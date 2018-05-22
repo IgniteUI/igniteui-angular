@@ -283,6 +283,25 @@
 
     %grid-row--group {
         position: relative;
+        background: --var($theme, 'header-background') !important;
+    }
+
+    %grid__groupLabel {
+        display: inline-flex;
+    }
+
+    %grid__groupCount {
+        display: inline-flex;
+        padding: 5px;
+    }
+
+    %grid__groupContent {
+        width: 100%;
+    }
+    
+    %grid__groupIndentation {
+        background: --var($theme, 'header-background');
+        z-index: 9999;
     }
 
     %grid-cell-display {

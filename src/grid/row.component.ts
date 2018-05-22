@@ -117,7 +117,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
 
     constructor(public gridAPI: IgxGridAPIService,
                 private selectionAPI: IgxSelectionAPIService,
-                private element: ElementRef,
+                public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
     @autoWire(true)

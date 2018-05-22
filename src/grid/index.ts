@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import {  IgxBadgeModule } from "../badge/badge.component";
 import { IgxCheckboxModule } from "../checkbox/checkbox.component";
 import { IgxSelectionAPIService } from "../core/selection";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
@@ -87,7 +88,8 @@ import { IgxGridRowComponent } from "./row.component";
     IgxFocusModule,
     IgxTextHighlightModule,
     IgxTextSelectionModule,
-    IgxCheckboxModule
+    IgxCheckboxModule,
+    IgxBadgeModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService]
 })

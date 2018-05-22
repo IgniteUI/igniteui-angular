@@ -19,13 +19,13 @@
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" role="row">
+        <ng-container *ngIf="groupingExpressions.length > 0">
+            <div class="igx-grid__groupIndentation" [style.min-width.px]="calcGroupByWidth">
+            </div>
+        </ng-container>
         <ng-container *ngIf="rowSelectable">
             <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="groupingExpressions.length > 0">
-            <div class="igx-grid__cbx-grouping" [style.min-width.px]="calcGroupByWidth">
             </div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
@@ -46,11 +46,11 @@
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupByDefaultExpanded:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-container *ngIf="isGroupByRecord(rowData); else record_template">
-            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData">
+            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
             </igx-grid-groupby-row>
         </ng-container>
         <ng-template #record_template>
-            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-grid-row>
         </ng-template>
     </ng-template>

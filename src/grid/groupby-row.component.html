@@ -5,11 +5,11 @@
             <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
         </span>
     </div>
-<div [tabIndex]="tabindex">
+<div [tabIndex]="tabindex" class="igx-grid__groupContent" #groupContent>
     <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
     </ng-container>
 </div>
 <ng-template #defaultGroupByTemplate>
-    <span>{{ groupRow.expression.fieldName }}: {{ groupRow.value }} ({{ groupRow.records.length }})</span>
+    <span class="igx-grid__groupLabel">{{ groupRow.expression.fieldName }}: {{ groupRow.value }}</span> <igx-badge type="info" [value]="groupRow.records.length" class='igx-grid__groupCount'></igx-badge>
 </ng-template>    
 </ng-container>
