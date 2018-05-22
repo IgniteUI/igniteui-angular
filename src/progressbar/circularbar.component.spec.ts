@@ -165,6 +165,25 @@ describe("IgCircularBar", () => {
         expect(progressBar.value).toBe(expectedValue);
     }));
 
+    it("When passed value is string progress indication should remain the same", async(() => {
+        const fix = TestBed.createComponent(CircularBarComponent);
+        fix.detectChanges();
+
+        const datepicker = fix.componentInstance.circularBar;
+        const expectedRes = fix.componentInstance.value;
+        fix.whenStable().then(() => {
+            expect(datepicker.value).toEqual(expectedRes);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            datepicker.value = "0345-234";
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(datepicker.value).toEqual(expectedRes);
+        });
+    }));
+
     // UI TESTS
 
     it("The value representation should respond to passed value correctly", fakeAsync(() => {
