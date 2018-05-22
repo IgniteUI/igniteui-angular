@@ -48,6 +48,7 @@ let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
 const DEFAULT_SUMMARY_HEIGHT = 36.36;
 const MINIMUM_COLUMN_WIDTH = 136;
+const MINIMUM_DOM_COLUMN_WIDTH = 50;
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -1040,6 +1041,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             column.index = index;
             if (!column.width) {
                 column.width = this.columnWidth;
+            }
+            if (column.width !== null &&
+                (typeof column.width === "number" || column.width.endsWith("px"))) {
+                column.width = Math.max(parseInt(column.width, 10), MINIMUM_DOM_COLUMN_WIDTH) + "px";
             }
             if (cb) {
                 cb(column);
