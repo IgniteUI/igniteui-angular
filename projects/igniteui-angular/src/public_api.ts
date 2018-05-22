@@ -54,6 +54,7 @@ export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
 export * from './lib/grid/index';
 export * from './lib/icon/index';
+export * from './lib/icon/icon.service';
 export * from './lib/input-group/input-group.component';
 export * from './lib/list/list.component';
 export * from './lib/navbar/navbar.component';
