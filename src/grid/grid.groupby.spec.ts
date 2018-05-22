@@ -67,7 +67,7 @@ describe("IgxGrid - GropBy", () => {
 
         // verify rows
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(5);
         expect(dataRows.length).toEqual(8);
@@ -86,7 +86,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(6);
         expect(dataRows.length).toEqual(8);
@@ -100,7 +100,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
@@ -114,7 +114,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(8);
@@ -136,7 +136,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
         expect(groupRows.length).toEqual(13);
@@ -152,7 +152,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
         expect(groupRows.length).toEqual(21);
@@ -172,7 +172,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
         // verify groups and data rows count
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
@@ -183,7 +183,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(false);
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(4);
         // verify collapsed group sub records are not rendered
@@ -197,7 +197,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
 
@@ -220,7 +220,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(13);
         expect(dataRows.length).toEqual(8);
@@ -242,7 +242,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(11);
         expect(dataRows.length).toEqual(8);
         // verify groups
@@ -262,7 +262,7 @@ describe("IgxGrid - GropBy", () => {
         grid.groupBy("ProductName", SortingDirection.Desc, false);
         fix.detectChanges();
         const groupRows = grid.groupedRowList.toArray();
-        const dataRows = grid.rowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
         // verify groups and data rows count
         expect(groupRows.length).toEqual(5);
         expect(dataRows.length).toEqual(8);
@@ -289,7 +289,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
         expect(groupRows.length).toEqual(5);
@@ -301,7 +301,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         // verify group order
         checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
@@ -316,7 +316,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
         expect(groupRows.length).toEqual(5);
@@ -327,7 +327,7 @@ describe("IgxGrid - GropBy", () => {
         grid.sort("ProductName", SortingDirection.None, false);
         fix.detectChanges();
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
          // verify groups and data rows count
         expect(groupRows.length).toEqual(0);
