@@ -30,10 +30,10 @@ export class IgxGridSortingPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: "gridGroupBy",
+    name: "gridPreGroupBy",
     pure: true
 })
-export class IgxGridGroupingPipe implements PipeTransform {
+export class IgxGridPreGroupingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
@@ -53,6 +53,33 @@ export class IgxGridGroupingPipe implements PipeTransform {
         state.defaultExpanded = grid.groupByDefaultExpanded;
 
         return DataUtil.group(cloneArray(collection), state);
+    }
+}
+
+@Pipe({
+    name: "gridPostGroupBy",
+    pure: true
+})
+export class IgxGridPostGroupingPipe implements PipeTransform {
+
+    constructor(private gridAPI: IgxGridAPIService) {}
+
+    public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
+                     expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
+                     id: string, pipeTrigger: number): any[] {
+
+        const state = { expressions: [], expansion: [], defaultExpanded };
+        const grid: IgxGridComponent = this.gridAPI.get(id);
+        state.expressions = grid.groupingExpressions;
+
+        if (!state.expressions.length) {
+            return collection;
+        }
+
+        state.expansion = grid.groupingExpansionState;
+        state.defaultExpanded = grid.groupByDefaultExpanded;
+
+        return DataUtil.restoreGroups(cloneArray(collection), state);
     }
 }
 

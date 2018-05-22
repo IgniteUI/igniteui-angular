@@ -11,6 +11,8 @@ import { IPagingState, PagingError } from "./paging-state.interface";
 
 import { IDataState } from "./data-state.interface";
 import { IGroupingState } from "./groupby-state.interface";
+import { IGroupByExpandState } from "./groupby-expand-state.interface";
+import { IGroupByRecord } from "./groupby-record.interface";
 
 export enum DataType {
     String = "string",
@@ -54,7 +56,39 @@ export class DataUtil {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each grouping expression(if not set)
-        return state.strategy.groupBy(data, state.expressions, state.expansion, state.defaultExpanded);
+        return state.strategy.groupBy(data, state.expressions);
+    }
+    public static restoreGroups<T>(data: T[], state: IGroupingState): T[] {
+        DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
+        if (state.expressions.length === 0) {
+            return data;
+        }
+        return this.restoreGroupsRecursive(data, 1, state.expressions.length, state.expansion, state.defaultExpanded);
+    }
+    private static restoreGroupsRecursive(data: any[], level: number, depth: number,
+        expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
+        let i: number = 0, j: number, result = [];
+        if (level !== depth) {
+            data = this.restoreGroupsRecursive(data, level + 1, depth, expansion, defaultExpanded);
+        }
+        while (i < data.length) {
+            let g = data[i]["__groupParent"];
+            for (j = i + 1; j < data.length; j++) {
+                let h = data[j]["__groupParent"];
+                if (g !== h && g.level === h.level) {
+                    break;
+                }
+            }
+            const expandState: IGroupByExpandState = expansion.find((state) =>
+                state.fieldName === g.expression.fieldName && state.value === g.value);
+            const expanded = expandState ? expandState.expanded : defaultExpanded;
+            result.push(g);
+            if (expanded) {
+                result = result.concat(data.slice(i, j));
+            }
+            i = j;
+        }
+        return result;
     }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {
