@@ -193,7 +193,7 @@ describe('IgLinearBar', () => {
         expect(progressBar.value).toBe(expectedValue);
     }));
 
-    it("When passed value is string progress indication should remain the same", async(() => {
+    it('When passed value is string progress indication should remain the same', async(() => {
         const fix = TestBed.createComponent(LinearBarComponent);
         fix.detectChanges();
 
@@ -204,7 +204,7 @@ describe('IgLinearBar', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            datepicker.value = "0345-234";
+            datepicker.value = '0345-234';
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
