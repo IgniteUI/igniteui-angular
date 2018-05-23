@@ -399,7 +399,7 @@ describe("IgxGrid - GropBy", () => {
         grid.groupBy("ProductName", SortingDirection.Desc, false);
         grid.groupBy("Released", SortingDirection.Desc, false);
         fix.detectChanges();
-        
+
         const grRows = grid.groupedRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
         grRows[0].groupContent.nativeElement.focus();
