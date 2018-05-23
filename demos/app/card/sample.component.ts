@@ -86,7 +86,7 @@ export class IgxCardSampleComponent implements OnInit {
                 avatarUrl: "images/card/avatars/rupert_stadler.jpg",
                 buttons: ["message", "follow"],
                 icons: ["add", "star"],
-                imageUrl: "images/card/media/audi_tt.jpg",
+                imageUrl: "images/card/media/audi.jpg",
                 subtitle: "January 30, 2017",
                 title: "Rupert Stadler"
             }),
