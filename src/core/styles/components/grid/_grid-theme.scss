@@ -290,13 +290,16 @@
     %grid__groupLabel {
         display: inline-flex;
     }
+
     %grid__groupCount {
         display: inline-flex;
         padding: 5px;
     }
+
     %grid__groupContent {
         width: 100%;
     }
+    
     %grid__groupIndentation {
         background: --var($theme, 'header-background');
         z-index: 9999;

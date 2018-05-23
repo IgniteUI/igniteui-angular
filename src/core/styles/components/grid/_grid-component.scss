@@ -74,9 +74,11 @@
     @include e(groupContent) {
         @extend %grid__groupContent !optional;
     }
+
     @include e(groupContent) {
         @extend %grid__groupContent !optional;
     }
+
     @include e(groupIndentation) {
         @extend %grid__groupIndentation !optional;
     }

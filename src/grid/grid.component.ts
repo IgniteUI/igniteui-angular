@@ -45,8 +45,8 @@ import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
 import { IgxGroupByRowTemplateDirective } from "./grid.common";
-import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { IgxGridSortingPipe } from "./grid.pipes";
+import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
@@ -377,8 +377,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
+    @ViewChildren("row")
+    public rowList: QueryList<any>;
+
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
-    public rowList: QueryList<IgxGridRowComponent>;
+    public dataRowList: QueryList<any>;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     public groupedRowList: QueryList<IgxGridGroupByRowComponent>;
@@ -809,7 +812,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._toggleGroup(groupRow);
     }
 
-    public isGroupByRecord(record: any):boolean {
+    public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record.records && record.records.length;
     }
@@ -1441,6 +1444,108 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowSelectionChange.emit(args);
         this.selectionAPI.set_selection(this.id, args.newSelection);
         this.checkHeaderChecboxStatus(headerStatus);
+    }
+
+    public navigateDown(rowIndex: number, columnIndex: number) {
+        const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
+        const target = row instanceof IgxGridGroupByRowComponent ?
+        row.groupContent :
+        this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
+        const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
+        if (!verticalScroll && !target) {
+            return;
+        }
+
+        if (target) {
+            const containerHeight = this.calcHeight ?
+                Math.ceil(this.calcHeight) :
+                null; // null when there is no vertical virtualization
+            const containerTopOffset =
+                parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const targetEndTopOffset = row.element.nativeElement.offsetTop + this.rowHeight + containerTopOffset;
+            if (containerHeight && targetEndTopOffset > containerHeight) {
+                const scrollAmount = targetEndTopOffset - containerHeight;
+                this.verticalScrollContainer.addScrollTop(scrollAmount);
+
+                this._focusNextCell(rowIndex, columnIndex);
+            } else {
+                target.nativeElement.focus();
+            }
+        } else {
+            const containerHeight = this.calcHeight;
+            const contentHeight = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
+            const scrollOffset = parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const lastRowOffset = contentHeight + scrollOffset - this.calcHeight;
+            const scrollAmount = this.rowHeight + lastRowOffset;
+            this.verticalScrollContainer.addScrollTop(scrollAmount);
+            this._focusNextCell(rowIndex, columnIndex);
+        }
+    }
+
+    public navigateUp(rowIndex: number, columnIndex: number) {
+        const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
+        const target =  row instanceof IgxGridGroupByRowComponent ?
+         row.groupContent :
+         this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
+        const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
+
+        if (!verticalScroll && !target) {
+            return;
+        }
+        if (target) {
+            const containerTopOffset =
+                parseInt(row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            if (this.rowHeight > -containerTopOffset // not the entire row is visible, due to grid offset
+                && verticalScroll.scrollTop // the scrollbar is not at the first item
+                && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
+
+                this.verticalScrollContainer.addScrollTop(-this.rowHeight);
+                this._focusNextCell(rowIndex, columnIndex);
+            }
+            target.nativeElement.focus();
+        } else {
+            const scrollOffset =
+                -parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const scrollAmount = this.rowHeight + scrollOffset;
+            this.verticalScrollContainer.addScrollTop(-scrollAmount);
+            this._focusNextCell(rowIndex, columnIndex);
+        }
+    }
+
+    private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {
+        let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
+        const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
+        this.subscribeNext(virtualDir, () => {
+             this.cdr.detectChanges();
+             let target;
+             row = this.gridAPI.get_row_by_index(this.id, rowIndex);
+             target = this.gridAPI.get_cell_by_visible_index(
+                this.id,
+                rowIndex,
+                columnIndex);
+             if (!target) {
+                if (dir) {
+                    target = dir === "left" ? row.cells.first : row.cells.last;
+                } else if (row instanceof IgxGridGroupByRowComponent) {
+                    target = row.groupContent;
+                } else {
+                    return;
+                }
+            }
+             target.nativeElement.focus();
+        });
+    }
+
+    private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
+        virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
+            next: (e: any) => {
+                callback(e);
+            }
+        });
+    }
+
+    public trackColumnChanges(index, col) {
+        return col.field + col.width;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, scroll?: boolean) {

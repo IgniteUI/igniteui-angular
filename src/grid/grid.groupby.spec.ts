@@ -17,6 +17,9 @@ describe("IgxGrid - GropBy", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
     const CELL_CSS_CLASS = ".igx-grid__td";
     const FIXED_CELL_CSS = "igx-grid__th--pinned";
+    const SORTING_ICON_NONE_CONTENT = "none";
+    const SORTING_ICON_ASC_CONTENT = "arrow_upward";
+    const SORTING_ICON_DESC_CONTENT = "arrow_downward";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -65,7 +68,7 @@ describe("IgxGrid - GropBy", () => {
 
         // verify rows
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(5);
         expect(dataRows.length).toEqual(8);
@@ -84,7 +87,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(6);
         expect(dataRows.length).toEqual(8);
@@ -98,7 +101,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
@@ -112,7 +115,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(8);
@@ -134,7 +137,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
         expect(groupRows.length).toEqual(13);
@@ -150,7 +153,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
         expect(groupRows.length).toEqual(21);
@@ -170,7 +173,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
         // verify groups and data rows count
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
@@ -181,7 +184,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(false);
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(4);
         // verify collapsed group sub records are not rendered
@@ -195,7 +198,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
 
@@ -218,7 +221,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(13);
         expect(dataRows.length).toEqual(8);
@@ -240,7 +243,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(11);
         expect(dataRows.length).toEqual(8);
         // verify groups
@@ -260,7 +263,7 @@ describe("IgxGrid - GropBy", () => {
         grid.groupBy("ProductName", SortingDirection.Desc, false);
         fix.detectChanges();
         const groupRows = grid.groupedRowList.toArray();
-        const dataRows = grid.rowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
         // verify groups and data rows count
         expect(groupRows.length).toEqual(5);
         expect(dataRows.length).toEqual(8);
@@ -287,7 +290,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
         expect(groupRows.length).toEqual(5);
@@ -299,13 +302,13 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
         // verify group order
         checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
 
     });
-    it("should remove grouping when already grouped columnn is sorted with order 'None'.", () => {
+    it("should remove grouping when already grouped columnn is sorted with order 'None' via the API.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -314,7 +317,7 @@ describe("IgxGrid - GropBy", () => {
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
-        let dataRows = grid.rowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
         expect(groupRows.length).toEqual(5);
@@ -325,11 +328,39 @@ describe("IgxGrid - GropBy", () => {
         grid.sort("ProductName", SortingDirection.None, false);
         fix.detectChanges();
         groupRows = grid.groupedRowList.toArray();
-        dataRows = grid.rowList.toArray();
+        dataRows = grid.dataRowList.toArray();
 
          // verify groups and data rows count
         expect(groupRows.length).toEqual(0);
         expect(dataRows.length).toEqual(8);
+
+    });
+    it("should disallow setting sorting state None to grouped column when sorting via the UI.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.groupBy("Downloads", SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        // click header
+        headers[0].triggerEventHandler("click", new Event("click"));
+        fix.detectChanges();
+
+        const sortingIcon = fix.debugElement.query(By.css(".sort-icon"));
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+
+        // click header again
+        headers[0].triggerEventHandler("click", new Event("click"));
+        fix.detectChanges();
+
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
+
+        // click header again
+        headers[0].triggerEventHandler("click", new Event("click"));
+        fix.detectChanges();
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
 
     });
     it("should group by the specified field when grouping by an already sorted field.", () => {
@@ -377,7 +408,7 @@ describe("IgxGrid - GropBy", () => {
             [width]='width'
             [height]='height'
             [data]="data"
-            [autoGenerate]="true">
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)">
         </igx-grid>
     `
 })
@@ -451,7 +482,7 @@ export class DefaultGridComponent {
         }
     ];
 
-    public columnCreated(column: IgxColumnComponent) {
+    public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
     }
 }

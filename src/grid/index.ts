@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import {  IgxBadgeModule } from "../badge/badge.component";
 import { IgxCheckboxModule } from "../checkbox/checkbox.component";
 import { IgxSelectionAPIService } from "../core/selection";
 import { IgxDatePickerModule } from "../date-picker/date-picker.component";
@@ -31,7 +32,6 @@ import { IgxGridComponent } from "./grid.component";
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
 import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { IgxGridRowComponent } from "./row.component";
-import {  IgxBadgeModule } from "../badge/badge.component"
 
 @NgModule({
   declarations: [

@@ -5,7 +5,7 @@
             <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
         </span>
     </div>
-<div [tabIndex]="tabindex" class="igx-grid__groupContent">
+<div [tabIndex]="tabindex" class="igx-grid__groupContent" #groupContent>
     <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
     </ng-container>
 </div>

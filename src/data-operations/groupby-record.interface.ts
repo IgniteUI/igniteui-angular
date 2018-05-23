@@ -5,7 +5,7 @@ export class GroupedRecords extends Array<any> {}
 export interface IGroupByRecord {
     expression: ISortingExpression;
     level: number;
-    records: GroupedRecords
+    records: GroupedRecords;
     value: any;
     // TODO: add groupby summaries here
  }
