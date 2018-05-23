@@ -1,4 +1,4 @@
-<ng-container [style.padding-left]="padding" #defaultGroupRow >
+<ng-container [style.padding-left]="padding" #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
     <div class="igx-grid__indicator-grouping" [style.min-width.px]="grid.calcGroupByWidth" [tabIndex]="tabindex">    
         <span (click)="toggle()">
             <igx-icon *ngIf="!expanded" fontSet="material" name="expand_less"></igx-icon>

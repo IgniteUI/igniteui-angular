@@ -250,7 +250,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     public isCellSelected() {
         const selection = this.selectionApi.get_selection(this.cellSelectionID);
-        if (selection) {
+        if (selection && selection.length > 0) {
             const selectedCellID = selection[0];
             return this.cellID.rowID === selectedCellID.rowID &&
                 this.cellID.columnID === selectedCellID.columnID;
@@ -545,7 +545,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
-
+        if(rowIndex === 0) {
+            return;
+        }
+        this._clearCellSelection();
         this.grid.navigateUp(rowIndex, this.visibleColumnIndex);
     }
 
@@ -557,6 +560,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
+        const totalCount = this.grid.totalCount ? this.grid.totalCount : this.grid.data.length;
+        if (rowIndex >= totalCount) {
+            return;
+        }
+        this._clearCellSelection();
         this.grid.navigateDown(rowIndex, this.visibleColumnIndex);
     }
 

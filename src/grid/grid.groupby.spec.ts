@@ -385,7 +385,7 @@ describe("IgxGrid - GropBy", () => {
     });
 
     // GroupBy + Selection integration
-    it("should allow keyboard navigation through group rows.",  fakeAsync(() => {
+    fit("should allow keyboard navigation through group rows.",  fakeAsync(() => {
         discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;

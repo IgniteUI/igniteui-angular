@@ -1530,6 +1530,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     target = dir === "left" ? row.cells.first : row.cells.last;
                 } else if (row instanceof IgxGridGroupByRowComponent) {
                     target = row.groupContent;
+                } else if(row){
+                     target = row.cells.first;
                 } else {
                     return;
                 }
