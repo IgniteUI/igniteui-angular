@@ -449,7 +449,6 @@ describe("IgxGrid - GropBy", () => {
         discardPeriodicTasks();
 
     }));
-});
 
     it("should apply group area if a column is grouped.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
