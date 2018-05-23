@@ -10,7 +10,7 @@
 5. Operations UI - column chooser
 6. Advanced Filtering
 7. Column Moving
-8. Update to Angular 6
+8. **[DONE]** Update to Angular 6
 9. Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
 10. Design: Data dense theme for data grid 
 
