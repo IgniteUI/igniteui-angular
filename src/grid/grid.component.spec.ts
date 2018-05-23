@@ -15,7 +15,7 @@ describe("IgxGrid - input properties", () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
-                IgGridTest30x1000Component, IgGridTest150x20000Component,
+                IgGridTest30x1000Component, IgGridTest150x200Component,
                 IgxGridTestDefaultWidthHeightComponent,
                 IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent
             ],
@@ -117,8 +117,8 @@ describe("IgxGrid - input properties", () => {
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
     });
 
-    it("col width should be >=136px - grid 150x20000", () => {
-        const fix = TestBed.createComponent(IgGridTest150x20000Component);
+    it("col width should be >=136px - grid 150x200", () => {
+        const fix = TestBed.createComponent(IgGridTest150x200Component);
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridMinDefaultColWidth;
@@ -650,7 +650,7 @@ export class IgGridTest30x1000Component {
     </igx-grid>
     `
 })
-export class IgGridTest150x20000Component {
+export class IgGridTest150x200Component {
     public cols;
     public data;
 
@@ -659,7 +659,7 @@ export class IgGridTest150x20000Component {
 
     constructor(private _cdr: ChangeDetectorRef) {
         this.generateColumns(150);
-        this.generateData(this.cols.length, 20000);
+        this.generateData(this.cols.length, 200);
     }
 
     init(column) {
