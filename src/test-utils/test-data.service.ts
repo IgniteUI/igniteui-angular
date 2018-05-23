@@ -1,10 +1,43 @@
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map  } from "rxjs/operators";
 import { Calendar } from "../calendar/calendar";
+import { cloneObject } from "../core/utils";
+import { IDataState } from "../data-operations/data-state.interface";
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
 
-export class TestData {
+@Injectable()
+export class TestDataService {
 
-    timeGenerator: Calendar = new Calendar();
-    today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    private timeGenerator: Calendar = new Calendar();
+    private today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
+    public stringArray = [
+        "Terrance Orta",
+        "Richard Mahoney LongerName",
+        "Donna Price",
+        "Lisa Landers",
+        "Dorothy H. Spencer"
+    ];
+
+    public numbersArray = [
+        10,
+        20,
+        30
+    ];
+
+    public dateArray = [
+        new Date("2018"),
+        new Date(2018, 3, 23),
+        new Date(30),
+        new Date("2018/03/23")
+    ];
+
+    public emptyObjectData = [
+        {},
+        {},
+        {}
+    ];
     public oneItemNumberData = [{ index: 1, value: 1 }];
 
     /* Fields: index: number, value: number; 2 items. */
@@ -17,6 +50,64 @@ export class TestData {
     public numberDataFourFields = [
         { index: 1, value: 1, other: 1, another: 1},
         { index: 2, value: 2, other: 2, another: 2}
+    ];
+
+    public differentTypesData = [
+        { Number: 1, String: "1", Boolean: true, Date: new Date(2018, 3, 3) },
+        { Number: 2, String: "2", Boolean: false, Date: new Date(2018, 5, 6) },
+        { Number: 3, String: "3", Boolean: true, Date: new Date(2018, 9, 22) }
+    ];
+
+    public contactsData = [
+        {
+            name: "Terrance Orta",
+            phone: "770-504-2217"
+        }, {
+            name: "Richard Mahoney LongerName",
+            phone: ""
+        }, {
+            name: "Donna Price",
+            phone: "859-496-2817"
+        }, {
+            name: "",
+            phone: "901-747-3428"
+        }, {
+            name: "Dorothy H. Spencer",
+            phone: "573-394-9254"
+        }
+    ];
+
+    public contactsFunkyData = [
+        {
+            name: "Terrance Mc'Orta",
+            phone: "(+359)770-504-2217 | 2218"
+        }, {
+            name: "Richard Mahoney /LongerName/",
+            phone: ""
+        }, {
+            name: "Donna, \/; Price",
+            phone: "859 496 28**"
+        }, {
+            name: "\r\n",
+            phone: "901-747-3428"
+        }, {
+            name: "Dorothy \"H.\" Spencer",
+            phone: "573-394-9254[fax]"
+        }, {
+            name: "Иван Иванов (1,2)",
+            phone: "№ 573-394-9254"
+        }
+    ];
+
+    public contactsPartial = [
+        {
+            name: "Terrance Orta",
+            phone: "770-504-2217"
+        }, {
+            name: "Richard Mahoney LongerName"
+        }, {
+            phone: "780-555-1331"
+        }
     ];
 
     /* Data fields: ID: number, Name: string; 3 items. */
@@ -474,9 +565,10 @@ export class TestData {
         return data;
     }
 
-    public generateBigValuesData() {
+    /* Data fields: ID: string, Column1: string, Column2: string, Column3: string. */
+    public generateBigValuesData(rowsCount: number) {
         const bigData = [];
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < rowsCount; i++) {
             for (let j = 0; j < 5; j++) {
                 bigData.push({
                     ID: i.toString() + "_" + j.toString(),
@@ -489,19 +581,21 @@ export class TestData {
         return bigData;
     }
 
-    public generateColumns(count) {
+    public generateColumns(count, namePrefix = "col") {
         const cols = [];
         for (let i = 0; i < count; i++) {
             cols.push({
-                field: "col" + i,
-                header: "col" + i
+                field: namePrefix + i,
+                header: namePrefix + i
             });
         }
         return cols;
     }
 
-    public generateData(rowsCount, colsCount) {
-        const cols = this.generateColumns(colsCount);
+    /* Generates data with headers in the format "colNamePrefix1..N" and
+    number values calculated by "colIndex * rowIndex" formula. */
+    public generateData(rowsCount, colsCount, colNamePrefix = "col") {
+        const cols = this.generateColumns(colsCount, colNamePrefix);
         const data = [];
         for (let r = 0; r < rowsCount; r++) {
             const record = {};
@@ -511,5 +605,51 @@ export class TestData {
             data.push(record);
         }
         return data;
+    }
+
+    /* Generate a different set of data using the specified baseData.
+    Note: If a numeric ID field is available, it will be incremented accordingly. */
+    public generateFromData(baseData: any[], rowsCount: number) {
+        const data = [];
+        const iterations = Math.floor(rowsCount / baseData.length);
+        const remainder = rowsCount % baseData.length;
+
+        for (let i = 0; i < iterations; i++) {
+            baseData.forEach((item) => {
+                const currentItem = cloneObject(item);
+                const id = this.getIDColumnName(currentItem);
+                if (id) {
+                    currentItem[id] = item[id] + i * baseData.length;
+                }
+                data.push(currentItem);
+            });
+        }
+        const currentLength = data.length;
+        for (let i = 0; i < remainder; i++) {
+            const currentItem = cloneObject(baseData[i]);
+            const id = this.getIDColumnName(currentItem);
+            if (id) {
+                currentItem[id] = currentLength + baseData[i][id];
+            }
+            data.push(currentItem);
+        }
+
+        return data;
+    }
+
+    private getIDColumnName(dataItem: any) {
+        if (!dataItem) {
+            return undefined;
+        }
+
+        if (dataItem["ID"]) {
+            return "ID";
+        } else if (dataItem["Id"]) {
+            return "Id";
+        } else if (dataItem["id"]) {
+            return "id";
+        } else {
+            return undefined;
+        }
     }
 }

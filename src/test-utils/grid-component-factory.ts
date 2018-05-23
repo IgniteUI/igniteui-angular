@@ -19,7 +19,6 @@ export class GridComponentFactory {
 // export class BaseGridTestComponent {
 //     public data = [];
 
-
 // }
 
 // enum GridEvents {
