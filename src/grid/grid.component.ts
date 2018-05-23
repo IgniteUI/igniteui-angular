@@ -1063,7 +1063,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (this._height && this._height.indexOf("%") !== -1) {
             /*height in %*/
-            let pagingHeight = 0, groupAreaHeight = 0;
+            let pagingHeight = 0;
+            let groupAreaHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
                     this.paginator.nativeElement.clientHeight : 0;
@@ -1080,7 +1081,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.tfootHeight - pagingHeight - groupAreaHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
-            let pagingHeight = 0, groupAreaHeight = 0;
+            let pagingHeight = 0;
+            let groupAreaHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
                     this.paginator.nativeElement.clientHeight : 0;
