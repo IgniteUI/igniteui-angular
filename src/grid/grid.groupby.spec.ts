@@ -2,6 +2,7 @@ import { Component, ViewChild } from "@angular/core";
 import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { take } from "rxjs/operators";
 import { Calendar } from "../calendar";
 import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
@@ -11,7 +12,9 @@ import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridHeaderComponent } from "./grid-header.component";
 import { IGridCellEventArgs, IgxGridComponent } from "./grid.component";
+import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { IgxGridModule } from "./index";
+import { IgxGridRowComponent } from "./row.component";
 
 describe("IgxGrid - GropBy", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
@@ -20,6 +23,9 @@ describe("IgxGrid - GropBy", () => {
     const SORTING_ICON_NONE_CONTENT = "none";
     const SORTING_ICON_ASC_CONTENT = "arrow_upward";
     const SORTING_ICON_DESC_CONTENT = "arrow_downward";
+    const GROUPROW_CSS = ".igx-grid__tr--group";
+    const DATAROW_CSS = ".igx-grid__tr";
+    const GROUPROW_COTENT_CSS = ".igx-grid__groupContent";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -376,6 +382,72 @@ describe("IgxGrid - GropBy", () => {
         // verify group order
         checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
     });
+
+    // GroupBy + Selection integration
+    it("should allow keyboard navigation through group rows.",  fakeAsync(() => {
+        discardPeriodicTasks();
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        const mockEvent = { preventDefault: () => { } };
+
+        fix.componentInstance.width = "400px";
+        fix.componentInstance.height = "400px";
+        grid.columnWidth = "200px";
+        fix.detectChanges();
+
+        grid.groupBy("ProductName", SortingDirection.Desc, false);
+        grid.groupBy("Released", SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const grRows = fix.debugElement.queryAll(By.css(GROUPROW_CSS));
+        const dataRows = fix.debugElement.queryAll(By.css(DATAROW_CSS));
+        const grRowsContent = fix.debugElement.queryAll(By.css(GROUPROW_COTENT_CSS));
+        grRowsContent[0].triggerEventHandler("focus", {});
+        tick();
+        fix.detectChanges();
+
+        let focusedElem = grid.rowList.find((r) => r.focused);
+
+        expect(focusedElem.index).toEqual(0);
+        grRows[0].triggerEventHandler("keydown.arrowdown", mockEvent);
+        tick();
+        fix.detectChanges();
+
+        focusedElem = grid.rowList.filter((r) => r.focused);
+
+        expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
+
+        grRows[1].triggerEventHandler("keydown.arrowdown", mockEvent);
+        tick();
+        fix.detectChanges();
+
+        focusedElem = grid.rowList.filter((r) => r.focused);
+
+        expect(focusedElem[focusedElem.length - 1].index).toEqual(2);
+        // verify cell selected
+
+        const cell = dataRows[1].queryAll(By.css(CELL_CSS_CLASS))[0];
+        expect(cell.componentInstance.selected).toBe(true);
+
+        cell.triggerEventHandler("keydown.arrowup", mockEvent);
+
+        tick();
+        fix.detectChanges();
+
+        focusedElem = grid.rowList.filter((r) => r.focused);
+
+        expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
+
+        grRows[1].triggerEventHandler("keydown.arrowup", mockEvent);
+        tick();
+        fix.detectChanges();
+
+        focusedElem = grid.rowList.filter((r) => r.focused);
+
+        expect(focusedElem[focusedElem.length - 1].index).toEqual(0);
+        discardPeriodicTasks();
+
+    }));
 });
 @Component({
     template: `

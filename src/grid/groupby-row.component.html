@@ -1,11 +1,11 @@
 <ng-container [style.padding-left]="padding" #defaultGroupRow >
-    <div class="igx-grid__indicator-grouping" [style.min-width.px]="grid.calcGroupByWidth" [tabIndex]="tabindex" (keydown.enter)="toggle()" (keydown.space)="toggle()">    
+    <div class="igx-grid__indicator-grouping" [style.min-width.px]="grid.calcGroupByWidth" [tabIndex]="tabindex">    
         <span (click)="toggle()">
             <igx-icon *ngIf="!expanded" fontSet="material" name="expand_less"></igx-icon>
             <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
         </span>
     </div>
-<div [tabIndex]="tabindex" class="igx-grid__groupContent" #groupContent>
+<div [tabIndex]="tabindex" class="igx-grid__groupContent" #groupContent (focus)="onFocus()" (blur)="onBlur()">
     <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
     </ng-container>
 </div>

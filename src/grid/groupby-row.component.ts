@@ -48,6 +48,11 @@ export class IgxGridGroupByRowComponent {
 
     protected defaultCssClass = "igx-grid__tr--group";
 
+    protected isFocused = false;
+
+    get focused(): boolean {
+        return this.isFocused;
+    }
     @Input()
     public index: number;
 
@@ -110,6 +115,14 @@ export class IgxGridGroupByRowComponent {
         }
         const rowIndex = this.index - 1;
         this.grid.navigateUp(rowIndex, visibleColumnIndex);
+    }
+
+    public onFocus() {
+        this.isFocused = true;
+    }
+
+    public onBlur() {
+        this.isFocused = false;
     }
 
     private _getLastSelectedCell() {
