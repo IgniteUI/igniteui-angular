@@ -7,7 +7,7 @@ import { AppComponent } from './../app.component';
     templateUrl: 'navdrawer.sample.html'
 })
 export class NavdrawerSampleComponent {
-    constructor(private app: AppComponent) {}
+    constructor(public app: AppComponent) {}
 
     toggle() {
         this.app.navdrawer.toggle();

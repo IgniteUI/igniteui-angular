@@ -1,8 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { IgxIconModule } from 'igniteui-angular';
+import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
 import { routing } from './routing';
@@ -36,6 +37,17 @@ import { BottomNavSampleComponent, CustomContentComponent } from './bottomnav/bo
 import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
+import { RemoteService } from './shared/remote.service';
+import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
+import { LocalService } from './shared/local.service';
+import { GridSampleComponent } from './grid/grid.sample';
+import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
+import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
+import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
+import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
+import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
+import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 
 
 const components = [
@@ -66,6 +78,15 @@ const components = [
     TabsSampleComponent,
     TimePickerSampleComponent,
     ToastSampleComponent,
+    VirtualForSampleComponent,
+    ButtonGroupSampleComponent,
+    GridSampleComponent,
+    GridColumnPinningSampleComponent,
+    GridColumnResizingSampleComponent,
+    GridSummaryComponent,
+    GridPerformanceSampleComponent,
+    GridSelectionComponent,
+    GridVirtualizationSampleComponent,
 
     CustomContentComponent,
     ColorsSampleComponent,
@@ -79,11 +100,18 @@ const components = [
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
+        HttpClientModule,
         IgxIconModule.forRoot(),
+        IgxGridModule.forRoot(),
         SharedModule,
         routing
     ],
-    providers: [],
+    providers: [
+        LocalService,
+        RemoteService,
+        IgxExcelExporterService,
+        IgxCsvExporterService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

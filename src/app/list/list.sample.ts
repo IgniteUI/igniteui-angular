@@ -7,17 +7,23 @@ import { IgxDialogComponent, IgxFilterOptions } from 'igniteui-angular';
     templateUrl: 'list.sample.html'
 })
 export class ListSampleComponent {
-    @ViewChild('checkbox') public checkbox: any;
-    @ViewChild('declarativeList') public declarativeList: any;
-    @ViewChild('addFruitDialog') public addFruitDialog: IgxDialogComponent;
 
-    public fruitsSearch: string;
-    public search1: string;
-    public search2: string;
-    public options: object = {};
-    public fruitsFilteredItemsCount = undefined;
+    @ViewChild('checkbox')
+    checkbox: any;
 
-    private navItems: object[] = [{
+    @ViewChild('declarativeList')
+    declarativeList: any;
+
+    @ViewChild('addFruitDialog')
+    addFruitDialog: IgxDialogComponent;
+
+    fruitsSearch: string;
+    search1: string;
+    search2: string;
+    options: object = {};
+    fruitsFilteredItemsCount = undefined;
+
+    navItems: object[] = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',
@@ -89,7 +95,7 @@ export class ListSampleComponent {
         text: 'Ward Riley'
     }];
 
-    private fruits: Fruit[] = [];
+    fruits: Fruit[] = [];
 
     get fo1() {
         const _fo = new IgxFilterOptions();
@@ -127,18 +133,18 @@ export class ListSampleComponent {
         return fruitsFilterOpts;
     }
 
-    private filteringHandler = function(args) {
+    filteringHandler = function(args) {
         args.cancel = !this.checkbox.checked;
     };
 
-    private filteredHandler = (args) => { };
+    filteredHandler = (args) => { };
 
-    private onAddFruitButtonClicked(fruitName) {
+    onAddFruitButtonClicked(fruitName) {
         this.fruits.push({ id: this.fruits.length, name: fruitName });
         this.addFruitDialog.close();
     }
 
-    private deleteFruit(fruitId) {
+    deleteFruit(fruitId) {
         let fruitIndex = -1;
         for (let i = 0; i < this.fruits.length; i++) {
             if (fruitId === this.fruits[i].id) {
@@ -150,7 +156,7 @@ export class ListSampleComponent {
         this.fruits.splice(fruitIndex, 1);
     }
 
-    private fruitsFiltered(args) {
+    fruitsFiltered(args) {
         this.fruitsFilteredItemsCount = args.filteredItems.length;
     }
 }

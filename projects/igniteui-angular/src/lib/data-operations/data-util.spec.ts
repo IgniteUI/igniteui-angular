@@ -13,7 +13,7 @@ import {    DataType,
             FilteringLogic, FilteringStrategy, IDataState,
             IFilteringExpression, IFilteringState, IPagingState, ISortingExpression, ISortingState,
             PagingError, SortingDirection
-        } from '../../index';
+        } from '../../public_api';
 /* Test sorting */
 function testSort() {
     let data: any[] = [];

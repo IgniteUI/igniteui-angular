@@ -11,8 +11,6 @@ export class ToastSampleComponent {
     @Input()
     toastPosition: IgxToastPosition = IgxToastPosition.Bottom;
 
-    onShowing(): void { }
-
     showToast(toast, position) {
         switch (position) {
             case 'middle':

@@ -5,8 +5,8 @@ import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { ExcelStrings } from './excel-strings';
 import { JSZipFiles } from './jszip-helper';
-import { IFileContent, JSZipWrapper, ObjectComparer  } from './jszip-verification-wrapper';
-import { ExportTestDataService, FileContentData, ValueData } from './test-data.service';
+import { IFileContent, JSZipWrapper, ObjectComparer  } from './jszip-verification-wrapper.spec';
+import { ExportTestDataService, FileContentData, ValueData } from './test-data.service.spec';
 
 describe('Excel Exporter', () => {
     let sourceData: ExportTestDataService;

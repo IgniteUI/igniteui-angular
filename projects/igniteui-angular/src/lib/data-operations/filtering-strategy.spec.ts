@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DataGenerator } from './test-util/data-generator';
 
-import { FilteringCondition, FilteringLogic, FilteringStrategy, IFilteringExpression, IFilteringState } from '../../index';
+import { FilteringCondition, FilteringLogic, FilteringStrategy, IFilteringExpression, IFilteringState } from '../../public_api';
 
 describe('Unit testing FilteringStrategy', () => {
     let dataGenerator: DataGenerator;

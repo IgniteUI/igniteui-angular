@@ -1,9 +1,9 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { ExportTestDataService, FileContentData, ValueData } from '../excel/test-data.service';
+import { ExportTestDataService, FileContentData, ValueData } from '../excel/test-data.service.spec';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
-import { CSVWrapper } from './csv-verification-wrapper';
+import { CSVWrapper } from './csv-verification-wrapper.spec';
 
 describe('CSV exporter', () => {
     let sourceData: ExportTestDataService;

@@ -12,13 +12,13 @@ import {
     GridReorderedColumnsComponent
 } from '../exporter-common/components-declarations';
 import { ExportUtilities } from '../exporter-common/export-utilities';
-import { TestMethods } from '../exporter-common/test-methods';
+import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { ExcelStrings } from './excel-strings';
 import { JSZipFiles } from './jszip-helper';
-import { JSZipWrapper, ObjectComparer } from './jszip-verification-wrapper';
-import { ExportTestDataService, FileContentData, ValueData } from './test-data.service';
+import { JSZipWrapper, ObjectComparer } from './jszip-verification-wrapper.spec';
+import { ExportTestDataService, FileContentData, ValueData } from './test-data.service.spec';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;

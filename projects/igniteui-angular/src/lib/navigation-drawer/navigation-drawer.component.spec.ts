@@ -9,7 +9,7 @@ import {
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import * as Infragistics from '../../index';
+import * as Infragistics from '../../public_api';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare var Simulator: any;

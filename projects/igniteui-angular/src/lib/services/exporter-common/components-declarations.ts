@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridComponent } from '../../grid/grid.component';
-import { ExportTestDataService } from '../excel/test-data.service';
+import { ExportTestDataService } from '../excel/test-data.service.spec';
 
 @Component({
     template: `

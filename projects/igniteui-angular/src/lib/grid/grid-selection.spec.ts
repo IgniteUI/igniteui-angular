@@ -6,7 +6,7 @@ import { Calendar } from '../calendar';
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { STRING_FILTERS } from '../../index';
+import { STRING_FILTERS } from '../data-operations/filtering-condition';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';

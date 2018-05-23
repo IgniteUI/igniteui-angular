@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DataGenerator } from './test-util/data-generator';
 
-import { SortingDirection, SortingStrategy } from '../../index';
+import { SortingDirection, SortingStrategy } from '../../public_api';
 
 describe('Unit testing SortingStrategy', () => {
     let dataGenerator: DataGenerator;
