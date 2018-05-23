@@ -21,7 +21,8 @@ describe("IgxGrid - GropBy", () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                DefaultGridComponent
+                DefaultGridComponent,
+                GroupableGridComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -345,6 +346,30 @@ describe("IgxGrid - GropBy", () => {
         // verify group order
         checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
     });
+
+    it("should apply group area if a column is grouped.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+
+        grid.groupBy("ProductName", SortingDirection.Asc, false);
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        // verify group area is rendered
+        expect(gridElement.querySelectorAll(".igx-grouparea").length).toEqual(1);
+    });
+
+    it("should apply group area if a column is groupable.", () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        // verify group area is rendered
+        expect(gridElement.querySelectorAll(".igx-grouparea").length).toEqual(1);
+        expect(gridElement.clientHeight).toEqual(700);
+    });
 });
 @Component({
     template: `
@@ -429,4 +454,89 @@ export class DefaultGridComponent {
     public columnCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="data"
+            [paging]="true">
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+        </igx-grid>
+    `
+})
+export class GroupableGridComponent {
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    public nextDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0, 0);
+    public prevDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0, 0, 0);
+    public width = "800px";
+    public height = "700px";
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+
+    public data = [
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.today,
+            Released: false
+        },
+        {
+            Downloads: 1000,
+            ID: 2,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.nextDay,
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: null,
+            Released: false
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.prevDay,
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: "",
+            ReleaseDate: null,
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 6,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: this.nextDay,
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.prevDay,
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.today,
+            Released: false
+        }
+    ];
 }
