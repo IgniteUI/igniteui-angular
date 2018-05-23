@@ -392,25 +392,24 @@ describe("IgxGrid - GropBy", () => {
         const mockEvent = { preventDefault: () => { } };
 
         fix.componentInstance.width = "400px";
-        fix.componentInstance.height = "400px";
+        fix.componentInstance.height = "300px";
         grid.columnWidth = "200px";
         fix.detectChanges();
 
         grid.groupBy("ProductName", SortingDirection.Desc, false);
         grid.groupBy("Released", SortingDirection.Desc, false);
         fix.detectChanges();
-
-        const grRows = fix.debugElement.queryAll(By.css(GROUPROW_CSS));
-        const dataRows = fix.debugElement.queryAll(By.css(DATAROW_CSS));
-        const grRowsContent = fix.debugElement.queryAll(By.css(GROUPROW_COTENT_CSS));
-        grRowsContent[0].triggerEventHandler("focus", {});
+        
+        const grRows = grid.groupedRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
+        grRows[0].groupContent.nativeElement.focus();
         tick();
         fix.detectChanges();
 
         let focusedElem = grid.rowList.find((r) => r.focused);
 
         expect(focusedElem.index).toEqual(0);
-        grRows[0].triggerEventHandler("keydown.arrowdown", mockEvent);
+        grRows[0].onKeydownArrowDown(new KeyboardEvent("keydown", { key: "arrowdown", code: "40" }));
         tick();
         fix.detectChanges();
 
@@ -418,7 +417,7 @@ describe("IgxGrid - GropBy", () => {
 
         expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
 
-        grRows[1].triggerEventHandler("keydown.arrowdown", mockEvent);
+        grRows[1].onKeydownArrowDown(new KeyboardEvent("keydown", { key: "arrowdown", code: "40" }));
         tick();
         fix.detectChanges();
 
@@ -427,10 +426,10 @@ describe("IgxGrid - GropBy", () => {
         expect(focusedElem[focusedElem.length - 1].index).toEqual(2);
         // verify cell selected
 
-        const cell = dataRows[1].queryAll(By.css(CELL_CSS_CLASS))[0];
-        expect(cell.componentInstance.selected).toBe(true);
+        const cell = dataRows[0].cells.toArray()[0];
+        expect(cell.selected).toBe(true);
 
-        cell.triggerEventHandler("keydown.arrowup", mockEvent);
+        cell.onKeydownArrowUp(new KeyboardEvent("keydown", { key: "arrowup", code: "38" }));
 
         tick();
         fix.detectChanges();
@@ -439,7 +438,7 @@ describe("IgxGrid - GropBy", () => {
 
         expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
 
-        grRows[1].triggerEventHandler("keydown.arrowup", mockEvent);
+        grRows[1].onKeydownArrowUp(new KeyboardEvent("keydown", { key: "arrowup", code: "38" }));
         tick();
         fix.detectChanges();
 

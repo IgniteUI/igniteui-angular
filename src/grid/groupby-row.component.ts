@@ -87,6 +87,7 @@ export class IgxGridGroupByRowComponent {
         return `${this.defaultCssClass}`;
     }
 
+    @HostListener("keydown.space")
     @autoWire(true)
     public toggle() {
         this.grid.toggleGroup(this.groupRow);
