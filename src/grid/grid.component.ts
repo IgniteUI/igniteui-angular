@@ -410,6 +410,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild("headerCheckbox", { read: IgxCheckboxComponent })
     public headerCheckbox: IgxCheckboxComponent;
 
+    @ViewChild("groupArea")
+    public groupArea: ElementRef;
+
     @ViewChild("theadRow")
     public theadRow: ElementRef;
 
@@ -503,6 +506,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _groupingExpressions = [];
     protected _groupingExpandState: IGroupByExpandState[] = [];
     protected _groupRowTemplate: TemplateRef<any>;
+    protected _groupAreaTemplate: TemplateRef<any>;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -609,6 +613,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
     set groupRowTemplate(template: TemplateRef<any>) {
         this._groupRowTemplate = template;
+        this.markForCheck();
+    }
+
+    get groupAreaTemplate(): TemplateRef<any> {
+        return this._groupAreaTemplate;
+    }
+    set groupAreaTemplate(template: TemplateRef<any>) {
+        this._groupAreaTemplate = template;
         this.markForCheck();
     }
 
@@ -788,6 +800,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._groupBy(rest[0], rest[1], rest[2]);
         }
+        this.calculateGridSizes();
     }
 
     public isExpandedGroup(group: IGroupByRecord): boolean {
@@ -978,6 +991,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
     }
 
+    get hasGroupableColumns(): boolean {
+        return this.columnList.some((col) => col.groupable);
+    }
+
     get hasSortableColumns(): boolean {
         return this.columnList.some((col) => col.sortable);
     }
@@ -1047,6 +1064,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._height && this._height.indexOf("%") !== -1) {
             /*height in %*/
             let pagingHeight = 0;
+            let groupAreaHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
                     this.paginator.nativeElement.clientHeight : 0;
@@ -1054,13 +1072,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (!this.tfootHeight) {
                 this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
                     this.calcMaxSummaryHeight() : 0;
+            }
+            if (this.groupArea) {
+                groupAreaHeight = this.groupArea.nativeElement.offsetHeight;
             }
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
-                this.tfootHeight - pagingHeight -
+                this.tfootHeight - pagingHeight - groupAreaHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
             let pagingHeight = 0;
+            let groupAreaHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
                     this.paginator.nativeElement.clientHeight : 0;
@@ -1069,9 +1091,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
                     this.calcMaxSummaryHeight() : 0;
             }
+            if (this.groupArea) {
+                groupAreaHeight = this.groupArea.nativeElement.offsetHeight;
+            }
             this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
-                this.tfootHeight - pagingHeight -
+                this.tfootHeight - pagingHeight - groupAreaHeight -
                 this.scr.nativeElement.clientHeight;
         }
     }
@@ -1519,6 +1544,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 callback(e);
             }
         });
+    }
+
+    public trackColumnChanges(index, col) {
+        return col.field + col.width;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, scroll?: boolean) {

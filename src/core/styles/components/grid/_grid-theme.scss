@@ -202,9 +202,10 @@
     }
 
     %grid-thead {
-        grid-row: 1;
+        grid-row: 2;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         z-index: 2;
+        height: fit-content;
     }
 
     %grid-tfoot {
@@ -224,7 +225,7 @@
 
     %grid-tbody {
         position: relative;
-        grid-row: 2;
+        grid-row: 3;
         background: --var($theme, 'content-background');
         color: --var($theme, 'content-text-color');
         overflow: hidden;
@@ -302,6 +303,14 @@
     %grid__groupIndentation {
         background: --var($theme, 'header-background');
         z-index: 9999;
+    }
+
+    %grid-grouparea {
+        grid-row: 1;
+        border-bottom: 1px dotted igx-color($palette, 'grays', 400);
+        z-index: 2;
+        height: 60px;
+        background: --var($theme, 'header-background');
     }
 
     %grid-cell-display {
