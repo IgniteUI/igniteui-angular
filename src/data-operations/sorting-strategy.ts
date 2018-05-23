@@ -122,9 +122,9 @@ export class SortingStrategy implements ISortingStrategy {
             if (level < expressions.length - 1) {
                 result = result.concat(this.groupDataRecursive(group, expressions, level + 1, groupRow));
             } else {
-                for (let j = 0; j < group.length; j++) {
-                    group[j]["__groupParent"] = groupRow;
-                    result.push(group[j]);
+                for (const groupItem of group) {
+                    groupItem["__groupParent"] = groupRow;
+                    result.push(groupItem);
                 }
             }
             i += group.length;

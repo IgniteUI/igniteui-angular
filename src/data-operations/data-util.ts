@@ -10,9 +10,9 @@ import { ISortingStrategy, SortingStrategy } from "./sorting-strategy";
 import { IPagingState, PagingError } from "./paging-state.interface";
 
 import { IDataState } from "./data-state.interface";
-import { IGroupingState } from "./groupby-state.interface";
 import { IGroupByExpandState } from "./groupby-expand-state.interface";
 import { IGroupByRecord } from "./groupby-record.interface";
+import { IGroupingState } from "./groupby-state.interface";
 
 export enum DataType {
     String = "string",
@@ -40,7 +40,7 @@ export class DataUtil {
         return target;
     }
     public static getFilteringConditionsForDataType(dataType: DataType):
-        {[name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void} {
+        { [name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void } {
         return FilteringCondition[dataType];
     }
     public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
@@ -65,16 +65,19 @@ export class DataUtil {
         }
         return this.restoreGroupsRecursive(data, 1, state.expressions.length, state.expansion, state.defaultExpanded);
     }
-    private static restoreGroupsRecursive(data: any[], level: number, depth: number,
-        expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
-        let i: number = 0, j: number, result = [];
+    private static restoreGroupsRecursive(
+            data: any[], level: number, depth: number,
+            expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
+        let i = 0;
+        let j: number;
+        let result = [];
         if (level !== depth) {
             data = this.restoreGroupsRecursive(data, level + 1, depth, expansion, defaultExpanded);
         }
         while (i < data.length) {
-            let g = data[i]["__groupParent"];
+            const g = data[i]["__groupParent"];
             for (j = i + 1; j < data.length; j++) {
-                let h = data[j]["__groupParent"];
+                const h = data[j]["__groupParent"];
                 if (g !== h && g.level === h.level) {
                     break;
                 }
@@ -121,8 +124,7 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
-    public static filter<T>(data: T[],
-                            state: IFilteringState): T[] {
+    public static filter<T>(data: T[], state: IFilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
         if (!state.strategy) {
