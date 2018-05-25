@@ -6,85 +6,88 @@ import {
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
-import {FilteringCondition} from './filtering-condition';
 import { DataGenerator } from './test-util/data-generator';
+import { IgxStringFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand } from 'dist/igniteui-angular/public_api';
 describe('Unit testing FilteringCondition', () => {
     it('tests string conditions', () => {
-        const fc = FilteringCondition.string;
+        const fc = IgxStringFilteringOperand.instance();
         // contains
-        expect(fc.contains('test123', 'esT'))
+        expect(fc.condition('contains').logic('test123', 'esT'))
             .toBeFalsy('contains ignoreCase: false');
-        expect(fc.contains('test123', 'esT', true))
+        expect(fc.condition('contains').logic('test123', 'esT', true))
             .toBeTruthy('contains ignoreCase: true');
         // does not contain
-        expect(fc.doesNotContain('test123', 'esT'))
+        expect(fc.condition('doesNotContain').logic('test123', 'esT'))
             .toBeTruthy('doesNotContain ignoreCase: false');
-        expect(fc.doesNotContain('test123', 'esT', true))
+        expect(fc.condition('doesNotContain').logic('test123', 'esT', true))
             .toBeFalsy('doesNotContain ignoreCase: true');
         // startsWith
-        expect(fc.startsWith('test123', 'TesT'))
+        expect(fc.condition('startsWith').logic('test123', 'TesT'))
             .toBeFalsy('startsWith ignoreCase: false');
-        expect(fc.startsWith('test123', 'TesT', true))
+        expect(fc.condition('startsWith').logic('test123', 'TesT', true))
             .toBeTruthy('startsWith ignoreCase: true');
         // endsWith
-        expect(fc.endsWith('test123', 'T123'))
+        expect(fc.condition('endsWith').logic('test123', 'T123'))
             .toBeFalsy('endsWith ignoreCase: false');
-        expect(fc.endsWith('test123', 'sT123', true))
+        expect(fc.condition('endsWith').logic('test123', 'sT123', true))
             .toBeTruthy('endsWith ignoreCase: true');
         // equals
-        expect(fc.equals('test123', 'Test123'))
+        expect(fc.condition('equals').logic('test123', 'Test123'))
             .toBeFalsy();
-        expect(fc.equals('test123', 'Test123', true))
+        expect(fc.condition('equals').logic('test123', 'Test123', true))
             .toBeTruthy();
         // doesNotEqual
-        expect(fc.doesNotEqual('test123', 'Test123'))
+        expect(fc.condition('doesNotEqual').logic('test123', 'Test123'))
             .toBeTruthy('doesNotEqual ignoreCase: false');
-        expect(fc.doesNotEqual('test123', 'Test123', true))
+        expect(fc.condition('doesNotEqual').logic('test123', 'Test123', true))
             .toBeFalsy('doesNotEqual ignoreCase: true');
         // empty
-        expect(!fc.empty('test') && fc.empty(null) && fc.empty(undefined))
+        expect(!fc.condition('empty').logic('test') && fc.condition('empty').logic(null) && fc.condition('empty').logic(undefined))
             .toBeTruthy('empty');
         // notEmpty
-        expect(fc.notEmpty('test') && !fc.notEmpty(null) && !fc.notEmpty(undefined))
-            .toBeTruthy('notEmpty');
+        expect(fc.condition('notEmpty').logic('test') && !fc.condition('notEmpty').logic(null) && !fc.condition('notEmpty')
+            .logic(undefined)).toBeTruthy('notEmpty');
         // null
-        expect(!fc.null('test') && fc.null(null) && !fc.null(undefined))
+        expect(!fc.condition('null').logic('test') && fc.condition('null').logic(null) && !fc.condition('null').logic(undefined))
             .toBeTruthy('null');
         // notNull
-        expect(fc.notNull('test') && !fc.notNull(null) && fc.notNull(undefined))
+        expect(fc.condition('notNull').logic('test') && !fc.condition('notNull').logic(null) && fc.condition('notNull').logic(undefined))
             .toBeTruthy('notNull');
     });
     it('tests number conditions', () => {
-        const fn = FilteringCondition.number;
-        expect(fn.doesNotEqual(1, 2) && !fn.doesNotEqual(1, 1))
+        const fn = IgxNumberFilteringOperand.instance();
+        expect(fn.condition('doesNotEqual').logic(1, 2) && !fn.condition('doesNotEqual').logic(1, 1))
             .toBeTruthy('doesNotEqual');
-        expect(fn.empty(null))
+        expect(fn.condition('empty').logic(null))
             .toBeTruthy('empty');
-        expect(!fn.equals(1, 2) && fn.equals(1, 1))
+        expect(!fn.condition('equals').logic(1, 2) && fn.condition('equals').logic(1, 1))
             .toBeTruthy('equals');
-        expect(!fn.greaterThan(1, 2) && fn.greaterThan(2, 1))
+        expect(!fn.condition('greaterThan').logic(1, 2) && fn.condition('greaterThan').logic(2, 1))
             .toBeTruthy('greaterThan');
-        expect(!fn.greaterThanOrEqualTo(1, 2) && !fn.greaterThanOrEqualTo(1, 2) &&
-                fn.greaterThanOrEqualTo(1, 1))
+        expect(!fn.condition('greaterThanOrEqualTo').logic(1, 2) && !fn.condition('greaterThanOrEqualTo').logic(1, 2) &&
+                fn.condition('greaterThanOrEqualTo').logic(1, 1))
             .toBeTruthy('greaterThanOrEqualTo');
-        expect(fn.lessThan(1, 2) && !fn.lessThan(2, 2) &&
-                !fn.lessThan(3, 2))
+        expect(fn.condition('lessThan').logic(1, 2) && !fn.condition('lessThan').logic(2, 2) &&
+                !fn.condition('lessThan').logic(3, 2))
             .toBeTruthy('lessThan');
-        expect(fn.lessThanOrEqualTo(1, 2) &&
-                fn.lessThanOrEqualTo(1, 1) &&
-                !fn.lessThanOrEqualTo(3, 2))
+        expect(fn.condition('lessThanOrEqualTo').logic(1, 2) &&
+                fn.condition('lessThanOrEqualTo').logic(1, 1) &&
+                !fn.condition('lessThanOrEqualTo').logic(3, 2))
             .toBeTruthy('lessThanOrEqualTo');
-        expect(fn.notEmpty(1))
+        expect(fn.condition('notEmpty').logic(1))
             .toBeTruthy('notEmpty');
-        expect(fn.empty(null))
+        expect(fn.condition('empty').logic(null))
             .toBeTruthy('empty');
-        expect(fn.notNull(1))
+        expect(fn.condition('notNull').logic(1))
             .toBeTruthy('notNull');
-        expect(fn.null(null))
+        expect(fn.condition('null').logic(null))
             .toBeTruthy('null');
     });
     it('tests date conditions', () => {
-        const fd = FilteringCondition.date;
+        const fd = IgxDateFilteringOperand.instance();
         const now = new Date();
         const cnow = new Date();
         const yesterday = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
@@ -93,54 +96,54 @@ describe('Unit testing FilteringCondition', () => {
         const lastYear = ((d) => new Date(d.setFullYear(d.getFullYear() - 1)))(new Date());
         const nextYear = ((d) => new Date(d.setFullYear(d.getFullYear() + 1)))(new Date());
 
-        expect(fd.after(now, yesterday) && !fd.after(now, nextYear))
+        expect(fd.condition('after').logic(now, yesterday) && !fd.condition('after').logic(now, nextYear))
             .toBeTruthy('after');
-        expect(fd.before(yesterday, now) && !fd.before(now, lastYear))
+        expect(fd.condition('before').logic(yesterday, now) && !fd.condition('before').logic(now, lastYear))
             .toBeTruthy('before');
-        expect(fd.doesNotEqual(now, yesterday) && fd.doesNotEqual(now, yesterday))
+        expect(fd.condition('doesNotEqual').logic(now, yesterday) && fd.condition('doesNotEqual').logic(now, yesterday))
             .toBeTruthy('doesNotEqual');
-        expect(fd.empty(null) && fd.empty(undefined) && !fd.empty(now))
+        expect(fd.condition('empty').logic(null) && fd.condition('empty').logic(undefined) && !fd.condition('empty').logic(now))
             .toBeTruthy('empty');
-        expect(!fd.notEmpty(null) && !fd.notEmpty(undefined) && fd.notEmpty(now))
+        expect(!fd.condition('notEmpty').logic(null) && !fd.condition('notEmpty').logic(undefined) && fd.condition('notEmpty').logic(now))
             .toBeTruthy('notEmpty');
-        expect(fd.equals(now, cnow) && !fd.equals(now, yesterday))
+        expect(fd.condition('equals').logic(now, cnow) && !fd.condition('equals').logic(now, yesterday))
             .toBeTruthy('equals');
-        expect(!fd.lastMonth(now) && fd.lastMonth(lastMonth))
+        expect(!fd.condition('lastMonth').logic(now) && fd.condition('lastMonth').logic(lastMonth))
             .toBeTruthy('lastMonth');
-        expect(fd.lastYear(lastYear) && !fd.lastYear(now))
+        expect(fd.condition('lastYear').logic(lastYear) && !fd.condition('lastYear').logic(now))
             .toBeTruthy('lastYear');
-        expect(!fd.nextMonth(now) && fd.nextMonth(nextMonth))
+        expect(!fd.condition('nextMonth').logic(now) && fd.condition('nextMonth').logic(nextMonth))
             .toBeTruthy('nextMonth');
-        expect(!fd.nextYear(now) && fd.nextYear(nextYear))
+        expect(!fd.condition('nextYear').logic(now) && fd.condition('nextYear').logic(nextYear))
             .toBeTruthy('nextYear');
-        expect(fd.notEmpty(now) && !fd.notEmpty(null) && !fd.notEmpty(undefined))
+        expect(fd.condition('notEmpty').logic(now) && !fd.condition('notEmpty').logic(null) && !fd.condition('notEmpty').logic(undefined))
             .toBeTruthy('notEmpty');
-        expect(fd.notNull(now) && !fd.notNull(null) && fd.notNull(undefined))
+        expect(fd.condition('notNull').logic(now) && !fd.condition('notNull').logic(null) && fd.condition('notNull').logic(undefined))
             .toBeTruthy('notNull');
-        expect(fd.null(null) && !fd.null(now) && !fd.null(undefined))
+        expect(fd.condition('null').logic(null) && !fd.condition('null').logic(now) && !fd.condition('null').logic(undefined))
             .toBeTruthy('null');
-        expect(fd.thisMonth(now) && !fd.thisMonth(nextYear))
+        expect(fd.condition('thisMonth').logic(now) && !fd.condition('thisMonth').logic(nextYear))
             .toBeTruthy('thisMonth');
-        expect(fd.thisYear(now) && !fd.thisYear(nextYear))
+        expect(fd.condition('thisYear').logic(now) && !fd.condition('thisYear').logic(nextYear))
             .toBeTruthy('thisYear');
-        expect(fd.today(now) && !fd.today(nextYear))
+        expect(fd.condition('today').logic(now) && !fd.condition('today').logic(nextYear))
             .toBeTruthy('today');
-        expect(!fd.yesterday(now) && fd.yesterday(yesterday))
+        expect(!fd.condition('yesterday').logic(now) && fd.condition('yesterday').logic(yesterday))
             .toBeTruthy('yesterday');
     });
     it('tests boolean conditions', () => {
-        const f = FilteringCondition.boolean;
-        expect(f.empty(null) && f.empty(undefined) && !f.empty(false))
+        const f = IgxBooleanFilteringOperand.instance();
+        expect(f.condition('empty').logic(null) && f.condition('empty').logic(undefined) && !f.condition('empty').logic(false))
             .toBeTruthy('empty');
-        expect(f.false(false) && !f.false(true))
+        expect(f.condition('false').logic(false) && !f.condition('false').logic(true))
             .toBeTruthy('false');
-        expect(!f.true(false) && f.true(true))
+        expect(!f.condition('true').logic(false) && f.condition('true').logic(true))
             .toBeTruthy('true');
-        expect(!f.notEmpty(null) && !f.notEmpty(undefined) && f.notEmpty(false))
+        expect(!f.condition('notEmpty').logic(null) && !f.condition('notEmpty').logic(undefined) && f.condition('notEmpty').logic(false))
             .toBeTruthy('notEmpty');
-        expect(f.null(null) && !f.null(undefined) && !f.null(false))
+        expect(f.condition('null').logic(null) && !f.condition('null').logic(undefined) && !f.condition('null').logic(false))
             .toBeTruthy('null');
-        expect(!f.notNull(null) && f.notNull(undefined) && f.notNull(false))
+        expect(!f.condition('notNull').logic(null) && f.condition('notNull').logic(undefined) && f.condition('notNull').logic(false))
             .toBeTruthy('notNull');
     });
 });
