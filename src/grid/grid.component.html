@@ -17,6 +17,10 @@
         </select>
 </ng-template>
 
+<div class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
+    <span>Drag a column header and drop it here to group by that column</span>
+</div>
+
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" role="row">
         <ng-container *ngIf="groupingExpressions.length > 0">

@@ -2,6 +2,7 @@ import { Component, ViewChild } from "@angular/core";
 import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { take } from "rxjs/operators";
 import { Calendar } from "../calendar";
 import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
@@ -11,7 +12,9 @@ import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridHeaderComponent } from "./grid-header.component";
 import { IGridCellEventArgs, IgxGridComponent } from "./grid.component";
+import { IgxGridGroupByRowComponent } from "./groupby-row.component";
 import { IgxGridModule } from "./index";
+import { IgxGridRowComponent } from "./row.component";
 
 describe("IgxGrid - GropBy", () => {
     const COLUMN_HEADER_CLASS = ".igx-grid__th";
@@ -20,11 +23,15 @@ describe("IgxGrid - GropBy", () => {
     const SORTING_ICON_NONE_CONTENT = "none";
     const SORTING_ICON_ASC_CONTENT = "arrow_upward";
     const SORTING_ICON_DESC_CONTENT = "arrow_downward";
+    const GROUPROW_CSS = ".igx-grid__tr--group";
+    const DATAROW_CSS = ".igx-grid__tr";
+    const GROUPROW_COTENT_CSS = ".igx-grid__groupContent";
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                DefaultGridComponent
+                DefaultGridComponent,
+                GroupableGridComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -376,6 +383,95 @@ describe("IgxGrid - GropBy", () => {
         // verify group order
         checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
     });
+
+    // GroupBy + Selection integration
+    fit("should allow keyboard navigation through group rows.",  fakeAsync(() => {
+        discardPeriodicTasks();
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        const mockEvent = { preventDefault: () => { } };
+
+        fix.componentInstance.width = "400px";
+        fix.componentInstance.height = "300px";
+        grid.columnWidth = "200px";
+        fix.detectChanges();
+
+        grid.groupBy("ProductName", SortingDirection.Desc, false);
+        grid.groupBy("Released", SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const grRows = grid.groupedRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
+        grRows[0].groupContent.nativeElement.focus();
+        tick();
+        fix.detectChanges();
+
+        let focusedElem = grid.rowList.find((r) => r.focused);
+
+        expect(focusedElem.index).toEqual(0);
+        grRows[0].onKeydownArrowDown(new KeyboardEvent("keydown", { key: "arrowdown", code: "40" }));
+        tick();
+        fix.detectChanges();
+
+        focusedElem = grid.rowList.filter((r) => r.focused);
+
+        expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
+
+        grRows[1].onKeydownArrowDown(new KeyboardEvent("keydown", { key: "arrowdown", code: "40" }));
+        tick();
+        fix.detectChanges();
+
+        focusedElem = grid.rowList.filter((r) => r.focused);
+
+        expect(focusedElem[focusedElem.length - 1].index).toEqual(2);
+        // verify cell selected
+
+        const cell = dataRows[0].cells.toArray()[0];
+        expect(cell.selected).toBe(true);
+
+        cell.onKeydownArrowUp(new KeyboardEvent("keydown", { key: "arrowup", code: "38" }));
+
+        tick();
+        fix.detectChanges();
+
+        focusedElem = grid.rowList.filter((r) => r.focused);
+
+        expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
+
+        grRows[1].onKeydownArrowUp(new KeyboardEvent("keydown", { key: "arrowup", code: "38" }));
+        tick();
+        fix.detectChanges();
+
+        focusedElem = grid.rowList.filter((r) => r.focused);
+
+        expect(focusedElem[focusedElem.length - 1].index).toEqual(0);
+        discardPeriodicTasks();
+
+    }));
+
+    it("should apply group area if a column is grouped.", () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+
+        grid.groupBy("ProductName", SortingDirection.Asc, false);
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        // verify group area is rendered
+        expect(gridElement.querySelectorAll(".igx-grouparea").length).toEqual(1);
+    });
+
+    it("should apply group area if a column is groupable.", () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        // verify group area is rendered
+        expect(gridElement.querySelectorAll(".igx-grouparea").length).toEqual(1);
+        expect(gridElement.clientHeight).toEqual(700);
+    });
 });
 @Component({
     template: `
@@ -460,4 +556,89 @@ export class DefaultGridComponent {
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="data"
+            [paging]="true">
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+        </igx-grid>
+    `
+})
+export class GroupableGridComponent {
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    public nextDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0, 0);
+    public prevDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0, 0, 0);
+    public width = "800px";
+    public height = "700px";
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+
+    public data = [
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.today,
+            Released: false
+        },
+        {
+            Downloads: 1000,
+            ID: 2,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.nextDay,
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: null,
+            Released: false
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: "Ignite UI for JavaScript",
+            ReleaseDate: this.prevDay,
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: "",
+            ReleaseDate: null,
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 6,
+            ProductName: "Ignite UI for Angular",
+            ReleaseDate: this.nextDay,
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.prevDay,
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: "NetAdvantage",
+            ReleaseDate: this.today,
+            Released: false
+        }
+    ];
 }

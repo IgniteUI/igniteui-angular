@@ -48,6 +48,11 @@ export class IgxGridGroupByRowComponent {
 
     protected defaultCssClass = "igx-grid__tr--group";
 
+    protected isFocused = false;
+
+    get focused(): boolean {
+        return this.isFocused;
+    }
     @Input()
     public index: number;
 
@@ -65,7 +70,6 @@ export class IgxGridGroupByRowComponent {
         return this.grid.isExpandedGroup(this.groupRow);
     }
 
-    @HostBinding("attr.tabindex")
     public tabindex = 0;
 
     @HostBinding("attr.aria-describedby")
@@ -82,6 +86,8 @@ export class IgxGridGroupByRowComponent {
         return `${this.defaultCssClass}`;
     }
 
+    @HostListener("keydown.enter")
+    @HostListener("keydown.space")
     @autoWire(true)
     public toggle() {
         this.grid.toggleGroup(this.groupRow);
@@ -93,17 +99,17 @@ export class IgxGridGroupByRowComponent {
 
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event) {
-        const lastCell = this._getLastSelectedCell();
-        const visibleColumnIndex = lastCell ? lastCell.visibleColumnIndex : 0;
+        const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
+        const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
         event.preventDefault();
-        const rowIndex = this.index + 1;
+        const rowIndex = this.index + 1;        
         this.grid.navigateDown(rowIndex, visibleColumnIndex);
     }
 
     @HostListener("keydown.arrowup", ["$event"])
     public onKeydownArrowUp(event) {
-        const lastCell = this._getLastSelectedCell();
-        const visibleColumnIndex = lastCell ? lastCell.visibleColumnIndex : 0;
+        const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
+        const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
         event.preventDefault();
         if (this.index === 0) {
             return;
@@ -112,11 +118,25 @@ export class IgxGridGroupByRowComponent {
         this.grid.navigateUp(rowIndex, visibleColumnIndex);
     }
 
-    private _getLastSelectedCell() {
+    public onFocus() {
+        this.isFocused = true;
+    }
+
+    public onBlur() {
+        this.isFocused = false;
+    }
+
+    private _getSelectedColIndex() {
         const selection = this.selectionAPI.get_selection(this.gridID + "-cells");
         if (selection && selection.length > 0) {
-            const cellID = selection[0];
-            return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);
+             return selection[0].columnID;
+        }
+    }
+
+    private _getPrevSelectedColIndex() {
+        const selection = this.selectionAPI.get_prev_selection(this.gridID + "-cells");
+        if (selection && selection.length > 0) {
+            return selection[0].columnID;
         }
     }
 }
