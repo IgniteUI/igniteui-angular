@@ -87,6 +87,12 @@
         @extend %grid-grouparea !optional;
     }
 
+    @include e(groupField) {
+        @extend %grid__groupField !optional;
+    }
+    @include e(groupCount) {
+        @extend %grid__groupCount !optional;
+    }
 
     @include e(th) {
         @extend %grid-cell-display !optional;

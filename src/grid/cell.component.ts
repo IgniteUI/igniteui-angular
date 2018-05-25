@@ -557,10 +557,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
-        const totalCount = this.grid.totalCount ? this.grid.totalCount : this.grid.data.length;
-        if (rowIndex >= totalCount) {
-            return;
-        }
         this._clearCellSelection();
         this.grid.navigateDown(rowIndex, this.visibleColumnIndex);
     }
