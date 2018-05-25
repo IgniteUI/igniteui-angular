@@ -190,6 +190,7 @@ A list of the events emitted by the **igx-grid**:
 |`onColumnPinning`|Emitted when a column is pinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property.|
 |`onColumnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
 |`onContextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
+|`onDoubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
 
 
 Defining handlers for these event emitters is done using declarative event binding:
@@ -234,6 +235,11 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`deselectRows(rowIDs: any[])`|Removes the specified row(s) from the grid's selection in the `selectionAPI`.|
 |`selectAllRows()`|Marks all rows as selected in the grid `selectionAPI`.|
 |`deselectAllRows()`|Sets the grid's row selection in the `selectionAPI` to `[]`.|
+|`findNext(text: string, caseSensitive?: boolean)`|Highlights all occurrences of the specified text and marks the next occurrence as active.|
+|`findPrev(text: string, caseSensitive?: boolean)`|Highlights all occurrences of the specified text and marks the previous occurrence as active.|
+|`clearSearch(text: string, caseSensitive?: boolean)`|Removes all search highlights from the grid.|
+|`refreshSearch()`|Refreshes the current search.|
+
 
 
 ## IgxColumnComponent

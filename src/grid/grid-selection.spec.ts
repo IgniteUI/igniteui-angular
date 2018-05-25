@@ -581,14 +581,14 @@ describe("IgxGrid - Row Selection", () => {
         spyOn(grid, "triggerRowSelectionChange").and.callThrough();
         spyOn(grid.onRowSelectionChange, "emit").and.callThrough();
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
         expect(firstRow.isSelected).toBeFalsy();
         expect(secondRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
         grid.deselectRows(["0_0", "0_1", "0_2"]);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            expect(rowsCollection).toBeUndefined();
+            expect(rowsCollection).toEqual([]);
         });
         grid.selectRows(["0_0", "0_1", "0_2"], false);
         fix.whenStable().then(() => {
@@ -619,7 +619,7 @@ describe("IgxGrid - Row Selection", () => {
         let rowsCollection = [];
         const firstRow = grid.getRowByKey("0_0");
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
         expect(firstRow.isSelected).toBeFalsy();
         spyOn(grid, "triggerRowSelectionChange").and.callThrough();
         spyOn(grid.onRowSelectionChange, "emit").and.callThrough();
@@ -657,7 +657,7 @@ describe("IgxGrid - Row Selection", () => {
         let rowsCollection = [];
 
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
 
         grid.filter("ProductName", "Ignite", STRING_FILTERS.contains, true);
         fix.detectChanges();
@@ -665,7 +665,7 @@ describe("IgxGrid - Row Selection", () => {
         expect(headerCheckbox.indeterminate).toBeFalsy();
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
         expect(headerCheckbox.getAttribute("aria-checked")).toMatch("false");
         expect(headerCheckbox.getAttribute("aria-label")).toMatch("Select all filtered");
         grid.clearFilter("ProductName");
@@ -763,7 +763,7 @@ describe("IgxGrid - Row Selection", () => {
         expect(secondRow.isSelected).toBeFalsy();
         let rowsCollection = [];
         rowsCollection = grid.selectedRows();
-        expect(rowsCollection).toBeUndefined();
+        expect(rowsCollection).toEqual([]);
 
         grid.selectRows(["0_0", "0_1"], false);
         fix.detectChanges();
@@ -914,6 +914,78 @@ describe("IgxGrid - Row Selection", () => {
             expect(firstRow.isSelected).toBeFalsy();
             expect(secondRow.isSelected).toBeFalsy();
             expect(thirdRow.isSelected).toBeFalsy();
+        });
+    }));
+
+    it("Should be able to programatically select all rows with a correct reference, #1297", async(() => {
+        const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection1;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        grid.selectAllRows();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(grid.selectedRows()).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            grid.selectAllRows();
+        });
+    }));
+
+    it("Should be able to programatically select all rows and keep the header checkbox intact,  #1298", async(() => {
+        const fixture = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector(".igx-grid");
+        const headerRow: HTMLElement = fixture.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckboxElement: HTMLElement = headerRow.querySelector(".igx-checkbox");
+        const firstRow = grid.getRowByIndex(0);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        const thirdRow = grid.getRowByIndex(2);
+        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(thirdRow.isSelected).toBeFalsy();
+        grid.selectAllRows();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(thirdRow.isSelected).toBeTruthy();
+            expect(headerCheckboxElement.classList.contains("igx-checkbox--checked")).toBeTruthy();
+            grid.selectAllRows();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(thirdRow.isSelected).toBeTruthy();
+            expect(headerCheckboxElement.classList.contains("igx-checkbox--checked")).toBeTruthy();
+        });
+    }));
+
+    it("Should be able to programatically get a collection of all selected rows", async(() => {
+        const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection2;
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const headerRow: HTMLElement = fix.nativeElement.querySelector(".igx-grid__thead");
+        const headerCheckboxElement: HTMLElement = headerRow.querySelector(".igx-checkbox");
+        const firstRow = grid.getRowByIndex(0);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector(".igx-checkbox__input");
+        const thirdRow = grid.getRowByIndex(2);
+        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector(".igx-checkbox__input");
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(thirdRow.isSelected).toBeFalsy();
+        expect(grid.selectedRows()).toEqual([]);
+        thirdRowCheckbox.click();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeTruthy();
+            expect(grid.selectedRows()).toEqual(["0_2"]);
+            thirdRowCheckbox.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
+            expect(thirdRow.isSelected).toBeFalsy();
+            expect(grid.selectedRows()).toEqual([]);
         });
     }));
 

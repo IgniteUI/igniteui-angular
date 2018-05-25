@@ -28,7 +28,7 @@
             <igx-grid-header [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
         </ng-container>
         <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-            [igxForContainerSize]='unpinnedWidth' #headerContainer>
+            [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
             <igx-grid-header [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
         </ng-template>
     </div>
@@ -39,13 +39,9 @@
         | gridSort:sortingExpressions:id:pipeTrigger
         | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
         [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
-        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData">
-        </igx-grid-row>
+        <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData"></igx-grid-row>
     </ng-template>
-    <ng-container *ngIf="!!filteredData && filteredData.length === 0">
-        <ng-container *ngTemplateOutlet="template">
-        </ng-container>
-    </ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
 </div>
 
 
@@ -54,7 +50,7 @@
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-summary [gridID]="id" *ngFor="let col of pinnedColumns"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-container>
-        <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' #summaryContainer>
+        <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #summaryContainer>
             <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-template>
     </div>
@@ -74,5 +70,5 @@
 </div>
 
 <ng-template #emptyGrid>
-    <p class="igx-grid--empty">No records found.</p>
+    <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
 </ng-template>

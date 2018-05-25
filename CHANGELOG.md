@@ -1,6 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 6.0.0
+- Theming - You can now use css variables to style the component instances you include in your project.
+- Added `onDoubleClick` output to `igxGrid` to emit the double clicked cell.
+- Added `findNext`, `findPrev` and `clearSearch` methods to the IgxGridComponent which allow easy search of the grid data, even when the grid is virtualized.
+- Added `IgxTextHighlightDirective` which highlights parts of a DOM element and keeps and updates "active" highlight.
+- Added `All` option to the filter UI select for boolean columns
+- Update to Angular 6
+
 ## 5.3.1
 - igx-dialog changes
     - Dialog title as well as dialog actions (buttons) can be customized. For more information navigate to the [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/dialog/README.md).

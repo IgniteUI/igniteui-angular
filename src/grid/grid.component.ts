@@ -36,11 +36,13 @@ import { FilteringLogic, IFilteringExpression } from "../data-operations/filteri
 import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
 import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 import { IForOfState } from "../directives/for-of/IForOfState";
+import { IActiveHighlightInfo, IgxTextHighlightDirective } from "../directives/text-highlight/text-highlight.directive";
 import { IgxCheckboxComponent } from "./../checkbox/checkbox.component";
 import { IgxGridAPIService } from "./api.service";
 import { IgxGridCellComponent } from "./cell.component";
 import { IgxColumnComponent } from "./column.component";
 import { ISummaryExpression } from "./grid-summary";
+import { IgxGridSortingPipe } from "./grid.pipes";
 import { IgxGridRowComponent } from "./row.component";
 
 let NEXT_ID = 0;
@@ -85,6 +87,13 @@ export interface IRowSelectionEventArgs {
     newSelection: any[];
     row?: IgxGridRowComponent;
     event?: Event;
+}
+
+export interface ISearchInfo {
+    searchText: string;
+    caseSensitive: boolean;
+    activeMatchIndex: number;
+    matchInfoCache: any[];
 }
 
 /**
@@ -139,9 +148,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set filteredData(value) {
+        const highlightedItem = this.findHiglightedItem();
+
         this._filteredData = value;
         if (this.rowSelectable) {
             this.updateHeaderChecboxStatusOnFilter(this._filteredData);
+        }
+
+        if (highlightedItem !== null) {
+            this.restoreHighlight(highlightedItem);
         }
     }
 
@@ -179,8 +194,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (val < 0) {
             return;
         }
+
+        let rowIndex = -1;
+        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+
+        if (this.lastSearchInfo.searchText !== "") {
+            rowIndex = (activeInfo.page * this._perPage) + activeInfo.rowIndex;
+        }
+
         this._perPage = val;
         this.page = 0;
+
+        if (this.lastSearchInfo.searchText !== "") {
+            const newRowIndex = rowIndex % this._perPage;
+            const newPage = Math.floor(rowIndex / this._perPage);
+            IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, newRowIndex, activeInfo.index , newPage);
+            this.rebuildMatchCache();
+        }
     }
 
     @Input()
@@ -251,6 +281,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public primaryKey;
 
+    @Input()
+    public emptyGridMessage = "No records found.";
+
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
 
@@ -299,6 +332,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Output()
     public onContextMenu = new EventEmitter<IGridCellEventArgs>();
+
+    @Output()
+    public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
@@ -358,8 +394,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set sortingExpressions(value) {
+        const highlightedItem = this.findHiglightedItem();
+
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
+
+        if (highlightedItem !== null) {
+            this.restoreHighlight(highlightedItem);
+        }
     }
 
     get virtualizationState() {
@@ -388,6 +430,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public eventBus = new Subject<boolean>();
 
     public allRowsSelected = false;
+
+    public lastSearchInfo: ISearchInfo = {
+        searchText: "",
+        caseSensitive: false,
+        activeMatchIndex: 0,
+        matchInfoCache: []
+    };
 
     protected destroy$ = new Subject<boolean>();
 
@@ -475,7 +524,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
                 this.markForCheck();
             });
-}
+    }
 
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
@@ -621,6 +670,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowAdded.emit({ data });
         this._pipeTrigger++;
         this.cdr.markForCheck();
+
+        this.refreshSearch();
     }
 
     public deleteRow(rowSelector: any): void {
@@ -634,6 +685,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.onRowDeleted.emit({ data: row.rowData });
             this._pipeTrigger++;
             this.cdr.markForCheck();
+
+            this.refreshSearch();
         }
     }
 
@@ -706,6 +759,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (!name) {
             this.filteringExpressions = [];
+            this.filteredData = null;
             return;
         }
         if (!this.gridAPI.get_column_by_name(this.id, name)) {
@@ -745,6 +799,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return false;
         }
 
+        const oldIndex = col.visibleIndex;
+
         col.pinned = true;
         const index = this._pinnedColumns.length;
 
@@ -760,6 +816,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
         }
         this.markForCheck();
+
+        const newIndex = col.visibleIndex;
+        col.updateHighlights(oldIndex, newIndex);
         return true;
     }
 
@@ -769,12 +828,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!col.pinned) {
             return false;
         }
+        const oldIndex = col.visibleIndex;
         col.pinned = false;
         this._unpinnedColumns.splice(col.index, 0, col);
         if (this._pinnedColumns.indexOf(col) !== -1) {
             this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
         }
         this.markForCheck();
+
+        const newIndex = col.visibleIndex;
+        col.updateHighlights(oldIndex, newIndex);
         return true;
     }
 
@@ -783,6 +846,51 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public reflow() {
         this.calculateGridSizes();
+    }
+
+    public findNext(text: string, caseSensitive?: boolean): number {
+        return this.find(text, 1, caseSensitive);
+    }
+
+    public findPrev(text: string, caseSensitive?: boolean): number {
+        return this.find(text, -1, caseSensitive);
+    }
+
+    public refreshSearch(updateActiveInfo?: boolean): number {
+        if (this.lastSearchInfo.searchText) {
+            this.rebuildMatchCache();
+
+            if (updateActiveInfo) {
+                const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+                this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
+                    if (match.column === activeInfo.columnIndex &&
+                        match.row === activeInfo.rowIndex &&
+                        match.index === activeInfo.index &&
+                        match.page === activeInfo.page) {
+                            this.lastSearchInfo.activeMatchIndex = i;
+                    }
+                });
+            }
+
+            return this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
+        } else {
+            return 0;
+        }
+    }
+
+    public clearSearch() {
+        this.lastSearchInfo = {
+            searchText: "",
+            caseSensitive: false,
+            activeMatchIndex: 0,
+            matchInfoCache: []
+        };
+
+        this.rowList.forEach((row) => {
+            row.cells.forEach((c) => {
+                c.clearHighlight();
+            });
+        });
     }
 
     get hasSortableColumns(): boolean {
@@ -800,6 +908,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get hasSummarizedColumns(): boolean {
         return this.columnList.some((col) => col.hasSummary);
     }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
@@ -891,8 +1000,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 .filter((width) => !isNaN(width))
         );
         const sumExistingWidths = this.visibleColumns
-        .filter((col) =>  col.width !== null)
-        .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
+            .filter((col) => col.width !== null)
+            .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
@@ -1097,7 +1206,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public get template(): TemplateRef<any> {
-        return this.emptyGridTemplate;
+        if (this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate;
+        }
     }
 
     public checkHeaderChecboxStatus(headerStatus?: boolean) {
@@ -1105,10 +1216,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.allRowsSelected = this.selectionAPI.are_all_selected(this.id, this.data);
             if (this.headerCheckbox) {
                 this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selectionAPI.are_none_selected(this.id);
+                if (!this.headerCheckbox.indeterminate) {
+                    this.headerCheckbox.checked = this.selectionAPI.are_all_selected(this.id, this.data);
+                }
             }
             this.cdr.markForCheck();
-        }
-        if (this.headerCheckbox) {
+        } else if (this.headerCheckbox) {
             this.headerCheckbox.checked = headerStatus !== undefined ? headerStatus : false;
         }
     }
@@ -1171,8 +1284,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public selectedRows() {
-        return this.selectionAPI.get_selection(this.id);
+    public selectedRows(): any[] {
+        return this.selectionAPI.get_selection(this.id) || [];
     }
 
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
@@ -1199,5 +1312,187 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowSelectionChange.emit(args);
         this.selectionAPI.set_selection(this.id, args.newSelection);
         this.checkHeaderChecboxStatus(headerStatus);
+    }
+
+    public trackColumnChanges(index, col) {
+        return col.field + col.width;
+    }
+
+    private find(text: string, increment: number, caseSensitive?: boolean, scroll?: boolean) {
+        if (!this.rowList) {
+            return 0;
+        }
+
+        if (this.cellInEditMode) {
+            this.cellInEditMode.inEditMode = false;
+        }
+
+        if (!text) {
+            this.clearSearch();
+            return 0;
+        }
+
+        const caseSensitiveResolved = caseSensitive ? true : false;
+        let rebuildCache = false;
+
+        if (this.lastSearchInfo.searchText !== text || this.lastSearchInfo.caseSensitive !== caseSensitiveResolved) {
+            this.lastSearchInfo = {
+                searchText: text,
+                activeMatchIndex: 0,
+                caseSensitive: caseSensitiveResolved,
+                matchInfoCache: []
+            };
+
+            rebuildCache = true;
+        } else {
+            this.lastSearchInfo.activeMatchIndex += increment;
+        }
+
+        if (rebuildCache) {
+            this.rowList.forEach((row) => {
+                row.cells.forEach((c) => {
+                    c.highlightText(text, caseSensitiveResolved);
+                });
+            });
+
+            this.rebuildMatchCache();
+        }
+
+        if (this.lastSearchInfo.activeMatchIndex >= this.lastSearchInfo.matchInfoCache.length) {
+            this.lastSearchInfo.activeMatchIndex = 0;
+        } else if (this.lastSearchInfo.activeMatchIndex < 0) {
+            this.lastSearchInfo.activeMatchIndex = this.lastSearchInfo.matchInfoCache.length - 1;
+        }
+
+        if (this.lastSearchInfo.matchInfoCache.length) {
+            const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
+            const row = this.paging ? matchInfo.row % this.perPage : matchInfo.row;
+
+            IgxTextHighlightDirective.setActiveHighlight(this.id, matchInfo.column, row, matchInfo.index, matchInfo.page);
+
+            if (scroll !== false) {
+                this.scrollTo(matchInfo.row, matchInfo.column, matchInfo.page);
+            }
+        } else {
+            IgxTextHighlightDirective.setActiveHighlight(this.id, -1, -1, -1, -1);
+        }
+
+        return this.lastSearchInfo.matchInfoCache.length;
+    }
+
+    private get filteredSortedData(): any[] {
+        let data: any[] = this.filteredData ? this.filteredData : this.data;
+
+        if (this.sortingExpressions &&
+            this.sortingExpressions.length > 0) {
+
+            const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
+            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
+        }
+
+        return data;
+    }
+
+    private scrollTo(row: number, column: number, page: number): void {
+        if (this.paging) {
+            this.page = page;
+        }
+
+        this.scrollDirective(this.verticalScrollContainer, row);
+
+        if (this.pinnedColumns.length) {
+            if (column >= this.pinnedColumns.length) {
+                column -= this.pinnedColumns.length;
+                this.scrollDirective(this.rowList.first.virtDirRow, column);
+            }
+        } else {
+            this.scrollDirective(this.rowList.first.virtDirRow, column);
+        }
+    }
+
+    private scrollDirective(directive: IgxForOfDirective<any>, goal: number): void {
+        const state = directive.state;
+        const start = state.startIndex;
+        const size = state.chunkSize - 1;
+
+        if (start >= goal) {
+            directive.scrollTo(goal);
+        } else if (start + size <= goal) {
+            directive.scrollTo(goal - size + 1);
+        }
+    }
+
+    private rebuildMatchCache() {
+        this.lastSearchInfo.matchInfoCache = [];
+
+        const caseSensitive = this.lastSearchInfo.caseSensitive;
+        const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
+        const data = this.filteredSortedData;
+        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).map((c) => c.field);
+
+        data.forEach((dataRow, i) => {
+            const rowIndex = this.paging ? i % this.perPage : i;
+
+            keys.forEach((key, j) => {
+                const value = dataRow[key];
+                if (value !== undefined && value !== null) {
+                    let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
+                    let occurenceIndex = 0;
+                    let searchIndex = searchValue.indexOf(searchText);
+                    const pageIndex = this.paging ? Math.floor(i / this.perPage) : 0;
+
+                    while (searchIndex !== -1) {
+                        this.lastSearchInfo.matchInfoCache.push({
+                            row: rowIndex,
+                            column: j,
+                            page: pageIndex,
+                            index: occurenceIndex++
+                        });
+
+                        searchValue = searchValue.substring(searchIndex + searchText.length);
+                        searchIndex = searchValue.indexOf(searchText);
+                    }
+                }
+            });
+        });
+    }
+
+    private findHiglightedItem(): any {
+        if (this.lastSearchInfo.searchText !== "") {
+            const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+
+            const activeIndex = (activeInfo.page * this.perPage) + activeInfo.rowIndex;
+            const data = this.filteredSortedData;
+            return data[activeIndex];
+        } else {
+            return null;
+        }
+    }
+
+    private restoreHighlight(highlightedItem: any): void {
+        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+
+        const data = this.filteredSortedData;
+        const rowIndex = data.indexOf(highlightedItem);
+        const page = this.paging ? Math.floor(rowIndex / this.perPage) : 0;
+        const row = this.paging ? rowIndex % this.perPage : rowIndex;
+
+        this.rebuildMatchCache();
+
+        if (rowIndex !== -1) {
+            IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, row, activeInfo.index, page);
+
+            this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
+                if (match.column === activeInfo.columnIndex &&
+                    match.row === rowIndex &&
+                    match.index === activeInfo.index &&
+                    match.page === page) {
+                        this.lastSearchInfo.activeMatchIndex = i;
+                }
+            });
+        } else {
+            this.lastSearchInfo.activeMatchIndex = 0;
+            this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
+        }
     }
 }
