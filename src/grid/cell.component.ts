@@ -538,10 +538,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @HostListener("keydown.arrowup", ["$event"])
     public onKeydownArrowUp(event) {
-        if (this.inEditMode) {
+        if (this.inEditMode || this.rowIndex === 0) {
             return;
         }
-
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
@@ -551,7 +550,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event) {
-        if (this.inEditMode) {
+        const virtDir = this.grid.verticalScrollContainer;
+        const count = virtDir.totalItemCount || virtDir.igxForOf.length;
+        if (this.inEditMode || this.rowIndex + 1 === count) {
             return;
         }
         event.preventDefault();
