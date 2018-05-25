@@ -15,20 +15,21 @@ before_install:
 before_script:
 - npm install -g gulp
 script:
-- npm run lint
-- npm run build
-- npm run test
+- npm run lint:lib
+- ng build igniteui-angular --prod
+- npm run build:style
+- npm run test:lib
 - if [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 
 before_deploy:
 # move to dist
-- cd dist
+- cd dist/igniteui-angular
 # update package versions
 - npm version "${TRAVIS_TAG}" --no-git-tag-version --save
 - if [[ "${TRAVIS_TAG}" == *"beta"* ]]; then export NPM_TAG="next"; else export NPM_TAG="latest"; fi
 
 # copy readme
-- cp ../README.md README.md
+- cp ../../README.md README.md
 
 deploy:
   provider: npm
