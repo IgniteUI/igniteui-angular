@@ -1,0 +1,24 @@
+.circular-samples {
+    display: flex;
+    justify-content: space-between;
+}
+
+.circular-container {
+    display: flex;
+    width: 84px;
+    height: 84px;
+    padding: 16px;
+}
+
+.linear-container + .linear-container{
+    padding-top: 16px;
+}
+
+
+.button-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 24px;
+    z-index: 24;
+}

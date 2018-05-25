@@ -1,0 +1,260 @@
+.sample-column {
+    flex-flow: column nowrap;
+    flex: 1 0 100% !important;
+    padding: 0 8px;
+}
+
+.sample-title {
+    margin-left: 8px;
+}
+
+.color-palettes {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.color-palette {
+    min-width: 300px;
+    flex: 1 0 25%;
+    margin-bottom: 48px;
+}
+
+.colors-row {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+}
+
+@media only screen and (min-width: 767px) {
+    .colors-row {
+        flex-flow: row nowrap;
+    }
+}
+
+.color-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    flex-basis: 100%;
+    color: #fff;
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.color-title {
+    font-size: 18px;
+    margin: 0;
+    height: 70px;
+    padding: 8px 16px;
+}
+
+.color-values {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 14px;
+    font-weight: 600;
+    height: 50px;
+    padding: 8px 16px;
+}
+
+.color-container.primary-color {
+    background: #0375be;
+}
+
+.color-container.secondary-color {
+    background: #e41c77;
+}
+
+.color-container.accent-color {
+    background: #fbb13c;
+}
+
+.color-palette div.color-container.accent-color {
+    color: #000;
+}
+
+.color-container.success-color {
+    background: #4caf50;
+}
+
+.color-container.warn-color {
+    background: #fbb13c;
+}
+
+.color-container.gray-color {
+    color: #000;
+}
+
+.color-container.gray-color h4.color-title {
+    background: rgba(0, 0, 0, .38);
+}
+
+.color-container.gray-color div.color-values:first-of-type {
+    background: rgba(0, 0, 0, .38);
+}
+
+.color-container.error-color {
+    background: #f44336;
+}
+
+.primary-color div.color-values.m-100 {
+    background: #82ceff;
+    color: #000;
+}
+
+.primary-color div.color-values.m-200 {
+    background: #70c0f5;
+    color: #000;
+}
+
+.primary-color div.color-values.m-300 {
+    background: #1d8cd3;
+}
+
+.primary-color div.color-values.m-400 {
+    background: #0a80cc;
+}
+
+.primary-color div.color-values.m-500 {
+    background: #0375be;
+}
+
+.primary-color div.color-values.m-600 {
+    background: #0166a7;
+}
+
+.primary-color div.color-values.m-700 {
+    background: #015a94;
+}
+
+.primary-color div.color-values.m-800 {
+    background: #014e80;
+}
+
+.primary-color div.color-values.m-900 {
+    background: #01416a;
+}
+
+.secondary-color div.color-values.m-100 {
+    background: #fcc5de;
+    color: #000;
+}
+
+.secondary-color div.color-values.m-200 {
+    background: #e17fab;
+    color: #000;
+}
+
+.secondary-color div.color-values.m-300 {
+    background: #dc5491;
+}
+
+.secondary-color div.color-values.m-400 {
+    background: #df3683;
+}
+
+.secondary-color div.color-values.m-500 {
+    background: #e41c77;
+}
+
+.secondary-color div.color-values.m-600 {
+    background: #dc0a6a;
+}
+
+.secondary-color div.color-values.m-700 {
+    background: #d30160;
+}
+
+.secondary-color div.color-values.m-800 {
+    background: #bf0157;
+}
+
+.secondary-color div.color-values.m-900 {
+    background: #a5044d;
+}
+
+.accent-color div.color-values.m-100 {
+    background: #fcf0dd;
+    color: #000;
+}
+
+.accent-color div.color-values.m-200 {
+    background: #f4d4a2;
+    color: #000;
+}
+
+.accent-color div.color-values.m-300 {
+    background: #f2c173;
+}
+
+.accent-color div.color-values.m-400 {
+    background: #f6b856;
+}
+
+.accent-color div.color-values.m-500 {
+    background: #fbb13c;
+}
+
+.accent-color div.color-values.m-600 {
+    background: #ffa81e;
+    color: #fff;
+}
+
+.accent-color div.color-values.m-700 {
+    background: #ffa10c;
+    color: #fff;
+}
+
+.accent-color div.color-values.m-800 {
+    background: #f69701;
+    color: #fff;
+}
+
+.accent-color div.color-values.m-900 {
+    background: #e08901;
+    color: #fff;
+}
+
+.gray-color div.color-values.m-100 {
+    background: rgba(0, 0, 0, .04);
+    color: #000;
+}
+
+.gray-color div.color-values.m-200 {
+    background: rgba(0, 0, 0, .08);
+    color: #000;
+}
+
+.gray-color div.color-values.m-300 {
+    background: rgba(0, 0, 0, .12);
+}
+
+.gray-color div.color-values.m-400 {
+    background: rgba(0, 0, 0, .26);
+}
+
+.gray-color div.color-values.m-500 {
+    background: rgba(0, 0, 0, .38);
+}
+
+.gray-color div.color-values.m-600 {
+    background: rgba(0, 0, 0, .54);
+    color: #fff;
+}
+
+.gray-color div.color-values.m-700 {
+    background: rgba(0, 0, 0, .62);
+    color: #fff;
+}
+
+.gray-color div.color-values.m-800 {
+    background: rgba(0, 0, 0, .74);
+    color: #fff;
+}
+
+.gray-color div.color-values.m-900 {
+    background: rgba(0, 0, 0, .87);
+    color: #fff;
+}

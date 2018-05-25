@@ -1,0 +1,56 @@
+.sample-column {
+    flex-flow: column nowrap;
+    flex: 1 0 100% !important;
+    padding: 0 16px;
+}
+
+.typography-group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.typography-group div.typography-sample {
+    margin-top: 0;
+}
+
+.typography-sample div.spec {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.typography-sample.header {
+    margin-right: 8px;
+    min-width: 300px;
+    flex: 1 0 20%;
+}
+
+.typography-sample + .typography-sample {
+    margin-top: 48px;
+}
+
+.font-weights {
+    list-style: none;
+    padding: 0;
+}
+
+.font-weights li {
+    font-size: 28px;
+    line-height: 35px;
+}
+
+.font-weights li.light {
+    font-weight: 300;
+}
+
+.font-weights li.normal {
+    font-weight: 400;
+}
+
+.font-weights li.semibold {
+    font-weight: 600;
+}
+
+.font-weights li.bold {
+    font-weight: 700;
+}
