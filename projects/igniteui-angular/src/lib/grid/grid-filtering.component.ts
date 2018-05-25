@@ -16,16 +16,15 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
-import {
-    BOOLEAN_FILTERS,
-    DATE_FILTERS,
-    NUMBER_FILTERS,
-    STRING_FILTERS
-} from '../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
+import { IgxNumberFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxDateFilteringOperand,
+    IFilteringOperation } from '../../public_api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,22 +56,17 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     get conditions() {
-        let conditions = [];
-
         switch (this.dataType) {
-            case DataType.String:
-                conditions = Object.keys(STRING_FILTERS);
-                break;
             case DataType.Number:
-                conditions = Object.keys(NUMBER_FILTERS);
-                break;
+                return IgxNumberFilteringOperand.instance().conditionList();
             case DataType.Boolean:
-                conditions = Object.keys(BOOLEAN_FILTERS);
-                break;
+                return IgxBooleanFilteringOperand.instance().conditionList();
             case DataType.Date:
-                conditions = Object.keys(DATE_FILTERS);
+                return IgxDateFilteringOperand.instance().conditionList();
+            case DataType.String:
+            default:
+                return IgxStringFilteringOperand.instance().conditionList();
         }
-        return conditions;
     }
 
     get template() {
@@ -269,16 +263,17 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         event.stopPropagation();
     }
 
-    protected getCondition(value) {
+    protected getCondition(value): IFilteringOperation {
         switch (this.dataType) {
-            case DataType.String:
-                return STRING_FILTERS[value];
             case DataType.Number:
-                return NUMBER_FILTERS[value];
+                return IgxNumberFilteringOperand.instance().condition(value);
             case DataType.Boolean:
-                return BOOLEAN_FILTERS[value];
+                return IgxBooleanFilteringOperand.instance().condition(value);
             case DataType.Date:
-                return DATE_FILTERS[value];
+                return IgxDateFilteringOperand.instance().condition(value);
+            case DataType.String:
+            default:
+                return IgxStringFilteringOperand.instance().condition(value);
         }
     }
 

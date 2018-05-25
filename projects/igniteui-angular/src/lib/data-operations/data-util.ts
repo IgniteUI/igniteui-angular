@@ -1,4 +1,8 @@
-import { FilteringCondition } from './filtering-condition';
+import { IgxFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxStringFilteringOperand } from './filtering-condition';
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
 import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
@@ -36,9 +40,18 @@ export class DataUtil {
             });
         return target;
     }
-    public static getFilteringConditionsForDataType(dataType: DataType):
-        {[name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void} {
-        return FilteringCondition[dataType];
+    public static getFilteringConditionsForDataType(dataType: DataType): IgxFilteringOperand {
+        switch (dataType) {
+            case DataType.Boolean:
+                return IgxBooleanFilteringOperand.instance();
+            case DataType.Date:
+                return IgxDateFilteringOperand.instance();
+            case DataType.Number:
+                return IgxNumberFilteringOperand.instance();
+            case DataType.String:
+            default:
+                return IgxStringFilteringOperand.instance();
+        }
     }
     public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
         return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));

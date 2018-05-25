@@ -3,10 +3,9 @@
  * Singleton
  *
  * @export
- * @class IgxFilteringOperand
  */
 export class IgxFilteringOperand {
-    private static _instance: IgxFilteringOperand;
+    private static _instance: IgxFilteringOperand = null;
 
     public operations: IFilteringOperation[];
 
@@ -38,6 +37,10 @@ export class IgxFilteringOperand {
         return this._instance || (this._instance = new this());
     }
 
+    public conditionList(): string[] {
+        return this.operations.map((element) => element.name);
+    }
+
     public condition(name: string): IFilteringOperation {
         this.operations.forEach((element) => {
             if (element.name === name) {
@@ -56,8 +59,6 @@ export class IgxFilteringOperand {
  * Provides filtering operations for booleans
  *
  * @export
- * @class IgxBooleanFilteringOperand
- * @extends {IgxFilteringOperand}
  */
 export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
@@ -80,8 +81,6 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
  * Provides filtering operations for Dates
  *
  * @export
- * @class IgxDateFilteringOperand
- * @extends {IgxFilteringOperand}
  */
 export class IgxDateFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
@@ -192,10 +191,6 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
     /**
      * Splits a Date object into parts
      *
-     * @static
-     * @param {Date} date
-     * @param {string} [dateFormat]
-     * @returns {IDateParts}
      * @memberof IgxDateFilteringOperand
      */
     public static getDateParts(date: Date, dateFormat?: string): IDateParts {
@@ -240,8 +235,6 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
  * Provides filtering operations for numbers
  *
  * @export
- * @class IgxNumberFilteringOperand
- * @extends {IgxFilteringOperand}
  */
 export class IgxNumberFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
@@ -284,8 +277,6 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
  * Provides filtering operations for strings
  *
  * @export
- * @class IgxStringFilteringOperand
- * @extends {IgxFilteringOperand}
  */
 export class IgxStringFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
@@ -337,9 +328,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
 
     /**
      * Applies case sensitivity on strings if provided
-     * @param {string} a
-     * @param {boolean} ignoreCase
-     * @returns {string}
+     *
      * @memberof IgxStringFilteringOperand
      */
     public static applyIgnoreCase(a: string, ignoreCase: boolean): string {
@@ -353,7 +342,6 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
  * Interface describing filtering operations
  *
  * @export
- * @interface IFilteringOperation
  */
 export interface IFilteringOperation {
     name: string;
@@ -364,7 +352,6 @@ export interface IFilteringOperation {
  * Interface describing Date object in parts
  *
  * @export
- * @interface IDateParts
  */
 export interface IDateParts {
     year: number;
