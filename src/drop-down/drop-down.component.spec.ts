@@ -29,7 +29,7 @@ describe("IgxDropDown ", () => {
                 IgxDropDownTestScrollComponent,
                 IgxDropDownTestDisabledComponent,
                 IgxDropDownTestDisabledAnyComponent,
-                IgxDropDownTestEmptyList
+                IgxDropDownTestEmptyListComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -732,7 +732,7 @@ describe("IgxDropDown ", () => {
     });
 
     it("Unit: should return empty array for items when there are no items", () => {
-        const fixture = TestBed.createComponent(IgxDropDownTestEmptyList);
+        const fixture = TestBed.createComponent(IgxDropDownTestEmptyListComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css("button")).nativeElement;
         const igxDropDown = fixture.componentInstance.dropdownEmpty;
@@ -1000,7 +1000,7 @@ class IgxDropDownTestDisabledComponent {
     </igx-drop-down>
     `
 })
-class IgxDropDownTestEmptyList {
+class IgxDropDownTestEmptyListComponent {
 
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
     public dropdownEmpty: IgxDropDownComponent;
