@@ -14,23 +14,23 @@
     TemplateRef,
     ViewChild,
     ViewContainerRef
-} from "@angular/core";
-import { take } from "rxjs/operators";
-import { IgxSelectionAPIService } from "../core/selection";
-import { KEYCODES } from "../core/utils";
-import { DataType } from "../data-operations/data-util";
-import { IgxTextHighlightDirective } from "../directives/text-highlight/text-highlight.directive";
-import { IgxGridAPIService } from "./api.service";
-import { IgxColumnComponent } from "./column.component";
-import { autoWire, IGridBus } from "./grid.common";
-import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
-import { IgxGridGroupByRowComponent } from "./groupby-row.component";
+} from '@angular/core';
+import { take } from 'rxjs/operators';
+import { IgxSelectionAPIService } from '../core/selection';
+import { KEYCODES } from '../core/utils';
+import { DataType } from '../data-operations/data-util';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxGridAPIService } from './api.service';
+import { IgxColumnComponent } from './column.component';
+import { autoWire, IGridBus } from './grid.common';
+import { IGridCellEventArgs, IGridEditEventArgs } from './grid.component';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    selector: "igx-grid-cell",
-    templateUrl: "./cell.component.html"
+    selector: 'igx-grid-cell',
+    templateUrl: './cell.component.html'
 })
 export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
     @Input()
@@ -45,8 +45,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     @Input()
     public value: any;
 
-    public highlightClass = "igx-highlight";
-    public activeHighlightClass = "igx-highlight__active";
+    public highlightClass = 'igx-highlight';
+    public activeHighlightClass = 'igx-highlight__active';
 
     get formatter(): (value: any) => any {
         return this.column.formatter;
@@ -121,43 +121,43 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         }
     }
 
-    @HostBinding("attr.tabindex")
+    @HostBinding('attr.tabindex')
     public tabindex = 0;
 
-    @HostBinding("attr.role")
-    public role = "gridcell";
+    @HostBinding('attr.role')
+    public role = 'gridcell';
 
-    @HostBinding("attr.aria-readonly")
+    @HostBinding('attr.aria-readonly')
     get readonly(): boolean {
         return !this.column.editable;
     }
 
-    @HostBinding("class.igx_grid__cell--edit")
+    @HostBinding('class.igx_grid__cell--edit')
     get cellInEditMode() {
         return this.inEditMode;
     }
 
-    @HostBinding("attr.aria-describedby")
+    @HostBinding('attr.aria-describedby')
     get describedby(): string {
         return `${this.row.gridID}_${this.column.field}`;
     }
 
-    @HostBinding("class")
+    @HostBinding('class')
     get styleClasses(): string {
         return `${this.defaultCssClass} ${this.column.cellClasses}`;
     }
 
-    @HostBinding("style.min-width")
-    @HostBinding("style.flex-basis")
-    @HostBinding("class.igx-grid__td--fw")
+    @HostBinding('style.min-width')
+    @HostBinding('style.flex-basis')
+    @HostBinding('class.igx-grid__td--fw')
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const isPercentageWidth = this.column.width && typeof this.column.width === "string" && this.column.width.indexOf("%") !== -1;
+        const isPercentageWidth = this.column.width && typeof this.column.width === 'string' && this.column.width.indexOf('%') !== -1;
         return this.isLastUnpinned && hasVerticalScroll && !!this.column.width && !isPercentageWidth ?
-            (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+            (parseInt(this.column.width, 10) - 18) + 'px' : this.column.width;
     }
 
-    @HostBinding("class.igx-grid__td--editing")
+    @HostBinding('class.igx-grid__td--editing')
     get editModeCSS() {
         return this._inEditMode;
     }
@@ -171,17 +171,17 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         this.isFocused = val;
     }
 
-    @HostBinding("class.igx-grid__td--number")
+    @HostBinding('class.igx-grid__td--number')
     get applyNumberCSSClass() {
         return this.column.dataType === DataType.Number;
     }
 
-    @HostBinding("class.igx-grid__th--pinned")
+    @HostBinding('class.igx-grid__th--pinned')
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding("class.igx-grid__th--pinned-last")
+    @HostBinding('class.igx-grid__th--pinned-last')
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         return pinnedCols[pinnedCols.length - 1] === this.column;
@@ -196,23 +196,23 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return this.isSelected = this.isCellSelected();
     }
 
-    @HostBinding("attr.aria-selected")
-    @HostBinding("class.igx-grid__td--selected")
+    @HostBinding('attr.aria-selected')
+    @HostBinding('class.igx-grid__td--selected')
     @autoWire(true)
     set selected(val: boolean) {
         this.isSelected = val;
     }
 
-    @ViewChild("defaultCell", { read: TemplateRef })
+    @ViewChild('defaultCell', { read: TemplateRef })
     protected defaultCellTemplate: TemplateRef<any>;
 
-    @ViewChild("inlineEditor", { read: TemplateRef })
+    @ViewChild('inlineEditor', { read: TemplateRef })
     protected inlineEditorTemplate: TemplateRef<any>;
 
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     private highlight: IgxTextHighlightDirective;
 
-    protected defaultCssClass = "igx-grid__td";
+    protected defaultCssClass = 'igx-grid__td';
     protected isFocused = false;
     protected isSelected = false;
     protected _inEditMode = false;
@@ -260,7 +260,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @autoWire(true)
     public ngOnInit() {
-        this.cellSelectionID = this.gridID + "-cells";
+        this.cellSelectionID = this.gridID + '-cells';
         this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
             () => {
                 if (!this.selected) {
@@ -303,7 +303,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         this.grid.refreshSearch();
     }
 
-    @HostListener("dblclick", ["$event"])
+    @HostListener('dblclick', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {
             this.inEditMode = true;
@@ -315,7 +315,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         });
     }
 
-    @HostListener("click", ["$event"])
+    @HostListener('click', ['$event'])
     public onClick(event) {
         this.grid.onCellClick.emit({
             cell: this,
@@ -323,7 +323,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         });
     }
 
-    @HostListener("contextmenu", ["$event"])
+    @HostListener('contextmenu', ['$event'])
     public onContextMenu(event) {
         this.grid.onContextMenu.emit({
             cell: this,
@@ -331,7 +331,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         });
     }
 
-    @HostListener("focus", ["$event"])
+    @HostListener('focus', ['$event'])
     @autoWire()
     public onFocus(event) {
         this.isFocused = true;
@@ -348,14 +348,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         });
     }
 
-    @HostListener("blur", ["$event"])
+    @HostListener('blur', ['$event'])
     @autoWire()
     public onBlur(event) {
         this.isFocused = false;
         this.row.focused = false;
     }
 
-    @HostListener("keydown.arrowleft", ["$event"])
+    @HostListener('keydown.arrowleft', ['$event'])
     public onKeydownArrowLeft(event) {
         if (this.inEditMode) {
             return;
@@ -400,12 +400,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this.grid._focusNextCell(this.rowIndex, columnIndex, "left");
+                this.grid._focusNextCell(this.rowIndex, columnIndex, 'left');
             }
         }
     }
 
-    @HostListener("keydown.control.arrowleft")
+    @HostListener('keydown.control.arrowleft')
     public onKeydownCtrlArrowLeft() {
         if (this.inEditMode) {
             return;
@@ -422,14 +422,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                 const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
                 horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex);
 
-                this.grid._focusNextCell(this.rowIndex, columnIndex, "left");
+                this.grid._focusNextCell(this.rowIndex, columnIndex, 'left');
             } else {
                 target.nativeElement.focus();
             }
         }
     }
 
-    @HostListener("keydown.arrowright", ["$event"])
+    @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event) {
         if (this.inEditMode) {
             return;
@@ -493,12 +493,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this.grid._focusNextCell(this.rowIndex, columnIndex, "right");
+                this.grid._focusNextCell(this.rowIndex, columnIndex, 'right');
             }
         }
     }
 
-    @HostListener("keydown.control.arrowright")
+    @HostListener('keydown.control.arrowright')
     public onKeydownCtrlArrowRight() {
         if (this.inEditMode) {
             return;
@@ -528,7 +528,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                     // There is nowhere to scroll more. Don't subscribe since there won't be triggered event.
                     target.nativeElement.focus();
                 } else {
-                    this.grid._focusNextCell(this.rowIndex, columnIndex, "right");
+                    this.grid._focusNextCell(this.rowIndex, columnIndex, 'right');
                 }
             } else {
                 target.nativeElement.focus();
@@ -536,7 +536,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         }
     }
 
-    @HostListener("keydown.arrowup", ["$event"])
+    @HostListener('keydown.arrowup', ['$event'])
     public onKeydownArrowUp(event) {
         if (this.inEditMode || this.rowIndex === 0) {
             return;
@@ -548,7 +548,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         this.grid.navigateUp(rowIndex, this.visibleColumnIndex);
     }
 
-    @HostListener("keydown.arrowdown", ["$event"])
+    @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event) {
         const virtDir = this.grid.verticalScrollContainer;
         const count = virtDir.totalItemCount || virtDir.igxForOf.length;
@@ -562,8 +562,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         this.grid.navigateDown(rowIndex, this.visibleColumnIndex);
     }
 
-    @HostListener("keydown.enter")
-    @HostListener("keydown.f2")
+    @HostListener('keydown.enter')
+    @HostListener('keydown.f2')
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
             this.inEditMode = !this.inEditMode;
@@ -571,7 +571,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         }
     }
 
-    @HostListener("keydown.escape")
+    @HostListener('keydown.escape')
     public onKeydownExitEditMode() {
         this.inEditMode = false;
         this.nativeElement.focus();

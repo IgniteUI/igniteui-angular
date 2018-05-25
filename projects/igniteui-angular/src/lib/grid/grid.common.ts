@@ -1,4 +1,4 @@
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectorRef,
     Directive,
@@ -11,13 +11,13 @@ import {
     OnInit,
     Output,
     TemplateRef
-} from "@angular/core";
-import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from "rxjs";
-import { map, switchMap, takeUntil, throttle } from "rxjs/operators";
-import { IgxGridAPIService } from "./api.service";
+} from '@angular/core';
+import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
+import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
+import { IgxGridAPIService } from './api.service';
 
 @Directive({
-    selector: "[igxResizer]"
+    selector: '[igxResizer]'
 })
 export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
@@ -54,12 +54,12 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         ).subscribe((pos) => {
             const left = this._left + pos;
 
-            this.left = left < this.restrictHResizeMin ? this.restrictHResizeMin + "px" : left + "px";
+            this.left = left < this.restrictHResizeMin ? this.restrictHResizeMin + 'px' : left + 'px';
 
             if (left > this.restrictHResizeMax) {
-                this.left = this.restrictHResizeMax + "px";
+                this.left = this.restrictHResizeMax + 'px';
             } else if (left > this.restrictHResizeMin) {
-                this.left = left + "px";
+                this.left = left + 'px';
             }
         });
 
@@ -67,15 +67,15 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            fromEvent(this.document.defaultView, "mousedown").pipe(takeUntil(this._destroy))
+            fromEvent(this.document.defaultView, 'mousedown').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onMousedown(res));
 
-            fromEvent(this.document.defaultView, "mousemove").pipe(
+            fromEvent(this.document.defaultView, 'mousemove').pipe(
                 takeUntil(this._destroy),
                 throttle(() => interval(0, animationFrameScheduler))
             ).subscribe((res) => this.onMousemove(res));
 
-            fromEvent(this.document.defaultView, "mouseup").pipe(takeUntil(this._destroy))
+            fromEvent(this.document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onMouseup(res));
         });
     }
@@ -111,7 +111,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 }
 
 @Directive({
-    selector: "[igxCell]"
+    selector: '[igxCell]'
 })
 export class IgxCellTemplateDirective {
 
@@ -119,7 +119,7 @@ export class IgxCellTemplateDirective {
 }
 
 @Directive({
-    selector: "[igxHeader]"
+    selector: '[igxHeader]'
 })
 export class IgxCellHeaderTemplateDirective {
 
@@ -128,7 +128,7 @@ export class IgxCellHeaderTemplateDirective {
 }
 
 @Directive({
-    selector: "[igxGroupByRow]"
+    selector: '[igxGroupByRow]'
 })
 export class IgxGroupByRowTemplateDirective {
 
@@ -137,7 +137,7 @@ export class IgxGroupByRowTemplateDirective {
 }
 
 @Directive({
-    selector: "[igxFooter]"
+    selector: '[igxFooter]'
 })
 export class IgxCellFooterTemplateDirective {
 
@@ -145,7 +145,7 @@ export class IgxCellFooterTemplateDirective {
 }
 
 @Directive({
-    selector: "[igxCellEditor]"
+    selector: '[igxCellEditor]'
 })
 export class IgxCellEditorTemplateDirective {
 
@@ -182,7 +182,7 @@ export function autoWire(markForCheck = false) {
         } else if (descriptor.value) {
             descriptor.value = wrapped;
         } else {
-            throw Error("Can bind only to setter properties and methods");
+            throw Error('Can bind only to setter properties and methods');
         }
 
         return descriptor;

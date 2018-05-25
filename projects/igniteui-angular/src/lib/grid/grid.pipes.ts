@@ -1,14 +1,14 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { cloneArray } from "../core/utils";
-import { DataUtil } from "../data-operations/data-util";
-import { FilteringLogic, IFilteringExpression } from "../data-operations/filtering-expression.interface";
-import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
-import { ISortingExpression } from "../data-operations/sorting-expression.interface";
-import { IgxGridAPIService } from "./api.service";
-import { IgxGridComponent } from "./grid.component";
+import { Pipe, PipeTransform } from '@angular/core';
+import { cloneArray } from '../core/utils';
+import { DataUtil } from '../data-operations/data-util';
+import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
+import { ISortingExpression } from '../data-operations/sorting-expression.interface';
+import { IgxGridAPIService } from './api.service';
+import { IgxGridComponent } from './grid.component';
 
 @Pipe({
-  name: "gridSort",
+  name: 'gridSort',
   pure: true
 })
 export class IgxGridSortingPipe implements PipeTransform {
@@ -30,7 +30,7 @@ export class IgxGridSortingPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: "gridGroupBy",
+    name: 'gridGroupBy',
     pure: true
 })
 export class IgxGridGroupingPipe implements PipeTransform {
@@ -57,7 +57,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: "gridPaging",
+    name: 'gridPaging',
     pure: true
 })
 export class IgxGridPagingPipe implements PipeTransform {
@@ -82,7 +82,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: "gridFiltering",
+    name: 'gridFiltering',
     pure: true
 })
 export class IgxGridFilteringPipe implements PipeTransform {
@@ -105,12 +105,12 @@ export class IgxGridFilteringPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: "filterCondition",
+    name: 'filterCondition',
     pure: true
 })
 export class IgxGridFilterConditionPipe implements PipeTransform {
 
     public transform(value: string): string {
-        return value.split(/(?=[A-Z])/).join(" ");
+        return value.split(/(?=[A-Z])/).join(' ');
     }
 }

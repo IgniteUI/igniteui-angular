@@ -14,22 +14,22 @@ import {
     QueryList,
     ViewChild,
     ViewChildren
-} from "@angular/core";
-import { take } from "rxjs/operators";
-import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
-import { IgxSelectionAPIService } from "../core/selection";
-import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
-import { IgxGridAPIService } from "./api.service";
-import { IgxGridCellComponent } from "./cell.component";
-import { IgxColumnComponent } from "./column.component";
-import { autoWire, IGridBus } from "./grid.common";
-import { IgxGridComponent, IRowSelectionEventArgs } from "./grid.component";
+} from '@angular/core';
+import { take } from 'rxjs/operators';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IgxSelectionAPIService } from '../core/selection';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxGridAPIService } from './api.service';
+import { IgxGridCellComponent } from './cell.component';
+import { IgxColumnComponent } from './column.component';
+import { autoWire, IGridBus } from './grid.common';
+import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    selector: "igx-grid-row",
-    templateUrl: "./row.component.html"
+    selector: 'igx-grid-row',
+    templateUrl: './row.component.html'
 })
 export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck {
 
@@ -42,7 +42,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     @Input()
     public gridID: string;
 
-    @ViewChild("igxDirRef", { read: IgxForOfDirective })
+    @ViewChild('igxDirRef', { read: IgxForOfDirective })
     public virtDirRow: IgxForOfDirective<any>;
 
     @ViewChild(forwardRef(() => IgxCheckboxComponent), {read: IgxCheckboxComponent})
@@ -51,17 +51,17 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
     public cells: QueryList<IgxGridCellComponent>;
 
-    @HostBinding("style.height.px")
+    @HostBinding('style.height.px')
     get rowHeight() {
         return this.grid.rowHeight;
     }
-    @HostBinding("attr.tabindex")
+    @HostBinding('attr.tabindex')
     public tabindex = 0;
 
-    @HostBinding("attr.role")
-    public role = "row";
+    @HostBinding('attr.role')
+    public role = 'row';
 
-    @HostBinding("class")
+    @HostBinding('class')
     get styleClasses(): string {
         return `${this.defaultCssClass} ${this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS}`;
     }
@@ -90,8 +90,8 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         return this.grid.rowSelectable;
     }
 
-    @HostBinding("attr.aria-selected")
-    @HostBinding("class.igx-grid__tr--selected")
+    @HostBinding('attr.aria-selected')
+    @HostBinding('class.igx-grid__tr--selected')
     public isSelected: boolean;
 
     get grid(): IgxGridComponent {
@@ -110,7 +110,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         return this.element.nativeElement;
     }
 
-    protected defaultCssClass = "igx-grid__tr";
+    protected defaultCssClass = 'igx-grid__tr';
     protected _rowSelection = false;
     protected isFocused = false;
     protected chunkLoaded$;
@@ -135,12 +135,12 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         }
     }
 
-    @HostListener("focus", ["$event"])
+    @HostListener('focus', ['$event'])
     public onFocus(event) {
         this.isFocused = true;
     }
 
-    @HostListener("blur", ["$event"])
+    @HostListener('blur', ['$event'])
     public onBlur(event) {
         this.isFocused = false;
     }
@@ -154,8 +154,8 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
 
     get rowCheckboxAriaLabel() {
         return this.grid.primaryKey ?
-            this.isSelected ? "Deselect row with key " + this.rowID : "Select row with key " + this.rowID :
-            this.isSelected ? "Deselect row" : "Select row";
+            this.isSelected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
+            this.isSelected ? 'Deselect row' : 'Select row';
     }
 
     public ngDoCheck() {
