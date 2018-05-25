@@ -6,7 +6,7 @@ export class IgxSelectionAPIService {
     // Filtering data is saved when filtering pipe is applied and cleared when filtergin is cleared.
     protected filteredSelection: Map<string,  any[]> = new Map<string, any[]>();
 
-    protected prevSelection : Map<string,  any[]> = new Map<string, any[]>();
+    protected prevSelection: Map<string,  any[]> = new Map<string, any[]>();
 
     public get_selection(componentID: string): any[] {
         return this.selection.get(componentID);
