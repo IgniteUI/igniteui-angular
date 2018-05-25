@@ -36,6 +36,7 @@ describe("IgxGrid - GropBy", () => {
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
     }));
+
     function checkGroups(groupRows, expectedGroupOrder, grExpr?) {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.
         let count = 0;
@@ -58,6 +59,7 @@ describe("IgxGrid - GropBy", () => {
             }
         }
     }
+
     it("should allow grouping by different data types.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
@@ -170,6 +172,7 @@ describe("IgxGrid - GropBy", () => {
          false, 20, null, 1000, "", true, 100, null, true, 0],
         grid.groupingExpressions);
     });
+
     it("should allows expanding/collapsing groups.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -213,6 +216,7 @@ describe("IgxGrid - GropBy", () => {
            expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
         }
     });
+
     it("should allow changing the order of the groupBy columns.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
@@ -287,6 +291,7 @@ describe("IgxGrid - GropBy", () => {
         });
 
     });
+
     it("should apply the specified sort order on the group rows when already grouped columnn is sorted in asc/desc order.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -314,6 +319,7 @@ describe("IgxGrid - GropBy", () => {
         checkGroups(groupRows, [null, "", "Ignite UI for Angular", "Ignite UI for JavaScript", "NetAdvantage" ]);
 
     });
+
     it("should remove grouping when already grouped columnn is sorted with order 'None' via the API.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -341,6 +347,7 @@ describe("IgxGrid - GropBy", () => {
         expect(dataRows.length).toEqual(8);
 
     });
+
     it("should disallow setting sorting state None to grouped column when sorting via the UI.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -369,6 +376,7 @@ describe("IgxGrid - GropBy", () => {
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
 
     });
+
     it("should group by the specified field when grouping by an already sorted field.", () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -385,7 +393,7 @@ describe("IgxGrid - GropBy", () => {
     });
 
     // GroupBy + Selection integration
-    fit("should allow keyboard navigation through group rows.",  fakeAsync(() => {
+    it("should allow keyboard navigation through group rows.",  fakeAsync(() => {
         discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -471,6 +479,19 @@ describe("IgxGrid - GropBy", () => {
         // verify group area is rendered
         expect(gridElement.querySelectorAll(".igx-grouparea").length).toEqual(1);
         expect(gridElement.clientHeight).toEqual(700);
+    });
+
+    // GroupBy + Paging integration
+    it("should apply paging on data records only.", () => {
+
+    });
+
+    it("should have groups with correct summaries with paging.", () => {
+
+    });
+
+    it("should persist groupby state between pages.", () => {
+
     });
 });
 @Component({

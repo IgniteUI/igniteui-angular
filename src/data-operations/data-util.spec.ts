@@ -75,6 +75,45 @@ function testSort() {
         });
     });
 }
+
+function testGroupBy() {
+    let data: any[] = [];
+    let dataGenerator: DataGenerator;
+    beforeEach(async(() => {
+        dataGenerator = new DataGenerator();
+        data = dataGenerator.data;
+    }));
+    describe("Test groupBy", () => {
+        it("groups by descending column 'boolean'", () => {
+            /*const expr: ISortingExpression = {
+                dir: SortingDirection.Asc,
+                fieldName: "boolean"
+            };
+            // sort
+            let res = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            res = DataUtil.group(res, { expressions: [expr], expansion: [], defaultExpanded: true });
+            // second group pipe
+
+            expect(dataGenerator.getValuesForColumn(res, "boolean"))
+                        .toEqual([false, false, false, true, true]);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            const group1: IGroupByRecord = groups[0];
+            const group2: IGroupByRecord = groups[3];
+            expect(groups[1]).toEqual(group1);
+            expect(groups[2]).toEqual(group1);
+            expect(groups[4]).toEqual(group2);
+            expect(group1.level).toEqual(0);
+            expect(group2.level).toEqual(0);
+            expect(group1.records).toEqual(res.slice(0, 3));
+            expect(group2.records).toEqual(res.slice(3, 5));
+            expect(group1.value).toEqual(false);
+            expect(group2.value).toEqual(true);*/
+        });
+
+
+    });
+}
 /* //Test sorting */
 /* Test filtering */
 class CustomFilteringStrategy extends FilteringStrategy {
@@ -248,6 +287,7 @@ function testProcess() {
 /* //Test paging */
 describe("DataUtil", () => {
     testSort();
+    testGroupBy();
     testFilter();
     testPage();
     // test process
@@ -273,5 +313,4 @@ describe("DataUtil", () => {
             dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Date), dateCond))
                 .toBeTruthy("date filtering conditions");
     });
-
 });
