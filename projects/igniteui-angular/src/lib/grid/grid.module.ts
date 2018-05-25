@@ -1,34 +1,37 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { IgxCheckboxModule } from '../checkbox/checkbox.component';
-import { IgxSelectionAPIService } from '../core/selection';
-import { IgxDatePickerModule } from '../date-picker/date-picker.component';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxFocusModule } from '../directives/focus/focus.directive';
-import { IgxForOfModule } from '../directives/for-of/for_of.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxTextHighlightModule } from '../directives/text-highlight/text-highlight.directive';
-import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
-import { IgxGridAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
-import { IgxGridFilterComponent } from './grid-filtering.component';
-import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridSummaryComponent } from './grid-summary.component';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import {  IgxBadgeModule } from "../badge/badge.component";
+import { IgxCheckboxModule } from "../checkbox/checkbox.component";
+import { IgxSelectionAPIService } from "../core/selection";
+import { IgxDatePickerModule } from "../date-picker/date-picker.component";
+import { IgxButtonModule } from "../directives/button/button.directive";
+import { IgxFocusModule } from "../directives/focus/focus.directive";
+import { IgxForOfModule } from "../directives/for-of/for_of.directive";
+import { IgxRippleModule } from "../directives/ripple/ripple.directive";
+import { IgxTextHighlightModule } from "../directives/text-highlight/text-highlight.directive";
+import { IgxTextSelectionModule } from "../directives/text-selection/text-selection.directive";
+import { IgxToggleModule } from "../directives/toggle/toggle.directive";
+import { IgxIconModule } from "../icon";
+import { IgxInputGroupModule } from "../input-group/input-group.component";
+import { IgxGridAPIService } from "./api.service";
+import { IgxGridCellComponent } from "./cell.component";
+import { IgxColumnComponent } from "./column.component";
+import { IgxGridFilterComponent } from "./grid-filtering.component";
+import { IgxGridHeaderComponent } from "./grid-header.component";
+import { IgxGridSummaryComponent } from "./grid-summary.component";
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
-    IgxColumnResizerDirective
-} from './grid.common';
-import { IgxGridComponent } from './grid.component';
-import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from './grid.pipes';
-import { IgxGridRowComponent } from './row.component';
+    IgxColumnResizerDirective,
+    IgxGroupByRowTemplateDirective
+} from "./grid.common";
+import { IgxGridComponent } from "./grid.component";
+import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe } from "./grid.pipes";
+import { IgxGridGroupByRowComponent } from "./groupby-row.component";
+import { IgxGridRowComponent } from "./row.component";
 
 @NgModule({
   declarations: [
@@ -36,14 +39,17 @@ import { IgxGridRowComponent } from './row.component';
     IgxColumnComponent,
     IgxGridComponent,
     IgxGridRowComponent,
+    IgxGridGroupByRowComponent,
     IgxGridHeaderComponent,
     IgxGridSummaryComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
+    IgxGroupByRowTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxGridFilterComponent,
+    IgxGridGroupingPipe,
     IgxGridSortingPipe,
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
@@ -55,6 +61,7 @@ import { IgxGridRowComponent } from './row.component';
   exports: [
     IgxGridComponent,
     IgxGridCellComponent,
+    IgxGridGroupByRowComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridHeaderComponent,
@@ -62,6 +69,7 @@ import { IgxGridRowComponent } from './row.component';
     IgxGridSummaryComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
+    IgxGroupByRowTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnResizerDirective
@@ -79,7 +87,8 @@ import { IgxGridRowComponent } from './row.component';
     IgxFocusModule,
     IgxTextHighlightModule,
     IgxTextSelectionModule,
-    IgxCheckboxModule
+    IgxCheckboxModule,
+    IgxBadgeModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService]
 })

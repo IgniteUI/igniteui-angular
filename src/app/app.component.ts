@@ -76,6 +76,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Pinning'
         },
         {
+            link: '/gridGroupBy',
+            icon: 'view_column',
+            name: 'Grid GroupBy'
+        },
+        {
             link: '/gridColumnResizing',
             icon: 'view_column',
             name: 'Grid Column Resizing'

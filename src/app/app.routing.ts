@@ -38,6 +38,7 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 
+
 const appRoutes = [
     {
         path: '',
@@ -194,7 +195,7 @@ const appRoutes = [
         component: ButtonGroupSampleComponent
     },
     {
-        path: "gridGroupBy",
+        path: 'gridGroupBy',
         component: GridGroupBySampleComponent
     }
 ];

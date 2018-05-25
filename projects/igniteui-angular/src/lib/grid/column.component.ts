@@ -8,21 +8,21 @@ import {
     Input,
     QueryList,
     TemplateRef
-} from '@angular/core';
-import { DataType } from '../data-operations/data-util';
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxGridAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
-import { IgxGridSummaryComponent } from './grid-summary.component';
+} from "@angular/core";
+import { DataType } from "../data-operations/data-util";
+import { STRING_FILTERS } from "../data-operations/filtering-condition";
+import { IgxTextHighlightDirective } from "../directives/text-highlight/text-highlight.directive";
+import { IgxGridAPIService } from "./api.service";
+import { IgxGridCellComponent } from "./cell.component";
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from "./grid-summary";
+import { IgxGridSummaryComponent } from "./grid-summary.component";
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
-} from './grid.common';
-import { IgxGridComponent } from './grid.component';
+} from "./grid.common";
+import { IgxGridComponent } from "./grid.component";
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -34,7 +34,7 @@ import { IgxGridComponent } from './grid.component';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    selector: 'igx-column',
+    selector: "igx-column",
     template: ``
 })
 export class IgxColumnComponent implements AfterContentInit {
@@ -43,10 +43,13 @@ export class IgxColumnComponent implements AfterContentInit {
     public field: string;
 
     @Input()
-    public header = '';
+    public header = "";
 
     @Input()
     public sortable = false;
+
+    @Input()
+    public groupable = false;
 
     @Input()
     public editable = false;
@@ -99,10 +102,10 @@ export class IgxColumnComponent implements AfterContentInit {
     public minWidth = this.defaultMinWidth;
 
     @Input()
-    public headerClasses = '';
+    public headerClasses = "";
 
     @Input()
-    public cellClasses = '';
+    public cellClasses = "";
 
     @Input()
     get index(): number {
@@ -214,7 +217,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _hidden = false;
     protected _index: number;
 
-    private _defaultMinWidth = '88';
+    private _defaultMinWidth = "88";
 
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;

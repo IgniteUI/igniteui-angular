@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { cloneArray } from '../core/utils';
-import { DataUtil } from '../data-operations/data-util';
-import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
-import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
-import { IgxGridRowComponent } from './row.component';
+import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
+import { cloneArray } from "../core/utils";
+import { DataUtil } from "../data-operations/data-util";
+import { IFilteringExpression } from "../data-operations/filtering-expression.interface";
+import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
+import { IGroupByRecord } from "../data-operations/groupby-record.interface";
+import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
+import { IgxGridCellComponent } from "./cell.component";
+import { IgxColumnComponent } from "./column.component";
+import { IGridEditEventArgs, IgxGridComponent } from "./grid.component";
+import { IgxGridRowComponent } from "./row.component";
 
 @Injectable()
 export class IgxGridAPIService {
@@ -61,7 +63,7 @@ export class IgxGridAPIService {
     public get_row_by_key(id: string, rowSelector: any): IgxGridRowComponent {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
-            return this.get(id).rowList.find((row) => row.rowData[primaryKey] === rowSelector);
+            return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
         }
         return this.get(id).rowList.find((row) => row.index === rowSelector);
     }
@@ -72,7 +74,7 @@ export class IgxGridAPIService {
 
     public get_cell_by_field(id: string, rowSelector: any, field: string): IgxGridCellComponent {
         const row = this.get_row_by_key(id, rowSelector);
-        if (row) {
+        if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
     }
@@ -83,14 +85,14 @@ export class IgxGridAPIService {
 
     public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
         const row = this.get_row_by_index(id, rowIndex);
-        if (row) {
+        if (row && row.cells) {
             return row.cells.find((cell) => cell.columnIndex === columnIndex);
         }
     }
 
     public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
         const row = this.get_row_by_index(id, rowIndex);
-        if (row) {
+        if (row && row.cells) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
         }
     }
@@ -108,6 +110,9 @@ export class IgxGridAPIService {
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+        if (dir === SortingDirection.None) {
+            this.remove_grouping_expression(id, fieldName);
+        }
         const sortingState = cloneArray(this.get(id).sortingExpressions, true);
 
         this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase);
@@ -118,10 +123,57 @@ export class IgxGridAPIService {
         const sortingState = cloneArray(this.get(id).sortingExpressions, true);
 
         for (const each of expressions) {
+            if (each.dir === SortingDirection.None) {
+                this.remove_grouping_expression(id, each.fieldName);
+            }
             this.prepare_sorting_expression(sortingState, each.fieldName, each.dir, each.ignoreCase);
         }
 
         this.get(id).sortingExpressions = sortingState;
+    }
+
+    public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+        const groupingState = this.get(id).groupingExpressions;
+
+        this.prepare_sorting_expression(groupingState, fieldName, dir, ignoreCase);
+        this.get(id).groupingExpressions = groupingState;
+        this.sort(id, fieldName, dir, ignoreCase);
+        this.arrange_sorting_expressions(id);
+    }
+
+    public groupBy_multiple(id: string, expressions: ISortingExpression[]): void {
+        const groupingState = this.get(id).groupingExpressions;
+
+        for (const each of expressions) {
+            this.prepare_sorting_expression(groupingState, each.fieldName, each.dir, each.ignoreCase);
+        }
+
+        this.get(id).groupingExpressions = groupingState;
+        this.sort_multiple(id, expressions);
+        this.arrange_sorting_expressions(id);
+    }
+
+    public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
+        const grState = this.get(id).groupingExpansionState;
+        return grState.find((state) =>
+            state.fieldName === groupRow.expression.fieldName && state.value === groupRow.value);
+    }
+
+    public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
+        const grid = this.get(id);
+        const expansionState = grid.groupingExpansionState;
+
+        const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
+        if (state) {
+            state.expanded = !state.expanded;
+        } else {
+            expansionState.push({
+                expanded: !grid.groupByDefaultExpanded,
+                value: groupRow.value,
+                fieldName: groupRow.expression.fieldName
+            });
+        }
+        this.get(id).groupingExpansionState = expansionState;
     }
 
     public filter(id, fieldName, term, condition, ignoreCase) {
@@ -141,7 +193,7 @@ export class IgxGridAPIService {
 
         for (const each of expressions) {
             this.prepare_filtering_expression(filteringState, each.fieldName,
-                                              each.searchVal, each.condition, each.ignoreCase);
+                each.searchVal, each.condition, each.ignoreCase);
         }
         this.get(id).filteringExpressions = filteringState;
     }
@@ -209,6 +261,29 @@ export class IgxGridAPIService {
             state.push({ fieldName, dir, ignoreCase });
         } else {
             Object.assign(expression, { fieldName, dir, ignoreCase });
+        }
+    }
+    protected arrange_sorting_expressions(id) {
+        const groupingState = this.get(id).groupingExpressions;
+        this.get(id).sortingExpressions.sort((a, b) => {
+            const groupExprA = groupingState.find((expr) => expr.fieldName === a.fieldName);
+            const groupExprB = groupingState.find((expr) => expr.fieldName === b.fieldName);
+            if (groupExprA && groupExprB) {
+                return groupingState.indexOf(groupExprA) > groupingState.indexOf(groupExprB) ? 1 : -1;
+            } else if (groupExprA) {
+                return -1;
+            } else if (groupExprB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    }
+    protected remove_grouping_expression(id, fieldName) {
+        const groupingExpressions = this.get(id).groupingExpressions;
+        const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
+        if (index !== -1) {
+            groupingExpressions.splice(index, 1);
         }
     }
 }

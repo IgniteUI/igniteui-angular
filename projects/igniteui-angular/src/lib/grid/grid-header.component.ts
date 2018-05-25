@@ -12,20 +12,20 @@ import {
     NgZone,
     OnInit,
     ViewChild
-} from '@angular/core';
-import { DataType } from '../data-operations/data-util';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
-import { IgxGridAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
+} from "@angular/core";
+import { DataType } from "../data-operations/data-util";
+import { SortingDirection } from "../data-operations/sorting-expression.interface";
+import { RestrictDrag } from "../directives/dragdrop/dragdrop.directive";
+import { IgxGridAPIService } from "./api.service";
+import { IgxGridCellComponent } from "./cell.component";
+import { IgxColumnComponent } from "./column.component";
+import { autoWire, IGridBus } from "./grid.common";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    selector: 'igx-grid-header',
-    templateUrl: './grid-header.component.html'
+    selector: "igx-grid-header",
+    templateUrl: "./grid-header.component.html"
 })
 export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterViewInit {
 
@@ -35,24 +35,24 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     @Input()
     public gridID: string;
 
-    @HostBinding('class')
+    @HostBinding("class")
     get styleClasses() {
         return `igx-grid__th ${this.column.headerClasses}`;
     }
 
-    @HostBinding('style.min-width')
-    @HostBinding('style.flex-basis')
-    @HostBinding('class.igx-grid__th--fw')
+    @HostBinding("style.min-width")
+    @HostBinding("style.flex-basis")
+    @HostBinding("class.igx-grid__th--fw")
     get width() {
         return this.column.width;
     }
 
-    @HostBinding('class.asc')
+    @HostBinding("class.asc")
     get ascending() {
         return this.sortDirection === SortingDirection.Asc;
     }
 
-    @HostBinding('class.desc')
+    @HostBinding("class.desc")
     get descending() {
         return this.sortDirection === SortingDirection.Desc;
     }
@@ -61,22 +61,22 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         if (this.sortDirection !== SortingDirection.None) {
             // arrow_downward and arrow_upward
             // are material icons ligature strings
-            return this.sortDirection === SortingDirection.Asc ? 'arrow_upward' : 'arrow_downward';
+            return this.sortDirection === SortingDirection.Asc ? "arrow_upward" : "arrow_downward";
         }
-        return 'none';
+        return "none";
     }
 
-    @HostBinding('class.igx-grid__th--number')
+    @HostBinding("class.igx-grid__th--number")
     get columnType() {
         return this.column.dataType === DataType.Number;
     }
 
-    @HostBinding('class.igx-grid__th--sorted')
+    @HostBinding("class.igx-grid__th--sorted")
     get sorted() {
         return this.sortDirection !== SortingDirection.None;
     }
 
-    @HostBinding('style.z-index')
+    @HostBinding("style.z-index")
     get zIndex() {
         if (!this.column.pinned) {
             return null;
@@ -84,18 +84,18 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         return 9999 - this.grid.pinnedColumns.indexOf(this.column);
     }
 
-    @HostBinding('attr.role')
-    public hostRole = 'columnheader';
+    @HostBinding("attr.role")
+    public hostRole = "columnheader";
 
-    @HostBinding('attr.tabindex')
+    @HostBinding("attr.tabindex")
     public tabindex = 0;
 
-    @HostBinding('attr.id')
+    @HostBinding("attr.id")
     get headerID() {
         return `${this.gridID}_${this.column.field}`;
     }
 
-    @ViewChild('resizeArea')
+    @ViewChild("resizeArea")
     public resizeArea: ElementRef;
 
     public resizeCursor = null;
@@ -122,21 +122,23 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
     ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
-            this.resizeArea.nativeElement.addEventListener('mouseover', this.onResizeAreaMouseOver.bind(this));
-            this.resizeArea.nativeElement.addEventListener('mousedown', this.onResizeAreaMouseDown.bind(this));
+            this.resizeArea.nativeElement.addEventListener("mouseover", this.onResizeAreaMouseOver.bind(this));
+            this.resizeArea.nativeElement.addEventListener("mousedown", this.onResizeAreaMouseDown.bind(this));
         });
     }
 
-    @HostListener('click', ['$event'])
+    @HostListener("click", ["$event"])
     @autoWire(true)
     public onClick(event) {
         if (!this._isResiznig) {
             event.stopPropagation();
             if (this.column.sortable) {
                 const grid = this.gridAPI.get(this.gridID);
-
-                this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
-                    : this.sortDirection;
+                const groupingExpr = grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
+                const sortDir = groupingExpr ?
+                    this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc  : SortingDirection.Desc
+                    : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
+                this.sortDirection = sortDir;
                 this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
                 grid.onSortingDone.emit({
                     dir: this.sortDirection,
@@ -183,12 +185,12 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         return this.gridAPI.get(this.gridID);
     }
 
-    @HostBinding('class.igx-grid__th--pinned')
+    @HostBinding("class.igx-grid__th--pinned")
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding('class.igx-grid__th--pinned-last')
+    @HostBinding("class.igx-grid__th--pinned-last")
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {
@@ -205,7 +207,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
-            this.resizeCursor = 'col-resize';
+            this.resizeCursor = "col-resize";
             this.cdr.detectChanges();
         }
     }
@@ -269,7 +271,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
             const largestCell = Math.max(...Array.from(largest.keys()));
             const largestCellPadding = largest.get(largestCell);
-            const size = Math.ceil(largestCell + largestCellPadding) + 'px';
+            const size = Math.ceil(largestCell + largestCellPadding) + "px";
 
             if (this.column.pinned) {
                 const newPinnedWidth = this.grid.pinnedWidth - currentColWidth + parseFloat(size);
@@ -278,9 +280,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
                     this.column.width = size;
                 }
             } else if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
-                this.column.width = parseFloat(this.column.maxWidth) + 'px';
+                this.column.width = parseFloat(this.column.maxWidth) + "px";
             } else if (parseFloat(size) < parseFloat(this.column.defaultMinWidth)) {
-                this.column.width = this.column.defaultMinWidth + 'px';
+                this.column.width = this.column.defaultMinWidth + "px";
             } else {
                 this.column.width = size;
             }
@@ -312,11 +314,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
             colMinWidth = colMinWidth < currentColWidth ? colMinWidth : currentColWidth;
 
             if (currentColWidth + diff < colMinWidth) {
-                this.column.width = colMinWidth + 'px';
+                this.column.width = colMinWidth + "px";
             } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
-                this.column.width = colMaxWidth + 'px';
+                this.column.width = colMaxWidth + "px";
             } else {
-                this.column.width = (currentColWidth + diff) + 'px';
+                this.column.width = (currentColWidth + diff) + "px";
             }
 
             this.grid.markForCheck();

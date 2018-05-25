@@ -1,21 +1,22 @@
-import { FilteringCondition } from './filtering-condition';
-import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
-import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
-import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
+import { FilteringCondition } from "./filtering-condition";
+import { FilteringLogic, IFilteringExpression } from "./filtering-expression.interface";
+import { filteringStateDefaults, IFilteringState } from "./filtering-state.interface";
+import { FilteringStrategy, IFilteringStrategy } from "./filtering-strategy";
 
-import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
-import { ISortingState, SortingStateDefaults } from './sorting-state.interface';
-import { ISortingStrategy, SortingStrategy } from './sorting-strategy';
+import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
+import { ISortingState, SortingStateDefaults } from "./sorting-state.interface";
+import { ISortingStrategy, SortingStrategy } from "./sorting-strategy";
 
-import { IPagingState, PagingError } from './paging-state.interface';
+import { IPagingState, PagingError } from "./paging-state.interface";
 
-import { IDataState } from './data-state.interface';
+import { IDataState } from "./data-state.interface";
+import { IGroupingState } from "./groupby-state.interface";
 
 export enum DataType {
-    String = 'string',
-    Number = 'number',
-    Boolean = 'boolean',
-    Date = 'date'
+    String = "string",
+    Number = "number",
+    Boolean = "boolean",
+    Date = "date"
 }
 
 export class DataUtil {
@@ -48,6 +49,12 @@ export class DataUtil {
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
+    }
+    public static group<T>(data: T[], state: IGroupingState): T[] {
+        // set defaults
+        DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
+        // apply default settings for each grouping expression(if not set)
+        return state.strategy.groupBy(data, state.expressions, state.expansion, state.defaultExpanded);
     }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {

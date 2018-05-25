@@ -1,13 +1,23 @@
-import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
+import { expand } from "rxjs/operators";
+import { cloneArray } from "../core/utils";
+import { IGroupByExpandState } from "./groupby-expand-state.interface";
+import { IGroupByRecord } from "./groupby-record.interface";
+import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
 
 export interface ISortingStrategy {
     sort: (data: any[], expressions: ISortingExpression[]) => any[];
+    groupBy: (data: any[], expressions: ISortingExpression[],
+              expansion: IGroupByExpandState[], defaultExpanded: boolean) => any[];
     compareValues: (a: any, b: any) => number;
 }
 
 export class SortingStrategy implements ISortingStrategy {
     public sort(data: any[], expressions: ISortingExpression[]): any[] {
         return this.sortDataRecursive(data, expressions);
+    }
+    public groupBy(data: any[], expressions: ISortingExpression[],
+                   expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
+        return this.groupDataRecursive(data, expressions, expansion, defaultExpanded, 0);
     }
     public compareValues(a: any, b: any) {
         const an = (a === null || a === undefined);
@@ -43,12 +53,12 @@ export class SortingStrategy implements ISortingStrategy {
         const cmpFunc = (val1, val2): boolean => {
             return val1 === val2;
         };
-        res.push(data[ index ]);
-        groupval = data[ index ][ key ];
+        res.push(data[index]);
+        groupval = data[index][key];
         index++;
         for (i = index; i < len; i++) {
-            if (cmpFunc(data[ i ][ key ], groupval)) {
-                res.push(data[ i ]);
+            if (cmpFunc(data[i][key], groupval)) {
+                res.push(data[i]);
             } else {
                 break;
             }
@@ -59,17 +69,16 @@ export class SortingStrategy implements ISortingStrategy {
 
         const key = expression.fieldName;
         const ignoreCase = expression.ignoreCase ?
-                            data[0] && (typeof data[0][key] === 'string' ||
-                                               data[0][key] === null ||
-                                               data[0][key] === undefined) :
-                            false;
+            data[0] && (typeof data[0][key] === "string" ||
+                data[0][key] === null ||
+                data[0][key] === undefined) :
+            false;
         const reverse = (expression.dir === SortingDirection.Desc ? -1 : 1);
         const cmpFunc = (obj1, obj2) => {
             return this.compareObjects(obj1, obj2, key, reverse, ignoreCase);
         };
         return this.arraySort(data, cmpFunc);
     }
-
     private sortDataRecursive<T>(data: T[],
                                  expressions: ISortingExpression[],
                                  expressionIndex: number = 0): T[] {
@@ -84,7 +93,7 @@ export class SortingStrategy implements ISortingStrategy {
         if (expressionIndex >= exprsLen || dataLen <= 1) {
             return data;
         }
-        expr = expressions[ expressionIndex ];
+        expr = expressions[expressionIndex];
         data = this.sortByFieldExpression(data, expr);
         if (expressionIndex === exprsLen - 1) {
             return data;
@@ -97,10 +106,36 @@ export class SortingStrategy implements ISortingStrategy {
                 gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1);
             }
             for (j = 0; j < gbDataLen; j++) {
-                data[ i + j ] = gbData[ j ];
+                data[i + j] = gbData[j];
             }
             i += gbDataLen - 1;
         }
         return data;
+    }
+    private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[],
+                                  expansion: IGroupByExpandState[], defaultExpanded: boolean, level: number): T[] {
+        let i = 0;
+        let result = [];
+        while (i < data.length) {
+            const group = this.groupedRecordsByExpression(data, i, expressions[level]);
+            const groupRow: IGroupByRecord = {
+                expression: expressions[level],
+                level,
+                records: cloneArray(group),
+                value: group[0][expressions[level].fieldName]
+            };
+            result.push(groupRow);
+            const expandState: IGroupByExpandState = expansion.find((state) =>
+                state.fieldName === groupRow.expression.fieldName && state.value === groupRow.value);
+            const expanded = expandState ? expandState.expanded : defaultExpanded;
+            if (expanded) {
+                result = result.concat(level < expressions.length - 1 ?
+                    this.groupDataRecursive(group, expressions, expansion, defaultExpanded, level + 1) :
+                    group
+                );
+            }
+            i += group.length;
+        }
+        return result;
     }
 }
