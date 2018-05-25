@@ -284,11 +284,12 @@
 
     %grid-row--group {
         position: relative;
-        background: --var($theme, 'header-background') !important;
+        background: --var($theme, 'header-background') !important;        
     }
 
     %grid__groupLabel {
         display: inline-flex;
+        vertical-align: middle;
     }
 
     %grid__groupCount {
@@ -298,6 +299,7 @@
 
     %grid__groupContent {
         width: 100%;
+        border-bottom: 1px solid --var($theme, 'row-border-color');
     }
     
     %grid__groupIndentation {
@@ -311,6 +313,17 @@
         z-index: 2;
         height: 60px;
         background: --var($theme, 'header-background');
+    }
+
+    %grid__groupField {
+        color:#0099FF;
+        padding-right: 10px;
+    }
+
+    %grid__groupCount > div.igx-badge__circle {
+        background-color: igx-color($palette, 'grays', 200);
+        color: --var($theme, 'content-text-color');
+        font-size: $grid-head-fs;
     }
 
     %grid-cell-display {
