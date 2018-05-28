@@ -39,29 +39,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# demo folder trash until we migrate
-demos/**/*.js
-demos/**/*.js.map
-demos/style/fonts
-demos/style/*.css
-demos/node_modules
-demos/lib
-demos/dist
-demos/polyfills.js
-demos/vendor.js
-demos/main.js
-demos/index.html
-!demos/webpack.config.js
-!demos/postcss.config.js
-!demos/gulpfile.js
-
-oldsrc/**/*.js
-oldsrc/**/*.js.map
-oldsrc/**/*.css
-oldsrc/**/*.css.map
-
-
 src/**/*.js
 src/**/*.js.map
-src/**/*.css
 src/**/*.css.map
