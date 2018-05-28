@@ -61,8 +61,9 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     }
 
     get index() {
-        if (this._tabs.groups)
+        if (this._tabs.groups) {
             return this._tabs.groups.toArray().indexOf(this);
+        }
     }
 
     get customTabTemplate(): TemplateRef<any> {
