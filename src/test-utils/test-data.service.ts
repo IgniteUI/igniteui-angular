@@ -493,7 +493,7 @@ export class TestDataService {
         { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: new Date("2018-03-01") }
     ];
 
-    public foodProductData2 = [
+    public foodProductDataExtended = [
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
         { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
         { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
@@ -581,6 +581,21 @@ export class TestDataService {
         return bigData;
     }
 
+    /* Data fields: ID: string, Column 1..N: number. */
+    public generateBigDataRowsAndCols(rowsCount: number, colsCount: number) {
+        const bigData = [];
+        for (let i = 0; i < rowsCount; i++) {
+            const row = {};
+            row["ID"] = i.toString();
+            for (let j = 1; j < colsCount; j++) {
+                row["Column " + j] = i * j;
+            }
+
+            bigData.push(row);
+        }
+        return bigData;
+    }
+
     public generateColumns(count, namePrefix = "col") {
         const cols = [];
         for (let i = 0; i < count; i++) {
@@ -590,6 +605,50 @@ export class TestDataService {
             });
         }
         return cols;
+    }
+
+    public generateColumnsByType(count, type: string, namePrefix = "col") {
+        const cols = [];
+        for (let i = 0; i < count; i++) {
+            cols.push({
+                field: namePrefix + i,
+                dataType: type
+            });
+        }
+        return cols;
+    }
+
+    public generateEditableColumns(count, namePrefix = "col") {
+        const cols = [];
+        for (let i = 0; i < count; i++) {
+            if (i % 2 === 0) {
+                cols.push({
+                    key: namePrefix + i,
+                    dataType: "number",
+                    editable: true
+                });
+            } else {
+                cols.push({
+                    key: namePrefix + i,
+                    dataType: "number"
+                });
+            }
+        }
+        return cols;
+    }
+
+    public generateDataForColumns(columns: any[], rowsCount: number) {
+        const data = [];
+
+        for (let r = 0; r < rowsCount; r++) {
+            const record = {};
+            for (let c = 0; c < columns.length; c++) {
+                c === 0 ? record[columns[c].key] = 1 : record[columns[c].key] = c * r;
+            }
+            data.push(record);
+        }
+
+        return data;
     }
 
     /* Generates data with headers in the format "colNamePrefix1..N" and

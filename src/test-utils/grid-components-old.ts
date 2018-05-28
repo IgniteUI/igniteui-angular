@@ -1463,7 +1463,6 @@
 //     }
 // }
 
-
 // @Component({
 //     template: `
 //         <igx-grid
@@ -1598,6 +1597,7 @@
 //         </igx-grid>
 //     `
 // })
+// До тук съм
 // export class DefaultGridComponent {
 //     public selectedCell;
 //     /* tslint:disable */

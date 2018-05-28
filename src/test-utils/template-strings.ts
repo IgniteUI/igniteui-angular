@@ -124,7 +124,7 @@ export class ColumnDefinitions {
         <igx-column [field]="'Test'" [resizable]="true" dataType="string"></igx-column>
     `;
 
-    public static nullColsComponent = `
+    public static resizableColsComponent = `
         <igx-column *ngFor="let c of columns" [field]="c.field"
                                               [header]="c.field"
                                               [resizable]="c.resizable"
@@ -135,10 +135,10 @@ export class ColumnDefinitions {
     `;
 
     public static iterableComponent = `
-        <igx-column *ngFor="let each of declarations" [field]="each"></igx-column>
+        <igx-column *ngFor="let each of columns" [field]="each"></igx-column>
     `;
 
-    public static headerFooterTemplates = `
+    public static columnTemplates = `
     <igx-column field="ID">
         <ng-template igxHeader>
             <span class="header">Header text</span>
@@ -227,17 +227,17 @@ export class ColumnDefinitions {
     `;
 
     public static generatedWithSummaries = `
-        <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.header" [hasSummary]="true">
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [hasSummary]="true">
         </igx-column>
     `;
 
     public static generatedWithDataType = `
-        <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.header" [dataType]="c.dataType">
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [dataType]="c.dataType">
         </igx-column>
     `;
 
     public static generatedEditable = `
-    <igx-column *ngFor="let col of cols"
+    <igx-column *ngFor="let col of columns"
             [field]="col.key"
             [header]="col.key"
             [dataType]="col.dataType"

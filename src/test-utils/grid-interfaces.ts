@@ -15,9 +15,16 @@ export interface IGridCellClick {
     cellClick(evt): void;
 }
 
+export interface IGridCellDoubleClick {
+    /* Add to template: (onDoubleClick)="doubleClick($event)" */
+
+    clickedCell: IgxGridCellComponent;
+    doubleClick(evt): void;
+}
+
 export interface IGridContextMenu {
     /* Add to template: (onContextMenu)="cellRightClick($event)" */
 
-    clickedCell: IgxGridCellComponent;
+    rightClickedCell: IgxGridCellComponent;
     cellRightClick(evt): void;
 }
