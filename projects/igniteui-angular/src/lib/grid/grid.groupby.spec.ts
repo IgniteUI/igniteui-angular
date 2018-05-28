@@ -26,6 +26,45 @@ describe('IgxGrid - GropBy', () => {
     const GROUPROW_CSS = '.igx-grid__tr--group';
     const DATAROW_CSS = '.igx-grid__tr';
     const GROUPROW_COTENT_CSS = '.igx-grid__groupContent';
+    const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
+        const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
+        const row = grid.getRowByIndex(rowStartIndex);
+        const cIndx = colIndex || 0;
+        const colKey = grid.columnList.toArray()[cIndx].field;
+        let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+        if (rowStartIndex === rowEndIndex) {
+            if (cb) { cb(); } return;
+        }
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: dir,
+            key: dir
+        });
+        const elem = row instanceof IgxGridGroupByRowComponent ?
+            row : grid.getCellByColumn(row.index, colKey);
+        if (dir === 'ArrowDown') {
+            elem.onKeydownArrowDown(keyboardEvent);
+        } else {
+            elem.onKeydownArrowUp(keyboardEvent);
+        }
+         grid.cdr.detectChanges();
+
+        if (nextRow) {
+            setTimeout(() => {
+                 grid.cdr.detectChanges();
+                 navigateToIndex(grid, nextRow.index, rowEndIndex, cb, colIndex);
+            });
+        } else {
+            // else wait for chunk to load.
+            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                next: () => {
+                    grid.cdr.detectChanges();
+                    nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+                    navigateToIndex(grid, nextRow.index, rowEndIndex, cb, colIndex);
+                }
+            });
+        }
+
+    };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -385,8 +424,7 @@ describe('IgxGrid - GropBy', () => {
     });
 
     // GroupBy + Selection integration
-    it('should allow keyboard navigation through group rows.',  fakeAsync(() => {
-        discardPeriodicTasks();
+    it('should allow keyboard navigation through group rows.',  (done) => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         const mockEvent = { preventDefault: () => { } };
@@ -399,55 +437,95 @@ describe('IgxGrid - GropBy', () => {
         grid.groupBy('ProductName', SortingDirection.Desc, false);
         grid.groupBy('Released', SortingDirection.Desc, false);
         fix.detectChanges();
+        const cbFunc2 = () => {
+            const row = grid.getRowByIndex(0);
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+            expect(row.focused).toBe(true);
+            done();
+        };
+        const cbFunc = () => {
+             fix.detectChanges();
+             const row = grid.getRowByIndex(9);
+             expect(row instanceof IgxGridRowComponent).toBe(true);
+             expect(row.focused).toBe(true);
+             expect(row.cells.toArray()[0].selected).toBe(true);
 
-        const grRows = grid.groupedRowList.toArray();
-        const dataRows = grid.dataRowList.toArray();
-        grRows[0].groupContent.nativeElement.focus();
-        tick();
+             navigateToIndex(grid, 9, 0, cbFunc2);
+         };
+
+        navigateToIndex(grid, 0, 9, cbFunc);
+    });
+
+    it('should persist last selected cell column index when navigation through group rows.',  (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        const mockEvent = { preventDefault: () => { } };
+
+        fix.componentInstance.width = '400px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
         fix.detectChanges();
 
-        let focusedElem = grid.rowList.find((r) => r.focused);
-
-        expect(focusedElem.index).toEqual(0);
-        grRows[0].onKeydownArrowDown(new KeyboardEvent('keydown', { key: 'arrowdown', code: '40' }));
-        tick();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
         fix.detectChanges();
 
-        focusedElem = grid.rowList.filter((r) => r.focused);
+        const cbFunc2 = () => {
+            const row = grid.getRowByIndex(0);
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+            expect(row.focused).toBe(true);
+            done();
+        };
+        const cbFunc = () => {
+            fix.detectChanges();
+             const row = grid.getRowByIndex(9);
+             expect(row instanceof IgxGridRowComponent).toBe(true);
+             expect(row.focused).toBe(true);
+             expect(row.cells.last.selected).toBe(true);
 
-        expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
+             navigateToIndex(grid, 9, 0, cbFunc2, 4);
+         };
+        setTimeout(() => {
+            const cell = grid.getCellByColumn(2, 'Released');
+            cell.onFocus(new Event('focus'));
+            fix.detectChanges();
+            navigateToIndex(grid, 0, 9, cbFunc, 4);
+        }, 10);
+    });
 
-        grRows[1].onKeydownArrowDown(new KeyboardEvent('keydown', { key: 'arrowdown', code: '40' }));
-        tick();
+    it('should clear selection from data cells when a group row is focused via KB navigation.',  (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        const mockEvent = { preventDefault: () => { } };
+
+        fix.componentInstance.width = '800px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
         fix.detectChanges();
 
-        focusedElem = grid.rowList.filter((r) => r.focused);
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
 
-        expect(focusedElem[focusedElem.length - 1].index).toEqual(2);
-        // verify cell selected
+         const cbFunc = () => {
+             fix.detectChanges();
+             const row = grid.getRowByIndex(0);
+             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+             expect(row.focused).toBe(true);
+             const oldSelectedCell = grid.getCellByColumn(2, 'Downloads');
+             expect(cell.selected).toBe(false);
+             done();
+         };
 
-        const cell = dataRows[0].cells.toArray()[0];
+        const cell = grid.getCellByColumn(2, 'Downloads');
+        cell.onFocus(new Event('focus'));
+        fix.detectChanges();
         expect(cell.selected).toBe(true);
+        navigateToIndex(grid, 2, 0, cbFunc);
 
-        cell.onKeydownArrowUp(new KeyboardEvent('keydown', { key: 'arrowup', code: '38' }));
-
-        tick();
-        fix.detectChanges();
-
-        focusedElem = grid.rowList.filter((r) => r.focused);
-
-        expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
-
-        grRows[1].onKeydownArrowUp(new KeyboardEvent('keydown', { key: 'arrowup', code: '38' }));
-        tick();
-        fix.detectChanges();
-
-        focusedElem = grid.rowList.filter((r) => r.focused);
-
-        expect(focusedElem[focusedElem.length - 1].index).toEqual(0);
-        discardPeriodicTasks();
-
-    }));
+    });
 
     it('should apply group area if a column is grouped.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
