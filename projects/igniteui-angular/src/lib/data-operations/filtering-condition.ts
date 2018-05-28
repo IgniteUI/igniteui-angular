@@ -5,11 +5,10 @@
  * @export
  */
 export class IgxFilteringOperand {
-    private static _instance: IgxFilteringOperand = null;
 
     public operations: IFilteringOperation[];
 
-    protected constructor() {
+    public constructor() {
         this.operations = [{
             name: 'null',
             logic: (target: any) => {
@@ -33,21 +32,12 @@ export class IgxFilteringOperand {
         }];
     }
 
-    public static instance(): IgxFilteringOperand {
-        return this._instance || (this._instance = new this());
-    }
-
     public conditionList(): string[] {
         return this.operations.map((element) => element.name);
     }
 
     public condition(name: string): IFilteringOperation {
-        this.operations.forEach((element) => {
-            if (element.name === name) {
-                return element;
-            }
-        });
-        return null;
+        return this.operations.find((element) => element.name === name);
     }
 
     public append(operation: IFilteringOperation) {
@@ -61,6 +51,8 @@ export class IgxFilteringOperand {
  * @export
  */
 export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
+    private static _instance: IgxBooleanFilteringOperand = null;
+
     protected constructor() {
         super();
         this.operations = [{
@@ -75,6 +67,10 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
             }
         }].concat(this.operations);
     }
+
+    public static instance(): IgxBooleanFilteringOperand {
+        return this._instance || (this._instance = new IgxBooleanFilteringOperand());
+    }
 }
 
 /**
@@ -83,6 +79,8 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxDateFilteringOperand extends IgxFilteringOperand {
+    private static _instance: IgxDateFilteringOperand = null;
+
     protected constructor() {
         super();
         this.operations = [{
@@ -188,6 +186,10 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }].concat(this.operations);
     }
 
+    public static instance(): IgxDateFilteringOperand {
+        return this._instance || (this._instance = new IgxDateFilteringOperand());
+    }
+
     /**
      * Splits a Date object into parts
      *
@@ -237,6 +239,8 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxNumberFilteringOperand extends IgxFilteringOperand {
+    private static _instance: IgxNumberFilteringOperand = null;
+
     protected constructor() {
         super();
         this.operations = [{
@@ -271,6 +275,10 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
             }
         }].concat(this.operations);
     }
+
+    public static instance(): IgxNumberFilteringOperand {
+        return this._instance || (this._instance = new IgxNumberFilteringOperand());
+    }
 }
 
 /**
@@ -279,6 +287,8 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxStringFilteringOperand extends IgxFilteringOperand {
+    private static _instance: IgxStringFilteringOperand = null;
+
     protected constructor() {
         super();
         this.operations = [{
@@ -324,6 +334,10 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
                 return target !== search;
             }
         }].concat(this.operations);
+    }
+
+    public static instance(): IgxStringFilteringOperand {
+        return this._instance || (this._instance = new IgxStringFilteringOperand());
     }
 
     /**
