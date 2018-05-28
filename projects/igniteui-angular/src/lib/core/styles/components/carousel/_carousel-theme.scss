@@ -1,0 +1,233 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $button-background [null] - The previous/next buttons idle background color.
+/// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
+/// @param {Color} $button-arrow-color [null] - The previous/next buttons idle arrow color.
+/// @param {Color} $button-hover-arrow-color [null] - The previous/next buttons hover arrow color.
+/// @param {Color} $indicator-dot-color [null] - The active indicator dot color.
+/// @param {Color} $indicator-border-color [null] - The idle indicator border color.
+/// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
+/// @param {Bool} $disable-button-shadow [true] - Show shadow underneath the previous/next buttons.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires text-contrast
+/// @requires $elevations
+///
+/// @example scss Change the previous/next button colors
+///   $my-carousel-theme: igx-carousel-theme(
+///     $button-background: black,
+///     $button-hover-background: white
+///   );
+///   // Pass the carousel theme to the igx-carousel component mixin
+///   @include igx-carousel($my-carousel-theme);
+@function igx-carousel-theme(
+    $palette: $default-palette,
+    $button-background: null,
+    $button-hover-background: null,
+    $button-arrow-color: null,
+    $button-hover-arrow-color: null,
+
+    $indicator-dot-color: null,
+    $indicator-border-color: null,
+    $indicator-active-border-color: null,
+
+    $disable-button-shadow: true
+){
+    $default-theme: (
+        name: 'igx-carousel',
+        button-background: #fff,
+        button-hover-background: #fff,
+        button-arrow-color: igx-color($palette, 'grays', 600),
+        button-hover-arrow-color: igx-color($palette, 'grays', 900),
+        button-shadow: if($disable-button-shadow == true, none, igx-elevation($elevations, 1)),
+
+        indicator-dot-color: #fff,
+        indicator-border-color: #fff,
+        indicator-active-border-color: #fff
+    );
+
+    @if not($button-arrow-color) and $button-background {
+        $button-arrow-color: text-contrast($button-background);
+    }
+
+    @if not($button-hover-arrow-color) and $button-hover-background {
+        $button-hover-arrow-color: text-contrast($button-hover-background);
+    }
+
+    @return extend($default-theme, (
+        palette: $palette,
+        button-background: $button-background,
+        button-hover-background: $button-hover-background,
+        button-arrow-color: $button-arrow-color,
+        button-hover-arrow-color: $button-hover-arrow-color,
+
+        indicator-dot-color: $indicator-dot-color,
+        indicator-border-color: $indicator-border-color,
+        indicator-active-border-color: $indicator-active-border-color,
+
+        disable-button-shadow: $disable-button-shadow
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires $elevations
+/// @requires var
+/// @requires {mixin} animation
+/// @requires {mixin} scale-in-center
+/// @requires {mixin} scale-out-center
+@mixin igx-carousel($theme) {
+    @include igx-root-css-vars($theme);
+
+    @include scale-in-center();
+    @include scale-out-center();
+
+    $carousel-arrow-margin: 0 16px;
+    $carousel-indicators-margin: 16px 0;
+    $carousel-indicators-padding: 0;
+    $carousel-indicator-margin: 0 5px;
+    $indicator-border-style: 2px solid;
+
+    %igx-carousel-display {
+        display: flex;
+        position: relative;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        flex-flow: column nowrap;
+        transform-style: preserve-3d;
+        outline: none;
+    }
+
+    %igx-carousel-slide-wrapper {
+        position: relative;
+        width: 100%;
+        height: inherit;
+        overflow: hidden;
+
+        .active {
+            display: block;
+        }
+    }
+
+    %igx-carousel-arrow {
+        display: flex;
+        margin: $carousel-arrow-margin;
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        width: 46px;
+        height: 46px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        border-radius: 50%;
+        outline-style: none;
+        transition: all .15s ease-in-out;
+        color: --var($theme, 'button-arrow-color');
+        background-color: --var($theme, 'button-background');
+        box-shadow: --var($theme, 'button-shadow');
+
+        span {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    %igx-carousel-arrow--hover {
+        color: --var($theme, 'button-hover-arrow-color');
+        background: --var($theme, 'button-hover-background');
+    }
+
+    %igx-carousel-arrow--next {
+        right: 0;
+    }
+
+    %igx-carousel-arrow--prev {
+        left: 0;
+    }
+
+    %igx-carousel-indicators {
+        display: flex;
+        margin: $carousel-indicators-margin;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        list-style: none;
+        z-index: 10;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: $carousel-indicators-padding;
+
+        li {
+            margin: $carousel-indicator-margin;
+            position: relative;
+            width: 12px;
+            height: 12px;
+            text-indent: -9999px;
+            cursor: pointer;
+            border: $indicator-border-style;
+            border-color: --var($theme, 'indicator-border-color');
+            border-radius: 50%;
+            transition: all .15s $ease-out-quad;
+            box-shadow: igx-elevation($elevations, 1);
+            opacity: .7;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 1px;
+                bottom: 1px;
+                left: 1px;
+                right: 1px;
+                border-radius: inherit;
+                background: --var($theme, 'indicator-dot-color');
+                @include animation('scale-out-center' .15s $ease-out-quad forwards);
+                opacity: 0;
+            }
+
+            &.active {
+                border: $indicator-border-style;
+                border-color: --var($theme, 'indicator-active-border-color');
+                opacity: 1;
+            }
+
+            &.active::after {
+                opacity: 1;
+                @include animation('scale-in-center' .15s $ease-out-quad forwards);
+            }
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
+    %igx-carousel-slide {
+        display: none;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transition: .5s ease-in-out left;
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+
+    %igx-carousel-slide img {
+        width: inherit;
+        height: inherit;
+        transform: scale(1.01);
+    }
+}

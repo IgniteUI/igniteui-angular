@@ -1,0 +1,63 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $color [null] - The icon color.
+/// @param {String} $size [null] - The icon size.
+/// @param {Color} $disabled-color [null] - The disabled icon color.
+///
+/// @requires igx-color
+/// @requires extend
+/// @requires rem
+///
+/// @example scss Change the icon color
+///   $my-icon-theme: igx-icon-theme($color: orange);
+///   // Pass the theme to the igx-icon component mixin
+///   @include igx-icon($my-icon-theme);
+@function igx-icon-theme(
+    $palette: $default-palette,
+    $color: null,
+    $size: null,
+    $disabled-color: null
+) {
+    $default-theme: (
+        name: 'igx-icon',
+        color: currentColor,
+        size: rem(24px),
+        disabled-color: igx-color($palette, 'grays', 500)
+    );
+
+    @return extend($default-theme, (
+        palette: $palette,
+        color: $color,
+        size: $size,
+        disabled-color: $disabled-color
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires var
+@mixin igx-icon($theme) {
+    @include igx-root-css-vars($theme);
+
+    // @debug $theme;
+
+    $igx-icon-font-size: --var($theme, 'size');
+
+    %igx-icon-display {
+        width: $igx-icon-font-size;
+        height: $igx-icon-font-size;
+        font-size: $igx-icon-font-size;
+        color: --var($theme, 'color');
+    }
+
+    %igx-icon--inactive {
+        color: --var($theme, 'disabled-color') !important;
+    }
+}
