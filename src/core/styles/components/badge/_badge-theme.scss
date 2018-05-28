@@ -15,6 +15,7 @@
 /// @param {Color} $background-color [null] - The background color used.
 /// @param {Bool} $disable-shadow [true] - Sets the badge shadow visibility.
 /// @param {Bool} $disable-border [true] - Sets the badge border visibility.
+/// @param {String} $border-radius [null] - Sets the badge border radius.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -39,7 +40,9 @@
     $background-color: null,
 
     $disable-shadow: true,
-    $disable-border: true
+    $disable-border: true,
+
+    $border-radius: null
 ) {
     $default-theme: (
         name: 'igx-badge',
@@ -49,6 +52,7 @@
         background-color: igx-color($palette, 'primary', 500),
         badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1)),
         border-width: if($disable-border == true, 0, rem(1px)),
+        border-radius: 50%
     );
 
     @if not($icon-color) and $background-color {
@@ -64,7 +68,8 @@
         icon-color: $icon-color,
         text-color: $text-color,
         border-color: $border-color,
-        background-color: $background-color
+        background-color: $background-color,
+        border-radius: $border-radius
     ));
 }
 
@@ -80,8 +85,6 @@
 
     $badge-width: 22px;
     $badge-height: $badge-width;
-
-    $badge-border-radius-circle: $badge-width / 2;
 
     $badge-font-size: rem(11px);
     $badge-font-weight: normal;
@@ -114,13 +117,13 @@
         }
     }
 
-    %igx-badge-value {
+    %igx-badge__text-value {
         white-space: nowrap;
         padding: $badge-value-padding;
     }
 
-    %igx-badge--circle {
-        border-radius: $badge-border-radius-circle;
+    %igx-badge--border {
+        border-radius: --var($theme, 'border-radius');
         box-shadow: --var($theme, 'badge-shadow');
         border-width: --var($theme, 'border-width');
         border-color: --var($theme, 'border-color');
@@ -128,23 +131,23 @@
         overflow: hidden;
     }
 
-    %igx-badge--default {
+    %igx-state--default {
         background-color: --var($theme, 'background-color');
     }
 
-    %igx-circle--success {
+    %igx-state--success {
         background-color: igx-color($palette, 'success');
     }
 
-    %igx-badge--info {
+    %igx-state--info {
         background-color: igx-color($palette, 'info');
     }
 
-    %igx-circle--warn {
+    %igx-state--warn {
         background-color: igx-color($palette, 'warn');
     }
 
-    %igx-circle--error {
+    %igx-state--error {
         background-color: igx-color($palette, 'error');
     }
 
