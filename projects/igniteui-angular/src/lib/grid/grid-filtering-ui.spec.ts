@@ -2,8 +2,6 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
-    NUMBER_FILTERS, STRING_FILTERS } from '../data-operations/filtering-condition';
 import { Calendar, ICalendarDate } from '../calendar/calendar';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxInputDirective } from '../directives/input/input.directive';

@@ -13,7 +13,7 @@ import { IFilteringState } from './filtering-state.interface';
 import {IPagingState, PagingError} from './paging-state.interface';
 import {ISortingExpression, SortingDirection} from './sorting-expression.interface';
 import {ISortingState} from './sorting-state.interface';
-import { IgxNumberFilteringOperand } from 'dist/igniteui-angular/public_api';
+import { IgxNumberFilteringOperand } from '../../public_api';
 
 describe('DataContainer', () => {
     let dataGenerator: DataGenerator;

@@ -2,12 +2,12 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BOOLEAN_FILTERS, DATE_FILTERS, FilteringCondition,
-    NUMBER_FILTERS, STRING_FILTERS } from '../data-operations/filtering-condition';
 import { Calendar, ICalendarDate } from '../calendar/calendar';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand,
+    IgxBooleanFilteringOperand, IgxDateFilteringOperand } from '../../public_api';
 
 const FILTERING_TOGGLE_CLASS = 'igx-filtering__toggle';
 const FILTERING_TOGGLE_FILTERED_CLASS = 'igx-filtering__toggle--filtered';
@@ -32,7 +32,7 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
 
         // Contains filter
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
@@ -44,7 +44,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(8);
 
         // StartsWith filter
-        grid.filter('ProductName', 'Net', STRING_FILTERS.startsWith, true);
+        grid.filter('ProductName', 'Net', IgxStringFilteringOperand.instance().condition('startsWith'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, 'ID').value).toEqual(2);
@@ -52,63 +52,63 @@ describe('IgxGrid - Filtering actions', () => {
         // EndsWith filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', 'Script', STRING_FILTERS.endsWith, true);
+        grid.filter('ProductName', 'Script', IgxStringFilteringOperand.instance().condition('endsWith'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
 
         // DoesNotContain filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.doesNotContain, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('doesNotContain'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(6);
 
         // Equals filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', 'NetAdvantage', STRING_FILTERS.equals, true);
+        grid.filter('ProductName', 'NetAdvantage', IgxStringFilteringOperand.instance().condition('equals'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // DoesNotEqual filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', 'NetAdvantage', STRING_FILTERS.doesNotEqual, true);
+        grid.filter('ProductName', 'NetAdvantage', IgxStringFilteringOperand.instance().condition('doesNotEqual'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
         // Null filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', null , STRING_FILTERS.null, true);
+        grid.filter('ProductName', null , IgxStringFilteringOperand.instance().condition('null'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(3);
 
         // NotNull filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', null, STRING_FILTERS.notNull, true);
+        grid.filter('ProductName', null, IgxStringFilteringOperand.instance().condition('notNull'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(5);
 
         // Empty filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', null, STRING_FILTERS.empty, true);
+        grid.filter('ProductName', null, IgxStringFilteringOperand.instance().condition('empty'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(4);
 
         // NotEmpty filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', null, STRING_FILTERS.notEmpty, true);
+        grid.filter('ProductName', null, IgxStringFilteringOperand.instance().condition('notEmpty'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(4);
 
         // Ignorecase filter 'false'
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', 'Ignite UI for Angular', STRING_FILTERS.equals, false);
+        grid.filter('ProductName', 'Ignite UI for Angular', IgxStringFilteringOperand.instance().condition('equals'), false);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
     });
@@ -120,7 +120,7 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
 
         // DoesNotEqual filter
-        grid.filter('Downloads', 254, NUMBER_FILTERS.doesNotEqual);
+        grid.filter('Downloads', 254, IgxNumberFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
@@ -128,63 +128,63 @@ describe('IgxGrid - Filtering actions', () => {
         grid.clearFilter('Downloads');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('Downloads', 127, NUMBER_FILTERS.equals, true);
+        grid.filter('Downloads', 127, IgxNumberFilteringOperand.instance().condition('equals'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // GreaterThan filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
-        grid.filter('Downloads', 100, NUMBER_FILTERS.greaterThan, true);
+        grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThan'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(4);
 
         // LessThan filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
-        grid.filter('Downloads', 100, NUMBER_FILTERS.lessThan, true);
+        grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('lessThan'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(3);
 
         // GreaterThanOrEqualTo filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
-        grid.filter('Downloads', 100, NUMBER_FILTERS.greaterThanOrEqualTo, true);
+        grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(5);
 
         // LessThanOrEqualTo filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
-        grid.filter('Downloads', 20, NUMBER_FILTERS.lessThanOrEqualTo, true);
+        grid.filter('Downloads', 20, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(3);
 
         // Null filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
-        grid.filter('Downloads', null, NUMBER_FILTERS.null, true);
+        grid.filter('Downloads', null, IgxNumberFilteringOperand.instance().condition('null'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // NotNull filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
-        grid.filter('Downloads', null, NUMBER_FILTERS.notNull, true);
+        grid.filter('Downloads', null, IgxNumberFilteringOperand.instance().condition('notNull'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
         // Empty filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
-        grid.filter('Downloads', null, NUMBER_FILTERS.empty, true);
+        grid.filter('Downloads', null, IgxNumberFilteringOperand.instance().condition('empty'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // NotEmpty filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
-        grid.filter('Downloads', null, NUMBER_FILTERS.notEmpty, true);
+        grid.filter('Downloads', null, IgxNumberFilteringOperand.instance().condition('notEmpty'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
     });
@@ -196,7 +196,7 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
 
         // Empty filter
-        grid.filter('Released', null, BOOLEAN_FILTERS.empty);
+        grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('empty'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(3);
 
@@ -204,35 +204,35 @@ describe('IgxGrid - Filtering actions', () => {
         grid.clearFilter('Released');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
-        grid.filter('Released', null, BOOLEAN_FILTERS.false);
+        grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('false'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
 
         // True filter
         grid.clearFilter('Released');
         fix.detectChanges();
-        grid.filter('Released', null, BOOLEAN_FILTERS.true);
+        grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('true'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(3);
 
         // NotEmpty filter
         grid.clearFilter('Released');
         fix.detectChanges();
-        grid.filter('Released', null, BOOLEAN_FILTERS.notEmpty);
+        grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('notEmpty'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(5);
 
         // NotNull filter
         grid.clearFilter('Released');
         fix.detectChanges();
-        grid.filter('Released', null, BOOLEAN_FILTERS.notNull);
+        grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('notNull'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(6);
 
         // Null filter
         grid.clearFilter('Released');
         fix.detectChanges();
-        grid.filter('Released', null, BOOLEAN_FILTERS.null);
+        grid.filter('Released', null, IgxBooleanFilteringOperand.instance().condition('null'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
     });
@@ -250,7 +250,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         // After filter
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-        DATE_FILTERS.after);
+        IgxDateFilteringOperand.instance().condition('after'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
 
@@ -259,7 +259,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-        DATE_FILTERS.before);
+        IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(5);
 
@@ -267,7 +267,7 @@ describe('IgxGrid - Filtering actions', () => {
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
-        DATE_FILTERS.doesNotEqual);
+        IgxDateFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
@@ -275,84 +275,84 @@ describe('IgxGrid - Filtering actions', () => {
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
-        DATE_FILTERS.equals);
+        IgxDateFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // LastMonth filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.lastMonth);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('lastMonth'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(expectedResults[0]);
 
         // NextMonth filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.nextMonth);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('nextMonth'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(expectedResults[1]);
 
         // ThisYear filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.thisYear);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('thisYear'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(expectedResults[2]);
 
         // LastYear filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.lastYear);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('lastYear'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(expectedResults[4]);
 
         // NextYear filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.nextYear);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('nextYear'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(expectedResults[3]);
 
         // Null filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.null);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('null'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // NotNull filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.notNull);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('notNull'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
         // Empty filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.empty);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('empty'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
 
         // NotEmpty filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.notEmpty);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('notEmpty'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(6);
 
         // Today filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.today);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('today'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
         // Yesterday filter
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
-        grid.filter('ReleaseDate', null, DATE_FILTERS.yesterday);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('yesterday'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
     });
@@ -363,8 +363,8 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const exprs: IFilteringExpression[] = [
-            { fieldName: 'Downloads', searchVal: 20, condition: NUMBER_FILTERS.greaterThanOrEqualTo },
-            { fieldName: 'ID', searchVal: 4, condition: NUMBER_FILTERS.greaterThan }
+            { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
+            { fieldName: 'ID', searchVal: 4, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') }
         ];
 
         grid.filter(exprs);
@@ -387,7 +387,7 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
 
         grid.filteringLogic = FilteringLogic.Or;
-        grid.filterGlobal('some', STRING_FILTERS.contains);
+        grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
         fix.detectChanges();
 
         expect(grid.filteringExpressions.length).toEqual(grid.columns.length);
@@ -403,7 +403,7 @@ describe('IgxGrid - Filtering actions', () => {
         const firstHeaderCell = fixture.debugElement.query(By.css('.header-release-date'));
         const filteringIconWrapper = firstHeaderCell.query(By.css('.' + FILTERING_TOGGLE_CLASS));
 
-        grid.filter('ReleaseDate', null, DATE_FILTERS.today);
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('today'));
         fixture.detectChanges();
         expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_FILTERED_CLASS)).toBe(true);
 

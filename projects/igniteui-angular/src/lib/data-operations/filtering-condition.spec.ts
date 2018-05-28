@@ -10,7 +10,7 @@ import { DataGenerator } from './test-util/data-generator';
 import { IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand } from 'dist/igniteui-angular/public_api';
+    IgxDateFilteringOperand } from '../../public_api';
 describe('Unit testing FilteringCondition', () => {
     it('tests string conditions', () => {
         const fc = IgxStringFilteringOperand.instance();

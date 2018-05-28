@@ -7,7 +7,9 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DataGenerator } from './test-util/data-generator';
 
-import { FilteringCondition, FilteringLogic, FilteringStrategy, IFilteringExpression, IFilteringState } from '../../public_api';
+import { FilteringLogic, FilteringStrategy, IFilteringExpression, IFilteringState, IgxStringFilteringOperand,
+    IgxNumberFilteringOperand, 
+    IgxBooleanFilteringOperand} from '../../public_api';
 
 describe('Unit testing FilteringStrategy', () => {
     let dataGenerator: DataGenerator;
@@ -20,7 +22,7 @@ describe('Unit testing FilteringStrategy', () => {
     });
     it ('tests `filter`', () => {
         const res = fs.filter(data, [{
-                condition: FilteringCondition.number.greaterThan,
+                condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 fieldName: 'number',
                 searchVal: 1
             }]);
@@ -32,13 +34,13 @@ describe('Unit testing FilteringStrategy', () => {
         const res = fs.matchRecordByExpressions(rec,
             [
                 {
-                    condition: FilteringCondition.string.contains,
+                    condition: IgxStringFilteringOperand.instance().condition('contains'),
                     fieldName: 'string',
                     ignoreCase: false,
                     searchVal: 'ROW'
                 },
                 {
-                    condition: FilteringCondition.number.lessThan,
+                    condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
                     fieldName: 'number',
                     searchVal: 1
                 }
@@ -49,7 +51,7 @@ describe('Unit testing FilteringStrategy', () => {
     it ('tests `findMatch`', () => {
         const rec = data[0];
         const res = fs.findMatch(rec, {
-            condition: FilteringCondition.boolean.false,
+            condition: IgxBooleanFilteringOperand.instance().condition('false'),
             fieldName: 'boolean'
         }, -1);
         expect(res).toBeTruthy();
@@ -58,7 +60,7 @@ describe('Unit testing FilteringStrategy', () => {
         (data[0] as { string: string }).string = 'ROW';
         const filterstr = new FilteringStrategy();
         const res = filterstr.filter(data, [{
-            condition: FilteringCondition.string.contains,
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
             fieldName: 'string',
             searchVal: 'ROW'
         }]);
