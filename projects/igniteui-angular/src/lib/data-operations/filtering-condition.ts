@@ -19,16 +19,6 @@ export class IgxFilteringOperand {
             logic: (target: any) => {
                 return target !== null;
             }
-        }, {
-            name: 'empty',
-            logic: (target: any) => {
-                return target === null || target === undefined;
-            }
-        }, {
-            name: 'notEmpty',
-            logic: (target: any) => {
-                return target !== null && target !== undefined;
-            }
         }];
     }
 
@@ -64,6 +54,16 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
             name: 'false',
             logic: (target: boolean) => {
                 return !target && target !== null && target !== undefined;
+            }
+        }, {
+            name: 'empty',
+            logic: (target: boolean) => {
+                return target === null || target === undefined;
+            }
+        }, {
+            name: 'notEmpty',
+            logic: (target: boolean) => {
+                return target !== null && target !== undefined;
             }
         }].concat(this.operations);
     }
@@ -183,6 +183,16 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'y');
                 return  d.year === now.year + 1;
             }
+        }, {
+            name: 'empty',
+            logic: (target: Date) => {
+                return target === null || target === undefined;
+            }
+        }, {
+            name: 'notEmpty',
+            logic: (target: Date) => {
+                return target !== null && target !== undefined;
+            }
         }].concat(this.operations);
     }
 
@@ -273,6 +283,16 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
             logic: (target: number, searchVal: number) => {
                 return target <= searchVal;
             }
+        }, {
+            name: 'empty',
+            logic: (target: number) => {
+                return target === null || target === undefined || isNaN(target);
+            }
+        }, {
+            name: 'notEmpty',
+            logic: (target: number) => {
+                return target !== null && target !== undefined && !isNaN(target);
+            }
         }].concat(this.operations);
     }
 
@@ -332,6 +352,16 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
                 target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
                 return target !== search;
+            }
+        }, {
+            name: 'empty',
+            logic: (target: string) => {
+                return target === null || target === undefined || target.length === 0;
+            }
+        }, {
+            name: 'notEmpty',
+            logic: (target: string) => {
+                return target !== null && target !== undefined && target.length > 0;
             }
         }].concat(this.operations);
     }
