@@ -1,0 +1,69 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Grid Paging Theme
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $text-color [null] - The text color.
+/// @param {Color} $background-color [null] - The background color of the paging panel.
+/// @param {Color} $border-color [null] - The border color of the paging panel.
+///
+/// @requires extend
+/// @requires igx-color
+///
+/// @example scss Change the stripes color
+///   $my-grid-paginator-theme: igx-grid-paginator-theme(
+///     $stripes-color: orange
+///   );
+///   // Pass the theme to the igx-grid-paginator component mixin
+///   @include igx-grid-paginator($my-grid-paginator-theme);
+@function igx-grid-paginator-theme(
+    $palette: $default-palette,
+    $text-color: null,
+    $background-color: null,
+    $border-color: null
+) {
+    $default-theme: (
+        name: 'igx-grid-paginator',
+        text-color: currentColor,
+        background-color: rgb(245, 245, 245),
+        border-color: igx-color($palette, 'grays', 400)
+    );
+
+    @return extend($default-theme, (
+        palette: $palette,
+        text-color: $text-color,
+        background-color: $background-color,
+        border-color: $border-color
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-grid-paginator($theme) {
+    @include igx-root-css-vars($theme);
+
+    %igx-grid-paginator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: --var($theme, 'text-color');
+        background: --var($theme, 'background-color');
+        grid-row: 6;
+        padding: rem(5px) 0;
+        font-size: 12px;
+        border-top: 1px dotted --var($theme, 'border-color');
+
+        &:empty {
+            padding: 0;
+        }
+
+        > * {
+            margin: 0 rem(5px);
+        }
+    }
+}

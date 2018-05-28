@@ -1,0 +1,28 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-toast) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-toast-display !optional;
+
+    @include m(top) {
+        @extend %igx-toast-display !optional;
+        @extend %igx-toast--top !optional;
+    }
+
+    @include m(middle) {
+        @extend %igx-toast-display !optional;
+        @extend %igx-toast--middle !optional;
+    }
+
+    @include m(bottom) {
+        @extend %igx-toast-display !optional;
+        @extend %igx-toast--bottom !optional;
+    }
+}

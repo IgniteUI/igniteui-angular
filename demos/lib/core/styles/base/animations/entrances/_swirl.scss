@@ -1,0 +1,307 @@
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-fwd {
+    @include keyframes(swirl-in-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-right-fwd {
+    @include keyframes(swirl-in-right-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            transform-origin: 100% 50%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 100% 50%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-bl-fwd {
+    @include keyframes(swirl-in-bl-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            transform-origin: 0 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 0 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-bck {
+    @include keyframes(swirl-in-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-right-bck {
+    @include keyframes(swirl-in-right-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            transform-origin: 100% 50%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 100% 50%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-bl-bck {
+    @include keyframes(swirl-in-bl-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            transform-origin: 0 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 0 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-top-fwd {
+    @include keyframes(swirl-in-top-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            transform-origin: 50% 0;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 50% 0;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-br-fwd {
+    @include keyframes(swirl-in-br-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            transform-origin: 100% 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 100% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-left-fwd {
+    @include keyframes(swirl-in-left-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            transform-origin: 0 50%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 0 50%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-top-bck {
+    @include keyframes(swirl-in-top-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            transform-origin: 50% 0;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 50% 0;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-br-bck {
+    @include keyframes(swirl-in-br-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            transform-origin: 100% 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 100% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-left-bck {
+    @include keyframes(swirl-in-left-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            transform-origin: 0 50%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 0 50%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-tr-fwd {
+    @include keyframes(swirl-in-tr-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            transform-origin: 100% 0%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 100% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-bottom-fwd {
+    @include keyframes(swirl-in-bottom-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            transform-origin: 50% 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 50% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-tl-fwd {
+    @include keyframes(swirl-in-tl-fwd) {
+        0% {
+            transform: rotate(-540deg) scale(0);
+            transform-origin: 0 0;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 0 0;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-tr-bck {
+    @include keyframes(swirl-in-tr-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            transform-origin: 100% 0%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 100% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-bottom-bck {
+    @include keyframes(swirl-in-bottom-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            transform-origin: 50% 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 50% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin swirl-in-tl-bck {
+    @include keyframes(swirl-in-tl-bck) {
+        0% {
+            transform: rotate(540deg) scale(5);
+            transform-origin: 0 0;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0) scale(1);
+            transform-origin: 0 0;
+            opacity: 1;
+        }
+    }
+}

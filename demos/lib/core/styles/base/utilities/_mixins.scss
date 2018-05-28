@@ -1,0 +1,246 @@
+////
+/// @group Utilities
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Hides the element from the DOM.
+/// @access public
+/// @example scss - Sample usage
+///   input[type="checkbox"] {
+///     @include hide-default();
+///   }
+@mixin hide-default {
+    margin: 0;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/// Generates a linear gradient.
+/// @access public
+/// @param {string} $direction - The direction of the gradient.
+/// @param {List} $color-stops - A list of color stops to be used in the gradient.
+/// @example scss - Sample usage
+///   .bozo {
+///     background: @include linear-gradient("to right", red, orange);
+///   }
+/// @outputs The CSS representation of linear-gradient.
+@mixin linear-gradient($direction, $color-stops...) {
+    // Direction has been omitted and happens to be a color-stop
+    @if is-direction($direction) == false {
+        $color-stops: $direction, $color-stops;
+        $direction: 180deg;
+    }
+    background: linear-gradient($direction, $color-stops);
+}
+
+/// Registers a keyframes animation in the global keyframes registry list.
+/// @access public
+/// @group animations
+/// @param {String} $name - The name of the keyframes animation.
+@mixin keyframes($name) {
+    $keyframe: map-get($keyframes, $name);
+
+    @if $keyframe == null {
+        $keyframe: unique-id();
+        $keyframes: map-merge($keyframes, (#{$name}: $keyframe)) !global;
+
+        @at-root {
+            @keyframes #{$name} {
+                @content;
+            }
+        }
+    }
+}
+
+/// Registers a component to the list of known components.
+/// @access private
+/// @param {String} $name - The component name to register.
+@mixin register-component($name) {
+    $component: map-get($components, $name);
+    @if $component == null {
+        $component: unique-id();
+        $components: map-merge($components, (#{$name}: $component)) !global;
+    }
+}
+
+/// Animates an element.
+/// @access public
+/// @group animations
+/// @param {List} $animate - The list of animation properties.
+/// @example scss - Animating an element
+///  @include fade-in(); // include the 'fade-in' keyframes animation mixin
+///
+///  .bozo {
+///     @include animation('fade-in' .3s ease-out);
+///  }
+@mixin animation($animate...) {
+    $max: length($animate);
+    $animations: '';
+    @for $i from 1 through $max {
+        $animations: #{$animations + nth($animate, $i)};
+        @if $i < $max {
+            $animations: #{$animations + ', '};
+        }
+    }
+    animation: $animations;
+}
+
+/// Applies text-overflow ellipsis to e text element.
+/// This won't work on display flex elements.
+/// @access public
+@mixin ellipsis() {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/// Generates a CSS class name for a color from a
+/// given name, variant, prefix and suffix
+/// @access private
+/// @param {string} $name - The main class name.
+/// @param {string} $variant - An additional string to be attached to the main class name.
+/// @param {string} $prefix - A prefix to be attached to the name and variant string.
+/// @param {string} $prefix - A suffix to be attached to the name and variant string.
+@mixin gen-color-class($name, $variant, $prefix, $suffix) {
+    $prefix: if($prefix, '#{$prefix}-', '');
+    $suffix: if($suffix, '-#{$suffix}', '');
+
+    .#{$prefix}#{$name}-#{$variant}#{$suffix} {
+        @content;
+    }
+}
+
+/// Generates CSS class names for all colors from
+/// the color palette for a given property, with
+/// optional prefix and suffix attached to the class name.
+/// @access private
+/// @param {string} $prop - The CSS property to assign the palette color to.
+/// @param {string} $prefix - A prefix to be attached to the class name.
+/// @param {string} $suffix - A suffix to be attached to the class name.
+/// @example scss Generate background classes with colors from the palette.
+///   // Will generate class names like
+///   // .my-primary-500-bg { ... };
+///   @include gen-color-classes(
+///     $prop: 'background-color',
+///     $prefix: 'my', $suffix: 'bg'
+///   );
+/// @requires {mixin} gen-color-class
+@mixin gen-color-classes($prop, $prefix, $suffix) {
+    @each $palette-name, $sub-palette in $default-palette {
+        @each $variant, $color in $sub-palette {
+            @if type-of($color) != 'map' {
+                @include gen-color-class($palette-name, $variant, $prefix, $suffix) {
+                    #{$prop}: $color;
+                }
+            }
+        }
+    }
+}
+
+/// Generates CSS variables for a given palette.
+/// @access private
+/// @param {Map} $palette - The igx palette to use to generate css variables for.
+///
+/// @example scss Generate css variables for the `$default-palette`.
+///   @include css-vars-from-palette($default-palette);
+///
+@mixin css-vars-from-palette($palette) {
+    @each $palette-name, $sub-palette in $palette {
+        @each $variant, $color in $sub-palette {
+            @if type-of($color) != 'map' {
+                --igx-#{$palette-name}-#{$variant}: #{$color};
+            }
+        }
+    }
+}
+
+/// Generates CSS variables for a given palette.
+/// @access public
+/// @param {Map} $palette - The igx palette to use to generate css variables for.
+/// @param {string} $scope [null] - The scope of the generated css variables.
+///
+/// @example scss Generate css variables for the `$default-palette`.
+///   @include css-vars-from-palette($default-palette, ':root');
+///
+/// @requires {mixin} css-vars-from-palette
+@mixin igx-palette-vars($palette, $scope: null) {
+    @if $scope == null {
+        @include css-vars-from-palette($palette);
+    } @else {
+        #{$scope} {
+            @include css-vars-from-palette($palette);
+        }
+    }
+}
+
+/// Generates CSS class names for all colors from
+/// the color palette for a given property, with
+/// optional prefix and suffix attached to the class name.
+/// @access private
+/// @param {string} $prop - The CSS property to assign the palette color to.
+/// @param {string} $prefix [null] - A prefix to be attached to the class name.
+/// @param {string} $suffix [igx] - A suffix to be attached to the class name.
+/// @example scss Generate background classes with colors from the palette.
+///   // Will generate class names like
+///   // .igx-primary-500-bg { ... };
+///   @include igx-color-classes(
+///     $prop: 'background-color',
+///     $suffix: 'bg'
+///   );
+/// @requires {mixin} gen-color-classes
+@mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx') {
+    @include gen-color-classes($prop, $prefix, $suffix);
+}
+
+/// Parses a map of key value pairs
+/// from component themes to css variables.
+/// @access private
+/// @param {map} $theme - The component theme to be used to generate css variables.
+/// @example scss Convert theme colors to css variables.
+///   $my-theme: igx-avatar-theme($icon-color: red);
+///   :root {
+///     @include css-vars-from-theme($my-theme);
+///   }
+@mixin css-vars-from-theme($theme) {
+    $prefix: map-get($theme, 'name');
+
+    @each $key, $value in $theme {
+        @if $key != 'name' and $key != 'palette' {
+            --#{$prefix}-#{$key}: #{$value};
+        }
+    }
+}
+
+/// Add theme colors to the global root scope
+/// Ensures the operation is done only once.
+/// @access private
+/// @param {map} $theme - The component theme to get the
+/// @example scss Convert theme colors to css variables.
+/// @requires {mixin} css-vars-from-theme
+@mixin igx-root-css-vars($theme) {
+    $name: map-get($theme, 'name');
+
+    @if map-get($themes, $name) == null {
+        $id: unique-id();
+        $themes: map-merge($themes, (#{$name}: $id)) !global;
+
+        :root {
+            @include css-vars-from-theme($theme);
+        }
+    }
+}
+
+/// Add theme colors scoped to a specific element
+/// @access public
+/// @param {map} $theme - The component theme to get the
+/// @example scss Convert theme colors to css variables.
+/// @requires {mixin} css-vars-from-theme
+@mixin igx-css-vars($theme) {
+    @include css-vars-from-theme($theme);
+}

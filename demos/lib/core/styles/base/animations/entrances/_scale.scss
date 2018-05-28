@@ -1,0 +1,254 @@
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @requires {mixin} keyframes
+@mixin scale-in-center {
+    @include keyframes(scale-in-center) {
+        0% {
+            transform: scale(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-bl {
+    @include keyframes(scale-in-bl) {
+        0% {
+            transform: scale(0);
+            transform-origin: 0% 100%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            transform-origin: 0% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-ver-center {
+    @include keyframes(scale-in-ver-center) {
+        0% {
+            transform: scaleY(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-top {
+    @include keyframes(scale-in-top) {
+        0% {
+            transform: scale(0);
+            transform-origin: 50% 0%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            transform-origin: 50% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-left {
+    @include keyframes(scale-in-left) {
+        0% {
+            transform: scale(0);
+            transform-origin: 0% 50%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            transform-origin: 0% 50%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-ver-top {
+    @include keyframes(scale-in-ver-top) {
+        0% {
+            transform: scaleY(0);
+            transform-origin: 100% 0%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scaleY(1);
+            transform-origin: 100% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-tr {
+    @include keyframes(scale-in-tr) {
+        0% {
+            transform: scale(0);
+            transform-origin: 100% 0%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            transform-origin: 100% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-tl {
+    @include keyframes(scale-in-tl) {
+        0% {
+            transform: scale(0);
+            transform-origin: 0% 0%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            transform-origin: 0% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-ver-bottom {
+    @include keyframes(scale-in-ver-bottom) {
+        0% {
+            transform: scaleY(0);
+            transform-origin: 0% 100%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scaleY(1);
+            transform-origin: 0% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-right {
+    @include keyframes(scale-in-right) {
+        0% {
+            transform: scale(0);
+            transform-origin: 100% 50%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            transform-origin: 100% 50%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-hor-center {
+    @include keyframes(scale-in-hor-center) {
+        0% {
+            transform: scaleX(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-br {
+    @include keyframes(scale-in-br) {
+        0% {
+            transform: scale(0);
+            transform-origin: 100% 100%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            transform-origin: 100% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-hor-left {
+    @include keyframes(scale-in-hor-left) {
+        0% {
+            transform: scaleX(0);
+            transform-origin: 0% 0%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scaleX(1);
+            transform-origin: 0% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-bottom {
+    @include keyframes(scale-in-bottom) {
+        0% {
+            transform: scale(0);
+            transform-origin: 50% 100%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            transform-origin: 50% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin scale-in-hor-right {
+    @include keyframes(scale-in-hor-right) {
+        0% {
+            transform: scaleX(0);
+            transform-origin: 100% 100%;
+            opacity: 1;
+        }
+
+        100% {
+            transform: scaleX(1);
+            transform-origin: 100% 100%;
+            opacity: 1;
+        }
+    }
+}

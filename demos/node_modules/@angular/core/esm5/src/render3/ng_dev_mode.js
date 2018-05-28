@@ -1,0 +1,18 @@
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+if (typeof ngDevMode == 'undefined') {
+    if (typeof window != 'undefined')
+        window.ngDevMode = true;
+    if (typeof self != 'undefined')
+        self.ngDevMode = true;
+    if (typeof global != 'undefined')
+        global.ngDevMode = true;
+}
+export var _ngDevMode = true;
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibmdfZGV2X21vZGUuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9wYWNrYWdlcy9jb3JlL3NyYy9yZW5kZXIzL25nX2Rldl9tb2RlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFlQSxFQUFFLENBQUMsQ0FBQyxPQUFPLFNBQVMsSUFBSSxXQUFXLENBQUMsQ0FBQyxDQUFDO0lBQ3BDLEVBQUUsQ0FBQyxDQUFDLE9BQU8sTUFBTSxJQUFJLFdBQVcsQ0FBQztRQUFFLE1BQWMsQ0FBQyxTQUFTLEdBQUcsSUFBSSxDQUFDO0lBQ25FLEVBQUUsQ0FBQyxDQUFDLE9BQU8sSUFBSSxJQUFJLFdBQVcsQ0FBQztRQUFFLElBQVksQ0FBQyxTQUFTLEdBQUcsSUFBSSxDQUFDO0lBQy9ELEVBQUUsQ0FBQyxDQUFDLE9BQU8sTUFBTSxJQUFJLFdBQVcsQ0FBQztRQUFFLE1BQWMsQ0FBQyxTQUFTLEdBQUcsSUFBSSxDQUFDO0NBQ3BFO0FBRUQsTUFBTSxDQUFDLElBQU0sVUFBVSxHQUFHLElBQUksQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQGxpY2Vuc2VcbiAqIENvcHlyaWdodCBHb29nbGUgSW5jLiBBbGwgUmlnaHRzIFJlc2VydmVkLlxuICpcbiAqIFVzZSBvZiB0aGlzIHNvdXJjZSBjb2RlIGlzIGdvdmVybmVkIGJ5IGFuIE1JVC1zdHlsZSBsaWNlbnNlIHRoYXQgY2FuIGJlXG4gKiBmb3VuZCBpbiB0aGUgTElDRU5TRSBmaWxlIGF0IGh0dHBzOi8vYW5ndWxhci5pby9saWNlbnNlXG4gKi9cblxuXG5kZWNsYXJlIGdsb2JhbCB7XG4gIGNvbnN0IG5nRGV2TW9kZTogYm9vbGVhbjtcbn1cblxuZGVjbGFyZSBsZXQgZ2xvYmFsOiBhbnk7XG5cbmlmICh0eXBlb2YgbmdEZXZNb2RlID09ICd1bmRlZmluZWQnKSB7XG4gIGlmICh0eXBlb2Ygd2luZG93ICE9ICd1bmRlZmluZWQnKSAod2luZG93IGFzIGFueSkubmdEZXZNb2RlID0gdHJ1ZTtcbiAgaWYgKHR5cGVvZiBzZWxmICE9ICd1bmRlZmluZWQnKSAoc2VsZiBhcyBhbnkpLm5nRGV2TW9kZSA9IHRydWU7XG4gIGlmICh0eXBlb2YgZ2xvYmFsICE9ICd1bmRlZmluZWQnKSAoZ2xvYmFsIGFzIGFueSkubmdEZXZNb2RlID0gdHJ1ZTtcbn1cblxuZXhwb3J0IGNvbnN0IF9uZ0Rldk1vZGUgPSB0cnVlO1xuIl19

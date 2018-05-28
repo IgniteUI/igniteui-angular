@@ -1,0 +1,1 @@
+{"version":3,"file":"EmptyError.js","sources":["../../src/internal/util/EmptyError.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA;;;;;;;;;GASG;AACH;IAAgC,8BAAK;IACnC;QAAA,YACE,kBAAM,yBAAyB,CAAC,SAGjC;QAFC,KAAI,CAAC,IAAI,GAAG,YAAY,CAAC;QACxB,MAAc,CAAC,cAAc,CAAC,KAAI,EAAE,UAAU,CAAC,SAAS,CAAC,CAAC;;IAC7D,CAAC;IACH,iBAAC;AAAD,CAAC,AAND,CAAgC,KAAK,GAMpC;AANY,gCAAU"}

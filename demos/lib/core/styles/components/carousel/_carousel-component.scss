@@ -1,0 +1,47 @@
+//// Carousel
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-carousel) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-carousel-display !optional;
+
+    @include e(inner) {
+        @extend %igx-carousel-slide-wrapper !optional;
+    }
+
+    @include e(indicators) {
+        @extend %igx-carousel-indicators !optional;
+    }
+
+    @include e(arrow) {
+        @extend %igx-carousel-arrow !optional;
+    }
+
+    @include e(arrow, $m: prev) {
+        @extend %igx-carousel-arrow !optional;
+        @extend %igx-carousel-arrow--prev !optional;
+
+        &:hover {
+            @extend %igx-carousel-arrow--hover !optional;
+        }
+    }
+
+    @include e(arrow, $m: next) {
+        @extend %igx-carousel-arrow !optional;
+        @extend %igx-carousel-arrow--next !optional;
+
+        &:hover {
+            @extend %igx-carousel-arrow--hover !optional;
+        }
+    }
+}
+
+@include b(igx-slide) {
+    @extend %igx-carousel-slide !optional;
+}

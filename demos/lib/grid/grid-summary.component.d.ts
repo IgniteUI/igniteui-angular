@@ -1,0 +1,36 @@
+import { AfterContentInit, ChangeDetectorRef, DoCheck, OnDestroy, OnInit } from "@angular/core";
+import { DataType } from "../data-operations/data-util";
+import { IgxGridAPIService } from "./api.service";
+import { IgxColumnComponent } from "./column.component";
+import { IGridBus } from "./grid.common";
+export declare class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoCheck, AfterContentInit {
+    gridAPI: IgxGridAPIService;
+    cdr: ChangeDetectorRef;
+    fieldName: string;
+    column: IgxColumnComponent;
+    gridID: string;
+    readonly dataType: DataType;
+    readonly isPinned: boolean;
+    readonly isLastPinned: boolean;
+    readonly emptyClass: boolean;
+    readonly defaultClass: boolean;
+    readonly widthPersistenceClass: boolean;
+    readonly width: string;
+    protected subscriptionOnEdit$: any;
+    protected subscriptionOnAdd$: any;
+    protected subscriptionOnDelete$: any;
+    protected subscriptionOnFilter$: any;
+    itemClass: string;
+    private hiddenItemClass;
+    private summaryResultClass;
+    private numberSummaryResultClass;
+    constructor(gridAPI: IgxGridAPIService, cdr: ChangeDetectorRef);
+    ngOnInit(): void;
+    ngOnDestroy(): void;
+    ngDoCheck(): void;
+    ngAfterContentInit(): void;
+    clearCache(field: any): void;
+    clearAll(): void;
+    readonly resolveSummaries: any[];
+    summaryValueClass(result: any): string;
+}

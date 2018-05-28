@@ -1,0 +1,18 @@
+import { AnimationReferenceMetadata } from "@angular/animations";
+declare const swingInTopFwd: AnimationReferenceMetadata;
+declare const swingInRightFwd: AnimationReferenceMetadata;
+declare const swingInBottomFwd: AnimationReferenceMetadata;
+declare const swingInLeftFwd: AnimationReferenceMetadata;
+declare const swingInTopBck: AnimationReferenceMetadata;
+declare const swingInRightBck: AnimationReferenceMetadata;
+declare const swingInBottomBck: AnimationReferenceMetadata;
+declare const swingInLeftBck: AnimationReferenceMetadata;
+declare const swingOutTopFwd: AnimationReferenceMetadata;
+declare const swingOutRightFwd: AnimationReferenceMetadata;
+declare const swingOutBottomFwd: AnimationReferenceMetadata;
+declare const swingOutLefttFwd: AnimationReferenceMetadata;
+declare const swingOutTopBck: AnimationReferenceMetadata;
+declare const swingOutRightBck: AnimationReferenceMetadata;
+declare const swingOutBottomBck: AnimationReferenceMetadata;
+declare const swingOutLeftBck: AnimationReferenceMetadata;
+export { swingInTopFwd, swingInRightFwd, swingInLeftFwd, swingInBottomFwd, swingInTopBck, swingInRightBck, swingInBottomBck, swingInLeftBck, swingOutTopFwd, swingOutRightFwd, swingOutBottomFwd, swingOutLefttFwd, swingOutTopBck, swingOutRightBck, swingOutBottomBck, swingOutLeftBck };

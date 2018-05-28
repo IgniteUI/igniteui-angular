@@ -1,0 +1,27 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var iterator_1 = require("../symbol/iterator");
+exports.subscribeToIterable = function (iterable) { return function (subscriber) {
+    var iterator = iterable[iterator_1.iterator]();
+    do {
+        var item = iterator.next();
+        if (item.done) {
+            subscriber.complete();
+            break;
+        }
+        subscriber.next(item.value);
+        if (subscriber.closed) {
+            break;
+        }
+    } while (true);
+    // Finalize the iterator if it happens to be a Generator
+    if (typeof iterator.return === 'function') {
+        subscriber.add(function () {
+            if (iterator.return) {
+                iterator.return();
+            }
+        });
+    }
+    return subscriber;
+}; };
+//# sourceMappingURL=subscribeToIterable.js.map

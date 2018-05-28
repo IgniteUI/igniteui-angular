@@ -1,0 +1,412 @@
+////
+/// @group animations
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-center {
+    @include keyframes(rotate-in-center) {
+        0% {
+            transform: rotate(-360deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-bl {
+    @include keyframes(rotate-in-bl) {
+        0% {
+            transform: rotate(-360deg);
+            transform-origin: bottom left;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0deg);
+            transform-origin: bottom left;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-diag-2 {
+    @include keyframes(rotate-in-diag-2) {
+        0% {
+            transform: rotate3d(-1, 1, 0, -360deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate3d(-1, 1, 0, 0deg);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-top {
+    @include keyframes(rotate-in-top) {
+        0% {
+            transform: rotate(-360deg);
+            transform-origin: top;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0deg);
+            transform-origin: top;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-left {
+    @include keyframes(rotate-in-left) {
+        0% {
+            transform: rotate(-360deg);
+            transform-origin: left;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0deg);
+            transform-origin: left;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-tr {
+    @include keyframes(rotate-in-tr) {
+        0% {
+            transform: rotate(-360deg);
+            transform-origin: top right;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0deg);
+            transform-origin: top right;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-tl {
+    @include keyframes(rotate-in-tl) {
+        0% {
+            transform: rotate(-360deg);
+            transform-origin: top left;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0deg);
+            transform-origin: top left;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-right {
+    @include keyframes(rotate-in-right) {
+        0% {
+            transform: rotate(-360deg);
+            transform-origin: right;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0deg);
+            transform-origin: right;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-hor {
+    @include keyframes(rotate-in-hor) {
+        0% {
+            transform: rotateX(360deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotateX(0deg);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-br {
+    @include keyframes(rotate-in-br) {
+        0% {
+            transform: rotate(-360deg);
+            transform-origin: bottom right;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0deg);
+            transform-origin: bottom right;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-ver {
+    @include keyframes(rotate-in-ver) {
+        0% {
+            transform: rotateY(-360deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotateY(0deg);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-bottom {
+    @include keyframes(rotate-in-bottom) {
+        0% {
+            transform: rotate(-360deg);
+            transform-origin: bottom;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0deg);
+            transform-origin: bottom;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-diag-1 {
+    @include keyframes(rotate-in-diag-1) {
+        0% {
+            transform: rotate3d(1, 1, 0, -360deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate3d(1, 1, 0, 0deg);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-cw {
+    @include keyframes(rotate-in-2-cw) {
+        0% {
+            transform: rotate(-45deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-br-cw {
+    @include keyframes(rotate-in-2-br-cw) {
+        0% {
+            transform: rotate(-45deg);
+            transform-origin: 100% 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            transform-origin: 100% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-ccw {
+    @include keyframes(rotate-in-2-ccw) {
+        0% {
+            transform: rotate(45deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-br-ccw {
+    @include keyframes(rotate-in-2-br-ccw) {
+        0% {
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            transform-origin: 100% 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-fwd {
+    @include keyframes(rotate-in-2-fwd) {
+        0% {
+            transform: translateZ(-200px) rotate(-45deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateZ(0) rotate(0);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-bl-cw {
+    @include keyframes(rotate-in-2-bl-cw) {
+        0% {
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            transform-origin: 0 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-bck {
+    @include keyframes(rotate-in-2-bck) {
+        0% {
+            transform: translateZ(200px) rotate(45deg);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateZ(0) rotate(0);
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-bl-ccw {
+    @include keyframes(rotate-in-2-bl-ccw) {
+        0% {
+            transform: rotate(45deg);
+            transform-origin: 0 100%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            transform-origin: 0 100%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-tr-cw {
+    @include keyframes(rotate-in-2-tr-cw) {
+        0% {
+            transform: rotate(-45deg);
+            transform-origin: 100% 0%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            transform-origin: 100% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-tl-cw {
+    @include keyframes(rotate-in-2-tl-cw) {
+        0% {
+            transform: rotate(-45deg);
+            transform-origin: 0 0;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            transform-origin: 0 0;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-tr-ccw {
+    @include keyframes(rotate-in-2-tr-ccw) {
+        0% {
+            transform: rotate(45deg);
+            transform-origin: 100% 0%;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            transform-origin: 100% 0%;
+            opacity: 1;
+        }
+    }
+}
+
+/// @requires {mixin} keyframes
+@mixin rotate-in-2-tl-ccw {
+    @include keyframes(rotate-in-2-tl-ccw) {
+        0% {
+            transform: rotate(45deg);
+            transform-origin: 0 0;
+            opacity: 0;
+        }
+
+        100% {
+            transform: rotate(0);
+            transform-origin: 0 0;
+            opacity: 1;
+        }
+    }
+}

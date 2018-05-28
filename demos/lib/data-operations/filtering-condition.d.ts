@@ -1,0 +1,102 @@
+export declare let FilteringCondition: {
+    boolean: {
+        true(target: boolean): boolean;
+        false(target: boolean): boolean;
+        null(target: boolean): boolean;
+        notNull(target: boolean): boolean;
+        empty(target: boolean): boolean;
+        notEmpty(target: boolean): boolean;
+    };
+    date: {
+        equals(target: Date, searchVal: Date): boolean;
+        doesNotEqual(target: Date, searchVal: Date): boolean;
+        before(target: Date, searchVal: Date): boolean;
+        after(target: Date, searchVal: Date): boolean;
+        today(target: Date): boolean;
+        yesterday(target: Date): boolean;
+        thisMonth(target: Date): boolean;
+        lastMonth(target: Date): boolean;
+        nextMonth(target: Date): boolean;
+        thisYear(target: Date): boolean;
+        lastYear(target: Date): boolean;
+        nextYear(target: Date): boolean;
+        null(target: Date): boolean;
+        notNull(target: Date): boolean;
+        empty(target: Date): boolean;
+        notEmpty(target: Date): boolean;
+    };
+    number: {
+        equals(target: number, searchVal: number): boolean;
+        doesNotEqual(target: number, searchVal: number): boolean;
+        greaterThan(target: number, searchVal: number): boolean;
+        lessThan(target: number, searchVal: number): boolean;
+        greaterThanOrEqualTo(target: number, searchVal: number): boolean;
+        lessThanOrEqualTo(target: number, searchVal: number): boolean;
+        null(target: number): boolean;
+        notNull(target: any): boolean;
+        empty(target: number): boolean;
+        notEmpty(target: number): boolean;
+    };
+    string: {
+        contains(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+        startsWith(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+        endsWith(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+        doesNotContain(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+        equals(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+        doesNotEqual(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+        null(target: string): boolean;
+        notNull(target: string): boolean;
+        empty(target: string): boolean;
+        notEmpty(target: string): boolean;
+    };
+};
+export declare const STRING_FILTERS: {
+    contains(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+    startsWith(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+    endsWith(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+    doesNotContain(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+    equals(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+    doesNotEqual(target: string, searchVal: string, ignoreCase?: boolean): boolean;
+    null(target: string): boolean;
+    notNull(target: string): boolean;
+    empty(target: string): boolean;
+    notEmpty(target: string): boolean;
+};
+export declare const NUMBER_FILTERS: {
+    equals(target: number, searchVal: number): boolean;
+    doesNotEqual(target: number, searchVal: number): boolean;
+    greaterThan(target: number, searchVal: number): boolean;
+    lessThan(target: number, searchVal: number): boolean;
+    greaterThanOrEqualTo(target: number, searchVal: number): boolean;
+    lessThanOrEqualTo(target: number, searchVal: number): boolean;
+    null(target: number): boolean;
+    notNull(target: any): boolean;
+    empty(target: number): boolean;
+    notEmpty(target: number): boolean;
+};
+export declare const BOOLEAN_FILTERS: {
+    true(target: boolean): boolean;
+    false(target: boolean): boolean;
+    null(target: boolean): boolean;
+    notNull(target: boolean): boolean;
+    empty(target: boolean): boolean;
+    notEmpty(target: boolean): boolean;
+};
+export declare const DATE_FILTERS: {
+    equals(target: Date, searchVal: Date): boolean;
+    doesNotEqual(target: Date, searchVal: Date): boolean;
+    before(target: Date, searchVal: Date): boolean;
+    after(target: Date, searchVal: Date): boolean;
+    today(target: Date): boolean;
+    yesterday(target: Date): boolean;
+    thisMonth(target: Date): boolean;
+    lastMonth(target: Date): boolean;
+    nextMonth(target: Date): boolean;
+    thisYear(target: Date): boolean;
+    lastYear(target: Date): boolean;
+    nextYear(target: Date): boolean;
+    null(target: Date): boolean;
+    notNull(target: Date): boolean;
+    empty(target: Date): boolean;
+    notEmpty(target: Date): boolean;
+};

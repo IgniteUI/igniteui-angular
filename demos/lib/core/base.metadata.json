@@ -1,0 +1,1 @@
+[{"__symbolic":"module","version":4,"metadata":{"BaseComponent":{"__symbolic":"class","members":{"__ctor__":[{"__symbolic":"constructor","parameters":[{"__symbolic":"reference","module":"@angular/core","name":"Renderer","line":14,"character":36}]}],"getChild":[{"__symbolic":"method"}]}}}}]

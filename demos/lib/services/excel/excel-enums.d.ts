@@ -1,0 +1,25 @@
+export declare enum ExcelFolderTypes {
+    RootExcelFolder = 0,
+    RootRelsExcelFolder = 1,
+    DocPropsExcelFolder = 2,
+    XLExcelFolder = 3,
+    XLRelsExcelFolder = 4,
+    ThemeExcelFolder = 5,
+    WorksheetsExcelFolder = 6,
+    WorksheetsRelsExcelFolder = 7,
+    TablesExcelFolder = 8,
+}
+export declare enum ExcelFileTypes {
+    RootRelsFile = 0,
+    AppFile = 1,
+    CoreFile = 2,
+    WorkbookRelsFile = 3,
+    ThemeFile = 4,
+    WorksheetFile = 5,
+    StyleFile = 6,
+    WorkbookFile = 7,
+    ContentTypesFile = 8,
+    SharedStringsFile = 9,
+    WorksheetRelsFile = 10,
+    TablesFile = 11,
+}
