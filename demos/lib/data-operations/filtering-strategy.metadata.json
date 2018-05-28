@@ -1,1 +1,0 @@
-[{"__symbolic":"module","version":4,"metadata":{"IFilteringStrategy":{"__symbolic":"interface"},"FilteringStrategy":{"__symbolic":"class","members":{"filter":[{"__symbolic":"method"}],"findMatch":[{"__symbolic":"method"}],"matchRecordByExpressions":[{"__symbolic":"method"}]}}}}]

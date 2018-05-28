@@ -1,1 +1,0 @@
-[{"__symbolic":"module","version":4,"metadata":{"SortingStateDefaults":{"strategy":{"__symbolic":"new","expression":{"__symbolic":"reference","module":"./sorting-strategy","name":"SortingStrategy","line":5,"character":18}}},"ISortingState":{"__symbolic":"interface"}}}]

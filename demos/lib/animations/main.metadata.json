@@ -1,1 +1,0 @@
-[{"__symbolic":"module","version":4,"metadata":{"IAnimationParams":{"__symbolic":"interface"}},"exports":[{"from":"./fade/index"},{"from":"./flip/index"},{"from":"./rotate/index"},{"from":"./misc/index"},{"from":"./scale/index"},{"from":"./slide/index"},{"from":"./swing/index"}]}]

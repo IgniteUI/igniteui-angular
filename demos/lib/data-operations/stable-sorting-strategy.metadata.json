@@ -1,1 +1,0 @@
-[{"__symbolic":"module","version":4,"metadata":{"StableSortingStrategy":{"__symbolic":"class","extends":{"__symbolic":"reference","module":"./sorting-strategy","name":"SortingStrategy","line":2,"character":43},"members":{"compareObjects":[{"__symbolic":"method"}]}}}}]
