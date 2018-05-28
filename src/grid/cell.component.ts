@@ -1,8 +1,11 @@
 ﻿import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     ElementRef,
+    forwardRef,
     HostBinding,
     HostListener,
     Input,
@@ -16,6 +19,7 @@ import { take } from "rxjs/operators";
 import { IgxSelectionAPIService } from "../core/selection";
 import { KEYCODES } from "../core/utils";
 import { DataType } from "../data-operations/data-util";
+import { IgxTextHighlightDirective } from "../directives/text-highlight/text-highlight.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
@@ -27,8 +31,7 @@ import { IGridCellEventArgs, IGridEditEventArgs } from "./grid.component";
     selector: "igx-grid-cell",
     templateUrl: "./cell.component.html"
 })
-export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
-
+export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
     @Input()
     public column: IgxColumnComponent;
 
@@ -40,6 +43,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @Input()
     public value: any;
+
+    public highlightClass = "igx-highlight";
+    public activeHighlightClass = "igx-highlight__active";
 
     get formatter(): (value: any) => any {
         return this.column.formatter;
@@ -103,9 +109,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
 
     @autoWire(true)
     set inEditMode(value: boolean) {
+        const originalValue = this._inEditMode;
+
         this._inEditMode = value;
+
         if (this._inEditMode) {
             this.grid.cellInEditMode = this;
+        } else if (!originalValue) {
+            this.grid.cellInEditMode = null;
         }
     }
 
@@ -197,6 +208,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     @ViewChild("inlineEditor", { read: TemplateRef })
     protected inlineEditorTemplate: TemplateRef<any>;
 
+    @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
+    private highlight: IgxTextHighlightDirective;
+
     protected defaultCssClass = "igx-grid__td";
     protected isFocused = false;
     protected isSelected = false;
@@ -271,12 +285,21 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         }
     }
 
+    public ngAfterViewInit() {
+        if (this.highlight && this.grid.lastSearchInfo.searchText) {
+            this.highlight.highlight(this.grid.lastSearchInfo.searchText, this.grid.lastSearchInfo.caseSensitive);
+            this.highlight.activateIfNecessary();
+        }
+    }
+
     @autoWire(true)
     public update(val: any) {
         const args: IGridEditEventArgs = { row: this.row, cell: this, currentValue: this.value, newValue: val };
         this.grid.onEditDone.emit(args);
         this.value = args.newValue;
         this.gridAPI.update(this.gridID, this);
+
+        this.grid.refreshSearch();
     }
 
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
@@ -347,7 +370,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
         this.row.focused = true;
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;
-            this.grid.cellInEditMode = null;
         }
 
         this.grid.onSelection.emit({
@@ -634,5 +656,15 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy {
     public onKeydownExitEditMode() {
         this.inEditMode = false;
         this.nativeElement.focus();
+    }
+
+    public highlightText(text: string, caseSensitive?: boolean): number {
+        return this.highlight ? this.highlight.highlight(text, caseSensitive) : 0;
+    }
+
+    public clearHighlight() {
+        if (this.highlight) {
+            this.highlight.clearHighlight();
+        }
     }
 }
