@@ -61,11 +61,11 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     public roleDescription: string;
     private _size: string | Size = 'small';
 
-    @HostBinding('class.igx-avatar--rounded')
     @HostBinding('attr.id')
     @Input()
     public id = `igx-avatar-${NEXT_ID++}`;
 
+    @HostBinding('class.igx-avatar--rounded')
     @Input()
     public roundShape = false;
 
@@ -131,6 +131,10 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
         } else {
             return 'icon type avatar';
         }
+    }
+
+    public getSrcUrl() {
+        return `url(${this.src})`;
     }
 }
 
