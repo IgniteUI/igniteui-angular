@@ -261,16 +261,16 @@ describe('DataUtil', () => {
         const dateCond = IgxDateFilteringOperand.instance().conditionList();
 
         expect(
-            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.String), stringCond))
+            dataGenerator.isSuperset(DataUtil.getFilteringConditionsForDataType(DataType.String), stringCond))
                 .toBeTruthy('string filtering conditions');
         expect(
-            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Number), numberCond))
+            dataGenerator.isSuperset(DataUtil.getFilteringConditionsForDataType(DataType.Number), numberCond))
                 .toBeTruthy('number filtering conditions');
         expect(
-            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Boolean), booleanCond))
+            dataGenerator.isSuperset(DataUtil.getFilteringConditionsForDataType(DataType.Boolean), booleanCond))
                 .toBeTruthy('boolean filtering conditions');
         expect(
-            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Date), dateCond))
+            dataGenerator.isSuperset(DataUtil.getFilteringConditionsForDataType(DataType.Date), dateCond))
                 .toBeTruthy('date filtering conditions');
     });
 

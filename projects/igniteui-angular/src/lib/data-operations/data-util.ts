@@ -40,21 +40,18 @@ export class DataUtil {
             });
         return target;
     }
-    public static getFilteringConditionsForDataType(dataType: DataType): IgxFilteringOperand {
+    public static getFilteringConditionsForDataType(dataType: DataType): string[] {
         switch (dataType) {
             case DataType.Boolean:
-                return IgxBooleanFilteringOperand.instance();
+                return IgxBooleanFilteringOperand.instance().conditionList();
             case DataType.Date:
-                return IgxDateFilteringOperand.instance();
+                return IgxDateFilteringOperand.instance().conditionList();
             case DataType.Number:
-                return IgxNumberFilteringOperand.instance();
+                return IgxNumberFilteringOperand.instance().conditionList();
             case DataType.String:
             default:
-                return IgxStringFilteringOperand.instance();
+                return IgxStringFilteringOperand.instance().conditionList();
         }
-    }
-    public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
-        return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));
     }
     public static sort<T>(data: T[], state: ISortingState): T[] {
         // set defaults
