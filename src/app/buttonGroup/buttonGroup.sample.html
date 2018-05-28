@@ -1,0 +1,47 @@
+<div class="sample-wrapper">
+    <app-page-header title="Button Group">
+        A group of buttons tied together in a single component. It provides exclusive, multiple and toggle selections.
+    </app-page-header>
+    <section class="sample-content">
+
+        <article class="sample-column">
+            <h4 class="sample-title">Exclusive Selection <i class="light">Horizontal</i></h4>
+            <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions">
+            </igx-buttongroup>
+            <h5>First button is selected: {{alignOptions[0].selected}}</h5>
+        </article>
+
+
+        <article class="sample-column">
+            <h4 class="sample-title">Multiple Selection <i class="light">Horizontal</i></h4>
+            <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false">
+            </igx-buttongroup>
+        </article>
+
+        <article class="sample-column">
+            <h4 class="sample-title">Multiple Selection <i class="light">Horizontal Disabled</i></h4>
+            <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="true">
+            </igx-buttongroup>
+        </article>
+
+        <article class="sample-column">
+            <h4 class="sample-title">Exclusive Selection <i class="light">Vertical</i></h4>
+            <igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment">
+            </igx-buttongroup>
+        </article>
+
+        <article class="sample-column">
+            <h4 class="sample-title">Multiple Selection <i class="light">Vertical</i></h4>
+            <igx-buttongroup [multiSelection]="true" [values]="borders" [alignment]="alignment">
+            </igx-buttongroup>
+        </article>
+
+
+        <article class="sample-column">
+            <h4 class="sample-title">Custom class to style the content</h4>
+            <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false" itemContentCssClass="customContentStyle">
+            </igx-buttongroup>
+        </article>
+
+    </section>
+</div>

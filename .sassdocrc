@@ -1,6 +1,6 @@
 {
-    "dest": "./dist/docs/sass",
-    "descriptionPath": "./src/core/styles/README.md",
+    "dest": "./dist/igniteui-angular/docs/sass",
+    "descriptionPath": ".projects/igniteui-angular/src/lib/core/styles/README.md",
     "exclude": [],
     "package": {
         "name": "Ignite UI for Angular",
