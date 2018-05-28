@@ -8,7 +8,7 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
-describe('IgxGrid - Filtering actions', () => {
+fdescribe('IgxGrid - Filtering actions', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -89,27 +89,8 @@ describe('IgxGrid - Filtering actions', () => {
             expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // iterate over unary conditions
-            // null
-            options[6].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
-
-            // not null
-            options[7].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(5);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
-
             // empty
-            options[8].selected = true;
+            options[6].selected = true;
             select.nativeElement.dispatchEvent(new Event('change'));
             fix.detectChanges();
             expect(grid.rowList.length).toEqual(4);
@@ -118,10 +99,29 @@ describe('IgxGrid - Filtering actions', () => {
             expect(input.nativeElement.offsetHeight).toEqual(0);
 
             // not empty
-            options[9].selected = true;
+            options[7].selected = true;
             select.nativeElement.dispatchEvent(new Event('change'));
             fix.detectChanges();
             expect(grid.rowList.length).toEqual(4);
+            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+            expect(input.nativeElement.offsetHeight).toEqual(0);
+
+            // iterate over unary conditions
+            // null
+            options[8].selected = true;
+            select.nativeElement.dispatchEvent(new Event('change'));
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(3);
+            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+            expect(input.nativeElement.offsetHeight).toEqual(0);
+
+            // not null
+            options[9].selected = true;
+            select.nativeElement.dispatchEvent(new Event('change'));
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(5);
             expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
             expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
             expect(input.nativeElement.offsetHeight).toEqual(0);
@@ -132,7 +132,7 @@ describe('IgxGrid - Filtering actions', () => {
             select.nativeElement.dispatchEvent(new Event('change'));
             fix.detectChanges();
             input = filterUIContainer.query(By.directive(IgxInputDirective));
-            expect(grid.rowList.length).toEqual(4);
+            expect(grid.rowList.length).toEqual(5);
             expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
             // input is empty but there is filtering applied, so reset button should be active !
             expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
@@ -172,7 +172,7 @@ describe('IgxGrid - Filtering actions', () => {
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // starts with
-            options[1].selected = true;
+            options[2].selected = true;
             select.nativeElement.dispatchEvent(new Event('change'));
             fix.detectChanges();
             sendInput(input, 'Net', fix);
@@ -188,7 +188,7 @@ describe('IgxGrid - Filtering actions', () => {
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // ends with
-            options[2].selected = true;
+            options[3].selected = true;
             select.nativeElement.dispatchEvent(new Event('change'));
             fix.detectChanges();
             sendInput(input, 'script', fix);
@@ -201,7 +201,7 @@ describe('IgxGrid - Filtering actions', () => {
             expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
             // does not contain
-            options[3].selected = true;
+            options[1].selected = true;
             select.nativeElement.dispatchEvent(new Event('change'));
             fix.detectChanges();
             return fix.whenStable();
@@ -528,32 +528,8 @@ describe('IgxGrid - Filtering actions', () => {
             expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
             expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
 
-            // null condition
-            options[3].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            expect(grid.getCellByColumn(0, 'Released').value).toEqual(null);
-            expect(grid.getCellByColumn(1, 'Released').value).toEqual(null);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-
-            // not null condition
-            options[4].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(6);
-            expect(grid.getCellByColumn(0, 'Released').value).toBe(false);
-            expect(grid.getCellByColumn(1, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(3, 'Released').value).toMatch('');
-            expect(grid.getCellByColumn(4, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(5, 'Released').value).toBe(undefined);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-
             // empty condition
-            options[5].selected = true;
+            options[3].selected = true;
             select.nativeElement.dispatchEvent(new Event('change'));
             fix.detectChanges();
             expect(grid.rowList.length).toEqual(3);
@@ -564,7 +540,7 @@ describe('IgxGrid - Filtering actions', () => {
             expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
             // not empty condition
-            options[6].selected = true;
+            options[4].selected = true;
             select.nativeElement.dispatchEvent(new Event('change'));
             fix.detectChanges();
             expect(grid.rowList.length).toEqual(5);
@@ -573,6 +549,30 @@ describe('IgxGrid - Filtering actions', () => {
             expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
             expect(grid.getCellByColumn(3, 'Released').value).toMatch('');
             expect(grid.getCellByColumn(4, 'Released').value).toBe(true);
+            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+
+            // null condition
+            options[5].selected = true;
+            select.nativeElement.dispatchEvent(new Event('change'));
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(2);
+            expect(grid.getCellByColumn(0, 'Released').value).toEqual(null);
+            expect(grid.getCellByColumn(1, 'Released').value).toEqual(null);
+            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+
+            // not null condition
+            options[6].selected = true;
+            select.nativeElement.dispatchEvent(new Event('change'));
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(6);
+            expect(grid.getCellByColumn(0, 'Released').value).toBe(false);
+            expect(grid.getCellByColumn(1, 'Released').value).toBe(true);
+            expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
+            expect(grid.getCellByColumn(3, 'Released').value).toMatch('');
+            expect(grid.getCellByColumn(4, 'Released').value).toBe(true);
+            expect(grid.getCellByColumn(5, 'Released').value).toBe(undefined);
             expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
             expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         });
