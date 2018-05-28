@@ -385,7 +385,7 @@ describe("IgxGrid - GropBy", () => {
     });
 
     // GroupBy + Selection integration
-    fit("should allow keyboard navigation through group rows.",  fakeAsync(() => {
+    it("should allow keyboard navigation through group rows.",  fakeAsync(() => {
         discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -471,6 +471,25 @@ describe("IgxGrid - GropBy", () => {
         // verify group area is rendered
         expect(gridElement.querySelectorAll(".igx-grouparea").length).toEqual(1);
         expect(gridElement.clientHeight).toEqual(700);
+    });
+
+    fit("should allow collapsing and expanding all group rows", () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+
+        grid.groupBy("ProductName", SortingDirection.Asc, false);
+        grid.toggleAllGroupRows();
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        expect(groupRows[0].expanded).not.toBe(true);
+        expect(groupRows[groupRows.length - 1].expanded).not.toBe(true);
+
+        grid.toggleAllGroupRows();
+        fix.detectChanges();
+        expect(groupRows[0].expanded).toBe(true);
+        expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     });
 });
 @Component({

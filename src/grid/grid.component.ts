@@ -991,6 +991,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
     }
 
+    public toggleAllGroupRows() {
+        this.groupingExpansionState = [];
+        this.groupByDefaultExpanded = !this.groupByDefaultExpanded;
+    }
+
     get hasGroupableColumns(): boolean {
         return this.columnList.some((col) => col.groupable);
     }
