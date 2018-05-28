@@ -145,6 +145,9 @@ export class IgxColumnComponent implements AfterContentInit {
         this._summaries = new classRef();
     }
 
+    @Input()
+    public searchable = true;
+
     get defaultMinWidth(): string {
         return this._defaultMinWidth;
     }
