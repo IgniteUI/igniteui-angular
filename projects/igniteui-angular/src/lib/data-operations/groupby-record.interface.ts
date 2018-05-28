@@ -1,4 +1,4 @@
-import { ISortingExpression } from "./sorting-expression.interface";
+import { ISortingExpression } from './sorting-expression.interface';
 
 export class GroupedRecords extends Array<any> {}
 

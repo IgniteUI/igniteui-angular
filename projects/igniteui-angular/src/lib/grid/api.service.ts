@@ -1,15 +1,15 @@
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
-import { cloneArray } from "../core/utils";
-import { DataUtil } from "../data-operations/data-util";
-import { IFilteringExpression } from "../data-operations/filtering-expression.interface";
-import { IGroupByExpandState } from "../data-operations/groupby-expand-state.interface";
-import { IGroupByRecord } from "../data-operations/groupby-record.interface";
-import { ISortingExpression, SortingDirection } from "../data-operations/sorting-expression.interface";
-import { IgxGridCellComponent } from "./cell.component";
-import { IgxColumnComponent } from "./column.component";
-import { IGridEditEventArgs, IgxGridComponent } from "./grid.component";
-import { IgxGridRowComponent } from "./row.component";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { cloneArray } from '../core/utils';
+import { DataUtil } from '../data-operations/data-util';
+import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
+import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IgxGridCellComponent } from './cell.component';
+import { IgxColumnComponent } from './column.component';
+import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
+import { IgxGridRowComponent } from './row.component';
 
 @Injectable()
 export class IgxGridAPIService {

@@ -56,15 +56,15 @@ describe('Unit testing SortingStrategy', () => {
         expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([4, 0, 1, 2, 3]);
     });
-    it("tests `groupBy`", () => {
+    it('tests `groupBy`', () => {
         strategy = new SortingStrategy();
         const expr = [{
             dir: SortingDirection.Asc,
-            fieldName: "boolean"
+            fieldName: 'boolean'
         }];
         let res = strategy.sort(data, expr);
         res = strategy.groupBy(res, expr);
-        expect(dataGenerator.getValuesForColumn(res, "boolean"))
+        expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                     .toEqual([false, false, false, true, true]);
         const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
         const group1: IGroupByRecord = groups[0];

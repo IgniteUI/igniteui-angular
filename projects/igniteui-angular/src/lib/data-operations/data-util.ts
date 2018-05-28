@@ -1,24 +1,24 @@
-import { FilteringCondition } from "./filtering-condition";
-import { FilteringLogic, IFilteringExpression } from "./filtering-expression.interface";
-import { filteringStateDefaults, IFilteringState } from "./filtering-state.interface";
-import { FilteringStrategy, IFilteringStrategy } from "./filtering-strategy";
+import { FilteringCondition } from './filtering-condition';
+import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
+import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
+import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
 
-import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
-import { ISortingState, SortingStateDefaults } from "./sorting-state.interface";
-import { ISortingStrategy, SortingStrategy } from "./sorting-strategy";
+import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
+import { ISortingState, SortingStateDefaults } from './sorting-state.interface';
+import { ISortingStrategy, SortingStrategy } from './sorting-strategy';
 
-import { IPagingState, PagingError } from "./paging-state.interface";
+import { IPagingState, PagingError } from './paging-state.interface';
 
-import { IDataState } from "./data-state.interface";
-import { IGroupByExpandState } from "./groupby-expand-state.interface";
-import { IGroupByRecord } from "./groupby-record.interface";
-import { IGroupingState } from "./groupby-state.interface";
+import { IDataState } from './data-state.interface';
+import { IGroupByExpandState } from './groupby-expand-state.interface';
+import { IGroupByRecord } from './groupby-record.interface';
+import { IGroupingState } from './groupby-state.interface';
 
 export enum DataType {
-    String = "string",
-    Number = "number",
-    Boolean = "boolean",
-    Date = "date"
+    String = 'string',
+    Number = 'number',
+    Boolean = 'boolean',
+    Date = 'date'
 }
 
 export class DataUtil {
@@ -75,9 +75,9 @@ export class DataUtil {
             data = this.restoreGroupsRecursive(data, level + 1, depth, expansion, defaultExpanded);
         }
         while (i < data.length) {
-            const g = data[i]["__groupParent"];
+            const g = data[i]['__groupParent'];
             for (j = i + 1; j < data.length; j++) {
-                const h = data[j]["__groupParent"];
+                const h = data[j]['__groupParent'];
                 if (g !== h && g.level === h.level) {
                     break;
                 }

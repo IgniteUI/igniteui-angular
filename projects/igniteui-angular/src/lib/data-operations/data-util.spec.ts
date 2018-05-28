@@ -83,8 +83,8 @@ function testGroupBy() {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
     }));
-    describe("Test groupBy", () => {
-        it("groups by descending column 'boolean'", () => {
+    describe('Test groupBy', () => {
+        it('groups by descending column "boolean"', () => {
             /*const expr: ISortingExpression = {
                 dir: SortingDirection.Asc,
                 fieldName: "boolean"

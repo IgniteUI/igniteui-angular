@@ -1,8 +1,8 @@
-import { expand } from "rxjs/operators";
-import { cloneArray } from "../core/utils";
-import { IGroupByExpandState } from "./groupby-expand-state.interface";
-import { IGroupByRecord } from "./groupby-record.interface";
-import { ISortingExpression, SortingDirection } from "./sorting-expression.interface";
+import { expand } from 'rxjs/operators';
+import { cloneArray } from '../core/utils';
+import { IGroupByExpandState } from './groupby-expand-state.interface';
+import { IGroupByRecord } from './groupby-record.interface';
+import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 
 export interface ISortingStrategy {
     sort: (data: any[], expressions: ISortingExpression[]) => any[];
@@ -64,7 +64,7 @@ export class SortingStrategy implements ISortingStrategy {
 
         const key = expression.fieldName;
         const ignoreCase = expression.ignoreCase ?
-            data[0] && (typeof data[0][key] === "string" ||
+            data[0] && (typeof data[0][key] === 'string' ||
                 data[0][key] === null ||
                 data[0][key] === undefined) :
             false;
@@ -123,7 +123,7 @@ export class SortingStrategy implements ISortingStrategy {
                 result = result.concat(this.groupDataRecursive(group, expressions, level + 1, groupRow));
             } else {
                 for (const groupItem of group) {
-                    groupItem["__groupParent"] = groupRow;
+                    groupItem['__groupParent'] = groupRow;
                     result.push(groupItem);
                 }
             }
