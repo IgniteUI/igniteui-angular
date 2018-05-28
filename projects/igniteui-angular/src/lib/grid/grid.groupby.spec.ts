@@ -424,6 +424,35 @@ describe('IgxGrid - GropBy', () => {
     });
 
     // GroupBy + Selection integration
+   it('should toggle expand/collapse state of group row with Space/Enter key.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '400px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        const gRow = grid.groupedRowList.toArray()[0];
+        expect(gRow.expanded).toBe(true);
+        const evtEnter = new KeyboardEvent('keydown', {
+            code: 'enter',
+            key: 'enter'
+        });
+        const evtSpace = new KeyboardEvent('keydown', {
+            code: 'enter',
+            key: 'enter'
+        });
+        gRow.element.nativeElement.dispatchEvent(evtEnter);
+
+        fix.detectChanges();
+
+        expect(gRow.expanded).toBe(false);
+
+        gRow.element.nativeElement.dispatchEvent(evtEnter);
+        fix.detectChanges();
+        expect(gRow.expanded).toBe(true);
+    });
+
     it('should allow keyboard navigation through group rows.',  (done) => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -527,6 +556,122 @@ describe('IgxGrid - GropBy', () => {
 
     });
 
+     // GroupBy + Virtualization integration
+     it('should virtualize data and group records.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        expect(grid.groupedRowList.toArray().length).toEqual(3);
+        expect(grid.dataRowList.toArray().length).toEqual(2);
+        expect(grid.rowList.toArray().length).toEqual(5);
+     });
+
+    it('should recalculate visible chunk data and scrollbar size when expanding/collapsing group rows.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const origScrollHeight = parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10);
+
+        // collapse all group rows currently in the view
+        const grRows = grid.groupedRowList.toArray();
+        grRows[0].toggle();
+        fix.detectChanges();
+
+        // verify rows are updated
+        expect(grid.groupedRowList.toArray().length).toEqual(4);
+        expect(grid.dataRowList.toArray().length).toEqual(1);
+        expect(grid.rowList.toArray().length).toEqual(5);
+
+        // verify scrollbar is updated - 4 rows x 50px are hidden.
+        expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
+            .toEqual(origScrollHeight - 200);
+
+        grRows[0].toggle();
+        fix.detectChanges();
+
+        expect(grid.groupedRowList.toArray().length).toEqual(3);
+        expect(grid.dataRowList.toArray().length).toEqual(2);
+        expect(grid.rowList.toArray().length).toEqual(5);
+
+        expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
+            .toEqual(origScrollHeight);
+      });
+
+    it('should persist group row expand/collapse state when scrolling.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        let groupRow = grid.groupedRowList.toArray()[0];
+        groupRow.toggle();
+
+        expect(groupRow.expanded).toBe(false);
+        fix.detectChanges();
+
+        // scroll to bottom
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        fix.detectChanges();
+
+        // scroll back to the top
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
+        fix.detectChanges();
+
+        groupRow = grid.groupedRowList.toArray()[0];
+
+        expect(groupRow.expanded).toBe(false);
+    });
+
+    it('should leave group rows static when scrolling horizontally.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '400px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+        const groupRow = grid.groupedRowList.toArray()[0];
+        const origRect = groupRow.element.nativeElement.getBoundingClientRect();
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        fix.detectChanges();
+
+        const rect = groupRow.element.nativeElement.getBoundingClientRect();
+
+        // verify row location is the same
+        expect(rect.left).toEqual(origRect.left);
+        expect(rect.top).toEqual(origRect.top);
+    });
+
+    // GroupBy Area
     it('should apply group area if a column is grouped.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
