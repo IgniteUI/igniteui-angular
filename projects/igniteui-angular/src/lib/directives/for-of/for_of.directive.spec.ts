@@ -744,12 +744,12 @@ describe('IgxVirtual directive - simple template', () => {
         expect(displayContainer).not.toBeNull();
         expect(verticalScroller).not.toBeNull();
         expect(() => {
-            fix.componentInstance.height = "400px";
+            fix.componentInstance.height = '400px';
             fix.detectChanges();
-            fix.componentInstance.height = "500px";
+            fix.componentInstance.height = '500px';
             fix.detectChanges();
         }).not.toThrow();
-        let rowsRendered = displayContainer.querySelectorAll("div");
+        let rowsRendered = displayContainer.querySelectorAll('div');
         expect(rowsRendered.length).toBe(0);
         fix.componentInstance.data = fix.componentInstance.generateData();
         fix.detectChanges();
