@@ -600,7 +600,7 @@ export class  VirtualSummaryColumnComponent {
     @ViewChild("grid1", { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 
-    public width = "800px";
+    public width = "830px";
     public height = "600px";
 
     public numberSummary = new IgxNumberSummaryOperand();

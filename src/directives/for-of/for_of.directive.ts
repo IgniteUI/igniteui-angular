@@ -32,6 +32,7 @@ import { DeprecateProperty } from "../../core/deprecateDecorators";
 import { DisplayContainerComponent } from "./display.container";
 import { HVirtualHelperComponent } from "./horizontal.virtual.helper.component";
 import { IForOfState } from "./IForOfState";
+import { IgxVerticallScrollService } from "./vertical.scroll.service";
 import { VirtualHelperComponent } from "./virtual.helper.component";
 
 @Directive({ selector: "[igxFor][igxForOf]" })
@@ -104,7 +105,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         private _differs: IterableDiffers,
         private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef,
-        private _zone: NgZone) { }
+        private _zone: NgZone,
+        public vScroll: IgxVerticallScrollService) { }
 
     protected get isRemote(): boolean {
         return this.totalItemCount !== null;
@@ -232,6 +234,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.initHCache(this.igxForOf);
                 }
                 this._applyChanges(changes);
+            }
+
+            if (this.igxForScrollOrientation === "vertical") {
+                this.vScroll.needsVerticalScroll =
+                    this.igxForOf && this.igxForOf.length * parseInt(this.igxForItemSize, 10) > parseInt(this.igxForContainerSize, 10);
             }
         }
     }
@@ -627,6 +634,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             totalWidth += parseInt(cols[i].width, 10) || 0;
             this.hCache.push(totalWidth);
         }
+        if (this.vScroll.needsVerticalScroll) {
+            totalWidth += 18;
+            this.hCache.push(totalWidth);
+        }
         return totalWidth;
     }
 
@@ -747,7 +758,8 @@ export function getTypeNameForDebugging(type: any): string {
     declarations: [IgxForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     exports: [IgxForOfDirective],
-    imports: [CommonModule]
+    imports: [CommonModule],
+    providers: [IgxVerticallScrollService]
 })
 
 export class IgxForOfModule {

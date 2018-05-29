@@ -22,6 +22,7 @@ import { By } from "@angular/platform-browser";
 import { BehaviorSubject, Observable } from "rxjs";
 import { IgxForOfDirective, IgxForOfModule} from "./for_of.directive";
 import { IForOfState} from "./IForOfState";
+import { IgxVerticallScrollService } from "./vertical.scroll.service";
 
 describe("IgxVirtual directive - simple template", () => {
     const INACTIVE_VIRT_CONTAINER = "igx-display-container--inactive";
@@ -833,8 +834,9 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public differs: IterableDiffers,
         public fResolver: ComponentFactoryResolver,
         public changeDet: ChangeDetectorRef,
-        public zone: NgZone) {
-        super(viewContainer, template, differs, fResolver, changeDet, zone);
+        public zone: NgZone,
+        public vScroll: IgxVerticallScrollService) {
+        super(viewContainer, template, differs, fResolver, changeDet, zone, vScroll);
     }
 
     public testScrollPrev() {

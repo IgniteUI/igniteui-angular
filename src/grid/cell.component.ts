@@ -150,10 +150,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     @HostBinding("style.flex-basis")
     @HostBinding("class.igx-grid__td--fw")
     get width() {
-        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const isPercentageWidth = this.column.width && typeof this.column.width === "string" && this.column.width.indexOf("%") !== -1;
-        return this.isLastUnpinned && hasVerticalScroll && !!this.column.width && !isPercentageWidth ?
-            (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+        // const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        // const isPercentageWidth = this.column.width && typeof this.column.width === "string" && this.column.width.indexOf("%") !== -1;
+        // return this.isLastUnpinned && hasVerticalScroll && !!this.column.width && !isPercentageWidth ?
+        //     (parseInt(this.column.width, 10) - 18) + "px" : this.column.width;
+        return this.column.width;
     }
 
     @HostBinding("class.igx-grid__td--editing")
@@ -186,10 +187,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return pinnedCols[pinnedCols.length - 1] === this.column;
     }
 
-    get isLastUnpinned() {
-        const unpinnedColumns = this.grid.unpinnedColumns;
-        return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
-    }
+    // get isLastUnpinned() {
+    //     const unpinnedColumns = this.grid.unpinnedColumns;
+    //     return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
+    // }
 
     get selected() {
         return this.isSelected = this.isCellSelected();

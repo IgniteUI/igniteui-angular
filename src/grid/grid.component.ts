@@ -639,6 +639,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return totalWidth;
     }
 
+    get hasVerticalScroll(): boolean {
+        return this.verticalScrollContainer.vScroll.needsVerticalScroll;
+    }
+
     public nextPage(): void {
         if (!this.isLastPage) {
             this.page += 1;
