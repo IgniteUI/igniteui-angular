@@ -74,8 +74,8 @@ export class IgxCardSampleComponent implements OnInit {
                 avatarUrl: "images/card/avatars/alicia_keys.jpg",
                 buttons: ["share", "play album"],
                 imageUrl: "images/card/media/here_media.jpg",
-                subtitle: "by Alicia Keys",
-                title: "HERE"
+                subtitle: "by Melow D",
+                title: "THERE"
             }),
             new Card({
                 buttons: ["Comment", "Explore"],
@@ -86,9 +86,9 @@ export class IgxCardSampleComponent implements OnInit {
                 avatarUrl: "images/card/avatars/rupert_stadler.jpg",
                 buttons: ["message", "follow"],
                 icons: ["add", "star"],
-                imageUrl: "images/card/media/audi_tt.jpg",
+                imageUrl: "images/card/media/audi.jpg",
                 subtitle: "January 30, 2017",
-                title: "Rupert Stadler"
+                title: "Brad Stanley"
             }),
             new Card({})
         ];
