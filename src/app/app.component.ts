@@ -76,6 +76,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Pinning'
         },
         {
+            link: '/gridGroupBy',
+            icon: 'view_column',
+            name: 'Grid GroupBy'
+        },
+        {
             link: '/gridColumnResizing',
             icon: 'view_column',
             name: 'Grid Column Resizing'
@@ -164,6 +169,11 @@ export class AppComponent implements OnInit {
             link: '/toast',
             icon: 'android',
             name: 'Toast'
+        },
+        {
+            link: '/chips',
+            icon: 'android',
+            name: 'Chips'
         }
     ];
 

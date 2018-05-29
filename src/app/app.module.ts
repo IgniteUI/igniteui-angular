@@ -15,6 +15,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChipsSampleComponent} from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
@@ -48,6 +49,7 @@ import { GridPerformanceSampleComponent } from './grid-performance/grid-performa
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 
 
 const components = [
@@ -58,6 +60,7 @@ const components = [
     CalendarSampleComponent,
     CardSampleComponent,
     CarouselSampleComponent,
+    ChipsSampleComponent,
     DialogSampleComponent,
     DatePickerSampleComponent,
     IconSampleComponent,
@@ -87,6 +90,7 @@ const components = [
     GridPerformanceSampleComponent,
     GridSelectionComponent,
     GridVirtualizationSampleComponent,
+    GridGroupBySampleComponent,
 
     CustomContentComponent,
     ColorsSampleComponent,

@@ -5,7 +5,6 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
-import { ChipsSampleComponent} from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
@@ -39,6 +38,7 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 
+
 const appRoutes = [
     {
         path: '',
@@ -68,10 +68,6 @@ const appRoutes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
-    },
-    {
-        path: 'chips',
-        component: ChipsSampleComponent
     },
     {
         path: 'datePicker',
@@ -199,7 +195,7 @@ const appRoutes = [
         component: ButtonGroupSampleComponent
     },
     {
-        path: "gridGroupBy",
+        path: 'gridGroupBy',
         component: GridGroupBySampleComponent
     }
 ];
