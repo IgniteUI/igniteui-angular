@@ -25,6 +25,8 @@ describe('IgxGrid - GropBy', () => {
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const GROUPROW_CSS = '.igx-grid__tr--group';
     const DATAROW_CSS = '.igx-grid__tr';
+    const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
+    const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
     const GROUPROW_COTENT_CSS = '.igx-grid__groupContent';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
@@ -725,7 +727,7 @@ describe('IgxGrid - GropBy', () => {
         }
      });
 
-     it('should not select group rows when selectAll API is called.', () => {
+     it('should not select group rows when selectAll API is called or when header checkbox is clicked.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
@@ -741,15 +743,256 @@ describe('IgxGrid - GropBy', () => {
 
         fix.detectChanges();
 
-        const selRows = grid.selectedRows();
+        let selRows = grid.selectedRows();
         expect(selRows.length).toEqual(8);
 
-        const rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
+        let rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
         for (const r of rows) {
             expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
         }
+
+        grid.deselectAllRows();
+        fix.detectChanges();
+        selRows = grid.selectedRows();
+        expect(selRows.length).toEqual(0);
+
+        const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
+        const headerCheckboxElement: Element = headerRow.querySelector('.igx-checkbox__input');
+        headerCheckboxElement.dispatchEvent(new Event('click'));
+        fix.detectChanges();
+
+        selRows = grid.selectedRows();
+        expect(selRows.length).toEqual(8);
+
+        rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
+        for (const r of rows) {
+            expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
+        }
+
      });
 
+     // GroupBy + Resizing
+     it('should retain same size for group row after a column is resized.', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        fix.componentInstance.enableResizing = true;
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        let grRows = grid.groupedRowList.toArray();
+        for (const grRow of grRows) {
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+        }
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        const headerResArea = headers[0].nativeElement.children[2];
+        simulateMouseEvent('mouseover', headerResArea, 200, 5);
+        simulateMouseEvent('mousedown', headerResArea, 200, 5);
+        simulateMouseEvent('mouseup', headerResArea, 200, 5);
+        tick(100);
+        fix.detectChanges();
+        simulateMouseEvent('mousedown', headerResArea, 200, 5);
+        tick(100);
+        fix.detectChanges();
+
+        const resizer = headers[0].nativeElement.children[2].children[0];
+        expect(resizer).toBeDefined();
+        simulateMouseEvent('mousemove', resizer, 550, 5);
+        tick(100);
+
+        simulateMouseEvent('mouseup', resizer, 550, 5);
+        tick();
+        fix.detectChanges();
+
+        expect(grid.columns[0].width).toEqual('550px');
+
+        grRows = grid.groupedRowList.toArray();
+        for (const grRow of grRows) {
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+        }
+        discardPeriodicTasks();
+     }));
+
+     function simulateMouseEvent(eventName: string, element, x, y) {
+        const options: MouseEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: x,
+            clientY: y
+        };
+
+        return new Promise((resolve, reject) => {
+                element.dispatchEvent(new MouseEvent(eventName, options));
+                resolve();
+        });
+     }
+
+    // GroupBy + Summaries
+    it('should take into account only the data records when calculating summaries.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        grid.enableSummaries([{fieldName: 'ProductName'}]);
+        fix.detectChanges();
+
+        expect(grid.hasSummarizedColumns).toBe(true);
+
+        const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary'));
+        const labels = summaries[2].queryAll(By.css(SUMMARY_LABEL_CLASS));
+        const values = summaries[2].queryAll(By.css(SUMMARY_VALUE_CLASS));
+        expect(labels.length).toBe(1);
+        expect(labels[0].nativeElement.innerText).toBe('Count');
+        expect(values.length).toBe(1);
+        expect(values[0].nativeElement.innerText).toBe('8');
+    });
+
+    // GroupBy + Hiding
+    it('should retain same size for group row after a column is hidden.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        grid.getColumnByName('ProductName').hidden = true;
+        grid.getColumnByName('Released').hidden = true;
+
+         fix.detectChanges();
+
+        const grRows = grid.groupedRowList.toArray();
+        for (const grRow of grRows) {
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+        }
+    });
+
+    // GroupBy + Pinning
+    it('should retain same size for group row after a column is pinned.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '500px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        grid.pinColumn('ProductName');
+
+        fix.detectChanges();
+        const grRows = grid.groupedRowList.toArray();
+        for (const grRow of grRows) {
+            expect(grRow.element.nativeElement.clientWidth).toEqual(500);
+        }
+    });
+
+    // GroupBy + Updating
+    it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '500px';
+        grid.columnWidth = '200px';
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        // verify rows
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+
+        // add records
+        grid.addRow({
+            Downloads: 0,
+            ID: 1010,
+            ProductName: 'Ignite UI for Everyone',
+            ReleaseDate: new Date(),
+            Released: false
+        });
+        fix.detectChanges();
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(6);
+        expect(dataRows.length).toEqual(9);
+
+        // update records
+        grid.updateRow({ProductName: 'Ignite UI for Angular'}, 1010);
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(9);
+
+        grid.deleteRow(1010);
+        grid.deleteRow(3);
+        grid.deleteRow(6);
+        fix.detectChanges();
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(4);
+        expect(dataRows.length).toEqual(6);
+    });
+
+    it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableEditing = true;
+        fix.componentInstance.width = '800px';
+        grid.columnWidth = '200px';
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const rv =  grid.getRowByKey(5).element.nativeElement.querySelectorAll(CELL_CSS_CLASS)[2];
+        const cell = grid.getCellByColumn(5, 'ProductName');
+
+        cell.column.editable = true;
+        rv.dispatchEvent(new Event('focus'));
+
+        fix.detectChanges();
+        rv.dispatchEvent(new Event('dblclick'));
+        fix.detectChanges();
+        expect(cell.inEditMode).toBe(true);
+
+        const inputElem = cell.nativeElement.querySelector('.igx-input-group__input');
+        inputElem.value = 'NetAdvantage';
+
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: 'enter',
+            key: 'enter'
+        });
+        inputElem.dispatchEvent(keyboardEvent);
+        fix.detectChanges();
+
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+
+        // re-apply grouping
+        grid.groupBy('ProductName', SortingDirection.Asc, false);
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(4);
+        expect(dataRows.length).toEqual(8);
+    });
 
     // GroupBy Area
     it('should apply group area if a column is grouped.', () => {
@@ -816,6 +1059,8 @@ export class DefaultGridComponent {
     public instance: IgxGridComponent;
     public enableSorting = false;
     public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = false;
 
     public data = [
         {
@@ -879,6 +1124,8 @@ export class DefaultGridComponent {
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
         column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
     }
 }
 
