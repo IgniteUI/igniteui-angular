@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, ViewChild } from '@angular/core';
+﻿﻿import { Component, DebugElement, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,7 +19,8 @@ describe('IgxGrid - Summaries', () => {
             declarations: [
                 NoActiveSummariesComponent,
                 SummaryColumnComponent,
-                VirtualSummaryColumnComponent
+                VirtualSummaryColumnComponent,
+                UndefinedGridDataComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot()]
         })
@@ -381,6 +382,29 @@ describe('IgxGrid - Summaries', () => {
             done();
         });
     });
+
+    it('When we have data which is undefined and enable summary per defined column, error should not be thrown', async(() => {
+        const fix = TestBed.createComponent(UndefinedGridDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const idColumn = grid.getColumnByName('ID');
+        expect(grid.data.length > 0).toEqual(true);
+
+        fix.whenStable().then(() => {
+            fix.componentInstance.data = undefined;
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            expect(grid.data).toEqual(undefined);
+            expect(() => {
+                grid.enableSummaries(idColumn.field);
+                fix.detectChanges();
+            }).not.toThrow();
+        });
+    }));
+
     it('should render correct data after hiding all summaries when scrolled to the bottom',  (done) => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
@@ -486,7 +510,6 @@ describe('IgxGrid - Summaries', () => {
         const expectedLength = maxSummaryLength * INITIAL_SUMMARY_SIZE;
         return expectedLength;
     }
-
 });
 
 @Component({
@@ -619,4 +642,30 @@ export class  VirtualSummaryColumnComponent {
         const hScrollbar = this.grid1.parentVirtDir.getHorizontalScroll();
         hScrollbar.scrollLeft = newLeft;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column field="ID" [dataType]="'number'" [hasSummary]="hasSummary"></igx-column>
+        </igx-grid>`
+})
+export class UndefinedGridDataComponent {
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent})
+    public grid: IgxGridComponent;
+
+    constructor() { }
+
+    public data: any = [
+        { ID: 1 },
+        { ID: 2 },
+        { ID: 3 },
+        { ID: 4 },
+        { ID: 5 },
+        { ID: 6 },
+        { ID: 7 }
+    ];
+
+    public hasSummary = false;
 }

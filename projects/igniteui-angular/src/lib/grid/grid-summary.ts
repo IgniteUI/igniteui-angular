@@ -12,6 +12,10 @@ export interface IgxSummaryResult {
 export class IgxSummaryOperand {
 
     public operate(data?: any[]): IgxSummaryResult[] {
+        if (!data) {
+            return;
+        }
+
         return [{
             key: 'count',
             label: 'Count',
@@ -25,6 +29,10 @@ export class IgxSummaryOperand {
 export class IgxNumberSummaryOperand extends IgxSummaryOperand {
 
     public operate(data?: any[]): IgxSummaryResult[] {
+        if (!data) {
+            return;
+        }
+
         const result = super.operate(data);
         result.push({
             key: 'min',
@@ -46,28 +54,28 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
     }
 
     public min(data?: any[]): any {
-        if (data.length > 0) {
+        if (data && data.length > 0) {
             return data.reduce((a, b) => Math.min(a, b));
         } else {
             return;
         }
     }
     public max(data?: any[]): any {
-        if (data.length > 0) {
+        if (data && data.length > 0) {
             return data.reduce((a, b) => Math.max(a, b));
         } else {
             return;
         }
     }
     public sum(data?: any[]): any {
-        if (data.length > 0) {
+        if (data && data.length > 0) {
             return data.reduce((a, b) => +a + +b);
         } else {
             return;
         }
     }
     public average(data?: any[]): any {
-        if (data.length > 0) {
+        if (data && data.length > 0) {
             return this.sum(data) / this.count(data);
         } else {
             return;
@@ -77,6 +85,10 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
 export class IgxDateSummaryOperand extends IgxSummaryOperand {
 
     public operate(data?: any[]): IgxSummaryResult[] {
+        if (!data) {
+            return;
+        }
+
         const result = super.operate(data);
         result.push({
             key: 'earliest',
@@ -89,14 +101,14 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
         return result;
     }
     public latest(data?: any[]) {
-        if (data.length > 0) {
+        if (data && data.length > 0) {
             return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[0];
         } else {
             return;
         }
     }
     public earliest(data?: any[]) {
-        if (data.length > 0) {
+        if (data && data.length > 0) {
             return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[data.length - 1];
         } else {
             return;
