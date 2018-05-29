@@ -670,6 +670,86 @@ describe('IgxGrid - GropBy', () => {
         expect(rect.left).toEqual(origRect.left);
         expect(rect.top).toEqual(origRect.top);
     });
+    // GroupBy + Filtering
+    it('should filters by the data records and renders their related groups.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+        let allRows = grid.rowList.toArray();
+
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+        expect(grid.rowList.toArray().length).toEqual(13);
+
+        fix.detectChanges();
+        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        allRows = grid.rowList.toArray();
+
+        expect(groupRows.length).toEqual(2);
+        expect(dataRows.length).toEqual(4);
+        expect(grid.rowList.toArray().length).toEqual(6);
+    });
+
+    // GroupBy + RowSelectors
+     it('should not render row selectors in group row.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        grid.rowSelectable = true;
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+
+        fix.detectChanges();
+
+        const grRows = grid.groupedRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
+        for (const grRow of grRows) {
+            const checkBoxElement = grRow.element.nativeElement.querySelector('div.igx-grid__cbx-selection');
+            expect(checkBoxElement).toBeNull();
+        }
+        for (const dRow of dataRows) {
+            const checkBoxElement = dRow.element.nativeElement.querySelector('div.igx-grid__cbx-selection');
+            expect(checkBoxElement).toBeDefined();
+        }
+     });
+
+     it('should not select group rows when selectAll API is called.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        grid.rowSelectable = true;
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+
+        fix.detectChanges();
+
+        grid.selectAllRows();
+
+        fix.detectChanges();
+
+        const selRows = grid.selectedRows();
+        expect(selRows.length).toEqual(8);
+
+        const rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
+        for (const r of rows) {
+            expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
+        }
+     });
+
 
     // GroupBy Area
     it('should apply group area if a column is grouped.', () => {
@@ -696,13 +776,13 @@ describe('IgxGrid - GropBy', () => {
         expect(gridElement.clientHeight).toEqual(700);
     });
 
-    it("should allow collapsing and expanding all group rows", () => {
+    it('should allow collapsing and expanding all group rows', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector(".igx-grid");
+        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
-        grid.groupBy("ProductName", SortingDirection.Asc, false);
+        grid.groupBy('ProductName', SortingDirection.Asc, false);
         grid.toggleAllGroupRows();
         fix.detectChanges();
         const groupRows = grid.groupedRowList.toArray();
@@ -735,6 +815,7 @@ export class DefaultGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
     public enableSorting = false;
+    public enableFiltering = false;
 
     public data = [
         {
@@ -797,6 +878,7 @@ export class DefaultGridComponent {
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
     }
 }
 

@@ -490,11 +490,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         matchInfoCache: []
     };
 
-    public toggleAllGroupRows() {
-        this.groupingExpansionState = [];
-        this.groupByDefaultExpanded = !this.groupByDefaultExpanded;
-    }
-
     protected destroy$ = new Subject<boolean>();
 
     protected _perPage = 15;
@@ -923,6 +918,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const newIndex = col.visibleIndex;
         col.updateHighlights(oldIndex, newIndex);
         return true;
+    }
+
+    public toggleAllGroupRows() {
+        this.groupingExpansionState = [];
+        this.groupByDefaultExpanded = !this.groupByDefaultExpanded;
     }
 
     public unpinColumn(columnName: string): boolean {
