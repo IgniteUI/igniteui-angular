@@ -9,16 +9,13 @@ export interface IgxSummaryResult {
     label: string;
     summaryResult: any;
 }
+
 export class IgxSummaryOperand {
-    public static count(data?: any[]): any {
+    public static count(data: any[]): any {
         return data.length;
     }
 
-    public operate(data?: any[]): IgxSummaryResult[] {
-        if (!data) {
-            return;
-        }
-
+    public operate(data: any[]): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',
@@ -26,42 +23,24 @@ export class IgxSummaryOperand {
         }];
     }
 }
+
+// @dynamic
 export class IgxNumberSummaryOperand extends IgxSummaryOperand {
 
-    public static min(data?: any[]): any {
-        if (data && data.length > 0) {
-            return data.reduce((a, b) => Math.min(a, b));
-        } else {
-            return;
-        }
+    public static min(data: any[]): any {
+        return data.reduce((a, b) => Math.min(a, b));
     }
-    public static max(data?: any[]): any {
-        if (data && data.length > 0) {
-            return data.reduce((a, b) => Math.max(a, b));
-        } else {
-            return;
-        }
+    public static max(data: any[]): any {
+        return data.reduce((a, b) => Math.max(a, b));
     }
-    public static sum(data?: any[]): any {
-        if (data && data.length > 0) {
-            return data.reduce((a, b) => +a + +b);
-        } else {
-            return;
-        }
+    public static sum(data: any[]): any {
+        return data.reduce((a, b) => +a + +b);
     }
-    public static average(data?: any[]): any {
-        if (data && data.length > 0) {
-            return this.sum(data) / this.count(data);
-        } else {
-            return;
-        }
+    public static average(data: any[]): any {
+        return this.sum(data) / this.count(data);
     }
 
-    public operate(data?: any[]): IgxSummaryResult[] {
-        if (!data) {
-            return;
-        }
-
+    public operate(data: any[]): IgxSummaryResult[] {
         const result = super.operate(data);
         result.push({
             key: 'min',
@@ -82,27 +61,17 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
         return result;
     }
 }
+
+// @dynamic
 export class IgxDateSummaryOperand extends IgxSummaryOperand {
-    public static latest(data?: any[]) {
-        if (data && data.length > 0) {
-            return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[0];
-        } else {
-            return;
-        }
+    public static latest(data: any[]) {
+        return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[0];
     }
-    public static earliest(data?: any[]) {
-        if (data && data.length > 0) {
-            return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[data.length - 1];
-        } else {
-            return;
-        }
+    public static earliest(data: any[]) {
+        return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[data.length - 1];
     }
 
-    public operate(data?: any[]): IgxSummaryResult[] {
-        if (!data) {
-            return;
-        }
-
+    public operate(data: any[]): IgxSummaryResult[] {
         const result = super.operate(data);
         result.push({
             key: 'earliest',
