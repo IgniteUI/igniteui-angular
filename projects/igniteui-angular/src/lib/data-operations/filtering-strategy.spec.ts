@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { DataGenerator } from './test-util/data-generator';
 
 import { FilteringLogic, FilteringStrategy, IFilteringExpression, IFilteringState, IgxStringFilteringOperand,
-    IgxNumberFilteringOperand, 
+    IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand} from '../../public_api';
 
 describe('Unit testing FilteringStrategy', () => {
