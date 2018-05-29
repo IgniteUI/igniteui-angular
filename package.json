@@ -68,6 +68,7 @@
     "tslib": "^1.7.1",
     "tslint": "~5.9.1",
     "typedoc": "^0.11.1",
-    "typescript": "~2.7.2"
+    "typescript": "~2.7.2",
+    "webpack-cli": "^2.1.4"
   }
 }
