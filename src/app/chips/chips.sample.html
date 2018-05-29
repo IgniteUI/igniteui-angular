@@ -1,0 +1,13 @@
+<div class="sample-wrapper">
+    <app-page-header title="Chips" description="Hello chips"></app-page-header>
+    <section class="sample-content">
+        <igx-chips-area #chipsArea (onChipsOrderChange)="chipsOrderChanged($event)" (onChipMoveEnd)="chipMovingEnded()">
+            <igx-chip *ngFor="let chip of chipList" [id]="chip.id" (onRemove)="chipRemoved($event)">
+                <!-- <span igxPrefixConnector>></span> -->
+                <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
+                <label #label igxLabel [class]="''">{{chip.text}}</label>
+                <span igxSuffixConnector> -> </span>
+            </igx-chip>
+        </igx-chips-area>
+    </section>
+</div>

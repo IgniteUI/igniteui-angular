@@ -50,6 +50,7 @@ export * from './lib/calendar/index';
 export * from './lib/card/card.component';
 export * from './lib/carousel/carousel.component';
 export * from './lib/checkbox/checkbox.component';
+export * from './lib/chips/index';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
 export * from './lib/grid/index';
