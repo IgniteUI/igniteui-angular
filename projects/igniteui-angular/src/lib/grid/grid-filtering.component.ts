@@ -20,11 +20,7 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
-import { IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand,
-    IgxStringFilteringOperand,
-    IgxDateFilteringOperand,
-    IFilteringOperation } from '../../public_api';
+import { IFilteringOperation } from '../../public_api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,17 +52,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     get conditions() {
-        switch (this.dataType) {
-            case DataType.Number:
-                return IgxNumberFilteringOperand.instance().conditionList();
-            case DataType.Boolean:
-                return IgxBooleanFilteringOperand.instance().conditionList();
-            case DataType.Date:
-                return IgxDateFilteringOperand.instance().conditionList();
-            case DataType.String:
-            default:
-                return IgxStringFilteringOperand.instance().conditionList();
-        }
+        return this.column.filters.instance().conditionList();
     }
 
     get template() {
@@ -263,18 +249,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         event.stopPropagation();
     }
 
-    protected getCondition(value): IFilteringOperation {
-        switch (this.dataType) {
-            case DataType.Number:
-                return IgxNumberFilteringOperand.instance().condition(value);
-            case DataType.Boolean:
-                return IgxBooleanFilteringOperand.instance().condition(value);
-            case DataType.Date:
-                return IgxDateFilteringOperand.instance().condition(value);
-            case DataType.String:
-            default:
-                return IgxStringFilteringOperand.instance().condition(value);
-        }
+    protected getCondition(value: string): IFilteringOperation {
+        return this.column.filters.instance().condition(value);
     }
 
     protected transformValue(value) {

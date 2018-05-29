@@ -1,6 +1,6 @@
 /**
  * Provides base filtering operations
- * Singleton
+ * Implementations should be Singleton
  *
  * @export
  */
