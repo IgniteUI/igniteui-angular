@@ -25,13 +25,55 @@ describe('IgxGrid - GropBy', () => {
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const GROUPROW_CSS = '.igx-grid__tr--group';
     const DATAROW_CSS = '.igx-grid__tr';
+    const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
+    const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
     const GROUPROW_COTENT_CSS = '.igx-grid__groupContent';
+    const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
+        const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
+        const row = grid.getRowByIndex(rowStartIndex);
+        const cIndx = colIndex || 0;
+        const colKey = grid.columnList.toArray()[cIndx].field;
+        let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+        if (rowStartIndex === rowEndIndex) {
+            if (cb) { cb(); } return;
+        }
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: dir,
+            key: dir
+        });
+        const elem = row instanceof IgxGridGroupByRowComponent ?
+            row : grid.getCellByColumn(row.index, colKey);
+        if (dir === 'ArrowDown') {
+            elem.onKeydownArrowDown(keyboardEvent);
+        } else {
+            elem.onKeydownArrowUp(keyboardEvent);
+        }
+         grid.cdr.detectChanges();
+
+        if (nextRow) {
+            setTimeout(() => {
+                 grid.cdr.detectChanges();
+                 navigateToIndex(grid, nextRow.index, rowEndIndex, cb, colIndex);
+            });
+        } else {
+            // else wait for chunk to load.
+            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                next: () => {
+                    grid.cdr.detectChanges();
+                    nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+                    navigateToIndex(grid, nextRow.index, rowEndIndex, cb, colIndex);
+                }
+            });
+        }
+
+    };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
-                GroupableGridComponent
+                GroupableGridComponent,
+                CustomTemplateGridComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -264,6 +306,90 @@ describe('IgxGrid - GropBy', () => {
 
     });
 
+    it('should allow setting intial expand/collapse state', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+
+        grid.groupByDefaultExpanded = false;
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+
+        expect(groupRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(0);
+
+        for (const grRow of groupRows) {
+            expect(grRow.expanded).toBe(false);
+        }
+
+        grid.groupByDefaultExpanded = true;
+        grid.cdr.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+
+        expect(groupRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(8);
+
+        for (const grRow of groupRows) {
+            expect(grRow.expanded).toBe(true);
+        }
+    });
+
+    it('should trigger a onGroupingDone event when a column is grouped with the correct params.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const currExpr = fix.componentInstance.currentSortExpressions;
+        expect(currExpr.length).toEqual(1);
+        expect(currExpr[0].fieldName).toEqual('Released');
+    });
+
+    it('should allow setting custom template for group row content.', () => {
+        const fix = TestBed.createComponent(CustomTemplateGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const groupRows = grid.groupedRowList.toArray();
+
+        for (const grRow of groupRows) {
+           const elem = grRow.groupContent.nativeElement;
+           const grVal = grRow.groupRow.value === null ? '' : grRow.groupRow.value.toString();
+           const expectedText = 'Total items with value:' + grVal  +
+            ' are ' + grRow.groupRow.records.length;
+           expect(elem.innerText).toEqual(expectedText);
+        }
+    });
+
+    it('should have the correct ARIA attributes on the group rows.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const groupRows = grid.groupedRowList.toArray();
+        for (const grRow of groupRows) {
+           const elem =  grRow.element.nativeElement;
+           expect(elem.attributes['aria-describedby'].value).toEqual('igx-grid-0_Released');
+           expect(elem.attributes['aria-expanded'].value).toEqual('true');
+        }
+    });
+
     // GroupBy + Sorting integration
     it('should apply sorting on each group\'s records when non-grouped column is sorted.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -393,8 +519,36 @@ describe('IgxGrid - GropBy', () => {
     });
 
     // GroupBy + Selection integration
-    it('should allow keyboard navigation through group rows.',  fakeAsync(() => {
-        discardPeriodicTasks();
+   it('should toggle expand/collapse state of group row with Space/Enter key.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '400px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        const gRow = grid.groupedRowList.toArray()[0];
+        expect(gRow.expanded).toBe(true);
+        const evtEnter = new KeyboardEvent('keydown', {
+            code: 'enter',
+            key: 'enter'
+        });
+        const evtSpace = new KeyboardEvent('keydown', {
+            code: 'enter',
+            key: 'enter'
+        });
+        gRow.element.nativeElement.dispatchEvent(evtEnter);
+
+        fix.detectChanges();
+
+        expect(gRow.expanded).toBe(false);
+
+        gRow.element.nativeElement.dispatchEvent(evtEnter);
+        fix.detectChanges();
+        expect(gRow.expanded).toBe(true);
+    });
+
+    it('should allow keyboard navigation through group rows.',  (done) => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         const mockEvent = { preventDefault: () => { } };
@@ -407,56 +561,533 @@ describe('IgxGrid - GropBy', () => {
         grid.groupBy('ProductName', SortingDirection.Desc, false);
         grid.groupBy('Released', SortingDirection.Desc, false);
         fix.detectChanges();
+        const cbFunc2 = () => {
+            const row = grid.getRowByIndex(0);
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+            expect(row.focused).toBe(true);
+            done();
+        };
+        const cbFunc = () => {
+             fix.detectChanges();
+             const row = grid.getRowByIndex(9);
+             expect(row instanceof IgxGridRowComponent).toBe(true);
+             expect(row.focused).toBe(true);
+             expect(row.cells.toArray()[0].selected).toBe(true);
+
+             navigateToIndex(grid, 9, 0, cbFunc2);
+         };
+
+        navigateToIndex(grid, 0, 9, cbFunc);
+    });
+
+    it('should persist last selected cell column index when navigation through group rows.',  (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        const mockEvent = { preventDefault: () => { } };
+
+        fix.componentInstance.width = '400px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        fix.detectChanges();
+
+        const cbFunc2 = () => {
+            const row = grid.getRowByIndex(0);
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+            expect(row.focused).toBe(true);
+            done();
+        };
+        const cbFunc = () => {
+            fix.detectChanges();
+             const row = grid.getRowByIndex(9);
+             expect(row instanceof IgxGridRowComponent).toBe(true);
+             expect(row.focused).toBe(true);
+             expect(row.cells.last.selected).toBe(true);
+
+             navigateToIndex(grid, 9, 0, cbFunc2, 4);
+         };
+        setTimeout(() => {
+            const cell = grid.getCellByColumn(2, 'Released');
+            cell.onFocus(new Event('focus'));
+            fix.detectChanges();
+            navigateToIndex(grid, 0, 9, cbFunc, 4);
+        }, 10);
+    });
+
+    it('should clear selection from data cells when a group row is focused via KB navigation.',  (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        const mockEvent = { preventDefault: () => { } };
+
+        fix.componentInstance.width = '800px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+         const cbFunc = () => {
+             fix.detectChanges();
+             const row = grid.getRowByIndex(0);
+             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+             expect(row.focused).toBe(true);
+             const oldSelectedCell = grid.getCellByColumn(2, 'Downloads');
+             expect(cell.selected).toBe(false);
+             done();
+         };
+
+        const cell = grid.getCellByColumn(2, 'Downloads');
+        cell.onFocus(new Event('focus'));
+        fix.detectChanges();
+        expect(cell.selected).toBe(true);
+        navigateToIndex(grid, 2, 0, cbFunc);
+
+    });
+
+     // GroupBy + Virtualization integration
+     it('should virtualize data and group records.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        expect(grid.groupedRowList.toArray().length).toEqual(3);
+        expect(grid.dataRowList.toArray().length).toEqual(2);
+        expect(grid.rowList.toArray().length).toEqual(5);
+     });
+
+    it('should recalculate visible chunk data and scrollbar size when expanding/collapsing group rows.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const origScrollHeight = parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10);
+
+        // collapse all group rows currently in the view
+        const grRows = grid.groupedRowList.toArray();
+        grRows[0].toggle();
+        fix.detectChanges();
+
+        // verify rows are updated
+        expect(grid.groupedRowList.toArray().length).toEqual(4);
+        expect(grid.dataRowList.toArray().length).toEqual(1);
+        expect(grid.rowList.toArray().length).toEqual(5);
+
+        // verify scrollbar is updated - 4 rows x 50px are hidden.
+        expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
+            .toEqual(origScrollHeight - 200);
+
+        grRows[0].toggle();
+        fix.detectChanges();
+
+        expect(grid.groupedRowList.toArray().length).toEqual(3);
+        expect(grid.dataRowList.toArray().length).toEqual(2);
+        expect(grid.rowList.toArray().length).toEqual(5);
+
+        expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
+            .toEqual(origScrollHeight);
+      });
+
+    it('should persist group row expand/collapse state when scrolling.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        let groupRow = grid.groupedRowList.toArray()[0];
+        groupRow.toggle();
+
+        expect(groupRow.expanded).toBe(false);
+        fix.detectChanges();
+
+        // scroll to bottom
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        fix.detectChanges();
+
+        // scroll back to the top
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
+        fix.detectChanges();
+
+        groupRow = grid.groupedRowList.toArray()[0];
+
+        expect(groupRow.expanded).toBe(false);
+    });
+
+    it('should leave group rows static when scrolling horizontally.',  () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '400px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        fix.detectChanges();
+        const groupRow = grid.groupedRowList.toArray()[0];
+        const origRect = groupRow.element.nativeElement.getBoundingClientRect();
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        fix.detectChanges();
+
+        const rect = groupRow.element.nativeElement.getBoundingClientRect();
+
+        // verify row location is the same
+        expect(rect.left).toEqual(origRect.left);
+        expect(rect.top).toEqual(origRect.top);
+    });
+    // GroupBy + Filtering
+    it('should filters by the data records and renders their related groups.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+        let allRows = grid.rowList.toArray();
+
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+        expect(grid.rowList.toArray().length).toEqual(13);
+
+        fix.detectChanges();
+        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        allRows = grid.rowList.toArray();
+
+        expect(groupRows.length).toEqual(2);
+        expect(dataRows.length).toEqual(4);
+        expect(grid.rowList.toArray().length).toEqual(6);
+    });
+
+    // GroupBy + RowSelectors
+     it('should not render row selectors in group row.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        grid.rowSelectable = true;
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+
+        fix.detectChanges();
 
         const grRows = grid.groupedRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
-        grRows[0].groupContent.nativeElement.focus();
+        for (const grRow of grRows) {
+            const checkBoxElement = grRow.element.nativeElement.querySelector('div.igx-grid__cbx-selection');
+            expect(checkBoxElement).toBeNull();
+        }
+        for (const dRow of dataRows) {
+            const checkBoxElement = dRow.element.nativeElement.querySelector('div.igx-grid__cbx-selection');
+            expect(checkBoxElement).toBeDefined();
+        }
+     });
+
+     it('should not select group rows when selectAll API is called or when header checkbox is clicked.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        grid.rowSelectable = true;
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+
+        fix.detectChanges();
+
+        grid.selectAllRows();
+
+        fix.detectChanges();
+
+        let selRows = grid.selectedRows();
+        expect(selRows.length).toEqual(8);
+
+        let rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
+        for (const r of rows) {
+            expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
+        }
+
+        grid.deselectAllRows();
+        fix.detectChanges();
+        selRows = grid.selectedRows();
+        expect(selRows.length).toEqual(0);
+
+        const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
+        const headerCheckboxElement: Element = headerRow.querySelector('.igx-checkbox__input');
+        headerCheckboxElement.dispatchEvent(new Event('click'));
+        fix.detectChanges();
+
+        selRows = grid.selectedRows();
+        expect(selRows.length).toEqual(8);
+
+        rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
+        for (const r of rows) {
+            expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
+        }
+
+     });
+
+     // GroupBy + Resizing
+     it('should retain same size for group row after a column is resized.', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        fix.componentInstance.enableResizing = true;
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        let grRows = grid.groupedRowList.toArray();
+        for (const grRow of grRows) {
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+        }
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        const headerResArea = headers[0].nativeElement.children[2];
+        simulateMouseEvent('mouseover', headerResArea, 200, 5);
+        simulateMouseEvent('mousedown', headerResArea, 200, 5);
+        simulateMouseEvent('mouseup', headerResArea, 200, 5);
+        tick(100);
+        fix.detectChanges();
+        simulateMouseEvent('mousedown', headerResArea, 200, 5);
+        tick(100);
+        fix.detectChanges();
+
+        const resizer = headers[0].nativeElement.children[2].children[0];
+        expect(resizer).toBeDefined();
+        simulateMouseEvent('mousemove', resizer, 550, 5);
+        tick(100);
+
+        simulateMouseEvent('mouseup', resizer, 550, 5);
         tick();
         fix.detectChanges();
 
-        let focusedElem = grid.rowList.find((r) => r.focused);
+        expect(grid.columns[0].width).toEqual('550px');
 
-        expect(focusedElem.index).toEqual(0);
-        grRows[0].onKeydownArrowDown(new KeyboardEvent('keydown', { key: 'arrowdown', code: '40' }));
-        tick();
-        fix.detectChanges();
-
-        focusedElem = grid.rowList.filter((r) => r.focused);
-
-        expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
-
-        grRows[1].onKeydownArrowDown(new KeyboardEvent('keydown', { key: 'arrowdown', code: '40' }));
-        tick();
-        fix.detectChanges();
-
-        focusedElem = grid.rowList.filter((r) => r.focused);
-
-        expect(focusedElem[focusedElem.length - 1].index).toEqual(2);
-        // verify cell selected
-
-        const cell = dataRows[0].cells.toArray()[0];
-        expect(cell.selected).toBe(true);
-
-        cell.onKeydownArrowUp(new KeyboardEvent('keydown', { key: 'arrowup', code: '38' }));
-
-        tick();
-        fix.detectChanges();
-
-        focusedElem = grid.rowList.filter((r) => r.focused);
-
-        expect(focusedElem[focusedElem.length - 1].index).toEqual(1);
-
-        grRows[1].onKeydownArrowUp(new KeyboardEvent('keydown', { key: 'arrowup', code: '38' }));
-        tick();
-        fix.detectChanges();
-
-        focusedElem = grid.rowList.filter((r) => r.focused);
-
-        expect(focusedElem[focusedElem.length - 1].index).toEqual(0);
+        grRows = grid.groupedRowList.toArray();
+        for (const grRow of grRows) {
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+        }
         discardPeriodicTasks();
+     }));
 
-    }));
+     function simulateMouseEvent(eventName: string, element, x, y) {
+        const options: MouseEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: x,
+            clientY: y
+        };
 
+        return new Promise((resolve, reject) => {
+                element.dispatchEvent(new MouseEvent(eventName, options));
+                resolve();
+        });
+     }
+
+    // GroupBy + Summaries
+    it('should take into account only the data records when calculating summaries.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        grid.enableSummaries([{fieldName: 'ProductName'}]);
+        fix.detectChanges();
+
+        expect(grid.hasSummarizedColumns).toBe(true);
+
+        const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary'));
+        const labels = summaries[2].queryAll(By.css(SUMMARY_LABEL_CLASS));
+        const values = summaries[2].queryAll(By.css(SUMMARY_VALUE_CLASS));
+        expect(labels.length).toBe(1);
+        expect(labels[0].nativeElement.innerText).toBe('Count');
+        expect(values.length).toBe(1);
+        expect(values[0].nativeElement.innerText).toBe('8');
+    });
+
+    // GroupBy + Hiding
+    it('should retain same size for group row after a column is hidden.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        grid.getColumnByName('ProductName').hidden = true;
+        grid.getColumnByName('Released').hidden = true;
+
+         fix.detectChanges();
+
+        const grRows = grid.groupedRowList.toArray();
+        for (const grRow of grRows) {
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+        }
+    });
+
+    // GroupBy + Pinning
+    it('should retain same size for group row after a column is pinned.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '500px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        grid.pinColumn('ProductName');
+
+        fix.detectChanges();
+        const grRows = grid.groupedRowList.toArray();
+        for (const grRow of grRows) {
+            expect(grRow.element.nativeElement.clientWidth).toEqual(500);
+        }
+    });
+
+    // GroupBy + Updating
+    it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '500px';
+        grid.columnWidth = '200px';
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        // verify rows
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+
+        // add records
+        grid.addRow({
+            Downloads: 0,
+            ID: 1010,
+            ProductName: 'Ignite UI for Everyone',
+            ReleaseDate: new Date(),
+            Released: false
+        });
+        fix.detectChanges();
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(6);
+        expect(dataRows.length).toEqual(9);
+
+        // update records
+        grid.updateRow({ProductName: 'Ignite UI for Angular'}, 1010);
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(9);
+
+        grid.deleteRow(1010);
+        grid.deleteRow(3);
+        grid.deleteRow(6);
+        fix.detectChanges();
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(4);
+        expect(dataRows.length).toEqual(6);
+    });
+
+    it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableEditing = true;
+        fix.componentInstance.width = '800px';
+        grid.columnWidth = '200px';
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+
+        const rv =  grid.getRowByKey(5).element.nativeElement.querySelectorAll(CELL_CSS_CLASS)[2];
+        const cell = grid.getCellByColumn(5, 'ProductName');
+
+        cell.column.editable = true;
+        rv.dispatchEvent(new Event('focus'));
+
+        fix.detectChanges();
+        rv.dispatchEvent(new Event('dblclick'));
+        fix.detectChanges();
+        expect(cell.inEditMode).toBe(true);
+
+        const inputElem = cell.nativeElement.querySelector('.igx-input-group__input');
+        inputElem.value = 'NetAdvantage';
+
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: 'enter',
+            key: 'enter'
+        });
+        inputElem.dispatchEvent(keyboardEvent);
+        fix.detectChanges();
+
+        let groupRows = grid.groupedRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+
+        // re-apply grouping
+        grid.groupBy('ProductName', SortingDirection.Asc, false);
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(4);
+        expect(dataRows.length).toEqual(8);
+    });
+
+    // GroupBy Area
     it('should apply group area if a column is grouped.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -481,6 +1112,25 @@ describe('IgxGrid - GropBy', () => {
         expect(gridElement.clientHeight).toEqual(700);
     });
 
+    it('should allow collapsing and expanding all group rows', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+
+        grid.groupBy('ProductName', SortingDirection.Asc, false);
+        grid.toggleAllGroupRows();
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        expect(groupRows[0].expanded).not.toBe(true);
+        expect(groupRows[groupRows.length - 1].expanded).not.toBe(true);
+
+        grid.toggleAllGroupRows();
+        fix.detectChanges();
+        expect(groupRows[0].expanded).toBe(true);
+        expect(groupRows[groupRows.length - 1].expanded).toBe(true);
+    });
+
     // GroupBy + Paging integration
     it('should apply paging on data records only.', () => {
 
@@ -491,8 +1141,6 @@ describe('IgxGrid - GropBy', () => {
     });
 
     it('should persist groupby state between pages.', () => {
-
-    });
 });
 @Component({
     template: `
@@ -500,7 +1148,7 @@ describe('IgxGrid - GropBy', () => {
             [width]='width'
             [height]='height'
             [data]="data"
-            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)">
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
     `
 })
@@ -514,6 +1162,10 @@ export class DefaultGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
     public enableSorting = false;
+    public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = false;
+    public currentSortExpressions;
 
     public data = [
         {
@@ -576,6 +1228,12 @@ export class DefaultGridComponent {
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
+    }
+    public onGroupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
     }
 }
 
@@ -600,6 +1258,93 @@ export class GroupableGridComponent {
     public prevDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0, 0, 0);
     public width = '800px';
     public height = '700px';
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+
+    public data = [
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: 'Ignite UI for JavaScript',
+            ReleaseDate: this.today,
+            Released: false
+        },
+        {
+            Downloads: 1000,
+            ID: 2,
+            ProductName: 'NetAdvantage',
+            ReleaseDate: this.nextDay,
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: 'Ignite UI for Angular',
+            ReleaseDate: null,
+            Released: false
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: 'Ignite UI for JavaScript',
+            ReleaseDate: this.prevDay,
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: '',
+            ReleaseDate: null,
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 6,
+            ProductName: 'Ignite UI for Angular',
+            ReleaseDate: this.nextDay,
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.prevDay,
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: 'NetAdvantage',
+            ReleaseDate: this.today,
+            Released: false
+        }
+    ];
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="data">
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <ng-template igxGroupByRow let-groupRow>
+                <span>Total items with value:{{ groupRow.value }} are {{ groupRow.records.length }}</span>
+            </ng-template>
+        </igx-grid>
+    `
+})
+export class CustomTemplateGridComponent {
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    public nextDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0, 0);
+    public prevDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0, 0, 0);
+    public width = '800px';
+    public height = null;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;

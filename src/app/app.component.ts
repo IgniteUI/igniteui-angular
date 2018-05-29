@@ -169,6 +169,11 @@ export class AppComponent implements OnInit {
             link: '/toast',
             icon: 'android',
             name: 'Toast'
+        },
+        {
+            link: '/chips',
+            icon: 'android',
+            name: 'Chips'
         }
     ];
 

@@ -1,0 +1,12 @@
+igx-icon {
+    height: 1.5rem;
+}
+
+label {
+    position: unset;
+    width: unset;
+    -webkit-transform: unset;
+    transform: unset;
+    line-height: unset;
+    height: unset;
+}
