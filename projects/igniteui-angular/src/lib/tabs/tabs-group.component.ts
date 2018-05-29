@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewChecked,
     Component,
     ContentChild,
     Directive,
+    ElementRef,
     forwardRef,
     HostBinding,
     Inject,
@@ -20,7 +22,7 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
     templateUrl: 'tabs-group.component.html'
 })
 
-export class IgxTabsGroupComponent implements AfterContentInit {
+export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
     private _itemStyle = 'igx-tabs-group';
     public isSelected = false;
 
@@ -38,16 +40,6 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     @HostBinding('class.igx-tabs__group')
     get styleClass(): boolean {
         return true;
-    }
-
-    @HostBinding('attr.aria-labelledby')
-    get labelledBy(): string {
-        return 'igx-tab-item-' + this.index;
-    }
-
-    @HostBinding('attr.id')
-    get id(): string {
-        return 'igx-tabs__group-' + this.index;
     }
 
     public get itemStyle(): string {
@@ -74,19 +66,32 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         this._tabTemplate = template;
     }
 
+    get nativeElement() {
+        return this._nativeElement;
+    }
+
     private _tabTemplate: TemplateRef<any>;
+    private _nativeElement: ElementRef;
 
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
-    constructor(@Inject(forwardRef(() => IgxTabsComponent))
-    private _tabs: IgxTabsComponent) {
+    constructor(
+        @Inject(forwardRef(() => IgxTabsComponent))
+        private _tabs: IgxTabsComponent,
+        private _element: ElementRef) {
+        this._nativeElement = _element;
     }
 
     public ngAfterContentInit(): void {
         if (this.tabTemplate) {
             this._tabTemplate = this.tabTemplate.template;
         }
+    }
+
+    public ngAfterViewChecked() {
+        this.nativeElement.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
+        this.nativeElement.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
     }
 
     public select(focusDelay = 50, onInit = false) {
