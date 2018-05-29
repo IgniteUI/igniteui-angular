@@ -79,7 +79,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private get _isAtBottomIndex() {
-        return this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
+        return this.igxForOf && this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
     }
     private extraRowApplied = false;
 
@@ -740,7 +740,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
     private applyChunkSizeChange() {
-        const chunkSize = this.isRemote ? this.igxForOf.length : this._calculateChunkSize();
+        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this._calculateChunkSize();
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
