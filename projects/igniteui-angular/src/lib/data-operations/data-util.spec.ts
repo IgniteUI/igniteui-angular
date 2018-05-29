@@ -172,7 +172,7 @@ function testGroupBy() {
             expect(res[1].value).toEqual(true);
         });
 
-        fit('two level groups', () => {
+        it('two level groups', () => {
             const expr2 = {
                 fieldName: "string",
                 dir: SortingDirection.Asc
