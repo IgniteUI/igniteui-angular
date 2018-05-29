@@ -801,6 +801,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._groupBy(rest[0], rest[1], rest[2]);
         }
         this.calculateGridSizes();
+        this.onGroupingDone.emit(this.sortingExpressions);
     }
 
     public isExpandedGroup(group: IGroupByRecord): boolean {
