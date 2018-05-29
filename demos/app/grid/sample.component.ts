@@ -1,8 +1,8 @@
-import { Component, Injectable, ViewChild } from "@angular/core";
+import { Component, Injectable, ViewChild, Input } from "@angular/core";
 import { Http } from "@angular/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map  } from "rxjs/operators";
-import { IgxColumnHidingComponent } from "../../lib/grid/column-hiding.component";
+import { IgxColumnHidingComponent, ColumnDisplayOrder } from "../../lib/grid/column-hiding.component";
 import { IgxColumnComponent } from "../../lib/grid/column.component";
 import { IgxGridComponent } from "../../lib/grid/grid.component";
 import {

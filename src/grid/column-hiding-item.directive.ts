@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Directive, EventEmitter, Input, Output } from "@angular/core";
 import { IgxColumnHidingComponent } from "./column-hiding.component";
 
 export interface IValueChangedEventArgs {
@@ -20,11 +20,11 @@ export abstract class ItemPropertyValueChanged {
         }
     }
 
+    @Input()
     get value() {
         return (this.object) ? this.object[this._propName] : null;
     }
 
-    @Input()
     set value(value) {
         this.onValueChanged(value);
     }

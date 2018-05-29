@@ -2,12 +2,10 @@ import { CommonModule } from "@angular/common";
 import {
     ChangeDetectorRef,
     Component,
-    ElementRef,
     EventEmitter,
     Input,
     NgModule,
     OnDestroy,
-    OnInit,
     Output,
     TemplateRef,
     ViewChild } from "@angular/core";
@@ -31,10 +29,7 @@ export enum ColumnDisplayOrder {
     selector: "igx-column-hiding",
     templateUrl: "./column-hiding.component.html"
 })
-export class IgxColumnHidingComponent implements OnInit, OnDestroy {
-
-    @Input()
-    public showHiddenColumnsCount = true;
+export class IgxColumnHidingComponent implements OnDestroy {
 
     @Input()
     get columns() {
@@ -45,7 +40,6 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
         if (value) {
             this._gridColumns = value;
             this.createColumnItems();
-            this.cdr.markForCheck();
         }
     }
 
@@ -56,7 +50,6 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
 
     set title(value) {
         this._title = (value && value !== null) ? value : "";
-        this.cdr.markForCheck();
     }
 
     @Input()
@@ -66,7 +59,6 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
 
     set filterColumnsPrompt(value) {
         this._filterColumnsPrompt = (value && value !== null) ? value : "";
-        this.cdr.markForCheck();
     }
 
     @Input()
@@ -74,11 +66,11 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
         return this._currentColumns;
     }
 
+    @Input()
     get filterCriteria() {
         return this._filterCriteria;
     }
 
-    @Input()
     set filterCriteria(value) {
         if (!value || value.length === 0) {
             this.clearFiltering();
@@ -95,7 +87,7 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
     }
 
     @Input()
-    public get disableHideAll(): boolean {
+    get disableHideAll(): boolean {
         if (!this._currentColumns || this._currentColumns.length < 1 ||
                 this._hiddenColumnsCount === this.columns.length) {
             return true;
@@ -108,7 +100,7 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
     }
 
     @Input()
-    public get disableShowAll(): boolean {
+    get disableShowAll(): boolean {
         if (!this._currentColumns || this._currentColumns.length < 1 ||
             this._hiddenColumnsCount < 1 || this.hidableColumns.length < 1) {
             return true;
@@ -119,23 +111,25 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
         }
     }
 
+    @Input()
     get togglable() {
         return this._togglable;
     }
 
-    @Input()
     set togglable(value) {
         this._togglable = value;
         this.cdr.markForCheck();
     }
 
     @Input()
-    public get columnDisplayOrder() {
+    get columnDisplayOrder() {
         return this._columnDisplayOrder;
     }
 
-    public set columnDisplayOrder(value: ColumnDisplayOrder) {
-        this._columnDisplayOrder = value;
+    set columnDisplayOrder(value: ColumnDisplayOrder) {
+        if (value !== undefined) {
+            this.orderColumns(value);
+        }
         this.cdr.markForCheck();
     }
 
@@ -160,21 +154,24 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
     private _currentColumns = [];
     private _gridColumns = [];
     private _togglable = true;
-    private _filterCriteria = "";
-    private _filterColumnsPrompt = ""; // "Filter columns list ..."
-    private _showHiddenColumnsOnly = false;
     private _hiddenColumnsCount = 0;
-    private _title = ""; // no default value
     private _columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
+    private _filterCriteria = "";
+    private _filterColumnsPrompt = "";
+    private _title = "";
 
     public dialogShowing = false;
     public dialogPosition = "igx-filtering__options--to-right";
 
-    constructor(public cdr: ChangeDetectorRef) {
+    public get template(): TemplateRef<any> {
+        if (this.togglable) {
+            return this.columnChooserToggle;
+        } else {
+            return this.columnChooserInline;
+        }
     }
 
-    ngOnInit() {
-        this.cdr.markForCheck();
+    constructor(public cdr: ChangeDetectorRef) {
     }
 
     ngOnDestroy() {
@@ -188,18 +185,13 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
     }
 
     private createColumnItems() {
-        if (this._gridColumns !== undefined) {
+        if (this._gridColumns.length > 0) {
             this._currentColumns = [];
             this._hiddenColumnsCount = this._gridColumns.filter((col) => col.hidden).length;
             this._gridColumns.forEach((column) => {
                 this._currentColumns.push(this.createColumnHidingItem(this, column));
             });
-
-            if (this._columnDisplayOrder.toString() === ColumnDisplayOrder[ColumnDisplayOrder.Alphabetical]) {
-                this._currentColumns = this._currentColumns.sort((current, next) => {
-                    return current.name.toLowerCase().localeCompare(next.name.toLowerCase());
-                });
-            }
+            this.orderColumns(this._columnDisplayOrder);
         }
     }
 
@@ -211,6 +203,16 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
             this.onVisibilityChanged({ column: item.column, newValue: args.newValue });
         });
         return item;
+    }
+
+    private orderColumns(value) {
+        this._columnDisplayOrder = value;
+        if (value === ColumnDisplayOrder[ColumnDisplayOrder.Alphabetical] ||
+            value === ColumnDisplayOrder.Alphabetical) {
+            this._currentColumns = this._currentColumns.sort((current, next) => {
+                return current.name.toLowerCase().localeCompare(next.name.toLowerCase());
+            });
+        }
     }
 
     protected filter() {
@@ -245,14 +247,6 @@ export class IgxColumnHidingComponent implements OnInit, OnDestroy {
 
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
-    }
-
-    public get template(): TemplateRef<any> {
-        if (this.togglable) {
-            return this.columnChooserToggle;
-        } else {
-            return this.columnChooserInline;
-        }
     }
 
     public onVisibilityChanged(args: IColumnVisibilityChangedEventArgs) {

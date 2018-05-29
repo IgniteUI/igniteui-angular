@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Calendar } from "../calendar";
 import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from "./column-hiding-item.directive";
-import { IgxColumnHidingComponent, IgxColumnHidingModule } from "./column-hiding.component";
+import { ColumnDisplayOrder, IgxColumnHidingComponent, IgxColumnHidingModule } from "./column-hiding.component";
 import { IgxColumnComponent } from "./column.component";
 import { IgxGridComponent } from "./grid.component";
 import { IgxGridModule } from "./index";
@@ -70,6 +70,20 @@ describe("Column Hiding UI", () => {
                 expect(columnItems.length).toBe(5);
 
                 expect(getColumnHidingItems().length).toBe(5);
+        });
+
+        it("orders columns according to 'columnDisplayOrder'.", () => {
+            expect(columnChooser.columnDisplayOrder).toBe(ColumnDisplayOrder.DisplayOrder);
+
+            let columnItems = columnChooser.columnItems.map((item) => item.name);
+            expect(columnItems.toString()).toBe("ID,ProductName,Downloads,Released,ReleaseDate");
+
+            columnChooser.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
+            fix.detectChanges();
+
+            expect(columnChooser.columnDisplayOrder).toBe(ColumnDisplayOrder.Alphabetical);
+            columnItems = columnChooser.columnItems.map((item) => item.name);
+            expect(columnItems.toString()).toBe("Downloads,ID,ProductName,Released,ReleaseDate");
         });
 
         it("shows 'ProductName' checkbox unchecked and disabled.", () => {
