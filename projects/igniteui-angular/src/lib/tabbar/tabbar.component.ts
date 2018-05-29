@@ -171,18 +171,12 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
         this._tabTemplate = template;
     }
 
-    get nativeElement() {
-        return this._nativeElement;
-    }
-
     private _tabTemplate: TemplateRef<any>;
-    private _nativeElement: ElementRef;
 
     @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
     protected tabTemplate: IgxTabTemplateDirective;
 
     constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
-        this._nativeElement = _element;
     }
 
     public ngAfterContentInit(): void {
@@ -192,8 +186,8 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
     }
 
     public ngAfterViewChecked() {
-        this.nativeElement.nativeElement.setAttribute("aria-labelledby", `igx-tab-${this.index}`);
-        this.nativeElement.nativeElement.setAttribute("id", `igx-bottom-nav__panel-${this.index}`);
+        this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-${this.index}`);
+        this._element.nativeElement.setAttribute('id', `igx-bottom-nav__panel-${this.index}`);
     }
 
     public select() {

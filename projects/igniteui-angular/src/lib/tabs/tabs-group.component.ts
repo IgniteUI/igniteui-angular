@@ -66,12 +66,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
         this._tabTemplate = template;
     }
 
-    get nativeElement() {
-        return this._nativeElement;
-    }
-
     private _tabTemplate: TemplateRef<any>;
-    private _nativeElement: ElementRef;
 
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
@@ -80,7 +75,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
         @Inject(forwardRef(() => IgxTabsComponent))
         private _tabs: IgxTabsComponent,
         private _element: ElementRef) {
-        this._nativeElement = _element;
     }
 
     public ngAfterContentInit(): void {
@@ -90,8 +84,8 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     }
 
     public ngAfterViewChecked() {
-        this.nativeElement.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
-        this.nativeElement.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
+        this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
+        this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
     }
 
     public select(focusDelay = 50, onInit = false) {
