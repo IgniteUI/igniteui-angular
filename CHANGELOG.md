@@ -2,6 +2,38 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
+- `igxGrid` filtering operands
+    - 5 filtering operand classes are now exposed
+        - `IgxFilteringOperand` is a base filtering operand, which can be inherited when defining custom filtering conditions
+        - `IgxBooleanFilteringOperand` defines all default filtering conditions for `boolean` types
+        - `IgxNumberFilteringOperand` defines all default filtering conditions for `numeric` types
+        - `IgxStringFilteringOperand` defines all default filtering conditions for `string` types
+        - `IgxDateFilteringOperand` defines all default filtering conditions for `Date` types
+    - `IgxColumnComponent` now exposes a `filters` property, which takes an `IgxFilteringOperand` class reference
+        - Custom filters can now be provided to grid columns by populating the `operations` property of the `IgxFilteringOperand` with operations of `IFilteringOperation` type
+```
+export class IgxCustomFilteringOperand extends IgxFilteringOperand {
+    // Making the implementation singleton
+    private static _instance: IgxCustomFilteringOperand = null;
+
+    protected constructor() {
+        super();
+        this.operations = [{
+            name: 'true',
+            logic: (target: string) => {
+                return target === 'My custom filter';
+            }
+        }].concat(this.operations);
+    }
+
+    // singleton
+    // Must implement this method, because the IgxColumnComponent expects it
+    public static instance(): IgxCustomFilteringOperand {
+        return this._instance || (this._instance = new this());
+    }
+}
+```
+
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
 

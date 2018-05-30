@@ -5,7 +5,6 @@
  * @export
  */
 export class IgxFilteringOperand {
-
     public operations: IFilteringOperation[];
 
     public constructor() {
@@ -69,7 +68,7 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
     }
 
     public static instance(): IgxBooleanFilteringOperand {
-        return this._instance || (this._instance = new IgxBooleanFilteringOperand());
+        return this._instance || (this._instance = new this());
     }
 }
 
@@ -197,7 +196,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
     }
 
     public static instance(): IgxDateFilteringOperand {
-        return this._instance || (this._instance = new IgxDateFilteringOperand());
+        return this._instance || (this._instance = new this());
     }
 
     /**
@@ -297,7 +296,7 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
     }
 
     public static instance(): IgxNumberFilteringOperand {
-        return this._instance || (this._instance = new IgxNumberFilteringOperand());
+        return this._instance || (this._instance = new this());
     }
 }
 
@@ -367,7 +366,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
     }
 
     public static instance(): IgxStringFilteringOperand {
-        return this._instance || (this._instance = new IgxStringFilteringOperand());
+        return this._instance || (this._instance = new this());
     }
 
     /**
