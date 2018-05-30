@@ -178,4 +178,8 @@
     @include e(group-icon) {
         @extend %igx-grid__group-icon !optional;
     }
+
+    @include e(grouparea-placeholder) {
+        @extend %igx-grid__grouparea-placeholder !optional;
+    }
 }
