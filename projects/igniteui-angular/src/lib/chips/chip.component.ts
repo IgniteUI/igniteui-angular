@@ -78,6 +78,15 @@ export class IgxChipComponent {
     @HostBinding('style.zIndex')
     public zIndex = 1;
 
+    @Input()
+    public set color(newColor) {
+        this.chipArea.nativeElement.style.backgroundColor = newColor;
+    }
+
+    public get color() {
+        return this.chipArea.nativeElement.style.backgroundColor;
+    }
+
     @Output()
     public onOutOfAreaLeft = new EventEmitter<any>();
 
@@ -91,7 +100,16 @@ export class IgxChipComponent {
     public onMoveEnd = new EventEmitter<any>();
 
     @Output()
+    public onInteractionStart = new EventEmitter<any>();
+
+    @Output()
+    public onInteractionEnd = new EventEmitter<any>();
+
+    @Output()
     public onRemove = new EventEmitter<any>();
+
+    @ViewChild('chipArea', { read: ElementRef })
+    public chipArea: ElementRef;
 
     public defaultTransitionTime = '0.5s';
     public areaMovingPerforming = false;
@@ -128,7 +146,7 @@ export class IgxChipComponent {
         this.initialOffsetY = event.offsetY;
         this.transitionTime = '0s'; // transition time with 0s disables transition
         this.zIndex = 10;
-        this.onMoveStart.emit();
+        this.onInteractionStart.emit();
     }
 
     @HostListener('pointermove', ['$event'])
@@ -138,10 +156,18 @@ export class IgxChipComponent {
                 owner: this,
                 isValid: false
             };
+            if (!this.bMoved) {
+                this.onMoveStart.emit();
+            }
 
-            this.bMoved = true;
-            this.top += event.clientY - this.oldMouseY;
-            this.left += event.clientX - this.oldMouseX;
+            const moveY = event.clientY - this.oldMouseY;
+            const moveX = event.clientX - this.oldMouseX;
+            if (moveX || moveY) {
+                this.bMoved = true;
+            }
+
+            this.top += moveY;
+            this.left += moveX;
             this.oldMouseX = event.clientX;
             this.oldMouseY = event.clientY;
 
@@ -173,6 +199,10 @@ export class IgxChipComponent {
         this.top = 0;
         this.left = 0;
 
+        this.onInteractionEnd.emit({
+            owner: this,
+            moved: this.bMoved
+        });
         if (!this.bMoved) {
             this.zIndex = 1;
             this.onMoveEnd.emit();
@@ -192,7 +222,7 @@ export class IgxChipComponent {
 
     public onChipRemove() {
         const eventData = {
-            chip: this
+            owner: this
         };
         this.onRemove.emit(eventData);
     }

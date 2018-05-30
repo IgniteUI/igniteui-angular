@@ -1,7 +1,7 @@
 <span *ngIf="!isFirstChip" class="chip-connector" [style.visibility]="areaMovingPerforming ? 'hidden' : 'visible'">
     <ng-content select="igx-prefix-connector,[igxPrefixConnector]"></ng-content>
 </span>
-<span class="chip-area">
+<span #chipArea class="chip-area">
     <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     <ng-content select="[igxLabel]"></ng-content>
     <span #cancelContainer *ngIf="removable" igxButton="icon" igxRipple igxRippleCentered="true" (click)="onChipRemove()">

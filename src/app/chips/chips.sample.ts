@@ -34,7 +34,7 @@ export class ChipsSampleComponent {
 
     chipRemoved(event) {
         this.chipList = this.chipList.filter((item) => {
-            return item.id !== event.chip.id;
+            return item.id !== event.owner.id;
         });
         this.chipsArea.cdr.detectChanges();
     }

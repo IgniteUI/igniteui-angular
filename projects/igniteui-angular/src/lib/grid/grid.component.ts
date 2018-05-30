@@ -173,6 +173,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     set groupingExpressions(value) {
         this._groupingExpressions = cloneArray(value);
+        this.chipsGoupingExpressions = cloneArray(value);
         /* grouping should work in conjunction with sorting
         and without overriding seperate sorting expressions */
         this._applyGrouping();
@@ -476,6 +477,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcRowCheckboxWidth: number;
     public calcHeight: number;
     public tfootHeight: number;
+    public chipsGoupingExpressions = [];
 
     public cellInEditMode: IgxGridCellComponent;
 
@@ -1733,6 +1735,37 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this.lastSearchInfo.activeMatchIndex = 0;
             this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
+        }
+    }
+
+    public onChipRemoved(event) {
+        this.groupingExpressions = this.groupingExpressions.filter((expr) => {
+            return expr.fieldName !== event.owner.id;
+        });
+    }
+
+    public chipsOrderChanged(event) {
+        const newGrouping = [];
+        for (let i = 0; i < event.chipsArray.length; i++) {
+            const expr = this.groupingExpressions.filter((item) => {
+                return item.fieldName === event.chipsArray[i].id;
+            })[0];
+            newGrouping.push(expr);
+        }
+        this.chipsGoupingExpressions = newGrouping;
+        event.isValid = true;
+    }
+
+    public chipsMovingEnded() {
+        this.groupingExpressions = this.chipsGoupingExpressions;
+    }
+
+    public onChipInteractionEnd(event) {
+        if (!event.moved) {
+            const column = this.getColumnByName(event.owner.id);
+            const exprIndex = this.groupingExpressions.findIndex((expr) => expr.fieldName === column.field);
+            const sortDirection = this.groupingExpressions[exprIndex].dir;
+            this.groupingExpressions[exprIndex].dir = 3 - sortDirection;
         }
     }
 }
