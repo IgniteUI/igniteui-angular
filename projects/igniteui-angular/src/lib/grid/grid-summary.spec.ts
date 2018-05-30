@@ -309,7 +309,7 @@ describe('IgxGrid - Summaries', () => {
 
         expect(tfootSize).toBe(expectedHeight);
     });
-    fit('should calculate summaries for \'number\' dataType or return if no data is provided', () => {
+    it('should calculate summaries for \'number\' dataType or return if no data is provided', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
