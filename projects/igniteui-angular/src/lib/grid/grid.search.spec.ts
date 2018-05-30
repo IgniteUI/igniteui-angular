@@ -723,12 +723,12 @@ describe('IgxGrid - search API', () => {
         });
     });
 
-    it("Cells with no text should be excluded from the search", () => {
+    it('Cells with no text should be excluded from the search', () => {
         const fix = TestBed.createComponent(GridWithAvatarComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSearch;
-        const matches = grid.findNext("https");
+        const matches = grid.findNext('https');
         expect(matches).toBe(0);
     });
 
@@ -950,22 +950,22 @@ export class HiddenColumnsGridComponent {
 export class GridWithAvatarComponent {
     public data = [
         {
-            Name: "Person 1",
-            Avatar: "https://randomuser.me/api/portraits/men/43.jpg"
+            Name: 'Person 1',
+            Avatar: 'https://randomuser.me/api/portraits/men/43.jpg'
         },
         {
-            Name: "Person 2",
-            Avatar: "https://randomuser.me/api/portraits/women/66.jpg"
+            Name: 'Person 2',
+            Avatar: 'https://randomuser.me/api/portraits/women/66.jpg'
         },
         {
-            Name: "Person 3",
-            Avatar: "https://randomuser.me/api/portraits/men/92.jpg"
+            Name: 'Person 3',
+            Avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
         }
     ];
 
-    @ViewChild("gridSearch", { read: IgxGridComponent })
+    @ViewChild('gridSearch', { read: IgxGridComponent })
     public gridSearch: IgxGridComponent;
 
-    public highlightClass = "igx-highlight";
-    public activeClass = "igx-highlight__active";
+    public highlightClass = 'igx-highlight';
+    public activeClass = 'igx-highlight__active';
 }
