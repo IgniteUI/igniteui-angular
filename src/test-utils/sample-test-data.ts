@@ -1,4 +1,3 @@
-import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map  } from "rxjs/operators";
 import { Calendar } from "../calendar/calendar";
@@ -6,13 +5,12 @@ import { cloneObject } from "../core/utils";
 import { IDataState } from "../data-operations/data-state.interface";
 import { SortingDirection } from "../data-operations/sorting-expression.interface";
 
-@Injectable()
-export class TestDataService {
+export class SampleTestData {
 
-    private timeGenerator: Calendar = new Calendar();
-    private today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    private static timeGenerator: Calendar = new Calendar();
+    private static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
-    public stringArray = [
+    public static stringArray = [
         "Terrance Orta",
         "Richard Mahoney LongerName",
         "Donna Price",
@@ -20,45 +18,45 @@ export class TestDataService {
         "Dorothy H. Spencer"
     ];
 
-    public numbersArray = [
+    public static numbersArray = [
         10,
         20,
         30
     ];
 
-    public dateArray = [
+    public static dateArray = [
         new Date("2018"),
         new Date(2018, 3, 23),
         new Date(30),
         new Date("2018/03/23")
     ];
 
-    public emptyObjectData = [
+    public static emptyObjectData = [
         {},
         {},
         {}
     ];
-    public oneItemNumberData = [{ index: 1, value: 1 }];
+    public static oneItemNumberData = [{ index: 1, value: 1 }];
 
     /* Fields: index: number, value: number; 2 items. */
-    public numberDataTwoFields = [
+    public static numberDataTwoFields = [
         { index: 1, value: 1},
         { index: 2, value: 2}
     ];
 
     /* Fields: index: number, value: number, other: number, another: number; 2 items. */
-    public numberDataFourFields = [
+    public static numberDataFourFields = [
         { index: 1, value: 1, other: 1, another: 1},
         { index: 2, value: 2, other: 2, another: 2}
     ];
 
-    public differentTypesData = [
+    public static differentTypesData = [
         { Number: 1, String: "1", Boolean: true, Date: new Date(2018, 3, 3) },
         { Number: 2, String: "2", Boolean: false, Date: new Date(2018, 5, 6) },
         { Number: 3, String: "3", Boolean: true, Date: new Date(2018, 9, 22) }
     ];
 
-    public contactsData = [
+    public static contactsData = [
         {
             name: "Terrance Orta",
             phone: "770-504-2217"
@@ -77,7 +75,7 @@ export class TestDataService {
         }
     ];
 
-    public contactsFunkyData = [
+    public static contactsFunkyData = [
         {
             name: "Terrance Mc'Orta",
             phone: "(+359)770-504-2217 | 2218"
@@ -99,7 +97,7 @@ export class TestDataService {
         }
     ];
 
-    public contactsPartial = [
+    public static contactsPartial = [
         {
             name: "Terrance Orta",
             phone: "770-504-2217"
@@ -111,21 +109,21 @@ export class TestDataService {
     ];
 
     /* Data fields: ID: number, Name: string; 3 items. */
-    public personIDNameData = [
+    public static personIDNameData = [
         { ID: 1, Name: "Johny" },
         { ID: 2, Name: "Sally" },
         { ID: 3, Name: "Tim" }
     ];
 
     /* Data fields: FirstName: string, LastName: string, age:number; 3 items. */
-    public personNameAgeData = [
+    public static personNameAgeData = [
         { FirstName: "John", LastName: "Brown", age: 20 },
         { FirstName: "Ben", LastName: "Affleck", age: 30 },
         { FirstName: "Tom", LastName: "Riddle", age: 50 }
     ];
 
     /* Data fields: ID: number, Name: string, LastName: string, Region: string; 7 items. */
-    public personIDNameRegionData = [
+    public static personIDNameRegionData = [
         { ID: 2, Name: "Jane", LastName: "Brown", Region: "AD" },
         { ID: 1, Name: "Brad", LastName: "Williams", Region: "BD" },
         { ID: 6, Name: "Rick", LastName: "Jones", Region: "ACD"},
@@ -135,7 +133,7 @@ export class TestDataService {
         { ID: 3, Name: "Connor", LastName: "Walker", Region: "OC" }
     ];
 
-    public personJobData = [
+    public static personJobData = [
         { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
         { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
         { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
@@ -148,7 +146,7 @@ export class TestDataService {
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
     ];
 
-    public contactInfoData = [
+    public static contactInfoData = [
         {
             ID: "ALFKI",
             CompanyName: "Alfreds Futterkiste",
@@ -293,7 +291,7 @@ export class TestDataService {
     ];
 
     /* tslint:disable */
-    public contactInfoDataFull = [
+    public static contactInfoDataFull = [
         { "ID": "ALFKI", "CompanyName": "Alfreds Futterkiste", "ContactName": "Maria Anders", "ContactTitle": "Sales Representative", "Address": "Obere Str. 57", "City": "Berlin", "Region": null, "PostalCode": "12209", "Country": "Germany", "Phone": "030-0074321", "Fax": "030-0076545" },
         { "ID": "ANATR", "CompanyName": "Ana Trujillo Emparedados y helados", "ContactName": "Ana Trujillo", "ContactTitle": "Owner", "Address": "Avda. de la Constitución 2222", "City": "México D.F.", "Region": null, "PostalCode": "05021", "Country": "Mexico", "Phone": "(5) 555-4729", "Fax": "(5) 555-3745" },
         { "ID": "ANTON", "CompanyName": "Antonio Moreno Taquería", "ContactName": "Antonio Moreno", "ContactTitle": "Owner", "Address": "Mataderos 2312", "City": "México D.F.", "Region": null, "PostalCode": "05023", "Country": "Mexico", "Phone": "(5) 555-3932", "Fax": null },
@@ -324,7 +322,7 @@ export class TestDataService {
     ];
     /* tslint:enable */
 
-    public contactMariaAndersData = [{
+    public static contactMariaAndersData = [{
         ID: "ALFKI",
         CompanyName: "Alfreds Futterkiste",
         ContactName: "Maria Anders",
@@ -338,19 +336,19 @@ export class TestDataService {
         Fax: "030-0076545"
     }];
 
-    public productInfoData = [
+    public static productInfoData = [
         {
             Downloads: 254,
             ID: 1,
             ProductName: "Ignite UI for JavaScript",
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 15),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "day", 15),
             Released: false
         },
         {
             Downloads: 127,
             ID: 2,
             ProductName: "NetAdvantage",
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", -1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "month", -1),
             Released: true
         },
         {
@@ -364,7 +362,7 @@ export class TestDataService {
             Downloads: null,
             ID: 4,
             ProductName: null,
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", -1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "day", -1),
             Released: true
         },
         {
@@ -378,31 +376,31 @@ export class TestDataService {
             Downloads: 702,
             ID: 6,
             ProductName: "Some other item with Script",
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "day", 1),
             Released: null
         },
         {
             Downloads: 0,
             ID: 7,
             ProductName: null,
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", 1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "month", 1),
             Released: true
         },
         {
             Downloads: 1000,
             ID: 8,
             ProductName: null,
-            ReleaseDate: this.today,
+            ReleaseDate: SampleTestData.today,
             Released: false
         }
     ];
 
-    public productInfoDataFull = [
+    public static productInfoDataFull = [
         {
             Downloads: 254,
             ID: 1,
             ProductName: "Ignite UI for JavaScript",
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 15),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "day", 15),
             Released: false,
             Category: "Category 1",
             Items: "Item 1",
@@ -412,7 +410,7 @@ export class TestDataService {
             Downloads: 127,
             ID: 2,
             ProductName: "NetAdvantage",
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", -1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "month", -1),
             Released: true,
             Category: "Category 2",
             Items: "Item 2",
@@ -432,7 +430,7 @@ export class TestDataService {
             Downloads: null,
             ID: 4,
             ProductName: null,
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", -1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "day", -1),
             Released: true,
             Category: "Category 4",
             Items: "Item 4",
@@ -452,7 +450,7 @@ export class TestDataService {
             Downloads: 702,
             ID: 6,
             ProductName: "Some other item with Script",
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "day", 1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "day", 1),
             Released: null,
             Category: "Category 6",
             Items: "Item 6",
@@ -462,7 +460,7 @@ export class TestDataService {
             Downloads: 0,
             ID: 7,
             ProductName: null,
-            ReleaseDate: this.timeGenerator.timedelta(this.today, "month", 1),
+            ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "month", 1),
             Released: true,
             Category: "Category 7",
             Items: "Item 7",
@@ -472,7 +470,7 @@ export class TestDataService {
             Downloads: 1000,
             ID: 8,
             ProductName: null,
-            ReleaseDate: this.today,
+            ReleaseDate: SampleTestData.today,
             Released: false,
             Category: "Category 8",
             Items: "Item 8",
@@ -480,7 +478,7 @@ export class TestDataService {
         }
     ];
 
-    public foodProductData = [
+    public static foodProductData = [
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
         { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
         { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
@@ -493,7 +491,7 @@ export class TestDataService {
         { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: new Date("2018-03-01") }
     ];
 
-    public foodProductDataExtended = [
+    public static foodProductDataExtended = [
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
         { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
         { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
@@ -515,7 +513,7 @@ export class TestDataService {
         { ProductID: 19, ProductName: "Biscuits", InStock: true, UnitsInStock: 10570, OrderDate: new Date("2018-03-01") }
     ];
 
-    public generateNumberData(rowsCount: number) {
+    public static generateNumberData(rowsCount: number) {
         const data = [];
         for (let i = 0; i < rowsCount; i++) {
             data.push({ index: i, value: i, other: i, another: i });
@@ -523,7 +521,7 @@ export class TestDataService {
         return data;
     }
 
-    public generateNumberDataSpecial(numRows, numCols, defaultColWidth = null) {
+    public static generateNumberDataSpecial(numRows, numCols, defaultColWidth = null) {
         const cols = [];
         for (let j = 0; j < numCols; j++) {
             cols.push({
@@ -546,14 +544,14 @@ export class TestDataService {
 
     /* Data fields: Downloads:number, ID: number, ProductName: string, ReleaseDate: Date,
                     Released: boolean, Category: string, Items: string, Test: string. */
-    public generateProductData(itemsCount: number) {
+    public static generateProductData(itemsCount: number) {
         const data = [];
         for (let i = 0; i < itemsCount; i++) {
             const item = {
                 Downloads: 100 + i,
                 ID: i,
                 ProductName: "ProductName" + i,
-                ReleaseDate: this.timeGenerator.timedelta(this.today, "month", -1),
+                ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "month", -1),
                 Released: true,
                 Category: "Category" + i,
                 Items: "Items" + i,
@@ -566,7 +564,7 @@ export class TestDataService {
     }
 
     /* Data fields: ID: string, Column1: string, Column2: string, Column3: string. */
-    public generateBigValuesData(rowsCount: number) {
+    public static generateBigValuesData(rowsCount: number) {
         const bigData = [];
         for (let i = 0; i < rowsCount; i++) {
             for (let j = 0; j < 5; j++) {
@@ -582,7 +580,7 @@ export class TestDataService {
     }
 
     /* Data fields: ID: string, Column 1..N: number. */
-    public generateBigDataRowsAndCols(rowsCount: number, colsCount: number) {
+    public static generateBigDataRowsAndCols(rowsCount: number, colsCount: number) {
         const bigData = [];
         for (let i = 0; i < rowsCount; i++) {
             const row = {};
@@ -596,10 +594,11 @@ export class TestDataService {
         return bigData;
     }
 
-    public generateColumns(count, namePrefix = "col") {
+    public static generateColumns(count, namePrefix = "col") {
         const cols = [];
         for (let i = 0; i < count; i++) {
             cols.push({
+                key: namePrefix + i,
                 field: namePrefix + i,
                 header: namePrefix + i
             });
@@ -607,43 +606,45 @@ export class TestDataService {
         return cols;
     }
 
-    public generateColumnsByType(count, type: string, namePrefix = "col") {
+    public static generateColumnsByType(count, type: string, namePrefix = "col") {
         const cols = [];
         for (let i = 0; i < count; i++) {
             cols.push({
+                key: namePrefix + i,
                 field: namePrefix + i,
+                header: namePrefix + i,
                 dataType: type
             });
         }
         return cols;
     }
 
-    public generateEditableColumns(count, namePrefix = "col") {
+    public static generateEditableColumns(count, columnsType = "string", namePrefix = "col") {
         const cols = [];
         for (let i = 0; i < count; i++) {
             if (i % 2 === 0) {
                 cols.push({
                     key: namePrefix + i,
-                    dataType: "number",
+                    dataType: columnsType,
                     editable: true
                 });
             } else {
                 cols.push({
                     key: namePrefix + i,
-                    dataType: "number"
+                    dataType: columnsType
                 });
             }
         }
         return cols;
     }
 
-    public generateDataForColumns(columns: any[], rowsCount: number) {
+    public static generateDataForColumns(columns: any[], rowsCount: number, startFromOne = false) {
         const data = [];
 
         for (let r = 0; r < rowsCount; r++) {
             const record = {};
             for (let c = 0; c < columns.length; c++) {
-                c === 0 ? record[columns[c].key] = 1 : record[columns[c].key] = c * r;
+                (startFromOne && c === 0) ? record[columns[c].key] = 1 : record[columns[c].key] = c * r;
             }
             data.push(record);
         }
@@ -653,8 +654,8 @@ export class TestDataService {
 
     /* Generates data with headers in the format "colNamePrefix1..N" and
     number values calculated by "colIndex * rowIndex" formula. */
-    public generateData(rowsCount, colsCount, colNamePrefix = "col") {
-        const cols = this.generateColumns(colsCount, colNamePrefix);
+    public static generateData(rowsCount, colsCount, colNamePrefix = "col") {
+        const cols = SampleTestData.generateColumns(colsCount, colNamePrefix);
         const data = [];
         for (let r = 0; r < rowsCount; r++) {
             const record = {};
@@ -668,7 +669,7 @@ export class TestDataService {
 
     /* Generate a different set of data using the specified baseData.
     Note: If a numeric ID field is available, it will be incremented accordingly. */
-    public generateFromData(baseData: any[], rowsCount: number) {
+    public static generateFromData(baseData: any[], rowsCount: number) {
         const data = [];
         const iterations = Math.floor(rowsCount / baseData.length);
         const remainder = rowsCount % baseData.length;
@@ -676,7 +677,7 @@ export class TestDataService {
         for (let i = 0; i < iterations; i++) {
             baseData.forEach((item) => {
                 const currentItem = cloneObject(item);
-                const id = this.getIDColumnName(currentItem);
+                const id = SampleTestData.getIDColumnName(currentItem);
                 if (id) {
                     currentItem[id] = item[id] + i * baseData.length;
                 }
@@ -686,7 +687,7 @@ export class TestDataService {
         const currentLength = data.length;
         for (let i = 0; i < remainder; i++) {
             const currentItem = cloneObject(baseData[i]);
-            const id = this.getIDColumnName(currentItem);
+            const id = SampleTestData.getIDColumnName(currentItem);
             if (id) {
                 currentItem[id] = currentLength + baseData[i][id];
             }
@@ -696,7 +697,7 @@ export class TestDataService {
         return data;
     }
 
-    private getIDColumnName(dataItem: any) {
+    private static getIDColumnName(dataItem: any) {
         if (!dataItem) {
             return undefined;
         }

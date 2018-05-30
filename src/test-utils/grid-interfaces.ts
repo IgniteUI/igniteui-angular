@@ -1,30 +1,37 @@
-import { IgxGridCellComponent } from "../grid/cell.component";
-import { IGridCellEventArgs } from "../grid/grid.component";
 
+/* Add to template: (onSelection)="cellSelected($event)" */
 export interface IGridSelection {
-    /* Add to template: (onSelection)="cellSelected($event)" */
-
-    selectedCell: IgxGridCellComponent;
-    cellSelected(event: IGridCellEventArgs);
+    cellSelected(event);
 }
 
+/* Add to template: (onCellClick)="cellClick($event)" */
 export interface IGridCellClick {
-    /* Add to template: (onCellClick)="cellClick($event)" */
-
-    clickedCell: IgxGridCellComponent;
     cellClick(evt): void;
 }
 
+/* Add to template: (onDoubleClick)="doubleClick($event)" */
 export interface IGridCellDoubleClick {
-    /* Add to template: (onDoubleClick)="doubleClick($event)" */
-
-    clickedCell: IgxGridCellComponent;
     doubleClick(evt): void;
 }
 
+/* Add to template: (onContextMenu)="cellRightClick($event)" */
 export interface IGridContextMenu {
-    /* Add to template: (onContextMenu)="cellRightClick($event)" */
-
-    rightClickedCell: IgxGridCellComponent;
     cellRightClick(evt): void;
+}
+
+/* Add to template: ` (onColumnInit)="columnInit($event)"` */
+export interface IGridColumnInit {
+    columnInit(column): void;
+}
+
+/* Add to template: `(onRowAdded)="rowAdded($event)"
+                    (onRowDeleted)="rowDeleted($event)"` */
+export interface IGridRowEvents {
+    rowAdded(event): void;
+    rowDeleted(event): void;
+}
+
+/* Add to template: `(onColumnPinning)="columnPinning($event)"` */
+export interface IGridColumnPinning {
+    columnPinning(event): void;
 }
