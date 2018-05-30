@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-angular/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-angular?branch=master)
 [![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
 
-[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits and supporting directives for [Angular](https://angular.io/) by Infragistics.  Ignite UI for Angular is designed to enable developers to build the most modern, high-performance HTML5 & JavaScript apps for modern desktop browsers, mobile experiences and progressive web apps (PWA’s) targeting Google's Angular framework.  
+[Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) is a complete set of Material-based UI Widgets, Components & Sketch UI kits and supporting directives for [Angular](https://angular.io/) by Infragistics.  Ignite UI for Angular is designed to enable developers to build the most modern, high-performance HTML5 & JavaScript apps for modern desktop browsers, mobile experiences and progressive web apps (PWA’s) targeting Google's Angular framework.
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
@@ -12,7 +12,7 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 #### [**Install our VSCode tooltip extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-tooltips)
 ![](https://dl.infragistics.com/tools/extensions/angular-tooltips/tooltip_preview.gif)
 
-**IMPORTANT** The repository has been renamed from `igniteui-js-blocks` to `igniteui-angular`. Read more on our new [naming convention](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-github-repo-name-changes). 
+**IMPORTANT** The repository has been renamed from `igniteui-js-blocks` to `igniteui-angular`. Read more on our new [naming convention](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-github-repo-name-changes).
 
 Current list of controls include:
 
@@ -62,59 +62,50 @@ ig add grid <component name>
 ig start
 ```
 
-## Build Library
-In case your editor cannot auto-compile the TypeScript files (VS, VS Code, others with plugins)
-there's a configured npm command in place to run the compiler:
+## Building the Library
+```
+// build the code
+ng build ignuteui-angular
 
-For both ESM and UMD builds
-```
-npm run build
-npm run build:watch // run in watch mode
-```
+// build the css
+npm run build:style
 
-ESM build only
-```
-npm run build:esm
-npm run build:esm:watch // run in watch mode
+// build them both
+npm run build:lib
 ```
 
-UMD build only
+You can find the build ouput under `dist/igniteui-angular`.
+
+## Running the tests
+
+Running the tests in watch mode:
+
 ```
-npm run build:umd
-npm run build:umd:watch // run in watch mode
+ng test igniteui-angular // or npm run test:lib:watch
 ```
 
-## Build API Docs
+Running the tests once with code coverage enabled:
+```
+npm run test:lib
+```
+
+## Building the API Docs
 The API docs are produced using TypeDoc and SassDoc. In order to build the docs, all you need to do is run:
 
 ```
 npm run build:docs
 ```
 
-The output of the API docs build is located under `dist/docs`.
+The output of the API docs build is located under `dist/igniteui-angular/docs`.
 
-## Run Experimental Demos
+## Run Demos Application
 
-The `demos` directory contains a sample application for development/experimental samples of the components and directives of the library.
-If you want to run the demo application make sure to install the application dependencies:
+The repository includes a sample application featuring the showcasing the different components/directives.
+In order to run the demo samples, build the library first and start the application.
 ```
-cd demos && npm install
+npm run build:lib
+ng serve
 ```
-
-Run the following command from the root directory of your repository.
-This will open the demos application in your preferred browser. Any changes in the
-application code will trigger a rebuild of the application.
-```
-cd ..
-npm run start:demos
-```
-
-In case you want to explore/experiment with the library code start the demo application
-with:
-```
-npm run start:dev
-```
-It will watch both the `src` and `demos` directories and will rebuild both the library and the application.
 
 **NOTE**: Experimental demos are not always stable.
 
@@ -141,9 +132,9 @@ This repository is a fork of the Angular QuickStart Source and has been updated 
 ## Demo Apps & Documentation
 The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
 
-To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/angular-samples/components/grid.html).  
+To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/angular-samples/components/grid.html).
 
-All help, related API documents and walk-throughs can be found for each control [here](https://www.infragistics.com/angular-samples/components/grid.html). 
+All help, related API documents and walk-throughs can be found for each control [here](https://www.infragistics.com/angular-samples/components/grid.html).
 
 ## Roadmap
 [Roadmap document](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md)
@@ -156,7 +147,7 @@ Community support for open source usage of this product is available at [StackOv
 Infragistics is only successful if you are successful, if you need additional assitance beyond our help documentation, forums or Prioroty Support, we have a full suite of Services offerings, including Angular Training, Application Architecture and Development and full Design Consultation.  Click to learn more about our [Services offerings](https://www.infragistics.com/consulting#popular-services).
 
 ## License
-This project is released under the Apache License, version 2.0.  This is a commercial product, requiring a valid paid-for license for commercial use.  This product is free to use for non-commercial applications, like non-profits and educational usage. 
+This project is released under the Apache License, version 2.0.  This is a commercial product, requiring a valid paid-for license for commercial use.  This product is free to use for non-commercial applications, like non-profits and educational usage.
 
 To acquire a license for commercial usage, please register for a trial and acquire a license at [Infragistics.com/Angular](https://www.infragistics.com/products/ignite-ui-angular/getting-started).
 
