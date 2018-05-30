@@ -1128,10 +1128,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     protected autogenerateColumns() {
-        if (!this.data) {
-            return;
-        }
-
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         const fields = Object.keys(this.data[0]);
         const columns = [];

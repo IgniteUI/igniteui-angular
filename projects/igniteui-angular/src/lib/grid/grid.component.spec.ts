@@ -423,21 +423,6 @@ describe('IgxGrid - input properties', () => {
              });
         });
     });
-
-    it('Should not throw when data is undefined and autoGenerate is enabled', async(() => {
-        const template = `<igx-grid [data]="data" [autoGenerate]="autoGenerate"></igx-grid>`;
-        TestBed.overrideComponent(IgxGridTestComponent, { set: { template } });
-        TestBed.compileComponents().then(() => {
-            const fix = TestBed.createComponent(IgxGridTestComponent);
-            const grid = fix.componentInstance.grid;
-
-            fix.componentInstance.autoGenerate = true;
-            fix.componentInstance.data = undefined;
-            expect(() => {
-                fix.detectChanges();
-            }).not.toThrow();
-        });
-    }));
 });
 
 @Component({
