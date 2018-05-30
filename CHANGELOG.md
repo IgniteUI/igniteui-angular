@@ -19,11 +19,11 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
         super();
         this.operations = [{
-            name: 'true',
+            name: 'custom',
             logic: (target: string) => {
                 return target === 'My custom filter';
             }
-        }].concat(this.operations);
+        }].concat(this.operations); // Keep the empty and notEmpty conditions from base
     }
 
     // singleton
