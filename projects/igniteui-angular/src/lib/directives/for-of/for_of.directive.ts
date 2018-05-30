@@ -68,7 +68,20 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _lastTouchY = 0;
     private _pointerCapture;
     private _gestureObject;
-    private _isScrolledToBottom = false;
+
+    private get _isScrolledToBottom() {
+        if (!this.getVerticalScroll()) {
+            return true;
+        }
+        const scrollTop = this.getVerticalScroll().scrollTop;
+        const scrollHeight = this.getVerticalScroll().scrollHeight;
+        return Math.floor(scrollTop + this.igxForContainerSize) === scrollHeight;
+    }
+
+    private get _isAtBottomIndex() {
+        return this.igxForOf && this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
+    }
+    private extraRowApplied = false;
 
     // Start properties related to virtual height handling due to browser limitation
     /** Maximum height for an element of the browser. */
@@ -352,17 +365,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.state.startIndex = currIndex;
 
         if (endingIndex > this.igxForOf.length) {
-            // shrink the size of the chunk (remove the extra non-visible view) when the scroll is at the bottom.
             endingIndex = this.igxForOf.length;
-            this._isScrolledToBottom = true;
-            this.applyChunkSizeChange();
-        } else if (this._isScrolledToBottom && bUpdatedStart) {
-            // add one more non-visible view in the chunk to ensure smooth scrolling when we scroll up from the bottom.
-            if (endingIndex < this.igxForOf.length) {
-                // Update _isScrolledToBottom only if the new endingIndex becomes less than the rows rendered.
-                // We can have updated startIndex, but the endIndex to still be the end
-                this._isScrolledToBottom = false;
-            }
+        }
+        if (bUpdatedStart &&
+            ((!this._isScrolledToBottom || !this._isAtBottomIndex) && !this.extraRowApplied) ||
+            ((this._isScrolledToBottom || this._isAtBottomIndex) && this.extraRowApplied)) {
+            // Reapply chunk size when are aren't at the buttom index but we don't have extra row applied as well.
+            // or reapply chunk size when we are at the bottom index but we have extra row applied.
+            // We check both scroll position and index to be sure since we actually check bottom index before recalculating chunk size.
             this.applyChunkSizeChange();
         }
 
@@ -596,19 +606,26 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     0
                 ) + 1;
                 chunkSize = endIndex - this.state.startIndex;
-                chunkSize = chunkSize > this.igxForOf.length ? this.igxForOf.length : chunkSize;
+                if (this.igxForOf && chunkSize > this.igxForOf.length) {
+                    chunkSize = this.igxForOf.length;
+                }
             } else {
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
-                if (chunkSize !== 0 && !this._isScrolledToBottom) {
+                if (chunkSize !== 0 && !this._isScrolledToBottom && !this._isAtBottomIndex) {
                     chunkSize ++;
+                    this.extraRowApplied = true;
+                } else {
+                    this.extraRowApplied = false;
                 }
-                if (chunkSize > this.igxForOf.length) {
+                if (this.igxForOf && chunkSize > this.igxForOf.length) {
                     chunkSize = this.igxForOf.length;
                 }
             }
         } else {
-            chunkSize = this.igxForOf.length;
+            if (this.igxForOf) {
+                chunkSize = this.igxForOf.length;
+            }
         }
         return chunkSize;
     }
@@ -646,7 +663,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _recalcScrollBarSize() {
-        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
+        const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;
@@ -659,7 +676,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _calcHeight(): number {
-        const count = this.totalItemCount || this.igxForOf.length;
+        const count = this.totalItemCount || (this.igxForOf ? this.igxForOf.length : 0);
         let height = count * parseInt(this.igxForItemSize, 10);
         this._virtHeight = height;
         if (height > this._maxHeight) {
@@ -698,7 +715,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /** If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize */
     protected addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
-        if (elemIndex > this.igxForOf.length) {
+        if (!this.igxForOf || elemIndex > this.igxForOf.length) {
             return;
         }
 
@@ -723,7 +740,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
     private applyChunkSizeChange() {
-        const chunkSize = this.isRemote ? this.igxForOf.length : this._calculateChunkSize();
+        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this._calculateChunkSize();
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {

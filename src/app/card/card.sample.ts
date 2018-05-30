@@ -61,8 +61,8 @@ export class CardSampleComponent {
             avatarUrl: 'assets/images/card/avatars/alicia_keys.jpg',
             buttons: ['share', 'play album'],
             imageUrl: 'assets/images/card/media/here_media.jpg',
-            subtitle: 'by Alicia Keys',
-            title: 'HERE'
+            subtitle: 'by Melow D',
+            title: 'THERE'
         }),
         cardFactory({
             buttons: ['Comment', 'Explore'],
@@ -73,7 +73,7 @@ export class CardSampleComponent {
             avatarUrl: 'assets/images/card/avatars/rupert_stadler.jpg',
             buttons: ['message', 'follow'],
             icons: ['add', 'star'],
-            imageUrl: 'assets/images/card/media/audi_tt.jpg',
+            imageUrl: 'assets/images/card/media/audi.jpg',
             subtitle: 'January 30, 2017',
             title: 'Rupert Stadler'
         }),

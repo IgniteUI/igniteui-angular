@@ -23,7 +23,7 @@ describe('Avatar', () => {
             .compileComponents();
     }));
 
-    it('Initializes round avatar with autoincremented id', () => {
+    it('Initializes avatar with auto-incremented id', () => {
         const fixture = TestBed.createComponent(InitAvatarComponent);
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
@@ -53,6 +53,7 @@ describe('Avatar', () => {
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
 
+        expect(avatar.elementRef.nativeElement.classList.contains('igx-avatar--rounded')).toBeTruthy();
         expect(fixture.debugElement.query(By.css('.igx-avatar__initials'))).toBeTruthy();
         expect(avatar.roundShape).toBeTruthy();
     });
@@ -74,13 +75,13 @@ describe('Avatar', () => {
         expect(spanEl.getAttribute('aria-roledescription') === 'icon type avatar').toBeTruthy();
     });
 
-    it('Initializes image avatar with src element', () => {
+    it('Initializes image avatar', () => {
         const fixture = TestBed.createComponent(InitImageAvatarComponent);
         fixture.detectChanges();
         const avatar = fixture.componentInstance.avatar;
 
         expect(avatar.image).toBeTruthy();
-        expect(avatar.src.length !== 0).toBeTruthy();
+        expect(avatar.image.nativeElement.style.backgroundImage.length !== 0).toBeTruthy();
         expect(avatar.elementRef.nativeElement.classList.contains('igx-avatar--large')).toBeTruthy();
         expect(avatar.image.nativeElement.classList.length === 1).toBeTruthy();
         expect(avatar.roundShape).toBeTruthy();
