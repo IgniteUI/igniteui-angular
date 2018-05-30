@@ -28,16 +28,16 @@ export class IgxSummaryOperand {
 export class IgxNumberSummaryOperand extends IgxSummaryOperand {
 
     public static min(data: any[]): any {
-        return data.reduce((a, b) => Math.min(a, b));
+        return data.length ? data.reduce((a, b) => Math.min(a, b)) : [];
     }
     public static max(data: any[]): any {
-        return data.reduce((a, b) => Math.max(a, b));
+        return data.length ? data.reduce((a, b) => Math.max(a, b)) : [];
     }
     public static sum(data: any[]): any {
-        return data.reduce((a, b) => +a + +b);
+        return data.length ? data.reduce((a, b) => +a + +b) : [];
     }
     public static average(data: any[]): any {
-        return this.sum(data) / this.count(data);
+        return data.length ? this.sum(data) / this.count(data) : [];
     }
 
     public operate(data: any[]): IgxSummaryResult[] {

@@ -309,7 +309,7 @@ describe('IgxGrid - Summaries', () => {
 
         expect(tfootSize).toBe(expectedHeight);
     });
-    it('should calculate summaries for \'number\' dataType or return if no data is provided', () => {
+    fit('should calculate summaries for \'number\' dataType or return if no data is provided', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -325,10 +325,20 @@ describe('IgxGrid - Summaries', () => {
 
         const emptySummaries = summaryClass.operate([]);
         expect(emptySummaries[0].summaryResult).toBe(0);
-        expect(emptySummaries[1].summaryResult).toBe(undefined);
-        expect(emptySummaries[2].summaryResult).toBe(undefined);
-        expect(emptySummaries[3].summaryResult).toBe(undefined);
-        expect(emptySummaries[4].summaryResult).toBe(undefined);
+        expect(typeof emptySummaries[1].summaryResult).not.toEqual(undefined);
+        expect(typeof emptySummaries[2].summaryResult).not.toEqual(undefined);
+        expect(typeof emptySummaries[3].summaryResult).not.toEqual(undefined);
+        expect(typeof emptySummaries[4].summaryResult).not.toEqual(undefined);
+
+        expect(typeof emptySummaries[1].summaryResult).not.toEqual(null);
+        expect(typeof emptySummaries[2].summaryResult).not.toEqual(null);
+        expect(typeof emptySummaries[3].summaryResult).not.toEqual(null);
+        expect(typeof emptySummaries[4].summaryResult).not.toEqual(null);
+
+        expect(emptySummaries[1].summaryResult.length === 0).toBeTruthy();
+        expect(emptySummaries[2].summaryResult.length === 0).toBeTruthy();
+        expect(emptySummaries[3].summaryResult.length === 0).toBeTruthy();
+        expect(emptySummaries[4].summaryResult.length === 0).toBeTruthy();
     });
     it('should calculate summaries for \'date\' dataType or return if no data is provided', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
