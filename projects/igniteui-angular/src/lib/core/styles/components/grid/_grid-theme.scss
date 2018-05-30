@@ -235,6 +235,12 @@
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         z-index: 2;
         display: table;
+
+        %grid__group-indentation {
+            &::after {
+                display: none;
+            }
+        }
     }
 
     %grid-tfoot {
@@ -482,7 +488,7 @@
         align-items: center;
         justify-content: flex-start;
         flex: 1 1 auto;
-        padding-left: rem(24px);
+        padding-left: rem(18px);
         border-bottom: 1px solid --var($theme, 'row-border-color');
         background: --var($theme, 'header-background');
 
@@ -510,6 +516,11 @@
             bottom: -1px;
             left: 0;
             background: --var($theme, 'header-background');
+        }
+
+        .igx-button--icon {
+            width: rem(28px);
+            height: rem(28px);
         }
     }
 
