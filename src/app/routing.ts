@@ -77,7 +77,7 @@ const appRoutes = [
         component: DialogSampleComponent
     },
     {
-        path: 'drop-down',
+        path: 'dropDown',
         component: DropDownSampleComponent
     },
     {
