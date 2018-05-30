@@ -381,7 +381,7 @@ describe('IgxGrid - GropBy', () => {
         const groupRows = grid.groupedRowList.toArray();
         for (const grRow of groupRows) {
            const elem =  grRow.element.nativeElement;
-           expect(elem.attributes['aria-describedby'].value).toEqual('igx-grid-0_Released');
+           expect(elem.attributes['aria-describedby'].value).toEqual(grid.id + '_Released');
            expect(elem.attributes['aria-expanded'].value).toEqual('true');
         }
     });
