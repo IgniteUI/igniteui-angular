@@ -18,7 +18,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
     protected constructor() {
         super();
-        this.operations = this.operations = [{
+        this.operations = [{
             name: 'custom',
             logic: (target: string) => {
                 return target === 'My custom filter';
