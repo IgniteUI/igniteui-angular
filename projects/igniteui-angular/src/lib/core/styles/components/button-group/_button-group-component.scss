@@ -1,0 +1,42 @@
+//// Button Group
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-button-group) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-group-display !optional;
+
+    @include e(item) {
+        @extend %igx-group-item !optional;
+    }
+
+    @include e(item, $m: selected) {
+        @extend %igx-group-item !optional;
+        @extend %igx-group-item-selected !optional;
+    }
+
+    @include e(item-content) {
+        @extend %igx-group-item-content !optional;
+    }
+
+    @include m(vertical) {
+
+        @extend %igx-group-display !optional;
+        @extend %igx-group-vertical !optional;
+
+        @include e(item) {
+            @extend %igx-group-item !optional;
+            @extend %igx-group-item-vertical !optional;
+        }
+
+        @include e(item, $m: selected) {
+            @extend %igx-group-item !optional;
+            @extend %igx-group-item-selected !optional;
+        }
+    }
+}

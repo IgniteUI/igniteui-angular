@@ -1,0 +1,117 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Navbar Theme
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $background [null] - The navbar background color.
+/// @param {Color} $text-color [null] - The navbar text color.
+/// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
+/// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
+/// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
+///
+/// @requires extend
+/// @requires text-contrast
+/// @requires igx-elevations
+/// @requires $elevations
+///
+/// @example scss Change the background color
+///   $my-navbar-theme: igx-navbar-theme($background: green);
+///   // Pass the theme to the igx-navbar component mixin
+///   @include igx-navbar($my-navbar-theme);
+@function igx-navbar-theme(
+    $palette: $default-palette,
+    $background: null,
+    $text-color: null,
+    $idle-icon-color: null,
+    $hover-icon-color: null,
+    $disable-shadow: false
+) {
+    $default-theme: (
+        name: 'igx-navbar',
+        background: igx-color($palette, 'primary'),
+        text-color: #fff,
+        idle-icon-color: #fff,
+        hover-icon-color: #fff,
+        nav-shadow: if($disable-shadow == false, igx-elevation($elevations, 4), none)
+    );
+
+    @if not($text-color) and $background {
+        $text-color: text-contrast($background);
+    }
+
+    @if not($idle-icon-color) and $background {
+        $idle-icon-color: text-contrast($background);
+    }
+
+    @if not($hover-icon-color) and $background {
+        $hover-icon-color: text-contrast($background);
+    }
+
+    @return extend($default-theme, (
+        palette: $palette,
+        background: $background,
+        text-color: $text-color,
+        idle-icon-color: $idle-icon-color,
+        hover-icon-color: $hover-icon-color
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires em
+/// @requires var
+@mixin igx-navbar($theme) {
+    @include igx-root-css-vars($theme);
+
+    $navbar-padding: 0 em(16px);
+    $navbar-title-fz: em(18px, 16px);
+    $navbar-title-lh: em(18px, 16px);
+    $navbar-title-margin: 0;
+
+    %igx-navbar-display {
+        display: flex;
+        position: relative;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 56px;
+        padding: $navbar-padding;
+        background: --var($theme, 'background');
+        color: --var($theme, 'text-color');
+        box-shadow: --var($theme, 'nav-shadow');
+        z-index: 4;
+    }
+
+    %igx-navbar-title {
+        margin: $navbar-title-margin;
+        font-size: $navbar-title-fz;
+        line-height: $navbar-title-lh;
+    }
+
+    %igx-navbar-bundle {
+        display: flex;
+        align-items: center;
+        user-select: none;
+
+        * + * {
+            margin-left: 16px;
+        }
+    }
+
+    %igx-navbar-icon-display {
+        igx-icon {
+            cursor: pointer;
+            color: --var($theme, 'idle-icon-color');
+            transition: color .15s $ease-out-quad;
+
+            &:hover {
+                color: --var($theme, 'hover-icon-color');
+            }
+        }
+    }
+}

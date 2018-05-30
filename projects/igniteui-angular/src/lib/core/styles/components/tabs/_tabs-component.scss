@@ -1,0 +1,89 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-tabs) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-tabs !optional;
+
+    @include e(header) {
+        @extend %igx-tabs__header !optional;
+    }
+
+    @include e(header-wrapper-fixed) {
+        @extend %igx-tabs__header-wrapper-fixed !optional;
+    }
+
+    @include e(header-wrapper-fluid) {
+        @extend %igx-tabs__header-wrapper-fluid !optional;
+    }
+
+    @include e(header-menu-item-indicator) {
+        @extend %igx-tabs__header-menu-item-indicator !optional;
+    }
+
+    @include e(item-label) {
+        @extend %igx-tabs__item-label !optional;
+    }
+
+    @include e(header-button) {
+        @extend %igx-tabs__header-button !optional;
+    }
+
+    @include e(header-button, $m: hidden) {
+        @extend %igx-tabs__header-button !optional;
+        @extend %igx-tabs__header-button--hidden !optional;
+    }
+
+    @include e(header-button, $m: none) {
+        @extend %igx-tabs__header-button--none !optional;
+    }
+
+    @include e(header-button, $m: active) {
+        @extend %igx-tabs__header-button !optional;
+    }
+
+    @include e(header-menu-item) {
+        @extend %igx-tabs__header-menu-item !optional;
+    }
+
+    @include e(header-menu-item, $m: selected) {
+        @extend %igx-tabs__header-menu-item !optional;
+        @extend %igx-tabs__header-menu-item--selected !optional;
+    }
+
+    @include e(header-menu-item, $m: disabled) {
+        @extend %igx-tabs__header-menu-item !optional;
+        @extend %igx-tabs__header-menu-item--disabled !optional;
+    }
+
+    @include e(content-fixed) {
+        @extend %igx-tabs__content-fixed !optional;
+    }
+
+    @include e(content-fluid) {
+        @extend %igx-tabs__content-fluid !optional;
+    }
+
+
+    @include e(group) {
+        @extend %igx-tabs__group !optional;
+    }
+
+    @include e(header-menu-item-icon) {
+        @extend  %igx-tabs__header-menu-item-icon !optional;
+    }
+
+    @include m(fixed) {
+        @extend %igx-tabs--fixed !optional;
+    }
+
+    @include m(icons) {
+        @extend %igx-tabs--icons !optional;
+    }
+}

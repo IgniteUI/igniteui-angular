@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300px" height="300px" viewBox="0 0 300 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>toast-bg-top</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Demo-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Data-Operations" transform="translate(-998.000000, -308.000000)">
+            <g id="toast-bg-top" transform="translate(998.000000, 308.000000)">
+                <rect id="bg" fill="#F8F8F8" x="0" y="0" width="300" height="300" rx="2"></rect>
+                <g id="lines" opacity="0.400000006" transform="translate(22.000000, 24.000000)" fill="#ECECEC">
+                    <rect id="line" x="0" y="0" width="256" height="39"></rect>
+                    <rect id="line" x="0" y="71" width="256" height="39"></rect>
+                    <rect id="line" x="0" y="142" width="256" height="39"></rect>
+                    <rect id="line" x="0" y="213" width="256" height="39"></rect>
+                </g>
+                <g id="toast" transform="translate(66.000000, 29.000000)">
+                    <rect id="toast-bg" fill="#4E4E4E" opacity="0.859999955" x="0" y="0" width="168" height="34" rx="17"></rect>
+                    <g id="text" transform="translate(16.000000, 16.000000)" stroke-width="5" stroke="#FFFFFF" stroke-linecap="square" opacity="0.349999994">
+                        <path d="M0.5,1.5 L29.5,1.5"></path>
+                        <path d="M42.8333333,1.5 L59.8333333,1.5"></path>
+                        <path d="M73.1666667,1.5 L119.166667,1.5"></path>
+                        <path d="M132.5,1.5 L135.5,1.5"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

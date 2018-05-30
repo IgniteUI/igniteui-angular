@@ -1,0 +1,91 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+/// Slider
+@include b(igx-slider) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    $thumbs: 'from' 'to';
+    @extend %igx-slider-display !optional;
+
+    @include e(track) {
+        @extend %igx-slider-track !optional;
+    }
+
+    @include e(track-fill) {
+        @extend %igx-slider-track-fill !optional;
+    }
+
+    @include e(track-ticks) {
+        @extend %igx-slider-track-ticks !optional;
+    }
+
+    @include e(thumbs) {
+        @extend %igx-slider-thumbs-container !optional;
+    }
+
+    @each $t in $thumbs {
+        @include e(thumb-#{$t}) {
+            @extend %igx-thumb-display !optional;
+
+            .label {
+                @extend %igx-thumb-label !optional;
+            }
+
+            .dot {
+                @extend %igx-thumb-dot !optional;
+            }
+        }
+
+        @include e(thumb-#{$t}, $m: active) {
+            @extend %igx-thumb--active !optional;
+
+            .label {
+                @extend %igx-thumb-label--active !optional;
+            }
+
+            .dot {
+                @extend %igx-thumb-dot--active !optional;
+            }
+        }
+    }
+
+    @include m(disabled) {
+        @extend %igx-slider-display !optional;
+
+        @include e(track) {
+            @extend %igx-slider-track !optional;
+            @extend %igx-slider-track--disabled !optional;
+        }
+
+        @include e(track-fill) {
+            @extend %igx-slider-track-fill !optional;
+            @extend %igx-slider-track-fill--disabled !optional;
+        }
+
+        @include e(track-ticks) {
+            @extend %igx-slider-track-ticks !optional;
+            @extend %igx-slider-track-ticks--disabled !optional;
+        }
+
+        @each $t in $thumbs {
+            @include e(thumb-#{$t}) {
+                @extend %igx-thumb-display !optional;
+
+                .label {
+                    @extend %igx-thumb-label !optional;
+                }
+
+                .dot {
+                    @extend %igx-thumb-dot--disabled !optional;
+                }
+            }
+        }
+    }
+}

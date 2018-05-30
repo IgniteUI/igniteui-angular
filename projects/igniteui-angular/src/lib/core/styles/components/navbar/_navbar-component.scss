@@ -1,0 +1,27 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-navbar) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-navbar-display !optional;
+
+    @include e(title) {
+        @extend %igx-navbar-title !optional;
+    }
+
+    @include e(left) {
+        @extend %igx-navbar-bundle !optional;
+        @extend %igx-navbar-icon-display !optional;
+    }
+
+    @include e(right) {
+        @extend %igx-navbar-bundle !optional;
+        @extend %igx-navbar-icon-display !optional;
+    }
+}

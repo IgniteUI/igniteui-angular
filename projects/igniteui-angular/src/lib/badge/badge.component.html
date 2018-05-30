@@ -1,0 +1,4 @@
+<div class="igx-badge__circle" [ngClass]="setClasses()" [attr.aria-roledescription]="roleDescription">
+    <span *ngIf="!icon" class="igx-badge__circle-value">{{value}}</span>
+    <igx-icon *ngIf="icon" fontSet="material" [name]="icon"></igx-icon>
+</div>

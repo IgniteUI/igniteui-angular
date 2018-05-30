@@ -1,0 +1,226 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
+/// Does ___not___ apply for disabled state colors.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $item-text-color [null]- The text color for button group items.
+/// @param {Color} $item-background [null] - The background color for button group items .
+/// @param {Color} $item-border-color [null] - The border color between button group items.
+///
+/// @param {Color} $item-hover-text-color [null] - The hover text color for button group items.
+/// @param {Color} $item-hover-background [null] - The hover background color for button group items.
+///
+/// @param {Color} $item-selected-text-color [null]- The text color for a selected item in the button group.
+/// @param {Color} $item-selected-background [null] - The background color for a selected item in the button group.
+/// @param {Color} $item-selected-border-color [null] - The border color for a selected item from the button group.
+///
+/// @param {Color} $disabled-text-color [null]- The text/icon color for a disabled item in the button group.
+/// @param {Color} $disabled-background-color [null] - The background color for a disabled item in the button group.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires text-contrast
+///
+/// @example scss Change the background, text, and border colors
+///   $my-button-group-theme: igx-button-group-theme(
+///     $item-text-color: white,
+///     $item-background: rgba(0, 0, 0, .8),
+///     $$item-border-color: #dadada
+///   );
+///   // Pass the theme to the igx-button-group component mixin
+///   @include igx-button-group($my-button-group-theme);
+@function igx-button-group-theme(
+    $palette: $default-palette,
+
+    $item-text-color: null,
+    $item-background: null,
+    $item-border-color: null,
+
+    $item-hover-text-color: null,
+    $item-hover-background: null,
+
+    $disabled-text-color: null,
+    $disabled-background-color: null,
+
+    $item-selected-text-color: null,
+    $item-selected-background: null,
+    $item-selected-border-color: null
+) {
+    $default-theme: (
+        name: 'igx-button-group',
+        item-text-color: igx-color($palette, 'grays', 500),
+        item-background: #fff,
+        item-border-color: transparent,
+
+        item-hover-text-color: igx-color($palette, 'grays', 800),
+        item-hover-background: igx-color($palette, 'grays', 400),
+
+        item-selected-text-color: igx-color($palette, 'grays', 800),
+        item-selected-background: igx-color($palette, 'grays', 400),
+        item-selected-border-color: rgba(igx-color($palette, 'grays', 500), .12),
+
+        disabled-text-color: igx-color($palette, 'grays', 300),
+        disabled-background-color: igx-color($palette, 'grays', 100)
+    );
+
+    @if not($item-text-color) and $item-background  {
+        $item-text-color: text-contrast($item-background);
+    }
+
+    @if not($item-hover-background) and $item-background {
+        $item-hover-background: rgba(text-contrast($item-background), .2);
+    }
+
+    @if not($item-hover-text-color) and $item-hover-background {
+        $item-hover-text-color: text-contrast($item-background);
+    }
+
+    @if not($item-selected-background) and $item-background {
+        $item-selected-background: rgba(text-contrast($item-background), .2);
+    }
+
+    @if not($item-selected-border-color) and $item-background {
+        $item-selected-border-color: rgba(text-contrast($item-background), .2);
+    }
+
+    @if not($item-selected-background) and $item-background {
+        $item-selected-text-color: text-contrast($item-background);
+    }
+
+    @if not($item-selected-text-color) and $item-selected-background {
+        $item-selected-text-color: text-contrast($item-background);
+    }
+
+    @if not($disabled-text-color) and $item-background {
+        $disabled-text-color: rgba(text-contrast($item-background), .3);
+    }
+
+    @return extend($default-theme, (
+        palette: $palette,
+        item-text-color: $item-text-color,
+        item-background: $item-background,
+        item-border-color: $item-border-color,
+
+        item-hover-text-color: $item-hover-text-color,
+        item-hover-background: $item-hover-background,
+
+        disabled-text-color:$disabled-text-color,
+        disabled-background-color:$disabled-background-color,
+
+        item-selected-text-color: $item-selected-text-color,
+        item-selected-background: $item-selected-background,
+        item-selected-border-color: $item-selected-border-color
+    ));
+}
+
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires $elevations
+/// @requires var
+@mixin igx-button-group($theme) {
+    @include igx-root-css-vars($theme);
+
+    $group-radius: 2px;
+    $group-shadow: igx-elevation($elevations, 2);
+
+    $group-item-min-width: 24px;
+    $group-item-min-height: 36px;
+    $group-item-border-thickness: 1px;
+    $group-item-font-weight: 600;
+
+    $group-items-margin: rem(10px, 16px);
+
+    %igx-group-display {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        border-radius: $group-radius;
+        box-shadow: $group-shadow;
+        transition: box-shadow .2s ease;
+        overflow: hidden;
+        background-color: --var($theme, 'item-background');
+
+        %igx-button--disabled {
+            color: --var($theme, 'disabled-text-color') !important;
+            background-color: --var($theme, 'disabled-background-color') !important;
+        }
+    }
+
+    %igx-group-vertical {
+        flex-flow: column nowrap;
+    }
+
+    %igx-group-item {
+        box-sizing: content-box;
+        flex-grow: 1;
+        flex-basis: 0;
+        border: initial;
+        border-radius: 0;
+        border-left: $group-item-border-thickness solid;
+        border-right: $group-item-border-thickness solid;
+        border-color: --var($theme, 'item-border-color');
+        color: --var($theme, 'item-text-color');
+        background-color: --var($theme, 'item-background');
+        min-width: $group-item-min-width;
+        min-height: $group-item-min-height;
+        font-weight: $group-item-font-weight;
+
+        &:first-child {
+            border-left-width: 0;
+        }
+
+        &:last-child {
+            border-right-width: 0;
+        }
+
+        &:hover,
+        &:focus{
+            color: --var($theme, 'item-hover-text-color');
+            background-color: --var($theme, 'item-hover-background');
+        }
+    }
+
+    %igx-group-item-vertical {
+        border-left: 0;
+        border-right: 0;
+        border-bottom: $group-item-border-thickness solid;
+        border-color: --var($theme, 'item-border-color');
+
+        &:first-child {
+            border-top: 0;
+        }
+    }
+
+    %igx-group-item-selected {
+        color: --var($theme, 'item-selected-text-color');
+        background-color: --var($theme, 'item-selected-background');
+        border-color: --var($theme, 'item-selected-border-color');
+
+        &:hover,
+        &:focus{
+            color: --var($theme, 'item-selected-text-color');
+            background-color: --var($theme, 'item-selected-background');
+            border-color: --var($theme, 'item-selected-border-color');
+        }
+    }
+
+    %igx-group-item-content {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        * ~ * {
+            margin-left: $group-items-margin;
+        }
+    }
+}
