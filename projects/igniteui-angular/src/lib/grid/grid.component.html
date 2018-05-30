@@ -48,8 +48,9 @@
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody>
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
     | gridSort:sortingExpressions:id:pipeTrigger
+    | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupByDefaultExpanded:id:pipeTrigger
     | gridPaging:page:perPage:id:pipeTrigger
-    | gridGroupBy:groupingExpressions:groupingExpansionState:groupByDefaultExpanded:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
+    | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupByDefaultExpanded:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-container *ngIf="isGroupByRecord(rowData); else record_template">
             <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
