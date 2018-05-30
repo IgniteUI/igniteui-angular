@@ -1141,6 +1141,7 @@ describe('IgxGrid - GropBy', () => {
     });
 
     it('should persist groupby state between pages.', () => {
+    });
 });
 @Component({
     template: `

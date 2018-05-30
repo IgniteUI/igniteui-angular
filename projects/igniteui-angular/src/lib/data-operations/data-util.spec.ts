@@ -90,13 +90,13 @@ function testGroupBy() {
         data = dataGenerator.data;
         expr = {
             dir: SortingDirection.Asc,
-            fieldName: "boolean"
+            fieldName: 'boolean'
         };
         state = {
             expressions: [expr],
             expansion: [],
             defaultExpanded: true
-        }
+        };
     }));
     describe('Test groupBy', () => {
         it('groups by descending column "boolean", expanded', () => {
@@ -106,7 +106,7 @@ function testGroupBy() {
             res = DataUtil.group(res, state);
             // second group pipe
             res = DataUtil.restoreGroups(res, state);
-            expect(dataGenerator.getValuesForColumn(res, "boolean"))
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                         .toEqual([undefined, false, false, false, undefined, true, true]);
             const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
             const group1: IGroupByRecord = groups[1];
@@ -129,12 +129,12 @@ function testGroupBy() {
         it('groups by descending column "boolean", collapsed', () => {
             state.defaultExpanded = false;
             // sort
-            let sorted = DataUtil.sort(data, { expressions: [expr] });
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
             // first group pipe
             let res = DataUtil.group(sorted, state);
             // second group pipe
             res = DataUtil.restoreGroups(res, state);
-            expect(dataGenerator.getValuesForColumn(res, "boolean"))
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                         .toEqual([undefined, undefined]);
             const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
             expect(groups[0]).toEqual(null);
@@ -151,15 +151,15 @@ function testGroupBy() {
             state.expansion.push({
                 expanded: false,
                 value: false,
-                fieldName: "boolean"
+                fieldName: 'boolean'
             });
             // sort
-            let sorted = DataUtil.sort(data, { expressions: [expr] });
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
             // first group pipe
             let res = DataUtil.group(sorted, state);
             // second group pipe
             res = DataUtil.restoreGroups(res, state);
-            expect(dataGenerator.getValuesForColumn(res, "boolean"))
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                         .toEqual([undefined, undefined, true, true]);
             const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
             expect(groups[0]).toEqual(null);
@@ -174,22 +174,22 @@ function testGroupBy() {
 
         it('two level groups', () => {
             const expr2 = {
-                fieldName: "string",
+                fieldName: 'string',
                 dir: SortingDirection.Asc
             };
             state.expressions.push(expr2);
             // sort
-            let sorted = DataUtil.sort(data, { expressions: [expr, expr2] });
+            const sorted = DataUtil.sort(data, { expressions: [expr, expr2] });
             // first group pipe
             let res = DataUtil.group(sorted, state);
             // second group pipe
             res = DataUtil.restoreGroups(res, state);
-            expect(dataGenerator.getValuesForColumn(res, "boolean"))
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                         .toEqual([undefined, undefined, false, undefined, false,
                             undefined, false, undefined, undefined, true, undefined, true]);
-            expect(dataGenerator.getValuesForColumn(res, "string"))
-                        .toEqual([undefined, undefined, "row0, col1", undefined, "row2, col1",
-                        undefined, "row4, col1", undefined, undefined, "row1, col1", undefined, "row3, col1"]);
+            expect(dataGenerator.getValuesForColumn(res, 'string'))
+                        .toEqual([undefined, undefined, 'row0, col1', undefined, 'row2, col1',
+                        undefined, 'row4, col1', undefined, undefined, 'row1, col1', undefined, 'row3, col1']);
             const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
             const group1: IGroupByRecord = groups[1];
             const group2: IGroupByRecord = groups[2];
@@ -207,17 +207,17 @@ function testGroupBy() {
 
         it('groups by descending column "boolean", paging', () => {
             // sort
-            let sorted = DataUtil.sort(data, { expressions: [expr] });
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
             // first group pipe
-            let grouped = DataUtil.group(sorted, state);
+            const grouped = DataUtil.group(sorted, state);
             // page
             let res = DataUtil.page(grouped, { index: 0, recordsPerPage: 2 });
             // second group pipe
             res = DataUtil.restoreGroups(res, state);
-            expect(dataGenerator.getValuesForColumn(res, "boolean"))
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                         .toEqual([undefined, false, false]);
             let groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
-            let group1: IGroupByRecord = groups[1];
+            const group1: IGroupByRecord = groups[1];
             expect(groups[0]).toEqual(null);
             expect(res[0]).toEqual(group1);
             expect(groups[2]).toEqual(group1);
@@ -229,11 +229,11 @@ function testGroupBy() {
             res = DataUtil.page(grouped, { index: 1, recordsPerPage: 2 });
             // second group pipe
             res = DataUtil.restoreGroups(res, state);
-            expect(dataGenerator.getValuesForColumn(res, "boolean"))
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                         .toEqual([undefined, false, undefined, true]);
             groups = dataGenerator.getGroupRecords(res);
-            let group2: IGroupByRecord = groups[1];
-            let group3: IGroupByRecord = groups[3];
+            const group2: IGroupByRecord = groups[1];
+            const group3: IGroupByRecord = groups[3];
             expect(res[0]).toEqual(group2);
             expect(groups[0]).toEqual(null);
             expect(res[2]).toEqual(group3);
