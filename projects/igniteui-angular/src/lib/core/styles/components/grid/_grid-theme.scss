@@ -205,7 +205,7 @@
         grid-row: 2;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         z-index: 2;
-        height: fit-content;
+        display: table;
     }
 
     %grid-tfoot {
