@@ -12,12 +12,11 @@ import {    DataType,
             FilteringCondition,
             FilteringLogic, FilteringStrategy, IDataState,
             IFilteringExpression, IFilteringState,
-            IGroupByRecord,
+            IGroupByRecord, IGroupingState,
             IPagingState,
             ISortingExpression, ISortingState,
             PagingError, SortingDirection
         } from '../../public_api';
-import { IGroupingState } from 'tmp/src-inlined/data-operations/groupby-state.interface';
 /* Test sorting */
 function testSort() {
     let data: any[] = [];
