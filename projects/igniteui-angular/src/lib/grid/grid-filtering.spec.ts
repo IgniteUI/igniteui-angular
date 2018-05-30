@@ -7,12 +7,12 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand, IgxDateFilteringOperand } from '../../public_api';
+    IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxFilteringOperand } from '../../public_api';
 
 const FILTERING_TOGGLE_CLASS = 'igx-filtering__toggle';
 const FILTERING_TOGGLE_FILTERED_CLASS = 'igx-filtering__toggle--filtered';
 
-describe('IgxGrid - Filtering actions', () => {
+fdescribe('IgxGrid - Filtering actions', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -109,6 +109,13 @@ describe('IgxGrid - Filtering actions', () => {
         grid.clearFilter('ProductName');
         fix.detectChanges();
         grid.filter('ProductName', 'Ignite UI for Angular', IgxStringFilteringOperand.instance().condition('equals'), false);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Custom Filter
+        grid.clearFilter('ProductName');
+        fix.detectChanges();
+        grid.filter('AnotherField', '', CustomFilter.instance().condition('custom'), false);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
     });
@@ -413,6 +420,24 @@ describe('IgxGrid - Filtering actions', () => {
     });
 });
 
+export class CustomFilter extends IgxFilteringOperand {
+    private static _instance: CustomFilter;
+
+    private constructor () {
+        super();
+        this.operations = [{
+            name: 'custom',
+            logic: (target: string): boolean => {
+                return target === 'custom';
+            }
+        }];
+    }
+
+    public static instance(): CustomFilter {
+        return this._instance || (this._instance = new this());
+    }
+}
+
 @Component({
     template: `<igx-grid [data]="data" height="500px">
         <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
@@ -421,6 +446,9 @@ describe('IgxGrid - Filtering actions', () => {
         <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
         <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="true" dataType="date">
+        </igx-column>
+        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true" 
+            dataType="string" [filters]="CustomFilter">
         </igx-column>
     </igx-grid>`
 })
@@ -435,56 +463,64 @@ export class IgxGridFilteringComponent {
             ID: 1,
             ProductName: 'Ignite UI for JavaScript',
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', 15),
-            Released: false
+            Released: false,
+            AnotherField: 'a'
         },
         {
             Downloads: 127,
             ID: 2,
             ProductName: 'NetAdvantage',
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'month', -1),
-            Released: true
+            Released: true,
+            AnotherField: 'a'
         },
         {
             Downloads: 20,
             ID: 3,
             ProductName: 'Ignite UI for Angular',
             ReleaseDate: null,
-            Released: null
+            Released: null,
+            AnotherField: 'a'
         },
         {
             Downloads: null,
             ID: 4,
             ProductName: null,
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', -1),
-            Released: true
+            Released: true,
+            AnotherField: 'a'
         },
         {
             Downloads: 100,
             ID: 5,
             ProductName: '',
             ReleaseDate: undefined,
-            Released: false
+            Released: false,
+            AnotherField: 'a'
         },
         {
             Downloads: 702,
             ID: 6,
             ProductName: 'Some other item with Script',
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', 1),
-            Released: null
+            Released: null,
+            AnotherField: 'a'
         },
         {
             Downloads: 0,
             ID: 7,
             ProductName: null,
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'month', 1),
-            Released: true
+            Released: true,
+            AnotherField: 'a'
         },
         {
             Downloads: 1000,
             ID: 8,
             ProductName: null,
             ReleaseDate: this.today,
-            Released: undefined
+            Released: undefined,
+            AnotherField: 'custom'
         }
     ];
 
