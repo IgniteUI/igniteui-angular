@@ -3,6 +3,7 @@
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
 - `igxGrid` filtering operands
+    - **Breaking change** `IFilteringExpression` condition property is no longer a direct reference to a filtering condition method, instead it's a reference to an `IFilteringOperation`
     - 5 filtering operand classes are now exposed
         - `IgxFilteringOperand` is a base filtering operand, which can be inherited when defining custom filtering conditions
         - `IgxBooleanFilteringOperand` defines all default filtering conditions for `boolean` types

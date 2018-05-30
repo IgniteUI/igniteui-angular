@@ -252,26 +252,4 @@ describe('DataUtil', () => {
     testPage();
     // test process
     testProcess();
-    // test helper function getFilteringConditionsByDataType
-    it('tests getFilteringConditionsByDataType', () => {
-        const dataGenerator = new DataGenerator();
-        const stringCond = IgxStringFilteringOperand.instance().conditionList();
-        const numberCond = IgxNumberFilteringOperand.instance().conditionList();
-        const booleanCond = IgxBooleanFilteringOperand.instance().conditionList();
-        const dateCond = IgxDateFilteringOperand.instance().conditionList();
-
-        expect(
-            dataGenerator.isSuperset(DataUtil.getFilteringConditionsForDataType(DataType.String), stringCond))
-                .toBeTruthy('string filtering conditions');
-        expect(
-            dataGenerator.isSuperset(DataUtil.getFilteringConditionsForDataType(DataType.Number), numberCond))
-                .toBeTruthy('number filtering conditions');
-        expect(
-            dataGenerator.isSuperset(DataUtil.getFilteringConditionsForDataType(DataType.Boolean), booleanCond))
-                .toBeTruthy('boolean filtering conditions');
-        expect(
-            dataGenerator.isSuperset(DataUtil.getFilteringConditionsForDataType(DataType.Date), dateCond))
-                .toBeTruthy('date filtering conditions');
-    });
-
 });

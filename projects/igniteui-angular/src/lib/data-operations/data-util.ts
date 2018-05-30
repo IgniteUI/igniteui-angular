@@ -40,19 +40,6 @@ export class DataUtil {
             });
         return target;
     }
-    public static getFilteringConditionsForDataType(dataType: DataType): string[] {
-        switch (dataType) {
-            case DataType.Boolean:
-                return IgxBooleanFilteringOperand.instance().conditionList();
-            case DataType.Date:
-                return IgxDateFilteringOperand.instance().conditionList();
-            case DataType.Number:
-                return IgxNumberFilteringOperand.instance().conditionList();
-            case DataType.String:
-            default:
-                return IgxStringFilteringOperand.instance().conditionList();
-        }
-    }
     public static sort<T>(data: T[], state: ISortingState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
