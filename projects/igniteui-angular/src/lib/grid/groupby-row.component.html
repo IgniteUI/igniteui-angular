@@ -1,23 +1,23 @@
-<ng-container [style.padding-left]="padding" #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
-    <div class="igx-grid__indicator-grouping" [style.min-width.px]="grid.calcGroupByWidth" [tabIndex]="tabindex">    
-        <span (click)="toggle()">
-            <igx-icon *ngIf="!expanded" fontSet="material" name="expand_less"></igx-icon>
-            <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
-        </span>
+<ng-container class="igx-grid__groupby-row" [style.padding-left]="padding" #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
+
+    <div (click)="toggle()" class="igx-grid__grouping-indicator" [style.min-width.px]="grid.calcGroupByWidth" [tabIndex]="tabindex">
+        <igx-icon *ngIf="!expanded" fontSet="material" name="expand_less"></igx-icon>
+        <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
     </div>
-<div [tabIndex]="tabindex" class="igx-grid__groupContent" #groupContent (focus)="onFocus()" (blur)="onBlur()">
-    <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
-    </ng-container>
-</div>
-<ng-template #defaultGroupByTemplate>
-    <span class="igx-grid__groupLabel">
-        <igx-icon fontSet="material" name="group_work" color="#0099FF">
-        </igx-icon>
-        <span class="igx-grid__groupField">
-            {{ groupRow.expression.fieldName }}:
+
+    <div [tabIndex]="tabindex" class="igx-grid__group-content" #groupContent (focus)="onFocus()" (blur)="onBlur()">
+        <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
+        </ng-container>
+    </div>
+
+    <ng-template #defaultGroupByTemplate>
+        <span class="igx-grid__group-label">
+            <igx-icon fontSet="material" name="group_work" class="igx-grid__group-icon"></igx-icon>
+            <span class="igx-grid__group-field">
+                {{ groupRow.expression.fieldName }}:
+            </span>
+            <span class="igx-grid__group-text">{{ groupRow.value }}</span>
         </span>
-        {{ groupRow.value }}        
-    </span>
-    <igx-badge [value]="groupRow.records.length" class='igx-grid__groupCount' class='igx-grid__groupCount'></igx-badge>
-</ng-template>    
+        <igx-badge [value]="groupRow.records.length" class='igx-grid__group-count'></igx-badge>
+    </ng-template>
 </ng-container>

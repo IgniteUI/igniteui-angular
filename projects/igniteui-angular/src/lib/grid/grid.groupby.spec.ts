@@ -27,7 +27,7 @@ describe('IgxGrid - GropBy', () => {
     const DATAROW_CSS = '.igx-grid__tr';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
-    const GROUPROW_COTENT_CSS = '.igx-grid__groupContent';
+    const GROUPROW_COTENT_CSS = '.igx-grid__group-content';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
         const row = grid.getRowByIndex(rowStartIndex);

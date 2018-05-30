@@ -24,7 +24,7 @@
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" role="row">
         <ng-container *ngIf="groupingExpressions.length > 0">
-            <div class="igx-grid__groupIndentation" [style.min-width.px]="calcGroupByWidth">
+            <div class="igx-grid__group-indentation" [style.min-width.px]="calcGroupByWidth">
                 <button (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true">
                     <igx-icon fontSet="material" name="reorder"></igx-icon>
                 </button>
