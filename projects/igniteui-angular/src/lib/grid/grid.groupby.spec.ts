@@ -385,7 +385,7 @@ describe('IgxGrid - GroupBy', () => {
             const grVal = grRow.groupRow.value === null ? '' : grRow.groupRow.value.toString();
             const expectedText = 'Total items with value:' + grVal +
                 ' are ' + grRow.groupRow.records.length;
-            expect(elem.innerText).toEqual(expectedText);
+            expect(elem.innerText.trim(['\n', '\r', ' '])).toEqual(expectedText);
         }
     });
 
