@@ -10,6 +10,8 @@ import { ISortingStrategy, SortingStrategy } from './sorting-strategy';
 import { IPagingState, PagingError } from './paging-state.interface';
 
 import { IDataState } from './data-state.interface';
+import { IGroupByExpandState } from './groupby-expand-state.interface';
+import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 
 export enum DataType {
@@ -38,7 +40,7 @@ export class DataUtil {
         return target;
     }
     public static getFilteringConditionsForDataType(dataType: DataType):
-        {[name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void} {
+        { [name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void } {
         return FilteringCondition[dataType];
     }
     public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
@@ -54,7 +56,42 @@ export class DataUtil {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each grouping expression(if not set)
-        return state.strategy.groupBy(data, state.expressions, state.expansion, state.defaultExpanded);
+        return state.strategy.groupBy(data, state.expressions);
+    }
+    public static restoreGroups<T>(data: T[], state: IGroupingState): T[] {
+        DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
+        if (state.expressions.length === 0) {
+            return data;
+        }
+        return this.restoreGroupsRecursive(data, 1, state.expressions.length, state.expansion, state.defaultExpanded);
+    }
+    private static restoreGroupsRecursive(
+            data: any[], level: number, depth: number,
+            expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
+        let i = 0;
+        let j: number;
+        let result = [];
+        if (level !== depth) {
+            data = this.restoreGroupsRecursive(data, level + 1, depth, expansion, defaultExpanded);
+        }
+        while (i < data.length) {
+            const g = data[i]['__groupParent'];
+            for (j = i + 1; j < data.length; j++) {
+                const h = data[j]['__groupParent'];
+                if (g !== h && g.level === h.level) {
+                    break;
+                }
+            }
+            const expandState: IGroupByExpandState = expansion.find((state) =>
+                state.fieldName === g.expression.fieldName && state.value === g.value);
+            const expanded = expandState ? expandState.expanded : defaultExpanded;
+            result.push(g);
+            if (expanded) {
+                result = result.concat(data.slice(i, j));
+            }
+            i = j;
+        }
+        return result;
     }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {
@@ -87,8 +124,7 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
-    public static filter<T>(data: T[],
-                            state: IFilteringState): T[] {
+    public static filter<T>(data: T[], state: IFilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
         if (!state.strategy) {
