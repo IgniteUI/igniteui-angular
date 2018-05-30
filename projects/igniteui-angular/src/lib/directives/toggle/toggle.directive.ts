@@ -28,10 +28,16 @@ import { IgxNavigationService, IToggleView } from '../../core/navigation';
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     @Output()
-    public onOpen = new EventEmitter();
+    public onOpened = new EventEmitter();
 
     @Output()
-    public onClose = new EventEmitter();
+    public onOpening = new EventEmitter();
+
+    @Output()
+    public onClosed = new EventEmitter();
+
+    @Output()
+    public onClosing = new EventEmitter();
 
     @Input()
     public collapsed = true;
@@ -65,14 +71,19 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (!this.collapsed) { return; }
 
         const player = this.animationActivation();
-        player.onStart(() => this.collapsed = !this.collapsed);
+        player.onStart(() => {
+            this.collapsed = false;
+        });
         player.onDone(() =>  {
             player.destroy();
             if (fireEvents) {
-                this.onOpen.emit();
+                this.onOpened.emit();
             }
         });
 
+        if (fireEvents) {
+            this.onOpening.emit();
+        }
         player.play();
     }
 
@@ -81,19 +92,21 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
         const player = this.animationActivation();
         player.onDone(() => {
-            this.collapsed = !this.collapsed;
+            this.collapsed = true;
             // When using directive into component with OnPush it is necessary to
             // trigger change detection again when close animation ends
             // due to late updated @collapsed property.
             this.cdr.markForCheck();
             player.destroy();
             if (fireEvents) {
-                this.onClose.emit();
+                this.onClosed.emit();
             }
         });
 
+        if (fireEvents) {
+            this.onClosing.emit();
+        }
         player.play();
-
     }
 
     public toggle(fireEvents?: boolean) {
