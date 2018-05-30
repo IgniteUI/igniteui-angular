@@ -18,7 +18,7 @@
 </ng-template>
 
 <div class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
-    <div class="igx-grid__grouparea-placeholder">
+    <div *ngIf="groupingExpressions.length === 0" class="igx-grid__grouparea-placeholder">
         Drag a column header and drop it here to group by that column
     </div>
     <igx-chips-area (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
