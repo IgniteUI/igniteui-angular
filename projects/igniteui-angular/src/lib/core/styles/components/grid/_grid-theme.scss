@@ -472,6 +472,26 @@
 
         > * {
             margin-right: rem(4px);
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    [dir='rtl'] {
+        %grid__group-content {
+            padding-right: rem(34px);
+        }
+
+        %grid__group-label {
+            > * {
+                margin-left: rem(4px);
+
+                &:last-child {
+                    margin-left: 0;
+                }
+            }
         }
     }
 
@@ -530,6 +550,10 @@
         z-index: 2;
         height: 60px;
         background: --var($theme, 'grouparea-background');
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: $grid-cell-padding--e;
 
         &:focus {
             outline: transparent;
@@ -571,6 +595,11 @@
             height: rem(16px);
             font-size: rem(16px);
         }
+    }
+
+    %igx-grid__grouparea-placeholder {
+        @include ellipsis();
+        width: 100%;
     }
 }
 
