@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService } from 'igniteui-angular';
+import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
 import { routing } from './routing';
@@ -110,7 +110,8 @@ const components = [
         LocalService,
         RemoteService,
         IgxExcelExporterService,
-        IgxCsvExporterService
+        IgxCsvExporterService,
+        IgxOverlayService
     ],
     bootstrap: [AppComponent]
 })

@@ -13,7 +13,8 @@ import {
     OnInit,
     Optional,
     Output,
-    ViewChild
+    ViewChild,
+    Inject
 } from '@angular/core';
 
 import { EaseOut } from '../animations/easings';
@@ -21,6 +22,7 @@ import { fadeIn, fadeOut, slideInBottom } from '../animations/main';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxOverlayService } from './../services/overlay/overlay';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 
 /**
@@ -63,6 +65,8 @@ let DIALOG_ID = 0;
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
+
+    private overlayId: number;
 
     @HostBinding('attr.id')
     @Input()
@@ -154,7 +158,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
 
     constructor(
         private elementRef: ElementRef,
-        @Optional() private navService: IgxNavigationService
+        @Optional() private navService: IgxNavigationService,
+        @Inject(IgxOverlayService) private overlay: IgxOverlayService
     ) {
         this._titleId = IgxDialogComponent.NEXT_ID++ + '_title';
     }
@@ -213,6 +218,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     }
 
     private toggleState(state: string): void {
+        // tslint:disable-next-line:no-debugger
+        debugger;
+        if (state === 'open') {
+            this.overlayId = this.overlay.show(this.elementRef);
+        } else {
+            this.overlay.hide(this.overlayId);
+        }
+
         this._state = state;
         this._isOpen = state === 'open' ? true : false;
     }
