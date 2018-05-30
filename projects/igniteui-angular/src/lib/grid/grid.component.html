@@ -18,7 +18,24 @@
 </ng-template>
 
 <div class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
-    <span>Drag a column header and drop it here to group by that column</span>
+    <div>Drag a column header and drop it here to group by that column</div>
+    <igx-chips-area (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
+        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [color]="'#e6e6e6'"
+                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="onChipInteractionEnd($event)">
+            <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'" [style.height]="'1.5rem'"></igx-icon>
+            <span igxLabel
+                    [style.position]="'unset'"
+                    [style.width]="'unset'"
+                    [style.webkitTransform]="'unset'"
+                    [style.transform]="'unset'"
+                    [style.lineHeight]="'unset'"
+                    [style.height]="'unset'">
+                <span [style.float]="'left'">{{expr.fieldName}}</span>
+                <igx-icon fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'" [style.height]="'1.5rem'" [style.float]="'left'"></igx-icon>
+            </span>
+            <igx-icon igxSuffixConnector fontSet="material" [name]="'arrow_right'" [style.height]="'2.0rem'"></igx-icon>
+        </igx-chip>
+    </igx-chips-area>
 </div>
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>

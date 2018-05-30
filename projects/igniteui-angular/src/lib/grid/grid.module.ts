@@ -39,6 +39,7 @@ import {
 } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
+import { IgxChipsModule } from '../chips/chips.module';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { IgxGridRowComponent } from './row.component';
     IgxTextHighlightModule,
     IgxTextSelectionModule,
     IgxCheckboxModule,
-    IgxBadgeModule
+    IgxBadgeModule,
+    IgxChipsModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService]
 })

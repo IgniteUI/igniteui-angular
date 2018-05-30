@@ -2,6 +2,10 @@ igx-icon {
     height: 1.5rem;
 }
 
+igx-chips-area {
+    border: 1px #bfbfbf solid;
+}
+
 label {
     position: unset;
     width: unset;
