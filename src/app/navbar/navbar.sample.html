@@ -1,0 +1,33 @@
+<div class="sample-wrapper">
+    <app-page-header title="Navbar">
+        Informs the user of its current route in the application and provides quick actions.
+    </app-page-header>
+    <section class="sample-content">
+        <article class="sample-column">
+            <h4 class="sample-title">With nav and action icons</h4>
+            <div class="navbar-sample dark-navbar">
+                <igx-navbar title="Sample App" actionButtonIcon="menu">
+                    <igx-icon name="search"></igx-icon>
+                    <igx-icon name="favorite"></igx-icon>
+                    <igx-icon name="more_vert"></igx-icon>
+                </igx-navbar>
+            </div>
+        </article>
+
+        <article class="sample-column">
+            <h4 class="sample-title">With nav icon</h4>
+            <div class="navbar-sample">
+                <igx-navbar [title]="currentView" actionButtonIcon="arrow_back" [isActionButtonVisible]="canGoBack()" (onAction)="navigateBack()">
+                </igx-navbar>
+            </div>
+        </article>
+
+        <article class="sample-column">
+            <h4 class="sample-title">Without nav icon</h4>
+            <div class="navbar-sample">
+                <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'">
+                </igx-navbar>
+            </div>
+        </article>
+    </section>
+</div>
