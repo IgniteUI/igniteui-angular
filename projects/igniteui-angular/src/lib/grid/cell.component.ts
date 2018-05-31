@@ -115,6 +115,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
         if (this._inEditMode) {
             this.grid.cellInEditMode = this;
+            if (!this.column.inlineEditorTemplate) {
+                this.editValue = this.value;
+            }
+            this.cdr.detectChanges();
         } else if (!originalValue) {
             this.grid.cellInEditMode = null;
         }
@@ -211,6 +215,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     private highlight: IgxTextHighlightDirective;
 
+    public editValue;
     protected defaultCssClass = 'igx-grid__td';
     protected isFocused = false;
     protected isSelected = false;
@@ -376,6 +381,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             cell: this,
             event
         });
+    }
+
+    @autoWire()
+    public datePickerClosed() {
+        requestAnimationFrame(() => this.nativeElement.focus());
     }
 
     @HostListener('blur', ['$event'])
@@ -648,7 +658,27 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
             this.inEditMode = !this.inEditMode;
-            this.nativeElement.focus();
+            if (!this.inEditMode) {
+                this.submitValue();
+            }
+            if (!(this.column.dataType === DataType.Date)) {
+                this.nativeElement.focus();
+            }
+        }
+    }
+
+    submitValue() {
+        if (this.editValue !== undefined) {
+            if (this.column.dataType === DataType.Number) {
+                const val = parseFloat(this.editValue);
+                if (!isNaN(this.editValue) || isFinite(this.editValue)) {
+                    this.update(val);
+                }
+            } else {
+                this.update(this.editValue);
+            }
+        } else {
+            this.update(this.value);
         }
     }
 

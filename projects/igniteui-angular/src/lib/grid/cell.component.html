@@ -2,10 +2,23 @@
         [value]="formatter ? formatter(value) : value" [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page">
     <div>{{ formatter ? formatter(value) : value }}</div>
 </ng-template>
-<ng-template #inlineEditor let-cell="cell">
-    <igx-input-group>
-        <input igxInput [value]="value" [igxFocus]="true" [igxTextSelection]="true" (keydown.enter)="cell.update($event.target.value)">
-    </igx-input-group>
+<ng-template #inlineEditor  let-cell="cell">
+    <ng-container *ngIf="column.dataType === 'string'">
+        <igx-input-group>
+            <input igxInput [(ngModel)]="editValue" [value]="value" [igxFocus]="true">
+        </igx-input-group>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'number'">
+        <igx-input-group>
+            <input igxInput [(ngModel)]="editValue" [value]="value" [igxFocus]="true"  type="number">
+        </igx-input-group>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'boolean'">
+        <igx-checkbox [(ngModel)]="editValue" [checked]="editValue">{{ editValue }}</igx-checkbox>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'date'">
+        <igx-datePicker [(ngModel)]="editValue" (onClose)="datePickerClosed()"></igx-datePicker>
+    </ng-container>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context">
 </ng-container>
