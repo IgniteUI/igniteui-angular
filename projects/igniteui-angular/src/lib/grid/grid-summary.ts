@@ -15,7 +15,7 @@ export class IgxSummaryOperand {
         return data.length;
     }
 
-    public operate(data: any[]): IgxSummaryResult[] {
+    public operate(data: any[] = []): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',
@@ -40,7 +40,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
         return data.length ? this.sum(data) / this.count(data) : [];
     }
 
-    public operate(data: any[]): IgxSummaryResult[] {
+    public operate(data: any[] = []): IgxSummaryResult[] {
         const result = super.operate(data);
         result.push({
             key: 'min',
@@ -71,7 +71,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
         return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[data.length - 1];
     }
 
-    public operate(data: any[]): IgxSummaryResult[] {
+    public operate(data: any[] = []): IgxSummaryResult[] {
         const result = super.operate(data);
         result.push({
             key: 'earliest',

@@ -323,7 +323,7 @@ describe('IgxGrid - Summaries', () => {
         expect(summaries[3].summaryResult).toBe(39004);
         expect(summaries[4].summaryResult).toBe(3900.4);
 
-        const emptySummaries = summaryClass.operate([]);
+        const emptySummaries = summaryClass.operate();
         expect(emptySummaries[0].summaryResult).toBe(0);
         expect(typeof emptySummaries[1].summaryResult).not.toEqual(undefined);
         expect(typeof emptySummaries[2].summaryResult).not.toEqual(undefined);
