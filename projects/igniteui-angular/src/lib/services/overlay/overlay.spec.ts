@@ -136,7 +136,6 @@ const TEST_COMPONENTS = [
     imports: [BrowserModule],
     declarations: [TEST_COMPONENTS],
     exports: [TEST_COMPONENTS],
-    // bootstrap: [TEST_COMPONENTS],
     entryComponents: [TEST_COMPONENTS]
 })
 export class DynamicModule { }
