@@ -21,21 +21,21 @@
     <div *ngIf="groupingExpressions.length === 0" class="igx-grid__grouparea-placeholder">
         Drag a column header and drop it here to group by that column
     </div>
-    <igx-chips-area (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
-        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [color]="'#e6e6e6'"
+    <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
+        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName"
                 (onRemove)="onChipRemoved($event)" (onInteractionEnd)="onChipInteractionEnd($event)">
-            <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'" [style.height]="'1.5rem'"></igx-icon>
-            <span igxLabel
+            <!--<igx-icon class="igx-chips-area__item-icon" igxPrefix fontSet="material" [name]="'drag_indicator'" [style.height]="'1.5rem'"></igx-icon>-->
+            <span class="igx-chips-area__label" igxLabel
                     [style.position]="'unset'"
                     [style.width]="'unset'"
                     [style.webkitTransform]="'unset'"
                     [style.transform]="'unset'"
                     [style.lineHeight]="'unset'"
                     [style.height]="'unset'">
-                <span [style.float]="'left'">{{expr.fieldName}}</span>
-                <igx-icon fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'" [style.height]="'1.5rem'" [style.float]="'left'"></igx-icon>
+                <span class="igx-chips-area__text">{{expr.fieldName}}</span>
+                <igx-icon class="igx-chips-area__order-icon" fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'"></igx-icon>
             </span>
-            <igx-icon igxSuffixConnector fontSet="material" [name]="'arrow_right'" [style.height]="'2.0rem'"></igx-icon>
+            <igx-icon class="igx-chips-area__dir-icon" igxSuffixConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
     </igx-chips-area>
 </div>

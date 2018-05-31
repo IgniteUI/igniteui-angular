@@ -1,0 +1,42 @@
+//// Chps
+/// @group components
+/// @author
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-chips-area) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-chips-area !optional;
+
+    @include e(item) {
+        @extend %igx-chips-area__item !optional;
+    }
+
+    @include e(label) {
+        @extend %igx-chips-area__label !optional;
+    }
+
+    @include e(text) {
+        @extend %igx-chips-area__text !optional;
+    }
+
+    @include e(order-icon) {
+        @extend %igx-chips-area__order-icon !optional;
+    }
+
+    @include e(dir-icon) {
+        @extend %igx-chips-area__dir-icon !optional;
+    }
+
+    @include e(remove-icon) {
+        @extend %igx-chips-area__remove-icon  !optional;
+    }
+
+    @include e(chip-connector) {
+        @extend %igx-chips-area__chip-connector  !optional;
+    }
+}
+

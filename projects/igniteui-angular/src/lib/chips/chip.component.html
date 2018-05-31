@@ -1,14 +1,19 @@
-<span *ngIf="!isFirstChip" class="chip-connector" [style.visibility]="areaMovingPerforming ? 'hidden' : 'visible'">
+<span *ngIf="!isFirstChip" class="igx-chips-area__chip-connector" [style.visibility]="areaMovingPerforming ? 'hidden' : 'visible'">
     <ng-content select="igx-prefix-connector,[igxPrefixConnector]"></ng-content>
 </span>
-<span #chipArea class="chip-area">
+
+<div class="igx-chips-area__item chip-area" #chipArea>
     <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+
     <ng-content select="[igxLabel]"></ng-content>
+
     <span #cancelContainer *ngIf="removable" igxButton="icon" igxRipple igxRippleCentered="true" (click)="onChipRemove()">
-        <igx-icon fontSet="material" [name]="'cancel'"></igx-icon>
+        <igx-icon class="igx-chips-area__remove-icon" fontSet="material" [name]="'cancel'"></igx-icon>
     </span>
+
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
-</span>
-<span *ngIf="!isLastChip" [style.visibility]="areaMovingPerforming ? 'hidden' : 'visible' " class="chip-connector" >
+</div>
+
+<span *ngIf="!isLastChip" [style.visibility]="areaMovingPerforming ? 'hidden' : 'visible' " class="igx-chips-area__chip-connector" >
     <ng-content select="igx-suffix-connector,[igxSuffixConnector]"></ng-content>
 </span>
