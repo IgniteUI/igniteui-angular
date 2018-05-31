@@ -7,6 +7,7 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - Filtering actions', () => {
     beforeEach(async(() => {
@@ -1086,7 +1087,62 @@ describe('IgxGrid - Filtering actions', () => {
             expect(month.nativeElement.textContent.trim()).toEqual(expectedResult.toString());
         });
     }));
+
+    // UI tests custom column
+    it('UI tests on custom column', async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css('igx-grid-filter'))[4];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
+        const select = filterUIContainer.query(By.css('div > select'));
+        const options = select.nativeElement.options;
+        const reset = filterUIContainer.queryAll(By.css('button'))[0];
+        const close = filterUIContainer.queryAll(By.css('button'))[1];
+
+        expect(grid.rowList.length).toEqual(8);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            sendInput(input, 'a', fix);
+            return fix.whenStable();
+        }).then(() => {
+            verifyFilterUIPosition(filterUIContainer, grid);
+
+            // false condition
+            options[0].selected = true;
+            select.nativeElement.dispatchEvent(new Event('change'));
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(1);
+            expect(grid.getCellByColumn(0, 'AnotherField').value).toMatch('custom');
+            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        });
+    }));
 });
+
+export class CustomFilter extends IgxFilteringOperand {
+    private static _instance: CustomFilter;
+
+    private constructor () {
+        super();
+        this.operations = [{
+            name: 'custom',
+            logic: (target: string): boolean => {
+                return target === 'custom';
+            }
+        }];
+    }
+
+    public static instance(): CustomFilter {
+        return this._instance || (this._instance = new this());
+    }
+}
+
 
 @Component({
     template: `<igx-grid [data]="data" height="500px">
@@ -1097,12 +1153,16 @@ describe('IgxGrid - Filtering actions', () => {
         <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
             [filterable]="true" dataType="date">
         </igx-column>
+        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
     </igx-grid>`
 })
 export class IgxGridFilteringComponent {
 
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    public customFilter = CustomFilter;
 
     public data = [
         {
@@ -1110,56 +1170,64 @@ export class IgxGridFilteringComponent {
             ID: 1,
             ProductName: 'Ignite UI for JavaScript',
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', 15),
-            Released: false
+            Released: false,
+            AnotherField: 'a'
         },
         {
             Downloads: 127,
             ID: 2,
             ProductName: 'NetAdvantage',
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'month', -1),
-            Released: true
+            Released: true,
+            AnotherField: 'a'
         },
         {
             Downloads: 20,
             ID: 3,
             ProductName: 'Ignite UI for Angular',
             ReleaseDate: null,
-            Released: null
+            Released: null,
+            AnotherField: 'a'
         },
         {
             Downloads: null,
             ID: 4,
             ProductName: null,
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', -1),
-            Released: true
+            Released: true,
+            AnotherField: 'a'
         },
         {
             Downloads: 100,
             ID: 5,
             ProductName: '',
             ReleaseDate: undefined,
-            Released: false
+            Released: false,
+            AnotherField: 'a'
         },
         {
             Downloads: 702,
             ID: 6,
             ProductName: 'Some other item with Script',
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', 1),
-            Released: null
+            Released: null,
+            AnotherField: 'a'
         },
         {
             Downloads: 0,
             ID: 7,
             ProductName: null,
             ReleaseDate: this.timeGenerator.timedelta(this.today, 'month', 1),
-            Released: true
+            Released: true,
+            AnotherField: 'a'
         },
         {
             Downloads: 1000,
             ID: 8,
             ProductName: null,
             ReleaseDate: this.today,
-            Released: undefined
+            Released: undefined,
+            AnotherField: 'custom'
         }
     ];
 

@@ -448,7 +448,7 @@ export class CustomFilter extends IgxFilteringOperand {
             [filterable]="true" dataType="date">
         </igx-column>
         <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
-            dataType="string" [filters]="CustomFilter">
+            dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
 })
@@ -456,6 +456,8 @@ export class IgxGridFilteringComponent {
 
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+
+    public customFilter = CustomFilter;
 
     public data = [
         {
