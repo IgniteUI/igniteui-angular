@@ -451,10 +451,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
-    protected _subscribeOnEditDone$;
-    protected _subscribeOnRowAdded$;
-    protected _subscribeOnRowDeleted$;
-    protected _subscribeOnFilteringDone$;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -486,10 +482,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
-        this._subscribeOnRowAdded$ = this.onRowAdded.subscribe(() => this.clearSummaryCache());
-        this._subscribeOnRowDeleted$ = this.onRowDeleted.subscribe(() => this.clearSummaryCache());
-        this._subscribeOnFilteringDone$ = this.onFilteringDone.subscribe(() => this.clearSummaryCache());
-        this._subscribeOnEditDone$ = this.onEditDone.subscribe((editCell) => { this.clearSummaryCache(editCell); });
+
+        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { this.clearSummaryCache(editCell); });
     }
 
     public ngAfterContentInit() {
@@ -547,22 +544,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
         this.destroy$.next(true);
         this.destroy$.complete();
-
-        if (this._subscribeOnRowAdded$) {
-            this._subscribeOnRowAdded$.unsubscribe();
-        }
-
-        if (this._subscribeOnRowDeleted$) {
-            this._subscribeOnRowDeleted$.unsubscribe();
-        }
-
-        if (this._subscribeOnFilteringDone$) {
-            this._subscribeOnFilteringDone$.unsubscribe();
-        }
-
-        if (this._subscribeOnEditDone$) {
-            this._subscribeOnEditDone$.unsubscribe();
-        }
     }
 
     public dataLoading(event) {
