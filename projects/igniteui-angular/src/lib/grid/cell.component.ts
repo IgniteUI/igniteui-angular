@@ -115,9 +115,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
         if (this._inEditMode) {
             this.grid.cellInEditMode = this;
-            if (!this.column.inlineEditorTemplate) {
-                this.editValue = this.value;
-            }
+            // if (!this.column.inlineEditorTemplate) {
+            this.editValue = this.value;
+            // }
             this.cdr.detectChanges();
         } else if (!originalValue) {
             this.grid.cellInEditMode = null;
@@ -223,6 +223,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     protected chunkLoadedHor;
     protected chunkLoadedVer;
     private cellSelectionID: string;
+    private previousCellEditMode: boolean;
 
     constructor(
         public gridAPI: IgxGridAPIService,
@@ -233,6 +234,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     private _updateCellSelectionStatus() {
         this._clearCellSelection();
         this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+        if (this.column.editable && this.previousCellEditMode) {
+            this.inEditMode = true;
+        }
     }
 
     private _clearCellSelection() {
@@ -240,6 +244,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         if (cell) {
             cell.selected = false;
             cell.focused = false;
+            this.previousCellEditMode = cell.inEditMode;
+            if (cell.inEditMode) {
+                cell.inEditMode = false;
+                cell.submitValue();
+            }
         }
         this.selectionApi.set_selection(this.cellSelectionID, []);
     }
@@ -376,7 +385,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
             this.grid.cellInEditMode.inEditMode = false;
         }
-
         this.grid.onSelection.emit({
             cell: this,
             event
@@ -659,6 +667,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         if (this.column.editable) {
             this.inEditMode = !this.inEditMode;
             if (!this.inEditMode) {
+                debugger;
                 this.submitValue();
             }
             if (!(this.column.dataType === DataType.Date)) {
@@ -668,18 +677,16 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     submitValue() {
-        if (this.editValue !== undefined) {
-            if (this.column.dataType === DataType.Number) {
-                const val = parseFloat(this.editValue);
-                if (!isNaN(this.editValue) || isFinite(this.editValue)) {
-                    this.update(val);
-                }
-            } else {
-                this.update(this.editValue);
+        // if (this.editValue !== undefined) {
+        if (!this.column.inlineEditorTemplate && this.column.dataType === DataType.Number) {
+            const val = parseFloat(this.editValue);
+            if (!isNaN(this.editValue) || isFinite(this.editValue)) {
+                this.update(val);
             }
         } else {
-            this.update(this.value);
+            this.update(this.editValue);
         }
+        // }
     }
 
     @HostListener('keydown.escape')
