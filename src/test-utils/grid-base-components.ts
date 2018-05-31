@@ -18,7 +18,7 @@ export class BasicGridComponent {
     @ViewChild(IgxGridComponent)
     public grid: IgxGridComponent;
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor(public cdr: ChangeDetectorRef) {}
 }
 
 @Component({
@@ -122,8 +122,7 @@ export class PagingComponent extends BasicGridComponent {
     public paging = true;
     public perPage = 3;
 
-    /* Base components should not have default data. */
-    // data = SampleTestData.personJobData;
+    data = SampleTestData.personJobData;
 }
 
 @Component({

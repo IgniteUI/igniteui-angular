@@ -36,6 +36,7 @@ export class SampleTestData {
         {},
         {}
     ];
+
     public static oneItemNumberData = [{ index: 1, value: 1 }];
 
     /* Fields: index: number, value: number; 2 items. */
@@ -50,12 +51,14 @@ export class SampleTestData {
         { index: 2, value: 2, other: 2, another: 2}
     ];
 
+    /* Fields: Number: number, String: string, Boolean: boolean; Date: date; 3 items. */
     public static differentTypesData = [
         { Number: 1, String: "1", Boolean: true, Date: new Date(2018, 3, 3) },
         { Number: 2, String: "2", Boolean: false, Date: new Date(2018, 5, 6) },
         { Number: 3, String: "3", Boolean: true, Date: new Date(2018, 9, 22) }
     ];
 
+    /* Fields: name: string, phone: string; 5 items. */
     public static contactsData = [
         {
             name: "Terrance Orta",
@@ -75,6 +78,7 @@ export class SampleTestData {
         }
     ];
 
+    /* Fields: name: string, phone: string; 6 items. Remarks: Contains special and cyrilic characters. */
     public static contactsFunkyData = [
         {
             name: "Terrance Mc'Orta",
@@ -97,7 +101,8 @@ export class SampleTestData {
         }
     ];
 
-    public static contactsPartial = [
+    /* Fields: name: string, phone: string; 3 items. Remarks: Contains records without values for one of the fields. */
+    public static contactsDataPartial = [
         {
             name: "Terrance Orta",
             phone: "770-504-2217"
@@ -133,6 +138,7 @@ export class SampleTestData {
         { ID: 3, Name: "Connor", LastName: "Walker", Region: "OC" }
     ];
 
+    /* Data fields: ID: number, Name: string, JobTitle: string, HireDate: string; 10 items, sorted by ID. */
     public static personJobData = [
         { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
         { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
@@ -146,6 +152,9 @@ export class SampleTestData {
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
     ];
 
+    /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
+        City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
+        11 items, sorted by ID. */
     public static contactInfoData = [
         {
             ID: "ALFKI",
@@ -290,6 +299,9 @@ export class SampleTestData {
         }
     ];
 
+    /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
+        City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
+        27 items, sorted by ID. */
     /* tslint:disable */
     public static contactInfoDataFull = [
         { "ID": "ALFKI", "CompanyName": "Alfreds Futterkiste", "ContactName": "Maria Anders", "ContactTitle": "Sales Representative", "Address": "Obere Str. 57", "City": "Berlin", "Region": null, "PostalCode": "12209", "Country": "Germany", "Phone": "030-0074321", "Fax": "030-0076545" },
@@ -322,6 +334,8 @@ export class SampleTestData {
     ];
     /* tslint:enable */
 
+    /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
+        City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string; 1 item. */
     public static contactMariaAndersData = [{
         ID: "ALFKI",
         CompanyName: "Alfreds Futterkiste",
@@ -336,6 +350,8 @@ export class SampleTestData {
         Fax: "030-0076545"
     }];
 
+    /* Data fields: Downloads: number, ID: number, ProductName: string, ReleaseDate: Date, Released: boolean;
+        8 items, sorted by ID. */
     public static productInfoData = [
         {
             Downloads: 254,
@@ -395,6 +411,9 @@ export class SampleTestData {
         }
     ];
 
+    /* Data fields: Downloads: number, ID: number, ProductName: string, ReleaseDate: Date, Released: boolean,
+        Category: string, Items: string, Test: string;
+        8 items, sorted by ID. */
     public static productInfoDataFull = [
         {
             Downloads: 254,
@@ -478,6 +497,8 @@ export class SampleTestData {
         }
     ];
 
+    /* Data fields: ProductID: number, ProductName: string, InStock: boolean, UnitsInStock: number, OrderDate: Date;
+        10 items, sorted by ID. */
     public static foodProductData = [
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
         { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
@@ -491,6 +512,8 @@ export class SampleTestData {
         { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: new Date("2018-03-01") }
     ];
 
+    /* Data fields: ProductID: number, ProductName: string, InStock: boolean, UnitsInStock: number, OrderDate: Date;
+        19 items, sorted by ID. */
     public static foodProductDataExtended = [
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
         { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
@@ -513,6 +536,7 @@ export class SampleTestData {
         { ProductID: 19, ProductName: "Biscuits", InStock: true, UnitsInStock: 10570, OrderDate: new Date("2018-03-01") }
     ];
 
+    /* Generates data with the following data fields: index: number, value: number, other: number, another: number. */
     public static generateNumberData(rowsCount: number) {
         const data = [];
         for (let i = 0; i < rowsCount; i++) {
@@ -521,9 +545,10 @@ export class SampleTestData {
         return data;
     }
 
-    public static generateNumberDataSpecial(numRows, numCols, defaultColWidth = null) {
+    /* Generates columns with 'field' and 'width' fields. */
+    public static generateNumberDataSpecial(rowsCount, colsCount, defaultColWidth = null) {
         const cols = [];
-        for (let j = 0; j < numCols; j++) {
+        for (let j = 0; j < colsCount; j++) {
             cols.push({
                 field: j.toString(),
                 width: defaultColWidth !== null ? defaultColWidth : j % 8 < 2 ? 100 : (j % 6) * 125
@@ -531,7 +556,7 @@ export class SampleTestData {
         }
 
         const data = [];
-        for (let i = 0; i < numRows; i++) {
+        for (let i = 0; i < rowsCount; i++) {
             const obj = {};
             for (let j = 0; j <  cols.length; j++) {
                 const col = cols[j].field;
@@ -594,6 +619,7 @@ export class SampleTestData {
         return bigData;
     }
 
+    /* Generates columns with the following fields: key, field and header. */
     public static generateColumns(count, namePrefix = "col") {
         const cols = [];
         for (let i = 0; i < count; i++) {
@@ -606,6 +632,7 @@ export class SampleTestData {
         return cols;
     }
 
+    /* Generates columns with the following fields: key, field, header and dataType. */
     public static generateColumnsByType(count, type: string, namePrefix = "col") {
         const cols = [];
         for (let i = 0; i < count; i++) {
@@ -619,6 +646,7 @@ export class SampleTestData {
         return cols;
     }
 
+    /* Generates columns with the following fields: key, dataType and editable. */
     public static generateEditableColumns(count, columnsType = "string", namePrefix = "col") {
         const cols = [];
         for (let i = 0; i < count; i++) {
@@ -638,6 +666,7 @@ export class SampleTestData {
         return cols;
     }
 
+    /* Generates numeric data for the specified columns collection. */
     public static generateDataForColumns(columns: any[], rowsCount: number, startFromOne = false) {
         const data = [];
 
@@ -697,6 +726,7 @@ export class SampleTestData {
         return data;
     }
 
+    /* Gets the name of the identifier column if exists. */
     private static getIDColumnName(dataItem: any) {
         if (!dataItem) {
             return undefined;

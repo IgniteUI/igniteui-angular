@@ -1,12 +1,13 @@
-import { Component, TemplateRef, ViewChild } from "@angular/core";
+import { Component, TemplateRef, ViewChild, Input } from "@angular/core";
 import { IgxGridCellComponent } from "../grid/cell.component";
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from "../grid/grid-summary";
 import { IGridCellEventArgs, IGridEditEventArgs } from "../grid/grid.component";
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
-        GridNxMComponent, GridWithSizeComponent, PagingComponent, SummariesNxMComponent } from "./grid-components";
+        GridNxMComponent, GridWithSizeComponent, PagingComponent, SummariesNxMComponent } from "./grid-base-components";
 import { IGridSelection } from "./grid-interfaces";
 import { SampleTestData } from "./sample-test-data";
 import { ColumnDefinitions, TemplateStrings } from "./template-strings";
+import { IgxColumnComponent } from "../grid/column.component";
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -502,6 +503,7 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
 export class PinningComponent extends GridWithSizeComponent
                                 implements IGridSelection {
 
+    public column: IgxColumnComponent;
     public columns = [
         { field: "ID", width: 100 },
         { field: "CompanyName", width: 300 },
@@ -534,6 +536,7 @@ export class PinningComponent extends GridWithSizeComponent
 })
 export class GridFeaturesComponent extends BasicGridComponent {
     data = SampleTestData.productInfoData;
+
 }
 
 @Component({
@@ -542,4 +545,15 @@ export class GridFeaturesComponent extends BasicGridComponent {
         "", ColumnDefinitions.idNameJobHireDate)
 })
 export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
+}
+
+@Component({
+    template: TemplateStrings.declareGrid(
+        ` [height]="height" [width]="width" [columnWidth]="columnWidth" `,
+        "", ColumnDefinitions.productAllColumnFeatures)
+})
+export class GridAllFeaturesComponent extends GridWithSizeComponent {
+    @Input()
+    public columnWidth = 200;
+
 }
