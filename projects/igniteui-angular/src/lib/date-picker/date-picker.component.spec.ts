@@ -180,7 +180,7 @@ describe('IgxDatePicker', () => {
         expect(inputTarget.value).toEqual(todayToEnLocale);
     });
 
-    fit("Value should respond when is bound through ngModel and selection through selectDate method is made.", async(() => {
+    it('Value should respond when is bound through ngModel and selection through selectDate method is made.', async(() => {
         const fix = TestBed.createComponent(IgxDatePickerNgModelComponent);
         fix.detectChanges();
 
