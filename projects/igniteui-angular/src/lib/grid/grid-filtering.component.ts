@@ -25,7 +25,6 @@ import {
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +32,7 @@ import { autoWire, IGridBus } from './grid.common';
     selector: 'igx-grid-filter',
     templateUrl: './grid-filtering.component.html'
 })
-export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCheck {
+export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
 
     @Input()
     public column;
@@ -185,8 +184,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         }
         return false;
     }
-
-    @autoWire(true)
     public filter(): void {
         const grid = this.gridAPI.get(this.gridID);
         this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
@@ -200,8 +197,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             searchVal: this._value
         });
     }
-
-    @autoWire(true)
     public clearFiltering(resetCondition: boolean): void {
         this._value = null;
         this._filterCondition = resetCondition ? undefined : this._filterCondition;

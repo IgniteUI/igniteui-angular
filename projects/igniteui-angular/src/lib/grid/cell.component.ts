@@ -22,7 +22,6 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
 import { IGridCellEventArgs, IGridEditEventArgs } from './grid.component';
 
 @Component({
@@ -31,7 +30,7 @@ import { IGridCellEventArgs, IGridEditEventArgs } from './grid.component';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
+export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public column: IgxColumnComponent;
 
@@ -107,7 +106,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return this._inEditMode;
     }
 
-    @autoWire(true)
     set inEditMode(value: boolean) {
         const originalValue = this._inEditMode;
 
@@ -161,7 +159,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return this._inEditMode;
     }
 
-    @autoWire(true)
     get focused(): boolean {
         return this.isFocused;
     }
@@ -197,7 +194,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-grid__td--selected')
-    @autoWire(true)
     set selected(val: boolean) {
         this.isSelected = val;
     }
@@ -257,32 +253,31 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return false;
     }
 
-    @autoWire(true)
     public ngOnInit() {
         this.cellSelectionID = this.gridID + '-cells';
-        this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
-            () => {
-                if (!this.selected) {
-                    this.nativeElement.blur();
-                }
-                this.cdr.markForCheck();
-            });
-        this.chunkLoadedVer = this.grid.verticalScrollContainer.onChunkLoad.subscribe(
-            () => {
-                if (!this.selected) {
-                    this.nativeElement.blur();
-                }
-                this.cdr.markForCheck();
-            });
+        // this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
+        //     () => {
+        //         if (!this.selected) {
+        //             this.nativeElement.blur();
+        //         }
+        //         this.cdr.markForCheck();
+        //     });
+        // this.chunkLoadedVer = this.grid.verticalScrollContainer.onChunkLoad.subscribe(
+        //     () => {
+        //         if (!this.selected) {
+        //             this.nativeElement.blur();
+        //         }
+        //         this.cdr.markForCheck();
+        //     });
     }
 
     public ngOnDestroy() {
-        if (this.chunkLoadedHor) {
-            this.chunkLoadedHor.unsubscribe();
-        }
-        if (this.chunkLoadedVer) {
-            this.chunkLoadedVer.unsubscribe();
-        }
+        // if (this.chunkLoadedHor) {
+        //     this.chunkLoadedHor.unsubscribe();
+        // }
+        // if (this.chunkLoadedVer) {
+        //     this.chunkLoadedVer.unsubscribe();
+        // }
     }
 
     public ngAfterViewInit() {
@@ -292,7 +287,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         }
     }
 
-    @autoWire(true)
     public update(val: any) {
         const args: IGridEditEventArgs = { row: this.row, cell: this, currentValue: this.value, newValue: val };
         this.grid.onEditDone.emit(args);
@@ -362,7 +356,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     @HostListener('focus', ['$event'])
-    @autoWire()
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
@@ -379,7 +372,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     @HostListener('blur', ['$event'])
-    @autoWire()
     public onBlur(event) {
         this.isFocused = false;
         this.row.focused = false;

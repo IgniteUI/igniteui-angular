@@ -19,7 +19,6 @@ import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +26,7 @@ import { autoWire, IGridBus } from './grid.common';
     selector: 'igx-grid-header',
     templateUrl: './grid-header.component.html'
 })
-export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterViewInit {
+export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     @Input()
     public column: IgxColumnComponent;
@@ -128,7 +127,6 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     }
 
     @HostListener('click', ['$event'])
-    @autoWire(true)
     public onClick(event) {
         if (!this._isResiznig) {
             event.stopPropagation();

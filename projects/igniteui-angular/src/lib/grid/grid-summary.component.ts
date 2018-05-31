@@ -4,15 +4,13 @@ import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
-import { autoWire, IGridBus } from './grid.common';
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-summary',
     templateUrl: './grid-summary.component.html'
 })
-export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoCheck, AfterContentInit {
+export class IgxGridSummaryComponent implements OnInit, OnDestroy, DoCheck, AfterContentInit {
 
     fieldName: string;
 
@@ -73,7 +71,6 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
-    @autoWire(true)
     public ngOnInit() {
     }
 
@@ -115,12 +112,10 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, OnDestroy, DoC
         }
     }
 
-    @autoWire(true)
     clearCache(field) {
         this.gridAPI.remove_summary(this.gridID, field);
     }
 
-    @autoWire(true)
     clearAll() {
         this.gridAPI.remove_summary(this.gridID);
         this.gridAPI.get(this.gridID).markForCheck();
