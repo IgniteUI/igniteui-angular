@@ -55,7 +55,7 @@
                 </igx-card>
 
                 <igx-card>
-                    <igx-column-hiding [columns]="grid1.columnList" [togglable]="false"
+                    <igx-column-hiding [columns]="grid1.columns" [togglable]="false"
                                         columnDisplayOrder="Alphabetical"></igx-column-hiding>
                 </igx-card>
             </div>
@@ -74,6 +74,9 @@
                     </div>
                     <div class="switch-group">
                         <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <igx-switch [(ngModel)]="col.disableHiding">Disable Hiding</igx-switch>
                     </div>
                     <div class="switch-group">
                         <igx-switch [(ngModel)]="col.movable">Movable</igx-switch>

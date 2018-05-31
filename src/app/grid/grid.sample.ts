@@ -11,6 +11,7 @@ import {
     STRING_FILTERS,
     CsvFileTypes,
     IgxBaseExporter,
+    IgxColumnHidingComponent,
     IgxCsvExporterOptions,
     IgxCsvExporterService,
     IgxExcelExporterOptions,
@@ -102,6 +103,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
+        this.grid1.cdr.detectChanges();
         // this.remoteService.getData(this.grid3.data);
     }
 

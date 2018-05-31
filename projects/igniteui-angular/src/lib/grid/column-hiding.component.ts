@@ -8,7 +8,8 @@ import {
     OnDestroy,
     Output,
     TemplateRef,
-    ViewChild } from '@angular/core';
+    ViewChild,
+    OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { DataUtil } from '../data-operations/data-util';
@@ -89,7 +90,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
     @Input()
     get disableHideAll(): boolean {
         if (!this._currentColumns || this._currentColumns.length < 1 ||
-                this._hiddenColumnsCount === this.columns.length) {
+                this.hiddenColumnsCount === this.columns.length) {
             return true;
         } else if (this.hidableColumns.length < 1 ||
                 this.hidableColumns.length === this.hidableColumns.filter((col) => col.value).length) {
@@ -102,7 +103,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
     @Input()
     get disableShowAll(): boolean {
         if (!this._currentColumns || this._currentColumns.length < 1 ||
-            this._hiddenColumnsCount < 1 || this.hidableColumns.length < 1) {
+            this.hiddenColumnsCount < 1 || this.hidableColumns.length < 1) {
             return true;
         } else if (this.hidableColumns.length === this.hidableColumns.filter((col) => !col.value).length) {
             return true;
@@ -154,7 +155,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     private _currentColumns = [];
     private _gridColumns = [];
     private _togglable = true;
-    private _hiddenColumnsCount = 0;
     private _columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
     private _filterCriteria = '';
     private _filterColumnsPrompt = '';
@@ -162,6 +162,10 @@ export class IgxColumnHidingComponent implements OnDestroy {
 
     public dialogShowing = false;
     public dialogPosition = 'igx-filtering__options--to-right';
+
+    public get hiddenColumnsCount() {
+        return (this._gridColumns) ? this._gridColumns.filter((col) => col.hidden).length : 0;
+    }
 
     public get template(): TemplateRef<any> {
         if (this.togglable) {
@@ -187,7 +191,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     private createColumnItems() {
         if (this._gridColumns.length > 0) {
             this._currentColumns = [];
-            this._hiddenColumnsCount = this._gridColumns.filter((col) => col.hidden).length;
             this._gridColumns.forEach((column) => {
                 this._currentColumns.push(this.createColumnHidingItem(this, column));
             });
@@ -235,14 +238,12 @@ export class IgxColumnHidingComponent implements OnDestroy {
         for (const col of this.hidableColumns) {
             col.value = false;
         }
-        this._hiddenColumnsCount = 0;
     }
 
     public hideAllColumns() {
         for (const col of this.hidableColumns) {
             col.value = true;
         }
-        this._hiddenColumnsCount = this._gridColumns.filter((col) => col.hidden).length;
     }
 
     public refresh() {
@@ -250,11 +251,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     }
 
     public onVisibilityChanged(args: IColumnVisibilityChangedEventArgs) {
-        if (args.newValue) {
-           this._hiddenColumnsCount += 1;
-        } else {
-            this._hiddenColumnsCount -= 1;
-        }
         this.onColumnVisibilityChanged.emit(args);
     }
 }

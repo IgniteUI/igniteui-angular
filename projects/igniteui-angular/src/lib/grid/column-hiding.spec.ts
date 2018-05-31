@@ -66,13 +66,13 @@ describe('Column Hiding UI', () => {
         });
 
         it('lists all 5 grid columns.', () => {
-                const columnItems = columnChooser.columnItems;
-                expect(columnItems.length).toBe(5);
+            const columnItems = columnChooser.columnItems;
+            expect(columnItems.length).toBe(5);
 
-                expect(getColumnHidingItems().length).toBe(5);
+            expect(getColumnHidingItems().length).toBe(5);
         });
 
-        it('orders columns according to 'columnDisplayOrder'.', () => {
+        it('orders columns according to "columnDisplayOrder".', () => {
             expect(columnChooser.columnDisplayOrder).toBe(ColumnDisplayOrder.DisplayOrder);
 
             let columnItems = columnChooser.columnItems.map((item) => item.name);
@@ -86,7 +86,7 @@ describe('Column Hiding UI', () => {
             expect(columnItems.toString()).toBe('Downloads,ID,ProductName,Released,ReleaseDate');
         });
 
-        it('shows 'ProductName' checkbox unchecked and disabled.', () => {
+        it('shows "ProductName" checkbox unchecked and disabled.', () => {
             const columnName = 'ProductName';
             const colProductName = getColumnChooserItem(columnName);
             expect(colProductName).toBeDefined();
@@ -97,7 +97,20 @@ describe('Column Hiding UI', () => {
             verifyCheckbox(columnName, false, true);
         });
 
-        it('reflects changes in columns' disableHiding properly.', () => {
+        it('"hiddenColumnsCount" reflects properly the number of hidden columns.', () => {
+            expect(columnChooser.hiddenColumnsCount).toBe(1);
+
+            grid.columns[2].hidden = false;
+            expect(columnChooser.hiddenColumnsCount).toBe(0);
+
+            grid.columns[0].hidden = true;
+            expect(columnChooser.hiddenColumnsCount).toBe(1);
+
+            getCheckboxInput('Released').click();
+            expect(columnChooser.hiddenColumnsCount).toBe(2);
+        });
+
+        it('reflects changes in columns disableHiding properly.', () => {
             grid.columns[0].disableHiding = true;
             fix.detectChanges();
 
@@ -120,7 +133,7 @@ describe('Column Hiding UI', () => {
             verifyCheckbox('Released', false, false);
         });
 
-        it('shows all items and buttons disabled when all columns' disableHiding is true.', () => {
+        it('shows all items and buttons disabled when all columns disableHiding is true.', () => {
             grid.columns.forEach((col) => col.disableHiding = true);
             fix.detectChanges();
 
@@ -134,7 +147,7 @@ describe('Column Hiding UI', () => {
             expect(getButtonDisabledState('Hide All')).toBe(true);
         });
 
-        it('- toggling column's checkbox checked state successfully changes the grid column's visibility.', () => {
+        it('- toggling column checkbox checked state successfully changes the grid column visibility.', () => {
             const checkbox = getCheckboxInput('ReleaseDate');
             verifyCheckbox('ReleaseDate', false, false);
 
@@ -152,7 +165,7 @@ describe('Column Hiding UI', () => {
             verifyColumnIsHidden(column, false, 4);
         });
 
-        it('reflects properly grid column's hidden value changes.', () => {
+        it('reflects properly grid column hidden value changes.', () => {
             const name = 'ReleaseDate';
             verifyCheckbox(name, false, false);
             const column = grid.getColumnByName(name);
@@ -186,7 +199,7 @@ describe('Column Hiding UI', () => {
             verifyColumnIsHidden(column, null, 4);
         });
 
-        it('enables the column checkbox and 'Show All' button after changing disableHiding of a hidden column.', () => {
+        it('enables the column checkbox and "Show All" button after changing disableHiding of a hidden column.', () => {
             grid.columns.forEach((col) => col.disableHiding = true);
             const name = 'Downloads';
             grid.getColumnByName(name).disableHiding = false;
@@ -215,7 +228,7 @@ describe('Column Hiding UI', () => {
             expect(getButtonDisabledState('Hide All')).toBe(true, 'Hide All button is not disabled!');
         });
 
-        it('enables the column checkbox and 'Hide All' button after changing disableHiding of a visible column.', () => {
+        it('enables the column checkbox and "Hide All" button after changing disableHiding of a visible column.', () => {
             grid.columns.forEach((col) => col.disableHiding = true);
             const name = 'Released';
             grid.getColumnByName(name).disableHiding = false;
@@ -242,7 +255,7 @@ describe('Column Hiding UI', () => {
             expect(getButtonDisabledState('Hide All')).toBe(false);
         });
 
-        it('- 'Hide All' button gets enabled after checking a column when all used to be hidden.', () => {
+        it('- "Hide All" button gets enabled after checking a column when all used to be hidden.', () => {
             getButtonElement('Hide All').click();
             fix.detectChanges();
 
@@ -254,7 +267,7 @@ describe('Column Hiding UI', () => {
             expect(getButtonDisabledState('Hide All')).toBe(false);
         });
 
-        it('- 'Show All' button gets enabled after unchecking a column when all used to be visible.', () => {
+        it('- "Show All" button gets enabled after unchecking a column when all used to be visible.', () => {
             getButtonElement('Show All').click();
             fix.detectChanges();
 
@@ -266,7 +279,7 @@ describe('Column Hiding UI', () => {
             expect(getButtonDisabledState('Show All')).toBe(false);
         });
 
-        it('- 'Hide All' button gets disabled after checking the last unchecked column.', () => {
+        it('- "Hide All" button gets disabled after checking the last unchecked column.', () => {
             expect(getButtonDisabledState('Hide All')).toBe(false);
 
             getCheckboxInput('ReleaseDate').click();
@@ -277,14 +290,14 @@ describe('Column Hiding UI', () => {
             expect(getButtonDisabledState('Hide All')).toBe(true);
         });
 
-        it('- 'Show All' button gets disabled after unchecking the last checked column.', () => {
+        it('- "Show All" button gets disabled after unchecking the last checked column.', () => {
             expect(getButtonDisabledState('Show All')).toBe(false);
             getCheckboxInput('Downloads').click();
             fix.detectChanges();
             expect(getButtonDisabledState('Show All')).toBe(true);
         });
 
-        it('reflects changes in columns' headers.', () => {
+        it('reflects changes in columns headers.', () => {
             const column = grid.getColumnByName('ReleaseDate');
             column.header = 'Release Date';
             fix.detectChanges();
@@ -330,7 +343,7 @@ describe('Column Hiding UI', () => {
             expect(counter).toBe(4);
         });
 
-        it('onColumnVisibilityChanged event is fired for each hidable & visible column on pressing 'Hide All' button.', () => {
+        it('onColumnVisibilityChanged event is fired for each hidable & visible column on pressing "Hide All" button.', () => {
             const currentArgs: IColumnVisibilityChangedEventArgs[] = [];
             let counter = 0;
             columnChooser.onColumnVisibilityChanged.subscribe((args: IColumnVisibilityChangedEventArgs) => {
@@ -353,7 +366,7 @@ describe('Column Hiding UI', () => {
             expect(currentArgs[2].newValue).toBe(true);
         });
 
-        it('onColumnVisibilityChanged event is fired for each hidable & hidden column on pressing 'Show All' button.', () => {
+        it('onColumnVisibilityChanged event is fired for each hidable & hidden column on pressing "Show All" button.', () => {
             grid.columns[3].hidden = true;
             grid.columns[4].hidden = true;
             fix.detectChanges();
@@ -841,13 +854,13 @@ export class GridData {
 }
 @Component({
     template: `<div>
-    <igx-column-hiding [columns]='grid1.columns' [togglable]='false'></igx-column-hiding>
-    <igx-grid #grid1 [data]='data' width='500px' height='500px'>
-        <igx-column [field]=''ID'' [header]=''ID'' [disableHiding]='false'></igx-column>
-        <igx-column [field]=''ProductName'' [disableHiding]='true' dataType='string'></igx-column>
-        <igx-column [field]=''Downloads'' [hidden]='true' dataType='number'></igx-column>
-        <igx-column [field]=''Released'' dataType='boolean'></igx-column>
-        <igx-column [field]=''ReleaseDate'' [header]=''ReleaseDate'' dataType='date'></igx-column>
+    <igx-column-hiding [columns]="grid1.columns" [togglable]="false"></igx-column-hiding>
+    <igx-grid #grid1 [data]="data" width="500px" height="500px">
+        <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="false"></igx-column>
+        <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
     </igx-grid>
     </div>`
 })
@@ -866,12 +879,12 @@ export class GridColumnHidingComponent extends GridData implements AfterViewInit
 }
 
 @Component({
-    template: `<igx-grid [data]='data' width='500px' height='500px' [columnHiding]='true'>
-        <igx-column [field]=''ID'' [header]=''ID'' [disableHiding]='false'></igx-column>
-        <igx-column [field]=''ProductName'' [disableHiding]='true' dataType='string'></igx-column>
-        <igx-column [field]=''Downloads'' [hidden]='true' dataType='number'></igx-column>
-        <igx-column [field]=''Released'' dataType='boolean'></igx-column>
-        <igx-column [field]=''ReleaseDate'' [header]=''ReleaseDate'' dataType='date'></igx-column>
+    template: `<igx-grid [data]="data" width="500px" height="500px" [columnHiding]="true">
+        <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="false"></igx-column>
+        <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
     </igx-grid>`
 })
 export class GridWithColumnChooserComponent extends GridData {
@@ -881,12 +894,12 @@ export class GridWithColumnChooserComponent extends GridData {
 }
 
 @Component({
-    template: `<igx-grid [data]='data' width='500px' height='500px'>
-        <igx-column [field]=''ID'' [header]=''ID'' [disableHiding]='false'></igx-column>
-        <igx-column [field]=''ProductName'' [disableHiding]='true' dataType='string'></igx-column>
-        <igx-column [field]=''Downloads'' [hidden]='true' dataType='number'></igx-column>
-        <igx-column [field]=''Released'' dataType='boolean'></igx-column>
-        <igx-column [field]=''ReleaseDate'' [header]=''ReleaseDate'' dataType='date'></igx-column>
+    template: `<igx-grid [data]="data" width="500px" height="500px">
+        <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="false"></igx-column>
+        <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
     </igx-grid>`
 })
 export class GridWithoutColumnChooserComponent extends GridData {
