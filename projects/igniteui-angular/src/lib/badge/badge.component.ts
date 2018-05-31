@@ -87,29 +87,39 @@ export class IgxBadgeComponent {
     public icon: string;
 
     /**
-     * Set the value of the `role` attribute.
-     *
+     * This allows you to set value to role attribute.
      *```html
-     *   <igx-badge role="status" id="igx-badge-2" icon="check" type="success" class="badge-style"></igx-badge>
-     * ```
+     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *  public badge: IgxBadgeComponent;
      *
+     *  //...
+     *  badge.label = "badge-status";
+     * ```
      */
     @HostBinding('attr.role')
     public role = 'status';
 
     /**
-     * This allows you to set class to the badge. The default value is igx-badge.
+     * This allows you to disable igx-badge class. The default it's applied.
      *```html
-     *   <igx-badge cssClass="igx-badge" id="igx-badge-2" icon="check" type="success" class="badge-style"></igx-badge>
+     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *  public badge: IgxBadgeComponent;
+     * 
+     *  //...
+     *  badge.cssClass = false;
      * ```
      */
     @HostBinding('class.igx-badge')
     public cssClass = 'igx-badge';
 
     /**
-     * Set the value of the `aria-label` attribute.
+     * This allows you to set value to aria-label attribute.
      *```html
-     *   <igx-badge label="badge" id="igx-badge-2" icon="check" type="success" class="badge-style"></igx-badge>
+     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *  public badge: IgxBadgeComponent;
+     *
+     *  //...
+     *  badge.label = "icon-badge";
      * ```
      */
     @HostBinding('attr.aria-label')
