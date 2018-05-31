@@ -2,13 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
-- `igx-toggler` changes
+- `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
-    - `igx-toggler` changes
+    - `igxToggle` changes
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
 
