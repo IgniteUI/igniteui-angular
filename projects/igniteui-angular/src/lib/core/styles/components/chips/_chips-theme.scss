@@ -1,22 +1,25 @@
 ////
 /// @group themes
 /// @access public
-/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Chips Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null] - The chps background color.
+/// @param {Color} $chip-background [null] - The chips background color.
+/// @param {Color} $chip-hover-background [null] - The chips hover background color.
 /// @param {Color} $text-color [null] - The chips text color.
-/// @param {Color} $icon-color [null] - The chips icon color.
+/// @param {Color} $order-icon-color [null] - The chips order icon color.
+/// @param {Color} $dir-icon-color [null] - The chips direction icon color.
+/// @param {Color} $remove-icon-color [null] - The chips remove icon color.
+/// @param {Color} $remove-icon-hover-color [null] - The chips remove icon hover color.
 ///
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-color
 ///
 /// @example scss Change the background color
-///   $my-chips-theme: igx-chips-theme($background: black);
+///   $my-chips-theme: igx-chips-theme($chip-background: black);
 ///   // Pass the theme to the igx-chips component mixin
 ///   @include igx-chips($my-chips-theme);
 @function igx-chips-theme(
@@ -26,7 +29,8 @@
     $text-color: null,
     $order-icon-color: null,
     $dir-icon-color: null,
-    $remove-icon-color: null
+    $remove-icon-color: null,
+    $remove-icon-hover-color: null
 ) {
     $default-theme: (
         name: 'igx-chips',
@@ -34,8 +38,9 @@
         chip-hover-background: igx-color($palette, grays, 200),
         text-color: igx-color($palette, grays, 800),
         order-icon-color: igx-color($palette, grays, 600),
-        dir-icon-color: igx-color($palette, grays, 400),
-        remove-icon-color: igx-color($palette, grays, 300)
+        dir-icon-color: igx-color($palette, grays, 300),
+        remove-icon-color: igx-color($palette, grays, 300),
+        remove-icon-hover-color: igx-color($palette, grays, 600)
     );
 
     @if not($text-color) and $chip-background{
@@ -61,37 +66,40 @@
         text-color: $text-color,
         order-icon-color: $order-icon-color,
         dir-icon-color: $dir-icon-color,
-        remove-icon-color: $remove-icon-color
+        remove-icon-color: $remove-icon-color,
+        remove-icon-hover-color: $remove-icon-hover-color
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires igx-elevation
-/// @requires $elevations
-/// @requires $overlay-color
 /// @requires rem
 /// @requires var
 @mixin igx-chips($theme) {
     @include igx-root-css-vars($theme);
 
-    %igx-chips-area {
+    %igx-chips-area,
+    %igx-chips-area__item,
+    %igx-chips-area__label,
+    %igx-chips-area__chip-connector {
         display: flex;
-        justify-content: flex-start;
         align-items: center;
+    }
+
+    %igx-chips-area {
+        justify-content: flex-start;
         color: --var($theme, 'text-color');
         width: 100%;
     }
 
     %igx-chips-area__item {
-        display: flex;
-        align-items: center;
         background: --var($theme, 'chip-background');
         user-select: none;
         cursor: pointer;
         border-radius: rem(17px);
         padding: rem(4) rem(16);
         height: rem(34px);
+        transition: background 180ms ease-in-out;
 
         &:hover,
         &:focus{
@@ -106,17 +114,10 @@
         }
     }
 
-
-    %igx-chips-area__label {
-        display: flex;
-        align-items: center;
-    }
-
     %igx-chips-area__text {
         font-size: rem(12px);
         margin-right: rem(16px);
     }
-
 
     .igx-icon {
         &%igx-chips-area__order-icon {
@@ -133,13 +134,16 @@
         }
 
         &%igx-chips-area__remove-icon {
+            transition: color 180ms ease-in-out;
             color: --var($theme, 'remove-icon-color');
+
+            &:hover {
+                color: --var($theme, 'remove-icon-hover-color');
+            }
         }
     }
 
     %igx-chips-area__chip-connector {
-        display: flex;
-        align-items: center;
         user-select: none;
         pointer-events: none;
     }
