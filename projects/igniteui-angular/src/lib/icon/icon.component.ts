@@ -96,7 +96,8 @@ export class IgxIconComponent implements OnInit {
     public iconColor: string;
 
     /**
-    *    An @Input property that allows you to change the iconName of the icon. You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
+    *    An @Input property that allows you to change the iconName of the icon.
+    *    You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
     *```html
     *<igx-icon name="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
     *```
@@ -105,7 +106,8 @@ export class IgxIconComponent implements OnInit {
     public iconName: string;
 
     /**
-    *    An @Input property that allows you to change the `glyphName` of the icon. You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
+    *    An @Input property that allows you to change the `glyphName` of the icon.
+    *    You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
     *```html
     *<igx-icon iconName="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
     *```
@@ -116,7 +118,7 @@ export class IgxIconComponent implements OnInit {
     /**
      * An ElementRef property of the `igx-icon` component.
      */
-    public el:ElementRef;
+    public el: ElementRef;
 
     constructor(private _el: ElementRef, private iconService: IgxIconService) {
         this.el = _el;
