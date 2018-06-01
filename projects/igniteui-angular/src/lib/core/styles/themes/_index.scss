@@ -22,6 +22,7 @@
 @import '../components/grid-filtering/grid-filtering-theme';
 @import '../components/grid-summary/grid-summary-theme';
 @import '../components/grid-paginator/grid-paginator-theme';
+@import '../components/grid-toolbar/grid-toolbar-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tabs/tabs-theme';
 @import '../components/switch/switch-theme';
@@ -149,6 +150,10 @@
 
     @if not(index($exclude, 'igx-grid-summary')) {
         @include igx-grid-summary($theme: igx-grid-summary-theme());
+    }
+
+    @if not(index($exclude, 'igx-grid-toolbar')) {
+        @include igx-grid-toolbar($theme: igx-grid-toolbar-theme());
     }
 
     @if not(index($exclude, 'igx-icon')) {

@@ -19,6 +19,7 @@ import { IgxColumnComponent } from './column.component';
 import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridSummaryComponent } from './grid-summary.component';
+import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -38,6 +39,7 @@ import { IgxGridRowComponent } from './row.component';
     IgxGridRowComponent,
     IgxGridHeaderComponent,
     IgxGridSummaryComponent,
+    IgxGridToolbarComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
@@ -60,6 +62,7 @@ import { IgxGridRowComponent } from './row.component';
     IgxGridHeaderComponent,
     IgxGridFilterComponent,
     IgxGridSummaryComponent,
+    IgxGridToolbarComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,

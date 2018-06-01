@@ -101,6 +101,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Selection'
         },
         {
+            link: '/gridToolbar',
+            icon: 'view_column',
+            name: 'Grid Toolbar'
+        },
+        {
             link: '/dialog',
             icon: 'all_out',
             name: 'Dialog'

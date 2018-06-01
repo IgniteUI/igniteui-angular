@@ -37,11 +37,13 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IForOfState } from '../directives/for-of/IForOfState';
 import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxBaseExporter } from "../services/index";
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
+import { IgxGridToolbarComponent } from "./grid-toolbar.component";
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridRowComponent } from './row.component';
 
@@ -94,6 +96,13 @@ export interface ISearchInfo {
     caseSensitive: boolean;
     activeMatchIndex: number;
     matchInfoCache: any[];
+}
+
+export interface IGridToolbarExportEventArgs {
+    grid: IgxGridComponent;
+    exporter: IgxBaseExporter;
+    type: string;
+    cancel: boolean;
 }
 
 /**
@@ -418,6 +427,37 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
     }
+
+    /* Toolbar related definitions */
+
+    @ViewChild("toolbar", { read: IgxGridToolbarComponent })
+    public toolbar: IgxGridToolbarComponent = null;
+
+    @Input()
+    public showToolbar = false;
+
+    @Input()
+    public toolbarTitle: string = null;
+
+    @Input()
+    public exportExcel = false;
+
+    @Input()
+    public exportCsv = false;
+
+    @Input()
+    public exportText: string = null;
+
+    @Input()
+    public exportExcelText: string = null;
+
+    @Input()
+    public exportCsvText: string = null;
+
+    @Output()
+    public onToolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
+
+    /* End of toolbar related definitions */
 
     public pagingState;
     public calcWidth: number;

@@ -1,0 +1,41 @@
+<div class="sample-wrapper">
+    <app-page-header title="Grid Toolbar">
+        The grid's toolbar provides a dedicated area for grid features-related UI.
+    </app-page-header>
+    <section class="sample-content">
+        <article class="grid-sample">
+            <h4 class="sample-title">Toolbar</h4>
+
+            <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="600px"
+            
+                [showToolbar]="true"
+                toolbarTitle="Grid Toolbar"
+
+                [exportExcel]="true"
+                [exportCsv]="true"
+                exportText="Export"
+                exportExcelText="Export to Excel"
+                exportCsvText="Export to CSV"
+            >
+            </igx-grid>
+
+            <!--
+                [showToolbar]="true"
+                toolbarTitle="Grid Toolbar"
+
+                [columnHiding]="true"
+                columnHidingText="Hidden"
+                columnHidingTitle="Column Hiding"
+                
+                [exportExcel]="true"
+                [exportCsv]="true"
+                exportText="Export"
+                exportExcelText="Export to Excel"
+                exportCsvText="Export to CSV"
+
+                (onToolbarExporting)="toolbarExportClicked($event)"
+            -->
+        
+        </article>
+    </section>
+</div>
