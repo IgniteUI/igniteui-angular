@@ -9,10 +9,10 @@ import { DataGenerator } from './test-util/data-generator';
 
 import {    DataType,
             DataUtil,
-            FilteringCondition,
             FilteringLogic, FilteringStrategy, IDataState,
             IFilteringExpression, IFilteringState, IPagingState, ISortingExpression, ISortingState,
-            PagingError, SortingDirection
+            PagingError, SortingDirection, IgxStringFilteringOperand, IgxNumberFilteringOperand,
+            IgxDateFilteringOperand, IgxBooleanFilteringOperand
         } from '../../public_api';
 /* Test sorting */
 function testSort() {
@@ -102,7 +102,7 @@ function testFilter() {
     describe('test filtering', () => {
         it('filters \'number\' column greater than 3', () => {
             const res = DataUtil.filter(data, {
-                expressions: [{fieldName: 'number', condition: FilteringCondition.number.greaterThan, searchVal: 3}]
+                expressions: [{fieldName: 'number', condition: IgxNumberFilteringOperand.instance().condition('greaterThan'), searchVal: 3}]
             });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([4]);
@@ -112,7 +112,7 @@ function testFilter() {
             let res = DataUtil.filter(data, {
                                         expressions: [
                                                 {
-                                                    condition: FilteringCondition.string.contains,
+                                                    condition: IgxStringFilteringOperand.instance().condition('contains'),
                                                     fieldName: 'string',
                                                     searchVal: 'row'
                                                 }]
@@ -124,7 +124,7 @@ function testFilter() {
             res = DataUtil.filter(res, {
                                         expressions: [
                                                 {
-                                                    condition: FilteringCondition.string.contains,
+                                                    condition: IgxStringFilteringOperand.instance().condition('contains'),
                                                     fieldName: 'string',
                                                     ignoreCase: false,
                                                     searchVal: 'ROW'
@@ -138,7 +138,7 @@ function testFilter() {
             const res = DataUtil.filter(data, {
                                         expressions: [
                                                 {
-                                                    condition: FilteringCondition.date.after,
+                                                    condition: IgxDateFilteringOperand.instance().condition('after'),
                                                     fieldName: 'date',
                                                     searchVal: new Date()
                                                 }]
@@ -150,7 +150,7 @@ function testFilter() {
              const res = DataUtil.filter(data, {
                                         expressions: [
                                                 {
-                                                    condition: FilteringCondition.boolean.false,
+                                                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
                                                     fieldName: 'boolean'
                                                 }]
                                     });
@@ -161,7 +161,7 @@ function testFilter() {
             const res = DataUtil.filter(data, {
                                         expressions: [
                                                 {
-                                                    condition: FilteringCondition.boolean.false,
+                                                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
                                                     fieldName: 'boolean'
                                                 }],
                                         strategy: new CustomFilteringStrategy()
@@ -217,7 +217,7 @@ function testProcess() {
             const state: IDataState = {
                 filtering: {
                     expressions: [{
-                        condition: FilteringCondition.number.greaterThan,
+                        condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                         fieldName: 'number',
                         searchVal: 1}]
                 },
@@ -252,26 +252,4 @@ describe('DataUtil', () => {
     testPage();
     // test process
     testProcess();
-    // test helper function getFilteringConditionsByDataType
-    it('tests getFilteringConditionsByDataType', () => {
-        const dataGenerator = new DataGenerator();
-        const stringCond = Object.keys(FilteringCondition.string);
-        const numberCond = Object.keys(FilteringCondition.number);
-        const booleanCond = Object.keys(FilteringCondition.boolean);
-        const dateCond = Object.keys(FilteringCondition.date);
-
-        expect(
-            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.String), stringCond))
-                .toBeTruthy('string filtering conditions');
-        expect(
-            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Number), numberCond))
-                .toBeTruthy('number filtering conditions');
-        expect(
-            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Boolean), booleanCond))
-                .toBeTruthy('boolean filtering conditions');
-        expect(
-            dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Date), dateCond))
-                .toBeTruthy('date filtering conditions');
-    });
-
 });
