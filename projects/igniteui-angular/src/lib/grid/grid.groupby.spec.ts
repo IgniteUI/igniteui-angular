@@ -1096,7 +1096,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.instance.paging = true;
         fix.componentInstance.instance.perPage = 3;
         fix.detectChanges();
-        fix.componentInstance.instance.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.componentInstance.instance.groupBy({fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false});
         const groupRows = grid.groupedRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
 
@@ -1113,7 +1113,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.instance.paging = true;
         fix.componentInstance.instance.perPage = 3;
         fix.detectChanges();
-        fix.componentInstance.instance.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.componentInstance.instance.groupBy({fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false});
         let groupRows = grid.groupedRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
@@ -1148,7 +1148,7 @@ describe('IgxGrid - GroupBy', () => {
             value: 'Ignite UI for JavaScript'
         });
         fix.detectChanges();
-        fix.componentInstance.instance.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.componentInstance.instance.groupBy({fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false});
         let groupRows = grid.groupedRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
