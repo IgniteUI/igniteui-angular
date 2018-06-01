@@ -141,7 +141,7 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
 
         // ungroup
-        grid.groupBy('ProductName', SortingDirection.None, false);
+        grid.clearGrouping('ProductName');
         fix.detectChanges();
 
         // verify no groups are present
@@ -160,7 +160,7 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, [1000, 254, 100, 20, 0, null]);
 
         // ungroup and group by boolean column
-        grid.groupBy('Downloads', SortingDirection.None, false);
+        grid.clearGrouping('Downloads');
         fix.detectChanges();
         grid.groupBy('Released', SortingDirection.Desc, false);
         fix.detectChanges();
@@ -174,7 +174,7 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, [true, false, null]);
 
         // ungroup and group by date column
-        grid.groupBy('Released', SortingDirection.None, false);
+        grid.clearGrouping('Released');
         fix.detectChanges();
         grid.groupBy('ReleaseDate', SortingDirection.Asc, false);
         fix.detectChanges();
