@@ -115,7 +115,7 @@ export class IgxGridAPIService {
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions, true);
 
-        this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase);
+        this.prepare_sorting_expression([sortingState], fieldName, dir, ignoreCase);
         this.get(id).sortingExpressions = sortingState;
     }
 
@@ -126,30 +126,30 @@ export class IgxGridAPIService {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
             }
-            this.prepare_sorting_expression(sortingState, each.fieldName, each.dir, each.ignoreCase);
+            this.prepare_sorting_expression([sortingState], each.fieldName, each.dir, each.ignoreCase);
         }
 
         this.get(id).sortingExpressions = sortingState;
     }
 
     public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
-        const groupingState = this.get(id).groupingExpressions;
+        const groupingState = cloneArray(this.get(id).groupingExpressions, true);
+        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
 
-        this.prepare_sorting_expression(groupingState, fieldName, dir, ignoreCase);
+        const expression = this.prepare_sorting_expression([sortingState, groupingState], fieldName, dir, ignoreCase);
         this.get(id).groupingExpressions = groupingState;
-        this.sort(id, fieldName, dir, ignoreCase);
         this.arrange_sorting_expressions(id);
     }
 
     public groupBy_multiple(id: string, expressions: ISortingExpression[]): void {
-        const groupingState = this.get(id).groupingExpressions;
+        const groupingState = cloneArray(this.get(id).groupingExpressions, true);
+        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
 
         for (const each of expressions) {
-            this.prepare_sorting_expression(groupingState, each.fieldName, each.dir, each.ignoreCase);
+            this.prepare_sorting_expression([sortingState, groupingState], each.fieldName, each.dir, each.ignoreCase);
         }
 
         this.get(id).groupingExpressions = groupingState;
-        this.sort_multiple(id, expressions);
         this.arrange_sorting_expressions(id);
     }
 
@@ -248,21 +248,26 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_sorting_expression(state, fieldName, dir, ignoreCase) {
-
+    protected prepare_sorting_expression(states, fieldName, dir, ignoreCase) {
         if (dir === SortingDirection.None) {
-            state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
+            states.forEach(state => {
+                state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
+            });
             return;
         }
 
-        const expression = state.find((expr) => expr.fieldName === fieldName);
+        let expression = states[0].find((expr) => expr.fieldName === fieldName);
 
         if (!expression) {
-            state.push({ fieldName, dir, ignoreCase });
+            expression = { fieldName, dir, ignoreCase };
+            states.forEach(state => {
+                state.push(expression);
+            });
         } else {
             Object.assign(expression, { fieldName, dir, ignoreCase });
         }
     }
+
     protected arrange_sorting_expressions(id) {
         const groupingState = this.get(id).groupingExpressions;
         this.get(id).sortingExpressions.sort((a, b) => {
