@@ -15,7 +15,8 @@ import {
     Self,
     Optional,
     HostListener,
-    Directive
+    Directive,
+    Inject
 } from '@angular/core';
 import { IToggleView } from '../core/navigation';
 import { IgxSelectionAPIService } from '../core/selection';
@@ -392,7 +393,8 @@ export class IgxDropDownItemNavigationDirective {
 
     private _target;
 
-    constructor(private element: ElementRef, @Self() @Optional() public dropdown: IgxDropDownComponent) { }
+    constructor(private element: ElementRef,
+        @Inject(forwardRef(() => IgxDropDownComponent)) @Self() @Optional() public dropdown: IgxDropDownComponent) { }
 
     get target() {
         return this._target;
