@@ -11,7 +11,10 @@ import {    DataType,
             DataUtil,
             FilteringCondition,
             FilteringLogic, FilteringStrategy, IDataState,
-            IFilteringExpression, IFilteringState, IPagingState, ISortingExpression, ISortingState,
+            IFilteringExpression, IFilteringState,
+            IGroupByRecord, IGroupingState,
+            IPagingState,
+            ISortingExpression, ISortingState,
             PagingError, SortingDirection
         } from '../../public_api';
 /* Test sorting */
@@ -72,6 +75,172 @@ function testSort() {
                 });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual(dataGenerator.generateArray(4, 0));
+        });
+    });
+}
+
+function testGroupBy() {
+    let data: any[] = [];
+    let dataGenerator: DataGenerator;
+    let expr: ISortingExpression;
+    let state: IGroupingState;
+    beforeEach(async(() => {
+        dataGenerator = new DataGenerator();
+        data = dataGenerator.data;
+        expr = {
+            dir: SortingDirection.Asc,
+            fieldName: 'boolean'
+        };
+        state = {
+            expressions: [expr],
+            expansion: [],
+            defaultExpanded: true
+        };
+    }));
+    describe('Test groupBy', () => {
+        it('groups by descending column "boolean", expanded', () => {
+            // sort
+            let res = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            res = DataUtil.group(res, state);
+            // second group pipe
+            res = DataUtil.restoreGroups(res, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                        .toEqual([undefined, false, false, false, undefined, true, true]);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            const group1: IGroupByRecord = groups[1];
+            const group2: IGroupByRecord = groups[5];
+            expect(groups[0]).toEqual(null);
+            expect(res[0]).toEqual(group1);
+            expect(groups[2]).toEqual(group1);
+            expect(groups[3]).toEqual(group1);
+            expect(groups[4]).toEqual(null);
+            expect(res[4]).toEqual(group2);
+            expect(groups[6]).toEqual(group2);
+            expect(group1.level).toEqual(0);
+            expect(group2.level).toEqual(0);
+            expect(group1.records).toEqual(res.slice(1, 4));
+            expect(group2.records).toEqual(res.slice(5, 7));
+            expect(group1.value).toEqual(false);
+            expect(group2.value).toEqual(true);
+        });
+
+        it('groups by descending column "boolean", collapsed', () => {
+            state.defaultExpanded = false;
+            // sort
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            let res = DataUtil.group(sorted, state);
+            // second group pipe
+            res = DataUtil.restoreGroups(res, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                        .toEqual([undefined, undefined]);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            expect(groups[0]).toEqual(null);
+            expect(groups[1]).toEqual(null);
+            expect(res[0].level).toEqual(0);
+            expect(res[1].level).toEqual(0);
+            expect(res[0].records).toEqual(sorted.slice(0, 3));
+            expect(res[1].records).toEqual(sorted.slice(3, 5));
+            expect(res[0].value).toEqual(false);
+            expect(res[1].value).toEqual(true);
+        });
+
+        it('groups by ascending column "boolean", partially collapsed', () => {
+            state.expansion.push({
+                expanded: false,
+                value: false,
+                fieldName: 'boolean'
+            });
+            // sort
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            let res = DataUtil.group(sorted, state);
+            // second group pipe
+            res = DataUtil.restoreGroups(res, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                        .toEqual([undefined, undefined, true, true]);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            expect(groups[0]).toEqual(null);
+            expect(res[1]).toEqual(groups[2]);
+            expect(res[0].level).toEqual(0);
+            expect(res[1].level).toEqual(0);
+            expect(res[0].records).toEqual(sorted.slice(0, 3));
+            expect(res[1].records).toEqual(sorted.slice(3, 5));
+            expect(res[0].value).toEqual(false);
+            expect(res[1].value).toEqual(true);
+        });
+
+        it('two level groups', () => {
+            const expr2 = {
+                fieldName: 'string',
+                dir: SortingDirection.Asc
+            };
+            state.expressions.push(expr2);
+            // sort
+            const sorted = DataUtil.sort(data, { expressions: [expr, expr2] });
+            // first group pipe
+            let res = DataUtil.group(sorted, state);
+            // second group pipe
+            res = DataUtil.restoreGroups(res, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                        .toEqual([undefined, undefined, false, undefined, false,
+                            undefined, false, undefined, undefined, true, undefined, true]);
+            expect(dataGenerator.getValuesForColumn(res, 'string'))
+                        .toEqual([undefined, undefined, 'row0, col1', undefined, 'row2, col1',
+                        undefined, 'row4, col1', undefined, undefined, 'row1, col1', undefined, 'row3, col1']);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            const group1: IGroupByRecord = groups[1];
+            const group2: IGroupByRecord = groups[2];
+            const group3: IGroupByRecord = groups[8];
+            const group4: IGroupByRecord = groups[9];
+            expect(group1).toEqual(res[0]);
+            expect(group2).toEqual(res[1]);
+            expect(group3).toEqual(res[7]);
+            expect(group4).toEqual(res[8]);
+            expect(group1.level).toEqual(0);
+            expect(group2.level).toEqual(1);
+            expect(group3.level).toEqual(0);
+            expect(group4.level).toEqual(1);
+        });
+
+        it('groups by descending column "boolean", paging', () => {
+            // sort
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            const grouped = DataUtil.group(sorted, state);
+            // page
+            let res = DataUtil.page(grouped, { index: 0, recordsPerPage: 2 });
+            // second group pipe
+            res = DataUtil.restoreGroups(res, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                        .toEqual([undefined, false, false]);
+            let groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            const group1: IGroupByRecord = groups[1];
+            expect(groups[0]).toEqual(null);
+            expect(res[0]).toEqual(group1);
+            expect(groups[2]).toEqual(group1);
+            expect(group1.level).toEqual(0);
+            expect(group1.records).toEqual(grouped.slice(0, 3));
+            expect(group1.value).toEqual(false);
+
+            // page 2
+            res = DataUtil.page(grouped, { index: 1, recordsPerPage: 2 });
+            // second group pipe
+            res = DataUtil.restoreGroups(res, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                        .toEqual([undefined, false, undefined, true]);
+            groups = dataGenerator.getGroupRecords(res);
+            const group2: IGroupByRecord = groups[1];
+            const group3: IGroupByRecord = groups[3];
+            expect(res[0]).toEqual(group2);
+            expect(groups[0]).toEqual(null);
+            expect(res[2]).toEqual(group3);
+            expect(groups[2]).toEqual(null);
+            expect(group2.value).toEqual(false);
+            expect(group3.value).toEqual(true);
+            expect(group2.records).toEqual(grouped.slice(0, 3));
+            expect(group3.records).toEqual(grouped.slice(3, 5));
         });
     });
 }
@@ -248,6 +417,7 @@ function testProcess() {
 /* //Test paging */
 describe('DataUtil', () => {
     testSort();
+    testGroupBy();
     testFilter();
     testPage();
     // test process
@@ -273,5 +443,4 @@ describe('DataUtil', () => {
             dataGenerator.isSuperset(DataUtil.getListOfFilteringConditionsForDataType(DataType.Date), dateCond))
                 .toBeTruthy('date filtering conditions');
     });
-
 });

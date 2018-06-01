@@ -63,37 +63,6 @@
         @extend %grid-row--group !optional;
     }
 
-    @include e(groupLabel) {
-        @extend %grid__groupLabel !optional;
-    }
-
-    @include e(groupCount) {
-        @extend %grid__groupCount !optional;
-    }
-
-    @include e(groupContent) {
-        @extend %grid__groupContent !optional;
-    }
-
-    @include e(groupContent) {
-        @extend %grid__groupContent !optional;
-    }
-
-    @include e(groupIndentation) {
-        @extend %grid__groupIndentation !optional;
-    }
-
-    @include e(grouparea) {
-        @extend %grid-grouparea !optional;
-    }
-
-    @include e(groupField) {
-        @extend %grid__groupField !optional;
-    }
-    @include e(groupCount) {
-        @extend %grid__groupCount !optional;
-    }
-
     @include e(th) {
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;
@@ -166,5 +135,51 @@
 
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
+    }
+
+    // Groupby section
+
+    @include e(group-label) {
+        @extend %grid__group-label !optional;
+    }
+
+    @include e(group-text) {
+        @extend %grid__group-text !optional;
+    }
+
+    @include e(group-count) {
+        @extend %grid__group-count !optional;
+    }
+
+    @include e(group-content) {
+        @extend %grid__group-content !optional;
+    }
+
+    @include e(group-indentation) {
+        @extend %grid__group-indentation !optional;
+    }
+
+    @include e(grouparea) {
+        @extend %grid-grouparea !optional;
+    }
+
+    @include e(group-field) {
+        @extend %grid__group-field !optional;
+    }
+
+    @include e(group-count) {
+        @extend %grid__group-count !optional;
+    }
+
+    @include e(grouping-indicator) {
+        @extend %igx-grid__grouping-indicator !optional;
+    }
+
+    @include e(group-icon) {
+        @extend %igx-grid__group-icon !optional;
+    }
+
+    @include e(grouparea-placeholder) {
+        @extend %igx-grid__grouparea-placeholder !optional;
     }
 }

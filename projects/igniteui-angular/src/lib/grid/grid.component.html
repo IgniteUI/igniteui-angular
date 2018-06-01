@@ -18,13 +18,32 @@
 </ng-template>
 
 <div class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
-    <span>Drag a column header and drop it here to group by that column</span>
+    <div *ngIf="groupingExpressions.length === 0" class="igx-grid__grouparea-placeholder">
+        Drag a column header and drop it here to group by that column
+    </div>
+    <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
+        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName"
+                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="onChipInteractionEnd($event)">
+            <!--<igx-icon class="igx-chips-area__item-icon" igxPrefix fontSet="material" [name]="'drag_indicator'" [style.height]="'1.5rem'"></igx-icon>-->
+            <span class="igx-chips-area__label" igxLabel
+                    [style.position]="'unset'"
+                    [style.width]="'unset'"
+                    [style.webkitTransform]="'unset'"
+                    [style.transform]="'unset'"
+                    [style.lineHeight]="'unset'"
+                    [style.height]="'unset'">
+                <span class="igx-chips-area__text">{{expr.fieldName}}</span>
+                <igx-icon class="igx-chips-area__order-icon" fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'"></igx-icon>
+            </span>
+            <igx-icon class="igx-chips-area__dir-icon" igxSuffixConnector fontSet="material" [name]="'forward'"></igx-icon>
+        </igx-chip>
+    </igx-chips-area>
 </div>
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" role="row">
         <ng-container *ngIf="groupingExpressions.length > 0">
-            <div class="igx-grid__groupIndentation" [style.min-width.px]="calcGroupByWidth">
+            <div class="igx-grid__group-indentation" [style.min-width.px]="calcGroupByWidth">
                 <button (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true">
                     <igx-icon fontSet="material" name="reorder"></igx-icon>
                 </button>
@@ -48,8 +67,9 @@
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody>
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
     | gridSort:sortingExpressions:id:pipeTrigger
+    | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupByDefaultExpanded:id:pipeTrigger
     | gridPaging:page:perPage:id:pipeTrigger
-    | gridGroupBy:groupingExpressions:groupingExpansionState:groupByDefaultExpanded:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
+    | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupByDefaultExpanded:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-container *ngIf="isGroupByRecord(rowData); else record_template">
             <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>

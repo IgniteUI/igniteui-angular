@@ -29,9 +29,17 @@ import {
     IgxGroupByRowTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridGroupingPipe, IgxGridPagingPipe, IgxGridSortingPipe } from './grid.pipes';
+import {
+    IgxGridFilterConditionPipe,
+    IgxGridFilteringPipe,
+    IgxGridPagingPipe,
+    IgxGridPostGroupingPipe,
+    IgxGridPreGroupingPipe,
+    IgxGridSortingPipe
+} from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
+import { IgxChipsModule } from '../chips/chips.module';
 
 @NgModule({
   declarations: [
@@ -49,7 +57,8 @@ import { IgxGridRowComponent } from './row.component';
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxGridFilterComponent,
-    IgxGridGroupingPipe,
+    IgxGridPreGroupingPipe,
+    IgxGridPostGroupingPipe,
     IgxGridSortingPipe,
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
@@ -88,7 +97,8 @@ import { IgxGridRowComponent } from './row.component';
     IgxTextHighlightModule,
     IgxTextSelectionModule,
     IgxCheckboxModule,
-    IgxBadgeModule
+    IgxBadgeModule,
+    IgxChipsModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService]
 })

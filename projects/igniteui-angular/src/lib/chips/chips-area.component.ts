@@ -7,12 +7,17 @@ import {
     forwardRef,
     HostBinding,
     Input,
+    IterableDiffer,
+    IterableDiffers,
     NgModule,
     Output,
     Provider,
     QueryList,
     ViewChild,
-    AfterViewInit
+    AfterViewInit,
+    OnChanges,
+    SimpleChanges,
+    DoCheck
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -30,7 +35,7 @@ import { IgxPrefixConnectorDirective } from './prefixConnector.directive';
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html'
 })
-export class IgxChipsAreaComponent implements AfterViewInit {
+export class IgxChipsAreaComponent implements AfterViewInit, DoCheck {
     @HostBinding('style.width.px')
     @Input()
     public width: number;
@@ -43,18 +48,20 @@ export class IgxChipsAreaComponent implements AfterViewInit {
     public onChipsOrderChange = new EventEmitter<any>();
 
     @Output()
-    public onChipMoveEnd = new EventEmitter<any>();
+    public onChipsMoveEnd = new EventEmitter<any>();
 
-    @HostBinding('style.border')
-    public borderStyle = '1px #bfbfbf solid';
+    @Output()
+    public onChipsInteractionEnd = new EventEmitter<any>();
 
     @ContentChildren(IgxChipComponent)
     chipsList: QueryList<IgxChipComponent>;
 
     private modifiedChipsArray: IgxChipComponent[];
+    private _differ: IterableDiffer<IgxChipComponent> | null = null;
 
-    constructor(public cdr: ChangeDetectorRef) {
-
+    constructor(public cdr: ChangeDetectorRef,
+                private _iterableDiffers: IterableDiffers) {
+        this._differ = this._iterableDiffers.find([]).create(null);
     }
 
     ngAfterViewInit() {
@@ -67,12 +74,46 @@ export class IgxChipsAreaComponent implements AfterViewInit {
                 this.onChipOutOfAreaRight(chipRef);
             });
             chip.onMoveStart.subscribe(() => {
-                this.onChipsMoveStart();
+                this.onChipMoveStart();
             });
             chip.onMoveEnd.subscribe(() => {
-                this.onChipsMoveEnd();
+                this.onChipMoveEnd();
+            });
+            chip.onInteractionStart.subscribe(() => {
+                this.onChipInteractionStart();
+            });
+            chip.onInteractionEnd.subscribe(() => {
+                this.onChipInteractionEnd();
             });
         });
+    }
+
+    public ngDoCheck(): void {
+        if (this.chipsList) {
+            const changes = this._differ.diff(this.chipsList.toArray());
+            if (changes) {
+                changes.forEachAddedItem((addedChip) => {
+                    addedChip.item.onOutOfAreaLeft.subscribe((chipRef) => {
+                        this.onChipOutOfAreaLeft(chipRef);
+                    });
+                    addedChip.item.onOutOfAreaRight.subscribe((chipRef) => {
+                        this.onChipOutOfAreaRight(chipRef);
+                    });
+                    addedChip.item.onMoveStart.subscribe(() => {
+                        this.onChipMoveStart();
+                    });
+                    addedChip.item.onMoveEnd.subscribe(() => {
+                        this.onChipMoveEnd();
+                    });
+                    addedChip.item.onInteractionStart.subscribe(() => {
+                        this.onChipInteractionStart();
+                    });
+                    addedChip.item.onInteractionEnd.subscribe(() => {
+                        this.onChipInteractionEnd();
+                    });
+                });
+            }
+        }
     }
 
     shiftChipLeft(chipIndex: number) {
@@ -135,16 +176,24 @@ export class IgxChipsAreaComponent implements AfterViewInit {
         chipData.isValid = eventData.isValid;
     }
 
-    onChipsMoveStart() {
-        this.chipsList.forEach((chip) => {
-            chip.areaMovingPerforming = true;
-        });
+    onChipMoveStart() {
     }
-    onChipsMoveEnd() {
+
+    onChipMoveEnd() {
         this.chipsList.forEach((chip) => {
             chip.areaMovingPerforming = false;
         });
 
-        this.onChipMoveEnd.emit();
+        this.onChipsMoveEnd.emit();
+    }
+
+    onChipInteractionStart() {
+        this.chipsList.forEach((chip) => {
+            chip.areaMovingPerforming = true;
+        });
+    }
+
+    onChipInteractionEnd() {
+        this.onChipsInteractionEnd.emit();
     }
 }

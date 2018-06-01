@@ -21,6 +21,15 @@
 /// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
 /// @param {Color} $resize-line-color [null] - The table header resize line color.
 ///
+/// @param {Color} $grouparea-background [null] - The grid grouparea background color.
+/// @param {Color} $group-label [null] - The grid grouparea field text color.
+/// @param {Color} $grouparea-icon-color [null] - The grid grouparea icon color.
+///
+/// @param {Color} $expand-all-icon-color [null] - The grid row expand all icon color.
+/// @param {Color} $expand-all-icon-hover-color [null] - TThe grid row expand all icon hover color.
+/// @param {Color} $expand-icon-color [null] - The grid row expand icon color.
+/// @param {Color} $expand-icon-hover-color [null] - TThe grid row expand icon hover color.
+///
 /// @requires igx-color
 /// @requires igx-contrast-color
 /// @requires text-contrast
@@ -48,7 +57,17 @@
     $cell-selected-text-color: null,
     $cell-editing-background: null,
 
-    $resize-line-color: null
+    $resize-line-color: null,
+
+    $grouparea-background: null,
+    $group-label: null,
+    $grouparea-icon-color: null,
+    $expand-all-icon-color: null,
+    $expand-all-icon-hover-color: null,
+    $expand-icon-color: null,
+    $expand-icon-hover-color: null,
+    $group-count-background: null,
+    $group-count-text-color: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -72,7 +91,18 @@
         cell-selected-text-color: igx-contrast-color($palette, 'primary'),
         cell-editing-background: #fff,
 
-        resize-line-color: igx-color($palette, 'secondary')
+        resize-line-color: igx-color($palette, 'secondary'),
+
+        grouparea-background: hexrgba(igx-color($palette, 'grays', 100)),
+
+        group-label: igx-color($palette, 'primary', 500),
+        grouparea-icon-color: igx-color($palette, 'primary', 500),
+        expand-all-icon-color: igx-color($palette, 'grays', 600),
+        expand-all-icon-hover-color: igx-color($palette, 'grays', 800),
+        expand-icon-color: igx-color($palette, 'grays', 600),
+        expand-icon-hover-color: igx-color($palette, 'grays', 800),
+        group-count-background: igx-color($palette, 'grays', 200),
+        group-count-text-color: igx-color($palette, 'grays', 600),
     );
 
     @if not($header-text-color) and $header-background {
@@ -103,6 +133,18 @@
         $pinned-border-color: rgba(text-contrast($content-background), .08)
     }
 
+    @if not($group-label) and $grouparea-background {
+        $group-label: text-contrast($grouparea-background)
+    }
+
+    @if not($grouparea-icon-color) and $grouparea-background {
+        $grouparea-icon-color: text-contrast($grouparea-background)
+    }
+
+    @if not($grouparea-background) and $header-background {
+        $grouparea-background: $header-background
+    }
+
     @return extend($default-theme, (
         palette: $palette,
 
@@ -125,7 +167,17 @@
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
 
-        resize-line-color: $resize-line-color
+        resize-line-color: $resize-line-color,
+
+        grouparea-background: $grouparea-background,
+        group-label: $group-label,
+        grouparea-icon-color: $grouparea-icon-color,
+        expand-all-icon-color: $expand-all-icon-color,
+        expand-all-icon-hover-color: $expand-all-icon-hover-color,
+        expand-icon-color: $expand-icon-color,
+        expand-icon-hover-color: $expand-icon-hover-color,
+        group-count-background: $group-count-background,
+        group-count-text-color: $group-count-text-color,
     ));
 }
 
@@ -169,7 +221,7 @@
 
     %grid-display {
         display: grid;
-        grid-template-rows: auto 1fr auto auto;
+        grid-template-rows: auto auto 1fr auto;
         grid-template-columns: 1fr;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
@@ -205,7 +257,13 @@
         grid-row: 2;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         z-index: 2;
-        height: fit-content;
+        display: table;
+
+        %grid__group-indentation {
+            &::after {
+                display: none;
+            }
+        }
     }
 
     %grid-tfoot {
@@ -284,46 +342,7 @@
 
     %grid-row--group {
         position: relative;
-        background: --var($theme, 'header-background') !important;        
-    }
-
-    %grid__groupLabel {
-        display: inline-flex;
-        vertical-align: middle;
-    }
-
-    %grid__groupCount {
-        display: inline-flex;
-        padding: 5px;
-    }
-
-    %grid__groupContent {
-        width: 100%;
-        border-bottom: 1px solid --var($theme, 'row-border-color');
-    }
-    
-    %grid__groupIndentation {
-        background: --var($theme, 'header-background');
-        z-index: 9999;
-    }
-
-    %grid-grouparea {
-        grid-row: 1;
-        border-bottom: 1px dotted igx-color($palette, 'grays', 400);
-        z-index: 2;
-        height: 60px;
-        background: --var($theme, 'header-background');
-    }
-
-    %grid__groupField {
-        color: #09f;
-        padding-right: 10px;
-    }
-
-    %grid__groupCount > div.igx-badge__circle {
-        background-color: igx-color($palette, 'grays', 200);
-        color: --var($theme, 'content-text-color');
-        font-size: $grid-head-fs;
+        background: --var($theme, 'header-background') !important;
     }
 
     %grid-cell-display {
@@ -465,4 +484,160 @@
             left: 100%;
         }
     }
+
+    // Groupby section
+
+    %grid__group-label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        line-height: rem(16px);
+
+        > * {
+            margin-right: rem(4px);
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    [dir='rtl'] {
+        %grid__group-content {
+            padding-right: rem(34px);
+        }
+
+        %grid__group-label {
+            > * {
+                margin-left: rem(4px);
+
+                &:last-child {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+
+    %grid__group-text {
+        font-size: rem(14px);
+    }
+
+    %grid__group-content {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex: 1 1 auto;
+        padding-left: rem(18px);
+        border-bottom: 1px solid --var($theme, 'row-border-color');
+        background: --var($theme, 'header-background');
+
+        &:focus {
+            outline: transparent;
+        }
+    }
+
+    %grid__group-indentation {
+        background: --var($theme, 'header-background');
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding-left: 24px;
+        padding-right: 12px;
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: rem(1px);
+            bottom: -1px;
+            left: 0;
+            background: --var($theme, 'header-background');
+        }
+
+        .igx-button--icon {
+            width: rem(28px);
+            height: rem(28px);
+            color: --var($theme, 'expand-all-icon-color');
+        }
+
+        &:focus,
+        &:hover {
+            .igx-button--icon {
+                color: --var($theme, 'expand-all-icon-hover-color');
+            }
+        }
+    }
+
+    %grid-grouparea {
+        grid-row: 1;
+        border-bottom: 1px solid --var($theme, 'row-border-color');
+        z-index: 2;
+        height: 70px;
+        background: --var($theme, 'grouparea-background');
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: $grid-cell-padding--e;
+        overflow: hidden;
+
+        &:focus {
+            outline: transparent;
+        }
+    }
+
+    %grid__group-field {
+        color: --var($theme, 'group-label');
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    %grid__group-count {
+        > div {
+            background-color: --var($theme, 'group-count-background');
+            color: --var($theme, 'group-count-text-color');
+            font-size: $grid-head-fs;
+        }
+    }
+
+    %igx-grid__grouping-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: --var($theme, 'grouparea-background');
+        cursor: pointer;
+        padding-left: 24px;
+        padding-right: 12px;
+
+        .igx-icon {
+            color: --var($theme, 'expand-icon-color');
+        }
+
+        &:hover,
+        &:focus{
+            outline: transparent;
+
+            .igx-icon {
+                color: --var($theme, 'expand-icon-hover-color');
+            }
+        }
+    }
+
+    %igx-grid__group-icon {
+        user-select: none;
+
+        &.igx-icon {
+            color: --var($theme, 'grouparea-icon-color');
+            width: rem(16px);
+            height: rem(16px);
+            font-size: rem(16px);
+        }
+    }
+
+    %igx-grid__grouparea-placeholder {
+        @include ellipsis();
+        width: 100%;
+    }
 }
+
