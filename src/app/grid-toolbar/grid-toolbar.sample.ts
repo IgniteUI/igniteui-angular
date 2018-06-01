@@ -7,24 +7,24 @@ import { IgxGridComponent, IgxCsvExporterService, IgxExcelExporterService } from
     templateUrl: 'grid-toolbar.sample.html'
 })
 export class GridToolbarSampleComponent implements OnInit {
-    
-    @ViewChild("grid1", { read: IgxGridComponent })
+
+    @ViewChild('grid1', { read: IgxGridComponent })
     public igxGrid1: IgxGridComponent;
-  
+
     data = [
         {
-            Name: "Alice",
+            Name: 'Alice',
             Age: 25
         },
         {
-            Name: "Bob",
+            Name: 'Bob',
             Age: 23
         }
     ];
 
     constructor() {
     }
-    
+
     ngOnInit() {
     }
 
@@ -32,11 +32,11 @@ export class GridToolbarSampleComponent implements OnInit {
         obj.cancel = true;
         let exporter;
         switch (obj.type) {
-            case "excel" :
-                exporter = obj.exporter as IgxExcelExporterService
+            case 'excel' :
+                exporter = obj.exporter as IgxExcelExporterService;
                 // configure and perform export operation
                 break;
-            case "csv" :
+            case 'csv' :
                 exporter = obj.exporter as IgxCsvExporterService;
                 // configure and perform export operation
                 break;
