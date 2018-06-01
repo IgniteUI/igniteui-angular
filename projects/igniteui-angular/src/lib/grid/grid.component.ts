@@ -806,6 +806,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onGroupingDone.emit(this.sortingExpressions);
     }
 
+    public clearGrouping(name?: string): void {
+        this.gridAPI.clear_groupby(this.id, name);
+    }
+
     public isExpandedGroup(group: IGroupByRecord): boolean {
         const state: IGroupByExpandState = this._getStateForGroupRow(group);
         return state ? state.expanded : this.groupByDefaultExpanded;
