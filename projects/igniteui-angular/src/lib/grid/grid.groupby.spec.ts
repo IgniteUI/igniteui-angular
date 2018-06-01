@@ -125,7 +125,7 @@ describe('IgxGrid - GroupBy', () => {
             const grp = grExpr[i];
             const s = sortExpr[i];
             expect(chip).toBe(grp.fieldName);
-            expect(chip).toBe(sortExpr[i].fieldName);
+            expect(chip).toBe(s.fieldName);
             if (chipDirection === SORTING_ICON_ASC_CONTENT) {
                 expect(grp.dir).toBe(SortingDirection.Asc);
                 expect(s.dir).toBe(SortingDirection.Asc);
