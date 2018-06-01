@@ -8,7 +8,7 @@ import { IgxColumnComponent } from './column.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
-fdescribe('IgxGrid - Cell component', () => {
+describe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateVerticallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
@@ -345,7 +345,6 @@ fdescribe('IgxGrid - Cell component', () => {
         const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
         const selectedDate = new Date('04/12/2017');
         let datePicker;
-        debugger;
         fixture.whenStable().then(() => {
             fixture.detectChanges();
 
