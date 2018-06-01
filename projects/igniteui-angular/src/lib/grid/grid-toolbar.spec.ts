@@ -7,7 +7,7 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
-fdescribe('IgxGrid - Grid Toolbar', () => {
+describe('IgxGrid - Grid Toolbar', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
