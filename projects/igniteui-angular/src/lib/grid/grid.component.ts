@@ -1743,9 +1743,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public onChipRemoved(event) {
-        this.groupingExpressions = this.groupingExpressions.filter((expr) => {
-            return expr.fieldName !== event.owner.id;
-        });
+        this.clearGrouping(event.owner.id);
     }
 
     public chipsOrderChanged(event) {
