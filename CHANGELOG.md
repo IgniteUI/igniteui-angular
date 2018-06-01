@@ -35,8 +35,15 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 }
 ```
 
+- `igxToggle` changes
+    - `onOpening` event added.
+    - `onClosing` event added.
+
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
+    - `igxToggle` changes
+        - `onOpen` event renamed to `onOpened`.
+        - `onClose` event renamed to `onClosed`.
 
 ## 6.0.1
 - **Breaking changes**:
