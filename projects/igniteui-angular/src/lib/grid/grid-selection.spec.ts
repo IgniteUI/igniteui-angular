@@ -771,7 +771,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
-        grid.sort('Column1', SortingDirection.Desc, true);
+        grid.sort({fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true});
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
@@ -873,7 +873,7 @@ describe('IgxGrid - Row Selection', () => {
         const oldCellID = oldCell.cellID;
         oldCell.nativeElement.focus();
         oldCell.nativeElement.click();
-        grid.sort('UnitsInStock', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
         const cellAfterSorting = fixture.debugElement.query(By.css('.igx-grid__td--selected'));
         expect(grid.selectedCells).toBeDefined();

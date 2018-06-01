@@ -9,6 +9,7 @@ import { By } from '@angular/platform-browser';
 import { STRING_FILTERS } from '../data-operations/filtering-condition';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 
 describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -349,7 +350,7 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         fix.whenStable().then(() => {
-            grid.sort('Name');
+            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc});
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();

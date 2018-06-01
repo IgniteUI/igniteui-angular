@@ -332,7 +332,7 @@ describe('Excel Exporter', () => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        grid.sort('Name', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -349,7 +349,7 @@ describe('Excel Exporter', () => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        grid.sort('Name', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -357,7 +357,7 @@ describe('Excel Exporter', () => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridSortByName,
                     'Ascending sorted data should have been exported.');
 
-                grid.sort('Name', SortingDirection.Desc, true);
+                grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
 
                 fix.whenStable().then(() => {
                     fix.detectChanges();
@@ -366,7 +366,7 @@ describe('Excel Exporter', () => {
                         'Descending sorted data should have been exported.');
 
                         grid.clearSort();
-                        grid.sort('ID', SortingDirection.Asc, true);
+                        grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true});
 
                         fix.whenStable().then(() => {
                             fix.detectChanges();
@@ -543,7 +543,7 @@ describe('Excel Exporter', () => {
         const grid = fix.componentInstance.grid1;
         grid.columns[1].header = 'My header';
         grid.columns[1].sortable = true;
-        grid.sort('Name');
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
         const sortField = grid.sortingExpressions[0].fieldName;
 
         fix.whenStable().then(() => {

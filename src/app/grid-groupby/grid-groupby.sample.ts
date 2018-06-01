@@ -61,12 +61,11 @@ export class GridGroupBySampleComponent {
 		for (let i = 0; i < expressions.length; i++) {
 			let gr:ISortingExpression = expressions[i];
 			if (gr.fieldName === name) {
-				expressions.splice(i, 1);
-				this.grid1.groupBy(expressions);
+				this.grid1.groupBy({ fieldName: name, dir: SortingDirection.None, ignoreCase:false});
 				return;
 			}
 		}
-		this.grid1.groupBy(name, SortingDirection.Asc, false);
+		this.grid1.groupBy({fieldName:name, dir:SortingDirection.Asc, ignoreCase:false});
 	}
 
 }

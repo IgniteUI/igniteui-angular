@@ -189,7 +189,7 @@ describe('CSV Grid Exporter', () => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        grid.sort('Name', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -203,21 +203,21 @@ describe('CSV Grid Exporter', () => {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid1;
-        grid.sort('Name', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
 
         fix.whenStable().then(() => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.sortedSimpleGridData);
 
-                grid.sort('Name', SortingDirection.Desc, true);
+                grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
 
                 fix.whenStable().then(() => {
                     fix.detectChanges();
                     getExportedData(grid, options).then((wrapper2) => {
                         wrapper2.verifyData(wrapper2.sortedDescSimpleGridData);
                         grid.clearSort();
-                        grid.sort('ID', SortingDirection.Asc, true);
+                        grid.sort({fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true});
 
                         fix.whenStable().then(() => {
                             fix.detectChanges();
