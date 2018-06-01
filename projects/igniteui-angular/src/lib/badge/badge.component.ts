@@ -93,7 +93,7 @@ export class IgxBadgeComponent {
      *  public badge: IgxBadgeComponent;
      *
      *  //...
-     *  badge.label = "badge-status";
+     *  badge.role = "badge-status";
      * ```
      */
     @HostBinding('attr.role')
