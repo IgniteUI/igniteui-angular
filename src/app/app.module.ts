@@ -49,6 +49,7 @@ import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { ComboSampleComponent } from './combo/combo.sample';
 
 const components = [
     AppComponent,
@@ -61,6 +62,7 @@ const components = [
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    ComboSampleComponent,
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,

@@ -56,6 +56,11 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/combo',
+            icon: 'arrow_drop_down_circle',
+            name: 'Combo'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'

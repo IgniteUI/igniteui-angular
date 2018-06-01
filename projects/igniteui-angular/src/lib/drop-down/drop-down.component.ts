@@ -11,19 +11,23 @@ import {
     OnInit,
     Output,
     QueryList,
-    ViewChild
+    ViewChild,
+    Self,
+    Optional,
+    HostListener,
+    Directive
 } from '@angular/core';
 import { IToggleView } from '../core/navigation';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownItemComponent } from './drop-down-item.component';
+import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.component';
 
 export interface ISelectionEventArgs {
-    oldSelection: IgxDropDownItemComponent;
-    newSelection: IgxDropDownItemComponent;
+    oldSelection: IgxDropDownItemBase;
+    newSelection: IgxDropDownItemBase;
 }
 
-enum Direction {
+export enum Navigate {
     Up = -1,
     Down = 1
 }
@@ -38,28 +42,24 @@ enum Direction {
  * Example:
  * ```html
  * <igx-drop-down>
- *   <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+ *   <igx-drop-down-item *ngFor='let item of items' isDisabled={{item.disabled}} isHeader={{item.header}}>
  *     {{ item.value }}
  *   </igx-drop-down-item>
  * </igx-drop-down>
  * ```
  */
-@Component({
-    selector: 'igx-drop-down',
-    templateUrl: './drop-down.component.html'
-})
-export class IgxDropDownComponent implements IToggleView, OnInit {
+export class IgxDropDownBase implements IToggleView, OnInit {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
-    private _focusedItem: IgxDropDownItemComponent = null;
+    protected _focusedItem: any = null;
     private _width;
     private _height;
     private _id = 'DropDown_0';
 
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
-    private children: QueryList<IgxDropDownItemComponent>;
+    protected children: QueryList<IgxDropDownItemBase>;
 
     @ViewChild(IgxToggleDirective)
-    private toggleDirective: IgxToggleDirective;
+    protected toggleDirective: IgxToggleDirective;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -144,7 +144,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Get currently selected item
      */
-    public get selectedItem(): IgxDropDownItemComponent {
+    public get selectedItem(): any {
         const selection = this.selectionAPI.get_selection(this.id);
         return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
     }
@@ -152,8 +152,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Get all non-header items
      */
-    public get items(): IgxDropDownItemComponent[] {
-        const items: IgxDropDownItemComponent[] = [];
+    public get items(): IgxDropDownItemBase[] {
+        const items: IgxDropDownItemBase[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (!child.isHeader) {
@@ -168,8 +168,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Get all header items
      */
-    public get headers(): IgxDropDownItemComponent[] {
-        const headers: IgxDropDownItemComponent[] = [];
+    public get headers(): IgxDropDownItemBase[] {
+        const headers: IgxDropDownItemBase[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (child.isHeader) {
@@ -188,10 +188,17 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         return this.elementRef.nativeElement;
     }
 
+    /**
+     * Get dropdown html element
+     */
+    protected get scrollContainer() {
+        return this.toggleDirective.element;
+    }
+
     constructor(
-        private elementRef: ElementRef,
-        private cdr: ChangeDetectorRef,
-        private selectionAPI: IgxSelectionAPIService) { }
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef,
+        protected selectionAPI: IgxSelectionAPIService) { }
 
     /**
      * Select an item by index
@@ -235,45 +242,29 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
     }
 
-    focusFirst() {
+    protected navigate(direction: Navigate, currentIndex?: number) {
+        let index = -1;
         if (this._focusedItem) {
-            const focusedItemIndex = - 1;
-            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Down);
-            if (firstItemIndex !== -1) {
-                this.changeFocusedItem(this.items[firstItemIndex], this._focusedItem);
-            }
+            index = currentIndex ? currentIndex : this._focusedItem.index;
         }
+        const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
+        this.focusItem(newIndex, direction);
     }
 
-    focusLast() {
-        if (this._focusedItem) {
-            const focusedItemIndex = (this.items.length);
-            const lastItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Up);
-            if (lastItemIndex !== -1) {
-                this.changeFocusedItem(this.items[lastItemIndex], this._focusedItem);
-            }
-        }
+    navigateFirst() {
+        this.navigate(Navigate.Down, -1);
     }
 
-    focusNext() {
-        let focusedItemIndex = -1;
-        if (this._focusedItem) {
-            focusedItemIndex = this._focusedItem.index;
-        }
-        const nextItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Down);
-        if (nextItemIndex !== -1) {
-            this.changeFocusedItem(this.items[nextItemIndex], this._focusedItem);
-        }
+    navigateLast() {
+        this.navigate(Navigate.Up, this.items.length);
     }
 
-    focusPrev() {
-        if (this._focusedItem) {
-            const focusedItemIndex = this._focusedItem.index;
-            const prevItemIndex = this.getNearestSiblingFocusableItemIndex(focusedItemIndex, Direction.Up);
-            if (prevItemIndex !== -1) {
-                this.changeFocusedItem(this.items[prevItemIndex], this._focusedItem);
-            }
-        }
+    navigateNext() {
+        this.navigate(Navigate.Down);
+    }
+
+    navigatePrev() {
+        this.navigate(Navigate.Up);
     }
 
     ngOnInit() {
@@ -293,9 +284,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         if (this._focusedItem) {
             this._focusedItem.isFocused = true;
         } else if (this.allowItemsFocus) {
-            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(-1, Direction.Down);
+            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(-1, Navigate.Down);
             if (firstItemIndex !== -1) {
-                this.changeFocusedItem(this.items[firstItemIndex]);
+                this.focusItem(firstItemIndex);
             }
         }
         this.onOpened.emit();
@@ -313,12 +304,32 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         this.onClosed.emit();
     }
 
-    private scrollToItem(item: IgxDropDownItemComponent) {
+    protected scrollToItem(item: IgxDropDownItemBase) {
         const itemPosition = this.calculateScrollPosition(item);
-        this.toggleDirective.element.scrollTop = (itemPosition);
+        this.scrollContainer.scrollTop = (itemPosition);
     }
 
-    private changeSelectedItem(newSelection?: IgxDropDownItemComponent) {
+    public scrollToHiddenItem(newItem: IgxDropDownItemBase) {
+        const elementRect = newItem.element.nativeElement.getBoundingClientRect();
+        const parentRect = this.scrollContainer.getBoundingClientRect();
+        if (parentRect.top > elementRect.top) {
+            this.scrollContainer.scrollTop -= (parentRect.top - elementRect.top);
+        }
+
+        if (parentRect.bottom < elementRect.bottom) {
+            this.scrollContainer.scrollTop += (elementRect.bottom - parentRect.bottom);
+        }
+    }
+
+    public selectItem(item?) {
+        if (!item) {
+            item = this._focusedItem;
+        }
+        this.setSelectedItem(this._focusedItem.index);
+        this.toggleDirective.close(true);
+    }
+
+    protected changeSelectedItem(newSelection?: IgxDropDownItemBase) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
@@ -329,24 +340,24 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         this.onSelection.emit(args);
     }
 
-    private calculateScrollPosition(item: IgxDropDownItemComponent): number {
+    protected calculateScrollPosition(item: IgxDropDownItemBase): number {
         if (!item) {
             return 0;
         }
 
         const elementRect = item.element.nativeElement.getBoundingClientRect();
-        const parentRect = this.toggleDirective.element.getBoundingClientRect();
+        const parentRect = this.scrollContainer.getBoundingClientRect();
         const scrollDelta = parentRect.top - elementRect.top;
-        let scrollPosition = this.toggleDirective.element.scrollTop - scrollDelta;
+        let scrollPosition = this.scrollContainer.scrollTop - scrollDelta;
 
-        const dropDownHeight = this.toggleDirective.element.clientHeight;
+        const dropDownHeight = this.scrollContainer.clientHeight;
         scrollPosition -= dropDownHeight / 2;
         scrollPosition += item.elementHeight / 2;
 
         return Math.floor(scrollPosition);
     }
 
-    private getNearestSiblingFocusableItemIndex(startIndex: number, direction: Direction): number {
+    private getNearestSiblingFocusableItemIndex(startIndex: number, direction: Navigate): number {
         let index = startIndex;
         while (this.items[index + direction] && this.items[index + direction].isDisabled) {
             index += direction;
@@ -360,29 +371,107 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
     }
 
-    private changeFocusedItem(newItem: IgxDropDownItemComponent, oldItem?: IgxDropDownItemComponent) {
-        if (oldItem) {
-            oldItem.isFocused = false;
+    protected focusItem(newIndex: number, direction?: Navigate) {
+        if (newIndex !== -1) {
+            const oldItem = this._focusedItem;
+            const newItem = this.items[newIndex];
+            if (oldItem) {
+                oldItem.isFocused = false;
+            }
+            this._focusedItem = newItem;
+            this.scrollToHiddenItem(newItem);
+            this._focusedItem.isFocused = true;
         }
-
-        this._focusedItem = newItem;
-        const elementRect = this._focusedItem.element.nativeElement.getBoundingClientRect();
-        const parentRect = this.toggleDirective.element.getBoundingClientRect();
-        if (parentRect.top > elementRect.top) {
-            this.toggleDirective.element.scrollTop -= (parentRect.top - elementRect.top);
-        }
-
-        if (parentRect.bottom < elementRect.bottom) {
-            this.toggleDirective.element.scrollTop += (elementRect.bottom - parentRect.bottom);
-        }
-
-        this._focusedItem.isFocused = true;
     }
 }
 
+@Directive({
+    selector: '[igxDropDownItemNavigation]'
+})
+export class IgxDropDownItemNavigationDirective {
+
+    private _target;
+
+    constructor(private element: ElementRef, @Self() @Optional() public dropdown: IgxDropDownComponent) { }
+
+    get target() {
+        return this._target;
+    }
+
+    @Input('igxDropDownItemNavigation')
+    set target(target: IgxDropDownBase) {
+        this._target = target ? target : this.dropdown;
+    }
+
+    @HostListener('keydown.Enter', ['$event'])
+    @HostListener('keydown.Escape', ['$event'])
+    @HostListener('keydown.Tab', ['$event'])
+    onEscapeKeyDown(event) {
+        this.target.close();
+        event.preventDefault();
+    }
+
+    @HostListener('keydown.Space', ['$event'])
+    onSpaceKeyDown(event) {
+        this.target.selectItem();
+        event.preventDefault();
+    }
+
+    @HostListener('keydown.Spacebar', ['$event'])
+    onSpaceKeyDownIE(event) {
+        this.target.selectItem();
+        event.preventDefault();
+    }
+    /*
+    @HostListener('keydown.Enter', ['$event'])
+    onEnterKeyDown(event) {
+        this.target.selectItem();
+        event.preventDefault();
+    }*/
+
+    @HostListener('keydown.ArrowDown', ['$event'])
+    onArrowDownKeyDown(event) {
+        this.target.navigateNext();
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    @HostListener('keydown.ArrowUp', ['$event'])
+    onArrowUpKeyDown(event) {
+        this.target.navigatePrev();
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    @HostListener('keydown.End', ['$event'])
+    onEndKeyDown(event) {
+        this.target.navigateLast();
+        event.preventDefault();
+    }
+
+    @HostListener('keydown.Home', ['$event'])
+    onHomeKeyDown(event) {
+        this.target.navigateFirst();
+        event.preventDefault();
+    }
+}
+
+@Component({
+    selector: 'igx-drop-down',
+    templateUrl: './drop-down.component.html'
+})
+export class IgxDropDownComponent extends IgxDropDownBase {
+
+    constructor(
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef,
+        protected selectionAPI: IgxSelectionAPIService) {
+        super(elementRef, cdr, selectionAPI);
+    }
+}
 @NgModule({
-    declarations: [IgxDropDownComponent, IgxDropDownItemComponent],
-    exports: [IgxDropDownComponent, IgxDropDownItemComponent],
+    declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
+    exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
     imports: [CommonModule, IgxToggleModule],
     providers: [IgxSelectionAPIService]
 })

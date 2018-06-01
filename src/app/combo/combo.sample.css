@@ -1,0 +1,41 @@
+.footer-class,
+.header-class {
+    color: #131313;
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+    text-align: center;
+    font-weight: 400;
+}
+
+.state-card--simple {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.state-card--simple > * {
+    flex: 1 1 auto;
+}
+
+
+.display-value--main {
+    font-weight: 600;
+}
+
+.display-value--sub {
+    font-weight: 400;
+    align-self: flex-end;
+    font-size: 14px;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.igx-drop-down__item .igx-checkbox {
+    margin-right: 8px;
+}
+
+.input-container {
+    float: left;
+    margin: 0 30px 20px 0;
+}
