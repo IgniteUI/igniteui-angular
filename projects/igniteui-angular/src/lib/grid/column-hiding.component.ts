@@ -13,7 +13,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { DataUtil } from '../data-operations/data-util';
-import { FilteringCondition } from '../data-operations/filtering-condition';
+import { IFilteringOperation, IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { filteringStateDefaults } from '../data-operations/filtering-state.interface';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -224,7 +224,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
         this._currentColumns = DataUtil.filter(this._currentColumns, {
             expressions: [
                 {
-                    condition: FilteringCondition.string.contains,
+                    condition: IgxStringFilteringOperand.instance().condition('contains'),
                     fieldName: 'name',
                     ignoreCase: true,
                     searchVal: this._filterCriteria
