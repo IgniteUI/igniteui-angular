@@ -300,7 +300,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public emptyGridMessage = 'No records found.';
 
     @Input()
-    public columnHidingTitle = "";
+    public columnHidingTitle = '';
 
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
