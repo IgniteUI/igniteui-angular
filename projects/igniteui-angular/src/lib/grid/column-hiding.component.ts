@@ -131,7 +131,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
         if (value !== undefined) {
             this.orderColumns(value);
         }
-        this.cdr.markForCheck();
     }
 
     @Input()
@@ -154,6 +153,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
 
     private _currentColumns = [];
     private _gridColumns = [];
+    private _rawColumns = [];
     private _togglable = true;
     private _columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
     private _filterCriteria = '';
@@ -190,11 +190,11 @@ export class IgxColumnHidingComponent implements OnDestroy {
 
     private createColumnItems() {
         if (this._gridColumns.length > 0) {
-            this._currentColumns = [];
+            this._rawColumns = [];
             this._gridColumns.forEach((column) => {
-                this._currentColumns.push(this.createColumnHidingItem(this, column));
+                this._rawColumns.push(this.createColumnHidingItem(this, column));
             });
-            this.orderColumns(this._columnDisplayOrder);
+            this._currentColumns = this._rawColumns.slice(0);
         }
     }
 
@@ -212,9 +212,11 @@ export class IgxColumnHidingComponent implements OnDestroy {
         this._columnDisplayOrder = value;
         if (value === ColumnDisplayOrder[ColumnDisplayOrder.Alphabetical] ||
             value === ColumnDisplayOrder.Alphabetical) {
-            this._currentColumns = this._currentColumns.sort((current, next) => {
+            this._currentColumns = this._rawColumns.slice(0).sort((current, next) => {
                 return current.name.toLowerCase().localeCompare(next.name.toLowerCase());
             });
+        } else {
+            this._currentColumns = this._rawColumns;
         }
     }
 

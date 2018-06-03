@@ -84,6 +84,11 @@ describe('Column Hiding UI', () => {
             expect(columnChooser.columnDisplayOrder).toBe(ColumnDisplayOrder.Alphabetical);
             columnItems = columnChooser.columnItems.map((item) => item.name);
             expect(columnItems.toString()).toBe('Downloads,ID,ProductName,Released,ReleaseDate');
+
+            columnChooser.columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
+            fix.detectChanges();
+            columnItems = columnChooser.columnItems.map((item) => item.name);
+            expect(columnItems.toString()).toBe('ID,ProductName,Downloads,Released,ReleaseDate');
         });
 
         it('shows "ProductName" checkbox unchecked and disabled.', () => {
@@ -856,7 +861,7 @@ export class GridData {
     template: `<div>
     <igx-column-hiding [columns]="grid1.columns" [togglable]="false"></igx-column-hiding>
     <igx-grid #grid1 [data]="data" width="500px" height="500px">
-        <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="false"></igx-column>
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>
         <igx-column [field]="'Released'" dataType="boolean"></igx-column>
@@ -895,7 +900,7 @@ export class GridWithColumnChooserComponent extends GridData {
 
 @Component({
     template: `<igx-grid [data]="data" width="500px" height="500px">
-        <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="false"></igx-column>
+        <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="true"></igx-column>
         <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>
         <igx-column [field]="'Released'" dataType="boolean"></igx-column>
