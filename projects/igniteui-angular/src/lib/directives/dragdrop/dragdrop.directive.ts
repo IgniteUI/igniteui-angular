@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import {
-    ChangeDetectorRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -9,19 +8,14 @@ import {
     Inject,
     Input,
     NgModule,
+    NgZone,
     OnDestroy,
     OnInit,
     Output,
     Renderer2
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { map, switchMap, takeUntil} from 'rxjs/operators';
-
-export interface IgxDropEvent {
-    dragData: any;
-    dropData: any;
-    event: MouseEvent;
-}
+import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
+import { takeUntil, throttle } from 'rxjs/operators';
 
 export enum RestrictDrag {
     VERTICALLY,
@@ -30,201 +24,254 @@ export enum RestrictDrag {
 }
 
 @Directive({
-    selector: '[igxDrag]'
+    selector: "[igxDrag]"
 })
-export class IgxDragDirective {
-    @Input()
-    public restrictDrag: RestrictDrag = RestrictDrag.NONE;
+export class IgxDragDirective implements OnInit, OnDestroy {
 
     @Input()
-    public restrictHDragMin: number = Number.MIN_SAFE_INTEGER;
+    public dragTolerance = 5;
 
     @Input()
-    public restrictHDragMax: number = Number.MAX_SAFE_INTEGER;
-
-    @Input()
-    public restrictVDragMin: number = Number.MIN_SAFE_INTEGER;
-
-    @Input()
-    public restrictVDragMax: number = Number.MAX_SAFE_INTEGER;
+    public ghostImageClass = "";
 
     @Output()
-    public dragEnd = new Subject<any>();
+    public dragStart = new EventEmitter<any>();
 
     @Output()
-    public dragStart = new Subject<any>();
+    public dragEnd = new EventEmitter<any>();
 
     @Output()
-    public drag = new Subject<any>();
+    public returnMoveEnd = new EventEmitter<any>();
 
-    private _left;
-    private _top;
+    @HostBinding("style.touchAction")
+    public touch = "none";
 
-    constructor(public element: ElementRef, public cdr: ChangeDetectorRef, @Inject(DOCUMENT) public document) {
+    public defaultReturnDuration = '0.5s';
 
-        this.dragStart.pipe(
-            map((event) => ({ left: event.clientX, top: event.clientY })),
-            switchMap((offset) => this.drag.pipe(
-                map((event) => ({ left: event.clientX - offset.left, top: event.clientY - offset.top })),
-                takeUntil(this.dragEnd)
-            ))
-        ).subscribe((pos) => {
-            const left = this._left + pos.left;
-            const top = this._top + pos.top;
+    protected _startX = 0;
+    protected _startY = 0;
 
-            if (this.restrictDrag === RestrictDrag.HORIZONTALLY || this.restrictDrag === RestrictDrag.NONE) {
+    protected _dragGhost;
+    protected _dragStarted = false;
+    protected _dragOffsetX;
+    protected _dragOffsetY;
+    protected _dragStartX;
+    protected _dragStartY;
 
-                this.left = left < this.restrictHDragMin ? this.restrictHDragMin + 'px' : left + 'px';
+    protected _clicked = false;
+    protected _lastDropArea = null;
 
-                if (left > this.restrictHDragMax) {
-                    this.left = this.restrictHDragMax + 'px';
-                } else if (left > this.restrictHDragMin) {
-                    this.left = left + 'px';
-                }
-            }
+    protected _destroy = new Subject<boolean>();
 
-            if (this.restrictDrag === RestrictDrag.VERTICALLY || this.restrictDrag === RestrictDrag.NONE) {
+    constructor(public element: ElementRef, public zone: NgZone) {
+    }
 
-                this.top = top < this.restrictVDragMin ? this.restrictVDragMin + 'px' : top + 'px';
+    ngOnInit() {
+        this.zone.runOutsideAngular(() => {
+            fromEvent(this.element.nativeElement, "pointerdown").pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onPointerDown(res));
 
-                if (top > this.restrictVDragMax) {
-                    this.top = this.restrictVDragMax + 'px';
-                } else if (top > this.restrictVDragMin) {
-                    this.top = top + 'px';
-                }
-            }
+            fromEvent(this.element.nativeElement, "pointermove").pipe(
+                takeUntil(this._destroy),
+                throttle(() => interval(0, animationFrameScheduler))
+            ).subscribe((res) => this.onPointerMove(res));
+
+            fromEvent(this.element.nativeElement, "pointerup").pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onPointerUp(res));
         });
     }
 
-    public set left(val) {
-        this.element.nativeElement.style.left = val;
+    ngOnDestroy() {
+        this._destroy.next(true);
+        this._destroy.unsubscribe();
     }
 
-    public set top(val) {
-        this.element.nativeElement.style.top = val;
+    public set left(val: number) {
+        requestAnimationFrame(() => this._dragGhost.style.left = val + "px");
     }
 
-    @HostListener('document:mouseup', ['$event'])
-    onMouseup(event) {
-        this.dragEnd.next(event);
-        this.cdr.reattach();
+    public set top(val: number) {
+        requestAnimationFrame(() => this._dragGhost.style.top = val + "px");
     }
 
-    @HostListener('mousedown', ['$event'])
-    onMousedown(event) {
-        this.dragStart.next(event);
+    public onPointerDown(event) {
+        this.element.nativeElement.setPointerCapture(event.pointerId);
+        this._dragStarted = true;
+        this._clicked = true;
 
-        const elStyle = this.document.defaultView.getComputedStyle(this.element.nativeElement);
+        this._startX = event.pageX;
+        this._startY = event.pageY;
 
-        this._left = Number.isNaN(parseInt(elStyle.left, 10)) ? 0 : parseInt(elStyle.left, 10);
-        this._top = Number.isNaN(parseInt(elStyle.top, 10)) ? 0 : parseInt(elStyle.top, 10);
+        this._dragOffsetX = (event.pageX - this.element.nativeElement.getBoundingClientRect().left);
+        this._dragOffsetY = (event.pageY - this.element.nativeElement.getBoundingClientRect().top);
+        this._dragStartX = event.pageX - this._dragOffsetX;
+        this._dragStartY = event.pageY - this._dragOffsetY;
 
-        this.cdr.detach();
-    }
-
-    @HostListener('document:mousemove', ['$event'])
-    onMousemove(event) {
         event.preventDefault();
-        this.drag.next(event);
-    }
-}
-
-@Directive({
-    selector: '[igxDraggable]'
-})
-export class IgxDraggableDirective implements OnInit, OnDestroy {
-
-    @Input('igxDraggable') public data: any;
-    @Input() public dragClass: string;
-    @Input() public effectAllowed = 'move';
-
-    @HostBinding('draggable') public draggable: boolean;
-
-    constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
-
-    public ngOnInit(): void {
-        this.draggable = true;
     }
 
-    public ngOnDestroy(): void {
-        this.draggable = false;
-    }
+    public onPointerMove(event) {
+        if (this._dragStarted) {
+            const totalMovedX = event.pageX - this._startX;
+            const totalMovedY = event.pageY - this._startY;
 
-    @HostListener('dragstart', ['$event'])
-    protected onDragStart(event: any): void {
-        if (this.dragClass) {
-            this._renderer.addClass(this._elementRef.nativeElement, this.dragClass);
-        }
-        event.dataTransfer.effectAllowed = this.effectAllowed;
-        event.dataTransfer.setData('data', JSON.stringify(this.data));
-    }
+            if (!this._dragGhost &&
+                 (Math.abs(totalMovedX) > this.dragTolerance || Math.abs(totalMovedY) > this.dragTolerance)) {
+                this.dragStart.emit();
+                this.createDragGhost(event);
+                return;
+            } else if (!this._dragGhost) {
+                // no drag grost and not moved enough for drag to occur
+                return;
+            }
 
-    @HostListener('dragend', ['$event'])
-    protected onDragEnd(event: any): void {
-        event.preventDefault();
-        if (this.dragClass) {
-            this._renderer.removeClass(this._elementRef.nativeElement, this.dragClass);
-        }
-    }
-}
+            this.left = this._dragStartX + totalMovedX;
+            this.top = this._dragStartY + totalMovedY;
 
-@Directive({
-    selector: '[igxDroppable]'
-})
-export class IgxDroppableDirective {
-
-    @Input('igxDroppable') public data: any;
-    @Input() public dropClass: string;
-    @Input() public dropEffect = 'move';
-
-    @Output() public onDrop = new EventEmitter<IgxDropEvent>();
-
-    constructor(private _elementRef: ElementRef, private _renderer: Renderer2) {}
-
-    @HostListener('dragenter', ['$event'])
-    protected onDragEnter(event: any): void {
-        if (this.dropClass) {
-            this._renderer.addClass(this._elementRef.nativeElement, this.dropClass);
-        }
-    }
-
-    @HostListener('dragleave', ['$event'])
-    protected onDragLeave(event: any): void {
-        if (this.dropClass) {
-            this._renderer.removeClass(this._elementRef.nativeElement, this.dropClass);
-        }
-    }
-
-    @HostListener('dragover', ['$event'])
-    protected onDragOver(event: any): boolean {
-        if (event.preventDefault) {
+            this.dispatchDragEvents(event.pageX, event.pageY);
             event.preventDefault();
         }
-        event.dataTransfer.dropEffect = this.dropEffect;
-        return false;
     }
 
-    @HostListener('drop', ['$event'])
-    protected onDragDrop(event: any): void {
-        if (event.stopPropagation) {
-            event.stopPropagation();
+    public onPointerUp(event) {
+        this._dragStarted = false;
+
+        if (!this._dragGhost) {
+            return;
         }
 
-        if (this.dropClass) {
-            this._renderer.removeClass(this._elementRef.nativeElement, this.dropClass);
+        if (this._lastDropArea && !this._lastDropArea.isEqualNode(this.element.nativeElement)) {
+            this._dragGhost.parentNode.removeChild(this._dragGhost);
+            this._dragGhost = null;
+
+            this.dispatchDropEvent(event.pageX, event.pageY);
+        } else {
+            this._dragGhost.style.transitionDuration = this.defaultReturnDuration;
+            this.left = this._dragStartX;
+            this.top = this._dragStartY;
         }
-        const eventData: any = JSON.parse(event.dataTransfer.getData('data'));
-        const args: IgxDropEvent = {
-            dragData: eventData,
-            dropData: this.data,
-            event
+
+        this.dragEnd.emit();
+    }
+
+    public onTransitionEnd(event) {
+        if (!this._dragStarted && this._clicked) {
+            this._dragGhost.parentNode.removeChild(this._dragGhost);
+            this._dragGhost = null;
+            this._clicked = false;
+            this.returnMoveEnd.emit();
+        }
+    }
+
+    protected createDragGhost(event) {
+        const elStyle = document.defaultView.getComputedStyle(this.element.nativeElement);
+        this._dragGhost = this.element.nativeElement.cloneNode(true);
+
+        this._dragGhost.style.background = "lightgray";
+        this._dragGhost.style.border = "0.2px solid red";
+        this._dragGhost.style.width = elStyle.width;
+        this._dragGhost.style.height = elStyle.height;
+        this._dragGhost.style.position = "absolute";
+        this._dragGhost.style.cursor = "not-allowed";
+        this._dragGhost.style.zIndex  = "20";
+        this._dragGhost.style.transitionDuration = "0.0s";
+        this.left = this._dragStartX;
+        this.top = this._dragStartY;
+
+        document.body.appendChild(this._dragGhost);
+        document.body.style.cursor = "url(this._dragGhost)";
+
+        this._dragGhost.addEventListener("transitionend", (event) => {
+            this.onTransitionEnd(event);
+        });
+    }
+
+    protected dispatchDragEvents(pageX: number, pageY: number) {
+        let topDropArea;
+        const eventArgs = {
+            detail: {
+                startX: this._startX,
+                startY: this._startY,
+                clientX: pageX,
+                clientY: pageY,
+                owner: this
+            }
         };
-        this.onDrop.emit(args);
+
+        const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
+        for (let i = 0; i < elementsFromPoint.length; i++) {
+            if (elementsFromPoint[i].getAttribute("droppable") === "true" &&
+                !elementsFromPoint[i].isEqualNode(this._dragGhost)) {
+                topDropArea = elementsFromPoint[i];
+                break;
+            }
+        }
+
+        if (topDropArea &&
+             (!this._lastDropArea || (this._lastDropArea && !this._lastDropArea.isEqualNode(topDropArea)))) {
+            if (this._lastDropArea) {
+                this._lastDropArea.dispatchEvent(new CustomEvent("igxDragLeave", eventArgs));
+            }
+            topDropArea.dispatchEvent(new CustomEvent("igxDragEnter", eventArgs));
+            this._lastDropArea = topDropArea;
+        } else if (!topDropArea && this._lastDropArea) {
+            this._lastDropArea.dispatchEvent(new CustomEvent("igxDragLeave", eventArgs));
+            this._lastDropArea = null;
+        }
+    }
+
+    protected dispatchDropEvent(pageX: number, pageY: number) {
+        const eventArgs = {
+            detail: {
+                startX: this._startX,
+                startY: this._startY,
+                clientX: pageX,
+                clientY: pageY,
+                owner: this
+            }
+        };
+
+        this._lastDropArea.dispatchEvent(new CustomEvent("igxDragLeave", eventArgs));
+        this._lastDropArea.dispatchEvent(new CustomEvent("igxDrop", eventArgs));
+    }
+
+    protected getElementsAtPoint(pageX: number, pageY: number) {
+        if (document.msElementsFromPoint) {
+            // Edge and IE special snowflakes
+            return document.msElementsFromPoint(pageX, pageY);
+        } else {
+            // Other browsers like Chrome, Firefox, Opera
+            return document.elementsFromPoint(pageX, pageY); 
+        }
+    }
+}
+
+@Directive({
+    selector: "[igxDrop]"
+})
+export class IgxDropDirective {
+
+    @HostBinding('attr.droppable')
+    public droppable = true;
+
+    @HostListener("igxDragEnter", ["$event"])
+    public onDragEnter(event) {
+        // To do for generic scenario
+    }
+
+    @HostListener("igxDragLeave", ["$event"])
+    public onDragLeave(event) {
+        // To do for generic scenario
+    }
+
+    @HostListener("igxDrop", ["$event"])
+    public onDragDrop(event) {
+        // To do for generic scenario
     }
 }
 
 @NgModule({
-    declarations: [IgxDraggableDirective, IgxDroppableDirective, IgxDragDirective],
-    exports: [IgxDraggableDirective, IgxDroppableDirective, IgxDragDirective]
+    declarations: [IgxDragDirective, IgxDropDirective],
+    exports: [IgxDragDirective, IgxDropDirective]
 })
 export class IgxDragDropModule {}

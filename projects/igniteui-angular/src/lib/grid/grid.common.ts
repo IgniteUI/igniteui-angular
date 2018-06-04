@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectorRef,
     Directive,
@@ -15,6 +15,8 @@ import {
 import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxGridAPIService } from './api.service';
+import { IgxColumnComponent } from "./column.component";
+import { IgxDragDirective, IgxDropDirective } from "../directives/dragdrop/dragdrop.directive";
 
 @Directive({
     selector: '[igxResizer]'
@@ -178,4 +180,22 @@ export function autoWire(markForCheck = false) {
 
         return descriptor;
     };
+}
+
+@Directive({
+    selector: "[igxColumnMovingDrag]"
+})
+export class IgxColumnMovingDragDirective extends IgxDragDirective {
+    constructor(_element: ElementRef, _zone: NgZone) {
+        super(_element, _zone);
+    }
+}
+
+@Directive({
+    selector: "[igxColumnMovingDrop]"
+})
+export class IgxColumnMovingDropDirective extends IgxDropDirective {
+    constructor() {
+        super();
+    }
 }
