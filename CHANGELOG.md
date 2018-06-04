@@ -4,6 +4,8 @@ All notable changes for each version of this project will be documented in this 
 ## 6.1.0
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
+    - `igxGrid` changes:
+        - sort API now accepts params of type ISortingExpression or Array<ISortingExpression>.
 
 ## 6.0.1
 - **Breaking changes**:
