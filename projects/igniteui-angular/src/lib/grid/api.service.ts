@@ -10,6 +10,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
+import { IFilteringOperation } from '../../public_api';
 
 @Injectable()
 export class IgxGridAPIService {
@@ -205,7 +206,7 @@ export class IgxGridAPIService {
         this.get(id).groupingExpansionState = expansionState;
     }
 
-    public filter(id, fieldName, term, condition, ignoreCase) {
+    public filter(id: string, fieldName: string, term, condition: IFilteringOperation, ignoreCase: boolean) {
         const filteringState = this.get(id).filteringExpressions;
         if (this.get(id).paging) {
             this.get(id).page = 0;
@@ -266,10 +267,10 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_filtering_expression(state, fieldName, searchVal, condition, ignoreCase) {
+    protected prepare_filtering_expression(state, fieldName: string, searchVal, condition: IFilteringOperation, ignoreCase: boolean) {
 
         const expression = state.find((expr) => expr.fieldName === fieldName);
-        const newExpression = { fieldName, searchVal, condition, ignoreCase };
+        const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
         if (!expression) {
             state.push(newExpression);
         } else {

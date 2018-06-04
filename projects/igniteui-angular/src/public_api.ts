@@ -56,6 +56,8 @@ export * from './lib/checkbox/checkbox.component';
 export * from './lib/chips/index';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
+export * from './lib/drop-down/drop-down.component';
+export * from './lib/drop-down/drop-down-item.component';
 export * from './lib/grid/index';
 export * from './lib/icon/index';
 export * from './lib/icon/icon.service';

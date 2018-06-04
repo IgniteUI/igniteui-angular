@@ -1,9 +1,9 @@
 
 import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from '../../grid/grid.component';
-import { STRING_FILTERS } from '../../data-operations/filtering-condition';
 import { GridDeclarationComponent } from './components-declarations';
 import { IgxExporterOptionsBase } from './exporter-options-base';
+import { IgxStringFilteringOperand } from '../../../public_api';
 
 export class TestMethods {
 
@@ -19,14 +19,14 @@ export class TestMethods {
     }
 
     /* Creates an instance of GridDeclarationComponent; If filterParams is not specified,
-    applies the following filter: ["JobTitle", "Senior", STRING_FILTERS.contains, true]. */
+    applies the following filter: ["JobTitle", "Senior", IgxStringFilteringOperand.instance().condition('contains'), true]. */
     public static createGridAndFilter(...filterParams: any[]) {
         const fix = TestBed.createComponent(GridDeclarationComponent);
         fix.detectChanges();
         const myGrid = fix.componentInstance.grid1;
 
         filterParams = (filterParams.length === 0) ?
-                        ['JobTitle', 'Senior', STRING_FILTERS.contains, true] : filterParams;
+                        ['JobTitle', 'Senior', IgxStringFilteringOperand.instance().condition('contains'), true] : filterParams;
 
         myGrid.filter(...filterParams);
         fix.detectChanges();

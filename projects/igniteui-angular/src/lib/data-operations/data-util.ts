@@ -1,4 +1,8 @@
-import { FilteringCondition } from './filtering-condition';
+import { IgxFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxStringFilteringOperand } from './filtering-condition';
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
 import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
@@ -38,13 +42,6 @@ export class DataUtil {
                 }
             });
         return target;
-    }
-    public static getFilteringConditionsForDataType(dataType: DataType):
-        { [name: string]: (value: any, searchVal?: any, ignoreCase?: boolean) => void } {
-        return FilteringCondition[dataType];
-    }
-    public static getListOfFilteringConditionsForDataType(dataType: DataType): string[] {
-        return Object.keys(DataUtil.getFilteringConditionsForDataType(dataType));
     }
     public static sort<T>(data: T[], state: ISortingState): T[] {
         // set defaults

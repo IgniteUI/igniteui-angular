@@ -48,6 +48,7 @@ import { IgxGroupByRowTemplateDirective } from './grid.common';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
+import { IFilteringOperation } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -1228,7 +1229,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.sort_multiple(this.id, this._groupingExpressions);
     }
 
-    protected _filter(name: string, value: any, condition?, ignoreCase?) {
+    protected _filter(name: string, value: any, condition?: IFilteringOperation, ignoreCase?: boolean) {
         const col = this.gridAPI.get_column_by_name(this.id, name);
         if (col) {
             this.gridAPI
