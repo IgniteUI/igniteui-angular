@@ -1,4 +1,5 @@
-import { FilteringCondition } from './filtering-condition';
+import { IFilteringOperation } from '../../public_api';
+
 export enum FilteringLogic {
     And,
     Or
@@ -9,7 +10,7 @@ export enum FilteringLogic {
  */
 export declare interface IFilteringExpression {
     fieldName: string;
-    condition: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
+    condition: IFilteringOperation;
     searchVal?: any;
     ignoreCase?: boolean;
 }
