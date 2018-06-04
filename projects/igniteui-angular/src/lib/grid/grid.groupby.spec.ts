@@ -322,13 +322,13 @@ describe('IgxGrid - GroupBy', () => {
 
     });
 
-    it('should allow setting intial expand/collapse state', () => {
+    it('should allow setting expand/collapse state', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
         fix.detectChanges();
 
-        grid.groupByDefaultExpanded = false;
+        grid.groupsExpanded = false;
         grid.groupBy('Released', SortingDirection.Desc, false);
         fix.detectChanges();
 
@@ -342,7 +342,7 @@ describe('IgxGrid - GroupBy', () => {
             expect(grRow.expanded).toBe(false);
         }
 
-        grid.groupByDefaultExpanded = true;
+        grid.groupsExpanded = true;
         grid.cdr.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();

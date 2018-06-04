@@ -50,7 +50,7 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
         }
 
         state.expansion = grid.groupingExpansionState;
-        state.defaultExpanded = grid.groupByDefaultExpanded;
+        state.defaultExpanded = grid.groupsExpanded;
 
         return DataUtil.group(cloneArray(collection), state);
     }
@@ -77,7 +77,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
         }
 
         state.expansion = grid.groupingExpansionState;
-        state.defaultExpanded = grid.groupByDefaultExpanded;
+        state.defaultExpanded = grid.groupsExpanded;
 
         return DataUtil.restoreGroups(cloneArray(collection), state);
     }

@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { STRING_FILTERS } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grid';
 import { IgxColumnComponent } from '../../grid/column.component';
@@ -17,6 +16,7 @@ import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
+import { IgxStringFilteringOperand } from '../../../public_api';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -91,7 +91,7 @@ describe('CSV Grid Exporter', () => {
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.gridOneSeniorDev, 'One row should have been exported!');
 
-                grid.filter('JobTitle', 'Director', STRING_FILTERS.equals, true);
+                grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
                 fix.detectChanges();
                 fix.whenStable().then(() => {
                     fix.detectChanges();
