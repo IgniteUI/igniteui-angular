@@ -141,7 +141,7 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
 
         // ungroup
-        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.None, ignoreCase: false});
+        grid.clearGrouping('ProductName');
         fix.detectChanges();
 
         // verify no groups are present
@@ -160,7 +160,7 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, [1000, 254, 100, 20, 0, null]);
 
         // ungroup and group by boolean column
-        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.None, ignoreCase: false });
+        grid.clearGrouping('Downloads');
         fix.detectChanges();
         grid.groupBy({fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false});
         fix.detectChanges();
@@ -174,7 +174,7 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, [true, false, null]);
 
         // ungroup and group by date column
-        grid.groupBy({fieldName: 'Released', dir: SortingDirection.None, ignoreCase: false});
+        grid.clearGrouping('Released');
         fix.detectChanges();
         grid.groupBy({fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false});
         fix.detectChanges();
@@ -322,14 +322,14 @@ describe('IgxGrid - GroupBy', () => {
 
     });
 
-    it('should allow setting intial expand/collapse state', () => {
+    it('should allow setting expand/collapse state', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
         fix.detectChanges();
 
-        grid.groupByDefaultExpanded = false;
-        grid.groupBy({fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false});
+        grid.groupsExpanded = false;
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
@@ -342,7 +342,7 @@ describe('IgxGrid - GroupBy', () => {
             expect(grRow.expanded).toBe(false);
         }
 
-        grid.groupByDefaultExpanded = true;
+        grid.groupsExpanded = true;
         grid.cdr.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();

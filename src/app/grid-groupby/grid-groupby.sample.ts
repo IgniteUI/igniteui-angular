@@ -59,16 +59,15 @@ export class GridGroupBySampleComponent implements OnInit {
     }
     /* tslint:enable */
 
-	groupBy(name: string) {
-		let expressions = this.grid1.groupingExpressions;
-		for (let i = 0; i < expressions.length; i++) {
-			let gr:ISortingExpression = expressions[i];
-			if (gr.fieldName === name) {
-				this.grid1.groupBy({ fieldName: name, dir: SortingDirection.None, ignoreCase:false});
-				return;
-			}
-		}
-		this.grid1.groupBy({fieldName:name, dir:SortingDirection.Asc, ignoreCase:false});
-	}
-
+    groupBy(name: string) {
+        const expressions = this.grid1.groupingExpressions;
+        for (let i = 0; i < expressions.length; i++) {
+            const gr: ISortingExpression = expressions[i];
+            if (gr.fieldName === name) {
+                this.grid1.clearGrouping(name);
+                return;
+            }
+        }
+        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+    }
 }

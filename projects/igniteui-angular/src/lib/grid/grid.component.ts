@@ -191,7 +191,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
-    public groupByDefaultExpanded = true;
+    public groupsExpanded = true;
 
     @Input()
     get paging(): boolean {
@@ -807,9 +807,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onGroupingDone.emit(this.sortingExpressions);
     }
 
+    public clearGrouping(name?: string): void {
+        this.gridAPI.clear_groupby(this.id, name);
+    }
+
     public isExpandedGroup(group: IGroupByRecord): boolean {
         const state: IGroupByExpandState = this._getStateForGroupRow(group);
-        return state ? state.expanded : this.groupByDefaultExpanded;
+        return state ? state.expanded : this.groupsExpanded;
     }
 
     public toggleGroup(groupRow: IGroupByRecord) {
@@ -926,7 +930,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public toggleAllGroupRows() {
         this.groupingExpansionState = [];
-        this.groupByDefaultExpanded = !this.groupByDefaultExpanded;
+        this.groupsExpanded = !this.groupsExpanded;
     }
 
     public unpinColumn(columnName: string): boolean {
@@ -1740,9 +1744,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public onChipRemoved(event) {
-        this.groupingExpressions = this.groupingExpressions.filter((expr) => {
-            return expr.fieldName !== event.owner.id;
-        });
+        this.clearGrouping(event.owner.id);
     }
 
     public chipsOrderChanged(event) {

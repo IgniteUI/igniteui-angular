@@ -153,6 +153,35 @@ export class IgxGridAPIService {
         this.arrange_sorting_expressions(id);
     }
 
+    public clear_groupby(id: string, name?: string) {
+        const groupingState = cloneArray(this.get(id).groupingExpressions, true);
+        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
+
+        if (name) {
+            // clear specific expression
+            const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === name);
+            const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === name);
+            if (grExprIndex > -1) {
+                groupingState.splice(grExprIndex, 1);
+            }
+            if (sortExprIndex > -1) {
+                sortingState.splice(sortExprIndex, 1);
+            }
+            this.get(id).groupingExpressions = groupingState;
+            this.get(id).sortingExpressions = sortingState;
+        } else {
+            // clear all
+            this.get(id).groupingExpressions = [];
+            for (const grExpr of groupingState) {
+                const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName ===  grExpr.fieldName);
+                if (sortExprIndex > -1) {
+                    sortingState.splice(sortExprIndex, 1);
+                }
+            }
+            this.get(id).sortingExpressions = sortingState;
+        }
+    }
+
     public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
         const grState = this.get(id).groupingExpansionState;
         return grState.find((state) =>
@@ -168,7 +197,7 @@ export class IgxGridAPIService {
             state.expanded = !state.expanded;
         } else {
             expansionState.push({
-                expanded: !grid.groupByDefaultExpanded,
+                expanded: !grid.groupsExpanded,
                 value: groupRow.value,
                 fieldName: groupRow.expression.fieldName
             });
