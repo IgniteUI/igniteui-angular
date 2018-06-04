@@ -405,7 +405,6 @@ export class IgxDropDownItemNavigationDirective {
         this._target = target ? target : this.dropdown;
     }
 
-    @HostListener('keydown.Enter', ['$event'])
     @HostListener('keydown.Escape', ['$event'])
     @HostListener('keydown.Tab', ['$event'])
     onEscapeKeyDown(event) {
@@ -424,12 +423,17 @@ export class IgxDropDownItemNavigationDirective {
         this.target.selectItem();
         event.preventDefault();
     }
-    /*
+
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
+        if (!this.dropdown) {
+            this.target.close();
+            event.preventDefault();
+            return;
+        }
         this.target.selectItem();
         event.preventDefault();
-    }*/
+    }
 
     @HostListener('keydown.ArrowDown', ['$event'])
     onArrowDownKeyDown(event) {
