@@ -418,6 +418,55 @@ describe('IgxGrid - Filtering actions', () => {
         fixture.detectChanges();
         expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_CLASS)).toBe(true);
     });
+
+    it("Should correctly apply two conditions to two columns at once.", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const exprs: IFilteringExpression[] = [
+            { fieldName: "Downloads", searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
+            { fieldName: "Downloads", searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo') },
+            { fieldName: "ID", searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
+            { fieldName: "ID", searchVal: 5, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
+        ];
+
+        grid.filter(exprs);
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(1);
+        expect(grid.filteringExpressions.length).toEqual(4);
+
+        grid.clearFilter();
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(8);
+        expect(grid.filteringExpressions.length).toEqual(0);
+    });
+
+    it("Should correctly apply two conditions to number column.", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        //TODO
+    });
+
+    it("Should correctly apply two conditions to string column.", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        //TODO
+    });
+
+    it("Should correctly apply two conditions to date column.", () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        //TODO
+    });
 });
 
 export class CustomFilter extends IgxFilteringOperand {

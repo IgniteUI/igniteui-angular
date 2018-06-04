@@ -21,6 +21,8 @@ import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
 import { IFilteringOperation } from '../../public_api';
+import { IgxButtonGroupModule, IgxButtonGroupComponent } from "../buttonGroup/buttonGroup.component";
+import { IgxGridFilterExpressionComponent } from "./grid-filtering-expression.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,10 +42,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     set value(val) {
         // filtering needs to be cleared if value is null, undefined or empty string
         if (!val && val !== 0) {
-            this.clearFiltering(false);
+            //this.clearFiltering(false);
             return;
         }
-        this._value = this.transformValue(val);
+        //this._value = this.transformValue(val);
         this.filter();
     }
 
@@ -51,9 +53,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         return this.column.dataType;
     }
 
-    get conditions() {
-        return this.column.filters.instance().conditionList();
-    }
+    // get conditions() {
+    //     return this.column.filters.instance().conditionList();
+    // }
 
     get template() {
         switch (this.dataType) {
@@ -90,6 +92,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public dialogShowing = false;
     public dialogPosition = 'igx-filtering__options--to-right';
 
+    public filteringLogicOptions: any[];
+    public isSecondConditionVisible = false;
+
     protected UNARY_CONDITIONS = [
         'true', 'false', 'null', 'notNull', 'empty', 'notEmpty',
         'yesterday', 'today', 'thisMonth', 'lastMonth', 'nextMonth',
@@ -98,8 +103,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     protected _value;
     protected _filterCondition;
     protected filterChanged = new Subject();
-    protected conditionChanged = new Subject();
-    protected unaryConditionChanged = new Subject();
+    //protected conditionChanged = new Subject();
+    //protected unaryConditionChanged = new Subject();
     protected chunkLoaded = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
 
@@ -120,9 +125,24 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             debounceTime(250)
         ).subscribe((value) => this.value = value);
         // when condition is unary
-        this.unaryConditionChanged.subscribe((value) => this.filter());
+        //this.unaryConditionChanged.subscribe((value) => this.filter());
         // when condition is NOT unary
-        this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
+        //this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
+
+        this.filteringLogicOptions= [
+            {
+                label: "And",
+                togglable: true,
+                color: "gray",
+                ripple: "none"
+            },
+            {
+                label: "Or",
+                togglable: true,
+                color: "gray",
+                ripple: "none"
+            }
+        ];
     }
 
     public ngOnInit() {
@@ -140,36 +160,36 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     public ngOnDestroy() {
         this.filterChanged.unsubscribe();
-        this.conditionChanged.unsubscribe();
-        this.unaryConditionChanged.unsubscribe();
+        //this.conditionChanged.unsubscribe();
+        //this.unaryConditionChanged.unsubscribe();
         this.chunkLoaded.unsubscribe();
     }
 
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
         if (this.dialogShowing) {
-            this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
+            //this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
         }
         this.cdr.detectChanges();
     }
 
-    public isActive(value): boolean {
-        return this._filterCondition === value;
-    }
+    // public isActive(value): boolean {
+    //     return this._filterCondition === value;
+    // }
 
-    get unaryCondition(): boolean {
-        for (const each of this.UNARY_CONDITIONS) {
-            if (this._filterCondition && this._filterCondition === each) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // get unaryCondition(): boolean {
+    //     for (const each of this.UNARY_CONDITIONS) {
+    //         if (this._filterCondition && this._filterCondition === each) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
     @autoWire(true)
     public filter(): void {
         const grid = this.gridAPI.get(this.gridID);
-        this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
+        //this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
         this.gridAPI.filter(
             this.column.gridID, this.column.field,
             this._value, this.column.filteringCondition, this.column.filteringIgnoreCase);
@@ -183,37 +203,47 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     @autoWire(true)
     public clearFiltering(resetCondition: boolean): void {
-        this._value = null;
-        this._filterCondition = resetCondition ? undefined : this._filterCondition;
-        this.gridAPI.clear_filter(this.gridID, this.column.field);
-        this.gridAPI.get(this.gridID).clearSummaryCache();
-        // XXX - Temp fix for (#1183, #1177) (Should be deleted)
-        if (this.dataType === DataType.Date) {
-            this.cdr.detectChanges();
-        }
+        // this._value = null;
+        // this._filterCondition = resetCondition ? undefined : this._filterCondition;
+        // this.gridAPI.clear_filter(this.gridID, this.column.field);
+        // this.gridAPI.get(this.gridID).clearSummaryCache();
+        // // XXX - Temp fix for (#1183, #1177) (Should be deleted)
+        // if (this.dataType === DataType.Date) {
+        //     this.cdr.detectChanges();
+        // }
     }
 
-    public selectionChanged(value): void {
-        if (value === this.booleanFilterAll) {
-            this.clearFiltering(true);
-            return;
-        }
-        this._filterCondition = value;
-        this.column.filteringCondition = this.getCondition(value);
-        if (this.unaryCondition) {
-            this.unaryConditionChanged.next(value);
-        } else {
-            this.conditionChanged.next(value);
-        }
+    @autoWire(true)
+    public onSelectLogicOperator(event): void {
+        this.isSecondConditionVisible = true;
     }
 
-    public onInputChanged(val): void {
-        this.filterChanged.next(val);
+    @autoWire(true)
+    public onUnSelectLogicOperator(event): void {
+        this.isSecondConditionVisible = false;
     }
 
-    public clearInput(): void {
-        this.clearFiltering(false);
-    }
+    // public selectionChanged(value): void {
+    //     if (value === this.booleanFilterAll) {
+    //         this.clearFiltering(true);
+    //         return;
+    //     }
+    //     this._filterCondition = value;
+    //     this.column.filteringCondition = this.getCondition(value);
+    //     if (this.unaryCondition) {
+    //         this.unaryConditionChanged.next(value);
+    //     } else {
+    //         this.conditionChanged.next(value);
+    //     }
+    // }
+
+    // public onInputChanged(val): void {
+    //     this.filterChanged.next(val);
+    // }
+
+    // public clearInput(): void {
+    //     this.clearFiltering(false);
+    // }
 
     public get disabled() {
         // if filtering is applied, reset button should be active
@@ -239,29 +269,29 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         });
     }
 
-    // XXX - Temp fix for (#1183, #1177) (Should be deleted)
-    onDatePickerClick() {
-        this.zone.run(() => {});
-    }
+    // // XXX - Temp fix for (#1183, #1177) (Should be deleted)
+    // onDatePickerClick() {
+    //     this.zone.run(() => {});
+    // }
 
     @HostListener('click', ['$event'])
     public onClick(event) {
         event.stopPropagation();
     }
 
-    protected getCondition(value: string): IFilteringOperation {
-        return this.column.filters.instance().condition(value);
-    }
+    // protected getCondition(value: string): IFilteringOperation {
+    //     return this.column.filters.instance().condition(value);
+    // }
 
-    protected transformValue(value) {
-        if (this.dataType === DataType.Number) {
-            value = parseFloat(value);
-        } else if (this.dataType === DataType.Boolean) {
-            value = Boolean(value);
-        }
+    // protected transformValue(value) {
+    //     if (this.dataType === DataType.Number) {
+    //         value = parseFloat(value);
+    //     } else if (this.dataType === DataType.Boolean) {
+    //         value = Boolean(value);
+    //     }
 
-        return value;
-    }
+    //     return value;
+    // }
 
     protected filteringExpression(): boolean {
         const expr = this.gridAPI.get(this.gridID)
@@ -271,7 +301,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             this._value = expr.searchVal;
             this._filterCondition = expr.condition.name;
 
-            if (!this.unaryCondition && !this._value) {
+            if (/*!this.unaryCondition &&*/ !this._value) {
                 return false;
             }
             return true;

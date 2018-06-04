@@ -1123,6 +1123,54 @@ describe('IgxGrid - Filtering actions', () => {
             expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         });
     }));
+
+    it("Clicking And/Or button shows second select and input for adding second condition", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        //TODO
+
+    }));
+
+    it("Adding two conditions to a single column trough API correctly updates the filter dialog", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        //TODO
+
+    }));
+
+    it("After filling the first condition the grid is filtered, then after adding the second condition the grid is updated", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        //TODO
+
+    }));
+
+    it("Clicking Reset button clears all conditions", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        //TODO
+
+    }));
+
+    it("After edit/remove first or second condition the grid is updated", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        //TODO
+
+    }));
+
+    it("Unselecting And/Or hides second condition UI and removes the second filter expression", async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
+        //TODO
+
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
