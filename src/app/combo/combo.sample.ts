@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild, OnInit } from "@angular/core";
 import { IgxComboComponent } from 'igniteui-angular';
 
 const primitive = ["1", "2", "3", "4", "5", "6"];
@@ -27,7 +27,7 @@ const complex = [{
     templateUrl: "./combo.sample.html",
     styleUrls: ["combo.sample.css"]
 })
-export class ComboSampleComponent {
+export class ComboSampleComponent implements OnInit {
     private width = "160px";
     @ViewChild(IgxComboComponent) public igxCombo: IgxComboComponent;
     public toggleItemState = false;
@@ -96,5 +96,23 @@ export class ComboSampleComponent {
     toggleItem(itemID) {
         this.toggleItemState = !this.toggleItemState;
         this.igxCombo.dropdown.setSelectedItem(itemID, this.toggleItemState);
+    }
+
+    ngOnInit() {
+        this.igxCombo.dropdown.onOpening.subscribe(() => {
+            console.log('Opening log!');
+        });
+
+        this.igxCombo.dropdown.onOpened.subscribe(() => {
+            console.log('Opened log!');
+        });
+
+        this.igxCombo.dropdown.onClosing.subscribe(() => {
+            console.log('Closing log!');
+        });
+
+        this.igxCombo.dropdown.onClosed.subscribe(() => {
+            console.log('Closed log!');
+        });
     }
 }

@@ -18,7 +18,7 @@
 </ng-template>
 
 <div class="igx-combo" [style.width]="width">
-    <igx-input-group (click)="dropdown.toggle()" type="box">
+    <igx-input-group (click)="onInputClick($event)" type="box">
         <input (focus)="onInputFocus($event)" igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%"
             readonly [placeholder]="placeholder" />
         <igx-suffix igxButton="icon" igxRipple (click)="deselectAllItems()">

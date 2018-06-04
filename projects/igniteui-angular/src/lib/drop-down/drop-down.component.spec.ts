@@ -30,7 +30,7 @@ function wrapPromise(callback, resolve, time) {
 //         super(element, dropdown);
 //     }
 // }
-fdescribe('IgxDropDown ', () => {
+describe('IgxDropDown ', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
