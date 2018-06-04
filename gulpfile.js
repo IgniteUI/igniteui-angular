@@ -100,3 +100,11 @@ gulp.task('watch', () => {
         child.stderr.on('data', data => console.error(data.toString()));
     });
 });
+
+gulp.task('copy-migrations', () => {
+    return gulp.src([
+        './projects/igniteui-angular/migrations/**/*.json',
+        '!**/tsconfig.json'
+    ])
+    .pipe(gulp.dest('./dist/igniteui-angular/migrations'));
+});
