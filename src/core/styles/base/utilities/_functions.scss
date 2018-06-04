@@ -366,3 +366,135 @@
     $split-arr: append($split-arr, $string);
     @return $split-arr;
 }
+
+/// Creates a typography style set
+/// @access private
+/// @param {string} $typeface [Titillium Web] - The typeface used for the type style.
+/// @param {string} $font [Regular] - The font style variant from the typeface for the type style.
+/// @param {string} $size [1rem] - The font size used for the type style.
+/// @param {string} $case [lowercase] - The case type to be used for the type style.
+/// @param {number} $letter-spacing [0] - The letter spacing to be used for the type style.
+/// @requires rem
+@function igx-type-style(
+    $typeface: 'Titillium Web',
+    $font: 400,
+    $size: 1rem,
+    $case: lowercase,
+    $letter-spacing: 0
+) {
+    @return (
+        font-family: $typeface,
+        font-weight: 400,
+        font-size: $size,
+        text-transform: $case,
+        letter-spacing: $letter-spacing
+    );
+}
+
+/// Create a type scale with categories following
+/// the material design typography guidelines.
+/// @access private
+@function igx-type-scale(
+    $h1: null,
+    $h2: null,
+    $h3: null,
+    $h4: null,
+    $h5: null,
+    $h6: null,
+    $subtitle-1: null,
+    $subtitle-2: null,
+    $body-1: null,
+    $body-2: null,
+    $button: null,
+    $caption: null,
+    $overline: null
+) {
+    $default-scale: (
+        h1: igx-type-style(
+            $font: 300,
+            $size: rem(96px),
+            $letter-spacing: rem(-1.5)
+        ),
+        h2: igx-type-style(
+            $font: 300,
+            $size: rem(60px),
+            $letter-spacing: rem(-.5)
+        ),
+        h3: igx-type-style(
+            $size: rem(48px),
+        ),
+        h4: igx-type-style(
+            $size: rem(34px),
+            $letter-spacing: rem(.25)
+        ),
+        h5: igx-type-style(
+            $size: rem(24px)
+        ),
+        h6: igx-type-style(
+            $font: 600,
+            $size: rem(20px),
+            $letter-spacing: rem(.15)
+        ),
+        subtitle-1: igx-type-style(
+            $size: rem(16px),
+            $letter-spacing: rem(.15)
+        ),
+        subtitle-2: igx-type-style(
+            $font: 600,
+            $size: rem(14px),
+            $letter-spacing: rem(.1)
+        ),
+        body-1: igx-type-style(
+            $size: rem(16px),
+            $letter-spacing: rem(.5)
+        ),
+        body-2: igx-type-style(
+            $size: rem(14px),
+            $letter-spacing: rem(.25)
+        ),
+        button: igx-type-style(
+            $font: 600,
+            $size: rem(14px),
+            $case: uppercase,
+            $letter-spacing: rem(.75)
+        ),
+        caption: igx-type-style(
+            $size: rem(12px),
+            $letter-spacing: rem(.4)
+        ),
+        overline: igx-type-style(
+            $size: rem(10px),
+            $caption: uppercase,
+            $letter-spacing: rem(1.5)
+        )
+    );
+
+    @return extend($default-scale, (
+        h1: $h1,
+        h2: $h2,
+        h3: $h3,
+        h4: $h4,
+        h5: $h5,
+        h6: $h6,
+        subtitle-1: $subtitle-1,
+        subtitle-2: $subtitle-2,
+        body-1: $body-1,
+        body-2: $body-2,
+        button: $button,
+        caption: $caption,
+        overline: $overline
+    ));
+}
+
+/// Creates an igx typography set
+/// @access public
+/// @param {Map} $type-scale [igx-type-scale()] -
+// @mixin igx-typography($type-scale: igx-type-scale()) {
+//     @each $category, $styles in $type-scale {
+//         %igx-#{$category} {
+//             @each $rule, $value in $styles {
+//                 #{$rule}: #{$value}
+//             }
+//         }
+//     }
+// }
