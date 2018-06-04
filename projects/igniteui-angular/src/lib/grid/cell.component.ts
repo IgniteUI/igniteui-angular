@@ -13,7 +13,8 @@
     OnInit,
     TemplateRef,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    NgZone
 } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
@@ -229,7 +230,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         public gridAPI: IgxGridAPIService,
         public selectionApi: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
-        private element: ElementRef) { }
+        private element: ElementRef,
+        private zone: NgZone) { }
 
     private _updateCellSelectionStatus() {
         this._clearCellSelection();
@@ -389,6 +391,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             cell: this,
             event
         });
+    }
+    datePickerOpen() {
+        this.zone.run(() => this.cdr.detectChanges());
     }
 
     @autoWire()
@@ -667,7 +672,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         if (this.column.editable) {
             this.inEditMode = !this.inEditMode;
             if (!this.inEditMode) {
-                debugger;
                 this.submitValue();
             }
             if (!(this.column.dataType === DataType.Date)) {

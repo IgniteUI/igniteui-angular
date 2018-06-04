@@ -14,10 +14,10 @@
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
-        <igx-checkbox [(ngModel)]="editValue" [checked]="editValue">{{ editValue }}</igx-checkbox>
+        <igx-checkbox [(ngModel)]="editValue" [checked]="editValue"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-datePicker [(ngModel)]="editValue" (onClose)="datePickerClosed()"></igx-datePicker>
+        <igx-datePicker [(ngModel)]="editValue" (onOpen)="datePickerOpen()" (onClose)="datePickerClosed()"></igx-datePicker>
     </ng-container>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context">
