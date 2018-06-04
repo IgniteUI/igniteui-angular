@@ -12,20 +12,16 @@ export class IgxOverlayDirective {
         private _elementRef: ElementRef) { }
 
     public show() {
-        // tslint:disable-next-line:no-debugger
-        debugger;
         this._id = this._overlay.show(this._elementRef);
     }
 
     public hide() {
-        // tslint:disable-next-line:no-debugger
-        debugger;
         this._overlay.hide(this._id);
     }
 }
 @NgModule({
     declarations: [ IgxOverlayDirective ],
     exports: [ IgxOverlayDirective ],
-    providers: [ IgxOverlayDirective ]
+    providers: [ IgxOverlayService ]
 })
 export class IgxOverlayModule {}

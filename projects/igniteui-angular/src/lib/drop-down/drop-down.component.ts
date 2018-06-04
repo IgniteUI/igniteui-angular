@@ -17,6 +17,8 @@ import { IToggleView } from '../core/navigation';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
+import { IgxOverlayService } from '../services/overlay/overlay';
+import { IgxOverlayDirective, IgxOverlayModule } from '../services/overlay/overlay.directive';
 
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemComponent;
@@ -60,6 +62,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     @ViewChild(IgxToggleDirective)
     private toggleDirective: IgxToggleDirective;
+
+    @ViewChild(IgxOverlayDirective)
+    private overlay: IgxOverlayDirective;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -281,6 +286,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
 
     onToggleOpening() {
+        this.overlay.show();
         this.toggleDirective.collapsed = false;
         this.cdr.detectChanges();
         this.scrollToItem(this.selectedItem);
@@ -310,6 +316,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
             this._focusedItem.isFocused = false;
         }
 
+        this.overlay.hide();
         this.onClosed.emit();
     }
 
@@ -383,7 +390,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 @NgModule({
     declarations: [IgxDropDownComponent, IgxDropDownItemComponent],
     exports: [IgxDropDownComponent, IgxDropDownItemComponent],
-    imports: [CommonModule, IgxToggleModule],
+    imports: [CommonModule, IgxToggleModule, IgxOverlayModule],
     providers: [IgxSelectionAPIService]
 })
 export class IgxDropDownModule { }

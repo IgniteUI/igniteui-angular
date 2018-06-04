@@ -36,7 +36,7 @@ export class IgxOverlayService {
             this._overlayElement.style.left = '0';
             this._overlayElement.style.width = '100%';
             this._overlayElement.style.height = '100%';
-            this._overlayElement.style.backgroundColor = 'rgba(0,0,0,0.63)';
+            // this._overlayElement.style.backgroundColor = 'rgba(0,0,0,0.63)';
             this._overlayElement.style.display = 'none';
             this._overlayElement.classList.add('overlay');
             this._document.body.appendChild(this._overlayElement);
