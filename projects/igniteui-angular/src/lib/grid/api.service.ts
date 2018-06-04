@@ -197,7 +197,7 @@ export class IgxGridAPIService {
             state.expanded = !state.expanded;
         } else {
             expansionState.push({
-                expanded: !grid.groupByDefaultExpanded,
+                expanded: !grid.groupsExpanded,
                 value: groupRow.value,
                 fieldName: groupRow.expression.fieldName
             });
