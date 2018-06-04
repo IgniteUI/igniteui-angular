@@ -86,3 +86,11 @@ gulp.task('copy-git-hooks', () => {
     fs.copyFileSync('./.hooks/prepare-commit-msg',
         './.git/hooks/prepare-commit-msg');
 });
+
+gulp.task('copy-migrations', () => {
+    return gulp.src([
+        './projects/igniteui-angular/migrations/**/*.json',
+        '!**/tsconfig.json'
+    ])
+    .pipe(gulp.dest('./dist/igniteui-angular/migrations'));
+});
