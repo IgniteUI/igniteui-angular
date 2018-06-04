@@ -122,7 +122,7 @@ export class IgxGridAPIService {
 
     public sort_multiple(id: string, expressions: ISortingExpression[]): void {
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-        // the problem is that this comes with an expression but the sorting is not applied yet
+
         for (const each of expressions) {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
