@@ -149,7 +149,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         if (!!this._value || this._value === 0) {
             this.filter();
         } else {
-            this.cdr.markForCheck();
+            this.cdr.detectChanges();
         }
     }
 
