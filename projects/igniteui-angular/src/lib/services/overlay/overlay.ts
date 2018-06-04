@@ -1,4 +1,7 @@
 import { DOCUMENT } from '@angular/common';
+import { IPositionStrategy  } from './position/IPositionStrategy';
+import { CenterPositionStrategy } from './position/center-position-strategy';
+
 import {
     ApplicationRef,
     ComponentFactory,
@@ -14,6 +17,8 @@ export class IgxOverlayService {
     private _componentId = 0;
     private _elements = [];
     private _overlayElement: HTMLElement;
+    private _positionStrategy: IPositionStrategy;
+
 
     /**
      * Creates, sets up, and return a DIV HTMLElement attached to document's body
@@ -50,12 +55,11 @@ export class IgxOverlayService {
         private _appRef: ApplicationRef,
         private _injector: Injector,
         @Inject(DOCUMENT) private _document: any) { }
-
     /**
      * Attaches provided component's native element to the OverlayElement
      * @param component Component to show in the overlay
      */
-    show(component, x?, y?): number {
+    show(component, positionStrategy?: IPositionStrategy, x?, y?): number {
         let element;
         if (component instanceof ElementRef) {
             element = component.nativeElement;
@@ -71,6 +75,15 @@ export class IgxOverlayService {
             const dc = dynamicFactory.create(this._injector);
             this._appRef.attachView(dc.hostView);
             element = dc.location.nativeElement;
+        }
+        // If positionStrategy is specified, use it.
+        if (positionStrategy) {
+            this._positionStrategy = positionStrategy;
+
+        // If positionStrategy is not use CenterPositionStrategy as a default.
+        } else {
+            this._positionStrategy = new CenterPositionStrategy();
+            this._positionStrategy.position(element);
         }
 
         this.OverlayElement.style.display = 'block';
