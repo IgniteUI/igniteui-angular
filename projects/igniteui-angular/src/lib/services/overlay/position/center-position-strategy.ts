@@ -1,4 +1,5 @@
 export class CenterPositionStrategy {
+
     position (element): void {
         element.classList.add('show-center');
         // TODO: Below css should go to the 'show-center'.
@@ -12,6 +13,12 @@ export class CenterPositionStrategy {
         element.style.left = '0';
         element.style.bottom = '0';
         element.style.zIndex = '99999';
+    }
+
+    // cleanup
+    dispose(element): void {
+    // remove the CenterPositionStrategy css class attached
+        element.classList.remove('show-center');
     }
 }
 

@@ -79,6 +79,7 @@ export class IgxOverlayService {
         // If positionStrategy is specified, use it.
         if (positionStrategy) {
             this._positionStrategy = positionStrategy;
+            this._positionStrategy.position(element);
 
         // If positionStrategy is not use CenterPositionStrategy as a default.
         } else {
