@@ -24,6 +24,7 @@ describe('IgxInput', () => {
                 InputComponent,
                 TextareaComponent,
                 InputWithPlaceholderComponent,
+                InitiallyFilledInputComponent,
                 FilledInputComponent,
                 DisabledInputComponent,
                 RequiredInputComponent,
@@ -86,6 +87,35 @@ describe('IgxInput', () => {
         const igxInput = fixture.componentInstance.igxInput;
         expect(igxInput.hasPlaceholder).toBe(true);
         expect(igxInput.placeholder).toBe('Test');
+    });
+
+    it('Should have an initial filled style when data bound.', () => {
+        const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
+        fixture.detectChanges();
+
+        const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
+        expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+
+        const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
+        expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+
+        const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
+        expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+
+        const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
+        expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+
+        const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
+        expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+
+        const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
+        expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+
+        const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
+        expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+
+        const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
+        expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
     });
 
     it('Should have a filled style. Value API.', () => {
@@ -225,6 +255,69 @@ class RequiredTwoWayDataBoundInputComponent {
 
     public user = {
         firstName: ''
+    };
+}
+
+@Component({ template: `<igx-input-group #igxInputGroupNotFilledUndefined>
+                            <label for="not-filled-undefined" igxLabel>Not Filled Undefined</label>
+                            <input name="not-filled-undefined" igxInput [(ngModel)]="notFilledUndefined" />
+                        </igx-input-group>
+
+                        <igx-input-group #igxInputGroupNotFilledNull>
+                            <label for="not-filled-null" igxLabel>Not Filled Null</label>
+                            <input name="not-filled-null" igxInput [(ngModel)]="notFilledNull" />
+                        </igx-input-group>
+
+                        <igx-input-group #igxInputGroupNotFilledEmpty>
+                            <label for="not-filled-empty" igxLabel>Not Filled Empty</label>
+                            <input name="not-filled-empty" igxInput [(ngModel)]="notFilledEmpty" />
+                        </igx-input-group>
+
+                        <igx-input-group #igxInputGroupFilledString>
+                            <label for="filled-string" igxLabel>Filled String</label>
+                            <input name="filled-string" igxInput [(ngModel)]="user.firstName" />
+                        </igx-input-group>
+
+                        <igx-input-group #igxInputGroupFilledNumber>
+                            <label for="filled-number" igxLabel>Filled Number</label>
+                            <input name="filled-number" igxInput [(ngModel)]="user.age" />
+                        </igx-input-group>
+
+                        <igx-input-group #igxInputGroupFilledBoolFalse>
+                            <label for="filled-bool-false" igxLabel>Filled Bool False</label>
+                            <input name="filled-bool-false" igxInput [(ngModel)]="user.vegetarian" />
+                        </igx-input-group>
+
+                        <igx-input-group #igxInputGroupFilledBoolTrue>
+                            <label for="filled-bool-true" igxLabel>Filled Bool True</label>
+                            <input name="filled-bool-true" igxInput [(ngModel)]="user.smoker" />
+                        </igx-input-group>
+
+                        <igx-input-group #igxInputGroupFilledDate>
+                            <label for="filled-date" igxLabel>Filled Date</label>
+                            <input name="filled-date" igxInput [(ngModel)]="user.birthDate" />
+                        </igx-input-group>
+                        `})
+class InitiallyFilledInputComponent {
+    @ViewChild('igxInputGroupNotFilledUndefined') public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledNull') public igxInputGroupNotFilledNull: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledEmpty') public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
+
+    @ViewChild('igxInputGroupFilledString') public igxInputGroupFilledString: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledNumber') public igxInputGroupFilledNumber: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolFalse') public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolTrue') public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledDate') public igxInputGroupFilledDate: IgxInputGroupComponent;
+
+    public notFilledUndefined = undefined;
+    public notFilledNull = null;
+    public notFilledEmpty = '';
+    public user = {
+        firstName: 'Oke',
+        age: 30,
+        vegetarian: false,
+        smoker: true,
+        birthDate: new Date(1988, 1, 1)
     };
 }
 

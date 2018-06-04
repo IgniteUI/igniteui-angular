@@ -66,6 +66,11 @@ export class AppComponent implements OnInit {
             name: 'TimePicker'
         },
         {
+            link: '/dropDown',
+            icon: 'drop_down',
+            name: 'DropDown'
+        },
+        {
             link: '/grid',
             icon: 'view_column',
             name: 'Grid'

@@ -37,6 +37,7 @@ import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 
 const appRoutes = [
     {
@@ -75,6 +76,10 @@ const appRoutes = [
     {
         path: 'dialog',
         component: DialogSampleComponent
+    },
+    {
+        path: 'dropDown',
+        component: DropDownSampleComponent
     },
     {
         path: 'icon',
