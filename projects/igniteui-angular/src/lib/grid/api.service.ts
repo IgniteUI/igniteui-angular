@@ -137,7 +137,7 @@ export class IgxGridAPIService {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
-        const expression = this.prepare_sorting_expression([sortingState, groupingState], { fieldName, dir, ignoreCase });
+        this.prepare_sorting_expression([sortingState, groupingState], { fieldName, dir, ignoreCase });
         this.get(id).groupingExpressions = groupingState;
         this.arrange_sorting_expressions(id);
     }
@@ -286,15 +286,14 @@ export class IgxGridAPIService {
             return;
         }
 
-        let e = states[0].find((expr) => expr.fieldName === expression.fieldName);
-
-        if (!e) {
-            states.forEach(state => {
+        states.forEach(state => {
+            const e = state.find((expr) => expr.fieldName === expression.fieldName);
+            if (!e) {
                 state.push(expression);
-            });
-        } else {
-            Object.assign(e, expression);
-        }
+            } else {
+                Object.assign(e, expression);
+            }
+        });
     }
 
     protected arrange_sorting_expressions(id) {
