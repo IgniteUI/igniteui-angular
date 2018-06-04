@@ -15,6 +15,7 @@ export class DropDownSampleComponent implements OnInit {
 
     ngOnInit() {
         this.igxDropDown.height = '400px';
+        this.igxDropDown.width = '180px';
         // this.igxDropDown.allowItemsFocus = false;
 
         const states = [

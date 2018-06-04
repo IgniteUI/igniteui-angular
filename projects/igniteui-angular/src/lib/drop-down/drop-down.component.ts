@@ -19,6 +19,7 @@ import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { IgxOverlayDirective, IgxOverlayModule } from '../services/overlay/overlay.directive';
+import { CenterPositionStrategy } from '../services/overlay/position/center-position-strategy';
 
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemComponent;
@@ -66,6 +67,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     @ViewChild(IgxOverlayDirective)
     private overlay: IgxOverlayDirective;
 
+    @ViewChild('dropDown')
+    private dropDownElement;
+
     /**
      * Emitted when item selection is changing, before the selection completes
      */
@@ -105,7 +109,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
     set width(value) {
         this._width = value;
-        this.toggleDirective.element.style.width = value;
+        this.dropDownElement.nativeElement.style.width = value;
     }
 
     /**
@@ -286,7 +290,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
 
     onToggleOpening() {
-        this.overlay.show();
+        this.overlay.show(new CenterPositionStrategy());
         this.toggleDirective.collapsed = false;
         this.cdr.detectChanges();
         this.scrollToItem(this.selectedItem);

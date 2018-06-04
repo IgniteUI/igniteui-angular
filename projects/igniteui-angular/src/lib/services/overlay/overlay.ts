@@ -59,7 +59,7 @@ export class IgxOverlayService {
      * Attaches provided component's native element to the OverlayElement
      * @param component Component to show in the overlay
      */
-    show(component, positionStrategy?: IPositionStrategy, x?, y?): number {
+    show(component, positionStrategy?: IPositionStrategy): number {
         let element;
         if (component instanceof ElementRef) {
             element = component.nativeElement;
@@ -83,9 +83,9 @@ export class IgxOverlayService {
         // If positionStrategy is not use CenterPositionStrategy as a default.
         } else {
             this._positionStrategy = new CenterPositionStrategy();
-            this._positionStrategy.position(element);
         }
 
+        this._positionStrategy.position(element);
         this.OverlayElement.style.display = 'block';
         this.OverlayElement.appendChild(element);
         return this._componentId++;
