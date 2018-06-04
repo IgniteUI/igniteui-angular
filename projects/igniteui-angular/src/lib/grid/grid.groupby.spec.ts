@@ -6,7 +6,13 @@ import { take } from 'rxjs/operators';
 import { Calendar } from '../calendar';
 import { KEYCODES } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
+import {
+    IgxStringFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxFilteringOperand
+} from '../data-operations/filtering-condition';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
@@ -800,7 +806,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.rowList.toArray().length).toEqual(13);
 
         fix.detectChanges();
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
