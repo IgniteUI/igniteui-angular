@@ -1,5 +1,5 @@
 import {DataUtil} from './data-util';
-import { FilteringCondition } from './filtering-condition';
+import { IFilteringOperation } from './filtering-condition';
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IFilteringState } from './filtering-state.interface';
 
@@ -29,7 +29,7 @@ export class FilteringStrategy implements IFilteringStrategy {
     public findMatch(rec: object, expr: IFilteringExpression, index: number): boolean {
         const cond = expr.condition;
         const val = rec[expr.fieldName];
-        return cond(val, expr.searchVal, expr.ignoreCase);
+        return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
     public matchRecordByExpressions(rec: object,
                                     expressions: IFilteringExpression[],

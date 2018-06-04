@@ -9,11 +9,11 @@ import { DataGenerator} from './test-util/data-generator';
 import {DataAccess, DataContainer} from './data-container';
 import {IDataState} from './data-state.interface';
 import {DataUtil} from './data-util';
-import {FilteringCondition} from './filtering-condition';
 import { IFilteringState } from './filtering-state.interface';
 import {IPagingState, PagingError} from './paging-state.interface';
 import {ISortingExpression, SortingDirection} from './sorting-expression.interface';
 import {ISortingState} from './sorting-state.interface';
+import { IgxNumberFilteringOperand } from '../../public_api';
 
 describe('DataContainer', () => {
     let dataGenerator: DataGenerator;
@@ -30,7 +30,7 @@ describe('DataContainer', () => {
             filtering: {
                 expressions: [
                     {
-                        condition: FilteringCondition.number.greaterThanOrEqualTo,
+                        condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'),
                         fieldName: 'number',
                         searchVal: 1
                     }
@@ -90,7 +90,7 @@ describe('DataContainer', () => {
         const filteringState: IFilteringState = {
             expressions: [
                 {
-                    condition: FilteringCondition.number.doesNotEqual,
+                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
                     fieldName: 'number',
                     searchVal: 4
                 }
