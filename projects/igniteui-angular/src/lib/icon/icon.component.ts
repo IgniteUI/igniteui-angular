@@ -33,13 +33,14 @@ export class IgxIconComponent implements OnInit {
     private explicitLigature: TemplateRef<HTMLElement>;
 
     /**
-     *  This allows you to disable `igx-icon` class. By default it's applied.
+     *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
      *```html
-     *@ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
+     *@ViewChild("MyIcon") public icon: IgxIconComponent;
+     *constructor(private cdRef:ChangeDetectorRef) {}
      *ngAfterViewInit() {
-     *    icon.cssClass = false;
-     * }
+     *    this.icon.cssClass = "";
+     *    this.cdRef.detectChanges();
+     *}
      * ```
      */
     @HostBinding('class.igx-icon')
@@ -48,11 +49,12 @@ export class IgxIconComponent implements OnInit {
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
      *```html
-     *@ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
+     *@ViewChild("MyIcon") public icon: IgxIconComponent;
+     *constructor(private cdRef:ChangeDetectorRef) {}
      *ngAfterViewInit() {
-     *    icon.ariaHidden = false;
-     * }
+     *    this.icon.ariaHidden = false;
+     *    this.cdRef.detectChanges();
+     *}
      * ```
      */
     @HostBinding('attr.aria-hidden')
@@ -96,7 +98,8 @@ export class IgxIconComponent implements OnInit {
     public iconColor: string;
 
     /**
-    *    An @Input property that allows you to change the iconName of the icon.
+    *    An @Input property that allows you to change the `iconName` of the icon.
+    *    The `iconName` can be set using the `name`.
     *    You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
     *```html
     *<igx-icon name="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
@@ -107,6 +110,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
     *    An @Input property that allows you to change the `glyphName` of the icon.
+    *    The `glyphName` can be set using `iconName`.
     *    You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
     *```html
     *<igx-icon iconName="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
