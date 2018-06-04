@@ -113,40 +113,40 @@ export class IgxGridAPIService {
         if (dir === SortingDirection.None) {
             this.remove_grouping_expression(id, fieldName);
         }
-        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
 
-        this.prepare_sorting_expression([sortingState], fieldName, dir, ignoreCase);
+        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase });
         this.get(id).sortingExpressions = sortingState;
     }
 
     public sort_multiple(id: string, expressions: ISortingExpression[]): void {
-        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
-
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
+        // the problem is that this comes with an expression but the sorting is not applied yet
         for (const each of expressions) {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
             }
-            this.prepare_sorting_expression([sortingState], each.fieldName, each.dir, each.ignoreCase);
+            this.prepare_sorting_expression([sortingState], each);
         }
 
         this.get(id).sortingExpressions = sortingState;
     }
 
     public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
-        const groupingState = cloneArray(this.get(id).groupingExpressions, true);
-        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
+        const groupingState = cloneArray(this.get(id).groupingExpressions);
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
 
-        const expression = this.prepare_sorting_expression([sortingState, groupingState], fieldName, dir, ignoreCase);
+        const expression = this.prepare_sorting_expression([sortingState, groupingState], { fieldName, dir, ignoreCase });
         this.get(id).groupingExpressions = groupingState;
         this.arrange_sorting_expressions(id);
     }
 
     public groupBy_multiple(id: string, expressions: ISortingExpression[]): void {
-        const groupingState = cloneArray(this.get(id).groupingExpressions, true);
-        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
+        const groupingState = cloneArray(this.get(id).groupingExpressions);
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         for (const each of expressions) {
-            this.prepare_sorting_expression([sortingState, groupingState], each.fieldName, each.dir, each.ignoreCase);
+            this.prepare_sorting_expression([sortingState, groupingState], each);
         }
 
         this.get(id).groupingExpressions = groupingState;
@@ -154,8 +154,8 @@ export class IgxGridAPIService {
     }
 
     public clear_groupby(id: string, name?: string) {
-        const groupingState = cloneArray(this.get(id).groupingExpressions, true);
-        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
+        const groupingState = cloneArray(this.get(id).groupingExpressions);
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         if (name) {
             // clear specific expression
@@ -277,23 +277,22 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_sorting_expression(states, fieldName, dir, ignoreCase) {
-        if (dir === SortingDirection.None) {
+    protected prepare_sorting_expression(states, expression: ISortingExpression) {
+        if (expression.dir === SortingDirection.None) {
             states.forEach(state => {
-                state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
+                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
             });
             return;
         }
 
-        let expression = states[0].find((expr) => expr.fieldName === fieldName);
+        let e = states[0].find((expr) => expr.fieldName === expression.fieldName);
 
-        if (!expression) {
-            expression = { fieldName, dir, ignoreCase };
+        if (!e) {
             states.forEach(state => {
                 state.push(expression);
             });
         } else {
-            Object.assign(expression, { fieldName, dir, ignoreCase });
+            Object.assign(e, expression);
         }
     }
 
@@ -313,6 +312,7 @@ export class IgxGridAPIService {
             }
         });
     }
+
     protected remove_grouping_expression(id, fieldName) {
         const groupingExpressions = this.get(id).groupingExpressions;
         const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
