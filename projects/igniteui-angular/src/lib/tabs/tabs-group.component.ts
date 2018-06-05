@@ -201,7 +201,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      *    this.cdr.detectChanges();
      *}
      *```
-     * @param {*} focusDelay A number representing the expected delay.
+     * @param focusDelay A number representing the expected delay.
      */
     public select(focusDelay = 50, onInit = false) {
         if (this.isDisabled || this._tabs.selectedIndex === this.index) {
