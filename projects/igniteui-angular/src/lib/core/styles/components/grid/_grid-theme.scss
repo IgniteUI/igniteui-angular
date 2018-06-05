@@ -240,6 +240,12 @@
         compact: 0 rem(12px)
     );
 
+    $grid-grouping-indicator-padding: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
     %grid-display {
         display: grid;
         grid-template-rows: auto auto 1fr auto;
@@ -532,7 +538,7 @@
     }
 
     // Groupby section
-  
+
     %grid__group-label {
         display: flex;
         align-items: center;
@@ -589,7 +595,7 @@
         justify-content: center;
         align-items: center;
         position: relative;
-        padding-left: 24px;
+        padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: 12px;
 
         &::after {
@@ -625,7 +631,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: $grid-cell-padding--e;
+        padding: map-get($grid-cell-padding, 'comfortable');
         overflow: hidden;
 
         &:focus {
@@ -653,8 +659,8 @@
         align-items: center;
         background: --var($theme, 'header-background');
         cursor: pointer;
-        padding-left: 24px;
-        padding-right: 12px;
+        padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
+        padding-right: rem(12px);
 
         .igx-icon {
             color: --var($theme, 'expand-icon-color');
@@ -686,7 +692,7 @@
         @include ellipsis();
         width: 100%;
     }
-  
+
     %grid-summaries {
         display: flex;
         background: inherit;
