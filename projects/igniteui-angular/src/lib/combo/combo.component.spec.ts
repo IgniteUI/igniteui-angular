@@ -41,7 +41,7 @@ function wrapPromise(callback, resolve, time) {
     });
 }
 
-fdescribe('Combo', () => {
+describe('Combo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({

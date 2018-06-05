@@ -78,14 +78,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     @ContentChildren(forwardRef(() => IgxComboItemComponent))
     protected children: QueryList<IgxDropDownItemBase>;
 
-    get focusedItem(): IgxDropDownItemBase {
-        return this._focusedItem;
-    }
-
     @HostListener('focus')
     onFocus() {
         this._isFocused = true;
-        this._focusedItem = this._focusedItem ? this._focusedItem : this.items[0];
+        this._focusedItem = this._focusedItem ? this._focusedItem : this.items.length ? this.items[0] : this.children.first;
         if (this._focusedItem) {
             this._focusedItem.isFocused = true;
         }
@@ -117,7 +113,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     }
 
     selectItem(item?: IgxComboItemComponent) {
-        if (item && item.itemData === undefined) {
+        if (item.itemData === 'ADD ITEM') {
             this.parentElement.addItemToCollection();
         } else {
             this.setSelectedItem(item ? item.itemID : this._focusedItem.itemID);
@@ -151,6 +147,13 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         let newScrollStartIndex = isScrollUp ? state.startIndex - 1 : state.startIndex + 1;
         let data = vContainer.igxForOf;
 
+        if (data.length === 0) {
+            const newItem = this.children.first;
+            if (!newItem) { return; }
+            newItem.isFocused = true;
+            this._focusedItem = newItem;
+            return;
+        }
         // Following the big comment above, when the new item is group header, then we need to load 2 elements at once.
         if (data[newScrollStartIndex].isHeader && direction === Navigate.Up ||
             data[newScrollStartIndex + state.chunkSize - 2].isHeader && direction === Navigate.Down) {
@@ -281,9 +284,51 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     @ContentChild('headerItemTemplate', { read: TemplateRef })
     public headerItemTemplate: TemplateRef<any>;
 
+    /**
+     * Emitted when item selection is changing, before the selection completes
+     */
+    @Output()
+    public onSelection = new EventEmitter<IComboSelectionChangeEventArgs>();
+
+    /**
+     * Emitted before the dropdown is opened
+     */
+    @Output()
+    public onOpening = new EventEmitter();
+
+    /**
+     * Emitted after the dropdown is opened
+     */
+    @Output()
+    public onOpened = new EventEmitter();
+
+    /**
+     * Emitted before the dropdown is closed
+     */
+    @Output()
+    public onClosing = new EventEmitter();
+
+    /**
+     * Emitted after the dropdown is closed
+     */
+    @Output()
+    public onClosed = new EventEmitter();
+
+    /**
+     * Emitted when an item is being added to the data collection
+     */
     @Output()
     public onAddition = new EventEmitter();
 
+    /**
+     * Emitted when an the search input's input event is triggered
+     */
+    @Output()
+    public onSearchInput = new EventEmitter();
+
+    /**
+     * Sets the style width of the element
+     */
     @HostBinding('style.width')
     @Input()
     public width = '250px';
@@ -291,15 +336,27 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     @Input()
     public height = '400px';
 
+    /**
+     * Controls whether custom values can be added to the collection
+     */
     @Input()
     public allowCustomValues = true;
 
+    /**
+     * Configures the drop down list height
+     */
     @Input()
     public listHeight = 320;
 
+    /**
+     * Configures the drop down list item height
+     */
     @Input()
     public listItemHeight = 32;
 
+    /**
+     * Gets/sets a property by which the items from the collection should be grouped
+     */
     @Input()
     public set groupKey(val: string | number) {
         if (this._groupKey !== undefined) {
@@ -313,6 +370,9 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         return this._groupKey;
     }
 
+    /**
+     * Defines the placeholder value for the combo value field
+     */
     @Input()
     public placeholder = '';
 
@@ -346,9 +406,6 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     @Input()
     public filterable = true;
 
-    @Output()
-    public onSelection = new EventEmitter<IComboSelectionChangeEventArgs>();
-
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
@@ -373,6 +430,10 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         evt.stopPropagation();
         evt.preventDefault();
         this.dropdown.toggle();
+    }
+
+    public get values(): any[] {
+        return this.valueKey !== undefined ? this.selectedItems.map((e) => e[this.valueKey]) : [];
     }
 
     public get filteringExpressions() {
@@ -431,7 +492,7 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
 
     public set filteredData(val: any[]) {
         this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
-        // this.checkMatch();
+        this.checkMatch();
     }
 
     public handleKeyDown(evt) {
@@ -450,14 +511,17 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
             .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
     }
 
-    public handleInputChange() {
+    public handleInputChange(event?) {
         if (this.filterable) {
             this.filter(this.searchValue, STRING_FILTERS.contains,
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.textKey);
             this.isHeaderChecked();
         }
-        this.checkMatch();
-        this.cdr.detectChanges();
+        if (event) {
+            this.onSearchInput.emit({
+                event
+            });
+        }
     }
 
     public sort(fieldName: string | number, dir: SortingDirection = SortingDirection.Asc, ignoreCase: boolean = true): void {
@@ -580,6 +644,22 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         this.selectAllCheckbox.checked = false;
     }
 
+    public toggle() {
+        this.dropdown.toggle();
+    }
+
+    public open() {
+        this.dropdown.open();
+    }
+
+    public close() {
+        this.dropdown.close();
+    }
+
+    public get collapsed() {
+        return this.dropdown.collapsed;
+    }
+
     public selectAllItems() {
         const allVisible = this.selectionAPI.get_all_ids(this.filteredData);
         const newSelection = this.selectionAPI.select_items(this.id, allVisible);
@@ -636,7 +716,7 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         this.onAddition.emit(args);
         this.data.push(addedItem);
         this.changeSelectedItem(addedItem, true);
-        this.checkMatch();
+        this.customValueFlag = false;
         this.handleInputChange();
     }
 
