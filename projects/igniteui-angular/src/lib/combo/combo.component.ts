@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild,
     ContentChildren, ElementRef, EventEmitter, forwardRef,
-    HostBinding, HostListener, Inject, Input, NgModule, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren
+    HostBinding, HostListener, Inject, Input, NgModule, Output, QueryList, TemplateRef, ViewChild, ViewChildren
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { take } from 'rxjs/operators';
@@ -72,6 +72,14 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         return this.verticalScrollContainer.dc.location.nativeElement;
     }
 
+    /*
+     *  Event emitter overrides
+     */
+    public onOpened = this.parentElement.onOpened;
+    public onOpening = this.parentElement.onOpening;
+    public onClosing = this.parentElement.onClosing;
+    public onClosed = this.parentElement.onClosed;
+
     @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
     public verticalScrollContainer: IgxForOfDirective<any>;
 
@@ -112,14 +120,12 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this.parentElement.setSelectedItem(itemID, select);
     }
 
-    selectItem(item?: IgxComboItemComponent) {
+    selectItem(item: IgxComboItemComponent) {
         if (item.itemData === 'ADD ITEM') {
             this.parentElement.addItemToCollection();
         } else {
-            this.setSelectedItem(item ? item.itemID : this._focusedItem.itemID);
-            if (item) {
-                this._focusedItem = item;
-            }
+            this.setSelectedItem(item.itemID);
+            this._focusedItem = item;
         }
     }
 
@@ -213,7 +219,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     selector: 'igx-combo',
     templateUrl: 'combo.component.html'
 })
-export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
+export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     public id = '';
     public customValueFlag = true;
     protected _filteringLogic = FilteringLogic.Or;
@@ -499,7 +505,7 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
             this.dropdown.element.focus();
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
-            this.dropdown.toggle();
+            this.toggle();
         }
     }
 
@@ -513,7 +519,7 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
 
     public handleInputChange(event?) {
         if (this.filterable) {
-            this.filter(this.searchValue, STRING_FILTERS.contains,
+            this.filter(this.searchValue.trim(), STRING_FILTERS.contains,
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.textKey);
             this.isHeaderChecked();
         }
@@ -703,10 +709,11 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         if (!this.searchValue) {
             return false;
         }
+        const newValue = this.searchValue.trim();
         const addedItem = this.textKey ? {
-            [this.valueKey]: this.searchValue,
-            [this.textKey]: this.searchValue
-        } : this.searchValue;
+            [this.valueKey]: newValue,
+            [this.textKey]: newValue
+        } : newValue;
         const oldCollection = this.data;
         const newCollection = [...this.data];
         newCollection.push(addedItem);
@@ -717,6 +724,9 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         this.data.push(addedItem);
         this.changeSelectedItem(addedItem, true);
         this.customValueFlag = false;
+        if (this.searchInput) {
+            this.searchInput.nativeElement.focus();
+        }
         this.handleInputChange();
     }
 
@@ -750,8 +760,6 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         this.filteredData = [...this.data];
         this.id += currentItem++;
     }
-
-    ngOnDestroy() { }
 
     public writeValue(value: any): void {
         this.value = value;

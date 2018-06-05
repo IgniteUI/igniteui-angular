@@ -96,6 +96,25 @@ describe('Combo', () => {
         expect(combo.headerItemTemplate).toBeUndefined();
     });
 
+    it('Should properly call dropdown methods', () => {
+        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        expect(combo).toBeDefined();
+        spyOn(combo.dropdown, 'close');
+        spyOn(combo.dropdown, 'open');
+        spyOn(combo.dropdown, 'toggle');
+        spyOnProperty(combo.dropdown, 'collapsed', 'get').and.callFake(() => 'fake');
+        combo.open();
+        combo.close();
+        const stub = combo.collapsed;
+        combo.toggle();
+        expect(combo.dropdown.close).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.toggle).toHaveBeenCalledTimes(1);
+        expect(stub).toEqual('fake');
+    });
+
     it('Should properly accept input properties', () => {
         const fixture = TestBed.createComponent(IgxComboInputTestComponent);
         fixture.detectChanges();
@@ -416,6 +435,7 @@ describe('Combo', () => {
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
         spyOn(combo, 'selectAllItems');
+        spyOn(combo, 'toggle');
         const dropdownSpy = jasmine.createSpyObj('element', { focus: () => { } });
         const dropdownElement = spyOnProperty(combo.dropdown, 'element', 'get').and.returnValues(dropdownSpy);
         combo.handleKeyDown({ key: 'A' });
@@ -430,25 +450,25 @@ describe('Combo', () => {
         combo.handleKeyDown({ key: 'ArrowDown' });
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
         expect(dropdownSpy.focus).toHaveBeenCalledTimes(1);
-        // combo.handleKeyDown({key: 'Down'});
-        // expect(combo.selectAllItems).toHaveBeenCalledTimes(1);
-        // expect(dropdownSpy.focus).toHaveBeenCalledTimes(2);
+        combo.handleKeyDown({key: 'Escape'});
+        expect(combo.toggle).toHaveBeenCalledTimes(1);
     });
 
-    // it('Should properly return a reference to the VirtScrollContainer', () => {
-    //     const fix = TestBed.createComponent(IgxComboSampleComponent);
-    //     fix.detectChanges();
-    //     const combo = fix.componentInstance.combo;
-    //     expect(combo.dropdown.element).toBeDefined();
-    //     function mockFunc() {
-    //         return combo.dropdown.scrollContainer;
-    //     }
-    //     expect(mockFunc).toThrow();
-    //     combo.dropdown.toggle();
-    //     fix.detectChanges();
-    //     expect(combo.dropdown.element).toBeDefined();
-    //     expect(mockFunc).toBeDefined();
-    // });
+    it('Should properly return a reference to the VirtScrollContainer', () => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo.dropdown.element).toBeDefined();
+        const mockScroll = spyOnProperty<any>(combo.dropdown, 'scrollContainer', 'get').and.callThrough();
+        function mockFunc() {
+            return mockScroll();
+        }
+        expect(mockFunc).toThrow();
+        combo.dropdown.toggle();
+        fix.detectChanges();
+        expect(combo.dropdown.element).toBeDefined();
+        expect(mockFunc).toBeDefined();
+    });
 
     it('Should properly get/set textKey', () => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
@@ -642,16 +662,16 @@ describe('Combo', () => {
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         const dropdown = combo.dropdown;
-        spyOn(dropdown.onOpened, 'emit').and.callThrough();
-        spyOn(dropdown.onOpening, 'emit').and.callThrough();
-        spyOn(dropdown.onClosed, 'emit').and.callThrough();
-        spyOn(dropdown.onClosing, 'emit').and.callThrough();
+        spyOn(combo.onOpened, 'emit').and.callThrough();
+        spyOn(combo.onOpening, 'emit').and.callThrough();
+        spyOn(combo.onClosed, 'emit').and.callThrough();
+        spyOn(combo.onClosing, 'emit').and.callThrough();
         spyOn(combo, 'onInputClick').and.callThrough();
         const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
-        dropdown.onOpening.subscribe(() => onOpeningEventFired = true);
-        dropdown.onOpened.subscribe(() => onOpenedEventFired = true);
-        dropdown.onClosing.subscribe(() => onClosingEventFired = true);
-        dropdown.onClosed.subscribe(() => onClosedEventFired = true);
+        combo.onOpening.subscribe(() => onOpeningEventFired = true);
+        combo.onOpened.subscribe(() => onOpenedEventFired = true);
+        combo.onClosing.subscribe(() => onClosingEventFired = true);
+        combo.onClosed.subscribe(() => onClosedEventFired = true);
         const comboButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNBUTTON)).nativeElement;
         expect(comboButton).toBeDefined();
         comboButton.click();
@@ -660,10 +680,10 @@ describe('Combo', () => {
             fixture.detectChanges();
             expect(dropdown.collapsed).toEqual(false);
             expect(combo.onInputClick).toHaveBeenCalledTimes(1);
-            expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
-            expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(0);
-            expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(combo.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(combo.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(combo.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(combo.onClosed.emit).toHaveBeenCalledTimes(0);
             expect(onOpeningEventFired).toEqual(true);
             expect(onOpenedEventFired).toEqual(true);
             comboButton.click();
@@ -671,8 +691,8 @@ describe('Combo', () => {
         }).then(() => {
             fixture.detectChanges();
             expect(combo.onInputClick).toHaveBeenCalledTimes(2);
-            expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(combo.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(combo.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(onClosingEventFired).toEqual(true);
             expect(onClosedEventFired).toEqual(true);
         });
