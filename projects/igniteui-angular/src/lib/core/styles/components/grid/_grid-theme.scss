@@ -420,4 +420,42 @@
             left: 100%;
         }
     }
+
+    %grid__drop-indicator-left {
+        position: absolute;
+        width: 4px;
+        top: 0;
+        left: -1px;
+        height: 100%;
+    }
+
+    %grid__drop-indicator-right {
+        position: absolute;
+        width: 4px;
+        top: 0;
+        right: -1px;
+        height: 100%;
+    }
+
+    %grid__scroll-on-drag-left {
+        position: absolute;
+        width: 15px;
+        top: 0;
+        left: 0px;
+        height: 100%;
+        z-index: 25;
+    }
+
+    %grid__scroll-on-drag-right {
+        position: absolute;
+        width: 15px;
+        top: 0;
+        right: 0px;
+        height: 100%;
+        z-index: 25;
+    }
+
+    %grid__drop-indicator-active {
+        background-color: #e41c77;
+    }
 }

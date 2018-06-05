@@ -41,6 +41,7 @@ import { RemoteService } from './shared/remote.service';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { LocalService } from './shared/local.service';
 import { GridSampleComponent } from './grid/grid.sample';
+import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
@@ -82,6 +83,7 @@ const components = [
     VirtualForSampleComponent,
     ButtonGroupSampleComponent,
     GridSampleComponent,
+    GridColumnMovingSampleComponent,
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
     GridSummaryComponent,

@@ -107,7 +107,6 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     protected sortDirection = SortingDirection.None;
     private _startResizePos;
     private _pinnedMaxWidth;
-    private _isResiznig = false;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone) { }
 
@@ -130,7 +129,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     @HostListener('click', ['$event'])
     @autoWire(true)
     public onClick(event) {
-        if (!this._isResiznig) {
+        if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.column.sortable) {
                 const grid = this.gridAPI.get(this.gridID);
@@ -213,7 +212,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
             this.showResizer = true;
-            this._isResiznig = true;
+            this.column.grid.isColumnResizing = true;
             this.resizerHeight = this.grid.calcResizerHeight;
             this._startResizePos = event.clientX;
         } else {
@@ -292,7 +291,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     }
 
     public onResize(event) {
-        this._isResiznig = false;
+        this.column.grid.isColumnResizing = false;
 
         this.showResizer = false;
         const diff = event.clientX - this._startResizePos;

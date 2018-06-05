@@ -5,11 +5,13 @@ import {
     ElementRef,
     HostListener,
     Inject,
+    Injectable,
     Input,
     NgZone,
     OnDestroy,
     OnInit,
     Output,
+    Renderer2,
     TemplateRef
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
@@ -17,6 +19,7 @@ import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from "./column.component";
 import { IgxDragDirective, IgxDropDirective } from "../directives/dragdrop/dragdrop.directive";
+import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
 
 @Directive({
     selector: '[igxResizer]'
@@ -182,12 +185,79 @@ export function autoWire(markForCheck = false) {
     };
 }
 
+@Injectable()
+export class IgxColumnMovingService {
+    private _column: IgxColumnComponent;
+
+    get column(): IgxColumnComponent {
+        return this._column;
+    }
+    set column(val: IgxColumnComponent) {
+        if (val) {
+            this._column = val;
+        }
+    }
+}
+
 @Directive({
     selector: "[igxColumnMovingDrag]"
 })
 export class IgxColumnMovingDragDirective extends IgxDragDirective {
-    constructor(_element: ElementRef, _zone: NgZone) {
+
+    public ghostImageClass = "igx-grid__drag-ghost-image";
+
+    @Input("igxColumnMovingDrag")
+    set data(val: IgxColumnComponent) {
+        this._column = val;
+    }
+
+    get column(): IgxColumnComponent {
+        return this._column;
+    }
+
+    get draggable() {
+        return this.column && this.column.movable;
+    }
+
+    private _column: IgxColumnComponent;
+
+    constructor(_element: ElementRef, _zone: NgZone, renderer: Renderer2, private cms: IgxColumnMovingService) {
         super(_element, _zone);
+    }
+
+    public onPointerDown(event) {
+        const resizeArea = document.elementFromPoint(event.pageX, event.pageY);
+        if (!this.draggable || this.element.nativeElement.children[3].isEqualNode(resizeArea)) {
+            return;
+        }
+
+        this.cms.column = this.column;
+
+        super.onPointerDown(event);
+    }
+
+    public onPointerMove(event) {
+        if (!this.draggable) {
+            return;
+        }
+        super.onPointerMove(event);
+
+        if (this._dragStarted && this._dragGhost && !this.column.grid.isColumnMoving) {
+            this.column.grid.isColumnMoving = true;
+            this.column.grid.cdr.detectChanges();
+        }
+    }
+
+    public onPointerUp(event) {
+        if (!this.draggable) {
+            return;
+        }
+
+        if (this._dragStarted) {
+            this.column.grid.isColumnMoving = false;
+            this.column.grid.cdr.detectChanges();
+        }
+        super.onPointerUp(event);
     }
 }
 
@@ -195,7 +265,92 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     selector: "[igxColumnMovingDrop]"
 })
 export class IgxColumnMovingDropDirective extends IgxDropDirective {
-    constructor() {
+    @Input("igxColumnMovingDrop")
+    set droppable(val: any) {
+        if (val instanceof IgxColumnComponent) {
+            this._column = val;
+        }
+
+        if (val instanceof IgxForOfDirective) {
+            this._hVirtDir = val;
+        }
+    }
+
+    get column(): IgxColumnComponent {
+        return this._column;
+    }
+
+    get isDropTarget(): boolean {
+        return this._column && this._column.grid.hasMovableColumns;
+    }
+
+    get horizontalScroll(): any {
+        if (this._hVirtDir) {
+            return this._hVirtDir;
+        }
+    }
+
+    private _dropIndicator: any = null;
+    private _column: IgxColumnComponent;
+    private _hVirtDir: IgxForOfDirective<any>;
+    private _dragLeave = new Subject<boolean>();
+    private _dropIndicatorClass = "igx-grid__drop-indicator-active";
+
+    constructor(private elementRef: ElementRef, private renderer: Renderer2, private cms: IgxColumnMovingService) {
         super();
+    }
+
+    public ngOnDestroy() {
+        this._dragLeave.next(true);
+        this._dragLeave.unsubscribe();
+    }
+
+    public onDragEnter(event) {
+        if (this.isDropTarget && this.column.grid.isColumnMoving && event.detail.owner.column !== this.column) {
+            if (!this.column.pinned || (this.column.pinned && this.column.grid.getPinnedWidth() + parseFloat(event.detail.owner.column.width) <= this.column.grid.calcPinnedContainerMaxWidth)) {
+                event.preventDefault();
+
+                this._dropIndicator = event.detail.startX < event.detail.clientX ? this.elementRef.nativeElement.children[4] :
+                    this.elementRef.nativeElement.children[0];
+
+                this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+            }
+        }
+
+        if (this.horizontalScroll) {
+            event.preventDefault();
+            interval(100).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
+                event.target.id === "right" ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
+                    this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
+            });
+        }
+    }
+
+    public onDragLeave(event) {
+        if (this._dropIndicator && event.detail.owner.column !== this.column) {
+            this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
+        }
+
+        if (this.horizontalScroll) {
+            this._dragLeave.next(true);
+        }
+    }
+
+    public onDragDrop(event) {
+
+        if (this.horizontalScroll) {
+            this._dragLeave.next(true);
+        }
+
+        if (this.column && this.isDropTarget) {
+            this.column.grid.isColumnMoving = false;
+            this.column.grid.cdr.detectChanges();
+
+            if (this._dropIndicator) {
+                this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
+            }
+
+            this.column.grid.moveColumn(this.cms.column, this.column);
+        }
     }
 }
