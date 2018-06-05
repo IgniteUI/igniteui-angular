@@ -42,8 +42,11 @@ export enum Type {
 export class IgxBadgeComponent {
 
     /**
-     * An @Input property that sets the value of the `id` attribute.
-     */
+    * An @Input property that sets the value of the `id` attribute.
+    * ```html
+    *   <igx-badge id="igx-badge-2" icon="check" type="success" class="badge-style"></igx-badge>
+    * ```
+    */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-badge-${NEXT_ID++}`;
@@ -52,6 +55,9 @@ export class IgxBadgeComponent {
     * An @Input property controlling the type of the badge.
     * Allowed values are `default`, `info`, `success`, `warning`, `error`.
     * Providing an invalid value won't display a badge.
+    * ```html
+    *   <igx-badge type="success" icon="check" class="badge-style"></igx-badge>
+    * ```
     */
     @Input()
     public type: string | Type = 'default';
@@ -60,6 +66,10 @@ export class IgxBadgeComponent {
     * An @Input property that sets the value to be displayed inside the badge.
     * If an `icon` property is already set the `icon` will be displayed.
     * If neither a `value` nor an `icon` is set the contentent of the badge will be empty.
+    * ```html
+    *   <igx-badge value="11" type="success" class="badge-style"></igx-badge>
+    * ```
+    *
     */
     @Input()
     public value = '';
@@ -69,29 +79,54 @@ export class IgxBadgeComponent {
      * Has priority over the `value` property.
      * If neither a `value` nor an `icon` is set the content of the badge will be empty.
      * Providing an invalid value won't display anything.
+     * ```html
+     *   <igx-badge icon="check" type="success" class="badge-style" value="11"></igx-badge>
+     * ```
      */
     @Input()
     public icon: string;
 
     /**
-     * Set the value of the `role` attribute.
+     * This allows you to set value to role attribute.
+     *```html
+     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *  public badge: IgxBadgeComponent;
+     *
+     *  //...
+     *  badge.label = "badge-status";
+     * ```
      */
     @HostBinding('attr.role')
     public role = 'status';
 
     /**
-     * This allows you to set class to the badge. The default value is igx-badge.
+     * This allows you to disable igx-badge class. The default it's applied.
+     *```html
+     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *  public badge: IgxBadgeComponent;
+     *
+     *  //...
+     *  badge.cssClass = false;
+     * ```
      */
     @HostBinding('class.igx-badge')
     public cssClass = 'igx-badge';
 
     /**
-     * Set the value of the `aria-label` attribute.
+     * This allows you to set value to aria-label attribute.
+     *```html
+     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *  public badge: IgxBadgeComponent;
+     *
+     *  //...
+     *  badge.label = "icon-badge";
+     * ```
      */
     @HostBinding('attr.aria-label')
     public label = 'badge';
 
     /**
+     * @hidden
      * Defines a human-readable, accessor, author-localized description for the `type` and the `icon` or `value` of the element.
      */
     get roleDescription() {
@@ -110,7 +145,7 @@ export class IgxBadgeComponent {
     }
 
     /**
-     *
+     * @hidden
      * Method which makes the name of the class more descriptive.
      * This helps the styling of the badges.
      */
@@ -149,6 +184,10 @@ export class IgxBadgeComponent {
     }
 
 }
+
+/**
+ * The IgxBadgeComponent provides the {@link IgxBadgeComponent} inside your application.
+ */
 
 @NgModule({
     declarations: [IgxBadgeComponent],

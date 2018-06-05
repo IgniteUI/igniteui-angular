@@ -64,50 +64,180 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
+    /**
+    * An @Input property that sets the value of the `id` attribute.
+    *```html
+    *<igx-dialog [id]="igx-dialog-56" #alert title="Notification" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
+    *```
+    */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-dialog-${DIALOG_ID++}`;
 
+    /**
+    * An @Input property controlling the `title` of the dialog.
+    *```html
+    *<igx-dialog title="Notification" #alert leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
+    *```
+    */
     @Input()
     public title = '';
+
+    /**
+     *  An @Input property controlling the `message` of the dialog.
+     *```html
+     *<igx-dialog message="Your email was sent!" #alert leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public message = '';
 
+    /**
+     * An @Input property to set the `label` of the left button of the dialog.
+     *```html
+     *<igx-dialog leftButtonLabel="OKAY" #alert title="Notification"  (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public leftButtonLabel = '';
+
+    /**
+     * An @Input property to set the left button `type`. The types are flat, raised and fab.
+     *```html
+     *<igx-dialog leftButtonType="raised" leftButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public leftButtonType = 'flat';
+    /**
+     * An @Input property to set the left button `color`.
+     *```html
+     *<igx-dialog leftButtonColor="yellow" leftButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public leftButtonColor = '';
+
+    /**
+     * An @Input property to set the left button `background-color`.
+     *```html
+     *<igx-dialog leftButtonBackgroundColor="black" leftButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public leftButtonBackgroundColor = '';
+
+    /**
+     * An @Input property to set the left button `ripple`.
+     *```html
+     *<igx-dialog leftButtonRipple="green" leftButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public leftButtonRipple = '';
 
+    /**
+     * An @Input property to set the `label` of the right button of the dialog.
+     *```html
+     *<igx-dialog rightButtonLabel="OKAY" #alert title="Notification"  (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public rightButtonLabel = '';
+
+    /**
+     * An @Input property to set the right button `type`. The types are flat, raised and fab.
+     *```html
+     *<igx-dialog rightButtonType="fab" rightButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public rightButtonType = 'flat';
+
+    /**
+     * An @Input property to set the right button `color`.
+     *```html
+     *<igx-dialog rightButtonColor="yellow" rightButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public rightButtonColor = '';
+
+    /**
+     * An @Input property to set the right button `background-color`.
+     *```html
+     *<igx-dialog rightButtonRipple="black" rightButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public rightButtonBackgroundColor = '';
+
+    /**
+     * An @Input property to set the right button `ripple`.
+     *```html
+     *<igx-dialog rightButtonRipple="green" rightButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
+     *```
+     */
     @Input()
     public rightButtonRipple = '';
 
+    /**
+     * An @Input property that allows you to enable the "close on click outside the dialog". By default it's disabled.
+     *```html
+     *<igx-dialog closeOnOutsideSelect="true" #dialog leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
+     *rightButtonLabel="OK" rightButtonRipple="#4CAF50" (onRightButtonSelect)="onDialogOKSelected($event)">
+     *</igx-dialog>
+     *```
+     */
     @Input()
     public closeOnOutsideSelect = false;
 
+    /**
+     * An @Output property that triggers emission of a function when the dialog is opened.
+     *```html
+     *<igx-dialog (onOpen)="alert.open()" #dialog leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
+     *</igx-dialog>
+     *```
+     */
     @Output()
     public onOpen = new EventEmitter<IDialogEventArgs>();
+
+    /**
+     * An @Output property that triggers emission of a function when the dialog is closed.
+     *```html
+     *<igx-dialog (onClose)="dialog.open()" #dialog title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK">
+     *</igx-dialog>
+     *```
+     */
     @Output()
     public onClose = new EventEmitter<IDialogEventArgs>();
 
+    /**
+     * An @Output property that triggers emission of a function when the left button is clicked.
+     *```html
+     *<igx-dialog (onLeftButtonSelect)="onDialogOKSelected($event)" #dialog leftButtonLabel="OK" rightButtonLabel="Cancel">
+     *</igx-dialog>
+     *```
+     */
     @Output()
     public onLeftButtonSelect = new EventEmitter<IDialogEventArgs>();
+
+    /**
+     * An @Output property that triggers emission of a function when the right button is clicked.
+     * ```html
+     *<igx-dialog (onRightButtonSelect)="onDialogOKSelected($event)"
+     *#dialog title="Confirmation" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK"
+     *rightButtonRipple="#4CAF50" closeOnOutsideSelect="true">
+     *</igx-dialog>
+     *```
+     */
     @Output()
     public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
+
+    /**
+     * @hidden
+     */
     public get element() {
         return this.elementRef.nativeElement;
     }
@@ -124,15 +254,45 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     private _titleId: string;
     private _state: string;
 
+    /**
+     *An accessor that returns the value of the `state` property.
+     *```html
+     *@ViewChild("MyDialog")
+     *public dialog: IgxDialogComponent;
+     *ngAfterViewInit() {
+     *    let dialogState = this.dialog.state;
+     *}
+     *```
+     */
     get state(): string {
         return this._state;
     }
 
+    /**
+     *An accessor that returns the value of the `_isOpen` property.
+     *```html
+     *@ViewChild("MyDialog")
+     *public dialog: IgxDialogComponent;
+     *ngAfterViewInit() {
+     *    let dialogOpen = this.dialog.isOpen;
+     *}
+     * ```
+     */
     @Input()
     get isOpen() {
         return this._isOpen;
     }
 
+    /**
+     *An accessor that returns the value of the role of the dialog.
+     *```html
+     *@ViewChild("MyDialog")
+     *public dialog: IgxDialogComponent;
+     *ngAfterViewInit() {
+     *    let dialogRole = this.dialog.role;
+     *}
+     * ```
+     */
     @Input()
     get role() {
         if (this.leftButtonLabel !== '' && this.rightButtonLabel !== '') {
@@ -147,6 +307,16 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         }
     }
 
+    /**
+     *An accessor that returns the value of the `_titleId` property.
+     *```html
+     *@ViewChild("MyDialog")
+     *public dialog: IgxDialogComponent;
+     *ngAfterViewInit() {
+     *    let dialogOpen = this.dialog.titleId;
+     *}
+     * ```
+     */
     @Input()
     get titleId() {
         return this._titleId;
@@ -159,6 +329,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         this._titleId = IgxDialogComponent.NEXT_ID++ + '_title';
     }
 
+    /**
+     * A method that opens the dialog.
+     * @memberOf {@link IgxDialogComponent}
+     *```html
+     *<button (click)="dialog.open() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     *<igx-dialog #dialog></igx-dialog>
+     *```
+     */
     public open() {
         if (this.isOpen) {
             return;
@@ -168,6 +346,15 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         this.onOpen.emit({ dialog: this, event: null });
     }
 
+    /**
+     *A method that that closes the dialog.
+     *@memberOf {@link IgxDialogComponent}
+     *```html
+     *<igx-dialog (onLeftButtonSelect)="dialog.close()" #dialog title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK"
+     *rightButtonRipple="#4CAF50" (onRightButtonSelect)="onDialogOKSelected($event)" closeOnOutsideSelect="true" (onOpen)="alert.open()">
+     *</igx-dialog>
+     *```
+     */
     public close() {
         if (!this.isOpen) {
             return;
@@ -177,10 +364,22 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         this.onClose.emit({ dialog: this, event: null });
     }
 
+
+    /**
+     * A method that opens/closes the dialog on click.
+     *@memberOf {@link IgxDialogComponent}
+     *```html
+     *<button (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
+     *<igx-dialog #dialog></igx-dialog>
+     *```
+     */
     public toggle() {
         this.isOpen ? this.close() : this.open();
     }
 
+    /**
+     * @hidden
+     */
     public onDialogSelected(event) {
         event.stopPropagation();
         if (
@@ -192,20 +391,31 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     */
     public onInternalLeftButtonSelect(event) {
         this.onLeftButtonSelect.emit({ dialog: this, event });
     }
 
+    /**
+     * @hidden
+     */
     public onInternalRightButtonSelect(event) {
         this.onRightButtonSelect.emit({ dialog: this, event });
     }
 
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         if (this.navService && this.id) {
             this.navService.add(this.id, this);
         }
     }
-
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         if (this.navService && this.id) {
             this.navService.remove(this.id);
@@ -222,6 +432,10 @@ export interface IDialogEventArgs {
     dialog: IgxDialogComponent;
     event: Event;
 }
+
+/**
+ * The IgxDialogComponent provides {@link IgxDialogComponent} inside your application.
+ */
 
 @NgModule({
     declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
