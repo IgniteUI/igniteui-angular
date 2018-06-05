@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, ViewChild } from '@angular/core';
+﻿﻿import { Component, DebugElement, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,7 +19,8 @@ describe('IgxGrid - Summaries', () => {
             declarations: [
                 NoActiveSummariesComponent,
                 SummaryColumnComponent,
-                VirtualSummaryColumnComponent
+                VirtualSummaryColumnComponent,
+                UndefinedGridDataComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot()]
         })
@@ -314,12 +315,22 @@ describe('IgxGrid - Summaries', () => {
         expect(summaries[3].summaryResult).toBe(39004);
         expect(summaries[4].summaryResult).toBe(3900.4);
 
-        const emptySummaries = summaryClass.operate([]);
+        const emptySummaries = summaryClass.operate();
         expect(emptySummaries[0].summaryResult).toBe(0);
-        expect(emptySummaries[1].summaryResult).toBe(undefined);
-        expect(emptySummaries[2].summaryResult).toBe(undefined);
-        expect(emptySummaries[3].summaryResult).toBe(undefined);
-        expect(emptySummaries[4].summaryResult).toBe(undefined);
+        expect(typeof emptySummaries[1].summaryResult).not.toEqual(undefined);
+        expect(typeof emptySummaries[2].summaryResult).not.toEqual(undefined);
+        expect(typeof emptySummaries[3].summaryResult).not.toEqual(undefined);
+        expect(typeof emptySummaries[4].summaryResult).not.toEqual(undefined);
+
+        expect(typeof emptySummaries[1].summaryResult).not.toEqual(null);
+        expect(typeof emptySummaries[2].summaryResult).not.toEqual(null);
+        expect(typeof emptySummaries[3].summaryResult).not.toEqual(null);
+        expect(typeof emptySummaries[4].summaryResult).not.toEqual(null);
+
+        expect(emptySummaries[1].summaryResult.length === 0).toBeTruthy();
+        expect(emptySummaries[2].summaryResult.length === 0).toBeTruthy();
+        expect(emptySummaries[3].summaryResult.length === 0).toBeTruthy();
+        expect(emptySummaries[4].summaryResult.length === 0).toBeTruthy();
     });
     it('should calculate summaries for \'date\' dataType or return if no data is provided', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
@@ -373,7 +384,30 @@ describe('IgxGrid - Summaries', () => {
             done();
         });
     });
-    it('should render correct data after hiding all summaries when scrolled to the bottom',  async(() => {
+
+    it('When we have data which is undefined and enable summary per defined column, error should not be thrown', async(() => {
+        const fix = TestBed.createComponent(UndefinedGridDataComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const idColumn = grid.getColumnByName('ID');
+        expect(grid.data.length > 0).toEqual(true);
+
+        fix.whenStable().then(() => {
+            fix.componentInstance.data = undefined;
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            expect(grid.data).toEqual(undefined);
+            expect(() => {
+                grid.enableSummaries(idColumn.field);
+                fix.detectChanges();
+            }).not.toThrow();
+        });
+    }));
+
+    it('should render correct data after hiding all summaries when scrolled to the bottom', (done) => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
 
@@ -413,28 +447,46 @@ describe('IgxGrid - Summaries', () => {
         });
     }));
 
-    it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', async(() => {
-        const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
+it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', async(() => {
+    const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
+    fixture.detectChanges();
+
+    const grid = fixture.componentInstance.grid1;
+    const summariedColumns = ['ProductName', 'InStock', 'UnitsInStock', 'OrderDate'];
+    let rowsRendered;
+    let tbody;
+    let expectedRowLenght;
+    let firstCellsText;
+    fixture.componentInstance.scrollTop(10000);
+
+    fixture.whenStable().then(() => {
         fixture.detectChanges();
+        rowsRendered = fixture.nativeElement.querySelectorAll('igx-grid-row');
+        tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
+        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+        expect(rowsRendered.length).toEqual(expectedRowLenght);
 
-        const grid = fixture.componentInstance.grid1;
-        const summariedColumns = ['ProductName', 'InStock', 'UnitsInStock', 'OrderDate'];
-        let rowsRendered;
-        let tbody;
-        let expectedRowLenght;
-        let firstCellsText;
-        fixture.componentInstance.scrollTop(10000);
-
-        fixture.whenStable().then(() => {
+        grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
+        return fixture.whenStable();
+    }).then(() => {
+        setTimeout(() => {
             fixture.detectChanges();
-            rowsRendered = fixture.nativeElement.querySelectorAll('igx-grid-row');
+
+            rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
             tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
             expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
-            expect(rowsRendered.length).toEqual(expectedRowLenght);
 
-            grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
-            return fixture.whenStable();
-        }).then(() => {
+            firstCellsText = rowsRendered.map((item) => {
+                return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
+            });
+            expect(rowsRendered.length).toEqual(expectedRowLenght);
+            let expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
+
+            for (let i = 0; i < rowsRendered.length - 1; i++) {
+                expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
+            }
+            grid.disableSummaries(['OrderDate']);
+
             setTimeout(() => {
                 fixture.detectChanges();
 
@@ -446,53 +498,34 @@ describe('IgxGrid - Summaries', () => {
                     return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
                 });
                 expect(rowsRendered.length).toEqual(expectedRowLenght);
-                let expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
-
+                expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
                     expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
                 }
-                grid.disableSummaries(['OrderDate']);
-
-                setTimeout(() => {
-                    fixture.detectChanges();
-
-                    rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
-                    tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
-                    expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
-
-                    firstCellsText = rowsRendered.map((item) => {
-                        return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
-                    });
-                    expect(rowsRendered.length).toEqual(expectedRowLenght);
-                    expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
-                    for (let i = 0; i < rowsRendered.length - 1; i++) {
-                        expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
-                    }
-                }, 100);
             }, 100);
-        });
-    }));
+        }, 100);
+    });
+}));
 
-    function sendInput(element, text: string, fix) {
-        element.nativeElement.value = text;
-        element.nativeElement.dispatchEvent(new Event('input'));
-        fix.detectChanges();
-        return fix.whenStable();
-    }
-    function calcMaxSummaryHeight(columnList, summaries: DebugElement[], defaultRowHeight) {
-        let maxSummaryLength = 0;
-        let index = 0;
-        columnList.filter((col) => col.hasSummary).forEach((column) => {
-            const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
-            if (maxSummaryLength < currentLength) {
-                maxSummaryLength = currentLength;
-            }
-            index++;
-        });
-        const expectedLength = maxSummaryLength * defaultRowHeight;
-        return expectedLength;
-    }
-
+function sendInput(element, text: string, fix) {
+    element.nativeElement.value = text;
+    element.nativeElement.dispatchEvent(new Event('input'));
+    fix.detectChanges();
+    return fix.whenStable();
+}
+function calcMaxSummaryHeight(columnList, summaries: DebugElement[], defaultRowHeight) {
+    let maxSummaryLength = 0;
+    let index = 0;
+    columnList.filter((col) => col.hasSummary).forEach((column) => {
+        const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
+        if (maxSummaryLength < currentLength) {
+            maxSummaryLength = currentLength;
+        }
+        index++;
+    });
+    const expectedLength = maxSummaryLength * defaultRowHeight;
+    return expectedLength;
+}
 });
 
 @Component({
@@ -625,4 +658,30 @@ export class VirtualSummaryColumnComponent {
         const hScrollbar = this.grid1.parentVirtDir.getHorizontalScroll();
         hScrollbar.scrollLeft = newLeft;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column field="ID" [dataType]="'number'" [hasSummary]="hasSummary"></igx-column>
+        </igx-grid>`
+})
+export class UndefinedGridDataComponent {
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
+    constructor() { }
+
+    public data: any = [
+        { ID: 1 },
+        { ID: 2 },
+        { ID: 3 },
+        { ID: 4 },
+        { ID: 5 },
+        { ID: 6 },
+        { ID: 7 }
+    ];
+
+    public hasSummary = false;
 }
