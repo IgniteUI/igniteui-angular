@@ -292,10 +292,13 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     public height = '400px';
 
     @Input()
-    public listHeight = 320;
+    public dropDownHeight = 320;
 
     @Input()
-    public listItemHeight = 32;
+    public dropDownWidth = this.width;
+
+    @Input()
+    public dropDownItemHeight = 32;
 
     @Input()
     public set groupKey(val: string | number) {
@@ -399,9 +402,6 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         this.cdr.markForCheck();
     }
 
-    public get selectedItems() {
-        return this.dropdown.selectedItem;
-    }
     protected clearSorting(field?: string | number) {
         if (field === undefined || field === null) {
             this.sortingExpressions = [];
@@ -586,19 +586,6 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         this.selectAllCheckbox.checked = false;
     }
 
-    public selectAllItems() {
-        const allVisible = this.selectionAPI.get_all_ids(this.filteredData);
-        const newSelection = this.selectionAPI.select_items(this.id, allVisible);
-        this.triggerSelectionChange(newSelection);
-    }
-
-    public deselectAllItems() {
-        const newSelection = this.filteredData.length === this.data.length ?
-            [] :
-            this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
-        this.triggerSelectionChange(newSelection);
-    }
-
     protected triggerSelectionChange(newSelection) {
         const oldSelection = this.dropdown.selectedItem;
         if (oldSelection !== newSelection) {
@@ -708,6 +695,33 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         return {
             $implicit: this
         };
+    }
+
+    public selectedItems() {
+        return this.dropdown.selectedItem;
+    }
+
+    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
+        const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
+        this.triggerSelectionChange(newSelection);
+    }
+
+    public deselectItems(newItems: Array<any>) {
+        const newSelection = this.selectionAPI.deselect_items(this.id, newItems);
+        this.triggerSelectionChange(newSelection);
+    }
+
+    public selectAllItems() {
+        const allVisible = this.selectionAPI.get_all_ids(this.filteredData);
+        const newSelection = this.selectionAPI.select_items(this.id, allVisible);
+        this.triggerSelectionChange(newSelection);
+    }
+
+    public deselectAllItems() {
+        const newSelection = this.filteredData.length === this.data.length ?
+            [] :
+            this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
+        this.triggerSelectionChange(newSelection);
     }
 }
 

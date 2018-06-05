@@ -104,8 +104,8 @@ fdescribe('Combo', () => {
         expect(combo.placeholder).toEqual('Location');
         expect(combo.filterable).toEqual(true);
         expect(combo.height).toEqual('400px');
-        expect(combo.listHeight).toEqual(400);
-        expect(combo.listItemHeight).toEqual(40);
+        expect(combo.dropDownHeight).toEqual(400);
+        expect(combo.dropDownItemHeight).toEqual(40);
         expect(combo.groupKey).toEqual('region');
         expect(combo.valueKey).toEqual('field');
         expect(combo.data).toBeDefined();
@@ -117,10 +117,10 @@ fdescribe('Combo', () => {
         expect(combo.filterable).toEqual(false);
         combo.height = '500px';
         expect(combo.height).toEqual('500px');
-        combo.listHeight = 500;
-        expect(combo.listHeight).toEqual(500);
-        combo.listItemHeight = 50;
-        expect(combo.listItemHeight).toEqual(50);
+        combo.dropDownHeight = 500;
+        expect(combo.dropDownHeight).toEqual(500);
+        combo.dropDownItemHeight = 50;
+        expect(combo.dropDownItemHeight).toEqual(50);
         combo.groupKey = 'field';
         expect(combo.groupKey).toEqual('field');
         combo.valueKey = 'region';
@@ -220,6 +220,62 @@ fdescribe('Combo', () => {
             // expect(combo.triggerSelectionChange).toHaveBeenCalledWith([]);
             expect(combo.onSelection.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: [targetItem.itemID], newSelection: [] });
+        });
+    }));
+
+    it(`Should properly select/deselect items using public methods selectItems and deselectItems`, fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        spyOn(combo.onSelection, 'emit');
+        combo.dropdown.toggle();
+        let oldSelection = [];
+        let newSelection = [combo.data[1], combo.data[5], combo.data[6]];
+        tick();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+
+            combo.selectItems(newSelection);
+            fix.detectChanges();
+            expect(combo.selectedItems().length).toEqual(newSelection.length);
+            combo.selectedItems().forEach(function(item, index) {
+                expect(item).toEqual(newSelection[index]);
+            });
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+
+            let newItem = combo.data[3];
+            combo.selectItems([newItem]);
+            oldSelection = [...newSelection];
+            newSelection.push(newItem);
+            fix.detectChanges();
+            expect(combo.selectedItems().length).toEqual(newSelection.length);
+            combo.selectedItems().forEach(function(item, index) {
+                expect(item).toEqual(newSelection[index]);
+            });
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+
+            oldSelection = [...newSelection];
+            newSelection = [combo.data[0]];
+            combo.selectItems(newSelection, true);
+            fix.detectChanges();
+            expect(combo.selectedItems().length).toEqual(newSelection.length);
+            combo.selectedItems().forEach(function(item, index) {
+                expect(item).toEqual(newSelection[index]);
+            });
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(3);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+
+            oldSelection = [...newSelection];
+            newSelection = [];
+            newItem = combo.data[0];
+            combo.deselectItems([newItem]);
+            fix.detectChanges();
+            expect(combo.selectedItems().length).toEqual(newSelection.length);
+            expect(combo.selectedItems().length).toEqual(0);
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(4);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
         });
     }));
 
@@ -356,44 +412,44 @@ fdescribe('Combo', () => {
         spyOn(combo, 'getItemDataByValueKey').and.callThrough();
         spyOn(combo.onSelection, 'emit').and.callThrough();
         combo.setSelectedItem(null);
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         dropdown.setSelectedItem(null);
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         dropdown.setSelectedItem(undefined);
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         combo.setSelectedItem(undefined);
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         dropdown.setSelectedItem({ field: 'Connecticut', region: 'New England' });
-        expect(combo.selectedItems).toEqual([{ field: 'Connecticut', region: 'New England' }]);
+        expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
         combo.deselectAllItems();
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         combo.setSelectedItem({ field: 'Connecticut', region: 'New England' });
-        expect(combo.selectedItems).toEqual([{ field: 'Connecticut', region: 'New England' }]);
+        expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
         combo.deselectAllItems();
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         dropdown.setSelectedItem('Connecticut');
-        expect(combo.selectedItems).toEqual([{ field: 'Connecticut', region: 'New England' }]);
+        expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
         combo.deselectAllItems();
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         dropdown.setSelectedItem('Connecticut', false);
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         combo.deselectAllItems();
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         dropdown.setSelectedItem({ field: 'Connecticut', region: 'New England' }, true);
-        expect(combo.selectedItems).toEqual([{ field: 'Connecticut', region: 'New England' }]);
+        expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
         spyOn(combo, 'setSelectedItem').and.callThrough();
         const selectionSpy = spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
-        dropdown.setSelectedItem(combo.selectedItems[0], false);
+        dropdown.setSelectedItem(combo.selectedItems()[0], false);
         expect(combo.setSelectedItem).toHaveBeenCalledWith({ field: 'Connecticut', region: 'New England' }, false);
         expect(selectionSpy.calls.mostRecent().args).toEqual([[]]);
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         combo.setSelectedItem('Connecticut', true);
-        expect(combo.selectedItems).toEqual([{ field: 'Connecticut', region: 'New England' }]);
-        expect(combo.selectedItems[0]).toEqual({ field: 'Connecticut', region: 'New England' });
+        expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
+        expect(combo.selectedItems()[0]).toEqual({ field: 'Connecticut', region: 'New England' });
         combo.setSelectedItem('Connecticut', false);
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         combo.setSelectedItem('Connecticut', false);
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         expect(combo.getItemDataByValueKey).toHaveBeenCalledTimes(5);
         expect(combo.onSelection.emit).toHaveBeenCalledTimes(13);
     });
@@ -403,7 +459,7 @@ fdescribe('Combo', () => {
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
         const dropdown = combo.dropdown;
-        expect(combo.selectedItems).toEqual([]);
+        expect(combo.selectedItems()).toEqual([]);
         expect(combo.dropdown.selectedItem).toEqual([]);
         combo.setSelectedItem('Connecticut');
         fix.detectChanges();
@@ -1060,8 +1116,8 @@ class IgxComboSampleComponent {
 @Component({
     template: `
         <p>Change data to:</p>
-        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [listHeight]='400'
-        [listItemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'">
+        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [dropDownHeight]='400'
+        [dropDownItemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'">
         </igx-combo>
 `
 })
