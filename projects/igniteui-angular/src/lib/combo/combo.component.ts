@@ -4,7 +4,7 @@ import {
     ContentChildren, ElementRef, EventEmitter, forwardRef,
     HostBinding, HostListener, Inject, Input, NgModule, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IToggleView } from '../core/navigation';
@@ -51,7 +51,7 @@ export interface IComboItemAdditionEvent {
     newCollection: any[];
 }
 let currentItem = 0;
-
+const noop = () => {};
 @Component({
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html'
@@ -206,21 +206,23 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     }
 }
 @Component({
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }],
     selector: 'igx-combo',
     templateUrl: 'combo.component.html'
 })
-export class IgxComboComponent implements AfterViewInit, OnDestroy {
+export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
+    public id = '';
+    public customValueFlag = true;
     protected _filteringLogic = FilteringLogic.Or;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
     protected _groupKey: string | number;
-    public customValueFlag = true;
+    protected _textKey = '';
     private _dataType = '';
     private _filteredData = [];
-    protected _textKey = '';
     private _searchInput: ElementRef;
-    public id = '';
     private _comboInput: ElementRef;
+    private _onChangeCallback: (_: any) => void = noop;
 
     private _value = '';
     private _searchValue = '';
@@ -593,6 +595,7 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy {
                 newSelection.map((e) => e[this.textKey]).join(', ') :
                 newSelection.join(', ');
             this.isHeaderChecked();
+            this._onChangeCallback(this.value);
         }
     }
 
@@ -660,9 +663,18 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy {
         this.id += currentItem++;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy() { }
 
+    public writeValue(value: any): void {
+        this.value = value;
     }
+
+    public registerOnChange(fn: any): void {
+        this._onChangeCallback = fn;
+    }
+
+    public registerOnTouched(fn: any): void { }
+    public setDisabledState(isDisabled: boolean): void { }
 
     public get template(): TemplateRef<any> {
         this._dataType = this.getDataType();
@@ -689,8 +701,8 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy {
     declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
         IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent],
     exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent],
-    imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, IgxForOfModule, IgxToggleModule,
-        IgxCheckboxModule, IgxDropDownModule, IgxIconModule],
+    imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
+        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxIconModule],
     providers: [IgxSelectionAPIService]
 })
 export class IgxComboModule { }
