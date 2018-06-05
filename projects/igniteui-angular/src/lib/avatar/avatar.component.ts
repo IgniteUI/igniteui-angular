@@ -39,118 +39,156 @@ export enum Size {
 export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
 
-/**
- * This is a reference to the avatar image element in the DOM.
- *
- * @memberof IgxAvatarComponent
- */
-@ViewChild('image')
+    /**
+     * This is a reference to the avatar image element in the DOM.
+     *
+     * ```typescript
+     *  this.avatar.image.style.backgroundImage = "images/picture.jpg";
+     * ```
+     *
+     * @memberof IgxAvatarComponent
+     */
+    @ViewChild('image')
     public image: ElementRef;
 
 
-/**
- * Sets the  'imageTemplate' to the avatar.
- * If the avatar has an image, it will have the 'imageTemplate'.
- *
- * @memberof IgxAvatarComponent
- */
-@ViewChild('imageTemplate', { read: TemplateRef })
+    /**
+     *@hidden
+     *
+     * @memberof IgxAvatarComponent
+     */
+    @ViewChild('imageTemplate', { read: TemplateRef })
     protected imageTemplate: TemplateRef<any>;
 
-/**
- *  Sets the  'initialsTemplate' to the avatar.
- *  If the avatar has initials, it will have the 'initialsTemplate'.
- *
- * @memberof IgxAvatarComponent
- */
-@ViewChild('initialsTemplate', { read: TemplateRef })
-    protected initialsTemplate: TemplateRef<any>;
-/**
- *
- * Sets the  'iconTemplate' to the avatar.
- * If the avatar has an icon, it will have the 'iconTemplate'.
- *
- * @memberof IgxAvatarComponent
- */
-@ViewChild('iconTemplate', { read: TemplateRef })
-    protected iconTemplate: TemplateRef<any>;
-/**
- * Indicates that the avatar's attribute aria-label is 'avatar'.
- *
- * @memberof IgxAvatarComponent
- */
-@HostBinding('attr.aria-label')
-    public ariaLabel = 'avatar';
-/**
- * Indicates that the avatar's attribute role is 'img'.
- *
- * @memberof IgxAvatarComponent
- */
-@HostBinding('attr.role')
-    public role = 'img';
-/**
- * Sets the avatar's class.
- *
- * @memberof IgxAvatarComponent
- */
-@HostBinding('class.igx-avatar')
-    public cssClass = 'igx-avatar';
-
-    public roleDescription: string;
-    private _size: string | Size = 'small';
     /**
-     *  Sets the default id of the avatar.
-     *  The first avatar component will have id = "igx-avatar-0".
+     *@hidden
+     * @memberof IgxAvatarComponent
+     */
+    @ViewChild('initialsTemplate', { read: TemplateRef })
+    protected initialsTemplate: TemplateRef<any>;
+    /**
+     *@hidden
+     * @memberof IgxAvatarComponent
+     */
+    @ViewChild('iconTemplate', { read: TemplateRef })
+    protected iconTemplate: TemplateRef<any>;
+    /**
+     * Indicates that the avatar's attribute aria-label is 'avatar'.
+     * ```html
+     * <igx-avatar aria-label="avatar"></igx-avatar>
+     * ```
+     * @memberof IgxAvatarComponent
+     */
+    @HostBinding('attr.aria-label')
+    public ariaLabel = 'avatar';
+    /**
+     * Indicates that the avatar's attribute role is 'img'.
+     *
+     * ```html
+     * <igx-avatar role="img"></igx-avatar>
+     * ```
+     *
+     * @memberof IgxAvatarComponent
+     */
+    @HostBinding('attr.role')
+    public role = 'img';
+    /**
+     * Initializes the avatar's class.
+     *
+     * ```html
+     * <igx-avatar class="igx-avatar"></igx-avatar>
+     * ```
+     *
+     * @memberof IgxAvatarComponent
+     */
+    @HostBinding('class.igx-avatar')
+    public cssClass = 'igx-avatar';
+    /**
+     * Describes what is the type of the avatar.
+     * The avatar can be an initials type, icon type or an image type.
+     *
+     * ```typescript
+     * let avatarDescription = this.avatar.roleDescription;
+     * ```
+     * @memberof IgxAvatarComponent
+     */
+    public roleDescription: string;
+
+    /**
+     * @hidden
+     *
+     * @memberof IgxAvatarComponent
+     */
+    private _size: string | Size = 'small';
+
+    /**
+     * Sets the id of the avatar. If not set,the first avatar component will have id = "igx-avatar-0".
+     *
+     * ```html
+     * <igx-avatar id="my-first-avatar"></igx-avatar>
+     * ```
      *
      * @memberof IgxAvatarComponent
      */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-avatar-${NEXT_ID++}`;
-/**
- *
- * Sets a round shape to the avatar if "roundShape" is true.
- * By default the shape of the avatar is a square.
- *
- * @memberof IgxAvatarComponent
- */
-@HostBinding('class.igx-avatar--rounded')
+    /**
+     *
+     * Sets a round shape to the avatar if "roundShape" is true.
+     * By default the shape of the avatar is a square.
+     *
+     * ```html
+     * <igx-avatar roundShape = "true" ></igx-avatar>
+     * ```
+     * @memberof IgxAvatarComponent
+     */
+    @HostBinding('class.igx-avatar--rounded')
     @Input()
     public roundShape = false;
+
     /**
-     *  Sets the avatar's initials/icon color.
-     *```
-     *  this.avatar.color = 'yellow';
+     * Sets the avatar's initials/icon color.
+     *
+     *```html
+     *<igx-avatar color="blue"></igx-avatar>
      *```
      *
      * @memberof IgxAvatarComponent
      */
     @Input()
     public color: string;
+
     /**
      * Sets the background color of the avatar.
-     * ```
-     * this.avatar.bgColor = 'blue';
+     *
+     * ```html
+     * <igx-avatar bgColor="yellow"></igx-avatar>
      * ```
      *
      * @memberof IgxAvatarComponent
      */
     @Input()
     public bgColor: string;
+
     /**
      *
-     *   Sets initials on the avatar.
-     *```
-     *   this.avatar.initials="JT";
-     *```
+     * Sets initials to the avatar.
+     *
+     * ```html
+     * <igx-avatar initials="MN"></igx-avatar>
+     * ```
+     *
      * @memberof IgxAvatarComponent
      */
     @Input()
     public initials: string;
+
     /**
-     * Sets an icon on the avatar. All icons from the material icon set are supported.
-     * ```
-     * this.avatar.icon = 'phone';
+     * Sets an icon to the avatar. All icons from the material icon set are supported.
+     *
+     * ```html
+     * <igx-avatar icon="phone"></igx-avatar>
      * ```
      *
      * @memberof IgxAvatarComponent
@@ -160,32 +198,39 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     /**
      * Sets the image source of the avatar.
+     *
+     * ```html
+     * <igx-avatar src="images/picture.jpg"></igx-avatar>
      * ```
-     * this.avatar.src = images/picture.jpg;
-     * ```
+     *
      * @memberof IgxAvatarComponent
      */
     @Input()
     public src: string;
+
     /**
      *
      * Returns the size of the avatar.
+     *
+     * ```html
+     * <igx-avatar  size={{another-avatar.size}}></igx-avatar>
      * ```
-     * let avatarSize  = this.avatar.size;
-     * ```
+     *
      * @memberof IgxAvatarComponent
      */
     @Input()
     public get size(): string | Size {
         return this._size;
     }
+
     /**
      * Sets the size  of the avatar.
      * By default the size is "small". It can be set to "medium" or "large".
+     *
      * ```
-     * avatarComponent.size = Size.MEDIUM;
-     * avatarComponent.size = 'large';
+     * <igx-avatar size="large"></igx-avatar>
      * ```
+     *
      * @memberof IgxAvatarComponent
      */
     public set size(value: string | Size) {
@@ -199,13 +244,16 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
                 this._size = 'small';
         }
     }
-/**
- *
- * Returns the template corresponding to the avatar type.
- *
- * @memberof IgxAvatarComponent
- */
-get template() {
+    /**
+     *
+     * Returns the template corresponding to the avatar type.
+     *
+     * ```typescript
+     * let template = this.avatar.template;
+     * ```
+     * @memberof IgxAvatarComponent
+     */
+    get template() {
         if (this.src) {
             return this.imageTemplate;
         }
@@ -220,22 +268,28 @@ get template() {
 
     constructor(public elementRef: ElementRef) { }
 
-
+    /**
+     * @hidden
+     *
+     * @memberof IgxAvatarComponent
+     */
     public ngOnInit() {
         this.roleDescription = this.getRole();
     }
 
-public ngAfterViewInit() {
+    /**
+     *@hidden
+     *
+     * @memberof IgxAvatarComponent
+     */
+    public ngAfterViewInit() {
         this.elementRef.nativeElement.classList.add(`igx-avatar--${this._size}`);
     }
-/**
- * Returns a string describing the avatar's role.
- * ```
- * avatarType:string = this.getRole();
- * ```
- * @memberof IgxAvatarComponent
- */
-private getRole() {
+    /**
+     * @hidden
+     * @memberof IgxAvatarComponent
+     */
+    private getRole() {
         if (this.initials) {
             return 'initials type avatar';
         } else if (this.src) {
@@ -245,14 +299,16 @@ private getRole() {
         }
     }
 
-/**
- * Returns the url of the image.
- * duplicateAvatar.src = this.avatar.getSrcUrl();
- *
- *
- * @memberof IgxAvatarComponent
- */
-public getSrcUrl() {
+    /**
+     * Returns the url of the image.
+     *
+     * ```typescript
+     * duplicateAvatar.src = this.avatar.getSrcUrl();
+     * ```
+     *
+     * @memberof IgxAvatarComponent
+     */
+    public getSrcUrl() {
         return `url(${this.src})`;
     }
 }
