@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { IPositionStrategy  } from './position/IPositionStrategy';
 import { CenterPositionStrategy } from './position/center-position-strategy';
+import { PositionSettings } from './position/utilities';
 
 import {
     ApplicationRef,
@@ -18,6 +19,7 @@ export class IgxOverlayService {
     private _elements = [];
     private _overlayElement: HTMLElement;
     private _positionStrategy: IPositionStrategy;
+    private _componentWrapper: HTMLElement;
 
 
     /**
@@ -50,6 +52,11 @@ export class IgxOverlayService {
         return this._overlayElement;
     }
 
+    /**
+     * Create, set up, and return a DIV HTMLElement wrapper around the component. Attach it to overlay div element.
+     */
+
+
     constructor(
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
@@ -59,7 +66,9 @@ export class IgxOverlayService {
      * Attaches provided component's native element to the OverlayElement
      * @param component Component to show in the overlay
      */
-    show(component, positionStrategy?: IPositionStrategy, x?, y?): number {
+    // optionally et component and _document from the current context and get
+    // positionStrategy passed from overlay.directive.ts
+    show(component, positionStrategy?: IPositionStrategy): number {
         let element;
         if (component instanceof ElementRef) {
             element = component.nativeElement;
@@ -79,20 +88,23 @@ export class IgxOverlayService {
         // If positionStrategy is specified, use it.
         if (positionStrategy) {
             this._positionStrategy = positionStrategy;
+            this._componentWrapper = this._document.createElement('div');
+            this._componentWrapper.appendChild(element);
             this._positionStrategy.position(element);
 
-        // If positionStrategy is not use CenterPositionStrategy as a default.
+        // Default to CenterPositionStrategy.
         } else {
-            this._positionStrategy = new CenterPositionStrategy();
-            this._positionStrategy.position(element);
+            this._positionStrategy = new CenterPositionStrategy(this._document);
         }
 
         this.OverlayElement.style.display = 'block';
-        this.OverlayElement.appendChild(element);
+        this.OverlayElement.appendChild(this._componentWrapper);
         return this._componentId++;
     }
 
     hide(id: number) {
+        // cleanup
+
         const children = this.OverlayElement.childNodes;
         if (children.length <= id) {
             throw new Error('There is no element with such index. Cannot remove the item from igxOverlay!');

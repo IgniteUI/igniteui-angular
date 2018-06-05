@@ -18,9 +18,10 @@ export class Point {
     constructor(public x: number, public y: number) {}
 }
 
-export class PositionOptions {
-    constructor(public point: Point, public rectangle: Rectangle,
+export class PositionSettings {
+    constructor(
+        public point: Point = new Point(0, 0),
         public horizontalAlignment?: HorizontalAlignment| HorizontalAlignment.Center,
-                public verticalAlignment?: VerticalAlignment | VerticalAlignment.Middle) {
+        public verticalAlignment?: VerticalAlignment | VerticalAlignment.Middle) {
     }
 }

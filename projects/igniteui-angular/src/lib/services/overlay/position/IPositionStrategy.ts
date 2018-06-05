@@ -1,13 +1,9 @@
-import {Rectangle, Point, HorizontalAlignment, VerticalAlignment  } from './utilities';
+import { PositionSettings } from './utilities';
+import { get } from 'https';
 
 export interface IPositionStrategy {
+    wrapperClass: string;
+
     /** Position the element based on the PositionStrategy implementing this interface */
-    position(element: HTMLElement, positionOptions?: PositionOptions ): void;
-
-    /** HTML cleanup */
-    dispose(element: HTMLElement): void;
+    position(element: HTMLElement, PositionSettings?: PositionSettings ): void;
 }
-
-
-
-
