@@ -183,8 +183,11 @@ export class IgxGridAPIService {
 
     public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
         const grState = this.get(id).groupingExpansionState;
+        const hierarchy = DataUtil.getHierarchy(groupRow);
         return grState.find((state) =>
-            state.fieldName === groupRow.expression.fieldName && state.value === groupRow.value);
+            state.fieldName === groupRow.expression.fieldName &&
+            state.value === groupRow.value &&
+            DataUtil.isHierarchyMatch(state.hierarchy, hierarchy));
     }
 
     public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
@@ -198,7 +201,8 @@ export class IgxGridAPIService {
             expansionState.push({
                 expanded: !grid.groupsExpanded,
                 value: groupRow.value,
-                fieldName: groupRow.expression.fieldName
+                fieldName: groupRow.expression.fieldName,
+                hierarchy: DataUtil.getHierarchy(groupRow)
             });
         }
         this.get(id).groupingExpansionState = expansionState;

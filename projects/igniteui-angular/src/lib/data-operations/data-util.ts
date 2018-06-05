@@ -79,8 +79,9 @@ export class DataUtil {
                     break;
                 }
             }
+            const hierarchy = this.getHierarchy(g);
             const expandState: IGroupByExpandState = expansion.find((state) =>
-                state.fieldName === g.expression.fieldName && state.value === g.value);
+                state.fieldName === g.expression.fieldName && state.value === g.value && this.isHierarchyMatch(state.hierarchy, hierarchy));
             const expanded = expandState ? expandState.expanded : defaultExpanded;
             result.push(g);
             if (expanded) {
@@ -143,5 +144,35 @@ export class DataUtil {
             data = DataUtil.page(data, state.paging);
         }
         return data;
+    }
+
+    public static getHierarchy(gRow: IGroupByRecord): Array<Map<string, any>> {
+        const hierarchy = [];
+        let kValPair = new Map();
+        kValPair.set(gRow.expression.fieldName, gRow.value);
+        hierarchy.push(kValPair);
+        while (gRow.__groupParent) {
+            gRow = gRow.__groupParent;
+            kValPair = new Map();
+            kValPair.set(gRow.expression.fieldName, gRow.value);
+            hierarchy.unshift(kValPair);
+        }
+        return hierarchy;
+    }
+
+    public static isHierarchyMatch(h1: Array<Map<string, any>>, h2: Array<Map<string, any>>): boolean {
+        let res;
+        if (h1.length !== h2.length) {
+            return false;
+        } else {
+            for (let i = 0; i < h1.length; i++) {
+                res = h1[0].keys().next().value === h2[0].keys().next().value &&
+                    h1[0].values().next().value === h2[0].values().next().value;
+                if (!res) {
+                    break;
+                }
+            }
+            return res;
+        }
     }
 }
