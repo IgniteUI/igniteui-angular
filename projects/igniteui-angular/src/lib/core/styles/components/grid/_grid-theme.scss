@@ -26,9 +26,12 @@
 /// @param {Color} $grouparea-icon-color [null] - The grid grouparea icon color.
 ///
 /// @param {Color} $expand-all-icon-color [null] - The grid row expand all icon color.
-/// @param {Color} $expand-all-icon-hover-color [null] - TThe grid row expand all icon hover color.
+/// @param {Color} $expand-all-icon-hover-color [null] - The grid row expand all icon hover color.
 /// @param {Color} $expand-icon-color [null] - The grid row expand icon color.
-/// @param {Color} $expand-icon-hover-color [null] - TThe grid row expand icon hover color.
+/// @param {Color} $expand-icon-hover-color [null] - The grid row expand icon hover color.
+/// @param {Color} $group-count-background [null] - The grid row group cont badge background color.
+/// @param {Color} $group-count-text-color [null] - The grid row group cont badge text color.
+/// @param {Color} $grouparea-placeholder-color [null] - The grid grouparea background color.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -67,7 +70,8 @@
     $expand-icon-color: null,
     $expand-icon-hover-color: null,
     $group-count-background: null,
-    $group-count-text-color: null
+    $group-count-text-color: null,
+    $grouparea-placeholder-color: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -103,6 +107,7 @@
         expand-icon-hover-color: igx-color($palette, 'grays', 800),
         group-count-background: igx-color($palette, 'grays', 200),
         group-count-text-color: igx-color($palette, 'grays', 600),
+        grouparea-placeholder-color: igx-color($palette, 'grays', 600)
     );
 
     @if not($header-text-color) and $header-background {
@@ -118,7 +123,7 @@
     }
 
     @if not($row-selected-text-color) and $row-selected-background {
-        $row-selected-text-color: text-contrast($row-selected-background);
+        $row-selected-text-color: $grouparea-background;
     }
 
     @if not($row-hover-background) and $content-background {
@@ -133,16 +138,12 @@
         $pinned-border-color: rgba(text-contrast($content-background), .08)
     }
 
-    @if not($group-label) and $grouparea-background {
-        $group-label: text-contrast($grouparea-background)
-    }
-
-    @if not($grouparea-icon-color) and $grouparea-background {
-        $grouparea-icon-color: text-contrast($grouparea-background)
-    }
-
     @if not($grouparea-background) and $header-background {
         $grouparea-background: $header-background
+    }
+
+    @if not($grouparea-placeholder-color) and $grouparea-background {
+        $grouparea-placeholder-color: text-contrast($grouparea-background)
     }
 
     @return extend($default-theme, (
@@ -178,6 +179,7 @@
         expand-icon-hover-color: $expand-icon-hover-color,
         group-count-background: $group-count-background,
         group-count-text-color: $group-count-text-color,
+        grouparea-placeholder-color: $grouparea-placeholder-color,
     ));
 }
 
@@ -632,7 +634,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: --var($theme, 'grouparea-background');
+        background: --var($theme, 'header-background');
         cursor: pointer;
         padding-left: 24px;
         padding-right: 12px;
@@ -663,6 +665,7 @@
     }
 
     %igx-grid__grouparea-placeholder {
+        color: --var($theme, 'grouparea-placeholder-color');
         @include ellipsis();
         width: 100%;
     }
