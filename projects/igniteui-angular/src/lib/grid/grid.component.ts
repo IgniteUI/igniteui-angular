@@ -483,6 +483,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
+
+        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { this.clearSummaryCache(editCell); });
     }
 
     public ngAfterContentInit() {
@@ -781,8 +786,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
-    public clearSummaryCache() {
-        this.gridAPI.remove_summary(this.id);
+    public clearSummaryCache(editCell?) {
+        if (editCell && editCell.cell) {
+            this.gridAPI.remove_summary(this.id, editCell.cell.column.filed);
+        } else {
+            this.gridAPI.remove_summary(this.id);
+        }
     }
 
     public pinColumn(columnName: string): boolean {
@@ -1030,9 +1039,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let maxSummaryLength = 0;
         this.columnList.filter((col) => col.hasSummary).forEach((column) => {
             this.gridAPI.set_summary_by_column_name(this.id, column.field);
-            const currentLength = this.gridAPI.get_summaries(this.id).get(column.field).length;
-            if (maxSummaryLength < currentLength) {
-                maxSummaryLength = currentLength;
+            const getCurrentSummaryColumn = this.gridAPI.get_summaries(this.id).get(column.field);
+            if (getCurrentSummaryColumn) {
+                if (maxSummaryLength < getCurrentSummaryColumn.length) {
+                    maxSummaryLength = getCurrentSummaryColumn.length;
+                }
             }
         });
         return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : DEFAULT_SUMMARY_HEIGHT);
