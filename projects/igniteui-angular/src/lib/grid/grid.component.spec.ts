@@ -427,7 +427,7 @@ describe('IgxGrid - input properties', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-    <igx-grid #grid [data]="data" [autoGenerate]="false">
+    <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate">
         <igx-column field="index" header="index" dataType="number"></igx-column>
         <igx-column field="value" header="value" dataType="number"></igx-column>
     </igx-grid></div>`
@@ -435,6 +435,8 @@ describe('IgxGrid - input properties', () => {
 export class IgxGridTestComponent {
     public data = [{ index: 1, value: 1 }];
     @ViewChild('grid') public grid: IgxGridComponent;
+
+    public autoGenerate = false;
 }
 
 @Component({
