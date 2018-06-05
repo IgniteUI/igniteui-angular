@@ -30,7 +30,7 @@ import {
 import { of, Subject } from 'rxjs';
 import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray } from '../core/utils';
+import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -242,13 +242,32 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.lastSearchInfo.searchText !== '') {
             const newRowIndex = rowIndex % this._perPage;
             const newPage = Math.floor(rowIndex / this._perPage);
-            IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, newRowIndex, activeInfo.index , newPage);
+            IgxTextHighlightDirective.setActiveHighlight(this.id, activeInfo.columnIndex, newRowIndex, activeInfo.index, newPage);
             this.rebuildMatchCache();
         }
     }
 
     @Input()
     public paginationTemplate: TemplateRef<any>;
+
+    @Input()
+    public get displayDensity(): DisplayDensity | string {
+        return this._displayDensity;
+    }
+
+    public set displayDensity(val: DisplayDensity | string) {
+        switch (val) {
+            case 'compact':
+                this._displayDensity = DisplayDensity.compact;
+                break;
+            case 'cosy':
+                this._displayDensity = DisplayDensity.cosy;
+                break;
+            case 'comfortable':
+            default:
+                this._displayDensity = DisplayDensity.comfortable;
+        }
+    }
 
     @Input()
     get rowSelectable(): boolean {
@@ -307,7 +326,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public oddRowCSS = '';
 
     @Input()
-    public rowHeight = 50;
+    public rowHeight: number;
 
     @Input()
     public columnWidth: string = null;
@@ -428,7 +447,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public tabindex = 0;
 
     @HostBinding('attr.class')
-    public hostClass = 'igx-grid';
+    get hostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-grid--cosy';
+            case DisplayDensity.compact:
+                return 'igx-grid--compact';
+            default:
+                return 'igx-grid';
+        }
+    }
 
     @HostBinding('attr.role')
     public hostRole = 'grid';
@@ -515,6 +543,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private columnListDiffer;
     private _height = '100%';
     private _width = '100%';
+    private _displayDensity = DisplayDensity.comfortable;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -541,6 +570,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
+        this.rowHeight = this.rowHeight ? this.rowHeight : this.defaultRowHeight;
+
+        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { this.clearSummaryCache(editCell); });
     }
 
     public ngAfterContentInit() {
@@ -633,6 +668,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.tfoot.nativeElement.clientHeight;
         }
         return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+    }
+
+    get defaultRowHeight(): number {
+        switch (this._displayDensity) {
+            case DisplayDensity.compact:
+                return 32;
+            case DisplayDensity.cosy:
+                return 40;
+            case DisplayDensity.comfortable:
+            default:
+                return 50;
+        }
     }
 
     get calcPinnedContainerMaxWidth(): number {
@@ -886,8 +933,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
-    public clearSummaryCache() {
-        this.gridAPI.remove_summary(this.id);
+    public clearSummaryCache(editCell?) {
+        if (editCell && editCell.cell) {
+            this.gridAPI.remove_summary(this.id, editCell.cell.column.filed);
+        } else {
+            this.gridAPI.remove_summary(this.id);
+        }
     }
 
     public pinColumn(columnName: string): boolean {
@@ -978,7 +1029,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                         match.row === activeInfo.rowIndex &&
                         match.index === activeInfo.index &&
                         match.page === activeInfo.page) {
-                            this.lastSearchInfo.activeMatchIndex = i;
+                        this.lastSearchInfo.activeMatchIndex = i;
                     }
                 });
             }
@@ -1159,7 +1210,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
         });
-        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : DEFAULT_SUMMARY_HEIGHT);
+        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : this.defaultRowHeight);
     }
 
     protected calculateGridSizes() {
@@ -1736,7 +1787,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     match.row === rowIndex &&
                     match.index === activeInfo.index &&
                     match.page === page) {
-                        this.lastSearchInfo.activeMatchIndex = i;
+                    this.lastSearchInfo.activeMatchIndex = i;
                 }
             });
         } else {
