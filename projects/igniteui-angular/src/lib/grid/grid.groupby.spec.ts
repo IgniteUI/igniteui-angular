@@ -21,6 +21,7 @@ import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
+import { IgxChipComponent } from '../chips';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -34,6 +35,8 @@ describe('IgxGrid - GroupBy', () => {
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
     const GROUPROW_COTENT_CSS = '.igx-grid__group-content';
+    const DISABLED_CHIP = 'igx-grid__chipDisabled';
+    const CHIP = 'igx-chip';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
         const row = grid.getRowByIndex(rowStartIndex);
@@ -1229,6 +1232,41 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         expect(groupRows[0].expanded).toBe(true);
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
+    });
+
+    it('should render disabled non-interactable chip for column that does not allow grouping.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.getColumnByName('ProductName').groupable = false;
+        grid.getColumnByName('Released').groupable = true;
+        fix.detectChanges();
+        grid.groupBy([{fieldName: 'ProductName', dir: SortingDirection.Asc}, {fieldName: 'Released', dir: SortingDirection.Asc}]);
+        fix.detectChanges();
+
+        const chips = fix.nativeElement.querySelectorAll(CHIP);
+        expect(chips.length).toBe(2);
+
+        // check correct chip is disabled
+        expect(chips[0].className).toEqual(DISABLED_CHIP);
+        expect(chips[1].className).not.toEqual(DISABLED_CHIP);
+
+        // check no remove button on disabled chip
+        expect(chips[0].querySelectorAll('.igx-chips-area__remove-icon').length).toEqual(0);
+        expect(chips[1].querySelectorAll('.igx-chips-area__remove-icon').length).toEqual(1);
+
+        // check click does not allow changing sort dir
+        chips[0].dispatchEvent(new PointerEvent('pointerup', {}));
+        chips[1].dispatchEvent(new PointerEvent('pointerup', {}));
+
+        fix.detectChanges();
+        grid.cdr.detectChanges();
+
+        const fChipDirection = chips[0].querySelector('span[igxLabel]>igx-icon').innerText;
+        const sChipDirection = chips[1].querySelector('span[igxLabel]>igx-icon').innerText;
+
+        expect(fChipDirection).toEqual('arrow_upward');
+        expect(sChipDirection).toEqual('arrow_downward');
     });
 });
 
