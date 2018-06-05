@@ -1,55 +1,39 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "noEmit": true,
-        "sourceMap": true,
-        "declaration": false,
-        "noImplicitAny": false,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "removeComments": true,
-        "lib": [
-            "es2015",
-            "dom"
-        ],
-        "typeRoots": [
-            "./node_modules/@types"
-        ],
-        "types": [
-            "jasmine",
-            "hammerjs",
-            "karma",
-            "node",
-            "webpack",
-            "webpack-env"
-        ]
-    },
-    "typedocOptions": {
-        "mode": "modules",
-        "out": "dist/docs/typescript",
-        "exclude": "**/*.spec.ts",
-        "theme": "default",
-        "ignoreCompilerErrors": true,
-        "excludePrivate": true,
-        "excludeNotExported": true,
-        "name": "Ignite UI for Angular",
-        "target": "ES5",
-        "moduleResolution": "node",
-        "preserveConstEnums": true,
-        "stripInternal": true,
-        "suppressExcessPropertyErrors": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "module": "commonjs"
-    },
-    "include": [
-        "src/**/*.ts"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
     ],
-    "exclude": [
-        "src/**/*.spec.ts",
-        "node_modules",
-        "demos",
-        "dist"
-    ]
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "paths": {
+      "igniteui-angular": [
+        "dist/igniteui-angular"
+      ]
+    }
+  },
+  "typedocOptions": {
+    "mode": "file",
+    "out": "dist/igniteui-angular/docs/typescript",
+    "exclude": "**/*.spec.ts",
+    "theme": "default",
+    "excludePrivate": true,
+    "excludeNotExported": true,
+    "name": "Ignite UI for Angular",
+    "target": "es2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "preserveConstEnums": true,
+    "stripInternal": true
+  }
 }
