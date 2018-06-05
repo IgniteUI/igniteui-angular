@@ -8,20 +8,20 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { IgxOverlayService } from './overlay';
+import { IgxOverlayDirective, IgxOverlayModule } from './overlay.directive';
 
 fdescribe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
-            imports: [
-                DynamicModule
-            ],
-            declarations: [
-                EmptyPageComponent
-            ],
-            providers: [IgxOverlayService]
+            imports: [IgxOverlayModule, DynamicModule],
+            declarations: DIRECTIVE_COMPONENTS,
+            providers: [IgxOverlayService],
         }).compileComponents();
     });
+
     it('Unit - OverlayElement should return a div attached to Document\'s body', () => {
+        // tslint:disable-next-line:no-debugger
+        debugger;
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -34,7 +34,8 @@ fdescribe('igxOverlay', () => {
             fixture.componentInstance.overlay.hideAll();
         });
     });
-    it('Unit - Should show component passed to overlay',  () => {
+
+    it('Unit - Should show component passed to overlay', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -49,7 +50,8 @@ fdescribe('igxOverlay', () => {
             fixture.componentInstance.overlay.hideAll();
         });
     });
-    fit('Unit - Hide() should hide component and overlay',  () => {
+
+    it('Unit - Hide() should hide component and overlay', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -83,8 +85,10 @@ fdescribe('igxOverlay', () => {
             expect(overlayDiv.style.display).toEqual('none');
             expect(overlayDiv.children.length).toEqual(0);
         });
+
     });
-    fit('Unit - HideAll() should hide all components and overlay',  () => {
+
+    it('Unit - HideAll() should hide all components and overlay', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         fixture.componentInstance.overlay.show(SimpleDynamicComponent);
@@ -109,7 +113,30 @@ fdescribe('igxOverlay', () => {
         });
     });
 
-// 1. Positioning Strategies
+    it('Unit - Should show and hide component via directive', () => {
+        const fixture = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.show();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+            expect(overlayDiv).toBeDefined();
+            expect(overlayDiv.style.display).toEqual('block');
+            expect(overlayDiv.children.length).toEqual(1);
+            expect(overlayDiv.children[0].localName).toEqual('div');
+
+            fixture.componentInstance.hide();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+            expect(overlayDiv).toBeDefined();
+            expect(overlayDiv.style.display).toEqual('none');
+            expect(overlayDiv.children.length).toEqual(0);
+        });
+    });
+
+    // 1. Positioning Strategies
     // 1.1 Center (show components in the window center).
     xit('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
         // TO DO
@@ -157,9 +184,9 @@ fdescribe('igxOverlay', () => {
     });
 
     xit('If using a ConnectedPositioningStrategy without passing options, the omitted ones default to ' +
-    '(Window center point, Center, Middle).', () => {
-        // TO DO
-    });
+        '(Window center point, Center, Middle).', () => {
+            // TO DO
+        });
 
     xit('When adding a new component it should be rendered where expected based on the options passed.', () => {
         // TO DO
@@ -176,19 +203,19 @@ fdescribe('igxOverlay', () => {
     });
 
     xit('closingScrollStrategy: no scrolling possible. The component changes ' +
-    'state to closed when reaching the threshold (example: expanded DropDown collapses).', () => {
-        // TO DO
-    });
+        'state to closed when reaching the threshold (example: expanded DropDown collapses).', () => {
+            // TO DO
+        });
 
     xit('Scroll Strategy Fixed: it should be partially hidden. When scrolling, the component stays static. ' +
-    'Component state remains the same (example: expanded DropDown remains expanded).', () => {
-        // TO DO
-    });
+        'Component state remains the same (example: expanded DropDown remains expanded).', () => {
+            // TO DO
+        });
 
     xit('Scroll Strategy Absolute: can scroll it into view. Component persist state. ' +
-    '(example: expanded DropDown remains expanded)', () => {
-        // TO DO
-    });
+        '(example: expanded DropDown remains expanded)', () => {
+            // TO DO
+        });
 
     // 1.3 AutoPosition (fit the shown component into the visible window.)
     xit('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
@@ -208,9 +235,9 @@ fdescribe('igxOverlay', () => {
     });
 
     xit('The component is repositioned and rendered correctly in the window, even when the rendering options passed ' +
-    ' should result in otherwise a partially hidden component. No scrollbars should appear.', () => {
-        // TO DO
-    });
+        ' should result in otherwise a partially hidden component. No scrollbars should appear.', () => {
+            // TO DO
+        });
 
     xit('igx-overlay margins should be rendered correctly', () => {
         // TO DO
@@ -222,9 +249,9 @@ fdescribe('igxOverlay', () => {
 
     // When adding more than one component to show in igx-overlay:
     xit('When the options used fit the component in the window - adding a new instance of the component with the ' +
-    ' same options will render it on top of the previous one.', () => {
-        // TO DO
-    });
+        ' same options will render it on top of the previous one.', () => {
+            // TO DO
+        });
 
     // When adding more than one component to show in igx-overlay and the options used will not fit the component in the
     // window, so AutoPosition is used.
@@ -259,9 +286,9 @@ fdescribe('igxOverlay', () => {
     });
 
     xit('The component shown in igx-overlay changes its state when it exceeds the scrolling tolerance set ' +
-    '(an expanded DropDown, Menu, DatePicker, etc. collapses).', () => {
-        // TO DO
-    });
+        '(an expanded DropDown, Menu, DatePicker, etc. collapses).', () => {
+            // TO DO
+        });
 
     // 2.3 Scroll Strategy - Fixed.
     xit('When scrolling, the component stays static and only the background scrolls', () => {
@@ -322,9 +349,9 @@ fdescribe('igxOverlay', () => {
 
     // 4. Css
     xit('All appropriate css classes should be applied on igx-overlay initialization. ' +
-    '(class overlay, incl. position, width, height, etc.)', () => {
-        // TO DO
-    });
+        '(class overlay, incl. position, width, height, etc.)', () => {
+            // TO DO
+        });
 
     xit('All css properties set should be actually applied.', () => {
         // TO DO
@@ -340,7 +367,34 @@ fdescribe('igxOverlay', () => {
 });
 
 @Component({
-    template: '<button #button (click)=\'click($event)\'>Show Overlay</button>'
+    template: '<div style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
+})
+export class SimpleDynamicComponent { }
+
+@Component({
+    template: `
+        <div igxOverlay>
+            <div *ngIf='visible' style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>
+        </div>`
+})
+export class SimpleDynamicWithDirectiveComponent {
+    public visible = false;
+
+    @ViewChild(IgxOverlayDirective)
+    private overlay: IgxOverlayDirective;
+    show() {
+        this.overlay.show();
+        this.visible = true;
+    }
+
+    hide() {
+        this.overlay.hide();
+        this.visible = false;
+    }
+}
+
+@Component({
+    template: `<button #button (click)=\'click($event)\'>Show Overlay</button>`
 })
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
@@ -352,19 +406,19 @@ export class EmptyPageComponent {
     }
 }
 
-@Component({
-    template: '<div style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
-})
-export class SimpleDynamicComponent { }
-
-const TEST_COMPONENTS = [
+const DYNAMIC_COMPONENTS = [
+    EmptyPageComponent,
     SimpleDynamicComponent
+];
+
+const DIRECTIVE_COMPONENTS = [
+    SimpleDynamicWithDirectiveComponent
 ];
 
 @NgModule({
     imports: [BrowserModule],
-    declarations: [TEST_COMPONENTS],
-    exports: [TEST_COMPONENTS],
-    entryComponents: [TEST_COMPONENTS]
+    declarations: [DYNAMIC_COMPONENTS],
+    exports: [DYNAMIC_COMPONENTS],
+    entryComponents: [DYNAMIC_COMPONENTS]
 })
 export class DynamicModule { }
