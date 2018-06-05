@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { STRING_FILTERS } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grid';
 import { IgxColumnComponent } from '../../grid/column.component';
@@ -19,6 +18,7 @@ import { ExcelStrings } from './excel-strings';
 import { JSZipFiles } from './jszip-helper';
 import { JSZipWrapper, ObjectComparer } from './jszip-verification-wrapper.spec';
 import { ExportTestDataService, FileContentData, ValueData } from './test-data.service.spec';
+import { IgxStringFilteringOperand } from '../../../public_api';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
@@ -185,7 +185,7 @@ describe('Excel Exporter', () => {
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row should have been exported!');
 
-                grid.filter('JobTitle', 'Director', STRING_FILTERS.equals, true);
+                grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
                 fix.detectChanges();
                 fix.whenStable().then(() => {
                     fix.detectChanges();

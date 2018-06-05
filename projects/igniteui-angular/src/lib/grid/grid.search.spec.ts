@@ -6,10 +6,10 @@ import {
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IgxStringFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -437,7 +437,7 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         fix.whenStable().then(() => {
-            grid.filter('JobTitle', 'Vice', STRING_FILTERS.contains);
+            grid.filter('JobTitle', 'Vice', IgxStringFilteringOperand.instance().condition('contains'));
             fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
@@ -591,7 +591,7 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.filter('Name', 'Tanya', STRING_FILTERS.contains);
+            grid.filter('Name', 'Tanya', IgxStringFilteringOperand.instance().condition('contains'));
             fix.detectChanges();
 
             return fix.whenStable();

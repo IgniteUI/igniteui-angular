@@ -5,13 +5,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../calendar/index';
 import { KEYCODES } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxStringFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - Column Pinning ', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -198,7 +198,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const grid = fix.componentInstance.grid;
 
         // Contains filter
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);

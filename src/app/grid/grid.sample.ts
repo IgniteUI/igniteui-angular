@@ -8,14 +8,14 @@ import {
     IgxSnackbarComponent,
     IgxToastComponent,
     SortingDirection,
-    STRING_FILTERS,
     CsvFileTypes,
     IgxBaseExporter,
     IgxCsvExporterOptions,
     IgxCsvExporterService,
     IgxExcelExporterOptions,
     IgxExporterOptionsBase,
-    IgxExcelExporterService
+    IgxExcelExporterService,
+    IgxStringFilteringOperand
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { LocalService } from '../shared/local.service';
@@ -235,7 +235,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     exportFilteredGrid() {
-        this.grid3.filter('ProductName', 'Queso', STRING_FILTERS.contains, true);
+        this.grid3.filter('ProductName', 'Queso', IgxStringFilteringOperand.instance().condition('contains'), true);
         this.grid3.cdr.detectChanges();
 
         const options = this.getOptions('Queso Report');

@@ -6,7 +6,13 @@ import { take } from 'rxjs/operators';
 import { Calendar } from '../calendar';
 import { KEYCODES } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
+import {
+    IgxStringFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxFilteringOperand
+} from '../data-operations/filtering-condition';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
@@ -534,6 +540,23 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
     });
 
+    it('should allow grouping of already sorted column', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.sort('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
+        // verify groups and data rows count
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+        expect(grid.groupingExpressions.length).toEqual(1);
+    });
+
     // GroupBy + Selection integration
     it('should toggle expand/collapse state of group row with Space/Enter key.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -800,7 +823,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.rowList.toArray().length).toEqual(13);
 
         fix.detectChanges();
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();

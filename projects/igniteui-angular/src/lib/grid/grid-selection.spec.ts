@@ -6,11 +6,11 @@ import { Calendar } from '../calendar';
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxStringFilteringOperand } from '../../public_api';
 
 const selectedCellClass = '.igx-grid__td--selected';
 let data = [
@@ -659,7 +659,7 @@ describe('IgxGrid - Row Selection', () => {
         rowsCollection = grid.selectedRows();
         expect(rowsCollection).toEqual([]);
 
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
@@ -680,7 +680,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
@@ -702,7 +702,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
         expect(grid.getRowByIndex(2).isSelected).toBeTruthy();
 
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeTruthy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
@@ -727,7 +727,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(headerCheckbox.indeterminate).toBeTruthy();
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
 
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeTruthy();

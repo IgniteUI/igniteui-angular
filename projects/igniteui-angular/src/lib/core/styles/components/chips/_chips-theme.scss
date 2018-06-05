@@ -213,6 +213,7 @@
         }
 
         &%igx-chips-area__order-icon {
+            color: --var($theme, 'order-icon-color');
             margin-right: rem(4px);
         }
 

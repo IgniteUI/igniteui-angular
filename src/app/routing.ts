@@ -32,12 +32,13 @@ import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.s
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
+import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
-import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
+import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 
 const appRoutes = [
     {
@@ -80,6 +81,10 @@ const appRoutes = [
     {
         path: 'dialog',
         component: DialogSampleComponent
+    },
+    {
+        path: 'dropDown',
+        component: DropDownSampleComponent
     },
     {
         path: 'icon',

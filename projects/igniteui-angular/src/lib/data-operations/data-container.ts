@@ -1,6 +1,5 @@
 import { IDataState } from './data-state.interface';
 import { DataUtil } from './data-util';
-import { FilteringCondition } from './filtering-condition';
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IFilteringState } from './filtering-state.interface';
 import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
