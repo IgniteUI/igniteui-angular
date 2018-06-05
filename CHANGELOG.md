@@ -41,6 +41,8 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
+    - `igxGrid` changes:
+        - sort API now accepts params of type `ISortingExpression` or `Array<ISortingExpression>`.
     - `igxToggle` changes
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.

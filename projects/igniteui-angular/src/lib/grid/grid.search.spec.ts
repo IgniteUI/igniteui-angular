@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - search API', () => {
@@ -349,7 +350,7 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         fix.whenStable().then(() => {
-            grid.sort('Name');
+            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc});
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();

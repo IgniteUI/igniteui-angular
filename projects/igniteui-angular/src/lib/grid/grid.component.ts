@@ -836,19 +836,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     public sort(...rest): void {
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
-            this._sort(rest[0], rest[1], rest[2]);
+            this._sort(rest[0]);
         }
     }
-
+    public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
         } else {
-            this._groupBy(rest[0], rest[1], rest[2]);
+            this._groupBy(rest[0]);
         }
         this.calculateGridSizes();
         this.onGroupingDone.emit(this.sortingExpressions);
@@ -1254,16 +1255,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return width - this.getPinnedWidth(takeHidden);
     }
 
-    protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
-        this.gridAPI.sort(this.id, name, direction, ignoreCase);
+    protected _sort(expression: ISortingExpression) {
+        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
     }
 
     protected _sortMultiple(expressions: ISortingExpression[]) {
         this.gridAPI.sort_multiple(this.id, expressions);
     }
 
-    protected _groupBy(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
-        this.gridAPI.groupBy(this.id, name, direction, ignoreCase);
+    protected _groupBy(expression: ISortingExpression) {
+        this.gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
     }
 
     protected _groupByMultiple(expressions: ISortingExpression[]) {
