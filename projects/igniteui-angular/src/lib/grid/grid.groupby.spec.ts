@@ -23,7 +23,7 @@ import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipComponent } from '../chips';
 
-fdescribe('IgxGrid - GroupBy', () => {
+describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const FIXED_CELL_CSS = 'igx-grid__th--pinned';
@@ -130,7 +130,8 @@ fdescribe('IgxGrid - GroupBy', () => {
             bubbles: true,
             cancelable: true,
             clientX: x,
-            clientY: y
+            clientY: y,
+            pointerId: 1
         };
 
         return new Promise((resolve, reject) => {
@@ -1385,6 +1386,27 @@ fdescribe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+    });
+
+    it('should reorder groups when reordering chips', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        simulatePointerEvent('pointerdown', chips[0], 0, 0);
+        simulatePointerEvent('pointermove', chips[0], 200, 0);
+        simulatePointerEvent('pointerup', chips[0], 0, 0);
+        fix.detectChanges();
+        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        // verify groups
+        const groupRows = grid.groupedRowList.toArray();
+        checkGroups(groupRows,
+            ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
+            false, 'Ignite UI for Angular', false, null, '', true, null, true],
+            grid.groupingExpressions);
     });
 });
 
