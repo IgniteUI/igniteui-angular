@@ -52,13 +52,13 @@
         name: 'igx-navdrawer',
         background: #fff,
         border-color: rgba(0, 0, 0, .14),
-        item-text-color: igx-color($palette, grays, 800),
+        item-text-color: igx-color($palette, grays, 700),
         item-active-text-color: igx-color($palette, primary, 500),
         item-active-background: igx-color($palette, grays, 100),
         item-hover-background: igx-color($palette, grays, 200),
         item-hover-text-color: igx-color($palette, grays, 800),
         item-header-text-color: igx-color($palette, grays, 600),
-        item-icon-color: igx-color($palette, grays, 600),
+        item-icon-color: igx-color($palette, grays, 700),
         item-active-icon-color: igx-color($palette, primary, 500),
         item-hover-icon-color: igx-color($palette, grays, 800)
     );
@@ -233,12 +233,6 @@
         outline: transparent;
         white-space: nowrap;
 
-        &:hover,
-        &:focus {
-            background-color: --var($theme, 'item-hover-background');
-            color: --var($theme, 'item-hover-text-color');
-        }
-
         > igx-icon + span {
             margin-left: 32px;
         }
@@ -249,8 +243,18 @@
             }
         }
 
-        .igx-icon {
+        igx-icon {
             color: --var($theme, 'item-icon-color');
+        }
+
+        &:hover,
+        &:focus {
+            background-color: --var($theme, 'item-hover-background');
+            color: --var($theme, 'item-hover-text-color');
+
+            igx-icon {
+                color: --var($theme, 'item-hover-icon-color');
+            }
         }
     }
 
@@ -259,14 +263,18 @@
         color: --var($theme, 'item-active-text-color');
         background-color: --var($theme, 'item-active-background');
 
+        igx-icon {
+            color: --var($theme, 'item-active-icon-color');
+        }
+
         &:focus,
         &:hover {
             color: --var($theme, 'item-active-text-color');
             background-color: --var($theme, 'item-active-background');
-        }
 
-        .igx-icon {
-            color: --var($theme, 'item-active-icon-color');
+            igx-icon {
+                color: --var($theme, 'item-active-icon-color');
+            }
         }
     }
 
