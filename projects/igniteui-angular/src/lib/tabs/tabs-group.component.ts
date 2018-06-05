@@ -24,50 +24,146 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
 
 export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
     private _itemStyle = 'igx-tabs-group';
+    /**
+     * @hidden
+     */
     public isSelected = false;
 
+    /**
+    * An @Input property that sets the value of the `label`.
+    *```html
+    *<igx-tabs-group label="Tab 1" icon="folder">
+    *```
+    */
     @Input()
     public label: string;
 
+    /**
+    * An @Input property that sets the value of the `label`.
+    *```html
+    *<igx-tabs-group label="Tab 1" icon="home">
+    *```
+    */
     @Input()
     public icon: string;
 
+    /**
+    * An @Input property that allows you to enable/disable the `isDisabled`.
+    *```html
+    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" isDisabled="true">
+    *```
+    */
     @Input()
     public isDisabled: boolean;
 
-    @HostBinding('attr.role') public role = 'tabpanel';
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.role')
+    public role = 'tabpanel';
 
+    /**
+     * An accessor that returns the class of the tab.
+     * ```html
+     * @ViewChild("MyTab")
+     * public tab: IgxTabsGroupComponent;
+     * ngAfterViewInIt(){
+     *    let tabStyleClass = this.tab.styleClass;
+     *    this.cdr.detectChanges();
+     * }
+     * ```
+     * Disclaimer:
+     * Svetla Boykova will fix the code to make sense.
+     */
     @HostBinding('class.igx-tabs__group')
     get styleClass(): boolean {
         return true;
     }
 
+    /**
+     * An accessor that returns the value of the `_itemStyle` property.
+     * ```html
+     * @ViewChild("MyTab")
+     * public tab: IgxTabsGroupComponent;
+     * ngAfterViewInIt(){
+     *    let tabStyle = this.tab.itemStyle;
+     *    this.cdr.detectChanges();
+     * }
+     * ```
+     */
     public get itemStyle(): string {
         return this._itemStyle;
     }
 
+    /**
+     * An accessor that returns the `tab` component.
+     * ```html
+     * @ViewChild("MyTab")
+     * public tab: IgxTabsGroupComponent;
+     * ngAfterViewInIt(){
+     *    let tabComponent = this.tab.relatedTab;
+     *    this.cdr.detectChanges();
+     * }
+     * ```
+     */
     get relatedTab(): IgxTabItemComponent {
         if (this._tabs.tabs) {
             return this._tabs.tabs.toArray()[this.index];
         }
     }
 
+    /**
+     * An accessor that returns the value of the index of the tab.
+     * ```html
+     * @ViewChild("MyTab")
+     * public tab: IgxTabsGroupComponent;
+     * ngAfterViewInIt(){
+     *    let tabIndex = this.tab.index;
+     *    this.cdr.detectChanges();
+     * }
+     * ```
+     */
     get index() {
         if (this._tabs.groups) {
             return this._tabs.groups.toArray().indexOf(this);
         }
     }
 
+    /**
+     * An accessor that returns the `_tabTemplate` property.
+     * ```html
+     * @ViewChild("MyTab")
+     * public tab: IgxTabsGroupComponent;
+     * ngAfterViewInIt(){
+     *    let tabTemplate = this.tab.customTabTemplate;
+     *    this.cdr.detectChanges();
+     * }
+     * ```
+     */
     get customTabTemplate(): TemplateRef<any> {
         return this._tabTemplate;
     }
 
+    /**
+     * An accessor that modifies the `_tabTemplate` property.
+     * ```html
+     * @ViewChild("MyTab")
+     * public tab: IgxTabsGroupComponent;
+     * ngAfterViewInIt(){
+     *    this.tab.customTabTemplate(customTemplate);
+     *    this.cdr.detectChanges();
+     * }
+     * ```
+     */
     set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
     }
 
     private _tabTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
@@ -77,17 +173,36 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
         private _element: ElementRef) {
     }
 
+    /**
+     * @hidden
+     */
     public ngAfterContentInit(): void {
         if (this.tabTemplate) {
             this._tabTemplate = this.tabTemplate.template;
         }
     }
 
+    /**
+     * @hidden
+     */
     public ngAfterViewChecked() {
         this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
         this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
     }
 
+    /**
+     * A method that sets the focus on a tab.
+     * @memberOf {@link IgxDialogComponent}
+     *```html
+     *@ViewChild("MyChild")
+     *public tab : IgxTabsGroupComponent;
+     *ngAfterViewInit(){
+     *    this.tab.select();
+     *    this.cdr.detectChanges();
+     *}
+     *```
+     * @param {*} focusDelay A number representing the expected delay.
+     */
     public select(focusDelay = 50, onInit = false) {
         if (this.isDisabled || this._tabs.selectedIndex === this.index) {
             return;
