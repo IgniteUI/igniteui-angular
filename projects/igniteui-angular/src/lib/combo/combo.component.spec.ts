@@ -1,12 +1,13 @@
 import { Component, ContentChildren, DebugElement, Directive, ElementRef, ViewChild } from '@angular/core';
-import { async, inject, TestBed, ComponentFixture } from '@angular/core/testing';
+import { async, inject, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectionAPIService } from '../core/selection';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
-import { IgxDropDownBase, IgxDropDownComponent, IgxDropDownItemNavigationDirective, IgxDropDownModule
+import {
+    IgxDropDownBase, IgxDropDownComponent, IgxDropDownItemNavigationDirective, IgxDropDownModule
 } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule } from './combo.component';
@@ -18,14 +19,6 @@ const CSS_CLASS_CHECKBOX = 'igx-checkbox';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
 const CSS_CLASS_SELECTED = 'igx-combo__item--selected';
 
-@Directive({
-    selector: '[igxDropDownItemNavigation]'
-})
-class MockDirective extends IgxDropDownItemNavigationDirective {
-    constructor() {
-        super({ nativeElement: null }, null);
-    }
-}
 const employeeData = [
     { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z' },
     { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z' },
@@ -48,15 +41,9 @@ function wrapPromise(callback, resolve, time) {
     });
 }
 
-xdescribe('Combo', () => {
+fdescribe('Combo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
-        // TestBed.overrideModule(IgxDropDownModule, {
-        //     set: {
-        //         declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, MockDirective],
-        //         exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, MockDirective]
-        //     }
-        // });
         TestBed.configureTestingModule({
             declarations: [
                 IgxComboTestComponent,
@@ -72,7 +59,7 @@ xdescribe('Combo', () => {
     }));
 
     // General
-    it('Should initialize the combo component properly', async(() => {
+    it('Should initialize the combo component properly', fakeAsync(() => {
         const fixture: ComponentFixture<IgxComboSampleComponent> = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
@@ -86,13 +73,12 @@ xdescribe('Combo', () => {
         expect(comboButton).toBeDefined();
         expect(combo.placeholder).toBeDefined();
         combo.dropdown.toggle();
+        tick();
         fixture.whenStable().then(() => {
-            return wrapPromise(() => {
-                fixture.detectChanges();
-                expect(combo.dropdown.collapsed).toEqual(false);
-                expect(combo.searchInput).toBeDefined();
-                // expect(combo.searchInput).toEqual(comboButton);
-            }, fixture.whenStable(), 1000);
+            fixture.detectChanges();
+            expect(combo.dropdown.collapsed).toEqual(false);
+            expect(combo.searchInput).toBeDefined();
+            // expect(combo.searchInput).toEqual(comboButton);
         });
     }));
 
@@ -157,7 +143,7 @@ xdescribe('Combo', () => {
         expect(combo.data.length).toEqual(0);
     });
 
-    it('Should call toggle properly', async(() => {
+    it('Should call toggle properly', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
@@ -170,7 +156,7 @@ xdescribe('Combo', () => {
         spyOn<any>(combo, 'cdr').and.callThrough();
         expect(combo.dropdown.collapsed).toEqual(true);
         combo.dropdown.toggle();
-
+        tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
@@ -182,19 +168,18 @@ xdescribe('Combo', () => {
             fixture.detectChanges();
             // spyOnProperty(combo, 'collapsed', 'get').and.returnValue(false);
             combo.dropdown.toggle();
+            tick();
             return fixture.whenStable();
         }).then(() => {
-            wrapPromise(() => {
-                fixture.detectChanges();
-                expect(combo.dropdown.close).toHaveBeenCalledTimes(1);
-                expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
-                expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
-                expect(combo.dropdown.collapsed).toEqual(true);
-            }, fixture.whenStable(), 1000);
+            fixture.detectChanges();
+            expect(combo.dropdown.close).toHaveBeenCalledTimes(1);
+            expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
+            expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
+            expect(combo.dropdown.collapsed).toEqual(true);
         });
     }));
 
-    it(`Should properly select/deselect items`, async(() => {
+    it(`Should properly select/deselect items`, fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -208,6 +193,7 @@ xdescribe('Combo', () => {
         spyOn(combo.dropdown, 'selectedItem').and.callThrough();
         spyOn(combo.onSelection, 'emit');
         combo.dropdown.toggle();
+        tick();
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(combo.dropdown.collapsed).toEqual(false);
@@ -237,7 +223,7 @@ xdescribe('Combo', () => {
         });
     }));
 
-    it('Should properly select/deselect ALL items', async(() => {
+    it('Should properly select/deselect ALL items', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -251,6 +237,7 @@ xdescribe('Combo', () => {
         spyOn(combo.onSelection, 'emit');
         const selectionService = new IgxSelectionAPIService();
         combo.dropdown.toggle();
+        tick();
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(combo.dropdown.collapsed).toEqual(false);
@@ -298,7 +285,7 @@ xdescribe('Combo', () => {
         expect(combo.getItemDataByValueKey(1)).toEqual(undefined);
     });
 
-    it('Should properly handle addItemToCollection calls', () => {
+    it('Should properly handle addItemToCollection calls (Complex data)', () => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -317,13 +304,6 @@ xdescribe('Combo', () => {
         expect(initialData.length).toBeLessThan(combo.data.length);
         expect(combo.data.length).toEqual(initialData.length + 1);
         expect(combo.onAddition.emit).toHaveBeenCalledTimes(1);
-        // expect(combo.onAddition.emit).toHaveBeenCalledWith({
-        //     oldCollection: initialData,
-        //     addedItem: {
-        //         field: 'myItem'
-        //     },
-        //     newCollection: [...initialData, {field: 'myItem'}]
-        // });
         expect(combo.data[combo.data.length - 1]).toEqual({
             field: 'myItem'
         });
@@ -337,17 +317,34 @@ xdescribe('Combo', () => {
         expect(initialData.length).toBeLessThan(combo.data.length);
         expect(combo.data.length).toEqual(initialData.length + 2);
         expect(combo.onAddition.emit).toHaveBeenCalledTimes(2);
-        // expect(combo.onAddition.emit).toHaveBeenCalledWith({
-        //     oldCollection: initialData,
-        //     addedItem: {
-        //         field: 'myItem2'
-        //     },
-        //     newCollection: combo.data
-        // });
         expect(combo.data[combo.data.length - 1]).toEqual({
             field: 'myItem2',
             region: 'exampleRegion'
         });
+    });
+
+    it('Should properly handle addItemToCollection calls (Primitive data)', () => {
+        const fix = TestBed.createComponent(IgxComboTestComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        const dropdown = combo.dropdown;
+        const initialData = [...combo.data];
+        expect(combo.searchValue).toEqual('');
+        combo.addItemToCollection();
+        fix.detectChanges();
+        expect(initialData).toEqual(combo.data);
+        expect(combo.data.length).toEqual(initialData.length);
+        combo.searchValue = 'myItem';
+        fix.detectChanges();
+        spyOn(combo.onAddition, 'emit').and.callThrough();
+        combo.addItemToCollection();
+        // tslint:disable-next-line:no-debugger
+        debugger;
+        fix.detectChanges();
+        expect(initialData.length).toBeLessThan(combo.data.length);
+        expect(combo.data.length).toEqual(initialData.length + 1);
+        expect(combo.onAddition.emit).toHaveBeenCalledTimes(1);
+        expect(combo.data[combo.data.length - 1]).toEqual('myItem');
     });
 
     it('Should handle setSelectedItem properly', () => {
@@ -500,7 +497,7 @@ xdescribe('Combo', () => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
-        expect(combo.width).toEqual(400);
+        expect(combo.width).toEqual('400px');
     });
 
     // Rendering
@@ -587,7 +584,7 @@ xdescribe('Combo', () => {
         });
     });
 
-    it('Dropdown list open/close - key navigation', async(() => {
+    it('Dropdown list open/close - key navigation', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboTestComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -599,6 +596,7 @@ xdescribe('Combo', () => {
         spyOn(combo.dropdown, 'open').and.callThrough();
         spyOn(combo.dropdown, 'close').and.callThrough();
         combo.onArrowDown(new KeyboardEvent('keydown', { altKey: false, key: 'ArrowDown' }));
+        tick();
         fix.whenStable().then(() => {
             fix.detectChanges();
 
@@ -630,12 +628,12 @@ xdescribe('Combo', () => {
 
             fix.detectChanges();
             expect(combo.dropdown.toggle).toHaveBeenCalledTimes(3);
-            expect(combo.dropdown.close).toHaveBeenCalledTimes(1);
+            expect(combo.dropdown.close).toHaveBeenCalledTimes(2);
             // expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
         });
     }));
 
-    it('Dropdown button should fire dropdown opening/closing events', () => {
+    it('Dropdown button should fire dropdown opening/closing events', fakeAsync(() => {
         let onOpeningEventFired = false;
         let onOpenedEventFired = false;
         let onClosingEventFired = false;
@@ -644,23 +642,43 @@ xdescribe('Combo', () => {
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         const dropdown = combo.dropdown;
+        spyOn(dropdown.onOpened, 'emit').and.callThrough();
+        spyOn(dropdown.onOpening, 'emit').and.callThrough();
+        spyOn(dropdown.onClosed, 'emit').and.callThrough();
+        spyOn(dropdown.onClosing, 'emit').and.callThrough();
+        spyOn(combo, 'onInputFocus').and.callThrough();
+        spyOn(combo, 'onInputClick').and.callThrough();
+        const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
         dropdown.onOpening.subscribe(() => onOpeningEventFired = true);
         dropdown.onOpened.subscribe(() => onOpenedEventFired = true);
         dropdown.onClosing.subscribe(() => onClosingEventFired = true);
         dropdown.onClosed.subscribe(() => onClosedEventFired = true);
         const comboButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNBUTTON)).nativeElement;
+        expect(comboButton).toBeDefined();
         comboButton.click();
+        tick();
         fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(dropdown.collapsed).toEqual(false);
+            expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+            expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(0);
             expect(onOpeningEventFired).toEqual(true);
             expect(onOpenedEventFired).toEqual(true);
             comboButton.click();
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
+            expect(combo.onInputFocus).toHaveBeenCalledTimes(0);
+            expect(combo.onInputClick).toHaveBeenCalledTimes(2);
+            expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(onClosingEventFired).toEqual(true);
             expect(onClosedEventFired).toEqual(true);
         });
-    });
+    }));
     it('Item selection - key navigation', () => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
@@ -924,9 +942,12 @@ xdescribe('Combo', () => {
 @Component({
     template: `
     <igx-combo #combo
-    [data]='citiesData'
->
-</igx-combo>`
+        [data]='citiesData'
+        [placeholder]="'Location'"
+        [filterable]='true' [width]="'400px'"
+    >
+    </igx-combo>
+`
 })
 class IgxComboTestComponent {
     @ViewChild('combo', { read: IgxComboComponent })
@@ -952,23 +973,23 @@ class IgxComboTestComponent {
 @Component({
     template: `
         <p>Change data to:</p>
-        <button class='igx-button' igxRipple (click)='changeData('primitive')'>Primitve</button>
-        <button class='igx-button' igxRipple (click)='changeData('complex')'>Complex</button>
-        <button class='igx-button' igxRipple (click)='changeData()'>Initial</button>
-        <igx-combo #combo [placeholder]=''Location'' [data]='items'
-        [filterable]='true' [valueKey]=''field'' [groupKey]=''region'' [width]=''400px''>
-            <ng-template #dropdownItemTemplate let-display let-key='valueKey'>
-                <div class='state-card--simple'>
-                    <span class='small-red-circle'></span>
-                    <div class='display-value--main'>State: {{display[key]}}</div>
-                    <div class='display-value--sub'>Region: {{display.region}}</div>
+        <button class='igx-button' igxRipple (click)="changeData('primitive')">Primitve</button>
+        <button class='igx-button' igxRipple (click)="changeData('complex')">Complex</button>
+        <button class='igx-button' igxRipple (click)="changeData()">Initial</button>
+        <igx-combo #combo [placeholder]="'Location'" [data]='items'
+        [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'">
+            <ng-template #dropdownItemTemplate let-display let-key="valueKey">
+                <div class="state-card--simple">
+                    <span class="small-red-circle"></span>
+                    <div class="display-value--main">State: {{display[key]}}</div>
+                    <div class="display-value--sub">Region: {{display.region}}</div>
                 </div>
             </ng-template>
             <ng-template #dropdownHeader>
-                <div class='header-class'>This is a header</div>
+                <div class="header-class">This is a header</div>
             </ng-template>
             <ng-template #dropdownFooter>
-                <div class='footer-class'>This is a footer</div>
+                <div class="footer-class">This is a footer</div>
             </ng-template>
         </igx-combo>
 `
@@ -1039,8 +1060,8 @@ class IgxComboSampleComponent {
 @Component({
     template: `
         <p>Change data to:</p>
-        <igx-combo #combo [placeholder]=''Location'' [data]='items' [height]=''400px'' [listHeight]='400'
-        [listItemHeight]='40' [filterable]='true' [valueKey]=''field'' [groupKey]=''region'' [width]=''400px''>
+        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [listHeight]='400'
+        [listItemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'">
         </igx-combo>
 `
 })

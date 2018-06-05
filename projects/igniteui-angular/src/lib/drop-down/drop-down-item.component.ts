@@ -17,7 +17,7 @@ export class IgxDropDownItemBase {
     protected _isFocused = false;
     public get itemID() {
         return;
-    };
+    }
 
     public itemData: any;
 
@@ -115,8 +115,8 @@ export class IgxDropDownItemBase {
             focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
             return;
         }
-
-        this.dropDown.selectItem();
+        this.dropDown.focusItem(this.index);
+        this.dropDown.selectItem(this);
     }
 
     markItemSelected() {

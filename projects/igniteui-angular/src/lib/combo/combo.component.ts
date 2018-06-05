@@ -216,12 +216,13 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     protected _filteringLogic = FilteringLogic.Or;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
-    protected _groupKey: string | number;
-    protected _textKey = '';
+    protected _groupKey: string | number = '';
+    protected _textKey: string | number = '';
     private _dataType = '';
+    private _data: any[] = [];
     private _filteredData = [];
-    private _searchInput: ElementRef;
-    private _comboInput: ElementRef;
+    private _searchInput: ElementRef = null;
+    private _comboInput: ElementRef = null;
     private _onChangeCallback: (_: any) => void = noop;
 
     private _value = '';
@@ -285,10 +286,10 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
 
     @HostBinding('style.width')
     @Input()
-    public width;
+    public width = '250px';
 
     @Input()
-    public height;
+    public height = '400px';
 
     @Input()
     public listHeight = 320;
@@ -298,7 +299,9 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
 
     @Input()
     public set groupKey(val: string | number) {
-        this.clearSorting(this._groupKey);
+        if (this._groupKey !== undefined) {
+            this.clearSorting(this._groupKey);
+        }
         this._groupKey = val;
         this.sort(this._groupKey);
     }
@@ -308,31 +311,37 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     }
 
     @Input()
-    public placeholder;
+    public placeholder = '';
 
     @Input()
     public defaultFallbackGroup = 'Other';
 
     @Input()
-    public valueKey;
+    public valueKey: string | number = '';
 
     @Input()
-    public data;
+    public set data(val: any[]) {
+        this._data = val;
+    }
+
+    public get data(): any[] {
+        return this._data;
+    }
 
     @Input()
     public filteringLogic = FilteringLogic.Or;
+
+    @Input()
+    set textKey(val: string | number) {
+        this._textKey = val;
+    }
 
     get textKey() {
         return this._textKey ? this._textKey : this.valueKey;
     }
 
     @Input()
-    set textKey(val) {
-        this._textKey = val;
-    }
-
-    @Input()
-    public filterable;
+    public filterable = true;
 
     @Output()
     public onSelection = new EventEmitter<IComboSelectionChangeEventArgs>();
@@ -357,11 +366,18 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         }
     }
 
+    onInputClick(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        this.dropdown.toggle();
+    }
+
     onInputFocus(evt) {
         if (this.dropdown.collapsed) {
             return;
         }
         evt.preventDefault();
+        evt.stopPropagation();
         this.dropdown.toggle();
     }
 
@@ -425,9 +441,6 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     }
 
     public handleKeyDown(evt) {
-        /* if (evt.key === 'Enter' && this.dropdown.items.length === 0) {
-            this.addItemToCollection();
-        } else */
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
             this.dropdown.element.focus();
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
@@ -436,13 +449,17 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     }
 
     private checkMatch() {
-        this.customValueFlag = !this.filteredData.some((e) => e[this.textKey].toLowerCase() === this.searchValue.trim().toLowerCase());
+        this.customValueFlag = this.textKey || this.textKey === 0 ?
+            !this.filteredData
+            .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) :
+            !this.filteredData
+            .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase());
     }
 
     public handleInputChange() {
         if (this.filterable) {
             this.filter(this.searchValue, STRING_FILTERS.contains,
-                true, this.getDataType() === DataTypes.PRIMITIVE ? undefined : this.textKey);
+                true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.textKey);
             this.isHeaderChecked();
         }
         this.checkMatch();
@@ -484,11 +501,8 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         }
     }
 
-    public getDataType(): string {
-        if (!this.data || !this.data.length) {
-            return DataTypes.EMPTY;
-        }
-        if (typeof this.data[0] === 'object') {
+    public get dataType(): string {
+        if (this.valueKey) {
             return DataTypes.COMPLEX;
         }
         return DataTypes.PRIMITIVE;
@@ -615,10 +629,10 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
         if (!this.searchValue) {
             return false;
         }
-        const addedItem = {
+        const addedItem = this.textKey ? {
             [this.valueKey]: this.searchValue,
             [this.textKey]: this.searchValue
-        };
+        } : this.searchValue;
         const oldCollection = this.data;
         const newCollection = [...this.data];
         newCollection.push(addedItem);
@@ -677,7 +691,7 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy, ControlValue
     public setDisabledState(isDisabled: boolean): void { }
 
     public get template(): TemplateRef<any> {
-        this._dataType = this.getDataType();
+        this._dataType = this.dataType;
         if (!this.filteredData || !this.filteredData.length) {
             return this.emptyTemplate;
         }
