@@ -2,7 +2,7 @@ import { IPositionStrategy } from './IPositionStrategy';
 import { DOCUMENT } from '@angular/common';
 import { PositionSettings } from './utilities';
 
-export class CenterPositionStrategy implements IPositionStrategy {
+export class GlobalPositionStrategy implements IPositionStrategy {
     private _options: PositionSettings;
     public wrapperClass: string;
 

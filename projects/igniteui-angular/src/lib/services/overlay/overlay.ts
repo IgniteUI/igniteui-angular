@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { IPositionStrategy  } from './position/IPositionStrategy';
-import { CenterPositionStrategy } from './position/center-position-strategy';
+import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { PositionSettings } from './position/utilities';
 
 import {
@@ -92,9 +92,9 @@ export class IgxOverlayService {
             this._componentWrapper.appendChild(element);
             this._positionStrategy.position(element);
 
-        // Default to CenterPositionStrategy.
+        // Default to GlobalPositionStrategy.
         } else {
-            this._positionStrategy = new CenterPositionStrategy(this._document);
+            this._positionStrategy = new GlobalPositionStrategy(this._document);
         }
 
         this.OverlayElement.style.display = 'block';
