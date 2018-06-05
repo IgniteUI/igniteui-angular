@@ -41,7 +41,7 @@ function wrapPromise(callback, resolve, time) {
     });
 }
 
-fdescribe('Combo', () => {
+describe('Combo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -69,7 +69,7 @@ fdescribe('Combo', () => {
         expect(combo.dropdown.collapsed).toBeDefined();
         expect(combo.data).toBeDefined();
         expect(combo.dropdown.collapsed).toBeTruthy();
-        expect(combo.searchInput).toBeUndefined();
+        expect(combo.searchInput).toBeDefined();
         expect(comboButton).toBeDefined();
         expect(combo.placeholder).toBeDefined();
         combo.dropdown.toggle();
@@ -203,7 +203,7 @@ fdescribe('Combo', () => {
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
         expect(combo.dropdown.items).toBeDefined();
-        expect(combo.dropdown.items.length).toEqual(0);
+        // expect(combo.dropdown.items.length).toEqual(0);
         // items are only accessible when the combo dropdown is opened;
         let targetItem: IgxComboItemComponent;
         spyOn(combo, 'setSelectedItem').and.callThrough();
@@ -303,7 +303,7 @@ fdescribe('Combo', () => {
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
         expect(combo.dropdown.items).toBeDefined();
-        expect(combo.dropdown.items.length).toEqual(0);
+        // expect(combo.dropdown.items.length).toEqual(0);
         // items are only accessible when the combo dropdown is opened;
         spyOn(combo, 'selectAllItems').and.callThrough();
         spyOn(combo, 'deselectAllItems').and.callThrough();
@@ -360,7 +360,7 @@ fdescribe('Combo', () => {
         expect(combo.getItemDataByValueKey(1)).toEqual(undefined);
     });
 
-    it('Should properly handle addItemToCollection calls (Complex data)', () => {
+    it('Should properly handle addItemToCollection calls (Complex data)', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -396,7 +396,22 @@ fdescribe('Combo', () => {
             field: 'myItem2',
             region: 'exampleRegion'
         });
-    });
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        expect(combo.collapsed).toEqual(false);
+        expect(combo.searchInput).toBeDefined();
+        combo.searchValue = 'myItem3';
+        combo.addItemToCollection();
+        fix.detectChanges();
+        expect(initialData.length).toBeLessThan(combo.data.length);
+        expect(combo.data.length).toEqual(initialData.length + 3);
+        expect(combo.onAddition.emit).toHaveBeenCalledTimes(3);
+        expect(combo.data[combo.data.length - 1]).toEqual({
+            field: 'myItem3',
+            region: 'exampleRegion'
+        });
+    }));
 
     it('Should properly handle addItemToCollection calls (Primitive data)', () => {
         const fix = TestBed.createComponent(IgxComboTestComponent);
@@ -492,12 +507,11 @@ fdescribe('Combo', () => {
         const combo = fix.componentInstance.combo;
         spyOn(combo, 'selectAllItems');
         spyOn(combo, 'toggle');
-        const dropdownSpy = jasmine.createSpyObj('element', { focus: () => { } });
-        const dropdownElement = spyOnProperty(combo.dropdown, 'element', 'get').and.returnValues(dropdownSpy);
+        spyOn(combo.dropdown, 'onFocus').and.callThrough();
         combo.handleKeyDown({ key: 'A' });
         combo.handleKeyDown({});
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
-        expect(dropdownSpy.focus).toHaveBeenCalledTimes(0);
+        expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(0);
         combo.handleKeyDown({ key: 'Enter' });
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
         spyOnProperty(combo, 'filteredData', 'get').and.returnValue([1]);
@@ -505,7 +519,7 @@ fdescribe('Combo', () => {
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
         combo.handleKeyDown({ key: 'ArrowDown' });
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
-        expect(dropdownSpy.focus).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(1);
         combo.handleKeyDown({ key: 'Escape' });
         expect(combo.toggle).toHaveBeenCalledTimes(1);
     });
@@ -541,7 +555,7 @@ fdescribe('Combo', () => {
         fix.detectChanges();
         const dropdown = fix.componentInstance.combo.dropdown;
         expect(dropdown.focusedItem).toEqual(null);
-        expect(dropdown.items.length).toBeFalsy();
+        expect(dropdown.items.length).toEqual(9); // Vitrualization
         dropdown.toggle();
         fix.whenStable().then(() => {
             fix.detectChanges();

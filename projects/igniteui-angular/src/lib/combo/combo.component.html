@@ -31,52 +31,41 @@
             </ng-template>
         </igx-suffix>
     </igx-input-group>
-    <ng-container *ngIf="!dropdown.collapsed">
+    <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="width">
         <igx-input-group class="igx-combo__search">
             <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue" (input)="handleInputChange($event)"
-                (keyup)="handleKeyDown($event)" placeholder="Enter a search term" />
+                (keyup)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" placeholder="Enter a search term" />
         </igx-input-group>
-        <!-- <div>
-            Select All:
-            <igx-checkbox #selectAllCheckbox (change)="handleSelectAll($event)"></igx-checkbox>
-        </div> -->
-    </ng-container>
-    <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0"
-        [width]="width">
-        <ng-container *ngIf="!dropdown.collapsed">
-            <ng-container *ngTemplateOutlet="dropdownHeader; context: {$impicit: this}">
-            </ng-container>
+        <ng-container *ngTemplateOutlet="dropdownHeader; context: {$impicit: this}">
         </ng-container>
-        <ng-container *ngIf="!dropdown.collapsed">
-            <div style="position: relative; overflow: hidden;" [style.height.px]="dropDownHeight" [style.width.px]="dropDownWidth">
-                <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
-                    [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="dropDownHeight" [igxForItemSize]="dropDownItemHeight"
-                    #virtualScrollContainer>
-                    <igx-combo-item [itemData]="item" isHeader={{item.isHeader}}>
-                        <ng-container *ngIf="!item.isHeader">
-                            <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true"></igx-checkbox>
-                        </ng-container>
-                        <ng-container *ngIf="item.isHeader">
-                            <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, textKey: textKey}"></ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="!item.isHeader">
-                            <ng-container #listItem *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, textKey: textKey};"></ng-container>
-                        </ng-container>
-                    </igx-combo-item>
-                </ng-template>
-                <igx-combo-item *ngIf="searchValue.length !== 0 && customValueFlag" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
-                    class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [isDisabled]="false" [itemData]="'ADD ITEM'">
-                    Add item to collection
-                    <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
-                </igx-combo-item>
-                <igx-combo-item *ngIf="filteredData.length === 0 && !customValueFlag">
-                    <ng-container *ngTemplateOutlet="empty; context: {$impicit: this}">
+        <div #dropdownItemContainer style="position: relative; overflow: hidden;" [style.height.px]="dropDownHeight" [style.width.px]="dropDownWidth" [igxDropDownItemNavigation]="dropdown"
+            [tabindex]="dropdown.collapsed ? -1 : 0">
+            <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
+                [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="dropDownHeight" [igxForItemSize]="dropDownItemHeight"
+                #virtualScrollContainer>
+                <igx-combo-item [itemData]="item" isHeader={{item.isHeader}}>
+                    <ng-container *ngIf="!item.isHeader">
+                        <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true"></igx-checkbox>
+                    </ng-container>
+                    <ng-container *ngIf="item.isHeader">
+                        <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, textKey: textKey}"></ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="!item.isHeader">
+                        <ng-container #listItem *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, textKey: textKey};"></ng-container>
                     </ng-container>
                 </igx-combo-item>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="!dropdown.collapsed">
-            <ng-container *ngTemplateOutlet="dropdownFooter; context: {$impicit: this}"></ng-container>
-        </ng-container>
+            </ng-template>
+            <igx-combo-item *ngIf="searchValue.length !== 0 && customValueFlag" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
+                class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [isDisabled]="false" [itemData]="'ADD ITEM'">
+                Add item to collection
+                <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
+            </igx-combo-item>
+            <igx-combo-item *ngIf="filteredData.length === 0 && !customValueFlag">
+                <ng-container *ngTemplateOutlet="empty; context: {$impicit: this}">
+                </ng-container>
+            </igx-combo-item>
+            <ng-container *ngTemplateOutlet="dropdownFooter; context: {$impicit: this}">
+            </ng-container>
+        </div>
     </igx-combo-drop-down>
 </div>

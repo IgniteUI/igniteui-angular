@@ -58,6 +58,7 @@ const noop = () => {};
 })
 export class IgxComboDropDownComponent extends IgxDropDownBase {
     private _isFocused = false;
+    private _children: QueryList<IgxDropDownItemBase>;
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -83,10 +84,14 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
     public verticalScrollContainer: IgxForOfDirective<any>;
 
-    @ContentChildren(forwardRef(() => IgxComboItemComponent))
-    protected children: QueryList<IgxDropDownItemBase>;
+    protected get children(): QueryList<IgxDropDownItemBase> {
+        return this.parentElement.children;
+    }
 
-    @HostListener('focus')
+    protected set children(val:  QueryList<IgxDropDownItemBase>) {
+        this._children = val;
+    }
+
     onFocus() {
         this._isFocused = true;
         this._focusedItem = this._focusedItem ? this._focusedItem : this.items.length ? this.items[0] : this.children.first;
@@ -95,8 +100,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
     }
 
-    @HostListener('blur')
-    onBlur() {
+    onBlur(evt?) {
         this._isFocused = false;
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
@@ -232,6 +236,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     private _dataType = '';
     private _data: any[] = [];
     private _filteredData = [];
+    private _children: QueryList<IgxDropDownItemBase>;
+    private _dropdownContainer: ElementRef = null;
     private _searchInput: ElementRef = null;
     private _comboInput: ElementRef = null;
     private _onChangeCallback: (_: any) => void = noop;
@@ -291,6 +297,23 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
 
     @ContentChild('headerItemTemplate', { read: TemplateRef })
     public headerItemTemplate: TemplateRef<any>;
+
+    public get children(): QueryList<IgxDropDownItemBase> {
+        return this._children;
+    }
+
+    @ViewChild('dropdownItemContainer')
+    protected set dropdownContainer(val: ElementRef) {
+        this._dropdownContainer = val;
+    }
+
+    protected get dropdownContainer(): ElementRef {
+        return this._dropdownContainer;
+    }
+    @ViewChildren(IgxComboItemComponent, {read: IgxComboItemComponent})
+    public set children(list: QueryList<IgxDropDownItemBase>) {
+        this._children = list;
+    }
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -503,7 +526,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
 
     public handleKeyDown(evt) {
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
-            this.dropdown.element.focus();
+            this.dropdownContainer.nativeElement.focus();
+            this.dropdown.onFocus();
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
             this.toggle();
         }
