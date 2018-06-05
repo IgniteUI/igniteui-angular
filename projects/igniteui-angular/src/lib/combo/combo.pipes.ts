@@ -27,6 +27,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
         state.expressions = this.combo.filteringExpressions;
 
         if (!state.expressions.length) {
+            this.combo.filteredData = collection;
             return collection;
         }
 
@@ -40,7 +41,7 @@ export class SimpleFilteringStrategy extends FilteringStrategy {
     public findMatch(rec: object, expr: IFilteringExpression, index: number): boolean {
         const cond = expr.condition;
         const val = expr.fieldName === undefined ? rec : rec[expr.fieldName];
-        return cond(val, expr.searchVal, expr.ignoreCase);
+        return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 }
 
@@ -59,6 +60,7 @@ export class IgxComboSortingPipe implements PipeTransform {
         state.expressions = this.combo.sortingExpressions;
 
         if (!state.expressions.length) {
+            this.combo.filteredData = collection;
             return collection;
         }
         const result = DataUtil.sort(cloneArray(collection), state);

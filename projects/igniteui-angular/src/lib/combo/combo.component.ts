@@ -10,7 +10,7 @@ import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.co
 import { IToggleView } from '../core/navigation';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray } from '../core/utils';
-import { BOOLEAN_FILTERS, STRING_FILTERS } from '../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxForOfDirective, IgxForOfModule } from '../directives/for-of/for_of.directive';
@@ -222,6 +222,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
 export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     public id = '';
     public customValueFlag = true;
+    protected stringFilters = IgxStringFilteringOperand;
+    protected boolenFilters = IgxBooleanFilteringOperand;
     protected _filteringLogic = FilteringLogic.Or;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
@@ -365,9 +367,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
      */
     @Input()
     public set groupKey(val: string | number) {
-        if (this._groupKey !== undefined) {
-            this.clearSorting(this._groupKey);
-        }
+        this.clearSorting(this._groupKey);
         this._groupKey = val;
         this.sort(this._groupKey);
     }
@@ -519,14 +519,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
 
     public handleInputChange(event?) {
         if (this.filterable) {
-            this.filter(this.searchValue.trim(), STRING_FILTERS.contains,
+            this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.textKey);
             this.isHeaderChecked();
         }
         if (event) {
-            this.onSearchInput.emit({
-                event
-            });
+            this.onSearchInput.emit(event);
         }
     }
 
@@ -741,7 +739,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         }
         if (this.groupKey) {
             const expression2 = newArray.find((expr) => expr.fieldName === 'isHeader');
-            const headerExpression = { fieldName: 'isHeader', searchVale: '', condition: BOOLEAN_FILTERS.true, ignoreCase: true };
+            const headerExpression = { fieldName: 'isHeader', searchVale: '',
+            condition: IgxBooleanFilteringOperand.instance().condition('true'), ignoreCase: true };
             if (!expression2) {
                 newArray.push(headerExpression);
             } else {
