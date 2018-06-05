@@ -182,4 +182,8 @@
     @include e(grouparea-placeholder) {
         @extend %igx-grid__grouparea-placeholder !optional;
     }
+
+    @include e(chipDisabled) {
+        @extend %grid__chipDisabled !optional;
+    }
 }

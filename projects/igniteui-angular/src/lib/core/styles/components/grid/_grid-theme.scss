@@ -487,6 +487,33 @@
 
     // Groupby section
 
+    %grid__chipDisabled {
+        .chip-area
+        {
+            background-color: rgba(0,0,0,0.04);
+            cursor: auto;
+            &:hover,
+            &:focus{
+                background-color: rgba(0,0,0,0.04);
+                .igx-icon {
+                    &%igx-chips-area__order-icon {
+                        color:  rgba(0,0,0,0.12);
+                    }
+                 }
+                 .igx-chips-area__text {
+                    color:  rgba(0,0,0,0.12);
+                }
+            }
+        }
+
+        .igx-chips-area__text {
+            color:  rgba(0,0,0,0.12);
+        }
+        .igx-chips-area__label {
+            color:  rgba(0,0,0,0.12);
+        }        
+    }
+
     %grid__group-label {
         display: flex;
         align-items: center;

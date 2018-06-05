@@ -16,9 +16,9 @@ export class GridGroupBySampleComponent implements OnInit {
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 100, hidden: true },
-            { field: 'CompanyName', width: 300 },
+            { field: 'CompanyName', width: 300, groupable: true },
             { field: 'ContactName', width: 200, pinned: true },
-            { field: 'ContactTitle', width: 200, pinned: true },
+            { field: 'ContactTitle', width: 200, pinned: true, groupable: false},
             { field: 'Address', width: 300 },
             { field: 'City', width: 100 },
             { field: 'Region', width: 100 },
