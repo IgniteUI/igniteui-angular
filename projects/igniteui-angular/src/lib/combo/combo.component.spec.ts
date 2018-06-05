@@ -702,7 +702,6 @@ fdescribe('Combo', () => {
         spyOn(dropdown.onOpening, 'emit').and.callThrough();
         spyOn(dropdown.onClosed, 'emit').and.callThrough();
         spyOn(dropdown.onClosing, 'emit').and.callThrough();
-        spyOn(combo, 'onInputFocus').and.callThrough();
         spyOn(combo, 'onInputClick').and.callThrough();
         const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
         dropdown.onOpening.subscribe(() => onOpeningEventFired = true);
@@ -727,7 +726,6 @@ fdescribe('Combo', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            expect(combo.onInputFocus).toHaveBeenCalledTimes(0);
             expect(combo.onInputClick).toHaveBeenCalledTimes(2);
             expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(1);
             expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(1);

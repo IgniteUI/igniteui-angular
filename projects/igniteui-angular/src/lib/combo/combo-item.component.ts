@@ -6,15 +6,15 @@ import {
     HostListener,
     Inject,
     Input
-} from "@angular/core";
-import { IgxCheckboxComponent } from "../checkbox/checkbox.component";
-import { IgxSelectionAPIService } from "../core/selection";
-import { IgxDropDownItemBase } from "../drop-down/drop-down-item.component";
-import { IgxComboDropDownComponent } from "./combo.component";
+} from '@angular/core';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IgxSelectionAPIService } from '../core/selection';
+import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
+import { IgxComboDropDownComponent } from './combo.component';
 
 @Component({
-    selector: "igx-combo-item",
-    templateUrl: "combo-item.component.html"
+    selector: 'igx-combo-item',
+    templateUrl: 'combo-item.component.html'
 })
 export class IgxComboItemComponent extends IgxDropDownItemBase {
     /**
@@ -40,7 +40,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
         return this.parentElement.selectedItem.indexOf(this.itemID) > -1;
     }
 
-    @HostListener("click", ["$event"])
+    @HostListener('click', ['$event'])
     clicked(event) {
         if (this.isDisabled || this.isHeader) {
             const focusedItem = this.parentElement.focusedItem;

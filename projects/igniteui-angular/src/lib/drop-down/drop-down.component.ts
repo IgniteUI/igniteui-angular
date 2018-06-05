@@ -243,6 +243,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         }
     }
 
+    public get focusedItem() {
+        return this._focusedItem;
+    }
+
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
@@ -414,13 +418,13 @@ export class IgxDropDownItemNavigationDirective {
 
     @HostListener('keydown.Space', ['$event'])
     onSpaceKeyDown(event) {
-        this.target.selectItem();
+        this.target.selectItem(this.target.focusedItem);
         event.preventDefault();
     }
 
     @HostListener('keydown.Spacebar', ['$event'])
     onSpaceKeyDownIE(event) {
-        this.target.selectItem();
+        this.target.selectItem(this.target.focusedItem);
         event.preventDefault();
     }
 
