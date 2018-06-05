@@ -17,7 +17,7 @@ import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipComponent } from '../chips';
 
-describe('IgxGrid - GroupBy', () => {
+fdescribe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const FIXED_CELL_CSS = 'igx-grid__th--pinned';
@@ -114,6 +114,21 @@ describe('IgxGrid - GroupBy', () => {
 
         return new Promise((resolve, reject) => {
             element.dispatchEvent(new MouseEvent(eventName, options));
+            resolve();
+        });
+    }
+
+    function simulatePointerEvent(eventName: string, element, x, y) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: x,
+            clientY: y
+        };
+
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(new PointerEvent(eventName, options));
             resolve();
         });
     }
@@ -1343,7 +1358,7 @@ describe('IgxGrid - GroupBy', () => {
 
         grid.groupBy('ProductName', SortingDirection.Asc, false);
         fix.detectChanges();
-        simulateMouseEvent('click', fix.nativeElement.querySelector('igx-grid-header[id="igx-grid-0_ProductName"]'), 0, 0);
+        simulateMouseEvent('click', fix.nativeElement.querySelector('igx-grid-header[id$="_ProductName"]'), 0, 0);
         fix.detectChanges();
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
