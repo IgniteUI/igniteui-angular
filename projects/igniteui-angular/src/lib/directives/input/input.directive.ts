@@ -105,7 +105,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
 
         if ((this.nativeElement.value && this.nativeElement.value.length > 0) ||
-            (this.ngModel && this.ngModel.model && this.ngModel.model.length > 0)) {
+            (this.ngModel && this.ngModel.model !== '' &&
+                this.ngModel.model !== undefined && this.ngModel.model !== null)) {
             this.inputGroup.isFilled = true;
         }
 
