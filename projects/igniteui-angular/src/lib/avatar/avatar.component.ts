@@ -212,8 +212,8 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * Returns the size of the avatar.
      *
-     * ```html
-     * <igx-avatar  size={{another-avatar.size}}></igx-avatar>
+     * ```typescript
+     *let avatarSize =  this.avatar.size;
      * ```
      *
      * @memberof IgxAvatarComponent
