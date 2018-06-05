@@ -41,28 +41,59 @@ export enum Type {
 })
 export class IgxBadgeComponent {
 
+    /**
+     * An @Input property that sets the value of the `id` attribute.
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-badge-${NEXT_ID++}`;
 
+    /**
+    * An @Input property controlling the type of the badge.
+    * Allowed values are `default`, `info`, `success`, `warning`, `error`.
+    * Providing an invalid value won't display a badge.
+    */
     @Input()
     public type: string | Type = 'default';
 
+    /**
+    * An @Input property that sets the value to be displayed inside the badge.
+    * If an `icon` property is already set the `icon` will be displayed.
+    * If neither a `value` nor an `icon` is set the contentent of the badge will be empty.
+    */
     @Input()
     public value = '';
 
+    /**
+     * Set an icon for the badge from the material icons set.
+     * Has priority over the `value` property.
+     * If neither a `value` nor an `icon` is set the content of the badge will be empty.
+     * Providing an invalid value won't display anything.
+     */
     @Input()
     public icon: string;
 
+    /**
+     * Set the value of the `role` attribute.
+     */
     @HostBinding('attr.role')
     public role = 'status';
 
+    /**
+     * This allows you to set class to the badge. The default value is igx-badge.
+     */
     @HostBinding('class.igx-badge')
     public cssClass = 'igx-badge';
 
+    /**
+     * Set the value of the `aria-label` attribute.
+     */
     @HostBinding('attr.aria-label')
     public label = 'badge';
 
+    /**
+     * Defines a human-readable, accessor, author-localized description for the `type` and the `icon` or `value` of the element.
+     */
     get roleDescription() {
         let message;
 
@@ -78,6 +109,11 @@ export class IgxBadgeComponent {
         return message;
     }
 
+    /**
+     *
+     * Method which makes the name of the class more descriptive.
+     * This helps the styling of the badges.
+     */
     public setClasses() {
         let classes = {};
 
