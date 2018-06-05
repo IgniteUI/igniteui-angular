@@ -120,27 +120,27 @@ export class IgxBadgeComponent {
         switch (Type[this.type.toUpperCase()]) {
             case Type.DEFAULT:
                 classes = {
-                    [`${this.cssClass}__circle--default`]: true
+                    [`${this.cssClass}__state--default`]: true
                 };
                 break;
             case Type.INFO:
                 classes = {
-                    [`${this.cssClass}__circle--info`]: true
+                    [`${this.cssClass}__state--info`]: true
                 };
                 break;
             case Type.SUCCESS:
                 classes = {
-                    [`${this.cssClass}__circle--success`]: true
+                    [`${this.cssClass}__state--success`]: true
                 };
                 break;
             case Type.WARNING:
                 classes = {
-                    [`${this.cssClass}__circle--warning`]: true
+                    [`${this.cssClass}__state--warning`]: true
                 };
                 break;
             case Type.ERROR:
                 classes = {
-                    [`${this.cssClass}__circle--error`]: true
+                    [`${this.cssClass}__state--error`]: true
                 };
                 break;
         }

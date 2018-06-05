@@ -2,6 +2,8 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
+- Theming - You can now change the badge border radius through the theme engine.
+
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
 
