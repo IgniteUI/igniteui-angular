@@ -144,7 +144,7 @@
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
     }
-  
+
     // Groupby section
 
     @include e(group-label) {
@@ -191,10 +191,6 @@
         @extend %igx-grid__grouparea-placeholder !optional;
     }
 
-    @include e(chipDisabled) {
-        @extend %grid__chipDisabled !optional;
-    }
-  
     @include m(cosy) {
         @extend %grid-display !optional;
 

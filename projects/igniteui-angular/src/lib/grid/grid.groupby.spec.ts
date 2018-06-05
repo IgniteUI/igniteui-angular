@@ -35,7 +35,7 @@ describe('IgxGrid - GroupBy', () => {
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
     const GROUPROW_COTENT_CSS = '.igx-grid__group-content';
-    const DISABLED_CHIP = 'igx-grid__chipDisabled';
+    const DISABLED_CHIP = 'iigx-chips-area__item--disabled';
     const CHIP = 'igx-chip';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
