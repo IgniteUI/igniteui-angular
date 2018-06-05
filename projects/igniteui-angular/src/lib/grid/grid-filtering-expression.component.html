@@ -1,7 +1,7 @@
 <ng-template #defaultFilterUI>
     <div *ngIf="!unaryCondition" class="igx-filtering__op">
         <igx-input-group>
-            <input type="text" igxInput placeholder="Value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" #input/>
+            <input type="text" igxInput placeholder="Value" autocomplete="off" (input)="onInputChanged($event.target.value)" #input/>
             <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
                 <igx-icon>clear</igx-icon>
             </igx-suffix>
@@ -11,7 +11,7 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker (click)="onDatePickerClick()" *ngIf="!unaryCondition" [(ngModel)]="value"></igx-datePicker>
+    <igx-datePicker (click)="onDatePickerClick()" *ngIf="!unaryCondition" [(ngModel)]="expression.searchVal"></igx-datePicker>
 </ng-template>
 
 <div>

@@ -13,7 +13,8 @@ import {
     OnInit,
     Output,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    AfterViewInit
 } from "@angular/core";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
@@ -24,7 +25,7 @@ import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
 import { IgxButtonGroupModule, IgxButtonGroupComponent } from "../buttonGroup/buttonGroup.component";
 import { IgxGridFilterComponent } from "./grid-filtering.component";
-import { IFilteringOperation } from '../../public_api';
+import { IFilteringOperation, IFilteringExpression } from '../../public_api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,37 +33,25 @@ import { IFilteringOperation } from '../../public_api';
     selector: "igx-grid-filter-expression",
     templateUrl: "./grid-filtering-expression.component.html"
 })
-export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDestroy {
-
-    @Input()
-    public column;
+export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
 
     @Input()
     public name;
 
-    get value() {
-        return this._value;
+    get column() {
+        return this._column;
     }
 
     @Input()
-    set value(val) {
-        // filtering needs to be cleared if value is null, undefined or empty string
-        if (!val && val !== 0) {
-            //this.clearFiltering(false);
-            //TODO
-            return;
+    set column(val) {
+        this._column = val;
+        if(this.expression) {
+            this.expression.fieldName = val;
         }
-        this._value = this.transformValue(val);
-        //this.filter();
-        this.onFilterChanged.emit();
-        //TODO
     }
-    
-    // @Output()
-    // public onClearInput = new EventEmitter<IgxGridFilterExpressionComponent>();
 
     @Output()
-    public onFilterChanged = new EventEmitter<any>();
+    public onExpressionChanged = new EventEmitter<any>();
 
     @ViewChild("defaultFilterUI", { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
@@ -70,39 +59,43 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     @ViewChild("defaultDateUI", { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
-    protected toggleDirective: IgxToggleDirective;
-
     @ViewChild("select", { read: ElementRef})
     protected select: ElementRef;
 
-    @ViewChild("logicOperators", {read: IgxButtonGroupComponent})
-    protected logicOperators: IgxButtonGroupComponent;
+    @ViewChild("input", { read: ElementRef})
+    protected input: ElementRef;
 
-    //public unaryCondition: boolean
-    private _value: any;
-    public filterCondition;
+    private _column: any;
+    public expression: IFilteringExpression;
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef, private filterComponent: IgxGridFilterComponent) {
          // when condition is unary
         //this.unaryConditionChanged.subscribe((value) => this.filter());
-        this.unaryConditionChanged.subscribe((value) => this.onFilterChanged.emit());//TODO
+        this.unaryConditionChanged.subscribe((value) => this.onExpressionChanged.emit(this.expression));//TODO
         // when condition is NOT unary
         //this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
-        this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.onFilterChanged.emit(); }});//TODO
-         
+        this.conditionChanged.subscribe((value) => { if (!!this.expression.searchVal || this.expression.searchVal === 0) { this.onExpressionChanged.emit(this.expression); }});//TODO
+
     }
 
     public ngOnInit() {
+        this.expression = { 
+            fieldName: this.column,
+            condition: null,
+            searchVal: null,
+            ignoreCase: null
+        }
+    }
+
+    public ngAfterViewInit() {
+        this.expression.condition = this.getCondition(this.select.nativeElement.value);
     }
 
     public ngOnDestroy() {
-        //this.filterChanged.unsubscribe();
         this.conditionChanged.unsubscribe();
         this.unaryConditionChanged.unsubscribe();
-        //this.chunkLoaded.unsubscribe();
     }
 
     protected UNARY_CONDITIONS = [
@@ -124,16 +117,21 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     }    
 
     public isActive(value): boolean {
-        return this.filterCondition === value;
+        if(this.expression && this.expression.condition === value) {
+            return true;
+        }
+        else {
+            return false;
+        } 
     }
 
     get gridID(): string {
-        return this.column.gridID;
+        return this.filterComponent.column.gridID;
     }
 
     get unaryCondition(): boolean {
         for (const each of this.UNARY_CONDITIONS) {
-            if (this.filterCondition && this.filterCondition === each) {
+            if (this.expression && this.expression.condition && this.expression.condition.name === each) {
                 return true;
             }
         }
@@ -141,11 +139,11 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     }
 
     get conditions() {
-        return this.column.filters.instance().conditionList();
+        return this.filterComponent.column.filters.instance().conditionList();
     }
 
     protected getCondition(value: string): IFilteringOperation {
-        return this.column.filters.instance().condition(value);
+        return this.filterComponent.column.filters.instance().condition(value);
     }
 
     protected transformValue(value) {
@@ -159,31 +157,40 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     }
 
     public selectionChanged(value): void {
-        //this.onSelectionChanged.emit(value);
-        this.filterCondition = value;
-        this.column.filteringCondition = this.getCondition(value);
+        this.expression.condition = this.getCondition(value);
         if (this.unaryCondition) {
             this.unaryConditionChanged.next(value);
         } else {
             this.conditionChanged.next(value);
         }
+        this.onExpressionChanged.emit(this.expression);
     }
 
 
     public onInputChanged(val): void {
-        //this.filterChanged.next(val);
-        this.onFilterChanged.emit(val);
-        //TODO
+        if (!val && val !== 0) {
+            this.expression.searchVal = val;
+            this.onExpressionChanged.emit(this.expression);
+            return;
+        }
+        this.expression.searchVal = this.transformValue(val);
+        this.onExpressionChanged.emit(this.expression);
     }
 
     public clearInput(): void {
-        //this.clearFiltering(false);
-        //TODO
-        this.onFilterChanged.emit();
+        this.input.nativeElement.value = null;
+        this.expression.searchVal = null;
+        // XXX - Temp fix for (#1183, #1177) (Should be deleted)
+        if (this.filterComponent.dataType === DataType.Date) {
+            this.cdr.detectChanges();
+        }
+        this.onExpressionChanged.emit(this.expression);
     }
 
     // XXX - Temp fix for (#1183, #1177) (Should be deleted)
     onDatePickerClick() {
         this.zone.run(() => {});
     }
+
+
 }
