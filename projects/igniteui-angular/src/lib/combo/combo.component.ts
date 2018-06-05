@@ -354,17 +354,20 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
      * Configures the drop down list height
      */
     @Input()
-    public listHeight = 320;
+    public dropDownHeight = 320;
 
     /**
      * Configures the drop down list item height
      */
     @Input()
-    public listItemHeight = 32;
+    public dropDownWidth = this.width;
 
     /**
      * Gets/sets a property by which the items from the collection should be grouped
      */
+    @Input()
+    public dropDownItemHeight = 32;
+
     @Input()
     public set groupKey(val: string | number) {
         this.clearSorting(this._groupKey);
@@ -439,7 +442,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     }
 
     public get values(): any[] {
-        return this.valueKey !== undefined ? this.selectedItems.map((e) => e[this.valueKey]) : [];
+        return this.valueKey !== undefined ? this.selectedItems().map((e) => e[this.valueKey]) : [];
     }
 
     public get filteringExpressions() {
@@ -460,9 +463,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         this.cdr.markForCheck();
     }
 
-    public get selectedItems() {
-        return this.dropdown.selectedItem;
-    }
     protected clearSorting(field?: string | number) {
         if (field === undefined || field === null) {
             this.sortingExpressions = [];
@@ -648,35 +648,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         this.selectAllCheckbox.checked = false;
     }
 
-    public toggle() {
-        this.dropdown.toggle();
-    }
-
-    public open() {
-        this.dropdown.open();
-    }
-
-    public close() {
-        this.dropdown.close();
-    }
-
-    public get collapsed() {
-        return this.dropdown.collapsed;
-    }
-
-    public selectAllItems() {
-        const allVisible = this.selectionAPI.get_all_ids(this.filteredData);
-        const newSelection = this.selectionAPI.select_items(this.id, allVisible);
-        this.triggerSelectionChange(newSelection);
-    }
-
-    public deselectAllItems() {
-        const newSelection = this.filteredData.length === this.data.length ?
-            [] :
-            this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
-        this.triggerSelectionChange(newSelection);
-    }
-
     protected triggerSelectionChange(newSelection) {
         const oldSelection = this.dropdown.selectedItem;
         if (oldSelection !== newSelection) {
@@ -789,6 +760,49 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         return {
             $implicit: this
         };
+    }
+
+    public toggle() {
+        this.dropdown.toggle();
+    }
+
+    public open() {
+        this.dropdown.open();
+    }
+
+    public close() {
+        this.dropdown.close();
+    }
+
+    public get collapsed() {
+        return this.dropdown.collapsed;
+    }
+
+    public selectedItems() {
+        return this.dropdown.selectedItem;
+    }
+
+    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
+        const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
+        this.triggerSelectionChange(newSelection);
+    }
+
+    public deselectItems(newItems: Array<any>) {
+        const newSelection = this.selectionAPI.deselect_items(this.id, newItems);
+        this.triggerSelectionChange(newSelection);
+    }
+
+    public selectAllItems() {
+        const allVisible = this.selectionAPI.get_all_ids(this.filteredData);
+        const newSelection = this.selectionAPI.select_items(this.id, allVisible);
+        this.triggerSelectionChange(newSelection);
+    }
+
+    public deselectAllItems() {
+        const newSelection = this.filteredData.length === this.data.length ?
+            [] :
+            this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
+        this.triggerSelectionChange(newSelection);
     }
 }
 
