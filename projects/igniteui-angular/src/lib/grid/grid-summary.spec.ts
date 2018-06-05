@@ -1,4 +1,4 @@
-﻿﻿import { Component, DebugElement, ViewChild } from '@angular/core';
+﻿import { Component, DebugElement, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -407,7 +407,7 @@ describe('IgxGrid - Summaries', () => {
         });
     }));
 
-    it('should render correct data after hiding all summaries when scrolled to the bottom', (done) => {
+    it('should render correct data after hiding all summaries when scrolled to the bottom', async(() => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
 
@@ -445,7 +445,7 @@ describe('IgxGrid - Summaries', () => {
                 }
             }, 100);
         });
-    });
+    }));
 
     it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', async(() => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
