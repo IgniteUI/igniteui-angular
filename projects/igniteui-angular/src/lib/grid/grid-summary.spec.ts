@@ -173,14 +173,11 @@ describe('IgxGrid - Summaries', () => {
         let countValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css('[title=\'Count\']'));
-            if (countValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(countValue).toBe(temp);
-            } else {
+            if (countLabel) {
                 countValue = countLabel.nativeElement.nextSibling.innerText;
+                expect(+countValue).toBe(grid.rowList.length);
             }
         });
-        expect(+countValue).toBe(grid.rowList.length);
 
         grid.addRow({
             ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: new Date('2018-03-01')
@@ -190,15 +187,11 @@ describe('IgxGrid - Summaries', () => {
         let updatedValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css('[title=\'Count\']'));
-            if (updatedValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(updatedValue).toBe(temp);
-            } else {
+            if (countLabel) {
                 updatedValue = countLabel.nativeElement.nextSibling.innerText;
+                expect(+updatedValue).toBe(grid.rowList.length);
             }
         });
-
-        expect(+updatedValue).toBe(grid.rowList.length);
     });
     it('should recalculate summary functions onRowDeleted', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
@@ -210,14 +203,11 @@ describe('IgxGrid - Summaries', () => {
         let countValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css('[title=\'Count\']'));
-            if (countValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(countValue).toBe(temp);
-            } else {
+            if (countLabel) {
                 countValue = countLabel.nativeElement.nextSibling.innerText;
+                expect(+countValue).toBe(grid.rowList.length);
             }
         });
-        expect(+countValue).toBe(grid.rowList.length);
 
         grid.deleteRow(0);
         fixture.detectChanges();
@@ -225,14 +215,11 @@ describe('IgxGrid - Summaries', () => {
         let updatedValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css('[title=\'Count\']'));
-            if (updatedValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(updatedValue).toBe(temp);
-            } else {
+            if (countLabel) {
                 updatedValue = countLabel.nativeElement.nextSibling.innerText;
+                expect(+updatedValue).toBe(grid.rowList.length);
             }
         });
-        expect(+updatedValue).toBe(grid.rowList.length);
     });
     it('should recalculate summary functions on updateRow', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
@@ -246,14 +233,12 @@ describe('IgxGrid - Summaries', () => {
         let countValue;
         summaries.forEach((summary) => {
             const countLabel = summary.query(By.css('[title=\'Count\']'));
-            if (countValue) {
-                const temp = countLabel.nativeElement.nextSibling.innerText;
-                expect(countValue).toBe(temp);
-            } else {
+            if (countLabel) {
                 countValue = countLabel.nativeElement.nextSibling.innerText;
+                expect(+countValue).toBe(grid.rowList.length);
             }
         });
-        expect(+countValue).toBe(grid.rowList.length);
+
         expect(productNameCell.value).toBe('Chai');
         expect(unitsInStockCell.value).toBe(2760);
 
@@ -388,7 +373,7 @@ describe('IgxGrid - Summaries', () => {
             done();
         });
     });
-    it('should render correct data after hiding all summaries when scrolled to the bottom', (done) => {
+    it('should render correct data after hiding all summaries when scrolled to the bottom',  async(() => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
 
@@ -420,13 +405,13 @@ describe('IgxGrid - Summaries', () => {
                     return item.querySelectorAll('igx-grid-cell')[0];
                 });
                 expect(rowsRendered.length).toEqual(expectedRowLenght);
-
+                const expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
-                    expect(firstCells[i].textContent.trim()).toEqual((grid.rowList.length - expectedRowLenght).toString());
+                    expect(firstCells[i].textContent.trim()).toEqual((expectedFirstCellNum + i).toString());
                 }
             }, 100);
         });
-    });
+    }));
 
     it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', async(() => {
         const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
@@ -461,9 +446,10 @@ describe('IgxGrid - Summaries', () => {
                     return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
                 });
                 expect(rowsRendered.length).toEqual(expectedRowLenght);
+                let expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
 
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
-                    expect(firstCellsText[i]).toEqual((i + 11).toString());
+                    expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
                 }
                 grid.disableSummaries(['OrderDate']);
 
@@ -478,11 +464,11 @@ describe('IgxGrid - Summaries', () => {
                         return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
                     });
                     expect(rowsRendered.length).toEqual(expectedRowLenght);
-
+                    expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
                     for (let i = 0; i < rowsRendered.length - 1; i++) {
-                        expect(firstCellsText[i]).toEqual((i + 11).toString());
+                        expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
                     }
-                }, 200);
+                }, 100);
             }, 100);
         });
     }));
