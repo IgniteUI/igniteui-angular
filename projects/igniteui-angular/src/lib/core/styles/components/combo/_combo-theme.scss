@@ -1,0 +1,66 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+/// @param {Color} $drop-down-background-color [null] - The drop-down background color.
+/// @requires text-contrast
+/// @requires igx-color
+@function igx-combo-theme(
+    $palette: $default-palette,
+
+    $background-color: null,
+    $add-icon-color: null
+) {
+
+    $default-theme: (
+        name: 'igx-combo',
+        background-color: #fff,
+        add-icon-color: igx-color($palette, 'grays', 500)
+    );
+
+
+    @return extend($default-theme,
+    (
+        pallete: $palette,
+        background-color: $background-color,
+        add-icon-color: $add-icon-color,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires rem
+@mixin igx-combo($theme) {
+    @include igx-root-css-vars($theme);
+
+    $dd-shadow: igx-elevation($elevations, 3);
+
+    %igx-combo__drop-down {
+        background: --var($theme, 'background-color');
+        position: absolute;
+        max-width: calc(100% - 32px);
+    }
+
+    %igx-combo__search {
+        padding: rem(8px) rem(16px);
+        background: #fdfdfd;
+        margin: 0 !important;
+        box-shadow: $dd-shadow;
+        z-index: 26;
+    }
+
+    .igx-drop-down__item {
+        &%igx-combo__add {
+            position: relative;
+            bottom: 0;
+            justify-content: center !important;
+
+            igx-icon {
+                color: --var($theme, 'add-icon-color');
+            }
+        }
+    }
+}

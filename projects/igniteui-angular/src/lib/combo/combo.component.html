@@ -69,7 +69,7 @@
                     Add item to collection
                     <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
                 </igx-combo-item>
-                <igx-combo-item *ngIf="filteredData.length === 0 && !customValueFlag" style="text-align: center;">
+                <igx-combo-item *ngIf="filteredData.length === 0 && !customValueFlag">
                     <ng-container *ngTemplateOutlet="empty; context: {$impicit: this}">
                     </ng-container>
                 </igx-combo-item>

@@ -1,0 +1,23 @@
+//// Combo
+/// @group components
+
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-combo) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @include e(drop-down) {
+        @extend %igx-combo__drop-down !optional;
+    }
+
+    @include e(search) {
+        @extend %igx-combo__search !optional;
+    }
+
+    @include e(add) {
+        @extend %igx-combo__add !optional;
+    }
+}
