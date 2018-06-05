@@ -15,7 +15,7 @@ import { autoWire, IGridBus } from './grid.common';
     selector: 'igx-grid-summary',
     templateUrl: './grid-summary.component.html'
 })
-export class IgxGridSummaryComponent implements IGridBus, AfterContentInit, OnInit, DoCheck {
+export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, AfterContentInit {
 
     fieldName: string;
 
