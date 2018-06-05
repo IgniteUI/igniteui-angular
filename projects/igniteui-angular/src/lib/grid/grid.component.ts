@@ -48,6 +48,7 @@ import { IgxGroupByRowTemplateDirective } from './grid.common';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
+import { IFilteringOperation } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -191,7 +192,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
-    public groupByDefaultExpanded = true;
+    public groupsExpanded = true;
 
     @Input()
     get paging(): boolean {
@@ -806,9 +807,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onGroupingDone.emit(this.sortingExpressions);
     }
 
+    public clearGrouping(name?: string): void {
+        this.gridAPI.clear_groupby(this.id, name);
+    }
+
     public isExpandedGroup(group: IGroupByRecord): boolean {
         const state: IGroupByExpandState = this._getStateForGroupRow(group);
-        return state ? state.expanded : this.groupByDefaultExpanded;
+        return state ? state.expanded : this.groupsExpanded;
     }
 
     public toggleGroup(groupRow: IGroupByRecord) {
@@ -925,7 +930,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public toggleAllGroupRows() {
         this.groupingExpansionState = [];
-        this.groupByDefaultExpanded = !this.groupByDefaultExpanded;
+        this.groupsExpanded = !this.groupsExpanded;
     }
 
     public unpinColumn(columnName: string): boolean {
@@ -1147,9 +1152,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let maxSummaryLength = 0;
         this.columnList.filter((col) => col.hasSummary).forEach((column) => {
             this.gridAPI.set_summary_by_column_name(this.id, column.field);
-            const currentLength = this.gridAPI.get_summaries(this.id).get(column.field).length;
-            if (maxSummaryLength < currentLength) {
-                maxSummaryLength = currentLength;
+            const getCurrentSummaryColumn = this.gridAPI.get_summaries(this.id).get(column.field);
+            if (getCurrentSummaryColumn) {
+                if (maxSummaryLength < getCurrentSummaryColumn.length) {
+                    maxSummaryLength = getCurrentSummaryColumn.length;
+                }
             }
         });
         return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : DEFAULT_SUMMARY_HEIGHT);
@@ -1224,7 +1231,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.sort_multiple(this.id, this._groupingExpressions);
     }
 
-    protected _filter(name: string, value: any, condition?, ignoreCase?) {
+    protected _filter(name: string, value: any, condition?: IFilteringOperation, ignoreCase?: boolean) {
         const col = this.gridAPI.get_column_by_name(this.id, name);
         if (col) {
             this.gridAPI
@@ -1739,9 +1746,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public onChipRemoved(event) {
-        this.groupingExpressions = this.groupingExpressions.filter((expr) => {
-            return expr.fieldName !== event.owner.id;
-        });
+        this.clearGrouping(event.owner.id);
     }
 
     public chipsOrderChanged(event) {

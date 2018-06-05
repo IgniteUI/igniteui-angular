@@ -25,35 +25,11 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
     templateUrl: 'chip.component.html',
     styles: [
         `:host {
+            display: flex;
+            align-items: center;
             position: relative;
-            display: inline-flex;
             transition-property: top, left;
-            float: left;
             touch-action: none;
-        }
-
-        .prefix {
-            display: inline-flex;
-            margin: 1px;
-            margin-right: 5px;
-        }
-
-        .chip-area {
-            background-color: #f2f2f2;
-            display: inline-flex;
-            padding-left: 5px;
-            padding-right: 5px;
-            margin: 5px;
-            border-radius: 15px;
-            user-select: none;
-            cursor: pointer;
-        }
-
-        .igx-button--icon {
-            width: 1.5rem;
-            height: 1.5rem;
-            margin: 1px;
-            margin-left: 5px;
         }
         `
     ]

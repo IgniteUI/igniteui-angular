@@ -3,9 +3,6 @@ export class IgxSelectionAPIService {
     // If the primaryKey is omitted, then selection is based on the item data
     protected selection: Map<string,  any[]> = new Map<string, any[]>();
 
-    // Filtering data is saved when filtering pipe is applied and cleared when filtergin is cleared.
-    protected filteredSelection: Map<string,  any[]> = new Map<string, any[]>();
-
     protected prevSelection: Map<string,  any[]> = new Map<string, any[]>();
 
     public get_selection(componentID: string): any[] {

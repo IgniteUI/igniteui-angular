@@ -64,8 +64,7 @@ export class GridGroupBySampleComponent implements OnInit {
         for (let i = 0; i < expressions.length; i++) {
             const gr: ISortingExpression = expressions[i];
             if (gr.fieldName === name) {
-                expressions.splice(i, 1);
-                this.grid1.groupBy(expressions);
+                this.grid1.clearGrouping(name);
                 return;
             }
         }

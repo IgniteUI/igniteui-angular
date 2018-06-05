@@ -6,7 +6,13 @@ import { take } from 'rxjs/operators';
 import { Calendar } from '../calendar';
 import { KEYCODES } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
+import {
+    IgxStringFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxFilteringOperand
+} from '../data-operations/filtering-condition';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
@@ -175,7 +181,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
 
         // ungroup
-        grid.groupBy('ProductName', SortingDirection.None, false);
+        grid.clearGrouping('ProductName');
         fix.detectChanges();
 
         // verify no groups are present
@@ -194,7 +200,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, [1000, 254, 100, 20, 0, null]);
 
         // ungroup and group by boolean column
-        grid.groupBy('Downloads', SortingDirection.None, false);
+        grid.clearGrouping('Downloads');
         fix.detectChanges();
         grid.groupBy('Released', SortingDirection.Desc, false);
         fix.detectChanges();
@@ -208,7 +214,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, [true, false, null]);
 
         // ungroup and group by date column
-        grid.groupBy('Released', SortingDirection.None, false);
+        grid.clearGrouping('Released');
         fix.detectChanges();
         grid.groupBy('ReleaseDate', SortingDirection.Asc, false);
         fix.detectChanges();
@@ -356,13 +362,13 @@ fdescribe('IgxGrid - GroupBy', () => {
 
     });
 
-    it('should allow setting intial expand/collapse state', () => {
+    it('should allow setting expand/collapse state', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
         fix.detectChanges();
 
-        grid.groupByDefaultExpanded = false;
+        grid.groupsExpanded = false;
         grid.groupBy('Released', SortingDirection.Desc, false);
         fix.detectChanges();
 
@@ -376,7 +382,7 @@ fdescribe('IgxGrid - GroupBy', () => {
             expect(grRow.expanded).toBe(false);
         }
 
-        grid.groupByDefaultExpanded = true;
+        grid.groupsExpanded = true;
         grid.cdr.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
@@ -566,6 +572,23 @@ fdescribe('IgxGrid - GroupBy', () => {
         const groupRows = grid.groupedRowList.toArray();
         // verify group order
         checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
+    });
+
+    it('should allow grouping of already sorted column', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.sort('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
+        // verify groups and data rows count
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+        expect(grid.groupingExpressions.length).toEqual(1);
     });
 
     // GroupBy + Selection integration
@@ -834,7 +857,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(grid.rowList.toArray().length).toEqual(13);
 
         fix.detectChanges();
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
