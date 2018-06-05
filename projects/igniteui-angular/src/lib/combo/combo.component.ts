@@ -290,6 +290,9 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy {
     public height = '400px';
 
     @Input()
+    public allowCustomValues = true;
+
+    @Input()
     public listHeight = 320;
 
     @Input()
@@ -370,15 +373,6 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy {
         this.dropdown.toggle();
     }
 
-    onInputFocus(evt) {
-        if (this.dropdown.collapsed) {
-            return;
-        }
-        evt.preventDefault();
-        evt.stopPropagation();
-        this.dropdown.toggle();
-    }
-
     public get filteringExpressions() {
         return this._filteringExpressions;
     }
@@ -449,9 +443,9 @@ export class IgxComboComponent implements AfterViewInit, OnDestroy {
     private checkMatch() {
         this.customValueFlag = this.textKey || this.textKey === 0 ?
             !this.filteredData
-            .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) :
+            .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues :
             !this.filteredData
-            .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase());
+            .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
     }
 
     public handleInputChange() {

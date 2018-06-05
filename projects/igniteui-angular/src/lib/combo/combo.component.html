@@ -19,8 +19,8 @@
 
 <div class="igx-combo" [style.width]="width">
     <igx-input-group (click)="onInputClick($event)" type="box">
-        <input (focus)="onInputFocus($event)" igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%"
-            readonly [placeholder]="placeholder" />
+        <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%" readonly [placeholder]="placeholder"
+        />
         <igx-suffix igxButton="icon" igxRipple (click)="deselectAllItems()">
             <igx-icon *ngIf="value.length" fontSet="material" name="clear"></igx-icon>
         </igx-suffix>
@@ -35,10 +35,6 @@
         <igx-input-group class="igx-combo__search">
             <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue" (input)="handleInputChange()"
                 (keyup)="handleKeyDown($event)" placeholder="Enter a search term" />
-            <igx-suffix *ngIf="searchValue.length !== 0 && customValueFlag" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 0 : -1"
-                igxButton="icon" class="" igxRipple (keypress)="addItemToCollection()">
-                <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
-            </igx-suffix>
         </igx-input-group>
         <!-- <div>
             Select All:
@@ -68,7 +64,12 @@
                         </ng-container>
                     </igx-combo-item>
                 </ng-template>
-                <igx-combo-item *ngIf="filteredData.length === 0" style="text-align: center;">
+                <div *ngIf="searchValue.length !== 0 && customValueFlag" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
+                    class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" isHeader='false' isDisabled='false'>
+                    Add item to collection
+                    <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
+                </div>
+                <igx-combo-item *ngIf="filteredData.length === 0 && !customValueFlag" style="text-align: center;">
                     <ng-container *ngTemplateOutlet="empty; context: {$impicit: this}">
                     </ng-container>
                 </igx-combo-item>
