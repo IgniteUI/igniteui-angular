@@ -545,9 +545,9 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
         fix.detectChanges();
-        grid.sort('ProductName', SortingDirection.Desc, false);
+        grid.sort({ fieldName:'ProductName', dir: SortingDirection.Desc, ignoreCase:false });
         fix.detectChanges();
-        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy({ fieldName:'ProductName', dir:SortingDirection.Desc, ignoreCase:false});
         fix.detectChanges();
         const groupRows = grid.groupedRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
