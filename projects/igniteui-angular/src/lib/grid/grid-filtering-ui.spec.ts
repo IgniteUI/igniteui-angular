@@ -1091,42 +1091,6 @@ describe('IgxGrid - Filtering actions', () => {
         });
     }));
 
-    // UI tests custom column
-    it('UI tests on custom column', async(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[4];
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const input = filterUIContainer.query(By.directive(IgxInputDirective));
-        const select = filterUIContainer.query(By.css('div > select'));
-        const options = select.nativeElement.options;
-        const reset = filterUIContainer.queryAll(By.css('button'))[0];
-        const close = filterUIContainer.queryAll(By.css('button'))[1];
-
-        expect(grid.rowList.length).toEqual(8);
-
-        filterIcon.nativeElement.click();
-        fix.detectChanges();
-
-        fix.whenStable().then(() => {
-            sendInput(input, 'a', fix);
-            return fix.whenStable();
-        }).then(() => {
-            verifyFilterUIPosition(filterUIContainer, grid);
-
-            // false condition
-            options[0].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(1);
-            expect(grid.getCellByColumn(0, 'AnotherField').value).toMatch('custom');
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        });
-    }));
-
     it('Should emit onFilteringDone when we clicked reset', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
