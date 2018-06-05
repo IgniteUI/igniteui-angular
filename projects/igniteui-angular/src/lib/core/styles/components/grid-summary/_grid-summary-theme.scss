@@ -80,17 +80,38 @@
         color: --var($theme, 'pinned-border-color')
     );
 
+    $item-padding: (
+        comfortable: rem(6px) 0,
+        cosy: rem(2px) 0,
+        compact: 0
+    );
+
+
+    $summary-padding: (
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
+    );
+
     %igx-grid-summary {
         display: flex;
         flex-direction: column;
         border-left: 1px dotted --var($theme, 'border-color');
         flex: 1 1 0%;
-        padding: 0 rem(24px);
+        padding: map-get($summary-padding, 'comfortable');
         overflow: hidden;
 
         &:first-of-type {
             border-left: 0;
         }
+    }
+
+    %igx-grid-summary--cosy {
+        padding: map-get($summary-padding, 'cosy');
+    }
+
+    %igx-grid-summary--compact {
+        padding: map-get($summary-padding, 'compact');
     }
 
     %igx-grid-summary--pinned {
@@ -114,9 +135,17 @@
     %igx-grid-summary__item {
         display: flex;
         align-items: center;
-        padding: rem(5px) 0;
+        padding: map-get($item-padding, 'comfortable');
         font-size: rem(12px);
         position: relative;
+    }
+
+    %igx-grid-summary__item--cosy {
+        padding: map-get($item-padding, 'cosy');
+    }
+
+    %igx-grid-summary__item--compact {
+        padding: map-get($item-padding, 'compact');
     }
 
     %igx-grid-summary__label {
