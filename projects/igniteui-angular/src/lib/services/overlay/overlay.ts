@@ -66,8 +66,7 @@ export class IgxOverlayService {
      * Attaches provided component's native element to the OverlayElement
      * @param component Component to show in the overlay
      */
-    // optionally et component and _document from the current context and get
-    // positionStrategy passed from overlay.directive.ts
+
     show(component, positionStrategy?: IPositionStrategy): number {
         let element;
         if (component instanceof ElementRef) {
@@ -97,6 +96,7 @@ export class IgxOverlayService {
             this._positionStrategy = new GlobalPositionStrategy(this._document);
         }
 
+        this._positionStrategy.position(element);
         this.OverlayElement.style.display = 'block';
         this.OverlayElement.appendChild(this._componentWrapper);
         return this._componentId++;
