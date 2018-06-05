@@ -810,11 +810,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.filteredData = null;
             return;
         }
-        if (!this.gridAPI.get_column_by_name(this.id, name)) {
+
+        const column = this.gridAPI.get_column_by_name(this.id, name);
+        if (!column) {
             return;
         }
         this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
+        this.onFilteringDone.emit({
+            fieldName: column.field,
+            condition: column.filteringCondition,
+            ignoreCase: column.filteringIgnoreCase,
+        });
     }
 
     public clearSort(name?: string) {

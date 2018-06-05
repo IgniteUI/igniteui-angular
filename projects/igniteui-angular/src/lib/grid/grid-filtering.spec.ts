@@ -418,6 +418,36 @@ describe('IgxGrid - Filtering actions', () => {
         fixture.detectChanges();
         expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_CLASS)).toBe(true);
     });
+
+    it('Should emit onFilteringDone when clearFilter is invoked through the grid', () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const columnFiled = 'ReleaseDate';
+        const cal = fix.componentInstance.timeGenerator;
+        const today = fix.componentInstance.today;
+        const searchVal = cal.timedelta(today, 'day', 4);
+
+        grid.filter('ReleaseDate', searchVal, IgxDateFilteringOperand.instance().condition('before'));
+        fix.detectChanges();
+
+        spyOn(grid.onFilteringDone, 'emit');
+        fix.detectChanges();
+
+        grid.clearFilter(columnFiled);
+        fix.detectChanges();
+
+        const column = grid.getColumnByName(columnFiled);
+        const args = {
+            fieldName: column.field,
+            condition: column.filteringCondition,
+            ignoreCase: column.filteringIgnoreCase,
+        };
+
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
+    });
 });
 
 export class CustomFilter extends IgxFilteringOperand {
