@@ -513,6 +513,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
         this.rowHeight = this.rowHeight ? this.rowHeight : this.defaultRowHeight;
+
+        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { this.clearSummaryCache(editCell); });
     }
 
     public ngAfterContentInit() {
@@ -823,8 +828,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_sort(this.id, name);
     }
 
-    public clearSummaryCache() {
-        this.gridAPI.remove_summary(this.id);
+    public clearSummaryCache(editCell?) {
+        if (editCell && editCell.cell) {
+            this.gridAPI.remove_summary(this.id, editCell.cell.column.filed);
+        } else {
+            this.gridAPI.remove_summary(this.id);
+        }
     }
 
     public pinColumn(columnName: string): boolean {
