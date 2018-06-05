@@ -104,7 +104,7 @@ export class IgxBadgeComponent {
      *```html
      *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
      *  public badge: IgxBadgeComponent;
-     * 
+     *
      *  //...
      *  badge.cssClass = false;
      * ```
