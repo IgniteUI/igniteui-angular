@@ -33,14 +33,12 @@ export class IgxGridAPIService {
             this.summaryCacheMap.set(id, new Map<string, any[]>());
         }
         const column = this.get_column_by_name(id, name);
-        if (this.get(id).filteredData) {
-            if (this.get(id).filteredData.length > 0) {
-                this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
-            } else {
-                this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
-            }
+        if (this.get(id).filteredData && this.get(id).filteredData.length >= 0) {
+            this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
         } else {
-            this.calculateSummaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
+            if (this.get(id).data) {
+                this.calculateSummaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
+            }
         }
     }
 
