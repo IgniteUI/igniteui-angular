@@ -44,7 +44,7 @@ export class IgxBadgeComponent {
     /**
     * An @Input property that sets the value of the `id` attribute.
     * ```html
-    *   <igx-badge id="igx-badge-2" icon="check" type="success" class="badge-style"></igx-badge>
+    *<igx-badge id="igx-badge-2" icon="check" type="success" class="badge-style"></igx-badge>
     * ```
     */
     @HostBinding('attr.id')
@@ -56,7 +56,7 @@ export class IgxBadgeComponent {
     * Allowed values are `default`, `info`, `success`, `warning`, `error`.
     * Providing an invalid value won't display a badge.
     * ```html
-    *   <igx-badge type="success" icon="check" class="badge-style"></igx-badge>
+    *<igx-badge type="success" icon="check" class="badge-style"></igx-badge>
     * ```
     */
     @Input()
@@ -67,9 +67,8 @@ export class IgxBadgeComponent {
     * If an `icon` property is already set the `icon` will be displayed.
     * If neither a `value` nor an `icon` is set the contentent of the badge will be empty.
     * ```html
-    *   <igx-badge value="11" type="success" class="badge-style"></igx-badge>
+    *<igx-badge value="11" type="success" class="badge-style"></igx-badge>
     * ```
-    *
     */
     @Input()
     public value = '';
@@ -80,7 +79,7 @@ export class IgxBadgeComponent {
      * If neither a `value` nor an `icon` is set the content of the badge will be empty.
      * Providing an invalid value won't display anything.
      * ```html
-     *   <igx-badge icon="check" type="success" class="badge-style" value="11"></igx-badge>
+     *<igx-badge icon="check" type="success" class="badge-style" value="11"></igx-badge>
      * ```
      */
     @Input()
@@ -89,11 +88,10 @@ export class IgxBadgeComponent {
     /**
      * This allows you to set value to role attribute.
      *```html
-     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
-     *  public badge: IgxBadgeComponent;
-     *
-     *  //...
-     *  badge.label = "badge-status";
+     *@ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *public badge: IgxBadgeComponent;
+     * //...
+     *badge.label = "badge-status";
      * ```
      */
     @HostBinding('attr.role')
@@ -102,11 +100,18 @@ export class IgxBadgeComponent {
     /**
      * This allows you to disable igx-badge class. The default it's applied.
      *```html
+<<<<<<< HEAD
      *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
      *  public badge: IgxBadgeComponent;
      *
      *  //...
      *  badge.cssClass = false;
+=======
+     *@ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *public badge: IgxBadgeComponent;
+     * //...
+     *badge.cssClass = false;
+>>>>>>> origin/master
      * ```
      */
     @HostBinding('class.igx-badge')
@@ -115,11 +120,10 @@ export class IgxBadgeComponent {
     /**
      * This allows you to set value to aria-label attribute.
      *```html
-     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
-     *  public badge: IgxBadgeComponent;
-     *
-     *  //...
-     *  badge.label = "icon-badge";
+     *@ViewChild("MyBadge", { read: IgxBadgeComponent })
+     *public badge: IgxBadgeComponent;
+     * //...
+     *badge.label = "icon-badge";
      * ```
      */
     @HostBinding('attr.aria-label')
