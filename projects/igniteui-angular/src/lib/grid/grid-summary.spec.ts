@@ -6,6 +6,7 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from './grid-summary';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxGridAPIService } from './api.service';
 
 describe('IgxGrid - Summaries', () => {
     const SUMMARY_CLASS = '.igx-grid-summary';
@@ -20,6 +21,7 @@ describe('IgxGrid - Summaries', () => {
                 NoActiveSummariesComponent,
                 SummaryColumnComponent,
                 VirtualSummaryColumnComponent,
+                SummaryColumnsWithIdenticalWidthsComponent,
                 UndefinedGridDataComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot()]
@@ -501,6 +503,36 @@ describe('IgxGrid - Summaries', () => {
         });
     });
 
+    it(`Should update summary section when the column is outside of the
+            viewport and have identical width with others`, async(() => {
+        const fix = TestBed.createComponent(SummaryColumnsWithIdenticalWidthsComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid1;
+        let summaries = fix.componentInstance.gridApi.get_summaries(grid.id);
+
+        let getCountResSummary = summaries.get('UnitsInStock').find((k) => k.key === 'count').summaryResult;
+        expect(getCountResSummary).toEqual(fix.componentInstance.data.length);
+        fix.whenStable().then(() => {
+            grid.addRow({
+                ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: new Date('2018-03-01')
+            });
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            scrollLeft(grid, 400);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            summaries = fix.componentInstance.gridApi.get_summaries(grid.id);
+            getCountResSummary = summaries.get('UnitsInStock').find((k) => k.key === 'count').summaryResult;
+            return getCountResSummary;
+        }).then((expectedRes) => {
+            fix.detectChanges();
+            expect(expectedRes).toEqual(fix.componentInstance.data.length);
+        });
+    }));
+
     function sendInput(element, text: string, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
@@ -520,7 +552,50 @@ describe('IgxGrid - Summaries', () => {
         const expectedLength = maxSummaryLength * INITIAL_SUMMARY_SIZE;
         return expectedLength;
     }
+
+    function scrollLeft(grid: IgxGridComponent, newLeft: number) {
+        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+        hScrollbar.scrollLeft = newLeft;
+    }
 });
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data" width="300px">
+            <igx-column field="ProductID" header="Product ID">
+            </igx-column>
+            <igx-column field="ProductName">
+            </igx-column>
+            <igx-column field="InStock" [dataType]="'boolean'">
+            </igx-column>
+            <igx-column field="OrderDate" [dataType]="'date'">
+            </igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class  SummaryColumnsWithIdenticalWidthsComponent {
+
+    @ViewChild('grid1', { read: IgxGridComponent })
+    public grid1: IgxGridComponent;
+
+    public data = [
+        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: '2005-03-21' },
+        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: '2008-01-15' },
+        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: '2010-11-20' },
+        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: '2007-10-11' },
+        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: '2001-07-27' },
+        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: '1990-05-17' },
+        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: '2005-03-03' },
+        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: '2017-09-09' },
+        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: '2025-12-25' },
+        { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: '2018-03-01' }
+    ];
+
+    constructor(public gridApi: IgxGridAPIService) { }
+}
+
 
 @Component({
     template: `
@@ -646,11 +721,6 @@ export class  VirtualSummaryColumnComponent {
     public scrollTop(newTop: number) {
         const vScrollbar = this.grid1.verticalScrollContainer.getVerticalScroll();
         vScrollbar.scrollTop = newTop;
-    }
-
-    public scrollLeft(newLeft: number) {
-        const hScrollbar = this.grid1.parentVirtDir.getHorizontalScroll();
-        hScrollbar.scrollLeft = newLeft;
     }
 }
 
