@@ -1,3 +1,4 @@
+// import { IPositionStrategy } from './position/IPositionStrategy';
 import { Directive, Inject, ElementRef, NgModule } from '@angular/core';
 import { IgxOverlayService } from './overlay';
 
@@ -10,9 +11,9 @@ export class IgxOverlayDirective {
     constructor(
         @Inject(IgxOverlayService) private _overlay,
         private _elementRef: ElementRef) { }
-
-    public show() {
-        this._id = this._overlay.show(this._elementRef);
+// pass the positionStrategy to the OverlayService
+    public show(positionStrategy?) {
+        this._id = this._overlay.show(this._elementRef, positionStrategy);
     }
 
     public hide() {

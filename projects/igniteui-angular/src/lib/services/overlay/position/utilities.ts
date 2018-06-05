@@ -21,7 +21,7 @@ export class Point {
 export class PositionSettings {
     constructor(
         public point: Point = new Point(0, 0),
-        public horizontalAlignment?: HorizontalAlignment| HorizontalAlignment.Center,
-        public verticalAlignment?: VerticalAlignment | VerticalAlignment.Middle) {
+        public horizontalAlignment = HorizontalAlignment.Center,
+        public verticalAlignment = VerticalAlignment.Middle) {
     }
 }

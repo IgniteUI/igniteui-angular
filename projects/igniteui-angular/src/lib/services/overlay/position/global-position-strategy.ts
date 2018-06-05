@@ -14,27 +14,48 @@ export class GlobalPositionStrategy implements IPositionStrategy {
     }
 
     position (element): void {
-        // TODO: Below css should go to the 'global-show'.
-        element.style.display = 'flex';
-        element.style.position = 'fixed';
-        element.style.alignItems = 'center';
-        element.style.justifyContent = 'center';
-        element.style.top = '0';
-        element.style.right = '0';
-        element.style.left = '0';
-        element.style.bottom = '0';
-        element.style.zIndex = '99999';
+        // Based on Alignment append suffixes to the css class.
+        this.wrapperClass = 'global-show';
 
+        switch (this._options.horizontalAlignment) {
+            case -1:
+                this.wrapperClass += '-left';
+                break;
+            case -0.5:
+                this.wrapperClass += '-center';
+                break;
+            case 0:
+                this.wrapperClass += '-right';
+                break;
+            default:
+                break;
+        }
 
-        // TODO: Based on Alignment append suffixes and attach to the class
-        this.wrapperClass = 'global-show-left';
-        this.wrapperClass = 'global-show-center';
-        this.wrapperClass = 'global-show-right';
-        this.wrapperClass = 'global-show-top';
-        this.wrapperClass = 'global-show-middle';
-        this.wrapperClass = 'global-show-bottom';
+        switch (this._options.verticalAlignment) {
+            case -1:
+                this.wrapperClass += '-top';
+                break;
+            case -0.5:
+                this.wrapperClass += '-middle';
+                break;
+            case 0:
+                this.wrapperClass += '-bottom';
+                break;
+            default:
+                break;
+        }
 
-        element.classList.add(this.wrapperClass);
+        element.parentElement.classList.add(this.wrapperClass);
+
+        //For test only - Remove the hardcoded css
+        element.parentElement.style.display = 'flex';
+        element.parentElement.style.position = 'fixed';
+        element.parentElement.style.alignItems = 'center';
+        element.parentElement.style.justifyContent = 'center';
+        element.parentElement.style.top = '0';
+        element.parentElement.style.right = '0';
+        element.parentElement.style.left = '0';
+        element.parentElement.style.bottom = '0';
     }
 }
 

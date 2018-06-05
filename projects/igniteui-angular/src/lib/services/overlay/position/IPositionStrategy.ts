@@ -1,6 +1,4 @@
 import { PositionSettings } from './utilities';
-import { get } from 'https';
-
 export interface IPositionStrategy {
     wrapperClass: string;
 
