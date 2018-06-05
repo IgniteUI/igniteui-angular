@@ -543,6 +543,23 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
     });
 
+    it('should allow grouping of already sorted column', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        grid.sort('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        const groupRows = grid.groupedRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
+        // verify groups and data rows count
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(8);
+        expect(grid.groupingExpressions.length).toEqual(1);
+    });
+
     // GroupBy + Selection integration
     it('should toggle expand/collapse state of group row with Space/Enter key.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);

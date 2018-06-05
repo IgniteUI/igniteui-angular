@@ -55,6 +55,14 @@
         }
     }
 
+    @include e(summaries) {
+        @extend %grid-summaries !optional;
+
+        igx-display-container {
+            @extend %grid-display-container-tr !optional;
+        }
+    }
+
     @include e(tr, $m: selected) {
         @extend %grid-row--selected !optional;
     }
@@ -136,7 +144,7 @@
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
     }
-
+  
     // Groupby section
 
     @include e(group-label) {
@@ -185,5 +193,29 @@
 
     @include e(chipDisabled) {
         @extend %grid__chipDisabled !optional;
+    }
+  
+    @include m(cosy) {
+        @extend %grid-display !optional;
+
+        @include e(th) {
+            @extend %grid-cell-header--cosy !optional;
+        }
+
+        @include e(td) {
+            @extend %grid-cell-display--cosy !optional;
+        }
+    }
+
+    @include m(compact) {
+        @extend %grid-display !optional;
+
+        @include e(th) {
+            @extend %grid-cell-header--compact !optional;
+        }
+
+        @include e(td) {
+            @extend %grid-cell-display--compact !optional;
+        }
     }
 }
