@@ -67,9 +67,6 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     @ViewChild(IgxOverlayDirective)
     private overlay: IgxOverlayDirective;
 
-    @ViewChild('dropDown')
-    private dropDownElement;
-
     /**
      * Emitted when item selection is changing, before the selection completes
      */
@@ -109,7 +106,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
     set width(value) {
         this._width = value;
-        this.dropDownElement.nativeElement.style.width = value;
+        this.toggleDirective.element.style.width = value;
     }
 
     /**
