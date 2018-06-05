@@ -445,48 +445,30 @@ describe('IgxGrid - Summaries', () => {
                 }
             }, 100);
         });
-    }));
+    });
 
-it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', async(() => {
-    const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
-    fixture.detectChanges();
-
-    const grid = fixture.componentInstance.grid1;
-    const summariedColumns = ['ProductName', 'InStock', 'UnitsInStock', 'OrderDate'];
-    let rowsRendered;
-    let tbody;
-    let expectedRowLenght;
-    let firstCellsText;
-    fixture.componentInstance.scrollTop(10000);
-
-    fixture.whenStable().then(() => {
+    it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', async(() => {
+        const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
         fixture.detectChanges();
-        rowsRendered = fixture.nativeElement.querySelectorAll('igx-grid-row');
-        tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
-        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
-        expect(rowsRendered.length).toEqual(expectedRowLenght);
 
-        grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
-        return fixture.whenStable();
-    }).then(() => {
-        setTimeout(() => {
+        const grid = fixture.componentInstance.grid1;
+        const summariedColumns = ['ProductName', 'InStock', 'UnitsInStock', 'OrderDate'];
+        let rowsRendered;
+        let tbody;
+        let expectedRowLenght;
+        let firstCellsText;
+        fixture.componentInstance.scrollTop(10000);
+
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-
-            rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
+            rowsRendered = fixture.nativeElement.querySelectorAll('igx-grid-row');
             tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
             expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
-
-            firstCellsText = rowsRendered.map((item) => {
-                return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
-            });
             expect(rowsRendered.length).toEqual(expectedRowLenght);
-            let expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
 
-            for (let i = 0; i < rowsRendered.length - 1; i++) {
-                expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
-            }
-            grid.disableSummaries(['OrderDate']);
-
+            grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
+            return fixture.whenStable();
+        }).then(() => {
             setTimeout(() => {
                 fixture.detectChanges();
 
@@ -498,34 +480,52 @@ it('should render correct data after hiding one bigger and then one smaller summ
                     return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
                 });
                 expect(rowsRendered.length).toEqual(expectedRowLenght);
-                expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
+                let expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
+
                 for (let i = 0; i < rowsRendered.length - 1; i++) {
                     expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
                 }
-            }, 100);
-        }, 100);
-    });
-}));
+                grid.disableSummaries(['OrderDate']);
 
-function sendInput(element, text: string, fix) {
-    element.nativeElement.value = text;
-    element.nativeElement.dispatchEvent(new Event('input'));
-    fix.detectChanges();
-    return fix.whenStable();
-}
-function calcMaxSummaryHeight(columnList, summaries: DebugElement[], defaultRowHeight) {
-    let maxSummaryLength = 0;
-    let index = 0;
-    columnList.filter((col) => col.hasSummary).forEach((column) => {
-        const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
-        if (maxSummaryLength < currentLength) {
-            maxSummaryLength = currentLength;
-        }
-        index++;
-    });
-    const expectedLength = maxSummaryLength * defaultRowHeight;
-    return expectedLength;
-}
+                setTimeout(() => {
+                    fixture.detectChanges();
+
+                    rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
+                    tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
+                    expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+
+                    firstCellsText = rowsRendered.map((item) => {
+                        return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
+                    });
+                    expect(rowsRendered.length).toEqual(expectedRowLenght);
+                    expectedFirstCellNum = grid.data.length - expectedRowLenght + 1;
+                    for (let i = 0; i < rowsRendered.length - 1; i++) {
+                        expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
+                    }
+                }, 100);
+            }, 100);
+        });
+    }));
+
+    function sendInput(element, text: string, fix) {
+        element.nativeElement.value = text;
+        element.nativeElement.dispatchEvent(new Event('input'));
+        fix.detectChanges();
+        return fix.whenStable();
+    }
+    function calcMaxSummaryHeight(columnList, summaries: DebugElement[], defaultRowHeight) {
+        let maxSummaryLength = 0;
+        let index = 0;
+        columnList.filter((col) => col.hasSummary).forEach((column) => {
+            const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
+            if (maxSummaryLength < currentLength) {
+                maxSummaryLength = currentLength;
+            }
+            index++;
+        });
+        const expectedLength = maxSummaryLength * defaultRowHeight;
+        return expectedLength;
+    }
 });
 
 @Component({
