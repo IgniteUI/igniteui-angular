@@ -115,7 +115,7 @@ export class IgxDropDownItemBase {
             focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
             return;
         }
-        this.dropDown.focusItem(this.index);
+        this.dropDown.navigateItem(this.index);
         this.dropDown.selectItem(this);
     }
 
