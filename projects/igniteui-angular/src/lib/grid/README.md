@@ -160,7 +160,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`paging`|bool|Enables the paging feature. Defaults to _false_.|
 |`perPage`|number|Visible items per page, default is 15|
 |`filteringLogic`|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
-|`filteringExpressions`|Array|The filtering state of the grid.|
+|`filteringExpressionsTree`|IFilteringExpressionsTree|The filtering state of the grid.|
 |`sortingExpressions`|Array|The sorting state of the grid.|
 |`rowSelectable`|Boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
@@ -267,7 +267,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`cellClasses`|string|Additional CSS classes applied to the cells in this column.|
 |`formatter`|Function|A function used to "template" the values of the cells without the need to pass a cell template the column.|
 |`index`|string|Column index|
-|`filteringCondition`|FilteringCondition|Boolean, date, string or number conditions. Default is string _contains_|
+|`filteringExpressionsTree`|IFilteringExpressionsTree|The filtering state of the column.|
 |`filteringIgnoreCase`|boolean|Ignore capitalization of strings when filtering is applied. Defaults to _true_.|
 |`sortingIgnoreCase`|boolean|Ignore capitalization of strings when sorting is applied. Defaults to _true_.|
 |`dataType`|DataType|One of string, number, boolean or Date. When filtering is enabled the filter UI conditions are based on the `dataType` of the column. Defaults to `string` if it is not provided. With `autoGenerate` enabled the grid will try to resolve the correct data type for each column based on the data source.|

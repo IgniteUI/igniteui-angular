@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
-import { IFilteringOperation } from '../../public_api';
+import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
 
 @Injectable()
 export class IgxGridAPIService {
@@ -125,49 +125,90 @@ export class IgxGridAPIService {
         this.get(id).sortingExpressions = sortingState;
     }
 
-    public filter(id: string, fieldName: string, term, condition: IFilteringOperation, ignoreCase: boolean) {
-        const filteringState = this.get(id).filteringExpressions;
-        if (this.get(id).paging) {
-            this.get(id).page = 0;
+    public filter(id: string, fieldName: string, term, condition: IFilteringOperation, ignoreCase: boolean);
+    public filter(id: string, fieldName: string, term, filteringExpressionsTree: IFilteringExpressionsTree, ignoreCase: boolean);
+    filter(id: string, fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
+        const grid = this.get(id);
+        const filteringTree = grid.filteringExpressionsTree;
+        if (grid.paging) {
+            grid.page = 0;
         }
-        this.prepare_filtering_expression(filteringState, fieldName, term, condition, ignoreCase);
-        this.get(id).filteringExpressions = filteringState;
+
+        if (conditionOrExpressionsTree instanceof FilteringExpressionsTree) {
+            const expressionsTree = conditionOrExpressionsTree as IFilteringExpressionsTree;
+            this.prepare_filtering_expression(filteringTree, fieldName, term, expressionsTree, ignoreCase);
+        } else {
+            const condition = conditionOrExpressionsTree as IFilteringOperation;
+            this.prepare_filtering_expression(filteringTree, fieldName, term, condition, ignoreCase);
+        }
+
+        grid.filteringExpressionsTree = filteringTree;
     }
 
     public filter_multiple(id: string, expressions: IFilteringExpression[]) {
-        const filteringState = this.get(id).filteringExpressions;
-        if (this.get(id).paging) {
-            this.get(id).page = 0;
+        const grid = this.get(id);
+        const filteringTree = grid.filteringExpressionsTree;
+        if (grid.paging) {
+            grid.page = 0;
         }
 
         for (const each of expressions) {
-            this.prepare_filtering_expression(filteringState, each.fieldName,
+            this.prepare_filtering_expression(filteringTree, each.fieldName,
                                               each.searchVal, each.condition, each.ignoreCase);
         }
-        this.get(id).filteringExpressions = filteringState;
+        grid.filteringExpressionsTree = filteringTree;
     }
 
     public filter_global(id, term, condition, ignoreCase) {
-        const filteringState = this.get(id).filteringExpressions;
-        if (this.get(id).paging) {
-            this.get(id).page = 0;
+        const grid = this.get(id);
+        const filteringTree = grid.filteringExpressionsTree;
+        if (grid.paging) {
+            grid.page = 0;
         }
 
-        for (const column of this.get(id).columns) {
-            this.prepare_filtering_expression(filteringState, column.field, term,
-                condition || column.filteringCondition, ignoreCase || column.filteringIgnoreCase);
+        for (const column of grid.columns) {
+            if (condition) {
+                this.prepare_filtering_expression(filteringTree, column.field, term,
+                    condition, ignoreCase || column.filteringIgnoreCase);
+            } else {
+                this.prepare_filtering_expression(filteringTree, column.field, term,
+                    column.filteringExpressionsTree, ignoreCase || column.filteringIgnoreCase);
+            }
         }
-        this.get(id).filteringExpressions = filteringState;
+
+        grid.filteringExpressionsTree = filteringTree;
     }
 
     public clear_filter(id, fieldName) {
-        const filteringState = this.get(id).filteringExpressions;
-        const index = filteringState.findIndex((expr) => expr.fieldName === fieldName);
+        const grid = this.get(id);
+        const filteringState = grid.filteringExpressionsTree;
+        const index = filteringState.filteringOperands.findIndex((expr) => {
+            if (expr instanceof FilteringExpressionsTree) {
+                return this.isFilteringExpressionsTreeForColumn(expr, fieldName)
+            }
+
+            return (expr as IFilteringExpression).fieldName === fieldName;
+        });
+
         if (index > -1) {
-            filteringState.splice(index, 1);
-            this.get(id).filteringExpressions = filteringState;
+            filteringState.filteringOperands.splice(index, 1);
+            // TODO: bvk - test if we need the following code
+            //grid.filteringExpressions = filteringState;
         }
-        this.get(id).filteredData = null;
+        grid.filteredData = null;
+    }
+
+    protected isFilteringExpressionsTreeForColumn(expressionsTree: IFilteringExpressionsTree, fieldName: string): boolean {
+        for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
+            let expr = expressionsTree.filteringOperands[i];
+            if ((expr instanceof FilteringExpressionsTree)) {
+                return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
+            } else {
+                return (expr as IFilteringExpression).fieldName === fieldName;
+            }
+        }
+
+        return false;
     }
 
     protected calculateSummaries(id: string, column, data) {
@@ -186,14 +227,57 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_filtering_expression(state, fieldName: string, searchVal, condition: IFilteringOperation, ignoreCase: boolean) {
+    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+        condition: IFilteringOperation, ignoreCase: boolean);
+    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+        filteringExpressionsTree: IFilteringExpressionsTree, ignoreCase: boolean);
+    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
 
-        const expression = state.find((expr) => expr.fieldName === fieldName);
+        const expressionOrExpressionsTreeForField = filteringState.filteringOperands.find((expr) => {
+            if (expr instanceof FilteringExpressionsTree) {
+                return this.isFilteringExpressionsTreeForColumn(expr, fieldName)
+            }
+
+            return (expr as IFilteringExpression).fieldName === fieldName;
+        });
+
+        let newExpressionsTree;
+        const expressionsTree = conditionOrExpressionsTree as IFilteringExpressionsTree;
+        const condition = conditionOrExpressionsTree as IFilteringOperation;
         const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
-        if (!expression) {
-            state.push(newExpression);
+
+        if (!expressionOrExpressionsTreeForField) {
+            // no expressions tree found for this field
+            if (expressionsTree) {
+                filteringState.filteringOperands.push(expressionsTree);
+            } else if (condition) {
+                // create expressions tree for this field and add the new expression to it
+                newExpressionsTree = new FilteringExpressionsTree(filteringState.operator);
+                newExpressionsTree.filteringOperands.push(newExpression);
+                filteringState.filteringOperands.push(newExpressionsTree);
+            }
         } else {
-            Object.assign(expression, newExpression);
+            // expression or expressions tree found for this field
+            const oldExpressionsTreeIndex = filteringState.filteringOperands.findIndex((expr) => expr === expressionOrExpressionsTreeForField);
+
+            if (expressionsTree) {
+                // replace the existing expressions tree for this field with the new one passed as parameter
+                filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, expressionsTree);
+            } else if (condition) {
+                // a new expression have to be added
+                if (expressionOrExpressionsTreeForField instanceof FilteringExpressionsTree) {
+                    // add it to the existing list of expressions for this field
+                    expressionOrExpressionsTreeForField.filteringOperands.push(newExpression);
+                } else {
+                    // the element found for this field is an expression but it should be an expressions tree
+                    // so create new expressions tree for this field
+                    newExpressionsTree = new FilteringExpressionsTree(filteringState.operator);
+                    newExpressionsTree.filteringOperands.push(newExpression);
+                    // and replace the old expression with the new expressions tree
+                    filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, newExpressionsTree);
+                }
+            }
         }
     }
 

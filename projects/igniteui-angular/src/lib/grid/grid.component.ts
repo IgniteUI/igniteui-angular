@@ -44,7 +44,7 @@ import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridRowComponent } from './row.component';
-import { IFilteringOperation } from '../../public_api';
+import { IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -135,13 +135,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public filteringLogic = FilteringLogic.And;
 
     @Input()
-    get filteringExpressions() {
-        return this._filteringExpressions;
+    get filteringExpressionsTree() {
+        return this._filteringExpressionsTree;
     }
 
-    set filteringExpressions(value) {
-        this._filteringExpressions = cloneArray(value);
-        this.cdr.markForCheck();
+    set filteringExpressionsTree(value) {
+        if (value) {
+            this._filteringExpressionsTree = value;
+            this.cdr.markForCheck();
+        }
     }
 
     get filteredData() {
@@ -449,8 +451,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _columns: IgxColumnComponent[] = [];
     protected _pinnedColumns: IgxColumnComponent[] = [];
     protected _unpinnedColumns: IgxColumnComponent[] = [];
-    protected _filteringLogic = FilteringLogic.And;
-    protected _filteringExpressions = [];
+    protected _filteringExpressionsTree: IFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
     protected _sortingExpressions = [];
     private _filteredData = null;
     private resizeHandler;
@@ -757,9 +758,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public clearFilter(name?: string) {
-
         if (!name) {
-            this.filteringExpressions = [];
+            this.filteringExpressionsTree.filteringOperands = [];
             this.filteredData = null;
             return;
         }
@@ -1086,9 +1086,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filter(name: string, value: any, condition?: IFilteringOperation, ignoreCase?: boolean) {
         const col = this.gridAPI.get_column_by_name(this.id, name);
         if (col) {
-            this.gridAPI
-                .filter(this.id, name, value,
-                    condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
+            if (condition) {
+                this.gridAPI.filter(this.id, name, value, condition, ignoreCase || col.filteringIgnoreCase);
+            } else {
+                this.gridAPI.filter(this.id, name, value, col.filteringExpressionsTree, ignoreCase || col.filteringIgnoreCase);
+            }
         } else {
             this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
         }
@@ -1201,7 +1203,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get headerCheckboxAriaLabel() {
-        return this._filteringExpressions.length > 0 ?
+        return this._filteringExpressionsTree.filteringOperands.length > 0 ?
             this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all filtered' : 'Select all filtered' :
             this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all' : 'Select all';
     }

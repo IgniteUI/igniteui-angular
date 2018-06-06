@@ -14,7 +14,7 @@ export class FilteringStrategy implements IFilteringStrategy {
         let rec;
         const len = data.length;
         const res: T[] = [];
-        if (!expressionsTree || !expressionsTree.firstOperand || !len) {
+        if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
             return data;
         }
         for (i = 0; i < len; i++) {
@@ -35,21 +35,25 @@ export class FilteringStrategy implements IFilteringStrategy {
     public matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
         if (expressions) {
             if (expressions instanceof FilteringExpressionsTree) {
-                let expressionTree = expressions as IFilteringExpressionsTree;
-                let match = this.matchRecord(rec, expressionTree.firstOperand);
+                let expressionsTree = expressions as IFilteringExpressionsTree;
+                let operator = expressionsTree.operator as FilteringLogic;
+                let match, matchOperand;
 
-                if (expressionTree.secondOperand && expressionTree.operator) {
-                    let operator = expressionTree.operator as FilteringLogic;
-                    let matchSecond = this.matchRecord(rec, expressionTree.secondOperand);
+                if (expressionsTree.filteringOperands) {
+                    expressionsTree.filteringOperands.forEach(operand => {
+                        matchOperand = this.matchRecord(rec, operand);
 
-                    if (operator === FilteringLogic.And) {
-                        match = match && matchSecond;
-                    } else if (operator === FilteringLogic.Or) {
-                        match = match || matchSecond;
-                    }
+                        if (match === undefined) {
+                            match = matchOperand;
+                        } else if (operator === FilteringLogic.And) {
+                            match = match && matchOperand;
+                        } else if (operator === FilteringLogic.Or) {
+                            match = match || matchOperand;
+                        }
+                    });
                 }
 
-                return match;
+                return match === undefined ? true : match;
             } else {
                 let expression = expressions as IFilteringExpression;
                 return this.findMatchByExpression(rec, expression);

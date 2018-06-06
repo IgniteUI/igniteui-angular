@@ -31,7 +31,7 @@ describe('Unit testing FilteringStrategy', () => {
     });
     it ('tests `matchRecordByExpressions`', () => {
         const rec = data[0];
-        const res = fs.matchRecordByExpressions(rec,
+        const res = fs.matchRecord(rec,
             [
                 {
                     condition: IgxStringFilteringOperand.instance().condition('contains'),
@@ -50,7 +50,7 @@ describe('Unit testing FilteringStrategy', () => {
     });
     it ('tests `findMatch`', () => {
         const rec = data[0];
-        const res = fs.findMatch(rec, {
+        const res = fs.findMatchByExpression(rec, {
             condition: IgxBooleanFilteringOperand.instance().condition('false'),
             fieldName: 'boolean'
         }, -1);
