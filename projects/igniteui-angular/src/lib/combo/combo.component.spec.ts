@@ -735,7 +735,7 @@ describe('Combo', () => {
         expect(combo.width).toEqual('400px');
     });
 
-    fit('Navigation through items in drop down', fakeAsync(() => {
+    it('Navigation through items in drop down', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -758,6 +758,28 @@ describe('Combo', () => {
         }).then(() => {
             fix.detectChanges();
             expect(combo.dropdown.items[0].itemData.field).toEqual('Indiana');
+
+            /*const lastVisibleItem = combo.dropdown.items[combo.dropdown.items.length - 2];
+            lastVisibleItem.isFocused = true;
+            combo.dropdown.focusedItem = lastVisibleItem;
+            lastVisibleItem.element.nativeElement.focus();
+            combo.dropdown.navigateNext();
+            fix.detectChanges();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(combo.dropdown.items[combo.dropdown.items.length - 2].itemData.field).toEqual('Alabama');
+
+            const targetItem = combo.dropdown.items[0] as IgxComboItemComponent;
+            targetItem.element.nativeElement.focus();
+            combo.dropdown.navigatePrev();
+            fix.detectChanges();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(combo.dropdown.items[0].itemData.field).toEqual('Indiana');*/
         });
     }));
 
