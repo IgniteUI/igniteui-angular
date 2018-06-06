@@ -12,13 +12,19 @@ import {
 } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule } from './combo.component';
+import { VirtualHelperComponent } from '../directives/for-of/virtual.helper.component';
 
+const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
 const CSS_CLASS_DROPDOWNBUTTON = 'dropdownToggleButton';
+const CSS_CLASS_CLEARBUTTON = 'clearButton';
 const CSS_CLASS_CHECKBOX = 'igx-checkbox';
+const CSS_CLASS_CHECKED = 'igx-checkbox--checked';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
-const CSS_CLASS_SELECTED = 'igx-combo__item--selected';
+const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
+const CSS_CLASS_HEADER = 'igx-drop-down__header';
+const CSS_CLASS_SCROLLBAR = 'igx-vhelper__placeholder-content';
 
 const employeeData = [
     { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z' },
@@ -49,7 +55,8 @@ describe('Combo', () => {
             declarations: [
                 IgxComboTestComponent,
                 IgxComboSampleComponent,
-                IgxComboInputTestComponent
+                IgxComboInputTestComponent,
+                IgxComboScrollTestComponent
             ],
             imports: [
                 IgxComboModule,
@@ -759,11 +766,57 @@ describe('Combo', () => {
         // TO DO
     });
 
-    it('Combo grouping rendering', () => {
-        // TO DO
+    it('Should properly render grouped items', () => {
+        const fix = TestBed.createComponent(IgxComboInputTestComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        combo.dropdown.toggle();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const dropdown = combo.dropdown.element;
+            checkGroupedItemsClass(0, 5, dropdown);
+            checkGroupedItemsClass(6, 10, dropdown);
+            // TO DO
+            // Navigate down and check the rest of the items
+        });
+
+        const checkGroupedItemsClass = function (startIndex: number, endIndex: number, dropdown: any) {
+            expect(dropdown.items[startIndex].classList.contains(CSS_CLASS_HEADER)).toBeTruthy();
+            for (let index = startIndex + 1; index <= endIndex; index++) {
+                expect(dropdown.items[index].classList.contains(CSS_CLASS_DROPDOWNLISTITEM)).toBeTruthy();
+            }
+        };
     });
-    it('Item selection rendering', () => {
-        // TO DO
+    it('Should properly render selected items', () => {
+        let selectedItem: HTMLElement;
+        let itemCheckbox: HTMLElement;
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const dropDownButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNBUTTON)).nativeElement;
+        dropDownButton.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            selectedItem = dropdownItems[4];
+            expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
+            selectedItem = dropdownItems[8];
+            expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
+            selectedItem = dropdownItems[0];
+            expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
+        });
     });
     it('Combo focused items rendering', () => {
         // TO DO
@@ -959,24 +1012,49 @@ describe('Combo', () => {
         const combo = fixture.componentInstance.combo;
         const dropdown = combo.dropdown;
     });
-    it('End key should scroll down to the last item in the dropdown list', () => {
+    it('End key should scroll down to the last item in the dropdown list', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         const dropdown = combo.dropdown;
-    });
+        dropdown.toggle();
+        tick();
+    }));
 
     it('PageDown/PageUp key should scroll the list a single view down/up', () => {
         // Combo will not provide such an implementation, PageDown/PageUp will scroll the container, without moving selection.
     });
 
-    it('Vertical scrollbar should not be visible when the items fit inside the container', () => {
-        // TO DO
-    });
-    it('Vertical scrollbar should be visible when the items does not fit inside the container', () => {
-        // TO DO
-    });
-
+    it('Vertical scrollbar should not be visible when the items fit inside the container', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxComboScrollTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const dropdown = combo.dropdown;
+        dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement as HTMLElement;
+            const scrollbarContainer = dropdownList.firstElementChild;
+            const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
+            expect(hasScrollbar).toBeFalsy();
+        });
+    }));
+    it('Vertical scrollbar should be visible when the items does not fit inside the container', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const dropdown = combo.dropdown;
+        dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement as HTMLElement;
+            const scrollbarContainer = dropdownList.firstElementChild;
+            const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
+            expect(hasScrollbar).toBeTruthy();
+        });
+    }));
     // Selection
     it('Selected items should be appended to the input separated by comma', () => {
         let dropdownList: HTMLElement;
@@ -1004,8 +1082,6 @@ describe('Combo', () => {
             fixture.detectChanges();
             expectedOutput = 'Paris';
             expect(inputElement.value).toEqual(expectedOutput);
-            dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             selectedItem = dropdownItems[7];
             itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
             itemCheckbox.click();
@@ -1015,8 +1091,6 @@ describe('Combo', () => {
             fixture.detectChanges();
             expectedOutput += ', Oslo';
             expect(inputElement.value).toEqual(expectedOutput);
-            dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             selectedItem = dropdownItems[1];
             itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
             itemCheckbox.click();
@@ -1026,34 +1100,298 @@ describe('Combo', () => {
             fixture.detectChanges();
             expectedOutput += ', Sofia';
             expect(inputElement.value).toEqual(expectedOutput);
+            selectedItem = dropdownItems[7];
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expectedOutput = 'Paris, Sofia';
+            expect(inputElement.value).toEqual(expectedOutput);
         });
     });
 
-    it('Selected items should be appended to the input in the order they are selected', () => {
-        // TO DO
-    });
+    xit('Selected items should be appended to the input in the order they are selected', fakeAsync(() => {
+        let dropdownItems: NodeListOf<HTMLElement>;
+        const expectedOutput = 'Paris, Oslo, Sofia, Ottawa';
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+        const inputElement = input.nativeElement;
+        // items are only accessible when the combo dropdown is opened;
+        let targetItem: IgxComboItemComponent;
+        // spyOn(combo, 'setSelectedItem').and.callThrough();
+        // spyOn(combo.dropdown, 'focusItem').and.callThrough();
+        // spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
+        // spyOn(combo.dropdown, 'selectedItem').and.callThrough();
+        // spyOn(combo.onSelection, 'emit');
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            const item_1 = dropdownItems[3];
+            const checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_1.click();
+            fixture.detectChanges();
 
-    it('Selected items should be highlighted in the dropdown list', () => {
-        // TO DO
-    });
-    it('Deselected item should be removed from the input', () => {
-        // TO DO
-    });
-    it('Clear button should dismiss all selected items', () => {
-        // TO DO
-    });
+            const item_2 = dropdownItems[7];
+            const checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_2.click();
+            fixture.detectChanges();
+
+            fixture.detectChanges();
+            targetItem = combo.dropdown.items[1] as IgxComboItemComponent;
+            combo.dropdown.selectItem(targetItem);
+
+            // fixture.detectChanges();
+            // combo.dropdown.navigateNext();
+            // fixture.detectChanges();
+            // combo.dropdown.navigateNext();
+            // fixture.detectChanges();
+
+            // targetItem = combo.dropdown.items[11] as IgxComboItemComponent;
+            // console.log(targetItem);
+            // combo.dropdown.selectItem(targetItem);
+
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual(expectedOutput);
+        });
+    }));
+    it('Deselected item should be removed from the input', fakeAsync(() => {
+        // const expectedOutput = 'Paris, Oslo, Sofia';
+        // const fixture = TestBed.createComponent(IgxComboTestComponent);
+        // fixture.detectChanges();
+        // const combo = fixture.componentInstance.combo;
+        // const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+        // const inputElement = input.nativeElement;
+        // // items are only accessible when the combo dropdown is opened;
+        // let targetItem: IgxComboItemComponent;
+        // // spyOn(combo, 'setSelectedItem').and.callThrough();
+        // // spyOn(combo.dropdown, 'focusItem').and.callThrough();
+        // // spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
+        // // spyOn(combo.dropdown, 'selectedItem').and.callThrough();
+        // // spyOn(combo.onSelection, 'emit');
+        // combo.dropdown.toggle();
+        // tick();
+        // fixture.whenStable().then(() => {
+        //     fixture.detectChanges();
+        //     targetItem = combo.dropdown.items[3] as IgxComboItemComponent;
+        //     combo.dropdown.selectItem(targetItem);
+
+        //     fixture.detectChanges();
+        //     targetItem = combo.dropdown.items[7] as IgxComboItemComponent;
+        //     combo.dropdown.selectItem(targetItem);
+
+        //     fixture.detectChanges();
+        //     targetItem = combo.dropdown.items[1] as IgxComboItemComponent;
+        //     combo.dropdown.selectItem(targetItem);
+
+        //     fixture.detectChanges();
+        //     expect(inputElement.value).toEqual(expectedOutput);
+
+        //     const clearButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
+        //     clearButton.click();
+
+        //     fixture.detectChanges();
+        //     expect(inputElement.value).toEqual('');
+        // });
+    }));
+    it('Clear button should dismiss all selected items', fakeAsync(() => {
+        const expectedOutput = 'Paris, Oslo, Sofia';
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+        const inputElement = input.nativeElement;
+        let checkbox_1: HTMLElement;
+        let checkbox_2: HTMLElement;
+        let checkbox_3: HTMLElement;
+        let dropdownItem_1;
+        let dropdownItem_2;
+        let dropdownItem_3;
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            const item_1 = dropdownItems[3];
+            dropdownItem_1 = combo.data[3];
+            checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_1.click();
+            fixture.detectChanges();
+            expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(combo.data[3])).toBeTruthy();
+            expect(combo.selectedItems[0]).toEqual('Paris');
+
+            const item_2 = dropdownItems[7];
+            dropdownItem_2 = combo.data[7];
+            checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_2.click();
+            fixture.detectChanges();
+            expect(checkbox_2.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(dropdownItem_2)).toBeTruthy();
+            expect(combo.selectedItems[1]).toEqual('Oslo');
+
+            const item_3 = dropdownItems[1];
+            dropdownItem_3 = combo.data[1];
+            checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_3.click();
+            fixture.detectChanges();
+            expect(checkbox_3.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(dropdownItem_3)).toBeTruthy();
+            expect(combo.selectedItems[2]).toEqual('Sofia');
+            return fixture.whenStable();
+        }).then(() => {
+            expect(inputElement.value).toEqual(expectedOutput);
+            const clearButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
+            clearButton.click();
+            fixture.detectChanges();
+            return fixture.whenStable();
+        }).then(() => {
+            expect(inputElement.value).toEqual('');
+            expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
+            expect(combo.isItemSelected(dropdownItem_1)).toBeFalsy();
+            expect(checkbox_2.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
+            expect(combo.isItemSelected(dropdownItem_2)).toBeFalsy();
+            expect(checkbox_3.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
+            expect(combo.isItemSelected(dropdownItem_3)).toBeFalsy();
+            expect(combo.selectedItems.length).toEqual(0);
+        });
+    }));
     it('Clear button should not throw exception when no items are selected', () => {
-        // TO DO
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const clearButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
+        clearButton.click();
+        fixture.whenStable().then(() => {
+            expect(() => fixture.detectChanges()).not.toThrowError();
+        });
     });
-    it('Item selection - checkbox', () => {
-        // TO DO
-    });
-    it('SelectAll option should select/deselect all list items', () => {
-        // TO DO
-    });
-    it('Item selection/deselection should trigger onSelectionChange event ', () => {
-        // TO DO
-    });
+    it('Item selection - checkbox', fakeAsync(() => {
+        const expectedOutput = 'Paris, Oslo, Sofia';
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+        const inputElement = input.nativeElement;
+        let checkbox_1: HTMLElement;
+        let checkbox_2: HTMLElement;
+        let checkbox_3: HTMLElement;
+        let dropdownItem_1;
+        let dropdownItem_2;
+        let dropdownItem_3;
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            const item_1 = dropdownItems[3];
+            dropdownItem_1 = combo.data[3];
+            checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_1.click();
+            fixture.detectChanges();
+            expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(combo.data[3])).toBeTruthy();
+            expect(combo.selectedItems[0]).toEqual('Paris');
+
+            const item_2 = dropdownItems[7];
+            dropdownItem_2 = combo.data[7];
+            checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_2.click();
+            fixture.detectChanges();
+            expect(checkbox_2.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(dropdownItem_2)).toBeTruthy();
+            expect(combo.selectedItems[1]).toEqual('Oslo');
+
+            const item_3 = dropdownItems[1];
+            dropdownItem_3 = combo.data[1];
+            checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_3.click();
+            fixture.detectChanges();
+            expect(checkbox_3.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(dropdownItem_3)).toBeTruthy();
+            expect(combo.selectedItems[2]).toEqual('Sofia');
+
+            // Deselect first item
+            checkbox_1.click();
+            fixture.detectChanges();
+            expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
+            expect(combo.isItemSelected(combo.data[3])).toBeFalsy();
+            expect(combo.selectedItems[0]).toEqual('Oslo');
+            expect(combo.selectedItems[1]).toEqual('Sofia');
+        });
+    }));
+    it('SelectAll option should select/deselect all list items', fakeAsync(() => {
+    }));
+    it('Item selection/deselection should trigger onSelectionChange event ', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+        const inputElement = input.nativeElement;
+        let selectedItem: HTMLElement;
+        let itemCheckbox: HTMLElement;
+        let result = 1;
+        spyOn(combo.onSelection, 'emit').and.callThrough();
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            selectedItem = dropdownItems[3];
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: [], newSelection: ['Paris'] });
+            result++;
+
+            selectedItem = dropdownItems[7];
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: ['Paris'], newSelection: ['Paris', 'Oslo'] });
+            result++;
+
+            selectedItem = dropdownItems[1];
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({
+                oldSelection: ['Paris', 'Oslo'],
+                newSelection: ['Paris', 'Oslo', 'Sofia']
+            });
+            result++;
+
+            // Deselecting an item
+            selectedItem = dropdownItems[7];
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({
+                oldSelection: ['Paris', 'Oslo', 'Sofia'],
+                newSelection: ['Paris', 'Sofia']
+            });
+            result++;
+
+            selectedItem = dropdownItems[1];
+            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            itemCheckbox.click();
+            fixture.detectChanges();
+            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: ['Paris', 'Sofia'], newSelection: ['Paris'] });
+        });
+    }));
     it('Groupped items should be selectable ', () => {
         // TO DO
     });
@@ -1224,6 +1562,27 @@ class IgxComboTestComponent {
 
 @Component({
     template: `
+    <igx-combo #combo
+        [data]='data'
+        [placeholder]="'Location'"
+        [filterable]='true' [width]="'100px'"
+    >
+    </igx-combo>
+`
+})
+class IgxComboScrollTestComponent {
+    @ViewChild('combo', { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+
+    public data: string[] = [
+        'Item 1',
+        'Item 2',
+        'Item 3'];
+
+}
+
+@Component({
+    template: `
         <p>Change data to:</p>
         <button class='igx-button' igxRipple (click)="changeData('primitive')">Primitve</button>
         <button class='igx-button' igxRipple (click)="changeData('complex')">Complex</button>
@@ -1357,3 +1716,4 @@ class IgxComboInputTestComponent {
         this.initData = this.items;
     }
 }
+
