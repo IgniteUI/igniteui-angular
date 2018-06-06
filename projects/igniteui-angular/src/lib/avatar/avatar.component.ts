@@ -100,8 +100,8 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @HostBinding('class.igx-avatar')
     public cssClass = 'igx-avatar';
     /**
-     * Describes what is the type of the avatar.
-     * The avatar can be an initials type, icon type or an image type.
+     * Returns the type of the avatar.
+     * The avatar can be: "initials type avatar", "icon type avatar" or "image type avatar".
      *
      * ```typescript
      * let avatarDescription = this.avatar.roleDescription;
