@@ -1,4 +1,5 @@
-import { Component, ContentChildren, DebugElement, Directive, ElementRef, ViewChild } from '@angular/core';
+import { element } from 'protractor';
+import { Component, ContentChildren, DebugElement, Directive, ElementRef, ViewChild, QueryList } from '@angular/core';
 import { async, inject, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -207,7 +208,7 @@ describe('Combo', () => {
         // items are only accessible when the combo dropdown is opened;
         let targetItem: IgxComboItemComponent;
         spyOn(combo, 'setSelectedItem').and.callThrough();
-        spyOn(combo.dropdown, 'focusItem').and.callThrough();
+        spyOn(combo.dropdown, 'navigateItem').and.callThrough();
         spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
         spyOn(combo.dropdown, 'selectedItem').and.callThrough();
         spyOn(combo.onSelection, 'emit');
@@ -726,6 +727,32 @@ describe('Combo', () => {
         const combo = fix.componentInstance.combo;
         expect(combo.width).toEqual('400px');
     });
+
+    fit('Navigation through items in drop down', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        combo.open();
+        tick();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const comboDropDown = fix.debugElement.query(By.css('.igx-drop-down__list')).children[2].nativeElement; // yes baby!!!
+            comboDropDown.focus();
+            combo.dropdown.navigateLast();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            // expect(combo.dropdown.items[combo.dropdown.items.length - 1].itemData.field).toEqual('Texas');
+
+            combo.dropdown.navigateFirst();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(combo.dropdown.items[0].itemData.field).toEqual('Indiana');
+        });
+    }));
 
     // Rendering
     it('All appropriate classes should be applied on combo initialization', () => {
