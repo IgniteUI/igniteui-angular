@@ -43,7 +43,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * This is a reference to the avatar image element in the DOM.
      *
      * ```typescript
-     *  this.avatar.image.style.backgroundImage = "images/picture.jpg";
+     *  let image =  this.avatar.image;
      * ```
      * @memberof IgxAvatarComponent
      */
