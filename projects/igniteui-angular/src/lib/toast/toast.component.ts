@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 
+let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Toast** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
@@ -30,7 +31,6 @@ import { IgxNavigationService, IToggleView } from '../core/navigation';
  * </igx-toast>
  * ```
  */
-let NEXT_ID = 0;
 @Component({
     animations: [
         trigger('animate', [
