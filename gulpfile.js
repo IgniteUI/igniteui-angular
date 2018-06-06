@@ -3,10 +3,11 @@
 const autoprefixer = require('autoprefixer');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const sourcemaps = require("gulp-sourcemaps");
-const postcss = require("gulp-postcss");
-const process = require("process");
+const sourcemaps = require('gulp-sourcemaps');
+const postcss = require('gulp-postcss');
+const process = require('process');
 const fs = require('fs');
+const spawn = require('child_process').spawn;
 
 const STYLES = {
     SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/*',
@@ -56,9 +57,11 @@ gulp.task('copy-git-hooks', () => {
     ];
 
     dirs.forEach((dir) => {
-        if(!fs.existsSync(dir)) {
+        if (!fs.existsSync(dir)) {
             fs.mkdir(dir, (err) => {
-                if(err) { throw err; }
+                if (err) {
+                    throw err;
+                }
             });
         }
     });
@@ -68,7 +71,7 @@ gulp.task('copy-git-hooks', () => {
     fs.copyFileSync(defaultHookDir + 'templates/default.js',
         defaultCopyHookDir + 'templates/default.js');
 
-    fs.copyFileSync(defaultHookDir +'templateValidators/default-style-validator.js',
+    fs.copyFileSync(defaultHookDir + 'templateValidators/default-style-validator.js',
         defaultCopyHookDir + 'templateValidators/default-style-validator.js');
 
     fs.copyFileSync(defaultHookDir + 'utils/issue-validator.js',
@@ -85,4 +88,15 @@ gulp.task('copy-git-hooks', () => {
 
     fs.copyFileSync('./.hooks/prepare-commit-msg',
         './.git/hooks/prepare-commit-msg');
+});
+
+gulp.task('watch', () => {
+    gulp.watch('./projects/igniteui-angular/src/lib/**/*', (e) => {
+        let child = spawn('npm', ['run', 'build:lib'], {
+            cwd: process.cwd()
+        });
+
+        child.stdout.on('data', data => console.info(data.toString()));
+        child.stderr.on('data', data => console.error(data.toString()));
+    });
 });
