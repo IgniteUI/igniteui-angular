@@ -190,6 +190,14 @@
     @include e(grouparea-placeholder) {
         @extend %igx-grid__grouparea-placeholder !optional;
     }
+    @for $i from 1 through 10 {
+        @include e(group-indentation-level-#{$i}) {
+            @extend %grid__group-indentation-level-#{$i} !optional;
+        }
+        @include e(group-indentation-padding-level-#{$i}) {
+            @extend %grid__group-indentation-padding-level-#{$i} !optional;
+        }
+    }
   
     @include m(cosy) {
         @extend %grid-display !optional;

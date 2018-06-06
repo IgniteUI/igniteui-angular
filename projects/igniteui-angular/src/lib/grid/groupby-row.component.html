@@ -1,6 +1,6 @@
-<ng-container [style.padding-left]="padding" #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
+<ng-container #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
 
-    <div (click)="toggle()" class="igx-grid__grouping-indicator" [style.min-width.px]="grid.calcGroupByWidth" [style.flex-basis.px]="grid.calcGroupByWidth" [tabIndex]="tabindex">
+    <div (click)="toggle()" class="igx-grid__grouping-indicator igx-grid__group-indentation-level-{{groupRow.level+1}}" [tabIndex]="tabindex">
         <igx-icon *ngIf="!expanded" fontSet="material" name="expand_less"></igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
     </div>

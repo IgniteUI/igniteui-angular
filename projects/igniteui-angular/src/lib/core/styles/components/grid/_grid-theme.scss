@@ -693,6 +693,21 @@
         width: 100%;
     }
 
+    @for $i from 1 through 10 {
+        %grid__group-indentation-level-#{$i} {
+            min-width: #{$i*30}px;
+            flex-basis: #{$i*30}px;
+
+            .igx-button--icon {
+                min-width: 30px;
+                flex-basis: 30px;
+            }
+        }
+        %grid__group-indentation-padding-level-#{$i} {
+            padding-left: #{$i*30}px;
+        }
+    }
+
     %grid-summaries {
         display: flex;
         background: inherit;
