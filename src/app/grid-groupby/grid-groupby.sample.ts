@@ -68,6 +68,6 @@ export class GridGroupBySampleComponent implements OnInit {
                 return;
             }
         }
-        this.grid1.groupBy(name, SortingDirection.Asc, false);
+        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
     }
 }
