@@ -35,27 +35,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @Input()
     public column;
 
-    // get value() {
-    //     return this._value;
-    // }
-
-    // set value(val) {
-    //     // filtering needs to be cleared if value is null, undefined or empty string
-    //     if (!val && val !== 0) {
-    //         //this.clearFiltering(false);
-    //         return;
-    //     }
-    //     //this._value = this.transformValue(val);
-    //     this.filter();
-    // }
-
     get dataType(): DataType {
         return this.column.dataType;
     }
-
-    // get conditions() {
-    //     return this.column.filters.instance().conditionList();
-    // }
 
     get template() {
         switch (this.dataType) {
@@ -88,7 +70,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         return `igx-filtering`;
     }
 
-    public booleanFilterAll = 'All';
     public dialogShowing = false;
     public dialogPosition = 'igx-filtering__options--to-right';
 
@@ -100,8 +81,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         'yesterday', 'today', 'thisMonth', 'lastMonth', 'nextMonth',
         'thisYear', 'lastYear', 'nextYear'
     ];
-    //protected _value;
-    //protected _filterCondition;
+    
     protected filterChanged = new Subject();
     protected chunkLoaded = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;

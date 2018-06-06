@@ -29,7 +29,7 @@
         </select>
     </div>
     <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container> -->
-    <igx-grid-filter-expression #firstExpr (onExpressionChanged)="onExpressionChanged($event)" [name]="'firstExpr'" [column]="column.field">
+    <igx-grid-filter-expression #firstExpr (onExpressionChanged)="onExpressionChanged($event)" [name]="'firstExpr'" [column]="column">
     </igx-grid-filter-expression>
     <igx-buttongroup #logicOperators (onSelect)="onSelectLogicOperator($event)" (onUnselect)="onUnSelectLogicOperator($event)" [multiSelection]="false" [values]="filteringLogicOptions">
     </igx-buttongroup>
