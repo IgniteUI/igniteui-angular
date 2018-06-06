@@ -458,4 +458,21 @@
     %grid__drop-indicator-active {
         background-color: #e41c77;
     }
+
+    %grid__drag-ghost-image {
+        border: 1px solid #e41c77;
+        background-color: gainsboro;
+        position: absolute;
+        opacity: 0.7;
+        z-index: 20;
+        width: auto;
+        height: auto;
+        top: -99999px;
+        left: -99999px;
+        overflow: visible;
+
+        &:last-of-type {
+            border-right: 1px solid #e41c77;
+        }
+    }
 }

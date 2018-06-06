@@ -63,7 +63,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
     protected _destroy = new Subject<boolean>();
 
-    constructor(public element: ElementRef, public zone: NgZone) {
+    constructor(public element: ElementRef, public zone: NgZone, public renderer: Renderer2) {
     }
 
     ngOnInit() {
@@ -87,11 +87,19 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     }
 
     public set left(val: number) {
-        requestAnimationFrame(() => this._dragGhost.style.left = val + "px");
+        requestAnimationFrame(() => {
+            if (this._dragGhost) {
+                this._dragGhost.style.left = val + "px";
+            }
+        });
     }
 
     public set top(val: number) {
-        requestAnimationFrame(() => this._dragGhost.style.top = val + "px");
+        requestAnimationFrame(() => {
+            if (this._dragGhost) {
+                this._dragGhost.style.top = val + "px";
+            }
+        });
     }
 
     public onPointerDown(event) {
@@ -164,22 +172,16 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     }
 
     protected createDragGhost(event) {
-        const elStyle = document.defaultView.getComputedStyle(this.element.nativeElement);
         this._dragGhost = this.element.nativeElement.cloneNode(true);
 
-        this._dragGhost.style.background = "lightgray";
-        this._dragGhost.style.border = "0.2px solid red";
-        this._dragGhost.style.width = elStyle.width;
-        this._dragGhost.style.height = elStyle.height;
-        this._dragGhost.style.position = "absolute";
-        this._dragGhost.style.cursor = "not-allowed";
-        this._dragGhost.style.zIndex  = "20";
-        this._dragGhost.style.transitionDuration = "0.0s";
         this.left = this._dragStartX;
         this.top = this._dragStartY;
 
+        if (this.ghostImageClass) {
+            this.renderer.addClass(this._dragGhost, this.ghostImageClass);
+        }
+
         document.body.appendChild(this._dragGhost);
-        document.body.style.cursor = "url(this._dragGhost)";
 
         this._dragGhost.addEventListener("transitionend", (event) => {
             this.onTransitionEnd(event);
@@ -241,7 +243,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             return document.msElementsFromPoint(pageX, pageY);
         } else {
             // Other browsers like Chrome, Firefox, Opera
-            return document.elementsFromPoint(pageX, pageY); 
+            return document.elementsFromPoint(pageX, pageY);
         }
     }
 }

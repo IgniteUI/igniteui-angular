@@ -152,4 +152,8 @@
     @include e(drop-indicator-active) {
         @extend %grid__drop-indicator-active !optional;
     }
+
+    @include e(drag-ghost-image) {
+        @extend %grid__drag-ghost-image !optional;
+    }
 }
