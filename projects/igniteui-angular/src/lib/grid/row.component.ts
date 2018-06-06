@@ -145,6 +145,7 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         this.isFocused = false;
     }
 
+    @autoWire(true)
     public onCheckboxClick(event) {
         const newSelection = (event.checked) ?
                             this.selectionAPI.select_item(this.gridID, this.rowID) :

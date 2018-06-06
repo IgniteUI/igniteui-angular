@@ -1247,6 +1247,34 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[0].expanded).toBe(true);
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     });
+
+    fit('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.rowSelectable = true;
+        fix.componentInstance.height = '200px';
+        fix.detectChanges();
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy('Released', SortingDirection.Desc, false);
+
+        fix.detectChanges();
+
+        // scroll to bottom
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        fix.detectChanges();
+        setTimeout(() => {
+            const rows = grid.dataRowList.toArray();
+            expect(rows.length).toEqual(1);
+            const checkBoxElement = rows[0].element.nativeElement.querySelector('.igx-checkbox__input');
+            checkBoxElement.dispatchEvent(new Event('click'));
+
+            expect(grid.selectedRows().length).toEqual(1);
+            expect(rows[0].element.nativeElement.className).toEqual('igx-grid__tr igx-grid__tr--selected');
+            done();
+        }, 100);
+
+    });
 });
 
 export class DataParent {
