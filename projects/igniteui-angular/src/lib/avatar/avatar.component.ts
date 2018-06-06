@@ -55,37 +55,38 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     /**
      *@hidden
      *
-     * @memberof IgxAvatarComponent
+     *
      */
     @ViewChild('imageTemplate', { read: TemplateRef })
     protected imageTemplate: TemplateRef<any>;
 
     /**
      *@hidden
-     * @memberof IgxAvatarComponent
+     *
      */
     @ViewChild('initialsTemplate', { read: TemplateRef })
     protected initialsTemplate: TemplateRef<any>;
     /**
      *@hidden
-     * @memberof IgxAvatarComponent
+     *
      */
     @ViewChild('iconTemplate', { read: TemplateRef })
     protected iconTemplate: TemplateRef<any>;
     /**
-     * Indicates that the avatar's attribute aria-label is 'avatar'.
-     * ```html
-     * <igx-avatar aria-label="avatar"></igx-avatar>
+     * Returns the aria-label of the avatar.
+     *
+     * ```typescript
+     * let ariaLabel = this.avatar.ariaLabel;
      * ```
-     * @memberof IgxAvatarComponent
+     *
      */
     @HostBinding('attr.aria-label')
     public ariaLabel = 'avatar';
     /**
-     * Indicates that the avatar's attribute role is 'img'.
+     * Returns the role attribute of the avatar.
      *
-     * ```html
-     * <igx-avatar role="img"></igx-avatar>
+     * ```typescript
+     * let avatarRole = this.avatar.role;
      * ```
      *
      * @memberof IgxAvatarComponent
@@ -93,10 +94,10 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @HostBinding('attr.role')
     public role = 'img';
     /**
-     * Initializes the avatar's class.
+     * Returns the class of the avatar.
      *
-     * ```html
-     * <igx-avatar class="igx-avatar"></igx-avatar>
+     * ```typescript
+     * let avatarCLass =  this.avatar.cssClass;
      * ```
      *
      * @memberof IgxAvatarComponent
@@ -117,12 +118,12 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     /**
      * @hidden
      *
-     * @memberof IgxAvatarComponent
+     *
      */
     private _size: string | Size = 'small';
 
     /**
-     * Sets the id of the avatar. If not set,the first avatar component will have id = "igx-avatar-0".
+     * Sets the id of the avatar. If not set, the first avatar component will have id = "igx-avatar-0".
      *
      * ```html
      * <igx-avatar id="my-first-avatar"></igx-avatar>
@@ -246,7 +247,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     }
     /**
      *
-     * Returns the template corresponding to the avatar type.
+     * Returns the template of the avatar.
      *
      * ```typescript
      * let template = this.avatar.template;
@@ -271,7 +272,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     /**
      * @hidden
      *
-     * @memberof IgxAvatarComponent
+     *
      */
     public ngOnInit() {
         this.roleDescription = this.getRole();
@@ -280,14 +281,14 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     /**
      *@hidden
      *
-     * @memberof IgxAvatarComponent
+     *
      */
     public ngAfterViewInit() {
         this.elementRef.nativeElement.classList.add(`igx-avatar--${this._size}`);
     }
     /**
      * @hidden
-     * @memberof IgxAvatarComponent
+     *
      */
     private getRole() {
         if (this.initials) {
@@ -303,7 +304,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * Returns the url of the image.
      *
      * ```typescript
-     * duplicateAvatar.src = this.avatar.getSrcUrl();
+     * let imageSourceUrl = this.avatar.getSrcUrl();
      * ```
      *
      * @memberof IgxAvatarComponent
