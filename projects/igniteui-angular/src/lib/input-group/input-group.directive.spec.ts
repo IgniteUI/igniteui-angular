@@ -96,7 +96,7 @@ describe('IgxInputGroup', () => {
         testInputGroupType('line', igxInputGroup, inputGroupElement);
     });
 
-    it("disabled input should properly detect changes.", () => {
+    it('disabled input should properly detect changes.', () => {
         const fixture = TestBed.createComponent(InputGroupDisabledComponent);
         fixture.detectChanges();
 
@@ -188,7 +188,7 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
                 </igx-input-group>`
 })
 class InputGroupDisabledComponent {
-    @ViewChild("igxInputGroup") public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
 
     public isDisabled = false;
 
