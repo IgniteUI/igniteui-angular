@@ -298,7 +298,7 @@ export class IgxGridAPIService {
         });
     }
 
-    protected arrange_sorting_expressions(id) {
+    public arrange_sorting_expressions(id) {
         const groupingState = this.get(id).groupingExpressions;
         this.get(id).sortingExpressions.sort((a, b) => {
             const groupExprA = groupingState.find((expr) => expr.fieldName === a.fieldName);
