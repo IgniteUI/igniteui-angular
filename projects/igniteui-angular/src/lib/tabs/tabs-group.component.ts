@@ -39,7 +39,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     public label: string;
 
     /**
-    * An @Input property that sets the value of the `label`.
+    * An @Input property that sets the value of the `icon`.
     *```html
     *<igx-tabs-group label="Tab 1" icon="home">
     *```
@@ -69,7 +69,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      * public tab: IgxTabsGroupComponent;
      * ngAfterViewInIt(){
      *    let tabStyleClass = this.tab.styleClass;
-     *    this.cdr.detectChanges();
      * }
      * ```
      * Disclaimer:
@@ -145,7 +144,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     }
 
     /**
-     * An accessor that modifies the `_tabTemplate` property.
+     * An accessor that is used to set custom template ot the tab.
      * ```html
      * @ViewChild("MyTab")
      * public tab: IgxTabsGroupComponent;
