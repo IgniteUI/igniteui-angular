@@ -63,36 +63,65 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Emitted when item selection is changing, before the selection completes
+     * 
+     * ```html
+     * <igx-drop-down (onSelection)='handleSelection()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onSelection = new EventEmitter<ISelectionEventArgs>();
 
     /**
      * Emitted before the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpening)='handleOpening()'></igx-dro-down>
+     * ```
      */
     @Output()
     public onOpening = new EventEmitter();
 
     /**
      * Emitted after the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpened)='handleOpened()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onOpened = new EventEmitter();
 
     /**
      * Emitted before the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosing)='handleClosing()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onClosing = new EventEmitter();
 
     /**
      * Emitted after the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosed)='handleClosed()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onClosed = new EventEmitter();
 
     /**
-     * Gets/sets the width of the drop down
+     *  Gets/sets the width of the drop down
+     * 
+     * ```typescript
+     * // get
+     * let myDropDownCurrentWidth = this.dropdown.width;
+     * 
+     * // set
+     * let myDropDownNewWidth = '160px';
+     * this.dropdown.width = myDropDownNewWidth; 
+     * ```
      */
     @Input()
     get width() {
@@ -105,6 +134,15 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Gets/sets the height of the drop down
+     * 
+     * ```typescript
+     * // get
+     * let myDropDownCurrentHeight = this.dropdown.height;
+     * 
+     * // set
+     * let myDropDownNewHeight = '400px';
+     * this.dropdown.height = myDropDownNewHeight;
+     * ```
      */
     @Input()
     get height() {
@@ -118,12 +156,25 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Gets/sets whether items will be able to take focus. If set to true, default value,
      * user will be able to use keyboard navigation.
+     *
+     * ```typescript
+     * this.dropdown.allowItemsFocus = true;
+     * ```
      */
     @Input()
     public allowItemsFocus = true;
 
     /**
      * Gets/sets the drop down's id
+     *
+     * ```typescript
+     * // get
+     * let myDropDownCurrentId = this.dropdown.id;
+     * 
+     * // set
+     * let myDropDownNewId = 'newDropDownId';
+     * this.dropdown.id = myDropDownNewId;
+     * ```
      */
     @Input()
     get id(): string {
@@ -136,6 +187,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Gets if the dropdown is collapsed
+     *
+     * @hidden
      */
     public get collapsed(): boolean {
         return this.toggleDirective.collapsed;
@@ -143,14 +196,23 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Get currently selected item
+     *
+     * ```typescript
+     * let currentItem = this.dropdown.selectedItem;
+     * ```
      */
     public get selectedItem(): IgxDropDownItemComponent {
         const selection = this.selectionAPI.get_selection(this.id);
         return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
     }
 
+    
     /**
      * Get all non-header items
+     *
+     * ```typescript
+     * let myDropDownItems = this.dropdown.items;
+     * ```
      */
     public get items(): IgxDropDownItemComponent[] {
         const items: IgxDropDownItemComponent[] = [];
@@ -167,6 +229,10 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Get all header items
+     * 
+     * ```typescript
+     * let myDropDownHeaderItems = this.dropdown.headers;
+     * ```
      */
     public get headers(): IgxDropDownItemComponent[] {
         const headers: IgxDropDownItemComponent[] = [];
@@ -183,6 +249,10 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Get dropdown html element
+     *
+     * ```typescript
+     * let myDropDownElement = this.dropdown.element;
+     * ```
      */
     public get element() {
         return this.elementRef.nativeElement;
@@ -212,6 +282,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Opens the dropdown
+     *
+     * @hidden
      */
     open() {
         this.toggleDirective.open(true);
@@ -219,6 +291,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Closes the dropdown
+     *
+     * @hidden
      */
     close() {
         this.toggleDirective.close(true);
@@ -226,6 +300,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Toggles the dropdown
+     *
+     * @hidden
      */
     toggle() {
         if (this.toggleDirective.collapsed) {
@@ -235,6 +311,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
     }
 
+    /**
+     * @hidden
+     */
     focusFirst() {
         if (this._focusedItem) {
             const focusedItemIndex = - 1;
@@ -245,6 +324,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
     }
 
+    /**
+     * @hidden
+     */
     focusLast() {
         if (this._focusedItem) {
             const focusedItemIndex = (this.items.length);
@@ -255,6 +337,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
     }
 
+    /**
+     * @hidden
+     */
     focusNext() {
         let focusedItemIndex = -1;
         if (this._focusedItem) {
@@ -266,6 +351,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
     }
 
+    /**
+     * @hidden
+     */
     focusPrev() {
         if (this._focusedItem) {
             const focusedItemIndex = this._focusedItem.index;
@@ -276,10 +364,17 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
     }
 
+    /**
+     * @hidden
+     */
     ngOnInit() {
         this.toggleDirective.id = this.id;
     }
 
+
+    /**
+     * @hidden
+     */
     onToggleOpening() {
         this.toggleDirective.collapsed = false;
         this.cdr.detectChanges();
@@ -287,6 +382,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         this.onOpening.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleOpened() {
         this._initiallySelectedItem = this.selectedItem;
         this._focusedItem = this.selectedItem;
@@ -301,10 +399,16 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         this.onOpened.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleClosing() {
         this.onClosing.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleClosed() {
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
