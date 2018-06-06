@@ -61,6 +61,15 @@
         border-bottom: 1px dashed --var($theme, 'search-separator-border-color');
     }
 
+    %igx-combo__content {
+        position: relative;
+        overflow: hidden;
+
+        &:focus {
+            outline: transparent;
+        }
+    }
+
     .igx-drop-down__item {
         &%igx-combo__add {
             position: relative;

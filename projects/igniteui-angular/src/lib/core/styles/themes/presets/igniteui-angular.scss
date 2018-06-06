@@ -25,10 +25,3 @@ $my-input-theme: igx-input-group-theme(
 .igx-combo__search {
     @include igx-input-group($my-input-theme);
 }
-
-
-$my-combo-theme: igx-combo-theme(
-
-);
-
-@include igx-combo($my-combo-theme);
