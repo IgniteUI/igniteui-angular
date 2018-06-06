@@ -89,14 +89,12 @@ export class IgxOverlayService {
             this._positionStrategy = positionStrategy;
             this._componentWrapper = this._document.createElement('div');
             this._componentWrapper.appendChild(element);
-            this._positionStrategy.position(element);
 
         // Default to GlobalPositionStrategy.
         } else {
             this._positionStrategy = new GlobalPositionStrategy(this._document);
             this._componentWrapper = this._document.createElement('div');
             this._componentWrapper.appendChild(element);
-            this._positionStrategy.position(element);
         }
 
         // Call the strategy to attach the needed css class.
