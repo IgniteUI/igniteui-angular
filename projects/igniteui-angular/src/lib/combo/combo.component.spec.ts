@@ -657,6 +657,44 @@ describe('Combo', () => {
        });
     }));
 
+    it('Should properly select/deselect filteredData', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        const initialData = [...combo.filteredData];
+
+        expect(combo.searchValue).toEqual('');
+        spyOn(combo, 'filter').and.callThrough();
+        combo.searchValue = 'New ';
+        combo.handleInputChange();
+        tick();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(combo.filter).toHaveBeenCalledTimes(1);
+            expect(combo.filteredData.length).toBeLessThan(initialData.length);
+            expect(combo.filteredData.length).toEqual(4);
+
+            combo.selectAllItems();
+            fix.detectChanges();
+            expect(combo.selectedItems().length).toEqual(4);
+
+            combo.selectAllItems(true);
+            fix.detectChanges();
+            expect(combo.selectedItems().length).toEqual(51);
+
+            combo.deselectAllItems();
+            fix.detectChanges();
+            expect(combo.selectedItems().length).toEqual(47);
+
+            combo.deselectAllItems(true);
+            fix.detectChanges();
+            expect(combo.selectedItems().length).toEqual(0);
+        });
+    }));
+
     it('Should properly sort filteredData', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
