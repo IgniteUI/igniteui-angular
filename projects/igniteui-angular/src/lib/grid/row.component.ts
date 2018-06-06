@@ -167,4 +167,8 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
             this.checkboxElement.checked = this.isSelected;
         }
     }
+
+    notGroups(arr) {
+        return arr.filter(c => !c.columnGroup);
+    }
 }

@@ -336,7 +336,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
@@ -539,6 +539,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
         this.destroy$.next(true);
         this.destroy$.complete();
+        this.gridAPI.unsubscribe(this);
     }
 
     public dataLoading(event) {
@@ -784,8 +785,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.remove_summary(this.id);
     }
 
-    public pinColumn(columnName: string): boolean {
-        const col = this.getColumnByName(columnName);
+    public pinColumn(columnName: string | IgxColumnComponent): boolean {
+        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         const colWidth = parseInt(col.width, 10);
 
         if (col.pinned) {
@@ -798,32 +799,57 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.getUnpinnedWidth(true) - colWidth < this.unpinnedAreaMinWidth) {
             return false;
         }
+        this._pinCol(col);
+        // if (col.isColumnGroup) {
+        //     col.children.forEach(child => this.pinColumn(child));
+        // }
 
-        const oldIndex = col.visibleIndex;
+        // const oldIndex = col.visibleIndex;
 
-        col.pinned = true;
-        const index = this._pinnedColumns.length;
+        // col.pinned = true;
+        // const index = this._pinnedColumns.length;
 
-        const args = { column: col, insertAtIndex: index };
-        this.onColumnPinning.emit(args);
+        // const args = { column: col, insertAtIndex: index };
+        // this.onColumnPinning.emit(args);
 
-        // update grid collections.
-        if (this._pinnedColumns.indexOf(col) === -1) {
-            this._pinnedColumns.splice(args.insertAtIndex, 0, col);
+        // // update grid collections.
+        // if (this._pinnedColumns.indexOf(col) === -1) {
+        //     this._pinnedColumns.splice(args.insertAtIndex, 0, col);
 
-            if (this._unpinnedColumns.indexOf(col) !== -1) {
-                this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
-            }
-        }
-        this.markForCheck();
+        //     if (this._unpinnedColumns.indexOf(col) !== -1) {
+        //         this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
+        //     }
+        // }
+        // this.markForCheck();
 
-        const newIndex = col.visibleIndex;
-        col.updateHighlights(oldIndex, newIndex);
+        // const newIndex = col.visibleIndex;
+        // col.updateHighlights(oldIndex, newIndex);
         return true;
     }
 
-    public unpinColumn(columnName: string): boolean {
-        const col = this.getColumnByName(columnName);
+    protected _pinCol(column: IgxColumnComponent) {
+        column.pinned = true;
+        const oldIndex = column.visibleIndex;
+        const index = this._pinnedColumns.length;
+
+        if (this._pinnedColumns.indexOf(column) === -1) {
+            this._pinnedColumns.splice(index, 0, column);
+
+            if (this._unpinnedColumns.indexOf(column) !== -1) {
+                this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(column), 1);
+            }
+        }
+        if (column.columnGroup) {
+            column.children.forEach(c => this._pinCol(c));
+        }
+        this.markForCheck();
+        const newIndex = column.visibleIndex;
+
+        column.updateHighlights(oldIndex, newIndex);
+    }
+
+    public unpinColumn(columnName: string | IgxColumnComponent): boolean {
+        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
 
         if (!col.pinned) {
             return false;
@@ -949,6 +975,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected calculateGridHeight() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        const maxHeadersDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+
+        if (maxHeadersDepth) {
+            this.theadRow.nativeElement.style.height = `${maxHeadersDepth * 50}px`;
+        }
 
         if (!this._height) {
             this.calcHeight = null;
@@ -1055,7 +1086,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
         let sum = 0;
         for (const col of fc) {
-            sum += parseInt(col.width, 10);
+            if (col.level === 0) {
+                sum += parseInt(col.width, 10);
+            }
         }
         if (this.rowSelectable) {
             sum += this.calcRowCheckboxWidth;
@@ -1141,7 +1174,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.columnList.reset(columns);
     }
 
+    onlyTopLevel(arr) {
+        return arr.filter(c => c.level === 0);
+    }
+
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
+
+        // XXX: Deprecate index
+
         collection.forEach((column: IgxColumnComponent, index: number) => {
             column.gridID = this.id;
             column.index = index;
@@ -1155,6 +1195,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._columns = this.columnList.toArray();
         this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
+
+        // this.columnList.filter(group => group.isColumnGroup)
+        //     .forEach(x => x.width = (x as any).childWidth);
     }
 
     protected setEventBusSubscription() {

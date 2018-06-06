@@ -37,6 +37,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
     @HostBinding('class')
     get styleClasses() {
+        if (this.column.columnGroup) {
+            return `${this.column.headerClasses}`;
+        }
         return `igx-grid__th ${this.column.headerClasses}`;
     }
 
@@ -121,10 +124,12 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     }
 
     ngAfterViewInit() {
-        this.zone.runOutsideAngular(() => {
-            this.resizeArea.nativeElement.addEventListener('mouseover', this.onResizeAreaMouseOver.bind(this));
-            this.resizeArea.nativeElement.addEventListener('mousedown', this.onResizeAreaMouseDown.bind(this));
-        });
+        if (!this.column.columnGroup) {
+            this.zone.runOutsideAngular(() => {
+                this.resizeArea.nativeElement.addEventListener('mouseover', this.onResizeAreaMouseOver.bind(this));
+                this.resizeArea.nativeElement.addEventListener('mousedown', this.onResizeAreaMouseDown.bind(this));
+            });
+        }
     }
 
     @HostListener('click', ['$event'])

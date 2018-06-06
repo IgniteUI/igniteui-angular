@@ -15,7 +15,7 @@ import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridSummaryComponent } from './grid-summary.component';
@@ -34,6 +34,7 @@ import { IgxGridRowComponent } from './row.component';
   declarations: [
     IgxGridCellComponent,
     IgxColumnComponent,
+    IgxColumnGroupComponent,
     IgxGridComponent,
     IgxGridRowComponent,
     IgxGridHeaderComponent,
@@ -50,13 +51,15 @@ import { IgxGridRowComponent } from './row.component';
     IgxGridFilterConditionPipe
   ],
   entryComponents: [
-    IgxColumnComponent
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
   ],
   exports: [
     IgxGridComponent,
     IgxGridCellComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
+    IgxColumnGroupComponent,
     IgxGridHeaderComponent,
     IgxGridFilterComponent,
     IgxGridSummaryComponent,

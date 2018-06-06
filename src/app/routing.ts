@@ -36,6 +36,7 @@ import { GridPerformanceSampleComponent } from './grid-performance/grid-performa
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 
 const appRoutes = [
     {
@@ -191,6 +192,10 @@ const appRoutes = [
     {
         path: 'buttonGroup',
         component: ButtonGroupSampleComponent
+    },
+    {
+        path: 'gridColumnGroups',
+        component: GridColumnGroupsSampleComponent
     }
 ];
 

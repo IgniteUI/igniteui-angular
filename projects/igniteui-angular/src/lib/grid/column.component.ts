@@ -7,7 +7,8 @@ import {
     ContentChildren,
     Input,
     QueryList,
-    TemplateRef
+    TemplateRef,
+    forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { STRING_FILTERS } from '../data-operations/filtering-condition';
@@ -132,7 +133,13 @@ export class IgxColumnComponent implements AfterContentInit {
     public dataType: DataType = DataType.String;
 
     @Input()
-    public pinned = false;
+    public get pinned(): boolean {
+        return this._pinned;
+    }
+
+    public set pinned(value: boolean) {
+        this._pinned = value;
+    }
 
     public gridID: string;
 
@@ -206,6 +213,25 @@ export class IgxColumnComponent implements AfterContentInit {
         return vIndex;
     }
 
+    get columnGroup() {
+        return false;
+    }
+
+    get level() {
+        let ptr = this.parent;
+        let lvl = 0;
+
+        while (ptr) {
+            lvl++;
+            ptr = ptr.parent;
+        }
+        return lvl;
+    }
+
+    parent;
+    children;
+
+    protected _pinned = false;
     protected _bodyTemplate: TemplateRef<any>;
     protected _headerTemplate: TemplateRef<any>;
     protected _footerTemplate: TemplateRef<any>;
@@ -260,11 +286,11 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     public pin(): boolean {
-        return this.gridAPI.get(this.gridID).pinColumn(this.field);
+        return this.grid.pinColumn(this.field);
     }
 
     public unpin(): boolean {
-        return this.gridAPI.get(this.gridID).unpinColumn(this.field);
+        return this.grid.unpinColumn(this.field);
     }
 
     public updateHighlights(oldIndex: number, newIndex: number) {
@@ -285,5 +311,59 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.grid) {
             this.grid.markForCheck();
         }
+    }
+
+}
+
+
+@Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{ provide: IgxColumnComponent, useExisting: forwardRef(() => IgxColumnGroupComponent)}],
+    selector: 'igx-column-group',
+    template: ``
+})
+export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
+
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    children: QueryList<IgxColumnComponent>;
+
+
+    @Input()
+    get hidden() {
+        return this._hidden;
+    }
+
+    set hidden(value: boolean) {
+        this._hidden = value;
+        this.children.map(child => child.hidden = value);
+    }
+
+    ngAfterContentInit() {
+        /*
+            @ContentChildren with descendants still returns the `parent`
+            component in the query list.
+        */
+        this.children.reset(this.children.toArray().slice(1));
+        this.children.forEach(child => {
+            child.parent = this;
+        });
+    }
+
+    get columnGroup() {
+        return true;
+    }
+
+    get width() {
+        return `${this.children.reduce((acc, val) => acc + (!val.hidden ? parseInt(val.width, 10) : 0), 0)}`;
+    }
+
+    set width(val) {}
+
+    public pin(): boolean {
+        return this.grid.pinColumn(this);
+    }
+
+    public unpin(): boolean {
+        return this.grid.unpinColumn(this);
     }
 }
