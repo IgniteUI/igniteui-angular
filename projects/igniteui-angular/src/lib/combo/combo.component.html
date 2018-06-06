@@ -21,7 +21,7 @@
     <igx-input-group (click)="onInputClick($event)" type="box">
         <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%" readonly [placeholder]="placeholder"
         />
-        <igx-suffix igxButton="icon" igxRipple (click)="deselectAllItems()">
+        <igx-suffix igxButton="icon" igxRipple (click)="deselectAllItems(true)">
             <igx-icon *ngIf="value.length" fontSet="material" name="clear"></igx-icon>
         </igx-suffix>
         <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>

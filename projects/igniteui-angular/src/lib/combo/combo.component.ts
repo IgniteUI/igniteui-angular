@@ -816,14 +816,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         this.triggerSelectionChange(newSelection);
     }
 
-    public selectAllItems() {
-        const allVisible = this.selectionAPI.get_all_ids(this.filteredData);
+    public selectAllItems(ignoreFilter?: boolean) {
+        const allVisible = this.selectionAPI.get_all_ids(ignoreFilter ? this.data : this.filteredData);
         const newSelection = this.selectionAPI.select_items(this.id, allVisible);
         this.triggerSelectionChange(newSelection);
     }
 
-    public deselectAllItems() {
-        const newSelection = this.filteredData.length === this.data.length ?
+    public deselectAllItems(ignoreFilter?: boolean) {
+        const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
             [] :
             this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
         this.triggerSelectionChange(newSelection);
