@@ -1331,7 +1331,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
-        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false});
         const groupRows = grid.groupedRowList.toArray();
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
@@ -1344,7 +1344,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
-        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false});
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click close button
@@ -1362,7 +1362,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
-        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false});
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
@@ -1380,7 +1380,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
-        grid.groupBy('ProductName', SortingDirection.Asc, false);
+        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false});
         fix.detectChanges();
         simulateMouseEvent('click', fix.nativeElement.querySelector('igx-grid-header[id$="_ProductName"]'), 0, 0);
         fix.detectChanges();
@@ -1392,8 +1392,8 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        grid.groupBy('Released', SortingDirection.Desc, false);
-        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        grid.groupBy({fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false});
+        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false});
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         simulatePointerEvent('pointerdown', chips[0], 0, 0);
         simulatePointerEvent('pointermove', chips[0], 200, 0);
@@ -1430,8 +1430,8 @@ describe('IgxGrid - GroupBy', () => {
         ];
         fix.detectChanges();
 
-        grid.groupBy('Released', SortingDirection.Asc, false);
-        grid.groupBy('ProductName', SortingDirection.Asc, false);
+        grid.groupBy({fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Asc,  ignoreCase: false});
 
         fix.detectChanges();
 
