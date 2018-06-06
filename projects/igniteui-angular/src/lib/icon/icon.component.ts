@@ -167,7 +167,7 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *   An accessor that returns the opposite value of the active property.
+     *   An accessor that returns inactive property.
      *```html
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -187,7 +187,7 @@ export class IgxIconComponent implements OnInit {
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
      *ngAfterViewInit() {
-     *    let iconActive = this.icon.getIconColor;
+     *    let iconColor = this.icon.getIconColor;
      * }
      * ```
      */

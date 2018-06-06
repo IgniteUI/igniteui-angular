@@ -100,18 +100,10 @@ export class IgxBadgeComponent {
     /**
      * This allows you to disable igx-badge class. The default it's applied.
      *```html
-<<<<<<< HEAD
-     *  @ViewChild("MyBadge", { read: IgxBadgeComponent })
-     *  public badge: IgxBadgeComponent;
-     *
-     *  //...
-     *  badge.cssClass = false;
-=======
      *@ViewChild("MyBadge", { read: IgxBadgeComponent })
      *public badge: IgxBadgeComponent;
      * //...
      *badge.cssClass = false;
->>>>>>> origin/master
      * ```
      */
     @HostBinding('class.igx-badge')
