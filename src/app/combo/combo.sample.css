@@ -33,6 +33,7 @@
     display: flex;
     align-items: center;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .dropdownToggleButton {
@@ -100,9 +101,11 @@ h3 {
 }
 
 .input-container {
-    margin-right: 24px
+    flex: 1 1 0%;
+    min-width: 100px;
+    margin-bottom: 24px;
 }
 
-.input-container:last-of-type {
-    margin-right: 0;
+.input-container + .input-container {
+    margin-left: 24px;
 }
