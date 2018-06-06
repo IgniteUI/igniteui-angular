@@ -203,14 +203,23 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     @autoWire(true)
     public clearFiltering(resetCondition: boolean): void {
+        const grid = this.gridAPI.get(this.gridID);
+        const filterValue = this._value;
         this._value = null;
         this._filterCondition = resetCondition ? undefined : this._filterCondition;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
-        this.gridAPI.get(this.gridID).clearSummaryCache();
+        grid.clearSummaryCache();
         // XXX - Temp fix for (#1183, #1177) (Should be deleted)
         if (this.dataType === DataType.Date) {
             this.cdr.detectChanges();
         }
+
+        grid.onFilteringDone.emit({
+            fieldName: this.column.field,
+            condition: this.column.filteringCondition,
+            ignoreCase: this.column.filteringIgnoreCase,
+            searchVal: filterValue
+        });
     }
 
     public selectionChanged(value): void {
