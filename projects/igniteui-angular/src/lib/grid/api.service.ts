@@ -187,7 +187,7 @@ export class IgxGridAPIService {
         return grState.find((state) =>
             state.fieldName === groupRow.expression.fieldName &&
             state.value === groupRow.value &&
-            DataUtil.isHierarchyMatch(state.hierarchy, hierarchy));
+            DataUtil.isHierarchyMatch(state.hierarchy || [new Map().set(state.fieldName, state.value)], hierarchy));
     }
 
     public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {

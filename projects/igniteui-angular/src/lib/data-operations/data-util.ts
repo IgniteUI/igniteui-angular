@@ -81,7 +81,9 @@ export class DataUtil {
             }
             const hierarchy = this.getHierarchy(g);
             const expandState: IGroupByExpandState = expansion.find((state) =>
-                state.fieldName === g.expression.fieldName && state.value === g.value && this.isHierarchyMatch(state.hierarchy, hierarchy));
+                state.fieldName === g.expression.fieldName &&
+                state.value === g.value &&
+                this.isHierarchyMatch(state.hierarchy || [new Map().set(state.fieldName, state.value)], hierarchy));
             const expanded = expandState ? expandState.expanded : defaultExpanded;
             result.push(g);
             if (expanded) {
