@@ -62,9 +62,9 @@
     $default-theme: (
         name: 'igx-tabs',
 
-        item-text-color: igx-color($palette, 'grays', 600),
+        item-text-color: igx-color($palette, 'grays', 700),
         item-background: white,
-        item-hover-color: igx-color($palette, 'grays', 600),
+        item-hover-color: igx-color($palette, 'grays', 700),
         item-hover-background: igx-color($palette, 'grays', 200),
 
         item-active-color: igx-color($palette, 'grays', 800),
