@@ -703,6 +703,7 @@
                 flex-basis: 30px;
             }
         }
+
         %grid__group-indentation-padding-level-#{$i} {
             padding-left: #{$i*30}px;
         }
