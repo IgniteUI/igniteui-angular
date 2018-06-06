@@ -219,8 +219,14 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     private _column: IgxColumnComponent;
 
-    constructor(_element: ElementRef, _zone: NgZone, _renderer: Renderer2, private cms: IgxColumnMovingService) {
-        super(_element, _zone, _renderer);
+    constructor(
+        _element: ElementRef,
+        _zone: NgZone,
+        _renderer: Renderer2,
+        _cdr: ChangeDetectorRef,
+        private cms: IgxColumnMovingService,
+    ) {
+        super(_cdr, _element, _zone, _renderer);
     }
 
     public onPointerDown(event) {
@@ -321,7 +327,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective {
     private _dropIndicatorClass = "igx-grid__drop-indicator-active";
 
     constructor(private elementRef: ElementRef, private renderer: Renderer2, private cms: IgxColumnMovingService) {
-        super();
+        super(elementRef, renderer);
     }
 
     public ngOnDestroy() {

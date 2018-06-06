@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
+import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
 
 import { routing } from './routing';
 import { AppComponent } from './app.component';
@@ -17,6 +18,7 @@ import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
+import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -62,6 +64,7 @@ const components = [
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    DragDropSampleComponent,
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
@@ -90,7 +93,6 @@ const components = [
     GridPerformanceSampleComponent,
     GridSelectionComponent,
     GridVirtualizationSampleComponent,
-
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
@@ -106,6 +108,7 @@ const components = [
         HttpClientModule,
         IgxIconModule.forRoot(),
         IgxGridModule.forRoot(),
+        IgxDragDropModule,
         SharedModule,
         routing
     ],
