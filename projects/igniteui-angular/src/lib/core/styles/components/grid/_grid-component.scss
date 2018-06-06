@@ -1,0 +1,167 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-grid) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %grid-display !optional;
+
+    @include e(caption) {
+        @extend %grid-caption !optional;
+    }
+
+    @include e(thead) {
+        @extend %grid-thead !optional;
+
+        igx-display-container {
+            @extend %grid-display-container-thead !optional;
+        }
+    }
+
+    @include e(tbody) {
+        @extend %grid-tbody !optional;
+    }
+
+    @include e(tbody-message) {
+        @extend %grid-tbody-message !optional;
+    }
+
+    @include e(scroll) {
+        @extend %grid-scroll !optional;
+    }
+
+    @include e(scroll-start) {
+        @extend %grid-scroll-start !optional;
+    }
+
+    @include e(scroll-main) {
+        @extend %grid-scroll-main !optional;
+    }
+
+    @include e(tfoot) {
+        @extend %grid-tfoot !optional;
+    }
+
+    @include e(tr) {
+        @extend %grid-row !optional;
+
+        igx-display-container {
+            @extend %grid-display-container-tr !optional;
+        }
+    }
+
+    @include e(summaries) {
+        @extend %grid-summaries !optional;
+
+        igx-display-container {
+            @extend %grid-display-container-tr !optional;
+        }
+    }
+
+    @include e(tr, $m: selected) {
+        @extend %grid-row--selected !optional;
+    }
+
+    @include e(th) {
+        @extend %grid-cell-display !optional;
+        @extend %grid-cell-header !optional;
+    }
+
+    @include e(th, $m: number) {
+        @extend %grid-cell-number !optional;
+    }
+
+    @include e(th, $m: pinned) {
+        @extend %grid-cell--pinned !optional;
+    }
+
+    @include e(th, $m: pinned-last) {
+        @extend %grid-cell--pinned-last !optional;
+    }
+
+    @include e(th, $m: fw) {
+        @extend %grid-cell--fixed-width !optional;
+    }
+
+    @include e(th-title) {
+        @extend %grid-cell-header-title !optional;
+    }
+
+    @include e(th-icons) {
+        @extend %grid-cell-header-icons !optional;
+    }
+
+    @include e(th-resize-handle) {
+        @extend %grid__resize-handle !optional;
+    }
+
+    @include e(th-resize-line) {
+        @extend %grid__resize-line !optional;
+    }
+
+    @include e(td) {
+        @extend %grid-cell-display !optional;
+    }
+
+    @include e(td, $m: selected) {
+        @extend %grid-cell--selected !optional;
+    }
+
+    @include e(td, $m: editing) {
+        @extend %grid-cell--editing !optional;
+    }
+
+    @include e(td, $m: number) {
+        @extend %grid-cell-number !optional;
+    }
+
+    @include e(td, $m: pinned) {
+        @extend %grid-cell--pinned !optional;
+    }
+
+    @include e(td, $m: pinned-last) {
+        @extend %grid-cell--pinned !optional;
+        @extend %grid-cell--pinned-last !optional;
+    }
+
+    @include e(td, $m: pinned-end) {
+        @extend %grid-cell-pinned--end !optional;
+    }
+
+    @include e(td, $m: fw) {
+        @extend %grid-cell--fixed-width !optional;
+    }
+
+    @include e(cbx-selection) {
+        @extend %grid__cbx-selection !optional;
+    }
+
+    @include m(cosy) {
+        @extend %grid-display !optional;
+
+        @include e(th) {
+            @extend %grid-cell-header--cosy !optional;
+        }
+
+        @include e(td) {
+            @extend %grid-cell-display--cosy !optional;
+        }
+    }
+
+    @include m(compact) {
+        @extend %grid-display !optional;
+
+        @include e(th) {
+            @extend %grid-cell-header--compact !optional;
+        }
+
+        @include e(td) {
+            @extend %grid-cell-display--compact !optional;
+        }
+    }
+}
