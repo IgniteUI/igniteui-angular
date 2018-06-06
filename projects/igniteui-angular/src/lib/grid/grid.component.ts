@@ -817,11 +817,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
-        this.onFilteringDone.emit({
-            fieldName: column.field,
-            condition: column.filteringCondition,
-            ignoreCase: column.filteringIgnoreCase,
-        });
     }
 
     public clearSort(name?: string) {
