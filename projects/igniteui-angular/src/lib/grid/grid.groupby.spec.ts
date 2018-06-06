@@ -1247,6 +1247,47 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[0].expanded).toBe(true);
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     });
+
+    it('should persist state for the correct group record when there are group records with the same fieldName and value.', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.data = [
+           {
+                Downloads: 0,
+                ID: 1,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: false
+            },
+            {
+                Downloads: 0,
+                ID: 2,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: true
+            }
+        ];
+        fix.detectChanges();
+
+        grid.groupBy('Released', SortingDirection.Asc, false);
+        grid.groupBy('ProductName', SortingDirection.Asc, false);
+
+        fix.detectChanges();
+
+        const groupRows = grid.groupedRowList.toArray();
+
+        // group rows that have the same fieldName and value but belong to different parent groups
+        const similarGroupRows = groupRows.filter((gRows) =>
+            gRows.groupRow.value === 'JavaScript' && gRows.groupRow.expression.fieldName);
+        expect(similarGroupRows.length).toEqual(2);
+
+        // verify that if one is collapse the other remains expanded
+        similarGroupRows[0].toggle();
+
+        expect( similarGroupRows[0].expanded).toEqual(false);
+        expect( similarGroupRows[1].expanded).toEqual(true);
+
+    });
 });
 
 export class DataParent {
