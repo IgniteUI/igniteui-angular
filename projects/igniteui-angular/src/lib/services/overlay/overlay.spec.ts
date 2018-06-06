@@ -20,8 +20,6 @@ fdescribe('igxOverlay', () => {
     });
 
     it('Unit - OverlayElement should return a div attached to Document\'s body', () => {
-        // tslint:disable-next-line:no-debugger
-        debugger;
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -45,7 +43,7 @@ fdescribe('igxOverlay', () => {
             expect(overlayDiv).toBeDefined();
             expect(overlayDiv.style.display).toEqual('block');
             expect(overlayDiv.children.length).toEqual(1);
-            expect(overlayDiv.children[0].localName).toEqual('ng-component');
+            expect(overlayDiv.children[0].localName).toEqual('div');
 
             fixture.componentInstance.overlay.hideAll();
         });
@@ -63,8 +61,8 @@ fdescribe('igxOverlay', () => {
             expect(overlayDiv).toBeDefined();
             expect(overlayDiv.style.display).toEqual('block');
             expect(overlayDiv.children.length).toEqual(2);
-            expect(overlayDiv.children[0].localName).toEqual('ng-component');
-            expect(overlayDiv.children[1].localName).toEqual('ng-component');
+            expect(overlayDiv.children[0].localName).toEqual('div');
+            expect(overlayDiv.children[1].localName).toEqual('div');
 
             fixture.componentInstance.overlay.hide(1);
             return fixture.whenStable();
@@ -74,7 +72,7 @@ fdescribe('igxOverlay', () => {
             expect(overlayDiv).toBeDefined();
             expect(overlayDiv.style.display).toEqual('block');
             expect(overlayDiv.children.length).toEqual(1);
-            expect(overlayDiv.children[0].localName).toEqual('ng-component');
+            expect(overlayDiv.children[0].localName).toEqual('div');
 
             fixture.componentInstance.overlay.hide(0);
             return fixture.whenStable();
@@ -99,8 +97,8 @@ fdescribe('igxOverlay', () => {
             expect(overlayDiv).toBeDefined();
             expect(overlayDiv.style.display).toEqual('block');
             expect(overlayDiv.children.length).toEqual(2);
-            expect(overlayDiv.children[0].localName).toEqual('ng-component');
-            expect(overlayDiv.children[1].localName).toEqual('ng-component');
+            expect(overlayDiv.children[0].localName).toEqual('div');
+            expect(overlayDiv.children[1].localName).toEqual('div');
 
             fixture.componentInstance.overlay.hideAll();
             return fixture.whenStable();

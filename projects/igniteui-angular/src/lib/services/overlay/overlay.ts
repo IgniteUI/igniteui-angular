@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { IPositionStrategy  } from './position/IPositionStrategy';
+import { IPositionStrategy } from './position/IPositionStrategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { PositionSettings } from './position/utilities';
 
@@ -18,9 +18,6 @@ export class IgxOverlayService {
     private _componentId = 0;
     private _elements = [];
     private _overlayElement: HTMLElement;
-    private _positionStrategy: IPositionStrategy;
-    private _componentWrapper: HTMLElement;
-
 
     /**
      * Creates, sets up, and return a DIV HTMLElement attached to document's body
@@ -68,40 +65,18 @@ export class IgxOverlayService {
      */
 
     show(component, positionStrategy?: IPositionStrategy): number {
-        let element;
-        if (component instanceof ElementRef) {
-            element = component.nativeElement;
-        } else {
-            let dynamicFactory: ComponentFactory<{}>;
-            try {
-                dynamicFactory = this._factoryResolver.resolveComponentFactory(component);
-            } catch (error) {
-                console.log(error);
-                return;
-            }
+        const element = this.getElement(component);
 
-            const dc = dynamicFactory.create(this._injector);
-            this._appRef.attachView(dc.hostView);
-            element = dc.location.nativeElement;
-        }
-        // If positionStrategy is specified, use it.
-        if (positionStrategy) {
-            this._positionStrategy = positionStrategy;
-            this._componentWrapper = this._document.createElement('div');
-            this._componentWrapper.appendChild(element);
+        const componentWrapper = this._document.createElement('div');
+        componentWrapper.appendChild(element);
 
-        // Default to GlobalPositionStrategy.
-        } else {
-            this._positionStrategy = new GlobalPositionStrategy(this._document);
-            this._componentWrapper = this._document.createElement('div');
-            this._componentWrapper.appendChild(element);
-        }
+        positionStrategy = this.getPositionStrategy(positionStrategy);
 
         // Call the strategy to attach the needed css class.
-        this._positionStrategy.position(element);
+        positionStrategy.position(element);
 
         this.OverlayElement.style.display = 'block';
-        this.OverlayElement.appendChild(this._componentWrapper);
+        this.OverlayElement.appendChild(componentWrapper);
         return this._componentId++;
     }
 
@@ -125,6 +100,36 @@ export class IgxOverlayService {
     hideAll() {
         while (this._componentId > 0) {
             this.hide(this._componentId - 1);
+        }
+    }
+
+    private getElement(component: any): HTMLElement {
+        let element: HTMLElement;
+
+        if (component instanceof ElementRef) {
+            element = component.nativeElement;
+            return element;
+        }
+
+        let dynamicFactory: ComponentFactory<{}>;
+        try {
+            dynamicFactory = this._factoryResolver.resolveComponentFactory(component);
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+
+        const dc = dynamicFactory.create(this._injector);
+        this._appRef.attachView(dc.hostView);
+        element = dc.location.nativeElement;
+        return element;
+    }
+
+    private getPositionStrategy(positionStrategy: IPositionStrategy): IPositionStrategy {
+        if (positionStrategy) {
+            return positionStrategy;
+        } else {
+            return new GlobalPositionStrategy(this._document);
         }
     }
 

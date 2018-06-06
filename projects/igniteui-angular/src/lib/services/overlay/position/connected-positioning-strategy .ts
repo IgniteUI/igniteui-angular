@@ -15,10 +15,9 @@ export class ConnectedPositioningStrategy implements IPositionStrategy  {
     position (element): void {
         this.wrapperClass = 'connected-show';
 
-        // (options defaults come from PositionSettings)
-        const rect = element.getBoundingClientRect();
+        // (options defaults come from the PositionSettings)
         element.parentElement.style.position = 'absolute';
-
+        // position based on point only
         element.parentElement.style.top = this._options.point.y + 'px';
         element.parentElement.style.left = this._options.point.y + 'px';
 
