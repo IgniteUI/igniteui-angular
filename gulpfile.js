@@ -95,7 +95,7 @@ gulp.task('copy-git-hooks', () => {
 gulp.task('watch', () => {
     gulp.watch('./projects/igniteui-angular/src/lib/**/*', () => {
         try {
-            let child = spawn('npm run build:lib', {
+            spawn('npm run build:lib', {
                 stdio: 'inherit',
                 shell: true,
                 cwd: process.cwd()
