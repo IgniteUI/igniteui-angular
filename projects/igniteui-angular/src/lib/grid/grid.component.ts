@@ -175,6 +175,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set groupingExpressions(value) {
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
+        this.gridAPI.arrange_sorting_expressions(this.id);
         /* grouping should work in conjunction with sorting
         and without overriding seperate sorting expressions */
         this._applyGrouping();
