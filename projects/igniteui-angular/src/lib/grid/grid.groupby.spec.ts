@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,6 +21,7 @@ import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
+import { IgxChipComponent } from '../chips';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -121,6 +122,40 @@ describe('IgxGrid - GroupBy', () => {
             element.dispatchEvent(new MouseEvent(eventName, options));
             resolve();
         });
+    }
+
+    function simulatePointerEvent(eventName: string, element, x, y) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: x,
+            clientY: y,
+            pointerId: 1
+        };
+
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(new PointerEvent(eventName, options));
+            resolve();
+        });
+    }
+
+    function checkChips(chips, grExpr, sortExpr) {
+        for (let i = 0; i < chips.length; i++) {
+            const chip = chips[i].querySelector('span[igxLabel]>span').innerText;
+            const chipDirection = chips[i].querySelector('span[igxLabel]>igx-icon').innerText;
+            const grp = grExpr[i];
+            const s = sortExpr[i];
+            expect(chip).toBe(grp.fieldName);
+            expect(chip).toBe(s.fieldName);
+            if (chipDirection === SORTING_ICON_ASC_CONTENT) {
+                expect(grp.dir).toBe(SortingDirection.Asc);
+                expect(s.dir).toBe(SortingDirection.Asc);
+            } else {
+                expect(grp.dir).toBe(SortingDirection.Desc);
+                expect(s.dir).toBe(SortingDirection.Desc);
+            }
+        }
     }
 
     it('should allow grouping by different data types.', () => {
@@ -1246,6 +1281,132 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         expect(groupRows[0].expanded).toBe(true);
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
+    });
+
+    // GroupBy chips
+    it('should apply the chips correctly when there are grouping expressions applied and reordered', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        // set groupingExpressions
+        const grid = fix.componentInstance.instance;
+        const exprs: ISortingExpression[] = [
+            { fieldName: 'ProductName', dir: SortingDirection.Desc },
+            { fieldName: 'Released', dir: SortingDirection.Desc }
+        ];
+        grid.groupingExpressions = exprs;
+        fix.detectChanges();
+        let groupRows = grid.groupedRowList.toArray();
+        checkGroups(groupRows,
+            ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
+                false, 'Ignite UI for Angular', false, null, '', true, null, true],
+            grid.groupingExpressions);
+        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+
+        // change order
+        grid.groupingExpressions = [
+            { fieldName: 'Released', dir: SortingDirection.Asc },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc }
+        ];
+        grid.sortingExpressions = [
+            { fieldName: 'Released', dir: SortingDirection.Asc },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc }
+        ];
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
+        // verify groups
+        checkGroups(groupRows,
+            [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
+                'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'],
+            grid.groupingExpressions);
+        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+    });
+
+    it('should apply the chips correctly when there is grouping at runtime', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        const groupRows = grid.groupedRowList.toArray();
+        const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
+    });
+
+    it('should remove sorting when grouping is removed', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        // click close button
+        simulateMouseEvent('click', chips[0].querySelector('span[igxbutton]'), 0, 0);
+        fix.detectChanges();
+        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        expect(chips.length).toBe(0);
+        expect(grid.groupingExpressions.length).toBe(0);
+        expect(grid.sortingExpressions.length).toBe(0);
+    });
+
+    it('should change sorting direction when grouping changes direction', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        fix.detectChanges();
+        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        // click grouping direction arrow
+        simulateMouseEvent('click', chips[0].querySelector('span[igxlabel]'), 0, 0);
+        fix.detectChanges();
+        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        expect(chips.length).toBe(1);
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+    });
+
+    it('should change grouping direction when sorting changes direction', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+
+        grid.groupBy('ProductName', SortingDirection.Asc, false);
+        fix.detectChanges();
+        simulateMouseEvent('click', fix.nativeElement.querySelector('igx-grid-header[id$="_ProductName"]'), 0, 0);
+        fix.detectChanges();
+        const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+    });
+
+    it('should reorder groups when reordering chips', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy('Released', SortingDirection.Desc, false);
+        grid.groupBy('ProductName', SortingDirection.Desc, false);
+        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        simulatePointerEvent('pointerdown', chips[0], 0, 0);
+        simulatePointerEvent('pointermove', chips[0], 200, 0);
+        simulatePointerEvent('pointerup', chips[0], 0, 0);
+        fix.detectChanges();
+        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        // verify groups
+        const groupRows = grid.groupedRowList.toArray();
+        checkGroups(groupRows,
+            ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
+            false, 'Ignite UI for Angular', false, null, '', true, null, true],
+            grid.groupingExpressions);
     });
 });
 
