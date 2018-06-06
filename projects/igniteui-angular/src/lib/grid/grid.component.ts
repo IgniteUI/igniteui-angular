@@ -718,7 +718,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (column.pinned) {
             const fromIndex = this._pinnedColumns.indexOf(column);
 
-            let toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
                 this._unpinnedColumns.indexOf(dropTarget);
 
             this._pinnedColumns.splice(fromIndex, 1);
@@ -733,7 +733,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             const fromIndex = this._unpinnedColumns.indexOf(column);
 
-            let toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
                 this._unpinnedColumns.indexOf(dropTarget);
 
             this._unpinnedColumns.splice(fromIndex, 1);

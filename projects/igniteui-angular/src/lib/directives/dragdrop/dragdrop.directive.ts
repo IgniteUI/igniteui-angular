@@ -154,7 +154,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         // Take margins because getBoundingClientRect() doesn't include margins of the element
         const marginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
         const marginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
-        
+
         this._dragOffsetX = (event.pageX - this.element.nativeElement.getBoundingClientRect().left) + marginLeft;
         this._dragOffsetY = (event.pageY - this.element.nativeElement.getBoundingClientRect().top)  + marginTop;
         this._dragStartX = event.pageX - this._dragOffsetX;

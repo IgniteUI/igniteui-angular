@@ -490,7 +490,7 @@
         position: absolute;
         width: 15px;
         top: 0;
-        left: 0px;
+        left: 0;
         height: 100%;
         z-index: 25;
     }
@@ -499,7 +499,7 @@
         position: absolute;
         width: 15px;
         top: 0;
-        right: 0px;
+        right: 0;
         height: 100%;
         z-index: 25;
     }
@@ -512,7 +512,7 @@
         border: 1px solid #e41c77;
         background-color: gainsboro;
         position: absolute;
-        opacity: 0.7;
+        opacity: .7;
         z-index: 20;
         width: auto;
         height: auto;
