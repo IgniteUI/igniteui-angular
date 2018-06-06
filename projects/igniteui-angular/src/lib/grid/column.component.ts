@@ -11,7 +11,6 @@ import {
     forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -24,6 +23,8 @@ import {
     IgxCellTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
+import { IFilteringOperation, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxStringFilteringOperand } from '../../public_api';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -121,7 +122,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public formatter: (value: any) => any;
 
     @Input()
-    public filteringCondition: (target: any, searchVal: any, ignoreCase?: boolean) => any;
+    public filteringCondition: IFilteringOperation;
 
     @Input()
     public filteringIgnoreCase = true;
@@ -150,6 +151,17 @@ export class IgxColumnComponent implements AfterContentInit {
 
     public set summaries(classRef: any) {
         this._summaries = new classRef();
+    }
+
+    @Input()
+    public searchable = true;
+
+    @Input()
+    public get filters(): any {
+        return this._filters;
+    }
+    public set filters(classRef: any) {
+        this._filters = classRef;
     }
 
     get defaultMinWidth(): string {
@@ -237,6 +249,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _footerTemplate: TemplateRef<any>;
     protected _inlineEditorTemplate: TemplateRef<any>;
     protected _summaries = null;
+    protected _filters = null;
     protected _hidden = false;
     protected _index: number;
 
@@ -280,6 +293,23 @@ export class IgxColumnComponent implements AfterContentInit {
                     break;
                 case DataType.Date:
                     this.summaries = IgxDateSummaryOperand;
+                    break;
+            }
+        }
+        if (!this.filters) {
+            switch (this.dataType) {
+                case DataType.Boolean:
+                    this.filters = IgxBooleanFilteringOperand;
+                    break;
+                case DataType.Number:
+                    this.filters = IgxNumberFilteringOperand;
+                    break;
+                case DataType.Date:
+                    this.filters = IgxDateFilteringOperand;
+                    break;
+                case DataType.String:
+                default:
+                    this.filters = IgxStringFilteringOperand;
                     break;
             }
         }

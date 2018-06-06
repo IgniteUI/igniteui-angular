@@ -16,16 +16,11 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
-import {
-    BOOLEAN_FILTERS,
-    DATE_FILTERS,
-    NUMBER_FILTERS,
-    STRING_FILTERS
-} from '../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
+import { IFilteringOperation } from '../../public_api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,22 +52,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     get conditions() {
-        let conditions = [];
-
-        switch (this.dataType) {
-            case DataType.String:
-                conditions = Object.keys(STRING_FILTERS);
-                break;
-            case DataType.Number:
-                conditions = Object.keys(NUMBER_FILTERS);
-                break;
-            case DataType.Boolean:
-                conditions = Object.keys(BOOLEAN_FILTERS);
-                break;
-            case DataType.Date:
-                conditions = Object.keys(DATE_FILTERS);
-        }
-        return conditions;
+        return this.column.filters.instance().conditionList();
     }
 
     get template() {
@@ -203,14 +183,23 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     @autoWire(true)
     public clearFiltering(resetCondition: boolean): void {
+        const grid = this.gridAPI.get(this.gridID);
+        const filterValue = this._value;
         this._value = null;
         this._filterCondition = resetCondition ? undefined : this._filterCondition;
         this.gridAPI.clear_filter(this.gridID, this.column.field);
-        this.gridAPI.get(this.gridID).clearSummaryCache();
+        grid.clearSummaryCache();
         // XXX - Temp fix for (#1183, #1177) (Should be deleted)
         if (this.dataType === DataType.Date) {
             this.cdr.detectChanges();
         }
+
+        grid.onFilteringDone.emit({
+            fieldName: this.column.field,
+            condition: this.column.filteringCondition,
+            ignoreCase: this.column.filteringIgnoreCase,
+            searchVal: filterValue
+        });
     }
 
     public selectionChanged(value): void {
@@ -269,17 +258,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         event.stopPropagation();
     }
 
-    protected getCondition(value) {
-        switch (this.dataType) {
-            case DataType.String:
-                return STRING_FILTERS[value];
-            case DataType.Number:
-                return NUMBER_FILTERS[value];
-            case DataType.Boolean:
-                return BOOLEAN_FILTERS[value];
-            case DataType.Date:
-                return DATE_FILTERS[value];
-        }
+    protected getCondition(value: string): IFilteringOperation {
+        return this.column.filters.instance().condition(value);
     }
 
     protected transformValue(value) {

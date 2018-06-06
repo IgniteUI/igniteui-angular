@@ -25,7 +25,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
                 IgxGridModule.forRoot()
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it('Define grid with resizable columns.', fakeAsync(() => {
@@ -593,8 +593,10 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector('igx-display-container');
+        const expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height;
 
-        expect(grid.calcHeight).toEqual(243);
+        expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.columns[0].width).toEqual('100px');
 
         // Resize first column
@@ -625,7 +627,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
 
         // Should 243 - 18, because the horizontal scrollbar has 18px height
-        expect(grid.calcHeight).toEqual(243 - 18);
+        expect(grid.calcHeight).toEqual(expectedHeight - 18);
         expect(hScrollVisible).toBe(true);
 
         discardPeriodicTasks();
@@ -662,7 +664,7 @@ export class ResizableColumnsComponent {
     public data = [
         { ID: 2, Name: 'Jane', LastName: 'Brown', Region: 'AD' },
         { ID: 1, Name: 'Brad', LastName: 'Williams', Region: 'BD' },
-        { ID: 6, Name: 'Rick', LastName: 'Jones', Region: 'ACD'},
+        { ID: 6, Name: 'Rick', LastName: 'Jones', Region: 'ACD' },
         { ID: 7, Name: 'Rick', LastName: 'BRown', Region: 'DD' },
         { ID: 5, Name: 'ALex', LastName: 'Smith', Region: 'MlDs' },
         { ID: 4, Name: 'Alex', LastName: 'Wilson', Region: 'DC' },
@@ -687,7 +689,7 @@ export class PinnedColumnsComponent {
     public data = [
         { ID: 2, Name: 'Jane', LastName: 'Brown', Region: 'AD' },
         { ID: 1, Name: 'Brad', LastName: 'Williams', Region: 'BD' },
-        { ID: 6, Name: 'Rick', LastName: 'Jones', Region: 'ACD'},
+        { ID: 6, Name: 'Rick', LastName: 'Jones', Region: 'ACD' },
         { ID: 7, Name: 'Rick', LastName: 'BRown', Region: 'DD' },
         { ID: 5, Name: 'ALex', LastName: 'Smith', Region: 'MlDs' },
         { ID: 4, Name: 'Alex', LastName: 'Wilson', Region: 'DC' },
@@ -741,7 +743,7 @@ export class LargePinnedColGridComponent implements OnInit {
             };
             this.data.push(item);
         }
-      }
+    }
 }
 
 @Component({
@@ -888,7 +890,7 @@ export class NullColumnsComponent implements OnInit {
             { field: 'ID', resizable: true, maxWidth: 200, minWidth: 70 },
             { field: 'CompanyName', resizable: true },
             { field: 'ContactName', resizable: true },
-            { field: 'ContactTitle', resizable: true},
+            { field: 'ContactTitle', resizable: true },
             { field: 'Address', resizable: true },
             { field: 'City', resizable: true },
             { field: 'Region', resizable: true },

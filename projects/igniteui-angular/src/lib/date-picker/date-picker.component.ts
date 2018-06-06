@@ -175,6 +175,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     public selectDate(date: Date) {
         this.value = date;
         this.onSelection.emit(date);
+        this._onChangeCallback(date);
     }
 
     /**
