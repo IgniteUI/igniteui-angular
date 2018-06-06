@@ -6,7 +6,9 @@
 
 $my-dd-theme: igx-drop-down-theme(
     $selected-item-background: igx-color($default-palette, 'primary', 100),
-    $header-text-color: #09f
+    $header-text-color: #09f,
+    $selected-hover-item-background: igx-color($default-palette, 'primary', 200),
+    $selected-focus-item-background: igx-color($default-palette, 'primary', 200)
 );
 
 $my-input-theme: igx-input-group-theme(
@@ -23,3 +25,10 @@ $my-input-theme: igx-input-group-theme(
 .igx-combo__search {
     @include igx-input-group($my-input-theme);
 }
+
+
+$my-combo-theme: igx-combo-theme(
+
+);
+
+@include igx-combo($my-combo-theme);

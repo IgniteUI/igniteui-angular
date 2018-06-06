@@ -9,6 +9,8 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
+    @extend %igx-combo !optional;
+
     @include e(drop-down) {
         @extend %igx-combo__drop-down !optional;
     }
