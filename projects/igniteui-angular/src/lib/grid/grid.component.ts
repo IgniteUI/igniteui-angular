@@ -1484,7 +1484,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).map((c) => c.field);
+        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
+                                        filter((c) => c.searchable).
+                                        map((c) => c.field);
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;
