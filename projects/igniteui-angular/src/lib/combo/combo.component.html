@@ -38,7 +38,7 @@
         </igx-input-group>
         <ng-container *ngTemplateOutlet="dropdownHeader; context: {$impicit: this}">
         </ng-container>
-        <div #dropdownItemContainer style="position: relative; overflow: hidden;" [style.height.px]="dropDownHeight" [style.width.px]="dropDownWidth" [igxDropDownItemNavigation]="dropdown"
+        <div #dropdownItemContainer class="igx-combo__content" [style.height.px]="dropDownHeight" [style.width.px]="dropDownWidth" [igxDropDownItemNavigation]="dropdown"
             [tabindex]="dropdown.collapsed ? -1 : 0">
             <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
                 [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="dropDownHeight" [igxForItemSize]="dropDownItemHeight"
