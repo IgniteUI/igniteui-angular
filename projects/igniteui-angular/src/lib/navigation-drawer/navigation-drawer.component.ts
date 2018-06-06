@@ -73,7 +73,7 @@ export class IgxNavigationDrawerComponent implements
      * Position of the Navigation Drawer. Can be "left"(default) or "right". 
      * Only has effect when not pinned.
      * 
-     * ```js
+     * ```typescript
      * this.navdrawer.position = 'left';
      * ```
      */
@@ -83,7 +83,7 @@ export class IgxNavigationDrawerComponent implements
      * Enables the use of touch gestures to manipulate the drawer:
      * - swipe/pan from edge to open, swipe-toggle and pan-drag.
      *
-     * ```js
+     * ```typescript
      *  this.navdrawer.enableGestures = true;
      * ```
      */
@@ -92,7 +92,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * State of the drawer.
      *
-     * ```js
+     * ```typescript
      *  this.navdrawer.isOpen = false;
      * ```
      */
@@ -102,7 +102,7 @@ export class IgxNavigationDrawerComponent implements
      * When pinned the drawer is relatively positioned instead of sitting above content. 
      * May require additional layout styling.
      *  
-     * ```js
+     * ```typescript
      * this.navdrawer.pin = false;
      * ```
      */
@@ -112,7 +112,7 @@ export class IgxNavigationDrawerComponent implements
      * Minimum device width required for automatic pin to be toggled.
      * Default is 1024, can be set to a falsy value to disable this behavior.
      *  
-     * ```js
+     * ```typescript
      * this.navdrawer.pinThreshold = 620;
      * ```
      */
@@ -120,10 +120,6 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Returns nativeElement of the component.
-     *  
-     * ```js
-     * let componentNativeElement = this.navdrawer.element;
-     * ```
      * 
      * @hidden
      */
@@ -134,7 +130,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * Width of the drawer in its open state. Defaults to "280px".
      *
-     * ```js
+     * ```typescript
      * this.navdrawer.width = '228px';
      * ```
      */
@@ -143,7 +139,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * Width of the drawer in its mini state. Defaults to 60px.
      *
-     * ```js
+     * ```typescript
      * this.navdrawer.miniWidth = '34px';
      * ```
      */
@@ -437,7 +433,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * Toggle the open state of the Navigation Drawer.
      * 
-     * ```js
+     * ```typescript
      * let fireEvents = true;
      * this.navdrawer.toggle(fireEvents);
      * ```
@@ -455,7 +451,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * Open the Navigation Drawer. Has no effect if already opened.
      * 
-     * ```js
+     * ```typescript
      * let fireEvents = true;
      * this.navdrawer.open(fireEvents);
      * ```
@@ -488,7 +484,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * Close the Navigation Drawer. Has no effect if already closed.
      * 
-     * ```js
+     * ```typescript
      * let fireEvents = true;
      * this.navdrawer.close(fireEvents);
      * ```
