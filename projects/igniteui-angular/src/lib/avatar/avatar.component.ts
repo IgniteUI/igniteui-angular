@@ -45,7 +45,6 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * ```typescript
      *  this.avatar.image.style.backgroundImage = "images/picture.jpg";
      * ```
-     *
      * @memberof IgxAvatarComponent
      */
     @ViewChild('image')
@@ -54,21 +53,17 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     /**
      *@hidden
-     *
-     *
      */
     @ViewChild('imageTemplate', { read: TemplateRef })
     protected imageTemplate: TemplateRef<any>;
 
     /**
      *@hidden
-     *
      */
     @ViewChild('initialsTemplate', { read: TemplateRef })
     protected initialsTemplate: TemplateRef<any>;
     /**
      *@hidden
-     *
      */
     @ViewChild('iconTemplate', { read: TemplateRef })
     protected iconTemplate: TemplateRef<any>;
@@ -111,14 +106,13 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * ```typescript
      * let avatarDescription = this.avatar.roleDescription;
      * ```
+     *
      * @memberof IgxAvatarComponent
      */
     public roleDescription: string;
 
     /**
      * @hidden
-     *
-     *
      */
     private _size: string | Size = 'small';
 
@@ -135,13 +129,13 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @Input()
     public id = `igx-avatar-${NEXT_ID++}`;
     /**
-     *
      * Sets a round shape to the avatar if "roundShape" is true.
      * By default the shape of the avatar is a square.
      *
      * ```html
      * <igx-avatar roundShape = "true" ></igx-avatar>
      * ```
+     *
      * @memberof IgxAvatarComponent
      */
     @HostBinding('class.igx-avatar--rounded')
@@ -173,7 +167,6 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     public bgColor: string;
 
     /**
-     *
      * Sets initials to the avatar.
      *
      * ```html
@@ -210,7 +203,6 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     public src: string;
 
     /**
-     *
      * Returns the size of the avatar.
      *
      * ```typescript
@@ -246,12 +238,12 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
         }
     }
     /**
-     *
      * Returns the template of the avatar.
      *
      * ```typescript
      * let template = this.avatar.template;
      * ```
+     *
      * @memberof IgxAvatarComponent
      */
     get template() {
@@ -271,8 +263,6 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     /**
      * @hidden
-     *
-     *
      */
     public ngOnInit() {
         this.roleDescription = this.getRole();
@@ -280,15 +270,12 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     /**
      *@hidden
-     *
-     *
      */
     public ngAfterViewInit() {
         this.elementRef.nativeElement.classList.add(`igx-avatar--${this._size}`);
     }
     /**
      * @hidden
-     *
      */
     private getRole() {
         if (this.initials) {
