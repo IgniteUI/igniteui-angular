@@ -8,7 +8,7 @@ const postcss = require('gulp-postcss');
 const process = require('process');
 const fs = require('fs');
 const {
-    spawn
+    spawnSync
 } = require('child_process');
 
 const STYLES = {
@@ -95,7 +95,7 @@ gulp.task('copy-git-hooks', () => {
 gulp.task('watch', () => {
     gulp.watch('./projects/igniteui-angular/src/lib/**/*', () => {
         try {
-            spawn('npm run build:lib', {
+            spawnSync('npm run build:lib', {
                 stdio: 'inherit',
                 shell: true,
                 cwd: process.cwd()
