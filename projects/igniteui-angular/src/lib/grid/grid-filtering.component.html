@@ -29,22 +29,15 @@
         </select>
     </div>
     <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container> -->
-    <igx-grid-filter-expression #firstExpr (onExpressionChanged)="onExpressionChanged($event)" [name]="'firstExpr'" [column]="column">
+    <igx-grid-filter-expression #firstExpr (onExpressionChanged)="onExpressionChanged($event)" [column]="column">
     </igx-grid-filter-expression>
     <igx-buttongroup #logicOperators (onSelect)="onSelectLogicOperator($event)" (onUnselect)="onUnSelectLogicOperator($event)" [multiSelection]="false" [values]="filteringLogicOptions">
     </igx-buttongroup>
-    <!-- <div *ngIf="isSecondConditionVisible">
-        <div >
-            <select (change)="selectionChanged($event.target.value)" #select>
-				<option *ngIf="dataType === 'boolean'" [value]="booleanFilterAll">{{ booleanFilterAll | filterCondition | titlecase }}</option>
-				<option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
-			</select>
-        </div>
-        <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
-    </div> -->
-    <!-- <igx-grid-filter-expression [value]="secondValue"></igx-grid-filter-expression> -->
+    <div *ngIf="isSecondConditionVisible">
+        <igx-grid-filter-expression #secondExpr (onExpressionChanged)="onExpressionChanged($event)" [column]="column"></igx-grid-filter-expression>
+    </div>
     <div class="igx-filtering__options-bgroup">
-        <button igxButton igxRipple (click)="clearFiltering(true)" [disabled]="disabled">Reset</button>
+        <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
         <button igxButton igxRipple (click)="directive.close(true)">Close</button>
     </div>
 </span>

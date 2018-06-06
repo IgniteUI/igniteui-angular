@@ -34,9 +34,6 @@ import { IFilteringOperation, IFilteringExpression } from '../../public_api';
 })
 export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
 
-    @Input()
-    public name;
-
     get column() {
         return this._column;
     }
@@ -75,7 +72,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         this.unaryConditionChanged.subscribe((value) => this.onExpressionChanged.emit(this.expression));//TODO
         // when condition is NOT unary
         //this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
-        this.conditionChanged.subscribe((value) => { if (!!this.expression.searchVal || this.expression.searchVal === 0) { this.onExpressionChanged.emit(this.expression); }});//TODO
+        this.conditionChanged.subscribe((value) => this.conditionChangedCallback());//TODO
 
     }
 
@@ -114,6 +111,13 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
                 return null;
         }
     }    
+
+    @autoWire()
+    public conditionChangedCallback() {
+        if (!!this.expression.searchVal || this.expression.searchVal === 0) {
+             this.onExpressionChanged.emit(this.expression); 
+        }
+   }
 
     public isActive(value): boolean {
         if(this.expression && this.expression.condition === value) {
@@ -162,7 +166,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         } else {
             this.conditionChanged.next(value);
         }
-        this.onExpressionChanged.emit(this.expression);
+        //this.onExpressionChanged.emit(this.expression);
     }
 
 
@@ -176,14 +180,21 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         this.onExpressionChanged.emit(this.expression);
     }
 
-    public clearInput(): void {
+    public clearFiltering(resetCondition: boolean): void {
         this.input.nativeElement.value = null;
         this.expression.searchVal = null;
+        this.expression.condition = resetCondition ? undefined : this.expression.condition;
         // XXX - Temp fix for (#1183, #1177) (Should be deleted)
         if (this.column.dataType === DataType.Date) {
             this.cdr.detectChanges();
         }
-        this.onExpressionChanged.emit(this.expression);
+        if(!resetCondition) {
+            this.onExpressionChanged.emit(this.expression);
+        }
+    }
+
+    public clearInput(): void {
+        this.clearFiltering(false);
     }
 
     // XXX - Temp fix for (#1183, #1177) (Should be deleted)

@@ -98,6 +98,12 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @ViewChild('select', { read: ElementRef})
     protected select: ElementRef;
 
+    @ViewChild('firstExpr', { read: IgxGridFilterExpressionComponent})
+    protected firstExpr: IgxGridFilterExpressionComponent;
+
+    @ViewChild('secondExpr', { read: IgxGridFilterExpressionComponent})
+    protected secondExpr: IgxGridFilterExpressionComponent;
+
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         // this.filterChanged.pipe(
         //     debounceTime(250)
@@ -170,15 +176,22 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     @autoWire(true)
-    public clearFiltering(resetCondition: boolean): void {
-        // this._value = null;
-        // this._filterCondition = resetCondition ? undefined : this._filterCondition;
-        // this.gridAPI.clear_filter(this.gridID, this.column.field);
-        // this.gridAPI.get(this.gridID).clearSummaryCache();
-        // // XXX - Temp fix for (#1183, #1177) (Should be deleted)
-        // if (this.dataType === DataType.Date) {
-        //     this.cdr.detectChanges();
-        // }
+    public clearFiltering(): void {
+        this.firstExpr.clearFiltering(true);
+        this.secondExpr.clearFiltering(true);
+
+        const grid = this.gridAPI.get(this.gridID);
+        grid.clearSummaryCache();
+
+        this.gridAPI.clear_filter(this.gridID, this.column.field);
+        this.gridAPI.get(this.gridID).clearSummaryCache();
+
+        grid.onFilteringDone.emit({
+            fieldName: this.column.field,
+            condition: undefined,
+            ignoreCase: this.column.filteringIgnoreCase,
+            searchVal: null
+        });
     }
 
     @autoWire(true)
