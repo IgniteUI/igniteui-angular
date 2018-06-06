@@ -180,33 +180,13 @@ export class IgxGridAPIService {
     public clear_filter(id, fieldName) {
         const grid = this.get(id);
         const filteringState = grid.filteringExpressionsTree;
-        const index = filteringState.filteringOperands.findIndex((expr) => {
-            if (expr instanceof FilteringExpressionsTree) {
-                return this.isFilteringExpressionsTreeForColumn(expr, fieldName)
-            }
-
-            return (expr as IFilteringExpression).fieldName === fieldName;
-        });
+        const index = filteringState.findIndex(fieldName);
 
         if (index > -1) {
             filteringState.filteringOperands.splice(index, 1);
-            // TODO: bvk - test if we need the following code
-            //grid.filteringExpressions = filteringState;
+            grid.filteringExpressionsTree = filteringState;
         }
         grid.filteredData = null;
-    }
-
-    protected isFilteringExpressionsTreeForColumn(expressionsTree: IFilteringExpressionsTree, fieldName: string): boolean {
-        for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-            let expr = expressionsTree.filteringOperands[i];
-            if ((expr instanceof FilteringExpressionsTree)) {
-                return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
-            } else {
-                return (expr as IFilteringExpression).fieldName === fieldName;
-            }
-        }
-
-        return false;
     }
 
     protected calculateSummaries(id: string, column, data) {
@@ -232,15 +212,8 @@ export class IgxGridAPIService {
     protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
         conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
 
-        const expressionOrExpressionsTreeForField = filteringState.filteringOperands.find((expr) => {
-            if (expr instanceof FilteringExpressionsTree) {
-                return this.isFilteringExpressionsTreeForColumn(expr, fieldName)
-            }
-
-            return (expr as IFilteringExpression).fieldName === fieldName;
-        });
-
         let newExpressionsTree;
+        const expressionOrExpressionsTreeForField = filteringState.find(fieldName);
         const expressionsTree = conditionOrExpressionsTree as IFilteringExpressionsTree;
         const condition = conditionOrExpressionsTree as IFilteringOperation;
         const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
