@@ -1248,7 +1248,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     });
 
-    fit('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', (done) => {
+    it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', (done) => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.rowSelectable = true;
