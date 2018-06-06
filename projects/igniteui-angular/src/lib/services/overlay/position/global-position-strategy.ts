@@ -7,7 +7,6 @@ export class GlobalPositionStrategy implements IPositionStrategy {
     public wrapperClass: string;
 
     constructor(
-        private _document: any,
         options?: PositionSettings
     ) {
         this._options = options ? options : new PositionSettings();
