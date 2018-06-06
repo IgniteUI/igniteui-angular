@@ -35,6 +35,15 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 }
 ```
 
+- `igxGrid` now supports grouping of columns enabling users to create critera for organizing data records. To explore the functionality start off by setting some columns as `groupable`:
+    ```html
+    <igx-grid [data]="data">
+        <igx-column [field]="'ProductName'"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [groupable]="true"></igx-column>
+    </igx-grid>
+    ```
+   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
+
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
