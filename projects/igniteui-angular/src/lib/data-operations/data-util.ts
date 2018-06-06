@@ -14,7 +14,7 @@ import { ISortingStrategy, SortingStrategy } from './sorting-strategy';
 import { IPagingState, PagingError } from './paging-state.interface';
 
 import { IDataState } from './data-state.interface';
-import { IGroupByExpandState } from './groupby-expand-state.interface';
+import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 
@@ -81,9 +81,7 @@ export class DataUtil {
             }
             const hierarchy = this.getHierarchy(g);
             const expandState: IGroupByExpandState = expansion.find((state) =>
-                state.fieldName === g.expression.fieldName &&
-                state.value === g.value &&
-                this.isHierarchyMatch(state.hierarchy || [new Map().set(state.fieldName, state.value)], hierarchy));
+                this.isHierarchyMatch(state.hierarchy || [{fieldName: g.expression.fieldName, value: g.value}], hierarchy));
             const expanded = expandState ? expandState.expanded : defaultExpanded;
             result.push(g);
             if (expanded) {
@@ -148,28 +146,24 @@ export class DataUtil {
         return data;
     }
 
-    public static getHierarchy(gRow: IGroupByRecord): Array<Map<string, any>> {
-        const hierarchy = [];
-        let kValPair = new Map();
-        kValPair.set(gRow.expression.fieldName, gRow.value);
-        hierarchy.push(kValPair);
+    public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
+        const hierarchy: Array<IGroupByKey> = [];
+        hierarchy.push({fieldName: gRow.expression.fieldName, value: gRow.value});
         while (gRow.__groupParent) {
             gRow = gRow.__groupParent;
-            kValPair = new Map();
-            kValPair.set(gRow.expression.fieldName, gRow.value);
-            hierarchy.unshift(kValPair);
+            hierarchy.unshift({fieldName: gRow.expression.fieldName, value: gRow.value});
         }
         return hierarchy;
     }
 
-    public static isHierarchyMatch(h1: Array<Map<string, any>>, h2: Array<Map<string, any>>): boolean {
+    public static isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>): boolean {
         let res;
         if (h1.length !== h2.length) {
             return false;
         } else {
             for (let i = 0; i < h1.length; i++) {
-                res = h1[0].keys().next().value === h2[0].keys().next().value &&
-                    h1[0].values().next().value === h2[0].values().next().value;
+                res = h1[i].fieldName === h2[i].fieldName &&
+                    h1[i].value === h2[i].value;
                 if (!res) {
                     break;
                 }

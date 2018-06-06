@@ -1202,8 +1202,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.instance.perPage = 3;
         fix.componentInstance.instance.groupingExpansionState.push({
             expanded: false,
-            fieldName: 'ProductName',
-            value: 'Ignite UI for JavaScript'
+            hierarchy: [{fieldName: 'ProductName', value: 'Ignite UI for JavaScript'}]
         });
         fix.detectChanges();
         fix.componentInstance.instance.groupBy({fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false});
