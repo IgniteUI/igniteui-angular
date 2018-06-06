@@ -874,7 +874,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.filteredData = null;
             return;
         }
-        if (!this.gridAPI.get_column_by_name(this.id, name)) {
+
+        const column = this.gridAPI.get_column_by_name(this.id, name);
+        if (!column) {
             return;
         }
         this.clearSummaryCache();
@@ -1502,7 +1504,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.lastSearchInfo.matchInfoCache.length;
     }
 
-    private get filteredSortedData(): any[] {
+    get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
 
         if (this.sortingExpressions &&
