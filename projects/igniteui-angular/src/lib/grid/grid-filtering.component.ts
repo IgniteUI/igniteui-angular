@@ -35,27 +35,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @Input()
     public column;
 
-    // get value() {
-    //     return this._value;
-    // }
-
-    // set value(val) {
-    //     // filtering needs to be cleared if value is null, undefined or empty string
-    //     if (!val && val !== 0) {
-    //         //this.clearFiltering(false);
-    //         return;
-    //     }
-    //     //this._value = this.transformValue(val);
-    //     this.filter();
-    // }
-
     get dataType(): DataType {
         return this.column.dataType;
     }
-
-    // get conditions() {
-    //     return this.column.filters.instance().conditionList();
-    // }
 
     get template() {
         switch (this.dataType) {
@@ -88,7 +70,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         return `igx-filtering`;
     }
 
-    public booleanFilterAll = 'All';
     public dialogShowing = false;
     public dialogPosition = 'igx-filtering__options--to-right';
 
@@ -100,8 +81,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         'yesterday', 'today', 'thisMonth', 'lastMonth', 'nextMonth',
         'thisYear', 'lastYear', 'nextYear'
     ];
-    //protected _value;
-    //protected _filterCondition;
+    
     protected filterChanged = new Subject();
     protected chunkLoaded = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
@@ -117,6 +97,12 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     @ViewChild('select', { read: ElementRef})
     protected select: ElementRef;
+
+    @ViewChild('firstExpr', { read: IgxGridFilterExpressionComponent})
+    protected firstExpr: IgxGridFilterExpressionComponent;
+
+    @ViewChild('secondExpr', { read: IgxGridFilterExpressionComponent})
+    protected secondExpr: IgxGridFilterExpressionComponent;
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         // this.filterChanged.pipe(
@@ -190,15 +176,22 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     @autoWire(true)
-    public clearFiltering(resetCondition: boolean): void {
-        // this._value = null;
-        // this._filterCondition = resetCondition ? undefined : this._filterCondition;
-        // this.gridAPI.clear_filter(this.gridID, this.column.field);
-        // this.gridAPI.get(this.gridID).clearSummaryCache();
-        // // XXX - Temp fix for (#1183, #1177) (Should be deleted)
-        // if (this.dataType === DataType.Date) {
-        //     this.cdr.detectChanges();
-        // }
+    public clearFiltering(): void {
+        this.firstExpr.clearFiltering(true);
+        this.secondExpr.clearFiltering(true);
+
+        const grid = this.gridAPI.get(this.gridID);
+        grid.clearSummaryCache();
+
+        this.gridAPI.clear_filter(this.gridID, this.column.field);
+        this.gridAPI.get(this.gridID).clearSummaryCache();
+
+        grid.onFilteringDone.emit({
+            fieldName: this.column.field,
+            condition: undefined,
+            ignoreCase: this.column.filteringIgnoreCase,
+            searchVal: null
+        });
     }
 
     @autoWire(true)
