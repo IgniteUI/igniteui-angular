@@ -1181,7 +1181,6 @@ fdescribe('Combo', () => {
             expect(inputElement.value).toEqual(expectedOutput);
         });
     });
-
     xit('Selected items should be appended to the input in the order they are selected', fakeAsync(() => {
         let dropdownItems: NodeListOf<HTMLElement>;
         const expectedOutput = 'Paris, Oslo, Sofia, Ottawa';
@@ -1466,14 +1465,83 @@ fdescribe('Combo', () => {
             expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: ['Paris', 'Sofia'], newSelection: ['Paris'] });
         });
     }));
-    it('Groupped items should be selectable ', () => {
-        // TO DO
-    });
-    it('Groupped item headdings should not be selectable ', () => {
-        // TO DO
-    });
+    it('Groupped items should be selectable ', fakeAsync(() => {
+            const expectedOutput = 'Michigan, Tennessee, Illinois';
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+            const inputElement = input.nativeElement;
+            let checkbox_1: HTMLElement;
+            let checkbox_2: HTMLElement;
+            let checkbox_3: HTMLElement;
+            let dropdownItem_1;
+            let dropdownItem_2;
+            let dropdownItem_3;
+            combo.dropdown.toggle();
+            tick();
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+                const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+                const item_1 = dropdownItems[3];
+                dropdownItem_1 = combo.data[9];
+                checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+                checkbox_1.click();
+                fixture.detectChanges();
+                expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+                expect(combo.isItemSelected(dropdownItem_1)).toBeTruthy();
+                expect(combo.selectedItems()[0]).toEqual(dropdownItem_1);
 
-    fit('Selecting items using the "selectItem" method should add the items to the previously selected items', fakeAsync(() => {
+                const item_2 = dropdownItems[7];
+                dropdownItem_2 = combo.data[33];
+                checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+                checkbox_2.click();
+                fixture.detectChanges();
+                expect(checkbox_2.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+                expect(combo.isItemSelected(dropdownItem_2)).toBeTruthy();
+                expect(combo.selectedItems()[1]).toEqual(dropdownItem_2);
+
+                const item_3 = dropdownItems[1];
+                dropdownItem_3 = combo.data[12];
+                checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+                checkbox_3.click();
+                fixture.detectChanges();
+                expect(checkbox_3.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+                expect(combo.isItemSelected(dropdownItem_3)).toBeTruthy();
+                expect(combo.selectedItems()[2]).toEqual(dropdownItem_3);
+                return fixture.whenStable();
+            }).then(() => {
+                expect(inputElement.value).toEqual(expectedOutput);
+            });
+    }));
+    it('Groupped item headdings should not be selectable ', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+        const inputElement = input.nativeElement;
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.igx-display-container')).nativeElement;
+            const dropdownHeaders = dropdownList.querySelectorAll('.' + CSS_CLASS_HEADER);
+            dropdownHeaders.forEach(el => {
+                const item = el as IgxComboItemComponent;
+                combo.dropdown.selectItem(item);
+                fixture.detectChanges();
+                expect(combo.isItemSelected(item)).toBeFalsy();
+                expect(combo.selectedItems().length).toEqual(0);
+            });
+            // TO DO
+            // Scroll all headers down
+            return fixture.whenStable();
+        }).then(() => {
+            expect(inputElement.value).toEqual('');
+        });
+    }));
+    it('Selecting items using the "selectItem" method should add the items to the previously selected items', fakeAsync(() => {
             let expectedOutput = 'Paris, Oslo, Sofia, Madrid';
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
