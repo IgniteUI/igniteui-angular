@@ -185,6 +185,15 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         if (data[newScrollStartIndex].isHeader && direction === Navigate.Up ||
             data[newScrollStartIndex + state.chunkSize - 2].isHeader && direction === Navigate.Down) {
             newScrollStartIndex = isScrollUp ? newScrollStartIndex - 1 : newScrollStartIndex + 1;
+            if (newScrollStartIndex < 0) { // If the next item loaded is a header and is also the very first item in the list.
+                vContainer.scrollTo(0); // Scrolls to the beginning of the list and switches focus to the searchInput
+                this.subscribeNext(vContainer, () => {
+                this.parentElement.searchInput.nativeElement.focus();
+                this.focusedItem.isFocused = false;
+                this.focusedItem = null;
+                });
+                return;
+            }
         }
         vContainer.scrollTo(newScrollStartIndex);
         this.subscribeNext(vContainer, () => {
@@ -255,7 +264,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     protected _groupKey: string | number = '';
     protected _textKey: string | number = '';
     private _dataType = '';
-    private _data: any[] = [];
+    // private _data: any[] = [];
     private _filteredData = [];
     private _children: QueryList<IgxDropDownItemBase>;
     private _dropdownContainer: ElementRef = null;
@@ -436,13 +445,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     public valueKey: string | number = '';
 
     @Input()
-    public set data(val: any[]) {
-        this._data = val;
-    }
+    public data = [];
+    // public set data(val: any[]) {
+    //     this._data = val || [];
+    // }
 
-    public get data(): any[] {
-        return this._data;
-    }
+    // public get data(): any[] {
+    //     return this._data;
+    // }
 
     @Input()
     public filteringLogic = FilteringLogic.Or;
