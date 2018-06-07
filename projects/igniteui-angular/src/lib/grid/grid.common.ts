@@ -188,6 +188,7 @@ export function autoWire(markForCheck = false) {
 @Injectable()
 export class IgxColumnMovingService {
     private _column: IgxColumnComponent;
+    private _icon: any;
 
     get column(): IgxColumnComponent {
         return this._column;
@@ -195,6 +196,15 @@ export class IgxColumnMovingService {
     set column(val: IgxColumnComponent) {
         if (val) {
             this._column = val;
+        }
+    }
+
+    get icon(): any {
+        return this._icon;
+    }
+    set icon(val: any) {
+        if (val) {
+            this._icon = val;
         }
     }
 }
@@ -231,6 +241,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         }
 
         this.cms.column = this.column;
+
         this.ghostImageClass = "igx-grid__drag-ghost-image";
         this.defaultReturnDuration = '0.1s';
 
@@ -272,16 +283,27 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         this._dragGhost.removeChild(this._dragGhost.children[2]);
 
+        const icon = document.createElement('i');
+        const text = document.createTextNode('not_interested');
+        icon.appendChild(text);
+
+        icon.style.color = '#e41c77';
+        icon.style.fontSize = '24px';
+        icon.classList.add('material-icons');
+
+        this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
+
+        this.cms.icon = icon;
+
         this._dragGhost.style.minWidth = null;
         this._dragGhost.style.flexBasis  = null;
-        this._dragGhost.style.border  = null;
 
         const range = document.createRange();
         range.selectNodeContents(this.element.nativeElement.children[1]);
 
         const s = document.defaultView.getComputedStyle(this.element.nativeElement);
         this.left = this._dragStartX = event.clientX - ((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 2);
-        this.top = this._dragStartY = event.clientY - ((range.getBoundingClientRect().height + parseFloat(s.paddingBottom) + parseFloat(s.paddingTop)) / 2);
+        this.top = this._dragStartY = event.clientY - (parseFloat(s.height) / 2);
     }
 }
 
@@ -339,6 +361,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective {
             this.column.grid.onColumnMoving.emit(args);
 
             if (args.cancel) {
+                this.cms.icon.innerText = 'not_interested';
                 return;
             }
 
@@ -347,18 +370,23 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective {
                     this.elementRef.nativeElement.children[0];
 
                 this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+
+                this.cms.icon.innerText = this.column.pinned && !this.cms.column.pinned ? 'lock' : 'swap_horiz';
             }
         }
 
         if (this.horizontalScroll) {
+            this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_right_alt' : 'keyboard_backspace';
+
             interval(100).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
-                event.target.id === "right" ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
+                event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
                     this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
             });
         }
     }
 
     public onDragLeave(event) {
+        this.cms.icon.innerText = 'not_interested';
 
         if (this._dropIndicator && this.cms.column !== this.column) {
             this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
@@ -387,9 +415,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective {
         }
 
         if (this.isDropTarget) {
-            this.column.grid.isColumnMoving = false;
-            this.column.grid.cdr.detectChanges();
-
             const args = {
                 source: this.cms.column,
                 target: this.column,
@@ -402,6 +427,9 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective {
             }
 
             this.column.grid.moveColumn(this.cms.column, this.column);
+
+            this.column.grid.isColumnMoving = false;
+            this.column.grid.cdr.detectChanges();
         }
     }
 }

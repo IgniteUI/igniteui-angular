@@ -18,7 +18,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: 150, resizable: true, movable: false },
+            { field: 'ID', width: 150, resizable: true, movable: true },
             { field: 'CompanyName', width: 150, resizable: true, movable: true },
             { field: 'ContactName', width: 150, resizable: true, movable: true },
             { field: 'ContactTitle', width: 150, resizable: true, movable: true },
@@ -393,9 +393,9 @@ export class GridColumnMovingSampleComponent implements OnInit {
     }
 
     onColumnMoving(event) {
-        if (event.target.field === 'ID') {
-            event.cancel = true;
-        }
+        // if (event.target.field === 'ID') {
+        //     event.cancel = true;
+        // }
     }
 
     onColumnMovingEnd(event) {
