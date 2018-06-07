@@ -7,7 +7,9 @@ const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
 const process = require('process');
 const fs = require('fs');
-const spawn = require('child_process').spawn;
+const {
+    spawnSync
+} = require('child_process');
 
 const STYLES = {
     SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/*',
@@ -91,12 +93,15 @@ gulp.task('copy-git-hooks', () => {
 });
 
 gulp.task('watch', () => {
-    gulp.watch('./projects/igniteui-angular/src/lib/**/*', (e) => {
-        let child = spawn('npm', ['run', 'build:lib'], {
-            cwd: process.cwd()
-        });
-
-        child.stdout.on('data', data => console.info(data.toString()));
-        child.stderr.on('data', data => console.error(data.toString()));
+    gulp.watch('./projects/igniteui-angular/src/lib/**/*', () => {
+        try {
+            spawnSync('npm run build:lib', {
+                stdio: 'inherit',
+                shell: true,
+                cwd: process.cwd()
+            });
+        } catch (err) {
+            console.error(`Exception: ${err}`);
+        }
     });
 });
