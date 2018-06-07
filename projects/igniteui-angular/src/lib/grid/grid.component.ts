@@ -231,7 +231,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.markForCheck();
           }
     }
-  
+
     public get displayDensity(): DisplayDensity | string {
         return this._displayDensity;
     }
