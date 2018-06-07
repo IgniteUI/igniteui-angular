@@ -290,7 +290,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this._dragGhost.removeChild(this._dragGhost.children[2]);
 
         const icon = document.createElement('i');
-        const text = document.createTextNode('not_interested');
+        const text = document.createTextNode('cancel');
         icon.appendChild(text);
 
         icon.style.color = '#e41c77';
@@ -305,7 +305,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this._dragGhost.style.flexBasis  = null;
 
         const range = document.createRange();
-        range.selectNodeContents(this.element.nativeElement.children[1]);
+        range.selectNodeContents(this._dragGhost.children[2]);
 
         const s = document.defaultView.getComputedStyle(this.element.nativeElement);
         this._dragGhost.style.width = Math.ceil(range.getBoundingClientRect().width +
@@ -372,11 +372,11 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.column.grid.onColumnMoving.emit(args);
 
             if (args.cancel) {
-                this.cms.icon.innerText = 'not_interested';
+                this.cms.icon.innerText = 'cancel';
                 return;
             }
 
-            const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(event.detail.owner.column.width);
+            const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
             if (!this.column.pinned || (this.column.pinned && nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth)) {
 
                 this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.children[4] :
@@ -389,7 +389,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
 
         if (this.horizontalScroll) {
-            this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_right_alt' : 'keyboard_backspace';
+            this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
 
             interval(100).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
                 event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
@@ -399,7 +399,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragLeave(event) {
-        this.cms.icon.innerText = 'not_interested';
+        this.cms.icon.innerText = 'cancel';
 
         if (this._dropIndicator && this.cms.column !== this.column) {
             this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
@@ -435,7 +435,12 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             };
             this.column.grid.onColumnMovingEnd.emit(args);
 
-            if (args.cancel) {
+            let nextPinnedWidth;
+            if (this.column.pinned) {
+                nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
+            }
+
+            if (args.cancel || (nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth)) {
                 return;
             }
 
