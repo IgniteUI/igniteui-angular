@@ -1448,6 +1448,108 @@ describe('IgxGrid - GroupBy', () => {
         expect( similarGroupRows[1].expanded).toEqual(true);
 
     });
+
+    it('should remove expansion state when removing groups', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.data = [
+           {
+                Downloads: 0,
+                ID: 1,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: false
+            },
+            {
+                Downloads: 0,
+                ID: 2,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: true
+            }
+        ];
+        fix.detectChanges();
+
+        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
+            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false},]);
+        fix.detectChanges();
+
+        const groupRows = grid.groupedRowList.toArray();
+        groupRows[1].toggle();
+        fix.detectChanges();
+        expect( groupRows[0].expanded).toEqual(true);
+        expect( groupRows[1].expanded).toEqual(false);
+
+        grid.clearGrouping("ProductName");
+        fix.detectChanges();
+
+        grid.groupBy([{fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
+        fix.detectChanges();
+
+        expect( groupRows[0].expanded).toEqual(true);
+        expect( groupRows[1].expanded).toEqual(true);
+        expect( groupRows[2].expanded).toEqual(true);
+        expect( groupRows[3].expanded).toEqual(true);
+
+        groupRows[1].toggle();
+        fix.detectChanges();
+
+        grid.clearGrouping();
+        fix.detectChanges();
+
+        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
+            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false},]);
+        fix.detectChanges();
+
+        expect( groupRows[0].expanded).toEqual(true);
+        expect( groupRows[1].expanded).toEqual(true);
+        expect( groupRows[2].expanded).toEqual(true);
+        expect( groupRows[3].expanded).toEqual(true);
+    });
+
+    it('should remove expansion state of groups with higher group hierarchy', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.data = [
+           {
+                Downloads: 0,
+                ID: 1,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: false
+            },
+            {
+                Downloads: 0,
+                ID: 2,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: true
+            }
+        ];
+        fix.detectChanges();
+
+        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
+            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false},]);
+        fix.detectChanges();
+
+        const groupRows = grid.groupedRowList.toArray();
+        groupRows[1].toggle();
+        fix.detectChanges();
+        expect( groupRows[0].expanded).toEqual(true);
+        expect( groupRows[1].expanded).toEqual(false);
+
+        grid.clearGrouping("Released");
+        fix.detectChanges();
+
+        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false}]);
+        fix.detectChanges();
+
+        // reorder chips by simulating events
+
+
+        expect( groupRows[0].expanded).toEqual(true);
+        expect( groupRows[1].expanded).toEqual(true);
+    });
 });
 
 export class DataParent {
