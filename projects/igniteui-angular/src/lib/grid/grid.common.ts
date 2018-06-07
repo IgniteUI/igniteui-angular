@@ -308,7 +308,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         const s = document.defaultView.getComputedStyle(this.element.nativeElement);
         this._dragGhost.style.width = Math.ceil(range.getBoundingClientRect().width +
-            parseFloat(s.borderRight) + parseFloat(s.borderLeft) + parseFloat(s.paddingLeft) +
+            parseFloat(s.borderRightWidth) + parseFloat(s.borderLeftWidth) + parseFloat(s.paddingLeft) +
             parseFloat(s.paddingRight) + icon.getBoundingClientRect().width) + 'px';
 
         this.left = this._dragStartX = event.clientX -
