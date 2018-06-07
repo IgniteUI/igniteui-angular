@@ -159,10 +159,12 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     @Input()
+    public searchable = true;
+
+    @Input()
     public get filters(): any {
         return this._filters;
     }
-
     public set filters(classRef: any) {
         this._filters = classRef;
     }
