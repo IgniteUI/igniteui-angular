@@ -220,7 +220,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(toggleDiv).not.toBe(null);
     });
 
-    it('testing excel export starting event (cancel)', () => {
+    it('testing excel export starting event (cancel)', (done) => {
         const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         const testPage = fixture.componentInstance;
@@ -241,12 +241,13 @@ describe('IgxGrid - Grid Toolbar', () => {
             expect(args.type).toBe('excel');
             expect(args.cancel).toBe(false);
             args.cancel = true;
+            done();
         });
 
         exportExcelButton.nativeElement.click();
     });
 
-    it('testing excel export starting event (non-cancel)', () => {
+    it('testing excel export starting event (non-cancel)', (done) => {
         const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         const testPage = fixture.componentInstance;
@@ -266,12 +267,18 @@ describe('IgxGrid - Grid Toolbar', () => {
             expect(args.exporter).not.toBe(null);
             expect(args.type).toBe('excel');
             expect(args.cancel).toBe(false);
+
+            // Spy the 'export' and 'exportData' methods so the files are not really created
+            spyOn(args.exporter, 'export');
+            spyOn(args.exporter, 'exportData');
+
+            done();
         });
 
         exportExcelButton.nativeElement.click();
     });
 
-    it('testing csv export starting event (cancel)', () => {
+    it('testing csv export starting event (cancel)', (done) => {
         const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         const testPage = fixture.componentInstance;
@@ -292,12 +299,13 @@ describe('IgxGrid - Grid Toolbar', () => {
             expect(args.type).toBe('csv');
             expect(args.cancel).toBe(false);
             args.cancel = true;
+            done();
         });
 
         exportCsvButton.nativeElement.click();
     });
 
-    it('testing csv export starting event (non-cancel)', () => {
+    it('testing csv export starting event (non-cancel)', (done) => {
         const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         const testPage = fixture.componentInstance;
@@ -317,6 +325,12 @@ describe('IgxGrid - Grid Toolbar', () => {
             expect(args.exporter).not.toBe(null);
             expect(args.type).toBe('csv');
             expect(args.cancel).toBe(false);
+            
+            // Spy the 'export' and 'exportData' methods so the files are not really created
+            spyOn(args.exporter, 'export');
+            spyOn(args.exporter, 'exportData');
+
+            done();
         });
 
         exportCsvButton.nativeElement.click();
