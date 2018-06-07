@@ -172,6 +172,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set groupingExpressions(value) {
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
+        this.gridAPI.arrange_sorting_expressions(this.id);
         /* grouping should work in conjunction with sorting
         and without overriding seperate sorting expressions */
         this._applyGrouping();
@@ -832,19 +833,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     public sort(...rest): void {
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
-            this._sort(rest[0], rest[1], rest[2]);
+            this._sort(rest[0]);
         }
     }
-
+    public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
         } else {
-            this._groupBy(rest[0], rest[1], rest[2]);
+            this._groupBy(rest[0]);
         }
         this.calculateGridSizes();
         this.onGroupingDone.emit(this.sortingExpressions);
@@ -911,7 +913,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.filteredData = null;
             return;
         }
-        if (!this.gridAPI.get_column_by_name(this.id, name)) {
+
+        const column = this.gridAPI.get_column_by_name(this.id, name);
+        if (!column) {
             return;
         }
         this.clearSummaryCache();
@@ -1250,16 +1254,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return width - this.getPinnedWidth(takeHidden);
     }
 
-    protected _sort(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
-        this.gridAPI.sort(this.id, name, direction, ignoreCase);
+    protected _sort(expression: ISortingExpression) {
+        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
     }
 
     protected _sortMultiple(expressions: ISortingExpression[]) {
         this.gridAPI.sort_multiple(this.id, expressions);
     }
 
-    protected _groupBy(name: string, direction = SortingDirection.Asc, ignoreCase = true) {
-        this.gridAPI.groupBy(this.id, name, direction, ignoreCase);
+    protected _groupBy(expression: ISortingExpression) {
+        this.gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
     }
 
     protected _groupByMultiple(expressions: ISortingExpression[]) {
@@ -1676,7 +1680,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.lastSearchInfo.matchInfoCache.length;
     }
 
-    private get filteredSortedData(): any[] {
+    get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
 
         if (this.sortingExpressions &&
@@ -1724,7 +1728,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).map((c) => c.field);
+        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
+                                        filter((c) => c.searchable).
+                                        map((c) => c.field);
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;
