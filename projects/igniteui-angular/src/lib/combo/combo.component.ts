@@ -159,16 +159,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         // which is not part of the this.items collection.
         // In that case the real item is not hidden, but not loaded at all by the virtualization,
         // and this is the same case as normal scroll up.
-        const vCont = this.verticalScrollContainer;
-        if (newIndex === -1 ||
-            newIndex === this.items.length - 1 && vCont.state.startIndex + vCont.state.chunkSize < vCont.igxForOf.length) {
+        if (newIndex === -1 || newIndex === this.items.length - 1) {
             this.navigateVirtualItem(direction);
         } else {
-            if (vCont.state.startIndex + vCont.state.chunkSize === vCont.igxForOf.length && newIndex === -1) {
-                this.parentElement.addItemButton.element.nativeElement.focus();
-            } else {
-                super.navigateItem(newIndex);
-            }
+            super.navigateItem(newIndex);
         }
     }
 
@@ -229,7 +223,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
 
     private focusItem(visibleIndex: number) {
         const oldItem = this._focusedItem;
-            if (oldItem && oldItem.isFocused) {
+            if (oldItem) {
                 oldItem.isFocused = false;
             }
             const newItem = this.items[visibleIndex];
@@ -276,7 +270,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     private _dropdownContainer: ElementRef = null;
     private _searchInput: ElementRef = null;
     private _comboInput: ElementRef = null;
-    private _addItemButton: IgxComboItemComponent = null;
     private _onChangeCallback: (_: any) => void = noop;
 
     private _value = '';
@@ -309,15 +302,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     @ViewChild('comboInput')
     set comboInput(content: ElementRef) {
         this._comboInput = content;
-    }
-
-    get addItemButton() {
-        return this._addItemButton;
-    }
-
-    @ViewChild('addItemButton')
-    set addItemButton(content: IgxComboItemComponent) {
-        this._addItemButton = content;
     }
 
     @ViewChild('primitive', { read: TemplateRef })
@@ -573,13 +557,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
 
     public handleKeyDown(evt) {
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
-            if (this.filteredData.length === 0) {
-                this.addItemButton.element.nativeElement.focus();
-            } else {
-                this.dropdownContainer.nativeElement.focus();
-                this.dropdown.onFocus();
-                this.dropdown.focusedItem = this.dropdown.items[0];
-            }
+            this.dropdownContainer.nativeElement.focus();
+            this.dropdown.onFocus();
+            this.dropdown.focusedItem = this.dropdown.items[0];
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
             this.toggle();
         }
