@@ -147,8 +147,7 @@ function testGroupBy() {
         it('groups by ascending column "boolean", partially collapsed', () => {
             state.expansion.push({
                 expanded: false,
-                value: false,
-                fieldName: 'boolean'
+                hierarchy: [{fieldName: 'boolean', value: false}]
             });
             // sort
             const sorted = DataUtil.sort(data, { expressions: [expr] });
