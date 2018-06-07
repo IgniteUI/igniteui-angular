@@ -1,0 +1,15 @@
+{
+    "$schema": "../../common/schema/selector.schema.json",
+    "changes": [
+        {
+            "type": "component",
+            "selector": "igx-tab-bar",
+            "replaceWith": "igx-bottom-nav"
+        },
+        {
+            "type": "directive",
+            "selector": "igxForRemote",
+            "remove": true
+        }
+    ]
+}

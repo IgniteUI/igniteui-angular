@@ -143,6 +143,13 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         this.chunkLoaded.unsubscribe();
     }
 
+    @autoWire()
+    public conditionChangedCallback() {
+        if (!!this._value || this._value === 0) {
+            this.filter();
+        }
+    }
+
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
         if (this.dialogShowing) {
