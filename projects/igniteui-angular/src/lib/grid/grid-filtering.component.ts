@@ -143,13 +143,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         this.chunkLoaded.unsubscribe();
     }
 
-    @autoWire()
-    public conditionChangedCallback() {
-        if (!!this._value || this._value === 0) {
-            this.filter();
-        }
-    }
-
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
         if (this.dialogShowing) {
@@ -261,15 +254,16 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     protected filteringExpression(): boolean {
-        const expr = this.gridAPI.get(this.gridID)
-            .filteringExpressions.find((x) => x.fieldName === this.column.field);
+        // const expr = this.gridAPI.get(this.gridID)
+        //     .filteringExpressions.find((x) => x.fieldName === this.column.field);
 
-        if (expr) {
+        // if (expr) {
 
-            if (!this.isUnaryCondition(expr.condition.name) && !expr.searchVal) {
-                return false;
-            }
-            return true;
-        }
+        //     if (!this.isUnaryCondition(expr.condition.name) && !expr.searchVal) {
+        //         return false;
+        //     }
+        //     return true;
+        // }
+        return false;
     }
 }
