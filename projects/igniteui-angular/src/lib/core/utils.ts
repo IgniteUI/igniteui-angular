@@ -24,3 +24,9 @@ export const enum KEYCODES {
     DOWN_ARROW = 40,
     F2 = 113
 }
+
+export const enum DisplayDensity {
+    comfortable = 'comfortable',
+    cosy = 'cosy',
+    compact = 'compact'
+}

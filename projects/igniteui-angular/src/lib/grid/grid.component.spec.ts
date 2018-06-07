@@ -2,11 +2,11 @@ import { asNativeElements, ChangeDetectorRef, Component, DebugElement, OnInit, V
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NUMBER_FILTERS } from '../data-operations/filtering-condition';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxNumberFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - input properties', () => {
     const MIN_COL_WIDTH = '136px';
@@ -377,7 +377,7 @@ describe('IgxGrid - input properties', () => {
         const editValue = 777;
 
         fix.whenStable().then(() => {
-            grid.filter(cols[0].key, 1, NUMBER_FILTERS.equals);
+            grid.filter(cols[0].key, 1, IgxNumberFilteringOperand.instance().condition('equals'));
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -427,7 +427,7 @@ describe('IgxGrid - input properties', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-    <igx-grid #grid [data]="data" [autoGenerate]="false">
+    <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate">
         <igx-column field="index" header="index" dataType="number"></igx-column>
         <igx-column field="value" header="value" dataType="number"></igx-column>
     </igx-grid></div>`
@@ -435,6 +435,8 @@ describe('IgxGrid - input properties', () => {
 export class IgxGridTestComponent {
     public data = [{ index: 1, value: 1 }];
     @ViewChild('grid') public grid: IgxGridComponent;
+
+    public autoGenerate = false;
 }
 
 @Component({

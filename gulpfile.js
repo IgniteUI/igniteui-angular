@@ -3,10 +3,13 @@
 const autoprefixer = require('autoprefixer');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const sourcemaps = require("gulp-sourcemaps");
-const postcss = require("gulp-postcss");
-const process = require("process");
+const sourcemaps = require('gulp-sourcemaps');
+const postcss = require('gulp-postcss');
+const process = require('process');
 const fs = require('fs');
+const {
+    spawnSync
+} = require('child_process');
 
 const STYLES = {
     SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/*',
@@ -56,9 +59,11 @@ gulp.task('copy-git-hooks', () => {
     ];
 
     dirs.forEach((dir) => {
-        if(!fs.existsSync(dir)) {
+        if (!fs.existsSync(dir)) {
             fs.mkdir(dir, (err) => {
-                if(err) { throw err; }
+                if (err) {
+                    throw err;
+                }
             });
         }
     });
@@ -68,7 +73,7 @@ gulp.task('copy-git-hooks', () => {
     fs.copyFileSync(defaultHookDir + 'templates/default.js',
         defaultCopyHookDir + 'templates/default.js');
 
-    fs.copyFileSync(defaultHookDir +'templateValidators/default-style-validator.js',
+    fs.copyFileSync(defaultHookDir + 'templateValidators/default-style-validator.js',
         defaultCopyHookDir + 'templateValidators/default-style-validator.js');
 
     fs.copyFileSync(defaultHookDir + 'utils/issue-validator.js',
@@ -85,4 +90,26 @@ gulp.task('copy-git-hooks', () => {
 
     fs.copyFileSync('./.hooks/prepare-commit-msg',
         './.git/hooks/prepare-commit-msg');
+});
+
+gulp.task('watch', () => {
+    gulp.watch('./projects/igniteui-angular/src/lib/**/*', () => {
+        try {
+            spawnSync('npm run build:lib', {
+                stdio: 'inherit',
+                shell: true,
+                cwd: process.cwd()
+            });
+        } catch (err) {
+            console.error(`Exception: ${err}`);
+        }
+    });
+});
+
+gulp.task('copy-migrations', () => {
+    return gulp.src([
+        './projects/igniteui-angular/migrations/**/*.json',
+        '!**/tsconfig.json'
+    ])
+    .pipe(gulp.dest('./dist/igniteui-angular/migrations'));
 });
