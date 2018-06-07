@@ -21,7 +21,7 @@
     $default-theme: (
         name: 'igx-combo',
         add-icon-color: igx-color($palette, 'primary', 500),
-        search-separator-border-color: igx-color($palette, 'grays', 300)
+        search-separator-border-color: igx-color($palette, 'grays', 300),
     );
 
 
@@ -30,7 +30,7 @@
         pallete: $palette,
         background-color: $background-color,
         add-icon-color: $add-icon-color,
-        search-separator-border-color: $search-separator-border-color
+        search-separator-border-color: $search-separator-border-color,
     ));
 }
 
@@ -58,7 +58,7 @@
         padding: rem(8px) rem(16px);
         margin: 0 !important;
         z-index: 26;
-        border-bottom: 1px dashed --var($theme, 'search-separator-border-color');
+        border-bottom: 1px dashed  --var($theme, 'search-separator-border-color');
     }
 
     %igx-combo__content {
