@@ -7,6 +7,7 @@ import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
+import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -80,6 +81,10 @@ const appRoutes = [
     {
         path: 'dropDown',
         component: DropDownSampleComponent
+    },
+    {
+        path: 'drag-drop',
+        component: DragDropSampleComponent
     },
     {
         path: 'icon',

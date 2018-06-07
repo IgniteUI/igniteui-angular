@@ -718,7 +718,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (column.pinned) {
             const fromIndex = this._pinnedColumns.indexOf(column);
 
-            let toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
                 this._unpinnedColumns.indexOf(dropTarget);
 
             this._pinnedColumns.splice(fromIndex, 1);
@@ -733,7 +733,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             const fromIndex = this._unpinnedColumns.indexOf(column);
 
-            let toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
                 this._unpinnedColumns.indexOf(dropTarget);
 
             this._unpinnedColumns.splice(fromIndex, 1);
@@ -874,7 +874,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.filteredData = null;
             return;
         }
-        if (!this.gridAPI.get_column_by_name(this.id, name)) {
+
+        const column = this.gridAPI.get_column_by_name(this.id, name);
+        if (!column) {
             return;
         }
         this.clearSummaryCache();
@@ -1502,7 +1504,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.lastSearchInfo.matchInfoCache.length;
     }
 
-    private get filteredSortedData(): any[] {
+    get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
 
         if (this.sortingExpressions &&

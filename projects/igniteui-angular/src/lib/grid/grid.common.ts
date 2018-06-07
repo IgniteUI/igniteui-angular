@@ -17,9 +17,9 @@ import {
 import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxGridAPIService } from './api.service';
-import { IgxColumnComponent } from "./column.component";
-import { IgxDragDirective, IgxDropDirective } from "../directives/dragdrop/dragdrop.directive";
-import { IgxForOfDirective } from "../directives/for-of/for_of.directive";
+import { IgxColumnComponent } from './column.component';
+import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 @Directive({
     selector: '[igxResizer]'
@@ -210,11 +210,11 @@ export class IgxColumnMovingService {
 }
 
 @Directive({
-    selector: "[igxColumnMovingDrag]"
+    selector: '[igxColumnMovingDrag]'
 })
 export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
-    @Input("igxColumnMovingDrag")
+    @Input('igxColumnMovingDrag')
     set data(val: IgxColumnComponent) {
         this._column = val;
     }
@@ -229,8 +229,14 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     private _column: IgxColumnComponent;
 
-    constructor(_element: ElementRef, _zone: NgZone, _renderer: Renderer2, private cms: IgxColumnMovingService) {
-        super(_element, _zone, _renderer);
+    constructor(
+        _element: ElementRef,
+        _zone: NgZone,
+        _renderer: Renderer2,
+        _cdr: ChangeDetectorRef,
+        private cms: IgxColumnMovingService,
+    ) {
+        super(_cdr, _element, _zone, _renderer);
     }
 
     public onPointerDown(event) {
@@ -241,8 +247,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         }
 
         this.cms.column = this.column;
-
-        this.ghostImageClass = "igx-grid__drag-ghost-image";
+        this.ghostImageClass = 'igx-grid__drag-ghost-image';
         this.defaultReturnDuration = '0.1s';
 
         super.onPointerDown(event);
@@ -302,16 +307,21 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         range.selectNodeContents(this.element.nativeElement.children[1]);
 
         const s = document.defaultView.getComputedStyle(this.element.nativeElement);
-        this.left = this._dragStartX = event.clientX - ((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 2);
+        this._dragGhost.style.width = Math.ceil(range.getBoundingClientRect().width +
+            parseFloat(s.borderRight) + parseFloat(s.borderLeft) + parseFloat(s.paddingLeft) +
+            parseFloat(s.paddingRight) + icon.getBoundingClientRect().width) + 'px';
+
+        this.left = this._dragStartX = event.clientX -
+            ((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 2);
         this.top = this._dragStartY = event.clientY - (parseFloat(s.height) / 2);
     }
 }
 
 @Directive({
-    selector: "[igxColumnMovingDrop]"
+    selector: '[igxColumnMovingDrop]'
 })
-export class IgxColumnMovingDropDirective extends IgxDropDirective {
-    @Input("igxColumnMovingDrop")
+export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
+    @Input('igxColumnMovingDrop')
     set data(val: any) {
         if (val instanceof IgxColumnComponent) {
             this._column = val;
@@ -340,10 +350,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective {
     private _column: IgxColumnComponent;
     private _hVirtDir: IgxForOfDirective<any>;
     private _dragLeave = new Subject<boolean>();
-    private _dropIndicatorClass = "igx-grid__drop-indicator-active";
+    private _dropIndicatorClass = 'igx-grid__drop-indicator-active';
 
     constructor(private elementRef: ElementRef, private renderer: Renderer2, private cms: IgxColumnMovingService) {
-        super();
+        super(elementRef, renderer);
     }
 
     public ngOnDestroy() {
@@ -365,7 +375,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective {
                 return;
             }
 
-            if (!this.column.pinned || (this.column.pinned && this.column.grid.getPinnedWidth() + parseFloat(event.detail.owner.column.width) <= this.column.grid.calcPinnedContainerMaxWidth)) {
+            const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(event.detail.owner.column.width);
+            if (!this.column.pinned || (this.column.pinned && nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth)) {
                 this._dropIndicator = event.detail.startX < event.detail.clientX ? this.elementRef.nativeElement.children[4] :
                     this.elementRef.nativeElement.children[0];
 
