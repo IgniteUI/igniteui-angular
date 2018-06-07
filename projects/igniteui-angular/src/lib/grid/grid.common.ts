@@ -286,6 +286,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     protected createDragGhost(event) {
         super.createDragGhost(event);
 
+        this._dragGhost.children[1].style.overflow = 'visible';
         this._dragGhost.removeChild(this._dragGhost.children[2]);
 
         const icon = document.createElement('i');
