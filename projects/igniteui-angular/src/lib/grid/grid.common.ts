@@ -378,7 +378,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(event.detail.owner.column.width);
             if (!this.column.pinned || (this.column.pinned && nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth)) {
-                this._dropIndicator = event.detail.startX < event.detail.clientX ? this.elementRef.nativeElement.children[4] :
+
+                this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.children[4] :
                     this.elementRef.nativeElement.children[0];
 
                 this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
