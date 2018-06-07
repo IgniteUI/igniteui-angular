@@ -20,7 +20,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy  {
         element.parentElement.style.position = 'absolute';
 
         element.parentElement.style.top = this._options.point.y + 'px';
-        element.parentElement.style.left = this._options.point.y + 'px';
+        element.parentElement.style.left = this._options.point.x + 'px';
 
         element.parentElement.classList.add(this.wrapperClass);
     }

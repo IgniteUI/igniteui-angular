@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxDropDownComponent } from 'igniteui-angular';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { IgxDropDownComponent, IgxButtonDirective } from 'igniteui-angular';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -10,6 +10,8 @@ import { IgxDropDownComponent } from 'igniteui-angular';
 export class DropDownSampleComponent implements OnInit {
     private width = '160px';
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
+
+    @ViewChild('button') public button;
 
     items: any[] = [];
 
@@ -103,11 +105,11 @@ export class DropDownSampleComponent implements OnInit {
         }
     }
 
-    constructor() {
+    constructor(private elementRef: ElementRef) {
     }
 
     public toggleDropDown() {
-        this.igxDropDown.toggle();
+        this.igxDropDown.toggle(this.button.nativeElement);
     }
 
     onSelection(ev) {

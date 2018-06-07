@@ -50,7 +50,7 @@ enum Direction {
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html'
 })
-export class IgxDropDownComponent implements IToggleView, OnInit {
+export class IgxDropDownComponent implements OnInit {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     private _focusedItem: IgxDropDownItemComponent = null;
     private _width;
@@ -218,8 +218,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Opens the dropdown
      */
-    open() {
-        this.toggleDirective.open(true);
+    open(element?: HTMLElement) {
+        this.toggleDirective.open(true, element);
     }
 
     /**
@@ -232,9 +232,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Toggles the dropdown
      */
-    toggle() {
+    toggle(element?: HTMLElement) {
         if (this.toggleDirective.collapsed) {
-            this.open();
+            this.open(element);
         } else {
             this.close();
         }
@@ -286,7 +286,6 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
 
     onToggleOpening() {
-        this.overlay.show();
         this.toggleDirective.collapsed = false;
         this.cdr.detectChanges();
         this.scrollToItem(this.selectedItem);
@@ -316,7 +315,6 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
             this._focusedItem.isFocused = false;
         }
 
-        this.overlay.hide();
         this.onClosed.emit();
     }
 

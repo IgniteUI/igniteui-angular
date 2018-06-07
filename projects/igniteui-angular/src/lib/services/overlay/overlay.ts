@@ -10,13 +10,14 @@ import {
     ElementRef,
     Inject,
     Injectable,
-    Injector
+    Injector,
+    ComponentRef
 } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
     private _componentId = 0;
-    private _elements = [];
+    private _elements: { id: string, elementRef: ElementRef, componentRef: ComponentRef<{}> }[] = [];
     private _overlayElement: HTMLElement;
 
     /**
@@ -40,8 +41,7 @@ export class IgxOverlayService {
             this._overlayElement.style.left = '0';
             this._overlayElement.style.width = '100%';
             this._overlayElement.style.height = '100%';
-            // this._overlayElement.style.backgroundColor = 'rgba(0,0,0,0.63)';
-            this._overlayElement.style.display = 'none';
+            this._overlayElement.style.visibility = 'hidden';
             this._overlayElement.classList.add('overlay');
             this._document.body.appendChild(this._overlayElement);
         }
@@ -64,8 +64,8 @@ export class IgxOverlayService {
      * @param component Component to show in the overlay
      */
 
-    show(component, positionStrategy?: IPositionStrategy): number {
-        const element = this.getElement(component);
+    show(component, id: string, positionStrategy?: IPositionStrategy): string {
+        const element = this.getElement(component, id);
 
         const componentWrapper = this._document.createElement('div');
         componentWrapper.appendChild(element);
@@ -75,38 +75,40 @@ export class IgxOverlayService {
         // Call the strategy to attach the needed css class.
         positionStrategy.position(element);
 
-        this.OverlayElement.style.display = 'block';
+        this.OverlayElement.style.visibility = 'visible';
         this.OverlayElement.appendChild(componentWrapper);
-        return this._componentId++;
+        return this._elements[this._elements.length - 1].id;
     }
 
-    hide(id: number) {
-        // cleanup
-
+    hide(id: string) {
+        // TODO: cleanup
         const children = this.OverlayElement.childNodes;
-        if (children.length <= id) {
-            throw new Error('There is no element with such index. Cannot remove the item from igxOverlay!');
+
+        const itemToHide = this._elements.find(element => element.id === id);
+        if (!itemToHide) {
+            console.warn('igxOverlay.hide was called with wrong id: ' + id);
         }
 
-        const child = children[id];
-        this.OverlayElement.removeChild(child);
-        this._componentId--;
+        const child: HTMLElement = itemToHide.elementRef.nativeElement;
+        this.OverlayElement.removeChild(child.parentNode);
 
         if (children.length === 0) {
-            this._overlayElement.style.display = 'none';
+            this._overlayElement.style.visibility = 'hidden';
         }
     }
 
     hideAll() {
-        while (this._componentId > 0) {
-            this.hide(this._componentId - 1);
+        while (this._elements.length > 0) {
+            this.hide(this._elements[this._elements.length - 1].id);
         }
     }
 
-    private getElement(component: any): HTMLElement {
+    private getElement(component: any, id: string): HTMLElement {
         let element: HTMLElement;
+        id = id ? id : (this._componentId++).toString();
 
         if (component instanceof ElementRef) {
+            this._elements.push({ id: id, elementRef: <ElementRef>component, componentRef: null });
             element = component.nativeElement;
             return element;
         }
@@ -115,11 +117,12 @@ export class IgxOverlayService {
         try {
             dynamicFactory = this._factoryResolver.resolveComponentFactory(component);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return null;
         }
 
-        const dc = dynamicFactory.create(this._injector);
+        const dc: ComponentRef<{}> = dynamicFactory.create(this._injector);
+        this._elements.push({ id: id, elementRef: dc.location, componentRef: dc });
         this._appRef.attachView(dc.hostView);
         element = dc.location.nativeElement;
         return element;
@@ -131,15 +134,5 @@ export class IgxOverlayService {
         } else {
             return new GlobalPositionStrategy(this._document);
         }
-    }
-
-    private EraseMe(nativeElement, x?, y?) {
-        // nativeElement.style.position = "fixed";
-        // nativeElement.style.top = x ? x : "500px";
-        // nativeElement.style.left = y ? y : "400px";
-        // nativeElement.style.height = "300px";
-        // nativeElement.style.width = "500px";
-        // nativeElement.style.backgroundColor = "white";
-        // nativeElement.style.overflowY = "auto";
     }
 }
