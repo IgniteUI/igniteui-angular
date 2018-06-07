@@ -1594,8 +1594,34 @@ describe('Combo', () => {
     it('Custom values - typing a value that matches an item from the list selects it', () => {
         // TO DO
     });
-    it('Custom values - typing a value that matches an already selected item should remove the corresponding tag', () => {
-        // TO DO
+    xit('Custom values - typing a value that matches an already selected item should remove the corresponding tag', () => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        let addItem;
+        const combo = fix.componentInstance.combo;
+        combo.dropdown.toggle();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            addItem = fix.debugElement.query(By.css('.igx-combo__add'));
+            expect(addItem).toEqual(null);
+            expect(combo.children.length).toBeTruthy();
+            combo.searchValue = 'New';
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            addItem = fix.debugElement.query(By.css('.igx-combo__add'));
+            expect(addItem === null).toBeFalsy();
+            expect(combo.children.length).toBeTruthy();
+
+            combo.searchValue = 'New York';
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            addItem = fix.debugElement.query(By.css('.igx-combo__add'));
+            expect(addItem).toEqual(null);
+            expect(combo.children.length).toBeTruthy();
+        });
     });
 });
 
