@@ -21,7 +21,7 @@
     <igx-input-group (click)="onInputClick($event)" type="box">
         <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%" readonly [placeholder]="placeholder"
         />
-        <igx-suffix igxButton="icon" igxRipple (click)="deselectAllItems(true)">
+        <igx-suffix igxButton="icon" class="clearButton" igxRipple (click)="deselectAllItems(true)">
             <igx-icon *ngIf="value.length" fontSet="material" name="clear"></igx-icon>
         </igx-suffix>
         <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
@@ -55,7 +55,7 @@
                     </ng-container>
                 </igx-combo-item>
             </ng-template>
-            <igx-combo-item *ngIf="searchValue.length !== 0 && customValueFlag" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
+            <igx-combo-item #addItemButton *ngIf="searchValue.length !== 0 && customValueFlag" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
                 class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [isDisabled]="false" [itemData]="'ADD ITEM'">
                 Add item to collection
                 <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>

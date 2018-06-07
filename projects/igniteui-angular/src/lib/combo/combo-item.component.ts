@@ -49,7 +49,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
             }
             return;
         }
-        this.parentElement.parentElement.searchInput.nativeElement.focus();
+        // this.parentElement.parentElement.searchInput.nativeElement.focus();
         this.parentElement.selectItem(this);
     }
 }

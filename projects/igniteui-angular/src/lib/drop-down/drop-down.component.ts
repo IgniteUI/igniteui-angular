@@ -247,13 +247,17 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         return this._focusedItem;
     }
 
+    public set focusedItem(item) {
+        this._focusedItem = item;
+    }
+
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
             index = currentIndex ? currentIndex : this._focusedItem.index;
         }
         const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
-        this.focusItem(newIndex, direction);
+        this.navigateItem(newIndex, direction);
     }
 
     navigateFirst() {
@@ -291,7 +295,7 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         } else if (this.allowItemsFocus) {
             const firstItemIndex = this.getNearestSiblingFocusableItemIndex(-1, Navigate.Down);
             if (firstItemIndex !== -1) {
-                this.focusItem(firstItemIndex);
+                this.navigateItem(firstItemIndex);
             }
         }
         this.onOpened.emit();
@@ -376,7 +380,7 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         }
     }
 
-    protected focusItem(newIndex: number, direction?: Navigate) {
+    protected navigateItem(newIndex: number, direction?: Navigate) {
         if (newIndex !== -1) {
             const oldItem = this._focusedItem;
             const newItem = this.items[newIndex];

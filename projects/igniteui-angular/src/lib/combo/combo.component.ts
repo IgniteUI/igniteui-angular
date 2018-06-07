@@ -120,6 +120,22 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
     }
 
+    navigateFirst() {
+        const vContainer = this.verticalScrollContainer;
+        vContainer.scrollTo(0);
+        this.subscribeNext(vContainer, () => {
+            this.focusItem(0);
+        });
+    }
+
+    navigateLast() {
+        const vContainer = this.verticalScrollContainer;
+        vContainer.scrollTo(vContainer.igxForOf.length);
+        this.subscribeNext(vContainer, () => {
+            this.focusItem(this.items.length - 1);
+        });
+    }
+
     setSelectedItem(itemID: any, select = true) {
         this.parentElement.setSelectedItem(itemID, select);
     }
@@ -133,7 +149,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
     }
 
-    focusItem(newIndex: number, direction?: number) {
+    navigateItem(newIndex: number, direction?: number) {
         // Virtual scrolling holds one hidden loaded element at the bottom of the drop down list.
         // At the top there isn't such a hidden element.
         // That's why we hold the first or the one before the last list item as focused, during keyboard navigation.
@@ -143,14 +159,20 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         // which is not part of the this.items collection.
         // In that case the real item is not hidden, but not loaded at all by the virtualization,
         // and this is the same case as normal scroll up.
-        if (newIndex === -1 || newIndex === this.items.length - 1) {
-            this.focusVirtualItem(direction);
+        const vCont = this.verticalScrollContainer;
+        if (newIndex === -1 ||
+            newIndex === this.items.length - 1 && vCont.state.startIndex + vCont.state.chunkSize < vCont.igxForOf.length) {
+            this.navigateVirtualItem(direction);
         } else {
-            super.focusItem(newIndex);
+            if (vCont.state.startIndex + vCont.state.chunkSize === vCont.igxForOf.length && newIndex === -1) {
+                this.parentElement.addItemButton.element.nativeElement.focus();
+            } else {
+                super.navigateItem(newIndex);
+            }
         }
     }
 
-    private focusVirtualItem(direction: Navigate) {
+    private navigateVirtualItem(direction: Navigate) {
         const vContainer = this.verticalScrollContainer;
         let state = vContainer.state;
         const isScrollUp = direction === Navigate.Up;
@@ -164,6 +186,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
             this._focusedItem = newItem;
             return;
         }
+
         // Following the big comment above, when the new item is group header, then we need to load 2 elements at once.
         if (data[newScrollStartIndex].isHeader && direction === Navigate.Up ||
             data[newScrollStartIndex + state.chunkSize - 2].isHeader && direction === Navigate.Down) {
@@ -183,13 +206,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
             const isBottomHiddenHeader = data[state.startIndex + state.chunkSize - 1].isHeader;
             const index = isScrollUp ? 0 : isBottomHiddenHeader ? this.items.length - 1 : this.items.length - 2;
 
-            const oldItem = this._focusedItem;
-            if (oldItem) {
-                oldItem.isFocused = false;
-            }
-            const newItem = this.items[index];
-            newItem.isFocused = true;
-            this._focusedItem = newItem;
+            this.focusItem(index);
         });
     }
 
@@ -199,6 +216,16 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
                 callback(e);
             }
         });
+    }
+
+    private focusItem(visibleIndex: number) {
+        const oldItem = this._focusedItem;
+            if (oldItem && oldItem.isFocused) {
+                oldItem.isFocused = false;
+            }
+            const newItem = this.items[visibleIndex];
+            newItem.isFocused = true;
+            this._focusedItem = newItem;
     }
 
     onToggleOpening() {
@@ -240,6 +267,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     private _dropdownContainer: ElementRef = null;
     private _searchInput: ElementRef = null;
     private _comboInput: ElementRef = null;
+    private _addItemButton: IgxComboItemComponent = null;
     private _onChangeCallback: (_: any) => void = noop;
 
     private _value = '';
@@ -272,6 +300,15 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     @ViewChild('comboInput')
     set comboInput(content: ElementRef) {
         this._comboInput = content;
+    }
+
+    get addItemButton() {
+        return this._addItemButton;
+    }
+
+    @ViewChild('addItemButton')
+    set addItemButton(content: IgxComboItemComponent) {
+        this._addItemButton = content;
     }
 
     @ViewChild('primitive', { read: TemplateRef })
@@ -526,8 +563,13 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
 
     public handleKeyDown(evt) {
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
-            this.dropdownContainer.nativeElement.focus();
-            this.dropdown.onFocus();
+            if (this.filteredData.length === 0) {
+                this.addItemButton.element.nativeElement.focus();
+            } else {
+                this.dropdownContainer.nativeElement.focus();
+                this.dropdown.onFocus();
+                this.dropdown.focusedItem = this.dropdown.items[0];
+            }
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
             this.toggle();
         }
