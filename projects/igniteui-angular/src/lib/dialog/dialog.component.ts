@@ -23,6 +23,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 
+let DIALOG_ID = 0;
 /**
  * **Ignite UI for Angular Dialog Window** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)
@@ -46,7 +47,6 @@ import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.dir
  * </igx-dialog>
  * ```
  */
-let DIALOG_ID = 0;
 @Component({
     animations: [
         trigger('fadeInOut', [
