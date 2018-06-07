@@ -64,7 +64,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
                      id: string, pipeTrigger: number) {
         const grid = this.gridAPI.get(id);
-        const state = { expressionsTree: grid.filteringExpressionsTree };
+        const state = { expressionsTree: expressionsTree };
 
         if (!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||

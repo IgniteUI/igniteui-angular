@@ -1138,16 +1138,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.sort_multiple(this.id, expressions);
     }
 
-    protected _filter(name: string, value: any, condition?: IFilteringOperation, ignoreCase?: boolean) {
+    protected _filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean) {
         const col = this.gridAPI.get_column_by_name(this.id, name);
-        if (col) {
-            if (condition) {
-                this.gridAPI.filter(this.id, name, value, condition, ignoreCase || col.filteringIgnoreCase);
-            } else {
-                this.gridAPI.filter(this.id, name, value, col.filteringExpressionsTree, ignoreCase || col.filteringIgnoreCase);
-            }
+        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+
+        if (conditionOrExpressionTree instanceof FilteringExpressionsTree) {
+            const expressionTree = conditionOrExpressionTree as FilteringExpressionsTree;
+            this.gridAPI.filter(this.id, name, value, expressionTree, filteringIgnoreCase);
         } else {
-            this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
+            const condition = conditionOrExpressionTree as IFilteringOperation;
+            if (condition) {
+                this.gridAPI.filter(this.id, name, value, condition, filteringIgnoreCase);
+            } else if (col) {
+                this.gridAPI.filter(this.id, name, value, col.filteringExpressionsTree, filteringIgnoreCase);
+            }
         }
     }
 
