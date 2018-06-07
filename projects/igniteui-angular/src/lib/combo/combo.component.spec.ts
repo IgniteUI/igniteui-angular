@@ -1477,10 +1477,6 @@ describe('Combo', () => {
         // TO DO
     });
 
-    it('Selecting items using the "selectItems" method should override the previously selected items', () => {
-        // TO DO
-    });
-
     // Filtering
     it('The textbox input is placed correctly', () => {
         // TO DO
