@@ -38,7 +38,7 @@
         </igx-input-group>
         <ng-container *ngTemplateOutlet="dropdownHeader; context: {$impicit: this}">
         </ng-container>
-        <div #dropdownItemContainer style="position: relative; overflow: hidden;" [style.height.px]="dropDownHeight" [style.width.px]="dropDownWidth" [igxDropDownItemNavigation]="dropdown"
+        <div #dropdownItemContainer class="igx-combo__content" [style.height.px]="dropDownHeight" [style.width.px]="dropDownWidth" [igxDropDownItemNavigation]="dropdown"
             [tabindex]="dropdown.collapsed ? -1 : 0">
             <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
                 [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="dropDownHeight" [igxForItemSize]="dropDownItemHeight"
@@ -55,17 +55,17 @@
                     </ng-container>
                 </igx-combo-item>
             </ng-template>
-            <igx-combo-item *ngIf="searchValue.length !== 0 && customValueFlag" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
-                class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [isDisabled]="false" [itemData]="'ADD ITEM'">
-                Add item to collection
-                <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
-            </igx-combo-item>
-            <igx-combo-item *ngIf="filteredData.length === 0 && !customValueFlag">
-                <ng-container *ngTemplateOutlet="empty; context: {$impicit: this}">
-                </ng-container>
-            </igx-combo-item>
-            <ng-container *ngTemplateOutlet="dropdownFooter; context: {$impicit: this}">
-            </ng-container>
         </div>
+        <igx-combo-item *ngIf="searchValue.length !== 0 && customValueFlag" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
+                        class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [isDisabled]="false" [itemData]="'ADD ITEM'">
+            Add item to collection
+            <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
+        </igx-combo-item>
+        <igx-combo-item *ngIf="filteredData.length === 0 && !customValueFlag">
+            <ng-container *ngTemplateOutlet="empty; context: {$impicit: this}">
+            </ng-container>
+        </igx-combo-item>
+        <ng-container *ngTemplateOutlet="dropdownFooter; context: {$impicit: this}">
+        </ng-container>
     </igx-combo-drop-down>
 </div>

@@ -16,6 +16,7 @@
 @import '../components/card/card-theme';
 @import '../components/carousel/carousel-theme';
 @import '../components/checkbox/checkbox-theme';
+@import '../components/combo/combo-theme';
 @import '../components/date-picker/date-picker-theme';
 @import '../components/dialog/dialog-theme';
 @import '../components/drop-down/drop-down-theme';
@@ -131,6 +132,10 @@
 
     @if not(index($exclude, 'igx-checkbox')) {
         @include igx-checkbox($theme: igx-checkbox-theme());
+    }
+
+    @if not(index($exclude, 'igx-combo')) {
+        @include igx-combo($theme: igx-combo-theme());
     }
 
     @if not(index($exclude, 'igx-date-picker')) {

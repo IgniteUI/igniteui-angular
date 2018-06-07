@@ -247,6 +247,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         return this._focusedItem;
     }
 
+    public set focusedItem(item) {
+        this._focusedItem = item;
+    }
+
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {

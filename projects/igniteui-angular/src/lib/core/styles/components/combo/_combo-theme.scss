@@ -3,20 +3,25 @@
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
-/// @param {Color} $drop-down-background-color [null] - The drop-down background color.
+///
+/// @param {Color} $add-icon-color [null] - The combo add new item icon color.
+/// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
+/// @param {Color} $search-background [null] - The combo search box background color.
+///
 /// @requires text-contrast
 /// @requires igx-color
 @function igx-combo-theme(
     $palette: $default-palette,
 
     $background-color: null,
-    $add-icon-color: null
+    $add-icon-color: null,
+    $search-separator-border-color: null
 ) {
 
     $default-theme: (
         name: 'igx-combo',
-        background-color: #fff,
-        add-icon-color: igx-color($palette, 'grays', 500)
+        add-icon-color: igx-color($palette, 'primary', 500),
+        search-separator-border-color: igx-color($palette, 'grays', 300),
     );
 
 
@@ -25,31 +30,44 @@
         pallete: $palette,
         background-color: $background-color,
         add-icon-color: $add-icon-color,
+        search-separator-border-color: $search-separator-border-color,
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires igx-color
-/// @requires igx-elevation
 /// @requires rem
 @mixin igx-combo($theme) {
     @include igx-root-css-vars($theme);
 
-    $dd-shadow: igx-elevation($elevations, 3);
+    %igx-combo {
+        position: relative;
+    }
 
     %igx-combo__drop-down {
-        background: --var($theme, 'background-color');
         position: absolute;
-        max-width: calc(100% - 32px);
+        width: 100%;
+
+        .igx-drop-down {
+            width: 100%;
+        }
     }
 
     %igx-combo__search {
         padding: rem(8px) rem(16px);
-        background: #fdfdfd;
         margin: 0 !important;
-        box-shadow: $dd-shadow;
         z-index: 26;
+        border-bottom: 1px dashed  --var($theme, 'search-separator-border-color');
+    }
+
+    %igx-combo__content {
+        position: relative;
+        overflow: hidden;
+
+        &:focus {
+            outline: transparent;
+        }
     }
 
     .igx-drop-down__item {

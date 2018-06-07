@@ -810,7 +810,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.filteredData = null;
             return;
         }
-        if (!this.gridAPI.get_column_by_name(this.id, name)) {
+
+        const column = this.gridAPI.get_column_by_name(this.id, name);
+        if (!column) {
             return;
         }
         this.clearSummaryCache();
@@ -1434,7 +1436,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.lastSearchInfo.matchInfoCache.length;
     }
 
-    private get filteredSortedData(): any[] {
+    get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
 
         if (this.sortingExpressions &&
@@ -1482,7 +1484,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).map((c) => c.field);
+        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
+                                        filter((c) => c.searchable).
+                                        map((c) => c.field);
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;

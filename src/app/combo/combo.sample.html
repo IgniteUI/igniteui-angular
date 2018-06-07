@@ -1,41 +1,50 @@
-<div class="sample-wrapper combo-sample">
+<div class="sample-wrapper">
     <app-page-header title="Combo" description="Combo lets you choose value from a list"></app-page-header>
-    <section class="sample-content">
-        <p>Change data to:</p>
-        <button class="igx-button--flat" igxRipple (click)="changeData()">Initial</button>
-        <button class="igx-button--flat" igxRipple (click)="changeData('primitive')">Primitve</button>
-        <button class="igx-button--flat" igxRipple (click)="changeData('complex')">Complex</button>
-        <button class="igx-button--flat" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
-        <div>
-            <igx-input-group type="box" class="input-container">
-                <input igxInput name="fristName" placeholder="First Name"/>
-            </igx-input-group>
-            <igx-input-group type="box" class="input-container">
-                <input igxInput name="lastName" placeholder="Last Name"/>
-            </igx-input-group>
-            <div style="clear: both;"></div>
-            <igx-combo class="input-container" placeholder="Location(s)"
-                (onAddition)="handleAddition($event)"
-                [data]="items"
-                [filterable]="true" [textKey]="'field'" [valueKey]="'field'"
-                [groupKey]="'region'" [width]="'400px'">
+    <section class="combo-sample">
+        <div class="btn-wrapper mb24">
+            <h3 class="mb24">COMBO DEMO</h3>
+            <span class="mb16">Change combo data to:</span>
+            <div class="btn-container">
+                <button class="igx-button--flat" igxRipple (click)="changeData()">Initial</button>
+                <button class="igx-button--flat" igxRipple (click)="changeData('primitive')">Primitve</button>
+                <button class="igx-button--flat" igxRipple (click)="changeData('complex')">Complex</button>
+                <button class="igx-button--flat" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
+            </div>
+        </div>
+        <div class="input-wrapper">
+            <div class="input-row">
+                <igx-input-group type="box" class="input-container">
+                    <input igxInput name="fristName" placeholder="First Name"/>
+                </igx-input-group>
+                <igx-input-group type="box" class="input-container">
+                    <input igxInput name="lastName" placeholder="Last Name"/>
+                </igx-input-group>
+                <igx-input-group type="box" class="input-container">
+                    <input igxInput name="age" placeholder="Age"/>
+                </igx-input-group>
+            </div>
+
+            <div class="input-row">
+                <igx-combo class="input-container" placeholder="Location(s)"
+                           (onAddition)="handleAddition($event)"
+                           [data]="items"
+                           [filterable]="true" [textKey]="'field'" [valueKey]="'field'"
+                           [groupKey]="'region'" [width]="'100%'">
                     <ng-template #dropdownItemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
                             <!--<span class="small-red-circle"></span>-->
-                            <div class="display-value--main">State: {{display[key]}}</div>
-                            <div class="display-value--sub">Region: {{display.region}}</div>
+                            <div class="display-value--main">{{display[key]}}</div>
+                            <div class="display-value--sub">{{display.region}}</div>
                         </div>
                     </ng-template>
                     <!--<ng-template #dropdownHeader>-->
-                        <!--<div class="header-class">This is a header</div>-->
+                    <!--<div class="header-class"><span>State</span><span>Region</span></div>-->
                     <!--</ng-template>-->
                     <!--<ng-template #dropdownFooter>-->
-                        <!--<div class="footer-class">This is a footer</div>-->
+                    <!--<div class="footer-class">This is a footer</div>-->
                     <!--</ng-template>-->
-            </igx-combo>
-            <igx-input-group type="box" class="input-container">
-                <input igxInput name="age" placeholder="Age"/>
-            </igx-input-group>
+                </igx-combo>
+            </div>
         </div>
     </section>
     <!-- <section class="sample-content">

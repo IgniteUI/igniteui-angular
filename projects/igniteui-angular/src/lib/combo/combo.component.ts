@@ -549,6 +549,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
             this.dropdownContainer.nativeElement.focus();
             this.dropdown.onFocus();
+            this.dropdown.focusedItem = this.dropdown.items[0];
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
             this.toggle();
         }
