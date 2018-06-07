@@ -102,15 +102,15 @@ describe('IgxInputGroup', () => {
 
         const component = fixture.componentInstance;
         const igxInputGroup = component.igxInputGroup;
-        expect(igxInputGroup.isDisabled).toBeFalsy();
+        expect(igxInputGroup.disabled).toBeFalsy();
 
         component.changeDisableState();
         fixture.detectChanges();
-        expect(igxInputGroup.isDisabled).toBeTruthy();
+        expect(igxInputGroup.disabled).toBeTruthy();
 
         component.changeDisableState();
         fixture.detectChanges();
-        expect(igxInputGroup.isDisabled).toBeFalsy();
+        expect(igxInputGroup.disabled).toBeFalsy();
     });
 });
 
@@ -183,16 +183,16 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
 }
 
 @Component({
-    template: `<igx-input-group #igxInputGroup [isDisabled]="isDisabled">
+    template: `<igx-input-group #igxInputGroup [disabled]="disabled">
                     <input igxInput />
                 </igx-input-group>`
 })
 class InputGroupDisabledComponent {
     @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
 
-    public isDisabled = false;
+    public disabled = false;
 
     public changeDisableState() {
-        this.isDisabled = !this.isDisabled;
+        this.disabled = !this.disabled;
     }
 }
