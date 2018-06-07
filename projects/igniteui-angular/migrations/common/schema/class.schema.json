@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "ClassChange": {
+            "properties": {
+                "name": {
+                    "description": "Name of the class to change",
+                    "type": "string"
+                },
+                "replaceWith": {
+                    "description": "Replace original name with new one",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "replaceWith"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "changes": {
+            "description": "An array of changes to output properties",
+            "items": {
+                "$ref": "#/definitions/ClassChange"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "changes"
+    ],
+    "type": "object"
+}
+
