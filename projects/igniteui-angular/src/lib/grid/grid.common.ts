@@ -377,7 +377,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             }
 
             const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
-            if (!this.column.pinned || (this.column.pinned && nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth)) {
+            if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned) || (this.column.pinned && nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth)) {
 
                 this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.children[4] :
                     this.elementRef.nativeElement.children[0];
@@ -436,7 +436,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.column.grid.onColumnMovingEnd.emit(args);
 
             let nextPinnedWidth;
-            if (this.column.pinned) {
+            if (this.column.pinned && !this.cms.column.pinned) {
                 nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
             }
 
