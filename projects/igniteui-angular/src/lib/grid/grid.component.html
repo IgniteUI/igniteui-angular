@@ -43,8 +43,8 @@
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" role="row">
         <ng-container *ngIf="groupingExpressions.length > 0">
-            <div class="igx-grid__group-indentation igx-grid__group-indentation-level-{{groupingExpressions.length}}" #headerGroupContainer>
-                <button (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true">
+            <div class="igx-grid__group-indentation-header igx-grid__group-indentation-level-{{groupingExpressions.length}}" #headerGroupContainer>
+                <button class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true">
                     <igx-icon fontSet="material" name="reorder"></igx-icon>
                 </button>
             </div>
