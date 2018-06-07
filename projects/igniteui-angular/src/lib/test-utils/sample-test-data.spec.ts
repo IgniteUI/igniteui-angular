@@ -1,15 +1,16 @@
-import { BehaviorSubject, Observable } from "rxjs";
-import { map  } from "rxjs/operators";
-import { Calendar } from "../calendar/calendar";
-import { cloneObject } from "../core/utils";
-import { IDataState } from "../data-operations/data-state.interface";
-import { SortingDirection } from "../data-operations/sorting-expression.interface";
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map  } from 'rxjs/operators';
+import { Calendar } from '../calendar/calendar';
+import { cloneObject } from '../core/utils';
+import { IDataState } from '../data-operations/data-state.interface';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 export class SampleTestData {
 
     private static timeGenerator: Calendar = new Calendar();
     private static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
+    // tslint:disable:quotemark
     public static stringArray = [
         "Terrance Orta",
         "Richard Mahoney LongerName",
@@ -334,6 +335,7 @@ export class SampleTestData {
     ];
     /* tslint:enable */
 
+    // tslint:disable:quotemark
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string; 1 item. */
     public static contactMariaAndersData = [{
@@ -743,3 +745,5 @@ export class SampleTestData {
         }
     }
 }
+
+    // tslint:enable:quotemark

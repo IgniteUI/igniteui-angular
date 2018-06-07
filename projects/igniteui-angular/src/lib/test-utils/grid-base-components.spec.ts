@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from "@angular/core";
-import { IgxColumnComponent } from "../grid/column.component";
-import { IgxGridComponent } from "../grid/grid.component";
-import { SampleTestData } from "./sample-test-data";
-import { ColumnDefinitions, TemplateStrings } from "./template-strings";
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { IgxColumnComponent } from '../grid/column.component';
+import { IgxGridComponent } from '../grid/grid.component';
+import { SampleTestData } from './sample-test-data.spec';
+import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
 
 @Component({
     template: `
@@ -17,8 +17,6 @@ export class BasicGridComponent {
 
     @ViewChild(IgxGridComponent)
     public grid: IgxGridComponent;
-
-    constructor(public cdr: ChangeDetectorRef) {}
 }
 
 @Component({
@@ -63,10 +61,10 @@ export class GridWithSizeComponent extends GridAutoGenerateComponent {
 export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
     public colsCount: number;
     public rowsCount: number;
-    public columnsType = "string";
+    public columnsType = 'string';
     public hasEditableColumns = false;
     public startFromOne = false;
-    public columnNamePrefix = "col";
+    public columnNamePrefix = 'col';
     public columns = [];
 
     ngOnInit() {
@@ -82,41 +80,41 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
 }
 
 @Component({
-    template: TemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobHireDate)
+    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobHireDate)
 })
 export class BasicGridSearchComponent extends BasicGridComponent {
-    public highlightClass = "igx-highlight";
-    public activeClass = "igx-highlight__active";
+    public highlightClass = 'igx-highlight';
+    public activeClass = 'igx-highlight__active';
 }
 
 /* To be removed!!! */
+// @Component({
+//     template: GridTemplateStrings.declareGrid('',
+//         ` (onColumnInit)="init($event)"`,
+//         ColumnDefinitions.generatedWithDataType)
+// })
+// export class SummariesNxMComponent extends BasicGridComponent {
+//     public columns = [];
+
+//     constructor(rows: number, cols: number, colsType: string) {
+//         super();
+//         this.columns = SampleTestData.generateColumnsByType(cols, colsType);
+//         this.data = SampleTestData.generateDataForColumns(this.columns, rows);
+//     }
+
+//     init(column: IgxColumnComponent) {
+//         column.hasSummary = true;
+//     }
+
+//     public isHorizonatScrollbarVisible() {
+//         const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+//         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+//     }
+// }
+
 @Component({
-    template: TemplateStrings.declareGrid("",
-        ` (onColumnInit)="init($event)"`,
-        ColumnDefinitions.generatedWithDataType)
-})
-export class SummariesNxMComponent extends BasicGridComponent {
-    public columns = [];
-
-    constructor(rows: number, cols: number, colsType: string) {
-        super(null);
-        this.columns = SampleTestData.generateColumnsByType(cols, colsType);
-        this.data = SampleTestData.generateDataForColumns(this.columns, rows);
-    }
-
-    init(column: IgxColumnComponent) {
-        column.hasSummary = true;
-    }
-
-    public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
-        return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
-    }
-}
-
-@Component({
-    template: TemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
-        "", ColumnDefinitions.idNameJobTitle)
+    template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
+        '', ColumnDefinitions.idNameJobTitle)
 })
 export class PagingComponent extends BasicGridComponent {
     public paging = true;
@@ -126,8 +124,8 @@ export class PagingComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: TemplateStrings.declareGrid(` [rowSelectable]="rowSelectable"`,
-        "", ColumnDefinitions.productBasic)
+    template: GridTemplateStrings.declareGrid(` [rowSelectable]="rowSelectable"`,
+        '', ColumnDefinitions.productBasic)
 })
 export class SelectionComponent extends BasicGridComponent {
     public rowSelectable = true;

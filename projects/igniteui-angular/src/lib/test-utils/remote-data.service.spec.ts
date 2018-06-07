@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { IDataState } from "../data-operations/data-state.interface";
-import { SortingDirection } from "../data-operations/sorting-expression.interface";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { IDataState } from '../data-operations/data-state.interface';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 export class RemoteServiceBase {
     public remoteData: Observable<any[]>;
     protected url: string;
-    // private url = "http://services.odata.org/V4/Northwind/Northwind.svc/Products";
+    // private url = 'http://services.odata.org/V4/Northwind/Northwind.svc/Products';
     private _remoteData: BehaviorSubject<any[]>;
 
     constructor(private http) {
@@ -24,13 +24,13 @@ export class RemoteServiceBase {
                 }
                 return response;
             }))
-            .subscribe((data) => {
-                this._remoteData.next(data.value);
+            .subscribe((rData) => {
+                this._remoteData.next(rData.value);
             });
     }
 
     private buildUrl(dataState: IDataState): string {
-        let qS = "";
+        let qS = '';
         if (dataState && dataState.paging) {
             const skip = dataState.paging.index * dataState.paging.recordsPerPage;
             const top = dataState.paging.recordsPerPage;
@@ -39,19 +39,19 @@ export class RemoteServiceBase {
         if (dataState && dataState.sorting) {
             const s = dataState.sorting;
             if (s && s.expressions && s.expressions.length) {
-                qS += (qS ? "&" : "") + "$orderby=";
+                qS += (qS ? '&' : '') + '$orderby=';
                 s.expressions.forEach((e, ind) => {
-                    qS += ind ? "," : "";
-                    qS += `${e.fieldName} ${e.dir === SortingDirection.Asc ? "asc" : "desc"}`;
+                    qS += ind ? ',' : '';
+                    qS += `${e.fieldName} ${e.dir === SortingDirection.Asc ? 'asc' : 'desc'}`;
                 });
             }
         }
-        qS = qS ? `?${qS}` : "";
+        qS = qS ? `?${qS}` : '';
         return `${this.url}${qS}`;
     }
 }
 
 @Injectable()
 export class RemoteNWProductsService extends RemoteServiceBase {
-    url = "http://services.odata.org/V4/Northwind/Northwind.svc/Products";
+    url = 'http://services.odata.org/V4/Northwind/Northwind.svc/Products';
 }

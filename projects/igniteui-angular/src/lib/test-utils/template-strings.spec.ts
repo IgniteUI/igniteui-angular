@@ -1,4 +1,4 @@
-export class TemplateStrings {
+export class GridTemplateStrings {
 
     public static basicGrid = `
     <igx-grid
@@ -18,7 +18,7 @@ export class TemplateStrings {
         [height]="height" [width]="width">
     </igx-grid>`;
 
-    public static declareGrid(attributes = "", events = "", columnDefinitions: ColumnDefinitions = "") {
+    public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``) {
         return `<igx-grid [data]="data"
         ${ attributes }
         ${ events }
@@ -28,7 +28,7 @@ export class TemplateStrings {
     }
 
     public static declareBasicGridWithColumns(columnDefinitions: ColumnDefinitions) {
-        return TemplateStrings.declareGrid("", "", columnDefinitions);
+        return GridTemplateStrings.declareGrid(``, ``, columnDefinitions);
     }
 
 }
@@ -272,4 +272,29 @@ export class ColumnDefinitions {
                     [sortable]="true" [resizable]="true" [editable]="true">
         </igx-column>
     `;
+}
+
+export class EventSubscriptions {
+
+    public static onColumnInit = ` (onColumnInit)="columnInit($event)"`;
+
+    public static onSelection = ` (onSelection)="cellSelected($event)"`;
+
+    public static onCellClick = ` (onCellClick)="cellClick($event)"`;
+
+    public static onDoubleClick = ` (onDoubleClick)="doubleClick($event)"`;
+
+    public static onContextMenu = ` (onContextMenu)="cellRightClick($event)"`;
+
+    public static onColumnPinning = ` (onColumnPinning)="columnPinning($event)"`;
+
+    public static onRowAdded = ` (onRowAdded)="rowAdded($event)"`;
+
+    public static onRowDeleted = ` (onRowDeleted)="rowDeleted($event)"`;
+
+    public static onEditDone = ` (onEditDone)="editDone($event)"`;
+
+    public static onRowSelectionChange = ` (onRowSelectionChange)="rowSelectionChange($event)"`;
+
+    public static onColumnResized = ` (onColumnResized)="columnResized($event)"`;
 }

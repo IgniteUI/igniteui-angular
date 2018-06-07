@@ -35,3 +35,18 @@ export interface IGridRowEvents {
 export interface IGridColumnPinning {
     columnPinning(event): void;
 }
+
+/* Add to template: ` (onEditDone)="editDone($event)"` */
+export interface IEditDone {
+    editDone(event): void;
+}
+
+/* Add to template: ` (onRowSelectionChange)="rowSelectionChange($event)"` */
+export interface IGridRowSelectionChange {
+    rowSelectionChange(event): void;
+}
+
+/* Add to template: ` (onColumnResized)="columnResized($event)"` */
+export interface IColumnResized {
+    columnResized(event): void;
+}
