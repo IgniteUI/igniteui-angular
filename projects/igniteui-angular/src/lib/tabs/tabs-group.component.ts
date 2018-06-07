@@ -37,9 +37,9 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
 
     @HostBinding('attr.role') public role = 'tabpanel';
 
-    @HostBinding('class.igx-tabs__group')
-    get styleClass(): boolean {
-        return true;
+    @HostBinding('class')
+    get styleClass(): string {
+        return 'igx-tabs__group';
     }
 
     public get itemStyle(): string {
