@@ -391,6 +391,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             return;
         }
 
+        event.stopPropagation();
         event.preventDefault();
         const rowIndex = this.rowIndex;
         const columnIndex = this.visibleColumnIndex - 1;
@@ -465,6 +466,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             return;
         }
 
+        event.stopPropagation();
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns;
         const rowIndex = this.rowIndex;
@@ -572,6 +574,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             return;
         }
 
+        event.stopPropagation();
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
@@ -608,6 +611,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             return;
         }
 
+        event.stopPropagation();
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;

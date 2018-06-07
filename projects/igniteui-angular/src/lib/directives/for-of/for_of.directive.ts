@@ -309,6 +309,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.scrollTo(this.state.startIndex - 1);
     }
 
+    public scrollNextPage() {
+        this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxForContainerSize, 10);
+    }
+
+    public scrollPrevPage() {
+        this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxForContainerSize, 10);
+    }
+
     public getColumnScrollLeft(colIndex) {
         return this.hCache[colIndex];
     }

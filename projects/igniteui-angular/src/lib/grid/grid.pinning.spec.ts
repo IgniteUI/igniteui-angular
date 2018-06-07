@@ -359,7 +359,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
-        const mockEvent = { preventDefault: () => { } };
+        const mockEvent = { preventDefault: () => { }, stopPropagation: () => { } };
 
         cell.triggerEventHandler('focus', {});
         tick();
@@ -409,7 +409,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
-        const mockEvent = { preventDefault: () => { } };
+        const mockEvent = { preventDefault: () => { }, stopPropagation: () => { } };
 
         cell.triggerEventHandler('focus', {});
         tick();
