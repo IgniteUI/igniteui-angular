@@ -47,7 +47,7 @@ export class IgxGridGroupByRowComponent {
                 public cdr: ChangeDetectorRef) { }
 
     protected defaultCssClass = 'igx-grid__tr--group';
-
+    protected paddingIndentationCssClass = 'igx-grid__group-indentation-padding-level';
     protected isFocused = false;
 
     get focused(): boolean {
@@ -77,13 +77,9 @@ export class IgxGridGroupByRowComponent {
         return this.gridID + '_' + this.groupRow.expression.fieldName;
     }
 
-    @HostBinding('style.padding-left')
-    get padding(): string {
-        return this.groupRow.level * this.grid.groupByIndentation + 'px';
-    }
     @HostBinding('class')
     get styleClasses(): string {
-        return `${this.defaultCssClass}`;
+        return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level;
     }
 
     @HostListener('keydown.enter')

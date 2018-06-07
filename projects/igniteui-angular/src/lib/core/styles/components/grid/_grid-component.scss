@@ -144,7 +144,7 @@
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
     }
-  
+
     // Groupby section
 
     @include e(group-label) {
@@ -183,6 +183,14 @@
         @extend %igx-grid__grouping-indicator !optional;
     }
 
+    @include e(group-indentation-header) {
+        @extend %igx-grid__group-indentation-header !optional;
+    }
+
+    @include e(group-expand-btn) {
+        @extend %igx-grid__group-expand-btn !optional;
+    }
+
     @include e(group-icon) {
         @extend %igx-grid__group-icon !optional;
     }
@@ -190,7 +198,16 @@
     @include e(grouparea-placeholder) {
         @extend %igx-grid__grouparea-placeholder !optional;
     }
-  
+
+    @for $i from 1 through 10 {
+        @include e(group-indentation-level-#{$i}) {
+            @extend %grid__group-indentation-level-#{$i} !optional;
+        }
+        @include e(group-indentation-padding-level-#{$i}) {
+            @extend %grid__group-indentation-padding-level-#{$i} !optional;
+        }
+    }
+
     @include m(cosy) {
         @extend %grid-display !optional;
 
