@@ -132,7 +132,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public id = `igx-grid-${NEXT_ID++}`;
 
     @Input()
-    public filteringLogic = FilteringLogic.And;
+    public get filteringLogic() {
+        return this._filteringExpressionsTree.operator;
+    }
+
+    public set filteringLogic(value: FilteringLogic) {
+        this._filteringExpressionsTree.operator = value;
+    }
 
     @Input()
     get filteringExpressionsTree() {
@@ -142,6 +148,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set filteringExpressionsTree(value) {
         if (value) {
             this._filteringExpressionsTree = value;
+            this._pipeTrigger++;
             this.cdr.markForCheck();
         }
     }
@@ -769,11 +776,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public filter(...rest): void {
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._filterMultiple(rest[0]);
-        } else {
-            this._filter(rest[0], rest[1], rest[2], rest[3]);
-        }
+        this._filter(rest[0], rest[1], rest[2], rest[3]);
     }
 
     public filterGlobal(value: any, condition?, ignoreCase?) {
@@ -805,16 +808,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public clearFilter(name?: string) {
-        if (!name) {
-            this.filteringExpressionsTree.filteringOperands = [];
-            this.filteredData = null;
-            return;
+        if (name) {
+            const column = this.gridAPI.get_column_by_name(this.id, name);
+            if (!column) {
+                return;
+            }
         }
 
-        const column = this.gridAPI.get_column_by_name(this.id, name);
-        if (!column) {
-            return;
-        }
         this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
     }
@@ -1149,10 +1149,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
         }
-    }
-
-    protected _filterMultiple(expressions: IFilteringExpression[]) {
-        this.gridAPI.filter_multiple(this.id, expressions);
     }
 
     protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {

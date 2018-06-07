@@ -143,20 +143,6 @@ export class IgxGridAPIService {
         grid.filteringExpressionsTree = filteringTree;
     }
 
-    public filter_multiple(id: string, expressions: IFilteringExpression[]) {
-        const grid = this.get(id);
-        const filteringTree = grid.filteringExpressionsTree;
-        if (grid.paging) {
-            grid.page = 0;
-        }
-
-        for (const each of expressions) {
-            this.prepare_filtering_expression(filteringTree, each.fieldName,
-                                              each.searchVal, each.condition, each.ignoreCase);
-        }
-        grid.filteringExpressionsTree = filteringTree;
-    }
-
     public filter_global(id, term, condition, ignoreCase) {
         const grid = this.get(id);
         const filteringTree = grid.filteringExpressionsTree;
@@ -184,8 +170,11 @@ export class IgxGridAPIService {
 
         if (index > -1) {
             filteringState.filteringOperands.splice(index, 1);
-            grid.filteringExpressionsTree = filteringState;
+        } else {
+            filteringState.filteringOperands = [];
         }
+        
+        grid.filteringExpressionsTree = filteringState;
         grid.filteredData = null;
     }
 
@@ -214,8 +203,10 @@ export class IgxGridAPIService {
 
         let newExpressionsTree;
         const expressionOrExpressionsTreeForField = filteringState.find(fieldName);
-        const expressionsTree = conditionOrExpressionsTree as IFilteringExpressionsTree;
-        const condition = conditionOrExpressionsTree as IFilteringOperation;
+        const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+                                conditionOrExpressionsTree as IFilteringExpressionsTree : null;
+        const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+                          null : conditionOrExpressionsTree as IFilteringOperation;
         const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
 
         if (!expressionOrExpressionsTreeForField) {

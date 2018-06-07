@@ -27,15 +27,21 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     }
 
     public findIndex(fieldName: string): number {
-        const index = this.filteringOperands.findIndex((expr) => {
+        let expr;
+        for (let i; i < this.filteringOperands.length; i++) {
+            expr = this.filteringOperands[i];
             if (expr instanceof FilteringExpressionsTree) {
-                return this.isFilteringExpressionsTreeForColumn(expr, fieldName)
+                if (this.isFilteringExpressionsTreeForColumn(expr, fieldName)) {
+                    return i;
+                }
+            } else {
+                if ((expr as IFilteringExpression).fieldName === fieldName) {
+                    return i;
+                }
             }
-    
-            return (expr as IFilteringExpression).fieldName === fieldName;
-        });
+        }
 
-        return index;
+        return -1;
     }
 
     protected isFilteringExpressionsTreeForColumn(expressionsTree: IFilteringExpressionsTree, fieldName: string): boolean {

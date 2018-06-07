@@ -37,10 +37,11 @@ export class FilteringStrategy implements IFilteringStrategy {
             if (expressions instanceof FilteringExpressionsTree) {
                 let expressionsTree = expressions as IFilteringExpressionsTree;
                 let operator = expressionsTree.operator as FilteringLogic;
-                let match, matchOperand;
+                let match, matchOperand, operand;
 
                 if (expressionsTree.filteringOperands) {
-                    expressionsTree.filteringOperands.forEach(operand => {
+                    for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
+                        operand = expressionsTree.filteringOperands[i];
                         matchOperand = this.matchRecord(rec, operand);
 
                         if (match === undefined) {
@@ -50,7 +51,7 @@ export class FilteringStrategy implements IFilteringStrategy {
                         } else if (operator === FilteringLogic.Or) {
                             match = match || matchOperand;
                         }
-                    });
+                    };
                 }
 
                 return match === undefined ? true : match;
