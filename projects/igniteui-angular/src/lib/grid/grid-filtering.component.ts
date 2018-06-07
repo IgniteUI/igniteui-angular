@@ -142,7 +142,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         // when condition is unary
         this.unaryConditionChanged.subscribe((value) => this.filter());
         // when condition is NOT unary
-        this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
+        this.conditionChanged.subscribe((value) => this.conditionChangedCallback());
     }
 
     public ngOnInit() {
@@ -163,6 +163,13 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         this.conditionChanged.unsubscribe();
         this.unaryConditionChanged.unsubscribe();
         this.chunkLoaded.unsubscribe();
+    }
+
+    @autoWire()
+    public conditionChangedCallback() {
+        if (!!this._value || this._value === 0) {
+            this.filter();
+        }
     }
 
     public refresh() {
