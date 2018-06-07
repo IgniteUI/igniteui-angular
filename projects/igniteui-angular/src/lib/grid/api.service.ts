@@ -123,23 +123,15 @@ export class IgxGridAPIService {
         this.get(id).sortingExpressions = sortingState;
     }
 
-    public filter(id: string, fieldName: string, term, condition: IFilteringOperation, ignoreCase: boolean);
-    public filter(id: string, fieldName: string, term, filteringExpressionsTree: IFilteringExpressionsTree, ignoreCase: boolean);
-    filter(id: string, fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
+    public filter(id: string, fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase: boolean) {
         const grid = this.get(id);
         const filteringTree = grid.filteringExpressionsTree;
         if (grid.paging) {
             grid.page = 0;
         }
 
-        if (conditionOrExpressionsTree instanceof FilteringExpressionsTree) {
-            const expressionsTree = conditionOrExpressionsTree as IFilteringExpressionsTree;
-            this.prepare_filtering_expression(filteringTree, fieldName, term, expressionsTree, ignoreCase);
-        } else {
-            const condition = conditionOrExpressionsTree as IFilteringOperation;
-            this.prepare_filtering_expression(filteringTree, fieldName, term, condition, ignoreCase);
-        }
-
+        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase);
         grid.filteringExpressionsTree = filteringTree;
     }
 
@@ -173,7 +165,7 @@ export class IgxGridAPIService {
         } else {
             filteringState.filteringOperands = [];
         }
-        
+
         grid.filteringExpressionsTree = filteringState;
         grid.filteredData = null;
     }
@@ -194,10 +186,6 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
-        condition: IFilteringOperation, ignoreCase: boolean);
-    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
-        filteringExpressionsTree: IFilteringExpressionsTree, ignoreCase: boolean);
     protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
         conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
 
@@ -221,7 +209,7 @@ export class IgxGridAPIService {
             }
         } else {
             // expression or expressions tree found for this field
-            const oldExpressionsTreeIndex = filteringState.filteringOperands.findIndex((expr) => expr === expressionOrExpressionsTreeForField);
+            const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
 
             if (expressionsTree) {
                 // replace the existing expressions tree for this field with the new one passed as parameter

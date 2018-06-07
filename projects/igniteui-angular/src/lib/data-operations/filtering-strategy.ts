@@ -35,8 +35,8 @@ export class FilteringStrategy implements IFilteringStrategy {
     public matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
         if (expressions) {
             if (expressions instanceof FilteringExpressionsTree) {
-                let expressionsTree = expressions as IFilteringExpressionsTree;
-                let operator = expressionsTree.operator as FilteringLogic;
+                const expressionsTree = expressions as IFilteringExpressionsTree;
+                const operator = expressionsTree.operator as FilteringLogic;
                 let match, matchOperand, operand;
 
                 if (expressionsTree.filteringOperands) {
@@ -51,12 +51,12 @@ export class FilteringStrategy implements IFilteringStrategy {
                         } else if (operator === FilteringLogic.Or) {
                             match = match || matchOperand;
                         }
-                    };
+                    }
                 }
 
                 return match === undefined ? true : match;
             } else {
-                let expression = expressions as IFilteringExpression;
+                const expression = expressions as IFilteringExpression;
                 return this.findMatchByExpression(rec, expression);
             }
         }
