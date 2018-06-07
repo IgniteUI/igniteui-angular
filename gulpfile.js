@@ -105,3 +105,11 @@ gulp.task('watch', () => {
         }
     });
 });
+
+gulp.task('copy-migrations', () => {
+    return gulp.src([
+        './projects/igniteui-angular/migrations/**/*.json',
+        '!**/tsconfig.json'
+    ])
+    .pipe(gulp.dest('./dist/igniteui-angular/migrations'));
+});
