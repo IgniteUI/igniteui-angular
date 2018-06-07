@@ -172,7 +172,7 @@ export class IgxGridAPIService {
             // clear all
             this.get(id).groupingExpressions = [];
             for (const grExpr of groupingState) {
-                const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName ===  grExpr.fieldName);
+                const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === grExpr.fieldName);
                 if (sortExprIndex > -1) {
                     sortingState.splice(sortExprIndex, 1);
                 }
@@ -185,7 +185,7 @@ export class IgxGridAPIService {
         const grState = this.get(id).groupingExpansionState;
         const hierarchy = DataUtil.getHierarchy(groupRow);
         return grState.find((state) =>
-            DataUtil.isHierarchyMatch(state.hierarchy || [{fieldName: groupRow.expression.fieldName, value: groupRow.value}], hierarchy));
+            DataUtil.isHierarchyMatch(state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
     }
 
     public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {

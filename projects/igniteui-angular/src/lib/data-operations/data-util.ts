@@ -1,8 +1,10 @@
-import { IgxFilteringOperand,
+import {
+    IgxFilteringOperand,
     IgxBooleanFilteringOperand,
     IgxDateFilteringOperand,
     IgxNumberFilteringOperand,
-    IgxStringFilteringOperand } from './filtering-condition';
+    IgxStringFilteringOperand
+} from './filtering-condition';
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
 import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
@@ -63,8 +65,8 @@ export class DataUtil {
         return this.restoreGroupsRecursive(data, 1, state.expressions.length, state.expansion, state.defaultExpanded);
     }
     private static restoreGroupsRecursive(
-            data: any[], level: number, depth: number,
-            expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
+        data: any[], level: number, depth: number,
+        expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
         let i = 0;
         let j: number;
         let result = [];
@@ -81,7 +83,7 @@ export class DataUtil {
             }
             const hierarchy = this.getHierarchy(g);
             const expandState: IGroupByExpandState = expansion.find((state) =>
-                this.isHierarchyMatch(state.hierarchy || [{fieldName: g.expression.fieldName, value: g.value}], hierarchy));
+                this.isHierarchyMatch(state.hierarchy || [{ fieldName: g.expression.fieldName, value: g.value }], hierarchy));
             const expanded = expandState ? expandState.expanded : defaultExpanded;
             result.push(g);
             if (expanded) {
@@ -148,27 +150,20 @@ export class DataUtil {
 
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
         const hierarchy: Array<IGroupByKey> = [];
-        hierarchy.push({fieldName: gRow.expression.fieldName, value: gRow.value});
+        hierarchy.push({ fieldName: gRow.expression.fieldName, value: gRow.value });
         while (gRow.__groupParent) {
             gRow = gRow.__groupParent;
-            hierarchy.unshift({fieldName: gRow.expression.fieldName, value: gRow.value});
+            hierarchy.unshift({ fieldName: gRow.expression.fieldName, value: gRow.value });
         }
         return hierarchy;
     }
 
     public static isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>): boolean {
-        let res;
         if (h1.length !== h2.length) {
             return false;
-        } else {
-            for (let i = 0; i < h1.length; i++) {
-                res = h1[i].fieldName === h2[i].fieldName &&
-                    h1[i].value === h2[i].value;
-                if (!res) {
-                    break;
-                }
-            }
-            return res;
         }
+        return h1.every((level, index): boolean => {
+            return level.fieldName === h2[index].fieldName && level.value === h2[index].value;
+        });
     }
 }
