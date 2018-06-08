@@ -213,7 +213,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     @ViewChild('inlineEditor', { read: TemplateRef })
     protected inlineEditorTemplate: TemplateRef<any>;
 
-    @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
+    @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
     private highlight: IgxTextHighlightDirective;
 
     public editValue;
@@ -700,11 +700,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     public highlightText(text: string, caseSensitive?: boolean): number {
-        return this.highlight ? this.highlight.highlight(text, caseSensitive) : 0;
+        return this.highlight && this.column.searchable ? this.highlight.highlight(text, caseSensitive) : 0;
     }
 
     public clearHighlight() {
-        if (this.highlight) {
+        if (this.highlight && this.column.searchable) {
             this.highlight.clearHighlight();
         }
     }

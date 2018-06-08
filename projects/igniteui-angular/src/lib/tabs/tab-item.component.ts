@@ -88,11 +88,11 @@ export class IgxTabItemComponent {
         return this._nativeTabItem;
     }
 
-    get isDisabled(): boolean {
+    get disabled(): boolean {
         const group = this.relatedGroup;
 
         if (group) {
-            return group.isDisabled;
+            return group.disabled;
         }
     }
 
