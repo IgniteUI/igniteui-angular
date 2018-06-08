@@ -704,7 +704,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
                 newSelection.map((e) => e[this.textKey]).join(', ') :
                 newSelection.join(', ');
             this.isHeaderChecked();
-            this._onChangeCallback(this.value);
+            this._onChangeCallback(newSelection);
         }
     }
 
@@ -778,7 +778,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     }
 
     public writeValue(value: any): void {
-        this.value = value;
+        this.selectItems(value);
     }
 
     public registerOnChange(fn: any): void {
@@ -829,13 +829,17 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     }
 
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
-        const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
-        this.triggerSelectionChange(newSelection);
+        if (newItems) {
+            const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
+            this.triggerSelectionChange(newSelection);
+        }
     }
 
     public deselectItems(newItems: Array<any>) {
-        const newSelection = this.selectionAPI.deselect_items(this.id, newItems);
-        this.triggerSelectionChange(newSelection);
+        if (newItems) {
+            const newSelection = this.selectionAPI.deselect_items(this.id, newItems);
+            this.triggerSelectionChange(newSelection);
+        }
     }
 
     public selectAllItems(ignoreFilter?: boolean) {

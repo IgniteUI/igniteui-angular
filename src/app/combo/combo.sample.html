@@ -55,4 +55,36 @@
             </igx-combo>
         </div>
     </section> -->
+
+    <!-- <form #templateBased="ngForm" (ngSubmit)="onSubmitTemplateBased()">
+        <p>
+            <igx-combo #comboTemplate [(ngModel)]="valuesTemplate" name="comboTemplatche"
+                class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
+                [data]="items" [textKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
+        </p>
+        <p>
+            <button type="submit" [disabled]="!templateBased.valid">Submit</button>
+        </p>
+    </form> -->
+    
+    <div class="input-wrapper"></div>
+        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+            <p>
+                <label>First Name:</label>
+                <input type="text" formControlName="firstName">
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type="password" formControlName="password">
+            </p>
+            <p>
+                <igx-combo #comboReactive formControlName="townCombo"
+                    class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
+                    [data]="items" [textKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
+            </p>
+            <p>
+                <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+            </p>
+        </form>
+    </div>
 </div>
