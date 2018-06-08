@@ -1,6 +1,5 @@
-<ng-container [style.padding-left]="padding" #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
-
-    <div (click)="toggle()" class="igx-grid__grouping-indicator" [style.min-width.px]="grid.calcGroupByWidth" [style.flex-basis.px]="grid.calcGroupByWidth" [tabIndex]="tabindex">
+<ng-container #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
+    <div (click)="toggle()" igxRipple class="igx-grid__grouping-indicator" [tabIndex]="tabindex">
         <igx-icon *ngIf="!expanded" fontSet="material" name="expand_less"></igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
     </div>
@@ -14,8 +13,8 @@
         <div class="igx-grid__group-label">
             <igx-icon fontSet="material" name="group_work" class="igx-grid__group-icon"></igx-icon>
             <span class="igx-grid__group-field">
-                {{ groupRow.expression.fieldName }}:
-            </span>
+            {{ groupRow.expression.fieldName }}:
+        </span>
             <span class="igx-grid__group-text">{{ groupRow.value }}</span><igx-badge [value]="groupRow.records.length" class='igx-grid__group-count'></igx-badge>
         </div>
     </ng-template>

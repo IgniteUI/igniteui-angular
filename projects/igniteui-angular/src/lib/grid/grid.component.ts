@@ -147,9 +147,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.markForCheck();
     }
 
-    @Input()
-    public groupByIndentation = 30;
-
     get filteredData() {
         return this._filteredData;
     }
@@ -429,6 +426,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('headerCheckboxContainer')
     public headerCheckboxContainer: ElementRef;
 
+    @ViewChild('headerGroupContainer')
+    public headerGroupContainer: ElementRef;
+
     @ViewChild('headerCheckbox', { read: IgxCheckboxComponent })
     public headerCheckbox: IgxCheckboxComponent;
 
@@ -496,10 +496,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
-    }
-
-    get calcGroupByWidth() {
-        return this.groupingExpressions.length * this.groupByIndentation;
     }
 
     public pagingState;
@@ -1241,8 +1237,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             sum += this.calcRowCheckboxWidth;
         }
 
-        if (this.groupingExpressions.length > 0) {
-            sum += this.calcGroupByWidth;
+        if (this.groupingExpressions.length > 0 && this.headerGroupContainer) {
+            sum += this.headerGroupContainer.nativeElement.clientWidth;
         }
         return sum;
     }
