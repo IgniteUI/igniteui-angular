@@ -230,6 +230,16 @@
 
     %igx-chips-area__chip-connector {
         user-select: none;
-        pointer-events: none;
+    }
+
+    %igx-chips-area__item--disabled {
+        %igx-chips-area__item {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        %igx-chips-area__label {
+            opacity: .5;
+        }
     }
 }

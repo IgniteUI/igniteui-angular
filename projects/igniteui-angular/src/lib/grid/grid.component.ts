@@ -1808,6 +1808,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const expr = this.groupingExpressions.filter((item) => {
                 return item.fieldName === event.chipsArray[i].id;
             })[0];
+
+            if (!this.getColumnByName(expr.fieldName).groupable) {
+                // disallow changing order if there are columns with groupable: false
+                event.isValid = false;
+                return;
+            }
             newGrouping.push(expr);
         }
         this.chipsGoupingExpressions = newGrouping;

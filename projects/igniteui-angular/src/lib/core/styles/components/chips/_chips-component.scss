@@ -15,6 +15,10 @@
         @extend %igx-chips-area__item !optional;
     }
 
+    @include e(item, $m: disabled) {
+        @extend %igx-chips-area__item--disabled !optional;
+    }
+
     @include e(label) {
         @extend %igx-chips-area__label !optional;
     }

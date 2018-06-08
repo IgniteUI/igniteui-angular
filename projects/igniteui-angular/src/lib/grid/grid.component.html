@@ -22,8 +22,8 @@
         Drag a column header and drop it here to group by that column
     </div>
     <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
-        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName"
-                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="onChipInteractionEnd($event)">
+        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable"
+                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="getColumnByName(expr.fieldName).groupable ? onChipInteractionEnd($event): null" [class.igx-chips-area__item--disabled]='!getColumnByName(expr.fieldName).groupable'>
             <!--<igx-icon class="igx-chips-area__item-icon" igxPrefix fontSet="material" [name]="'drag_indicator'" [style.height]="'1.5rem'"></igx-icon>-->
             <span class="igx-chips-area__label" igxLabel
                     [style.position]="'unset'"

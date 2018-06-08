@@ -10,6 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
+import { IgxChipComponent } from '../chips';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -18,6 +19,8 @@ describe('IgxGrid - GroupBy', () => {
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
+    const DISABLED_CHIP = 'igx-chips-area__item--disabled';
+    const CHIP = 'igx-chip';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
         const row = grid.getRowByIndex(rowStartIndex);
@@ -1311,7 +1314,6 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         const groupRows = grid.groupedRowList.toArray();
@@ -1324,7 +1326,6 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
@@ -1342,7 +1343,6 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
@@ -1360,7 +1360,6 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
@@ -1429,7 +1428,41 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(similarGroupRows[0].expanded).toEqual(false);
         expect(similarGroupRows[1].expanded).toEqual(true);
+    });
 
+    it('should render disabled non-interactable chip for column that does not allow grouping.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.getColumnByName('ProductName').groupable = false;
+        grid.getColumnByName('Released').groupable = true;
+        fix.detectChanges();
+        grid.groupBy([{ fieldName: 'ProductName', dir: SortingDirection.Asc }, { fieldName: 'Released', dir: SortingDirection.Asc }]);
+        fix.detectChanges();
+
+        const chips = fix.nativeElement.querySelectorAll(CHIP);
+        expect(chips.length).toBe(2);
+
+        // check correct chip is disabled
+        expect(chips[0].className).toEqual(DISABLED_CHIP);
+        expect(chips[1].className).not.toEqual(DISABLED_CHIP);
+
+        // check no remove button on disabled chip
+        expect(chips[0].querySelectorAll('.igx-chips-area__remove-icon').length).toEqual(0);
+        expect(chips[1].querySelectorAll('.igx-chips-area__remove-icon').length).toEqual(1);
+
+        // check click does not allow changing sort dir
+        chips[0].dispatchEvent(new PointerEvent('pointerup', {}));
+        chips[1].dispatchEvent(new PointerEvent('pointerup', {}));
+
+        fix.detectChanges();
+        grid.cdr.detectChanges();
+
+        const fChipDirection = chips[0].querySelector('span[igxLabel]>igx-icon').innerText;
+        const sChipDirection = chips[1].querySelector('span[igxLabel]>igx-icon').innerText;
+
+        expect(fChipDirection).toEqual('arrow_upward');
+        expect(sChipDirection).toEqual('arrow_downward');
     });
 });
 
@@ -1517,6 +1550,7 @@ export class DefaultGridComponent extends DataParent {
     public enableFiltering = false;
     public enableResizing = false;
     public enableEditing = false;
+    public enableGrouping = true;
     public currentSortExpressions;
 
     public columnsCreated(column: IgxColumnComponent) {
@@ -1524,6 +1558,7 @@ export class DefaultGridComponent extends DataParent {
         column.filterable = this.enableFiltering;
         column.resizable = this.enableResizing;
         column.editable = this.enableEditing;
+        column.groupable = this.enableGrouping;
     }
     public onGroupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
