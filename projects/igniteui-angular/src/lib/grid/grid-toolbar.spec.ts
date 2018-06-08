@@ -325,7 +325,7 @@ describe('IgxGrid - Grid Toolbar', () => {
             expect(args.exporter).not.toBe(null);
             expect(args.type).toBe('csv');
             expect(args.cancel).toBe(false);
-            
+
             // Spy the 'export' and 'exportData' methods so the files are not really created
             spyOn(args.exporter, 'export');
             spyOn(args.exporter, 'exportData');
