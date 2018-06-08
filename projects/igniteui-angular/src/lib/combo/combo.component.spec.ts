@@ -826,6 +826,28 @@ fdescribe('Combo', () => {
         });
     }));
 
+    it('Aria', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        const comboContainer = fix.nativeElement.querySelector('.igx-combo');
+        expect(comboContainer.getAttribute('aria-expanded')).toMatch('false');
+        combo.open();
+        tick();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(comboContainer.getAttribute('aria-expanded')).toMatch('true');
+            const comboInput = fix.nativeElement.querySelector('.igx-combo-input');
+            // expect(comboInput.getAttribute('aria-labelledBy')).toMatch('mockID');
+            combo.close();
+            tick();
+            fix.whenStable().then(() => {
+                fix.detectChanges();
+                expect(comboContainer.getAttribute('aria-expanded')).toMatch('false');
+            });
+        });
+    }));
+
     // Rendering
     it('All appropriate classes should be applied on combo initialization', () => {
         // TO DO
@@ -1894,8 +1916,10 @@ class IgxComboSampleComponent {
 @Component({
     template: `
         <p>Change data to:</p>
+        <label id="mockID">Combo Label</label>
         <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [dropDownHeight]='400'
-        [dropDownItemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'">
+        [dropDownItemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+        [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `
 })

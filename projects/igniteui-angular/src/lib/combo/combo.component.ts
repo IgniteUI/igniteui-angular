@@ -483,6 +483,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     @Input()
     public filterable = true;
 
+    @Input()
+    public ariaLabelledBy: string;
+
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
@@ -582,7 +585,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     private checkMatch() {
         this.customValueFlag = this.textKey || this.textKey === 0 ?
             !this.filteredData
-                .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues :
+                .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) &&
+                this.allowCustomValues :
             !this.filteredData
                 .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
     }
