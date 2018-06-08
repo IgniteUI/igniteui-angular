@@ -51,7 +51,7 @@ export interface IComboItemAdditionEvent {
     newCollection: any[];
 }
 let currentItem = 0;
-const noop = () => {};
+const noop = () => { };
 @Component({
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html'
@@ -88,7 +88,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         return this.parentElement.children;
     }
 
-    protected set children(val:  QueryList<IgxDropDownItemBase>) {
+    protected set children(val: QueryList<IgxDropDownItemBase>) {
         this._children = val;
     }
 
@@ -159,14 +159,27 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         // which is not part of the this.items collection.
         // In that case the real item is not hidden, but not loaded at all by the virtualization,
         // and this is the same case as normal scroll up.
+        const mod = this.parentElement.customValueFlag && this.parentElement.searchValue !== '';
+        if (direction) {
+            if (direction === Navigate.Down
+                && this.focusedItem.itemData === this.verticalScrollContainer.igxForOf[this.verticalScrollContainer.igxForOf.length - 1]
+                && mod) {
+                    if (this.focusedItem) {
+                        this.focusedItem.isFocused = false;
+                    }
+                    this.focusedItem = this.children.last;
+                    this.focusedItem.isFocused = true;
+                    return;
+                }
+        }
         if (newIndex === -1 || newIndex === this.items.length - 1) {
-            this.navigateVirtualItem(direction);
+            this.navigateVirtualItem(direction, mod ? 1 : 0);
         } else {
             super.navigateItem(newIndex);
         }
     }
 
-    private navigateVirtualItem(direction: Navigate) {
+    private navigateVirtualItem(direction: Navigate, mod?: number) {
         const vContainer = this.verticalScrollContainer;
         let state = vContainer.state;
         const isScrollUp = direction === Navigate.Up;
@@ -185,6 +198,16 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         if (data[newScrollStartIndex].isHeader && direction === Navigate.Up ||
             data[newScrollStartIndex + state.chunkSize - 2].isHeader && direction === Navigate.Down) {
             newScrollStartIndex = isScrollUp ? newScrollStartIndex - 1 : newScrollStartIndex + 1;
+            // newScrollStartIndex = mod && direction === Navigate.Down ? newScrollStartIndex + 1 : newScrollStartIndex;
+            if (newScrollStartIndex < 0) { // If the next item loaded is a header and is also the very first item in the list.
+                vContainer.scrollTo(0); // Scrolls to the beginning of the list and switches focus to the searchInput
+                this.subscribeNext(vContainer, () => {
+                    this.parentElement.searchInput.nativeElement.focus();
+                    this.focusedItem.isFocused = false;
+                    this.focusedItem = null;
+                });
+                return;
+            }
         }
         vContainer.scrollTo(newScrollStartIndex);
         this.subscribeNext(vContainer, () => {
@@ -198,7 +221,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
             // If the newly loaded element that is hidden isn't a header, this means that the first visible item, the one that needs focus,
             // should be either the one that is before the last item (this.items).
             const isBottomHiddenHeader = data[state.startIndex + state.chunkSize - 1].isHeader;
-            const index = isScrollUp ? 0 : isBottomHiddenHeader ? this.items.length - 1 : this.items.length - 2;
+            const index = isScrollUp ? 0 : isBottomHiddenHeader ? this.items.length - 1 - mod : this.items.length - 2 - mod;
 
             this.focusItem(index);
         });
@@ -214,12 +237,12 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
 
     private focusItem(visibleIndex: number) {
         const oldItem = this._focusedItem;
-            if (oldItem) {
-                oldItem.isFocused = false;
-            }
-            const newItem = this.items[visibleIndex];
-            newItem.isFocused = true;
-            this._focusedItem = newItem;
+        if (oldItem) {
+            oldItem.isFocused = false;
+        }
+        const newItem = this.items[visibleIndex];
+        newItem.isFocused = true;
+        this._focusedItem = newItem;
     }
 
     onToggleOpening() {
@@ -255,7 +278,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     protected _groupKey: string | number = '';
     protected _textKey: string | number = '';
     private _dataType = '';
-    private _data: any[] = [];
+    // private _data: any[] = [];
     private _filteredData = [];
     private _children: QueryList<IgxDropDownItemBase>;
     private _dropdownContainer: ElementRef = null;
@@ -331,7 +354,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     protected get dropdownContainer(): ElementRef {
         return this._dropdownContainer;
     }
-    @ViewChildren(IgxComboItemComponent, {read: IgxComboItemComponent})
+    @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
     public set children(list: QueryList<IgxDropDownItemBase>) {
         this._children = list;
     }
@@ -436,13 +459,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     public valueKey: string | number = '';
 
     @Input()
-    public set data(val: any[]) {
-        this._data = val;
-    }
+    public data = [];
+    // public set data(val: any[]) {
+    //     this._data = val || [];
+    // }
 
-    public get data(): any[] {
-        return this._data;
-    }
+    // public get data(): any[] {
+    //     return this._data;
+    // }
 
     @Input()
     public filteringLogic = FilteringLogic.Or;
@@ -558,9 +582,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     private checkMatch() {
         this.customValueFlag = this.textKey || this.textKey === 0 ?
             !this.filteredData
-            .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues :
+                .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues :
             !this.filteredData
-            .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
+                .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
     }
 
     public handleInputChange(event?) {
@@ -756,8 +780,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         }
         if (this.groupKey) {
             const expression2 = newArray.find((expr) => expr.fieldName === 'isHeader');
-            const headerExpression = { fieldName: 'isHeader', searchVale: '',
-            condition: IgxBooleanFilteringOperand.instance().condition('true'), ignoreCase: true };
+            const headerExpression = {
+                fieldName: 'isHeader', searchVale: '',
+                condition: IgxBooleanFilteringOperand.instance().condition('true'), ignoreCase: true
+            };
             if (!expression2) {
                 newArray.push(headerExpression);
             } else {
