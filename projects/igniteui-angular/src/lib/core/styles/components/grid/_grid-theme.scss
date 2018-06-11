@@ -246,7 +246,7 @@
         compact: rem(12px)
     );
 
-    $indicator-icon-width: 24px;
+    $indicator-icon-width: rem(24px);
 
     %grid-display {
         display: grid;
@@ -717,7 +717,7 @@
 
     @for $i from 1 through 10 {
         %grid__group-indentation-level-#{$i} {
-            padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + 24px);
+            padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
 
             .igx-button--icon {
                 width: 30px;
@@ -735,4 +735,5 @@
         background: inherit;
     }
 }
+
 
