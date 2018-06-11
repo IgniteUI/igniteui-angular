@@ -51,7 +51,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input()
     public set disabled(value: boolean) {
         this.nativeElement.disabled = value;
-        this.inputGroup.isDisabled = value;
+        this.inputGroup.disabled = value;
     }
 
     public get disabled() {
@@ -101,7 +101,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
 
         if (this.nativeElement.hasAttribute('disabled')) {
-            this.inputGroup.isDisabled = true;
+            this.inputGroup.disabled = true;
         }
 
         if ((this.nativeElement.value && this.nativeElement.value.length > 0) ||

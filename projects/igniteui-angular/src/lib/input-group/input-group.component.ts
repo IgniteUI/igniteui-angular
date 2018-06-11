@@ -61,7 +61,8 @@ export class IgxInputGroupComponent {
     public isSearch = false;
 
     @HostBinding('class.igx-input-group--disabled')
-    public isDisabled = false;
+    @Input()
+    public disabled = false;
 
     @HostBinding('class.igx-input-group--valid')
     public get validClass(): boolean {
