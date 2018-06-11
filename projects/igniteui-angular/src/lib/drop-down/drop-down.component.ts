@@ -117,16 +117,18 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
      * ```typescript
      * // get
      * let myDropDownCurrentWidth = this.dropdown.width;
-     * 
-     * // set
-     * let myDropDownNewWidth = '160px';
-     * this.dropdown.width = myDropDownNewWidth; 
      * ```
      */
     @Input()
     get width() {
         return this._width;
     }
+    /**
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [width]='160px'></igx-drop-down>
+     * ```
+     */
     set width(value) {
         this._width = value;
         this.toggleDirective.element.style.width = value;
@@ -138,16 +140,18 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
      * ```typescript
      * // get
      * let myDropDownCurrentHeight = this.dropdown.height;
-     * 
-     * // set
-     * let myDropDownNewHeight = '400px';
-     * this.dropdown.height = myDropDownNewHeight;
      * ```
      */
     @Input()
     get height() {
         return this._height;
     }
+    /**
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [height]='400px'></igx-drop-down>
+     * ```
+     */
     set height(value) {
         this._height = value;
         this.toggleDirective.element.style.height = value;
@@ -158,7 +162,13 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
      * user will be able to use keyboard navigation.
      *
      * ```typescript
-     * this.dropdown.allowItemsFocus = true;
+     * // get
+     * let dropDownAllowsItemFocus = this.dropdown.allowItemsFocus;
+     * ```
+     * 
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
      * ```
      */
     @Input()
@@ -170,16 +180,19 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
      * ```typescript
      * // get
      * let myDropDownCurrentId = this.dropdown.id;
-     * 
-     * // set
-     * let myDropDownNewId = 'newDropDownId';
-     * this.dropdown.id = myDropDownNewId;
      * ```
      */
     @Input()
     get id(): string {
         return this._id;
     }
+
+    /**
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [id]='newDropDownId'></igx-drop-down>
+     * ```
+     */
     set id(value: string) {
         this._id = value;
         this.toggleDirective.id = value;
