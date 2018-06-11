@@ -33,13 +33,13 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     public icon: string;
 
     @Input()
-    public isDisabled: boolean;
+    public disabled: boolean;
 
     @HostBinding('attr.role') public role = 'tabpanel';
 
-    @HostBinding('class.igx-tabs__group')
-    get styleClass(): boolean {
-        return true;
+    @HostBinding('class')
+    get styleClass(): string {
+        return 'igx-tabs__group';
     }
 
     public get itemStyle(): string {
@@ -89,7 +89,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     }
 
     public select(focusDelay = 50, onInit = false) {
-        if (this.isDisabled || this._tabs.selectedIndex === this.index) {
+        if (this.disabled || this._tabs.selectedIndex === this.index) {
             return;
         }
 

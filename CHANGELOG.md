@@ -44,6 +44,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `igxToggle` changes
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
+- **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
 
 ## 6.0.1
 - **Breaking changes**:
