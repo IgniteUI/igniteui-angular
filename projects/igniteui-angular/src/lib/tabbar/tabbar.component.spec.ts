@@ -63,8 +63,8 @@ describe('TabBar', () => {
         fixture.detectChanges();
 
         tabs = tabbar.tabs.toArray();
-        expect(tabs[0].isDisabled).toBeFalsy();
-        expect(tabs[1].isDisabled).toBeFalsy();
+        expect(tabs[0].disabled).toBeFalsy();
+        expect(tabs[1].disabled).toBeFalsy();
     });
 
     it('should initialize set/get properties', () => {
@@ -123,7 +123,7 @@ describe('TabBar', () => {
         expect(tab2.isSelected).toBeFalsy();
 
         // select disabled tab
-        tab2.relatedPanel.isDisabled = true;
+        tab2.relatedPanel.disabled = true;
         tab2.select();
         fixture.detectChanges();
 
