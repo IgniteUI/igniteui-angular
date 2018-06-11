@@ -93,7 +93,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      */
     @Input() public multiSelection = false;
     /**
-     * An @Input property that allows you the define the values to select.
+     * An @Input property that allows setting the buttons in the button group.
      * ```typescript
      *  public ngOnInit() {
      *      this.cities = [
@@ -183,7 +183,6 @@ export class IgxButtonGroupComponent implements AfterViewInit {
 
     /**
      * An @Ouput property that emits an event when a button is deselected.
-     * An @Ouput property
      *```typescript
      *@ViewChild("toast")
      *private toast: IgxToastComponent;
