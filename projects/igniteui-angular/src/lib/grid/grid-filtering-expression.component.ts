@@ -26,6 +26,7 @@ import { autoWire, IGridBus } from "./grid.common";
 import { IgxButtonGroupModule, IgxButtonGroupComponent } from "../buttonGroup/buttonGroup.component";
 import { IFilteringOperation, IFilteringExpression } from '../../public_api';
 
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -46,8 +47,11 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         }
     }
 
+    @Input()
+    public name;
+
     @Output()
-    public onExpressionChanged = new EventEmitter<any>();
+    public onExpressionChanged = new EventEmitter<IgxGridFilterExpressionComponent>();
 
     @ViewChild("defaultFilterUI", { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
@@ -70,7 +74,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
          // when condition is unary
         //this.unaryConditionChanged.subscribe((value) => this.filter());
-        this.unaryConditionChanged.subscribe((value) => this.onExpressionChanged.emit(this.expression));//TODO
+        this.unaryConditionChanged.subscribe((value) => this.onExpressionChanged.emit(this));//TODO
         // when condition is NOT unary
         //this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
         this.conditionChanged.subscribe((value) => this.conditionChangedCallback());//TODO
@@ -116,7 +120,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     @autoWire()
     public conditionChangedCallback() {
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
-             this.onExpressionChanged.emit(this.expression); 
+             this.onExpressionChanged.emit(this); 
         }
    }
 
@@ -178,12 +182,12 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public onInputChanged(val): void {
         this.expression.condition = this.getCondition(this.select.nativeElement.value);
         if (!val && val !== 0) {
-            this.expression.searchVal = val;
-            this.onExpressionChanged.emit(this.expression);
+            this.expression.searchVal = null;
+            this.onExpressionChanged.emit(this);
             return;
         }
         this.expression.searchVal = this.transformValue(val);
-        this.onExpressionChanged.emit(this.expression);
+        this.onExpressionChanged.emit(this);
     }
 
     public clearFiltering(resetCondition: boolean): void {
@@ -195,7 +199,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
             this.cdr.detectChanges();
         }
         if(!resetCondition) {
-            this.onExpressionChanged.emit(this.expression);
+            this.onExpressionChanged.emit(this);
         } else {
             this.select.nativeElement.selectedIndex = 0;
         }
