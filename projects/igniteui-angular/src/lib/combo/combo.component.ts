@@ -20,7 +20,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxDropDownBase, IgxDropDownComponent, IgxDropDownModule, Navigate } from '../drop-down/drop-down.component';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 
@@ -159,11 +159,11 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         // which is not part of the this.items collection.
         // In that case the real item is not hidden, but not loaded at all by the virtualization,
         // and this is the same case as normal scroll up.
-        const mod = this.parentElement.customValueFlag && this.parentElement.searchValue !== '';
+        const extraScroll = this.parentElement.isAddButtonVisible();
         if (direction) {
             if (direction === Navigate.Down
                 && this.focusedItem.itemData === this.verticalScrollContainer.igxForOf[this.verticalScrollContainer.igxForOf.length - 1]
-                && mod) {
+                && extraScroll) {
                     if (this.focusedItem) {
                         this.focusedItem.isFocused = false;
                     }
@@ -173,13 +173,13 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
                 }
         }
         if (newIndex === -1 || newIndex === this.items.length - 1) {
-            this.navigateVirtualItem(direction, mod ? 1 : 0);
+            this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
         } else {
             super.navigateItem(newIndex);
         }
     }
 
-    private navigateVirtualItem(direction: Navigate, mod?: number) {
+    private navigateVirtualItem(direction: Navigate, extraScroll?: number) {
         const vContainer = this.verticalScrollContainer;
         let state = vContainer.state;
         const isScrollUp = direction === Navigate.Up;
@@ -223,7 +223,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
             // If the newly loaded element that is hidden isn't a header, this means that the first visible item, the one that needs focus,
             // should be either the one that is before the last item (this.items).
             const isBottomHiddenHeader = data[state.startIndex + state.chunkSize - 1].isHeader;
-            const index = isScrollUp ? 0 : isBottomHiddenHeader ? this.items.length - 1 - mod : this.items.length - 2 - mod;
+            const index = isScrollUp ? 0 : isBottomHiddenHeader ? this.items.length - 1 - extraScroll : this.items.length - 2 - extraScroll;
 
             this.focusItem(index);
         });
@@ -248,7 +248,6 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     }
 
     onToggleOpening() {
-        this.parentElement.searchValue = '';
         this.parentElement.handleInputChange();
         this.onOpening.emit();
     }
@@ -277,6 +276,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     protected _filteringLogic = FilteringLogic.Or;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
+    protected _isDisabled = false;
     protected _groupKey: string | number = '';
     protected _textKey: string | number = '';
     private _dataType = '';
@@ -296,6 +296,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService) {
     }
+    @ViewChild(IgxInputGroupComponent, {read: IgxInputGroupComponent})
+    public comboInputGroup: IgxInputGroupComponent;
+
     @ViewChild(IgxComboDropDownComponent, { read: IgxComboDropDownComponent })
     public dropdown: IgxComboDropDownComponent;
 
@@ -745,6 +748,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.cdr.detectChanges();
     }
 
+    public isAddButtonVisible(): boolean {
+        return this.searchValue && this.customValueFlag;
+    }
+
     public handleSelectAll(evt) {
         if (evt.checked) {
             this.selectAllItems();
@@ -813,9 +820,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
-        if (this.disabled) {
-            this.setDisabledState(true);
-        }
     }
 
     public writeValue(value: any): void {
@@ -827,7 +831,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     public registerOnTouched(fn: any): void { }
-    public setDisabledState(isDisabled: boolean): void { }
+
+    public setDisabledState(isDisabled: boolean): void {
+        this.disabled = true;
+    }
 
     public get template(): TemplateRef<any> {
         this._dataType = this.dataType;
@@ -850,10 +857,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     public toggle() {
+        this.searchValue = '';
         this.dropdown.toggle();
     }
 
     public open() {
+        this.searchValue = '';
         this.dropdown.open();
     }
 
