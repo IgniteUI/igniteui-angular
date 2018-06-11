@@ -42,6 +42,9 @@ export class IgxChipComponent {
     @Input()
     public removable = true;
 
+    @HostBinding('class.igx-chip')
+    public cssClass = 'igx-chip';
+
     @HostBinding('style.top.px')
     public top = 0;
 

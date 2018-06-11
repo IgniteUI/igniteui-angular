@@ -23,19 +23,18 @@
     </div>
     <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
         <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable"
-                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="getColumnByName(expr.fieldName).groupable ? onChipInteractionEnd($event): null" [class.igx-chips-area__item--disabled]='!getColumnByName(expr.fieldName).groupable'>
-            <!--<igx-icon class="igx-chip-area__item-icon" igxPrefix fontSet="material" [name]="'drag_indicator'" [style.height]="'1.5rem'"></igx-icon>-->
-            <span class="igx-chips-area__label" igxLabel
+                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="getColumnByName(expr.fieldName).groupable ? onChipInteractionEnd($event): null" [class.igx-chip--disabled]='!getColumnByName(expr.fieldName).groupable'>
+            <span class="igx-chip__label" igxLabel
                     [style.position]="'unset'"
                     [style.width]="'unset'"
                     [style.webkitTransform]="'unset'"
                     [style.transform]="'unset'"
                     [style.lineHeight]="'unset'"
                     [style.height]="'unset'">
-                <span class="igx-chips-area__text">{{expr.fieldName}}</span>
-                <igx-icon class="igx-chips-area__order-icon" fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'"></igx-icon>
+                <span class="igx-chip__text">{{expr.fieldName}}</span>
+                <igx-icon class="igx-chip__order-icon" fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'"></igx-icon>
             </span>
-            <igx-icon class="igx-chips-area__dir-icon" igxSuffixConnector fontSet="material" [name]="'forward'"></igx-icon>
+            <igx-icon class="igx-chip__dir-icon" igxSuffixConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
     </igx-chips-area>
 </div>

@@ -4,7 +4,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Chips Theme
+/// Chip Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $chip-background [null] - The chip background color.
 /// @param {Color} $chip-hover-background [null] - The chip hover background color.
@@ -41,7 +41,7 @@
     $remove-icon-hover-color: null
 ) {
     $default-theme: (
-        name: 'igx-chips',
+        name: 'igx-chip',
         chip-background: igx-color($palette, grays, 100),
         chip-hover-background: igx-color($palette, grays, 200),
 
@@ -150,20 +150,22 @@
 
     $transition: all 120ms $ease-in-out-cubic;
 
-    %igx-chips-area,
-    %igx-chips-area__item,
-    %igx-chips-area__label,
-    %igx-chips-area__chip-connector {
+    %igx-chips-area {
         display: flex;
         align-items: center;
-    }
-
-    %igx-chips-area {
         justify-content: flex-start;
         width: 100%;
     }
 
-    %igx-chips-area__item {
+    %igx-chip,
+    %igx-chip__item,
+    %igx-chip__label,
+    %igx-chip__connector {
+        display: flex;
+        align-items: center;
+    }
+
+    %igx-chip__item {
         user-select: none;
         cursor: pointer;
         border-radius: rem(17px);
@@ -176,13 +178,13 @@
         &:focus{
             background: --var($theme, 'chip-hover-background');
 
-            %igx-chips-area__text {
+            %igx-chip__text {
                 color: --var($theme, 'text-hover-color');
             }
 
             transition: $transition;
 
-            .igx-icon %igx-chips-area__order-icon {
+            .igx-icon %igx-chip__order-icon {
                 transition: $transition;
                 color: --var($theme, 'order-icon-hover-color')
             }
@@ -196,14 +198,14 @@
         }
     }
 
-    %igx-chips-area__text {
+    %igx-chip__text {
         color: --var($theme, 'text-color');
         font-size: rem(12px);
         margin-right: rem(16px);
     }
 
     .igx-icon {
-        &%igx-chips-area__dir-icon {
+        &%igx-chip__dir-icon {
             width: rem(16px);
             height: rem(16px);
             font-size: rem(16px);
@@ -211,12 +213,12 @@
             color: --var($theme, 'dir-icon-color');
         }
 
-        &%igx-chips-area__order-icon {
+        &%igx-chip__order-icon {
             color: --var($theme, 'order-icon-color');
             margin-right: rem(4px);
         }
 
-        &%igx-chips-area__remove-icon {
+        &%igx-chip__remove-icon {
             color: --var($theme, 'remove-icon-color');
             transition: color 120ms ease-in-out;
 
@@ -227,18 +229,18 @@
         }
     }
 
-    %igx-chips-area__chip-connector {
+    %igx-chip__connector {
         user-select: none;
     }
 
-    %igx-chips-area__item--disabled {
-        %igx-chips-area__item {
+    %igx-chip--disabled {
+        %igx-chip__item {
             cursor: default;
             pointer-events: none;
         }
 
-        %igx-chips-area__label {
-            opacity: .5;
+        %igx-chip__label {
+            opacity: .4;
         }
     }
 }

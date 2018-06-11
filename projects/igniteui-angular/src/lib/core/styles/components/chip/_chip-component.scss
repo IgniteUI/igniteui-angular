@@ -5,42 +5,48 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
+
 @include b(igx-chips-area) {
+    @extend %igx-chips-area !optional;
+}
+
+@include b(igx-chip) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
-    @extend %igx-chips-area !optional;
+    @extend %igx-chip !optional;
 
-    @include e(item) {
-        @extend %igx-chips-area__item !optional;
+    @include m(disabled) {
+        @extend %igx-chip--disabled !optional;
     }
 
-    @include e(item, $m: disabled) {
-        @extend %igx-chips-area__item--disabled !optional;
+    @include e(item) {
+        @extend %igx-chip__item !optional;
     }
 
     @include e(label) {
-        @extend %igx-chips-area__label !optional;
+        @extend %igx-chip__label !optional;
     }
 
     @include e(text) {
-        @extend %igx-chips-area__text !optional;
+        @extend %igx-chip__text !optional;
     }
 
     @include e(order-icon) {
-        @extend %igx-chips-area__order-icon !optional;
+        @extend %igx-chip__order-icon !optional;
     }
 
     @include e(dir-icon) {
-        @extend %igx-chips-area__dir-icon !optional;
+        @extend %igx-chip__dir-icon !optional;
     }
 
     @include e(remove-icon) {
-        @extend %igx-chips-area__remove-icon  !optional;
+        @extend %igx-chip__remove-icon  !optional;
     }
 
-    @include e(chip-connector) {
-        @extend %igx-chips-area__chip-connector  !optional;
+    @include e(connector) {
+        @extend %igx-chip__connector  !optional;
     }
 }
+
 
