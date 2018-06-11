@@ -23,13 +23,10 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
 })
 
 export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
-<<<<<<< HEAD
     private _itemStyle = 'igx-tabs-group';
     /**
      * @hidden
      */
-=======
->>>>>>> origin/master
     public isSelected = false;
 
     /**
@@ -87,7 +84,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      * public tab: IgxTabsGroupComponent;
      * ngAfterViewInIt(){
      *    let tabStyle = this.tab.itemStyle;
-     *    this.cdr.detectChanges();
      * }
      * ```
      */
@@ -102,7 +98,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      * public tab: IgxTabsGroupComponent;
      * ngAfterViewInIt(){
      *    let tabComponent = this.tab.relatedTab;
-     *    this.cdr.detectChanges();
      * }
      * ```
      */
@@ -119,7 +114,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      * public tab: IgxTabsGroupComponent;
      * ngAfterViewInIt(){
      *    let tabIndex = this.tab.index;
-     *    this.cdr.detectChanges();
      * }
      * ```
      */
