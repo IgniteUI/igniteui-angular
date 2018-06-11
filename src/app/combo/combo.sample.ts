@@ -1,6 +1,8 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxComboComponent } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
+import { NgModule } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const primitive = ['1', '2', '3', '4', '5', '6'];
 const complex = [{
@@ -31,12 +33,33 @@ const complex = [{
 export class ComboSampleComponent implements OnInit {
     private width = '160px';
     @ViewChild(IgxComboComponent) public igxCombo: IgxComboComponent;
+    @ViewChild('comboTemplate', { read: IgxComboComponent}) public comboTemplate: IgxComboComponent;
     public toggleItemState = false;
     private initData: any[] = [];
     public items: any[] = [];
     private currentDataType = '';
 
-    constructor() {
+    get valuesTemplate() {
+        return this.comboTemplate.selectedItems();
+    }
+    set valuesTemplate(values: Array<any>) {
+        this.comboTemplate.selectItems(values);
+    }
+
+    reactiveForm: FormGroup;
+
+    onSubmitReactive() {
+        console.log('model-based form submitted');
+        console.log(this.reactiveForm);
+    }
+
+    onSubmitTemplateBased() {
+        console.log('template-driven form submitted');
+        console.log(this.reactiveForm);
+    }
+
+    constructor(fb: FormBuilder) {
+
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
@@ -65,6 +88,13 @@ export class ComboSampleComponent implements OnInit {
                 this.initData = this.items;
             });
         }
+
+        this.reactiveForm = fb.group({
+            'firstName': new FormControl('', Validators.required),
+            'password': ['', Validators.required],
+            'townCombo': [{value: [this.items[0]], disabled: true}, Validators.required]
+        });
+
     }
 
     changeData(type) {
