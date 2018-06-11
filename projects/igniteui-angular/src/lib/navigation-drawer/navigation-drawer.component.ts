@@ -353,7 +353,7 @@ export class IgxNavigationDrawerComponent implements
      * Gets the Drawer width for specific state.
      * Will attempt to evaluate requested state and cache.
      *
-     * 
+     *
      * @hidden
      */
     public get expectedWidth() {
