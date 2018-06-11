@@ -38,7 +38,7 @@ enum Direction {
  * Example:
  * ```html
  * <igx-drop-down>
- *   <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+ *   <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
  *     {{ item.value }}
  *   </igx-drop-down-item>
  * </igx-drop-down>
@@ -290,7 +290,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         }
 
         const newSelection = this.items.find((item) => item.index === index);
-        if (newSelection.isDisabled) {
+        if (newSelection.disabled) {
             return;
         }
 
@@ -469,7 +469,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     private getNearestSiblingFocusableItemIndex(startIndex: number, direction: Direction): number {
         let index = startIndex;
-        while (this.items[index + direction] && this.items[index + direction].isDisabled) {
+        while (this.items[index + direction] && this.items[index + direction].disabled) {
             index += direction;
         }
 
