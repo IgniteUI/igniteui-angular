@@ -71,7 +71,7 @@ const appRoutes = [
         component: CarouselSampleComponent
     },
     {
-        path: 'chips',
+        path: 'chip',
         component: ChipsSampleComponent
     },
     {
@@ -204,7 +204,7 @@ const appRoutes = [
         component: ButtonGroupSampleComponent
     },
     {
-        path: "gridGroupBy",
+        path: 'gridGroupBy',
         component: GridGroupBySampleComponent
     }
 ];

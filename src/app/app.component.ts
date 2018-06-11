@@ -176,7 +176,7 @@ export class AppComponent implements OnInit {
             name: 'Toast'
         },
         {
-            link: '/chips',
+            link: '/chip',
             icon: 'android',
             name: 'Chips'
         }

@@ -19,7 +19,7 @@ describe('IgxGrid - GroupBy', () => {
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
-    const DISABLED_CHIP = 'igx-chips-area__item--disabled';
+    const DISABLED_CHIP = 'igx-chip-area__item--disabled';
     const CHIP = 'igx-chip';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
@@ -1268,8 +1268,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     });
 
-    // GroupBy chips
-    it('should apply the chips correctly when there are grouping expressions applied and reordered', () => {
+    // GroupBy chip
+    it('should apply the chip correctly when there are grouping expressions applied and reordered', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
@@ -1310,7 +1310,7 @@ describe('IgxGrid - GroupBy', () => {
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     });
 
-    it('should apply the chips correctly when there is grouping at runtime', () => {
+    it('should apply the chip correctly when there is grouping at runtime', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -1369,7 +1369,7 @@ describe('IgxGrid - GroupBy', () => {
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     });
 
-    it('should reorder groups when reordering chips', () => {
+    it('should reorder groups when reordering chip', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -1448,8 +1448,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(chips[1].className).not.toEqual(DISABLED_CHIP);
 
         // check no remove button on disabled chip
-        expect(chips[0].querySelectorAll('.igx-chips-area__remove-icon').length).toEqual(0);
-        expect(chips[1].querySelectorAll('.igx-chips-area__remove-icon').length).toEqual(1);
+        expect(chips[0].querySelectorAll('.igx-chip-area__remove-icon').length).toEqual(0);
+        expect(chips[1].querySelectorAll('.igx-chip-area__remove-icon').length).toEqual(1);
 
         // check click does not allow changing sort dir
         chips[0].dispatchEvent(new PointerEvent('pointerup', {}));
