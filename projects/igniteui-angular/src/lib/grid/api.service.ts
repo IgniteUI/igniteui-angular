@@ -170,17 +170,11 @@ export class IgxGridAPIService {
             this.get(id).groupingExpressions = groupingState;
             this.get(id).sortingExpressions = sortingState;
 
-            const group = grpExpandState.filter((val) => {
-                return val.hierarchy && val.hierarchy.findIndex(e => e.fieldName === name) !== 0;
-            })[0];
-
-            const groupLevel = (group && group.hierarchy) ? group.hierarchy.findIndex(e => e.fieldName === name) : 0;
-
             /* remove expansion states related to the cleared group
             and all with deeper hierarchy than the cleared group */
             this.get(id).groupingExpansionState = grpExpandState
                 .filter((val) => {
-                    return val.hierarchy && val.hierarchy.length <= groupLevel;
+                    return val.hierarchy && val.hierarchy.length <= grExprIndex;
                 });
         } else {
             // clear all

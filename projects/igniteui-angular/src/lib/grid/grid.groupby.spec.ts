@@ -1471,7 +1471,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false},]);
+            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
         fix.detectChanges();
 
         const groupRows = grid.groupedRowList.toArray();
@@ -1480,7 +1480,7 @@ describe('IgxGrid - GroupBy', () => {
         expect( groupRows[0].expanded).toEqual(true);
         expect( groupRows[1].expanded).toEqual(false);
 
-        grid.clearGrouping("ProductName");
+        grid.clearGrouping('ProductName');
         fix.detectChanges();
 
         grid.groupBy([{fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
@@ -1498,7 +1498,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false},]);
+            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
         fix.detectChanges();
 
         expect( groupRows[0].expanded).toEqual(true);
@@ -1529,24 +1529,82 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false},]);
+            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
         fix.detectChanges();
 
-        const groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupedRowList.toArray();
         groupRows[1].toggle();
         fix.detectChanges();
         expect( groupRows[0].expanded).toEqual(true);
         expect( groupRows[1].expanded).toEqual(false);
 
-        grid.clearGrouping("Released");
+        grid.clearGrouping('Released');
         fix.detectChanges();
 
         grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false}]);
         fix.detectChanges();
 
         // reorder chips by simulating events
+        const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        simulatePointerEvent('pointerdown', chips[0], 0, 0);
+        simulatePointerEvent('pointermove', chips[0], 200, 0);
+        simulatePointerEvent('pointerup', chips[0], 0, 0);
+        fix.detectChanges();
 
+        groupRows = grid.groupedRowList.toArray();
+        expect( groupRows[0].expanded).toEqual(true);
+        expect( groupRows[1].expanded).toEqual(true);
+    });
 
+    it('should remove expansion state when reordering chips', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.data = [
+           {
+                Downloads: 0,
+                ID: 1,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: false
+            },
+            {
+                Downloads: 0,
+                ID: 2,
+                ProductName: 'JavaScript',
+                ReleaseDate: new Date(),
+                Released: true
+            }
+        ];
+        fix.detectChanges();
+
+        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
+            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
+        fix.detectChanges();
+
+        let groupRows = grid.groupedRowList.toArray();
+        groupRows[1].toggle();
+        fix.detectChanges();
+        expect( groupRows[0].expanded).toEqual(true);
+        expect( groupRows[1].expanded).toEqual(false);
+
+        groupRows = grid.groupedRowList.toArray();
+        // reorder chips by simulating events
+        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        simulatePointerEvent('pointerdown', chips[0], 0, 0);
+        simulatePointerEvent('pointermove', chips[0], 200, 0);
+        simulatePointerEvent('pointerup', chips[0], 0, 0);
+        fix.detectChanges();
+        expect( groupRows[0].expanded).toEqual(true);
+        expect( groupRows[1].expanded).toEqual(true);
+
+        // reorder chips again to revert them in original state
+        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        simulatePointerEvent('pointerdown', chips[0], 0, 0);
+        simulatePointerEvent('pointermove', chips[0], 200, 0);
+        simulatePointerEvent('pointerup', chips[0], 0, 0);
+        fix.detectChanges();
+
+        groupRows = grid.groupedRowList.toArray();
         expect( groupRows[0].expanded).toEqual(true);
         expect( groupRows[1].expanded).toEqual(true);
     });

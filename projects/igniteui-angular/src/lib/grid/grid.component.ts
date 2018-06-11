@@ -1814,6 +1814,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             })[0];
             newGrouping.push(expr);
         }
+        this.groupingExpansionState = [];
         this.chipsGoupingExpressions = newGrouping;
         event.isValid = true;
     }
