@@ -1,0 +1,21 @@
+{
+    "$schema": "../../common/schema/output.schema.json",
+    "changes": [
+        {
+            "name": "onOpen",
+            "replaceWith": "onOpened",
+            "owner": {
+                "selector": "igxToggle",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onClose",
+            "replaceWith": "onClosed",
+            "owner": {
+                "selector": "igxToggle",
+                "type": "directive"
+            }
+        }
+    ]
+}

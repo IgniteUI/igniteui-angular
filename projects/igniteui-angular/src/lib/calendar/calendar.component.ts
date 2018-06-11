@@ -553,11 +553,12 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         this.onSelection.emit(this.selectedDates);
     }
 
-    public animationDone() {
+    public animationDone(event, isLast: boolean) {
         const date = this.dates.find((d) => d.selected);
 
-        if (date) {
-            date.nativeElement.focus();
+        if (date && isLast) {
+            setTimeout(() => date.nativeElement.focus(),
+                parseInt(slideInRight.options.params.duration, 10));
         }
     }
 
