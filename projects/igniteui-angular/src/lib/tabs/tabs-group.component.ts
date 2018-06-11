@@ -23,10 +23,13 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
 })
 
 export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
+<<<<<<< HEAD
     private _itemStyle = 'igx-tabs-group';
     /**
      * @hidden
      */
+=======
+>>>>>>> origin/master
     public isSelected = false;
 
     /**
