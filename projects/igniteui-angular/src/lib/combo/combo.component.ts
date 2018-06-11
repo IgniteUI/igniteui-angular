@@ -69,21 +69,44 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this.allowItemsFocus = false;
     }
 
+    /**
+     * @hidden
+     */
     protected get scrollContainer() {
         return this.verticalScrollContainer.dc.location.nativeElement;
     }
 
-    /*
+    /**
      *  Event emitter overrides
+     *
+     * @hidden
      */
     public onOpened = this.parentElement.onOpened;
+
+    /**
+     * @hidden
+     */
     public onOpening = this.parentElement.onOpening;
+
+    /**
+     * @hidden
+     */
     public onClosing = this.parentElement.onClosing;
+
+    /**
+     * @hidden
+     */
     public onClosed = this.parentElement.onClosed;
 
+    /**
+     * @hidden
+     */
     @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
     public verticalScrollContainer: IgxForOfDirective<any>;
 
+    /**
+     * @hidden
+     */
     protected get children(): QueryList<IgxDropDownItemBase> {
         return this.parentElement.children;
     }
@@ -92,6 +115,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this._children = val;
     }
 
+    /**
+     * @hidden
+     */
     onFocus() {
         this._isFocused = true;
         this._focusedItem = this._focusedItem ? this._focusedItem : this.items.length ? this.items[0] : this.children.first;
@@ -100,6 +126,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
     }
 
+    /**
+     * @hidden
+     */
     onBlur(evt?) {
         this._isFocused = false;
         if (this._focusedItem) {
@@ -108,10 +137,16 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
     }
 
+    /**
+     * @hidden
+     */
     public get selectedItem(): any[] {
         return this.selectionAPI.get_selection(this.parentElement.id) || [];
     }
 
+    /**
+     * @hidden
+     */
     navigatePrev() {
         if (this._focusedItem.index === 0 && this.verticalScrollContainer.state.startIndex === 0) {
             this.parentElement.searchInput.nativeElement.focus();
@@ -140,6 +175,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this.parentElement.setSelectedItem(itemID, select);
     }
 
+    /**
+     * @hidden
+     */
     selectItem(item: IgxComboItemComponent) {
         if (item.itemData === 'ADD ITEM') {
             this.parentElement.addItemToCollection();
@@ -252,12 +290,18 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this.onOpening.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleOpened() {
         this.parentElement.triggerCheck();
         this.parentElement.searchInput.nativeElement.focus();
         this.onOpened.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleClosed() {
         this.parentElement.comboInput.nativeElement.focus();
         this.onClosed.emit();
@@ -270,17 +314,39 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
 })
 export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, OnInit {
     public id = '';
+    /**
+     * @hidden
+     */
     public customValueFlag = true;
+    /**
+     * @hidden
+     */
     protected stringFilters = IgxStringFilteringOperand;
+    /**
+     * @hidden
+     */
     protected boolenFilters = IgxBooleanFilteringOperand;
+    /**
+     * @hidden
+     */
     protected _filteringLogic = FilteringLogic.Or;
+    /**
+     * @hidden
+     */
     protected _filteringExpressions = [];
+    /**
+     * @hidden
+     */
     protected _sortingExpressions = [];
-    protected _isDisabled = false;
+    /**
+     * @hidden
+     */
     protected _groupKey: string | number = '';
+    /**
+     * @hidden
+     */
     protected _textKey: string | number = '';
     private _dataType = '';
-    // private _data: any[] = [];
     private _filteredData = [];
     private _children: QueryList<IgxDropDownItemBase>;
     private _dropdownContainer: ElementRef = null;
@@ -296,195 +362,392 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService) {
     }
-    @ViewChild(IgxInputGroupComponent, {read: IgxInputGroupComponent})
-    public comboInputGroup: IgxInputGroupComponent;
-
+    /**
+     * @hidden
+     */
     @ViewChild(IgxComboDropDownComponent, { read: IgxComboDropDownComponent })
     public dropdown: IgxComboDropDownComponent;
 
+    /**
+     * @hidden
+     */
     @ViewChild('selectAllCheckbox', { read: IgxCheckboxComponent })
     public selectAllCheckbox: IgxCheckboxComponent;
 
+    /**
+     * @hidden
+     */
     get searchInput() {
         return this._searchInput;
     }
 
+    /**
+     * @hidden
+     */
     @ViewChild('searchInput')
     set searchInput(content: ElementRef<HTMLInputElement>) {
         this._searchInput = content;
     }
 
+    /**
+     * @hidden
+     */
     get comboInput() {
         return this._comboInput;
     }
 
+    /**
+     * @hidden
+     */
     @ViewChild('comboInput')
     set comboInput(content: ElementRef) {
         this._comboInput = content;
     }
 
+    /**
+     * @hidden
+     */
     @ViewChild('primitive', { read: TemplateRef })
     protected primitiveTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden
+     */
     @ViewChild('complex', { read: TemplateRef })
     protected complexTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden
+     */
     @ViewChild('empty', { read: TemplateRef })
     protected emptyTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden
+     */
     @ContentChild('dropdownHeader', { read: TemplateRef })
     public dropdownHeader: TemplateRef<any>;
 
+    /**
+     * @hidden
+     */
     @ContentChild('dropdownFooter', { read: TemplateRef })
     public dropdownFooter: TemplateRef<any>;
 
+    /**
+     * @hidden
+     */
     @ContentChild('dropdownItemTemplate', { read: TemplateRef })
     public dropdownItemTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden
+     */
     @ContentChild('addItemTemplate', { read: TemplateRef })
     public addItemTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden
+     */
     @ContentChild('headerItemTemplate', { read: TemplateRef })
     public headerItemTemplate: TemplateRef<any>;
 
-    public get children(): QueryList<IgxDropDownItemBase> {
-        return this._children;
-    }
-
+    /**
+     * @hidden
+     */
     @ViewChild('dropdownItemContainer')
     protected set dropdownContainer(val: ElementRef) {
         this._dropdownContainer = val;
     }
 
+    /**
+     * @hidden
+     */
     protected get dropdownContainer(): ElementRef {
         return this._dropdownContainer;
     }
+
+    /**
+     * @hidden
+     */
     @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
     public set children(list: QueryList<IgxDropDownItemBase>) {
         this._children = list;
     }
 
     /**
+     * @hidden
+     */
+    public get children(): QueryList<IgxDropDownItemBase> {
+        return this._children;
+    }
+
+    /**
      * Emitted when item selection is changing, before the selection completes
+     *
+     * ```html
+     * <igx-combo (onSelection)='handleSelection()'></igx-combo>
+     * ```
      */
     @Output()
     public onSelection = new EventEmitter<IComboSelectionChangeEventArgs>();
 
     /**
      * Emitted before the dropdown is opened
+     *
+     * ```html
+     * <igx-combo onOpening='handleOpening()'></igx-combo>
+     * ```
      */
     @Output()
     public onOpening = new EventEmitter();
 
     /**
      * Emitted after the dropdown is opened
+     *
+     * ```html
+     * <igx-combo (onOpened)='handleOpened()'></igx-combo>
+     * ```
      */
     @Output()
     public onOpened = new EventEmitter();
 
     /**
      * Emitted before the dropdown is closed
+     *
+     * ```html
+     * <igx-combo (onClosing)='handleClosing()'></igx-combo>
+     * ```
      */
     @Output()
     public onClosing = new EventEmitter();
 
     /**
      * Emitted after the dropdown is closed
+     *
+     * ```html
+     * <igx-combo (onClosed)='handleClosed()'></igx-combo>
+     * ```
      */
     @Output()
     public onClosed = new EventEmitter();
 
     /**
      * Emitted when an item is being added to the data collection
+     *
+     * ```html
+     * <igx-combo (onAddition)='handleAdditionEvent()'></igx-combo>
+     * ```
      */
     @Output()
     public onAddition = new EventEmitter();
 
     /**
      * Emitted when an the search input's input event is triggered
+     *
+     * ```html
+     * <igx-combo (onSearchInput)='handleSearchInputEvent()'></igx-combo>
+     * ```
      */
     @Output()
     public onSearchInput = new EventEmitter();
 
     /**
      * Sets the style width of the element
+     *
+     * ```typescript
+     * // get
+     * let myComboWidth = this.combo.width;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [width]='250px'></igx-combo>
+     * ```
      */
     @HostBinding('style.width')
     @Input()
     public width = '250px';
 
+    /**
+     * Sets the style height of the element
+     *
+     * ```typescript
+     * // get
+     * let myComboHeight = this.combo.height;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [height]='400px'></igx-combo>
+     * ```
+     */
     @Input()
     public height = '400px';
 
     /**
      * Controls whether custom values can be added to the collection
+     *
+     * ```typescript
+     * // get
+     * let comboAllowsCustomValues = this.combo.allowCustomValues;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [allowCustomValues]='true'></igx-combo>
+     * ```
      */
     @Input()
     public allowCustomValues = false;
 
     /**
      * Configures the drop down list height
+     *
+     * ```typescript
+     * // get
+     * let myComboDropDownHeight = this.combo.dropDownHeight;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [dropDownHeight]='320'></igx-combo>
+     * ```
     */
     @Input()
     public dropDownHeight = 320;
 
     /**
      * Configures the drop down list item height
+     *
+     * ```typescript
+     * // get
+     * let myComboDropDownWidth = this.combo.dropDownWidth;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [dropDownWidth] = '80'></igx-combo>
+     * ```
      */
     @Input()
     public dropDownWidth = this.width;
 
     /**
      * Gets/sets a property by which the items from the collection should be grouped
+     *
+     * ```typescript
+     * // get
+     * let myComboDropDownItemHeight = this.combo.dropDownItemHeight;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [dropDownItemHeight]='32'></igx-combo>
+     * ```
      */
     @Input()
     public dropDownItemHeight = 32;
 
+    /**
+     * Combo item group
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [groupKey]='newGroupKey'></igx-combo>
+     * ```
+     */
     @Input()
     public set groupKey(val: string | number) {
         this.clearSorting(this._groupKey);
         this._groupKey = val;
         this.sort(this._groupKey);
     }
-
+    /**
+     * Combo item group
+     *
+     * ```typescript
+     * // get
+     * let currentGroupKey = this.combo.groupKey;
+     * ```
+     */
     public get groupKey(): string | number {
         return this._groupKey;
     }
 
     /**
      * Defines the placeholder value for the combo value field
+     *
+     * ```typescript
+     * // get
+     * let myComboPlaceholder = this.combo.placeholder;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [placeholder]='newPlaceHolder'></igx-combo>
+     * ```
      */
     @Input()
     public placeholder = '';
 
+    /**
+     * @hidden
+     */
     @Input()
     public defaultFallbackGroup = 'Other';
 
+    /**
+     * Combo value data source propery.
+     *
+     * ```typescript
+     * // get
+     * let myComboValueKey = this.combo.valueKey;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [valueKey]='myKey'></igx-combo>
+     * ```
+     */
     @Input()
     public valueKey: string | number = '';
 
+    /**
+     * Combo data source.
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [data]='items'></igx-combo>
+     * ```
+     */
     @Input()
     public data = [];
-    // public set data(val: any[]) {
-    //     this._data = val || [];
-    // }
 
-    // public get data(): any[] {
-    //     return this._data;
-    // }
-
+    /**
+     * @hidden
+     */
     @Input()
     public filteringLogic = FilteringLogic.Or;
 
+    /**
+     * @hidden
+     */
     @Input()
     set textKey(val: string | number) {
         this._textKey = val;
     }
 
+    /**
+     * @hidden
+     */
     get textKey() {
         return this._textKey ? this._textKey : this.valueKey;
     }
 
+    /**
+     * @hidden
+     */
     @Input()
     public filterable = true;
 
@@ -504,6 +767,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.ArrowUp', ['$event'])
     @HostListener('keydown.Alt.ArrowUp', ['$event'])
     onArrowUp(evt) {
@@ -514,34 +780,55 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     onInputClick(evt) {
         evt.stopPropagation();
         evt.preventDefault();
         this.dropdown.toggle();
     }
 
+    /**
+     * @hidden
+     */
     public get values(): any[] {
         return this.valueKey !== undefined ? this.selectedItems().map((e) => e[this.valueKey]) : [];
     }
 
+    /**
+     * @hidden
+     */
     public get filteringExpressions() {
         return this._filteringExpressions;
     }
 
+    /**
+     * @hidden
+     */
     public set filteringExpressions(value) {
         this._filteringExpressions = cloneArray(value);
         this.cdr.markForCheck();
     }
 
+    /**
+     * @hidden
+     */
     public get sortingExpressions() {
         return this._sortingExpressions;
     }
 
+    /**
+     * @hidden
+     */
     public set sortingExpressions(value) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
     }
 
+    /**
+     * @hidden
+     */
     protected clearSorting(field?: string | number) {
         if (field === undefined || field === null) {
             this.sortingExpressions = [];
@@ -555,31 +842,61 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * Combo value
+     *
+     * ```typescript
+     * // get
+     * let comboValue = this.combo.value;
+     * ```
+     */
     get value(): string {
         return this._value;
     }
-
+    /**
+     * Combo value
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [value]='newValue'></igx-combo>
+     * ```
+     */
     set value(val) {
         this._value = val;
     }
 
+    /**
+     * @hidden
+     */
     get searchValue() {
         return this._searchValue;
     }
 
+    /**
+     * @hidden
+     */
     set searchValue(val: string) {
         this._searchValue = val;
     }
 
+    /**
+     * @hidden
+     */
     public get filteredData(): any[] {
         return this._filteredData;
     }
 
+    /**
+     * @hidden
+     */
     public set filteredData(val: any[]) {
         this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
         this.checkMatch();
     }
 
+    /**
+     * @hidden
+     */
     public handleKeyDown(evt) {
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
             this.dropdownContainer.nativeElement.focus();
@@ -599,6 +916,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
                 .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
     }
 
+    /**
+     * @hidden
+     */
     public handleInputChange(event?) {
         if (this.filterable) {
             this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
@@ -610,6 +930,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public sort(fieldName: string | number, dir: SortingDirection = SortingDirection.Asc, ignoreCase: boolean = true): void {
         if (!fieldName && fieldName !== 0) {
             return;
@@ -620,6 +943,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.sortingExpressions = sortingState;
     }
 
+    /**
+     * @hidden
+     */
     public getItemDataByValueKey(val: any): any {
         if (!val && val !== 0) {
             return undefined;
@@ -629,6 +955,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             this.data.filter((e) => e === val);
     }
 
+    /**
+     * @hidden
+     */
     protected prepare_sorting_expression(state, fieldName, dir, ignoreCase) {
 
         if (dir === SortingDirection.None) {
@@ -645,6 +974,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public get dataType(): string {
         if (this.valueKey) {
             return DataTypes.COMPLEX;
@@ -662,6 +994,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.triggerSelectionChange(newSelection);
     }
 
+    /**
+     * @hidden
+     */
     public setSelectedItem(itemID: any, select = true) {
         if (itemID === undefined || itemID === null) {
             return;
@@ -684,6 +1019,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public isItemSelected(item) {
         return this.selectionAPI.is_item_selected(this.id, item);
     }
@@ -730,6 +1068,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     //     this.selectAllCheckbox.checked = false;
     // }
 
+    /**
+     * @hidden
+     */
     protected triggerSelectionChange(newSelection) {
         const oldSelection = this.dropdown.selectedItem;
         if (oldSelection !== newSelection) {
@@ -744,6 +1085,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public triggerCheck() {
         this.cdr.detectChanges();
     }
@@ -752,6 +1096,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return this.searchValue && this.customValueFlag;
     }
 
+    /**
+     * @hidden
+     */
     public handleSelectAll(evt) {
         if (evt.checked) {
             this.selectAllItems();
@@ -760,6 +1107,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public addItemToCollection() {
         if (!this.searchValue) {
             return false;
@@ -785,6 +1135,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.handleInputChange();
     }
 
+    /**
+     * @hidden
+     */
     protected prepare_filtering_expression(searchVal, condition, ignoreCase, fieldName?) {
         const newArray = [...this.filteringExpressions];
         const expression = newArray.find((expr) => expr.fieldName === fieldName);
@@ -809,6 +1162,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.filteringExpressions = newArray;
     }
 
+    /**
+     * @hidden
+     */
     public filter(term, condition, ignoreCase, valueKey?) {
         this.prepare_filtering_expression(term, condition, ignoreCase, valueKey);
     }
@@ -822,16 +1178,28 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.filteredData = [...this.data];
     }
 
+    /**
+     * @hidden
+     */
     public writeValue(value: any): void {
         this.selectItems(value);
     }
 
+    /**
+     * @hidden
+     */
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
     }
 
+    /**
+     * @hidden
+     */
     public registerOnTouched(fn: any): void { }
 
+    /**
+     * @hidden
+     */
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = true;
     }
@@ -850,34 +1218,55 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return this.primitiveTemplate;
     }
 
+    /**
+     * @hidden
+     */
     public get context(): any {
         return {
             $implicit: this
         };
     }
 
+    /**
+     * @hidden
+     */
     public toggle() {
         this.searchValue = '';
         this.dropdown.toggle();
     }
 
+    /**
+     * @hidden
+     */
     public open() {
         this.searchValue = '';
         this.dropdown.open();
     }
 
+    /**
+     * @hidden
+     */
     public close() {
         this.dropdown.close();
     }
 
+    /**
+     * @hidden
+     */
     public get collapsed() {
         return this.dropdown.collapsed;
     }
 
+    /**
+     * @hidden
+     */
     public selectedItems() {
         return this.dropdown.selectedItem;
     }
 
+    /**
+     * @hidden
+     */
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
             const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
@@ -885,6 +1274,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public deselectItems(newItems: Array<any>) {
         if (newItems) {
             const newSelection = this.selectionAPI.deselect_items(this.id, newItems);
@@ -892,12 +1284,18 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public selectAllItems(ignoreFilter?: boolean) {
         const allVisible = this.selectionAPI.get_all_ids(ignoreFilter ? this.data : this.filteredData);
         const newSelection = this.selectionAPI.select_items(this.id, allVisible);
         this.triggerSelectionChange(newSelection);
     }
 
+    /**
+     * @hidden
+     */
     public deselectAllItems(ignoreFilter?: boolean) {
         const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
             [] :
