@@ -1,5 +1,5 @@
-import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
@@ -10,7 +10,6 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
-import { IgxChipComponent } from '../chips';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -19,7 +18,7 @@ describe('IgxGrid - GroupBy', () => {
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
-    const DISABLED_CHIP = 'igx-chip-area__item--disabled';
+    const DISABLED_CHIP = 'igx-chips-area__item--disabled';
     const CHIP = 'igx-chip';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
