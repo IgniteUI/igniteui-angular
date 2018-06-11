@@ -78,7 +78,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
 
     /**
      * Event emitter overrides
-     * 
+     *
      * @hidden
      */
     public onOpened = this.parentElement.onOpened;
@@ -512,7 +512,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     /**
      * Emitted before the dropdown is closed
-     * 
+     *
      * ```html
      * <igx-combo (onClosing)='handleClosing()'></igx-combo>
      * ```
@@ -557,11 +557,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * // get
      * let myComboWidth = this.combo.width;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-combo [width]='250px'></igx-combo>
-     * ``` 
+     * ```
      */
     @HostBinding('style.width')
     @Input()
@@ -569,7 +569,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     /**
      * Sets the style height of the element
-     * 
+     *
      * ```typescript
      * // get
      * let myComboHeight = this.combo.height;
@@ -584,13 +584,13 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public height = '400px';
 
     /**
-     * Controls whether custom values can be added to the collection 
+     * Controls whether custom values can be added to the collection
      *
      * ```typescript
      * // get
      * let comboAllowsCustomValues = this.combo.allowCustomValues;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-combo [allowCustomValues]='true'></igx-combo>
@@ -601,7 +601,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     /**
      * Configures the drop down list height
-     * 
+     *
      * ```typescript
      * // get
      * let myComboDropDownHeight = this.combo.dropDownHeight;
@@ -622,7 +622,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * // get
      * let myComboDropDownWidth = this.combo.dropDownWidth;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-combo [dropDownWidth] = '80'></igx-combo>
@@ -638,7 +638,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * // get
      * let myComboDropDownItemHeight = this.combo.dropDownItemHeight;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-combo [dropDownItemHeight]='32'></igx-combo>
@@ -663,11 +663,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
     /**
      * Combo item group
-     * 
+     *
      * ```typescript
      * // get
      * let currentGroupKey = this.combo.groupKey;
-     * ``` 
+     * ```
      */
     public get groupKey(): string | number {
         return this._groupKey;
@@ -680,7 +680,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * // get
      * let myComboPlaceholder = this.combo.placeholder;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-combo [placeholder]='newPlaceHolder'></igx-combo>
@@ -697,12 +697,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     /**
      * Combo value data source propery.
-     * 
+     *
      * ```typescript
      * // get
      * let myComboValueKey = this.combo.valueKey;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-combo [valueKey]='myKey'></igx-combo>
@@ -713,7 +713,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     /**
      * Combo data source.
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-combo [data]='items'></igx-combo>
@@ -849,7 +849,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     /**
      * Combo value
-     * 
+     *
      * ```typescript
      * // get
      * let comboValue = this.combo.value;
@@ -860,7 +860,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
     /**
      * Combo value
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-combo [value]='newValue'></igx-combo>
@@ -1023,7 +1023,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             }
         }
     }
-    
+
     /**
      * @hidden
      */
