@@ -60,12 +60,6 @@ export class ComboSampleComponent implements OnInit {
 
     constructor(fb: FormBuilder) {
 
-        this.reactiveForm = fb.group({
-            'firstName': new FormControl('', Validators.required),
-            'password': ['', Validators.required],
-            'townCombo': ['', Validators.required]
-        });
-
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
@@ -94,6 +88,13 @@ export class ComboSampleComponent implements OnInit {
                 this.initData = this.items;
             });
         }
+
+        this.reactiveForm = fb.group({
+            'firstName': new FormControl('', Validators.required),
+            'password': ['', Validators.required],
+            'townCombo': [{value: [this.items[0]], disabled: true}, Validators.required]
+        });
+
     }
 
     changeData(type) {

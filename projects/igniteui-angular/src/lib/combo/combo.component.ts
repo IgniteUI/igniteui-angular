@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild,
     ContentChildren, ElementRef, EventEmitter, forwardRef,
-    HostBinding, HostListener, Inject, Input, NgModule, Output, QueryList, TemplateRef, ViewChild, ViewChildren
+    HostBinding, HostListener, Inject, Input, NgModule, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { take } from 'rxjs/operators';
@@ -184,6 +184,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         let state = vContainer.state;
         const isScrollUp = direction === Navigate.Up;
         let newScrollStartIndex = isScrollUp ? state.startIndex - 1 : state.startIndex + 1;
+        if (newScrollStartIndex < 0) {
+            newScrollStartIndex = 0;
+        }
         let data = vContainer.igxForOf;
 
         if (data.length === 0) {
@@ -193,7 +196,6 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
             this._focusedItem = newItem;
             return;
         }
-
         // Following the big comment above, when the new item is group header, then we need to load 2 elements at once.
         if (data[newScrollStartIndex].isHeader && direction === Navigate.Up ||
             data[newScrollStartIndex + state.chunkSize - 2].isHeader && direction === Navigate.Down) {
@@ -267,7 +269,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     selector: 'igx-combo',
     templateUrl: 'combo.component.html'
 })
-export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
+export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, OnInit {
     public id = '';
     public customValueFlag = true;
     protected stringFilters = IgxStringFilteringOperand;
@@ -282,7 +284,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     private _filteredData = [];
     private _children: QueryList<IgxDropDownItemBase>;
     private _dropdownContainer: ElementRef = null;
-    private _searchInput: ElementRef = null;
+    private _searchInput: ElementRef<HTMLInputElement> = null;
     private _comboInput: ElementRef = null;
     private _onChangeCallback: (_: any) => void = noop;
 
@@ -305,7 +307,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
     }
 
     @ViewChild('searchInput')
-    set searchInput(content: ElementRef) {
+    set searchInput(content: ElementRef<HTMLInputElement>) {
         this._searchInput = content;
     }
 
@@ -415,11 +417,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
      * Controls whether custom values can be added to the collection
      */
     @Input()
-    public allowCustomValues = true;
+    public allowCustomValues = false;
 
     /**
      * Configures the drop down list height
-     */
+    */
     @Input()
     public dropDownHeight = 320;
 
@@ -485,6 +487,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
 
     @Input()
     public ariaLabelledBy: string;
+
+    @Input()
+    public disabled = false;
 
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
@@ -595,7 +600,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         if (this.filterable) {
             this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.textKey);
-            this.isHeaderChecked();
+            // this.isHeaderChecked();
         }
         if (event) {
             this.onSearchInput.emit(event);
@@ -680,47 +685,47 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         return this.selectionAPI.is_item_selected(this.id, item);
     }
 
-    private isHeaderChecked() {
-        if (!this.selectAllCheckbox) {
-            return false;
-        }
-        const selectedItems = this.dropdown.selectedItem;
-        if (this.filteredData.length > 0 && selectedItems.length > 0) {
-            const compareData = this.filteredData;
-            if (selectedItems.length >= this.filteredData.length) {
-                let areAllSelected = true;
-                let indeterminateFlag = false;
-                for (const item of compareData) {
-                    if (areAllSelected && !indeterminateFlag) {
-                        indeterminateFlag = selectedItems.indexOf(item) > -1;
-                    }
-                    if (areAllSelected && indeterminateFlag) {
-                        if (selectedItems.indexOf(item) < 0) {
-                            areAllSelected = false;
-                            this.selectAllCheckbox.indeterminate = indeterminateFlag;
-                            this.selectAllCheckbox.checked = false;
-                            return;
-                        }
-                    }
-                }
-                this.selectAllCheckbox.indeterminate = false;
-                this.selectAllCheckbox.checked = true;
-                return;
-            } else if (selectedItems.length < this.filteredData.length) {
-                for (const item of selectedItems) {
-                    if (compareData.indexOf(item) > -1) {
-                        this.selectAllCheckbox.indeterminate = true;
-                        return;
-                    }
-                }
-                this.selectAllCheckbox.checked = false;
-                this.selectAllCheckbox.indeterminate = false;
-                return;
-            }
-        }
-        this.selectAllCheckbox.indeterminate = false;
-        this.selectAllCheckbox.checked = false;
-    }
+    // private isHeaderChecked() {
+    //     if (!this.selectAllCheckbox) {
+    //         return false;
+    //     }
+    //     const selectedItems = this.dropdown.selectedItem;
+    //     if (this.filteredData.length > 0 && selectedItems.length > 0) {
+    //         const compareData = this.filteredData;
+    //         if (selectedItems.length >= this.filteredData.length) {
+    //             let areAllSelected = true;
+    //             let indeterminateFlag = false;
+    //             for (const item of compareData) {
+    //                 if (areAllSelected && !indeterminateFlag) {
+    //                     indeterminateFlag = selectedItems.indexOf(item) > -1;
+    //                 }
+    //                 if (areAllSelected && indeterminateFlag) {
+    //                     if (selectedItems.indexOf(item) < 0) {
+    //                         areAllSelected = false;
+    //                         this.selectAllCheckbox.indeterminate = indeterminateFlag;
+    //                         this.selectAllCheckbox.checked = false;
+    //                         return;
+    //                     }
+    //                 }
+    //             }
+    //             this.selectAllCheckbox.indeterminate = false;
+    //             this.selectAllCheckbox.checked = true;
+    //             return;
+    //         } else if (selectedItems.length < this.filteredData.length) {
+    //             for (const item of selectedItems) {
+    //                 if (compareData.indexOf(item) > -1) {
+    //                     this.selectAllCheckbox.indeterminate = true;
+    //                     return;
+    //                 }
+    //             }
+    //             this.selectAllCheckbox.checked = false;
+    //             this.selectAllCheckbox.indeterminate = false;
+    //             return;
+    //         }
+    //     }
+    //     this.selectAllCheckbox.indeterminate = false;
+    //     this.selectAllCheckbox.checked = false;
+    // }
 
     protected triggerSelectionChange(newSelection) {
         const oldSelection = this.dropdown.selectedItem;
@@ -731,7 +736,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
             this.value = this._dataType !== DataTypes.PRIMITIVE ?
                 newSelection.map((e) => e[this.textKey]).join(', ') :
                 newSelection.join(', ');
-            this.isHeaderChecked();
+            // this.isHeaderChecked();
             this._onChangeCallback(newSelection);
         }
     }
@@ -801,10 +806,16 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor {
         this.prepare_filtering_expression(term, condition, ignoreCase, valueKey);
     }
 
-    public ngAfterViewInit() {
-        this.selectionAPI.set_selection(this.id, []);
-        this.filteredData = [...this.data];
+    public ngOnInit() {
         this.id += currentItem++;
+        this.selectionAPI.set_selection(this.id, []);
+    }
+
+    public ngAfterViewInit() {
+        this.filteredData = [...this.data];
+        if (this.disabled) {
+            this.setDisabledState(true);
+        }
     }
 
     public writeValue(value: any): void {

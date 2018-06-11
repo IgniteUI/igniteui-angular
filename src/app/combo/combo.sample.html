@@ -28,6 +28,7 @@
                 <igx-combo class="input-container" placeholder="Location(s)"
                            (onAddition)="handleAddition($event)"
                            [data]="items"
+                           [allowCustomValues]="true"
                            [filterable]="true" [textKey]="'field'" [valueKey]="'field'"
                            [groupKey]="'region'" [width]="'100%'">
                     <ng-template #dropdownItemTemplate let-display let-key="valueKey">
@@ -80,7 +81,7 @@
             <p>
                 <igx-combo #comboReactive formControlName="townCombo"
                     class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
-                    [data]="items" [textKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
+                    [data]="items" [textKey]="'field'" [valueKey]="'field'" [groupKey]="'region'" [disabled]="true"></igx-combo>
             </p>
             <p>
                 <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
