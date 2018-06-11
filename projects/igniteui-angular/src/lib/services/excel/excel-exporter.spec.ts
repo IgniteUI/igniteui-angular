@@ -7,6 +7,7 @@ import { ExcelStrings } from './excel-strings';
 import { JSZipFiles } from './jszip-helper';
 import { IFileContent, JSZipWrapper, ObjectComparer  } from './jszip-verification-wrapper.spec';
 import { ExportTestDataService, FileContentData, ValueData } from './test-data.service.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('Excel Exporter', () => {
     let sourceData: ExportTestDataService;
@@ -34,7 +35,8 @@ describe('Excel Exporter', () => {
     });
 
     it('should export empty objects successfully.', (done) => {
-        getExportedData(sourceData.emptyObjectData, options).then((wrapper) => {
+        getExportedData(SampleTestData.emptyObjectData, options).then((wrapper) => {
+        // getExportedData(sourceData.emptyObjectData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             done();
@@ -43,7 +45,7 @@ describe('Excel Exporter', () => {
 
     it('should export string data without headers successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(sourceData.noHeadersStringData, options).then((wrapper) => {
+        getExportedData(SampleTestData.stringArray, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
@@ -53,7 +55,7 @@ describe('Excel Exporter', () => {
 
     it('should export date time data without headers successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(sourceData.noHeadersDateTimeData, options).then((wrapper) => {
+        getExportedData(SampleTestData.dateArray, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
@@ -63,7 +65,7 @@ describe('Excel Exporter', () => {
 
     it('should export number data without headers successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(sourceData.noHeadersNumberData, options).then((wrapper) => {
+        getExportedData(SampleTestData.numbersArray, options).then((wrapper) => {
             wrapper.verifyStructure();
             // wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
@@ -72,7 +74,7 @@ describe('Excel Exporter', () => {
     });
 
     it('should export object data without headers successfully.', (done) => {
-        getExportedData(sourceData.noHeadersObjectData, options).then((wrapper) => {
+        getExportedData(SampleTestData.noHeadersObjectArray, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersObjectDataContent);
@@ -82,7 +84,7 @@ describe('Excel Exporter', () => {
 
     it('should export regular data successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(sourceData.contactsData, options).then((wrapper) => {
+        getExportedData(SampleTestData.contactsData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsDataContent);
@@ -92,7 +94,7 @@ describe('Excel Exporter', () => {
 
     it('should export data with missing values successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(sourceData.contactsPartialData, options).then((wrapper) => {
+        getExportedData(SampleTestData.contactsDataPartial, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
@@ -102,7 +104,7 @@ describe('Excel Exporter', () => {
 
     it('should export data with special characters successully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(sourceData.contactsFunkyData, options).then((wrapper) => {
+        getExportedData(SampleTestData.contactsFunkyData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsFunkyDataContent);

@@ -19,6 +19,7 @@ import { JSZipFiles } from './jszip-helper';
 import { JSZipWrapper, ObjectComparer } from './jszip-verification-wrapper.spec';
 import { ExportTestDataService, FileContentData, ValueData } from './test-data.service.spec';
 import { IgxStringFilteringOperand } from '../../../public_api';
+import { ReorderedColumnsComponent } from '../../test-utils/grid-samples.spec';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
@@ -29,9 +30,10 @@ describe('Excel Exporter', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
+                ReorderedColumnsComponent,
                 GridMarkupPagingDeclarationComponent,
                 GridDeclarationComponent,
-                GridReorderedColumnsComponent
+                // GridReorderedColumnsComponent
             ],
             imports: [IgxGridModule.forRoot()],
             providers: [ExportTestDataService]
@@ -270,10 +272,10 @@ describe('Excel Exporter', () => {
         });
     });
 
-    it('should honor columns declaration order.', (done) => {
-        const fix = TestBed.createComponent(GridReorderedColumnsComponent);
+    fit('should honor columns declaration order.', (done) => {
+        const fix = TestBed.createComponent(ReorderedColumnsComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
 
         fix.whenStable().then(() => {
             fix.detectChanges();

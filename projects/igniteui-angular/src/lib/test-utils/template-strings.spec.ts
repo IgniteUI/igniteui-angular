@@ -67,6 +67,12 @@ export class ColumnDefinitions {
         <igx-column field="HireDate" pinned="true"></igx-column>
     `;
 
+    public static nameJobTitleId = `
+        <igx-column field="Name"></igx-column>
+        <igx-column field="JobTitle"></igx-column>
+        <igx-column field="ID"></igx-column>
+    `;
+
     public static nameAgeEditable = `
         <igx-column field="FirstName" [editable]="true"></igx-column>
         <igx-column field="LastName"></igx-column>

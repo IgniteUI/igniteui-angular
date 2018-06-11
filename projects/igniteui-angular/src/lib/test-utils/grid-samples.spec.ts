@@ -572,3 +572,10 @@ export class GridAllFeaturesComponent extends GridWithSizeComponent {
     public columnWidth = 200;
 
 }
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
+        '', ColumnDefinitions.nameJobTitleId)
+})
+export class ReorderedColumnsComponent extends PagingComponent {
+}

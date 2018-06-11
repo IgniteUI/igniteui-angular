@@ -4,6 +4,7 @@ import { Calendar } from '../calendar/calendar';
 import { cloneObject } from '../core/utils';
 import { IDataState } from '../data-operations/data-state.interface';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { ValueData } from '../services/excel/test-data.service.spec';
 
 export class SampleTestData {
 
@@ -36,6 +37,12 @@ export class SampleTestData {
         {},
         {},
         {}
+    ];
+
+    public static noHeadersObjectArray = [
+        new ValueData('1'),
+        new ValueData('2'),
+        new ValueData('3')
     ];
 
     public static oneItemNumberData = [{ index: 1, value: 1 }];
@@ -140,7 +147,7 @@ export class SampleTestData {
     ];
 
     /* Data fields: ID: number, Name: string, JobTitle: string, HireDate: string; 10 items, sorted by ID. */
-    public static personJobData = [
+    public static personJobDataFull = [
         { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
         { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
         { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
@@ -151,6 +158,20 @@ export class SampleTestData {
         { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
         { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
+    ];
+
+    /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
+    public static personJobData = [
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President" },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director" },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director" },
+        { ID: 4, Name: "Jack Simon", JobTitle: "Software Developer" },
+        { ID: 5, Name: "Celia Martinez", JobTitle: "Senior Software Developer" },
+        { ID: 6, Name: "Erma Walsh", JobTitle: "CEO" },
+        { ID: 7, Name: "Debra Morton", JobTitle: "Associate Software Developer" },
+        { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead" },
+        { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer" },
+        { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager" }
     ];
 
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
