@@ -31,8 +31,7 @@ import {
     IgxBottomNavModule,
     IgxTabsModule,
     IgxTimePickerModule,
-    IgxToastModule,
-    IgxOverlayModule
+    IgxToastModule
 } from 'igniteui-angular';
 
 const igniteModules = [
@@ -66,8 +65,7 @@ const igniteModules = [
     IgxBottomNavModule,
     IgxTabsModule,
     IgxTimePickerModule,
-    IgxToastModule,
-    IgxOverlayModule
+    IgxToastModule
 ];
 
 @NgModule({

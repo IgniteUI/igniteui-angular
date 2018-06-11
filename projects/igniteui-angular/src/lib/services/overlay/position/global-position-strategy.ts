@@ -1,14 +1,15 @@
 import { IPositionStrategy } from './IPositionStrategy';
 import { DOCUMENT } from '@angular/common';
-import { PositionSettings } from './utilities';
+import { PositionSettings } from './../utilities';
 
 export class GlobalPositionStrategy implements IPositionStrategy {
-    private _options: PositionSettings;
+    // TODO: rename options to settings
+    public _options: PositionSettings;
     public wrapperClass: string;
 
     constructor(
         options?: PositionSettings
-    ) {
+   ) {
         this._options = options ? options : new PositionSettings();
     }
 
@@ -16,7 +17,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         // Based on Alignment append suffixes to the css class.
         this.wrapperClass = 'global-show';
 
-        switch (this._options.horizontalAlignment) {
+        switch (this._options.horizontalDirection) {
             case -1:
                 this.wrapperClass += '-left';
                 break;
@@ -30,7 +31,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
                 break;
         }
 
-        switch (this._options.verticalAlignment) {
+        switch (this._options.verticalDirection) {
             case -1:
                 this.wrapperClass += '-top';
                 break;
@@ -46,7 +47,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
 
         element.parentElement.classList.add(this.wrapperClass);
 
-        //For test only - Remove the hardcoded css
+        // For test only - Remove the hard coded css
         element.parentElement.style.display = 'flex';
         element.parentElement.style.position = 'fixed';
         element.parentElement.style.alignItems = 'center';

@@ -1,5 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { IgxDropDownComponent, IgxButtonDirective } from 'igniteui-angular';
+import {
+    IgxDropDownComponent,
+    ConnectedPositioningStrategy,
+    PositionSettings,
+    HorizontalAlignment,
+    VerticalAlignment
+} from 'igniteui-angular';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -11,7 +17,7 @@ export class DropDownSampleComponent implements OnInit {
     private width = '160px';
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
 
-    @ViewChild('button') public button;
+    @ViewChild('button') public button: ElementRef;
 
     items: any[] = [];
 
@@ -109,7 +115,15 @@ export class DropDownSampleComponent implements OnInit {
     }
 
     public toggleDropDown() {
-        this.igxDropDown.toggle(this.button.nativeElement);
+        const positionSettings = new PositionSettings();
+        console.dir(this.button);
+        positionSettings.element = this.button.nativeElement;
+        positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
+        positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
+        positionSettings.horizontalDirection = HorizontalAlignment.Right;
+        positionSettings.verticalDirection = VerticalAlignment.Bottom;
+        const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+        this.igxDropDown.toggle(positionStrategy);
     }
 
     onSelection(ev) {

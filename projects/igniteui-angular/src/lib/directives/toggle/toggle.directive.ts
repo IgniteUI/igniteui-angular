@@ -3,7 +3,8 @@ import {
     AnimationBuilder,
     AnimationFactory,
     AnimationPlayer,
-    style} from '@angular/animations';
+    style
+} from '@angular/animations';
 import {
     ChangeDetectorRef,
     Component,
@@ -22,8 +23,10 @@ import {
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy ';
-import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment } from '../../services/overlay/position/utilities';
+import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
+import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
+import { IPositionStrategy } from '../../services/overlay/position/IPositionStrategy';
+import { GlobalPositionStrategy } from '../../services/overlay/position/global-position-strategy';
 
 @Directive({
     exportAs: 'toggle',
@@ -70,23 +73,11 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         @Inject(IgxOverlayService) private overlayService: IgxOverlayService,
         @Optional() private navigationService: IgxNavigationService) { }
 
-    public open(fireEvents?: boolean, element?: HTMLElement) {
+    public open(fireEvents?: boolean, positionStrategy?: IPositionStrategy) {
         if (!this.collapsed) { return; }
-
-        let point = new Point(0, 0);
-        if (element) {
-            const elementRect = element.getBoundingClientRect();
-            point = new Point(elementRect.left, elementRect.bottom);
-        }
-
-        const positionStrategy =
-            new ConnectedPositioningStrategy(
-                new PositionSettings(
-                    point,
-                    HorizontalAlignment.Right,
-                    VerticalAlignment.Bottom));
-
+        positionStrategy = this.getPositionStrategy(positionStrategy);
         const id = this.overlayService.show(this.elementRef, this.id, positionStrategy);
+
         if (!this.id) {
             this.id = id;
         }
@@ -132,8 +123,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         player.play();
     }
 
-    public toggle(fireEvents?: boolean, element?: HTMLElement) {
-        this.collapsed ? this.open(fireEvents, element) : this.close(fireEvents);
+    public toggle(fireEvents?: boolean, positionStrategy?: IPositionStrategy) {
+        this.collapsed ? this.open(fireEvents, positionStrategy) : this.close(fireEvents);
     }
 
     public ngOnInit() {
@@ -170,6 +161,19 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             style({ transform: 'translateY(0)', opacity: 1 }),
             animate('120ms ease-in', style({ transform: 'translateY(-12px)', opacity: 0 }))
         ]);
+    }
+
+    private getPositionStrategy(positionStrategy?: IPositionStrategy): IPositionStrategy {
+        positionStrategy = positionStrategy ? positionStrategy : new GlobalPositionStrategy();
+        if (positionStrategy._options && positionStrategy._options.element) {
+            const elementRect = positionStrategy._options.element.getBoundingClientRect();
+            const x = elementRect.right + elementRect.width * positionStrategy._options.horizontalStartPoint;
+            const y = elementRect.bottom + elementRect.height * positionStrategy._options.verticalStartPoint;
+            positionStrategy._options.point = new Point(x, y);
+        }
+
+        positionStrategy._options = positionStrategy._options ? positionStrategy._options : new PositionSettings();
+        return positionStrategy;
     }
 }
 

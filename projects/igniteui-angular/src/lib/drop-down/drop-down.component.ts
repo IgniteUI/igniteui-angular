@@ -17,8 +17,7 @@ import { IToggleView } from '../core/navigation';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
-import { IgxOverlayService } from '../services/overlay/overlay';
-import { IgxOverlayDirective, IgxOverlayModule } from '../services/overlay/overlay.directive';
+import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemComponent;
@@ -62,9 +61,6 @@ export class IgxDropDownComponent implements OnInit {
 
     @ViewChild(IgxToggleDirective)
     private toggleDirective: IgxToggleDirective;
-
-    @ViewChild(IgxOverlayDirective)
-    private overlay: IgxOverlayDirective;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -218,8 +214,8 @@ export class IgxDropDownComponent implements OnInit {
     /**
      * Opens the dropdown
      */
-    open(element?: HTMLElement) {
-        this.toggleDirective.open(true, element);
+    open(positionStrategy?: IPositionStrategy) {
+        this.toggleDirective.open(true, positionStrategy);
     }
 
     /**
@@ -232,9 +228,9 @@ export class IgxDropDownComponent implements OnInit {
     /**
      * Toggles the dropdown
      */
-    toggle(element?: HTMLElement) {
+    toggle(positionStrategy?: IPositionStrategy) {
         if (this.toggleDirective.collapsed) {
-            this.open(element);
+            this.open(positionStrategy);
         } else {
             this.close();
         }
@@ -388,7 +384,7 @@ export class IgxDropDownComponent implements OnInit {
 @NgModule({
     declarations: [IgxDropDownComponent, IgxDropDownItemComponent],
     exports: [IgxDropDownComponent, IgxDropDownItemComponent],
-    imports: [CommonModule, IgxToggleModule, IgxOverlayModule],
+    imports: [CommonModule, IgxToggleModule],
     providers: [IgxSelectionAPIService]
 })
 export class IgxDropDownModule { }

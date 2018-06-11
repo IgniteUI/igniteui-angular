@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { PositionSettings } from './position/utilities';
+import { PositionSettings } from './utilities';
 
 import {
     ApplicationRef,

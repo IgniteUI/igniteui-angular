@@ -23,7 +23,6 @@ export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/toggle/toggle.directive';
-export * from './lib/services/overlay/overlay.directive';
 
 /**
  * Data operations
