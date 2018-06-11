@@ -34,7 +34,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
-     *```html
+     *```typescript
      *@ViewChild("MyIcon") public icon: IgxIconComponent;
      *constructor(private cdRef:ChangeDetectorRef) {}
      *ngAfterViewInit() {
@@ -48,7 +48,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
-     *```html
+     *```typescript
      *@ViewChild("MyIcon") public icon: IgxIconComponent;
      *constructor(private cdRef:ChangeDetectorRef) {}
      *ngAfterViewInit() {
@@ -140,7 +140,7 @@ export class IgxIconComponent implements OnInit {
 
         /**
      *   An accessor that returns the value of the font property.
-     *```html
+     *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
      *ngAfterViewInit() {
@@ -154,7 +154,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *   An accessor that returns the value of the active property.
-     *```html
+     *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
      *ngAfterViewInit() {
@@ -168,7 +168,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *   An accessor that returns inactive property.
-     *```html
+     *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
      *ngAfterViewInit() {
@@ -183,7 +183,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *   An accessor that returns the opposite value of the `iconColor` property.
-     *```html
+     *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
      *ngAfterViewInit() {
@@ -198,7 +198,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *   An accessor that returns the value of the iconName property.
-     *```html
+     *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
      *ngAfterViewInit() {
@@ -212,7 +212,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *   An accessor that returns a TemplateRef to explicit, implicit or no ligature.
-     *```html
+     *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
      *ngAfterViewInit() {
