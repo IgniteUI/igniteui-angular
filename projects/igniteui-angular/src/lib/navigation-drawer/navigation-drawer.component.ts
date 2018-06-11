@@ -49,7 +49,7 @@ let NEXT_ID = 0;
     providers: [HammerGesturesManager],
     selector: 'igx-nav-drawer',
     templateUrl: 'navigation-drawer.component.html'
-}) 
+})
 export class IgxNavigationDrawerComponent implements
     IToggleView,
     OnInit,
@@ -60,13 +60,13 @@ export class IgxNavigationDrawerComponent implements
     @HostBinding('class') public cssClass = 'igx-nav-drawer';
 
     /**
-     * ID of the component 
-     * 
+     * ID of the component
+     *
      * ```typescript
      * // get
-     * let myNavDrawerId = this.navdrawer.id; 
+     * let myNavDrawerId = this.navdrawer.id;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      *  <igx-nav-drawer id='navdrawer'></igx-nav-drawer>
@@ -76,14 +76,14 @@ export class IgxNavigationDrawerComponent implements
     @Input() public id = `igx-nav-drawer-${NEXT_ID++}`;
 
     /**
-     * Position of the Navigation Drawer. Can be "left"(default) or "right". 
+     * Position of the Navigation Drawer. Can be "left"(default) or "right".
      * Only has effect when not pinned.
-     * 
+     *
      * ```typescript
      * // get
      * let myNavDrawerPosition = this.navdrawer.position;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-nav-drawer [position]='left'></igx-nav-drawer>
@@ -91,7 +91,7 @@ export class IgxNavigationDrawerComponent implements
      */
     @Input() public position = 'left';
 
-    /** 
+    /**
      * Enables the use of touch gestures to manipulate the drawer:
      * - swipe/pan from edge to open, swipe-toggle and pan-drag.
      *
@@ -99,7 +99,7 @@ export class IgxNavigationDrawerComponent implements
      * // get
      * let gesturesEnabled = this.navdrawer.enableGestures;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-nav-drawer [enableGestures]='true'></igx-nav-drawer>
@@ -114,7 +114,7 @@ export class IgxNavigationDrawerComponent implements
      * // get
      * let navDrawerIsOpen = this.navdrawer.isOpen;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-nav-drawer [isOpen]='false'></igx-nav-drawer>
@@ -123,30 +123,30 @@ export class IgxNavigationDrawerComponent implements
     @Input() public isOpen = false;
 
     /**
-     * When pinned the drawer is relatively positioned instead of sitting above content. 
+     * When pinned the drawer is relatively positioned instead of sitting above content.
      * May require additional layout styling.
-     *  
+     *
      * ```typescript
      * // get
      * let navDrawerIsPinned = this.navdrawer.pin;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-nav-drawer [pin]='false'></igx-nav-drawer>
      * ```
      */
     @Input() public pin = false;
-    
+
     /**
      * Minimum device width required for automatic pin to be toggled.
      * Default is 1024, can be set to a falsy value to disable this behavior.
-     *  
+     *
      * ```typescript
      * // get
      * let navDrawerPinTreshold = this.navdrawer.pinThreshold;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-nav-drawer [pinTreshold]='1024'></igx-nav-drawer>
@@ -156,7 +156,7 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Returns nativeElement of the component.
-     * 
+     *
      * @hidden
      */
     get element() {
@@ -170,7 +170,7 @@ export class IgxNavigationDrawerComponent implements
      * // get
      * let navDrawerWidth = this.navdrawer.width;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-nav-drawer [width]='228px'></igx-nav-drawer>
@@ -185,7 +185,7 @@ export class IgxNavigationDrawerComponent implements
      * // get
      * let navDrawerMiniWidth = this.navdrawer.miniWidth;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-nav-drawer [miniWidth]='34px'></igx-nav-drawer>
@@ -195,14 +195,14 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Pinned state change output for two-way binding.
-     * 
+     *
      * ```html
      * <igx-nav-drawer [(pin)]='isPinned'></igx-nav-drawer>
      * ```
      */
     @Output() public pinChange = new EventEmitter<boolean>(true);
     /**
-     * Event fired as the Navigation Drawer is about to open. 
+     * Event fired as the Navigation Drawer is about to open.
      *
      * ```html
      *  <igx-nav-drawer (opening)='onOpening()'></igx-nav-drawer>
@@ -210,7 +210,7 @@ export class IgxNavigationDrawerComponent implements
      */
     @Output() public opening = new EventEmitter();
     /**
-     * Event fired when the Navigation Drawer has opened. 
+     * Event fired when the Navigation Drawer has opened.
      *
      * ```html
      * <igx-nav-drawer (opened)='onOpened()'></igx-nav-drawer>
@@ -229,7 +229,7 @@ export class IgxNavigationDrawerComponent implements
      * Event fired when the Navigation Drawer has closed.
      *
      * ```html
-     * <igx-nav-drawer (closed)='onClosed()'></igx-nav-drawer> 
+     * <igx-nav-drawer (closed)='onClosed()'></igx-nav-drawer>
      * ```
      */
     @Output() public closed = new EventEmitter();
@@ -252,7 +252,7 @@ export class IgxNavigationDrawerComponent implements
     public get miniTemplate(): IgxNavDrawerMiniTemplateDirective {
         return this._miniTemplate;
     }
-    
+
     /**
      * @hidden
      */
@@ -331,7 +331,7 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
-     *  
+     *
      * @hidden
      */
     public get hasAnimateWidth(): boolean {
@@ -350,7 +350,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     * Gets the Drawer width for specific state. 
+     * Gets the Drawer width for specific state.
      * Will attempt to evaluate requested state and cache.
      *
      * 
@@ -361,7 +361,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     * Get the Drawer mini width for specific state. 
+     * Get the Drawer mini width for specific state.
      * Will attempt to evaluate requested state and cache.
      *
      * @hidden
@@ -379,7 +379,7 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Exposes optional navigation service
-     * 
+     *
      * @hidden
      */
     public get state() {
@@ -480,12 +480,12 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Toggle the open state of the Navigation Drawer.
-     * 
+     *
      * ```typescript
      * let fireEvents = true;
      * this.navdrawer.toggle(fireEvents);
      * ```
-     * 
+     *
      * @param {boolean} [fireEvents] - Optional flag determining whether events should be fired or not.
      */
     public toggle(fireEvents?: boolean) {
@@ -498,12 +498,12 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Open the Navigation Drawer. Has no effect if already opened.
-     * 
+     *
      * ```typescript
      * let fireEvents = true;
      * this.navdrawer.open(fireEvents);
      * ```
-     * 
+     *
      * @param {boolean} [fireEvents] - Optional flag determining whether events should be fired or not.
      */
     public open(fireEvents?: boolean) {
@@ -531,12 +531,12 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Close the Navigation Drawer. Has no effect if already closed.
-     * 
+     *
      * ```typescript
      * let fireEvents = true;
      * this.navdrawer.close(fireEvents);
      * ```
-     * 
+     *
      * @param {boolean} [fireEvents] - Optional flag determining whether events should be fired or not.
      */
     public close(fireEvents?: boolean) {
@@ -575,7 +575,7 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
-     * 
+     *
      * @hidden
      * @param {boolean} [mini] - Request mini width instead
      */
@@ -629,7 +629,7 @@ export class IgxNavigationDrawerComponent implements
             }
         });
     }
- 
+
     /**
      * Get current Drawer width.
      */
