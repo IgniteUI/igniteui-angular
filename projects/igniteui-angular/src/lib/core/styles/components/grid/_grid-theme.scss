@@ -685,6 +685,8 @@
         min-width: rem(60px);
         flex-basis: rem(60px);
         padding-right: rem(12);
+        background: --var($theme, 'header-background');
+        z-index: 1;
     }
 
     %igx-grid__group-expand-btn {
