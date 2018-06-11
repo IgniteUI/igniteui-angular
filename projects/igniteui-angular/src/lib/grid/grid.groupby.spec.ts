@@ -11,7 +11,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
 
-describe('IgxGrid - GroupBy', () => {
+fdescribe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -19,6 +19,7 @@ describe('IgxGrid - GroupBy', () => {
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
     const DISABLED_CHIP = 'igx-chips-area__item--disabled';
+    const CHIP_REMOVE_ICON = '.igx-chips-area__remove-icon';
     const CHIP = 'igx-chip';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
@@ -1457,7 +1458,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(similarGroupRows[1].expanded).toEqual(true);
     });
 
-    it('should render disabled non-interactable chip for column that does not allow grouping.', () => {
+    fit('should render disabled non-interactable chip for column that does not allow grouping.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -1475,8 +1476,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(chips[1].className).not.toEqual(DISABLED_CHIP);
 
         // check no remove button on disabled chip
-        expect(chips[0].querySelectorAll('.igx-chip-area__remove-icon').length).toEqual(0);
-        expect(chips[1].querySelectorAll('.igx-chip-area__remove-icon').length).toEqual(1);
+        expect(chips[0].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(0);
+        expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
         chips[0].dispatchEvent(new PointerEvent('pointerup', {}));
