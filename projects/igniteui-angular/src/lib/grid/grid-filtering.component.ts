@@ -56,7 +56,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         if (this.dialogShowing) {
             return 'igx-filtering__toggle--active';
         }
-        if (this.filteringExpression()) {
+        if (this.isFilteringApplied()) {
             return 'igx-filtering__toggle--filtered';
         }
         return 'igx-filtering__toggle';
@@ -177,12 +177,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         //this.gridAPI.get(this.gridID).clearSummaryCache();
         grid.clearFilter(this.column.field);
 
-        grid.onFilteringDone.emit({
-            fieldName: this.column.field,
-            condition: this.firstExpr.expression.condition,
-            ignoreCase: this.column.filteringIgnoreCase,
-            searchVal: this.firstExpr.expression.searchVal
-        });
+        grid.onFilteringDone.emit(this.column.filteringExpressionsTree);
     }
 
     @autoWire(true)
@@ -240,25 +235,22 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             
         }
 
-        grid.onFilteringDone.emit({
-            fieldName: this.column.field,
-            condition: args.condition,
-            ignoreCase: this.column.filteringIgnoreCase,
-            searchVal: args.searchVal
-        });
+        grid.onFilteringDone.emit(this.column.filteringExpressionsTree);
     }
 
-    protected filteringExpression(): boolean {
+    protected isFilteringApplied(): boolean {
         const expr = this.gridAPI.get(this.gridID)
             .filteringExpressionsTree.find(this.column.field);
 
-        // if (expr) {
+        if (expr) {
+            if (expr instanceof FilteringExpressionsTree) {
+                return expr.filteringOperands.length > 0;
+            }
 
-        //     if (!this.isUnaryCondition(expr.condition.name) && !expr.searchVal) {
-        //         return false;
-        //     }
             return true;
-        //}
+        }
+
+        return false;
     }
 
     private filter(expression: any) {

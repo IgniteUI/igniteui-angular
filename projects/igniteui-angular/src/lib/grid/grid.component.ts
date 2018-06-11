@@ -342,7 +342,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onSortingDone = new EventEmitter<ISortingExpression>();
 
     @Output()
-    public onFilteringDone = new EventEmitter<IFilteringExpression>();
+    public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
 
     @Output()
     public onPagingDone = new EventEmitter<IPageEventArgs>();
