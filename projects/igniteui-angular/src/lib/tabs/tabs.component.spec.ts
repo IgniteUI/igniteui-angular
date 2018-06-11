@@ -61,8 +61,8 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
 
         tabItems = tabs.tabs.toArray();
-        expect(tabItems[0].isDisabled).toBeFalsy();
-        expect(tabItems[1].isDisabled).toBeFalsy();
+        expect(tabItems[0].disabled).toBeFalsy();
+        expect(tabItems[1].disabled).toBeFalsy();
     });
 
     it('should initialize set/get properties', () => {
@@ -121,7 +121,7 @@ describe('IgxTabs', () => {
         expect(tab2.isSelected).toBeFalsy();
 
         // select disabled tab
-        tab2.relatedGroup.isDisabled = true;
+        tab2.relatedGroup.disabled = true;
         tab2.select();
         fixture.detectChanges();
 

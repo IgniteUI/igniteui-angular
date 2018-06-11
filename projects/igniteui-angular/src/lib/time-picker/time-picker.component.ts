@@ -89,7 +89,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     @Input()
-    public isDisabled = false;
+    public disabled = false;
 
     @Input()
     public okButtonLabel = 'OK';
