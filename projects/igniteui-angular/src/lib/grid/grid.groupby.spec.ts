@@ -1,5 +1,5 @@
-import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
@@ -10,7 +10,6 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
-import { IgxChipComponent } from '../chips';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -19,7 +18,8 @@ describe('IgxGrid - GroupBy', () => {
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
-    const DISABLED_CHIP = 'igx-chip-area__item--disabled';
+    const DISABLED_CHIP = 'igx-chips-area__item--disabled';
+    const CHIP_REMOVE_ICON = '.igx-chips-area__remove-icon';
     const CHIP = 'igx-chip';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
@@ -1390,6 +1390,34 @@ describe('IgxGrid - GroupBy', () => {
             grid.groupingExpressions);
     });
 
+    it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.rowSelectable = true;
+        fix.componentInstance.height = '200px';
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+
+        fix.detectChanges();
+
+        // scroll to bottom
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        fix.detectChanges();
+        setTimeout(() => {
+            const rows = grid.dataRowList.toArray();
+            expect(rows.length).toEqual(1);
+            const checkBoxElement = rows[0].element.nativeElement.querySelector('.igx-checkbox__input');
+            checkBoxElement.dispatchEvent(new Event('click'));
+            setTimeout(() => {
+                expect(grid.selectedRows().length).toEqual(1);
+                expect(rows[0].element.nativeElement.className).toEqual('igx-grid__tr igx-grid__tr--selected');
+                done();
+            }, 100);
+        }, 100);
+    });
+
     it('should persist state for the correct group record when there are group records with the same fieldName and value.', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
@@ -1448,8 +1476,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(chips[1].className).not.toEqual(DISABLED_CHIP);
 
         // check no remove button on disabled chip
-        expect(chips[0].querySelectorAll('.igx-chip-area__remove-icon').length).toEqual(0);
-        expect(chips[1].querySelectorAll('.igx-chip-area__remove-icon').length).toEqual(1);
+        expect(chips[0].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(0);
+        expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
         chips[0].dispatchEvent(new PointerEvent('pointerup', {}));
