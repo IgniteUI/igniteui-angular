@@ -8,7 +8,8 @@ All notable changes for each version of this project will be documented in this 
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
-    - `igxToggle` changes
+    - `igxToggle` changes:
+        - `igxToggle` is renamed to `igxOverlay`.
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
 

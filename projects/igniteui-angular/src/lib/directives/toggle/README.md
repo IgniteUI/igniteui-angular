@@ -1,16 +1,16 @@
-# IgxToggle Directive
+# IgxOverlay Directive
 
-The **IgxToggle** provides a way for user to make a given content togglable.  
+The **IgxOverlay** provides a way for user to make a given content togglable.  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle.html)
 
 #Usage
 ```typescript
-import { IgxToggleModule } from "igniteui-angular";
+import { IgxOverlayModule } from "igniteui-angular";
 ```
 
 Basic initialization
 ```html
-<div igxToggle>
+<div igxOverlay>
     <p>Some content that user would like to make it togglable.</p>
 </div>
 ```
@@ -19,7 +19,7 @@ Opne/Close toggle through public methods that are provided by exporting the dire
 ```html
 <button (click)="toggleRef.open()">Open</button>
 <button (click)="toggleRef.close()">Close</button>
-<div igxToggle #toggleRef="toggle">
+<div igxOverlay #toggleRef="overlay">
     <p>Some content that user would like to make it togglable.</p>
 </div>
 ```
@@ -28,7 +28,7 @@ Open/Close the directive only through one trigger by exporting it with name **to
 handlers when the toggle is opened and respectively closed. 
 ```html
 <button (click)="toggleRef.toggle()">Toggle</button>
-<div igxToggle #toggleRef="toggle" (onOpening)="eventHandler()" (onOpened)="eventHandler()" (onClosing)="eventHandler()" (onClosed)="eventHandler()">
+<div igxOverlay #toggleRef="overlay" (onOpening)="eventHandler()" (onOpened)="eventHandler()" (onClosing)="eventHandler()" (onClosed)="eventHandler()">
     <p>Some content that user would like to make it togglable.</p>
 </div>
 ```
@@ -69,15 +69,15 @@ Basic initialization
 ```html
 
 <button [igxToggleAction]="toggleRef">Toggle</button>
-<div igxToggle #toggleRef="toggle">
+<div igxOverlay #toggleRef="overlay">
     <p>Some content that user would like to make it togglable.</p>
 </div>
 ```
 
 Passing registered component into **IgxNavigationService** by ID.
 ```html
-<button igxToggleAction="toggle">Toggle</button>
-<div igxToggle id="toggle">
+<button igxToggleAction="overlay">Toggle</button>
+<div igxOverlay id="overlay">
     <p>Some content that user would like to make it togglable.</p>
 </div>
 ```

@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { IToggleView } from '../core/navigation';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxOverlayDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 
@@ -59,8 +59,8 @@ export class IgxDropDownComponent implements OnInit {
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
     private children: QueryList<IgxDropDownItemComponent>;
 
-    @ViewChild(IgxToggleDirective)
-    private toggleDirective: IgxToggleDirective;
+    @ViewChild(IgxOverlayDirective)
+    private toggleDirective: IgxOverlayDirective;
 
     /**
      * Emitted when item selection is changing, before the selection completes

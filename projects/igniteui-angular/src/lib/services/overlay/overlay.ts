@@ -52,18 +52,16 @@ export class IgxOverlayService {
     /**
      * Create, set up, and return a DIV HTMLElement wrapper around the component. Attach it to overlay div element.
      */
-
-
     constructor(
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
         private _injector: Injector,
         @Inject(DOCUMENT) private _document: any) { }
+
     /**
      * Attaches provided component's native element to the OverlayElement
      * @param component Component to show in the overlay
      */
-
     show(component, id: string, positionStrategy?: IPositionStrategy): string {
         const element = this.getElement(component, id);
 

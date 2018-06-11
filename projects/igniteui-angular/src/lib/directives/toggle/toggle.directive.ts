@@ -29,10 +29,10 @@ import { IPositionStrategy } from '../../services/overlay/position/IPositionStra
 import { GlobalPositionStrategy } from '../../services/overlay/position/global-position-strategy';
 
 @Directive({
-    exportAs: 'toggle',
-    selector: '[igxToggle]'
+    exportAs: 'overlay',
+    selector: '[igxOverlay]'
 })
-export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
+export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
 
     @Output()
     public onOpened = new EventEmitter();
@@ -233,8 +233,8 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     }
 }
 @NgModule({
-    declarations: [IgxToggleDirective, IgxToggleActionDirective],
-    exports: [IgxToggleDirective, IgxToggleActionDirective],
+    declarations: [IgxOverlayDirective, IgxToggleActionDirective],
+    exports: [IgxOverlayDirective, IgxToggleActionDirective],
     providers: [IgxNavigationService]
 })
 export class IgxToggleModule { }

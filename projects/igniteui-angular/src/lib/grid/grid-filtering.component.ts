@@ -22,7 +22,7 @@ import {
     NUMBER_FILTERS,
     STRING_FILTERS
 } from '../data-operations/filtering-condition';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
@@ -129,8 +129,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @ViewChild('defaultDateUI', { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
-    protected toggleDirective: IgxToggleDirective;
+    @ViewChild(IgxOverlayDirective, { read: IgxOverlayDirective})
+    protected toggleDirective: IgxOverlayDirective;
 
     @ViewChild('select', { read: ElementRef})
     protected select: ElementRef;

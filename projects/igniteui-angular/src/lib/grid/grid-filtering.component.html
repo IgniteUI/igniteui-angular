@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<span igxToggle (onOpened)="refresh()" (onClosed)="refresh()" #directive="toggle" [attr.class]="dialogPosition">
+<span igxOverlay (onOpened)="refresh()" (onClosed)="refresh()" #directive="overlay" [attr.class]="dialogPosition">
     <div>
         <select (change)="selectionChanged($event.target.value)" #select>
             <option *ngIf="dataType === 'boolean'" [value]="booleanFilterAll">{{ booleanFilterAll | filterCondition | titlecase }}</option>

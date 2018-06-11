@@ -116,7 +116,6 @@ export class DropDownSampleComponent implements OnInit {
 
     public toggleDropDown() {
         const positionSettings = new PositionSettings();
-        console.dir(this.button);
         positionSettings.element = this.button.nativeElement;
         positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
         positionSettings.verticalStartPoint = VerticalAlignment.Bottom;

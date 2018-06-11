@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output,
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from './toggle.directive';
+import { IgxToggleActionDirective, IgxOverlayDirective, IgxToggleModule } from './toggle.directive';
 
-describe('IgxToggler', () => {
+describe('IgxOverlay', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
     beforeEach(async(() => {
@@ -20,11 +20,11 @@ describe('IgxToggler', () => {
         .compileComponents();
     }));
 
-    it('IgxToggleDirective is defined', () => {
+    it('IgxOverlayDirective is defined', () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
-        expect(fixture.debugElement.query(By.directive(IgxToggleDirective))).toBeDefined();
+        expect(fixture.debugElement.query(By.directive(IgxOverlayDirective))).toBeDefined();
         expect(fixture.debugElement.query(By.css('ul'))).toBeDefined();
         expect(fixture.debugElement.queryAll(By.css('li')).length).toBe(4);
     });
@@ -32,7 +32,7 @@ describe('IgxToggler', () => {
     it('verify that initially toggled content is hidden', () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
-        const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
+        const divEl = fixture.debugElement.query(By.directive(IgxOverlayDirective)).nativeElement;
         expect(fixture.componentInstance.isClosed).toBe(true);
         expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
     });
@@ -41,7 +41,7 @@ describe('IgxToggler', () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();
 
-        const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
+        const divEl = fixture.debugElement.query(By.directive(IgxOverlayDirective)).nativeElement;
         expect(fixture.componentInstance.isClosed).toBe(true);
         expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
         fixture.componentInstance.isClosed = false;
@@ -88,7 +88,7 @@ describe('IgxToggler', () => {
         fixture.detectChanges();
 
         const button: DebugElement = fixture.debugElement.query(By.directive(IgxToggleActionDirective));
-        const divEl: DebugElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
+        const divEl: DebugElement = fixture.debugElement.query(By.directive(IgxOverlayDirective));
         expect(fixture.debugElement.componentInstance.isClosed).toBeTruthy();
         expect(divEl.classes[HIDDEN_TOGGLER_CLASS]).toBeTruthy();
         button.triggerEventHandler('click', null);
@@ -101,7 +101,7 @@ describe('IgxToggler', () => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
 
-        const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
+        const divEl = fixture.debugElement.query(By.directive(IgxOverlayDirective)).nativeElement;
         const button: DebugElement = fixture.debugElement.query(By.directive(IgxToggleActionDirective));
 
         expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
@@ -119,7 +119,7 @@ describe('IgxToggler', () => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
 
-        const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
+        const divEl = fixture.debugElement.query(By.directive(IgxOverlayDirective)).nativeElement;
         const toggle = fixture.componentInstance.toggle;
         const p = fixture.debugElement.query(By.css('p'));
 
@@ -138,9 +138,9 @@ describe('IgxToggler', () => {
         fixture.detectChanges();
 
         const toggleFromComponent = fixture.componentInstance.toggle;
-        const toggleFromService = fixture.componentInstance.toggleAction.target as IgxToggleDirective;
+        const toggleFromService = fixture.componentInstance.toggleAction.target as IgxOverlayDirective;
 
-        expect(toggleFromService instanceof IgxToggleDirective).toBeTruthy();
+        expect(toggleFromService instanceof IgxOverlayDirective).toBeTruthy();
         expect(toggleFromService.id).toEqual(toggleFromComponent.id);
     }));
 
@@ -149,7 +149,7 @@ describe('IgxToggler', () => {
         fix.detectChanges();
 
         const toggle = fix.componentInstance.toggle;
-        const toggleElm = fix.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
+        const toggleElm = fix.debugElement.query(By.directive(IgxOverlayDirective)).nativeElement;
         const button: DebugElement = fix.debugElement.query(By.css('button'));
 
         spyOn(toggle.onOpened, 'emit');
@@ -176,7 +176,7 @@ describe('IgxToggler', () => {
 
 @Component({
     template: `
-    <div igxToggle #toggleRef="toggle" [collapsed]="isClosed" (onOpen)="open()" (onClose)="close()">
+    <div igxOverlay #toggleRef="overlay" [collapsed]="isClosed" (onOpen)="open()" (onClose)="close()">
       <ul>
         <li>1</li>
         <li>2</li>
@@ -187,7 +187,7 @@ describe('IgxToggler', () => {
     `
 })
 export class IgxToggleTestComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxOverlayDirective) public toggle: IgxOverlayDirective;
     public isClosed = true;
     public open() {}
     public close() {}
@@ -196,7 +196,7 @@ export class IgxToggleTestComponent {
     template: `
     <button [igxToggleAction]="toggleRef"
     [closeOnOutsideClick]="outsideClickClose">Open/Close Toggle</button>
-    <div igxToggle #toggleRef="toggle" [collapsed]="isClosed">
+    <div igxOverlay #toggleRef="overlay" [collapsed]="isClosed">
       <ul>
         <li>1</li>
         <li>2</li>
@@ -210,32 +210,32 @@ export class IgxToggleTestComponent {
 export class IgxToggleActionTestComponent {
     public isClosed = false;
     public outsideClickClose = true;
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxOverlayDirective) public toggle: IgxOverlayDirective;
     @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
 }
 
 @Component({
     template: `
         <button igxToggleAction="toggleID">Open/Close Toggle</button>
-        <div igxToggle id="toggleID">
+        <div igxOverlay id="toggleID">
             <p>Some content</p>
         </div>
     `
 })
 export class IgxToggleServiceInjectComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxOverlayDirective) public toggle: IgxOverlayDirective;
     @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
 }
 
 @Component({
     template: `
         <button igxToggleAction="toggleID">Open/Close Toggle</button>
-        <div igxToggle id="toggleID">
+        <div igxOverlay id="toggleID">
             <p>Some content</p>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestWithOnPushComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxOverlayDirective) public toggle: IgxOverlayDirective;
 }
