@@ -54,8 +54,9 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     *```
     */
     @Input()
-    public isDisabled: boolean;
+    public disabled: boolean;
 
+<<<<<<< HEAD
     /**
      * @hidden
      */
@@ -72,6 +73,10 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      * }
      * ```
      */
+=======
+    @HostBinding('attr.role') public role = 'tabpanel';
+
+>>>>>>> origin/master
     @HostBinding('class')
     get styleClass(): string {
         return 'igx-tabs__group';
@@ -185,7 +190,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      * @param focusDelay A number representing the expected delay.
      */
     public select(focusDelay = 50, onInit = false) {
-        if (this.isDisabled || this._tabs.selectedIndex === this.index) {
+        if (this.disabled || this._tabs.selectedIndex === this.index) {
             return;
         }
 
