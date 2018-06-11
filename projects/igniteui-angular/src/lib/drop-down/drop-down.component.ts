@@ -63,7 +63,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Emitted when item selection is changing, before the selection completes
-     * 
+     *
      * ```html
      * <igx-drop-down (onSelection)='handleSelection()'></igx-drop-down>
      * ```
@@ -113,7 +113,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      *  Gets the width of the drop down
-     * 
+     *
      * ```typescript
      * // get
      * let myDropDownCurrentWidth = this.dropdown.width;
@@ -125,7 +125,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
     /**
      * Sets the width of the drop down
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-drop-down [width]='160px'></igx-drop-down>
@@ -138,7 +138,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Gets the height of the drop down
-     * 
+     *
      * ```typescript
      * // get
      * let myDropDownCurrentHeight = this.dropdown.height;
@@ -150,7 +150,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
     /**
      * Sets the height of the drop down
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-drop-down [height]='400px'></igx-drop-down>
@@ -169,7 +169,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
      * // get
      * let dropDownAllowsItemFocus = this.dropdown.allowItemsFocus;
      * ```
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
@@ -192,7 +192,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
     /**
      * Sets the drop down's id
-     * 
+     *
      * ```html
      * <!--set-->
      * <igx-drop-down [id]='newDropDownId'></igx-drop-down>
@@ -224,7 +224,6 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
     }
 
-    
     /**
      * Get all non-header items
      *
@@ -247,7 +246,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
 
     /**
      * Get all header items
-     * 
+     *
      * ```typescript
      * let myDropDownHeaderItems = this.dropdown.headers;
      * ```
