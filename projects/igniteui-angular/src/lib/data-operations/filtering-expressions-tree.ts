@@ -28,7 +28,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     public findIndex(fieldName: string): number {
         let expr;
-        for (let i; i < this.filteringOperands.length; i++) {
+        for (let i = 0; i < this.filteringOperands.length; i++) {
             expr = this.filteringOperands[i];
             if (expr instanceof FilteringExpressionsTree) {
                 if (this.isFilteringExpressionsTreeForColumn(expr, fieldName)) {

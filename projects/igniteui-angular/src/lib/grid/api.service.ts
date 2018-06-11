@@ -156,6 +156,15 @@ export class IgxGridAPIService {
     }
 
     public clear_filter(id, fieldName) {
+        if (fieldName) {
+            const column = this.get_column_by_name(id, fieldName);
+            if (!column) {
+                return;
+            }
+
+            column.filteringExpressionsTree = null;
+        }
+
         const grid = this.get(id);
         const filteringState = grid.filteringExpressionsTree;
         const index = filteringState.findIndex(fieldName);
@@ -190,14 +199,14 @@ export class IgxGridAPIService {
         conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
 
         let newExpressionsTree;
-        const expressionOrExpressionsTreeForField = filteringState.find(fieldName);
+        const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
         const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
                                 conditionOrExpressionsTree as IFilteringExpressionsTree : null;
         const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
                           null : conditionOrExpressionsTree as IFilteringOperation;
         const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
 
-        if (!expressionOrExpressionsTreeForField) {
+        if (oldExpressionsTreeIndex == -1) {
             // no expressions tree found for this field
             if (expressionsTree) {
                 filteringState.filteringOperands.push(expressionsTree);
@@ -209,7 +218,7 @@ export class IgxGridAPIService {
             }
         } else {
             // expression or expressions tree found for this field
-            const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
+            const expressionOrExpressionsTreeForField = filteringState.filteringOperands[oldExpressionsTreeIndex];
 
             if (expressionsTree) {
                 // replace the existing expressions tree for this field with the new one passed as parameter
@@ -224,7 +233,7 @@ export class IgxGridAPIService {
                     // so create new expressions tree for this field
                     newExpressionsTree = new FilteringExpressionsTree(filteringState.operator);
                     newExpressionsTree.filteringOperands.push(newExpression);
-                    // and replace the old expression with the new expressions tree
+                    // and replace the old expression with the newly created expressions tree
                     filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, newExpressionsTree);
                 }
             }

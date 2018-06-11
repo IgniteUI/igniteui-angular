@@ -46,7 +46,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         if (this.dialogShowing) {
             return 'igx-filtering__toggle--active';
         }
-        if (this.filteringExpression()) {
+        if (this.isFilteringApplied()) {
             return 'igx-filtering__toggle--filtered';
         }
         return 'igx-filtering__toggle';
@@ -154,6 +154,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         //this.gridAPI.clear_filter(this.gridID, this.column.field);
         //this.gridAPI.get(this.gridID).clearSummaryCache();
         grid.clearFilter(this.column.field);
+
+        grid.onFilteringDone.emit(this.column.filteringExpressionsTree);
     }
 
     @autoWire(true)
@@ -215,24 +217,18 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         const grid = this.gridAPI.get(this.gridID);
         this._filter(filterExpression)
 
-        grid.onFilteringDone.emit({
-            fieldName: this.column.field,
-            condition: filterExpression.expression.condition,
-            ignoreCase: this.column.filteringIgnoreCase,
-            searchVal: filterExpression.expression.searchVal
-        });
+        grid.onFilteringDone.emit(this.column.filteringExpressionsTree);
     }
 
-    protected filteringExpression(): boolean {
+    protected isFilteringApplied(): boolean {
         const expr = this.gridAPI.get(this.gridID)
             .filteringExpressionsTree.find(this.column.field);
 
         if (expr) {
-            // if (expr instanceof FilteringExpressionsTree) {
+            if (expr instanceof FilteringExpressionsTree) {
+                return expr.filteringOperands.length > 0;
+            }
 
-            // } else if (!this.isUnaryCondition((expr as IFilteringExpression).condition.name && !(expr as IFilteringExpression).searchVal)) {
-            //     return false;
-            // }
             return true;
         }
         return false;
