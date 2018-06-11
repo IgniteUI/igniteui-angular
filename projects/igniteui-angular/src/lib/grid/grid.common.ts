@@ -290,7 +290,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this._dragGhost.removeChild(this._dragGhost.children[2]);
 
         const icon = document.createElement('i');
-        const text = document.createTextNode('cancel');
+        const text = document.createTextNode('block');
         icon.appendChild(text);
 
         icon.style.color = '#e41c77';
@@ -372,20 +372,25 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.column.grid.onColumnMoving.emit(args);
 
             if (args.cancel) {
-                this.cms.icon.innerText = 'cancel';
+                this.cms.icon.innerText = 'block';
                 return;
             }
 
-            const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
-            if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned) || (this.column.pinned && nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth)) {
-
+            if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned)) {
                 this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.children[4] :
                     this.elementRef.nativeElement.children[0];
 
                 this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
-
-                this.cms.icon.innerText = this.column.pinned && !this.cms.column.pinned ? 'lock' : 'swap_horiz';
             }
+
+            const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
+            if (!this.cms.column.pinned && this.column.pinned && nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
+
+                this._dropIndicator = this.elementRef.nativeElement.children[0];
+                this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+            }
+
+            this.cms.icon.innerText = this.column.pinned && !this.cms.column.pinned ? 'lock' : 'swap_horiz';
         }
 
         if (this.horizontalScroll) {
@@ -399,7 +404,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragLeave(event) {
-        this.cms.icon.innerText = 'cancel';
+        this.cms.icon.innerText = 'block';
 
         if (this._dropIndicator && this.cms.column !== this.column) {
             this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
