@@ -148,6 +148,8 @@
 @mixin igx-chip($theme) {
     @include igx-root-css-vars($theme);
 
+    $transition: all 120ms $ease-in-out-cubic;
+
     %igx-chips-area,
     %igx-chips-area__item,
     %igx-chips-area__label,
@@ -167,7 +169,7 @@
         border-radius: rem(17px);
         padding: rem(4) rem(16);
         height: rem(34px);
-        transition: all 120ms ease-in-out;
+        transition: $transition;
         background: --var($theme, 'chip-background');
 
         &:hover,
@@ -178,14 +180,11 @@
                 color: --var($theme, 'text-hover-color');
             }
 
-            transition: all 120ms ease-in-out;
+            transition: $transition;
 
-            .igx-icon {
-                transition: all 120ms ease-in-out;
-
-                &%igx-chips-area__order-icon {
-                    color: --var($theme, 'order-icon-hover-color')
-                }
+            .igx-icon %igx-chips-area__order-icon {
+                transition: $transition;
+                color: --var($theme, 'order-icon-hover-color')
             }
         }
 
