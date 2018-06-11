@@ -62,7 +62,13 @@ export class IgxNavigationDrawerComponent implements
     /**
      * ID of the component 
      * 
+     * ```typescript
+     * // get
+     * let myNavDrawerId = this.navdrawer.id; 
+     * ```
+     * 
      * ```html
+     * <!--set-->
      *  <igx-nav-drawer id='navdrawer'></igx-nav-drawer>
      * ```
      */
@@ -74,7 +80,13 @@ export class IgxNavigationDrawerComponent implements
      * Only has effect when not pinned.
      * 
      * ```typescript
-     * this.navdrawer.position = 'left';
+     * // get
+     * let myNavDrawerPosition = this.navdrawer.position;
+     * ```
+     * 
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [position]='left'></igx-nav-drawer>
      * ```
      */
     @Input() public position = 'left';
@@ -84,7 +96,13 @@ export class IgxNavigationDrawerComponent implements
      * - swipe/pan from edge to open, swipe-toggle and pan-drag.
      *
      * ```typescript
-     *  this.navdrawer.enableGestures = true;
+     * // get
+     * let gesturesEnabled = this.navdrawer.enableGestures;
+     * ```
+     * 
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [enableGestures]='true'></igx-nav-drawer>
      * ```
      */
     @Input() public enableGestures = true;
@@ -93,7 +111,13 @@ export class IgxNavigationDrawerComponent implements
      * State of the drawer.
      *
      * ```typescript
-     *  this.navdrawer.isOpen = false;
+     * // get
+     * let navDrawerIsOpen = this.navdrawer.isOpen;
+     * ```
+     * 
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [isOpen]='false'></igx-nav-drawer>
      * ```
      */
     @Input() public isOpen = false;
@@ -103,7 +127,13 @@ export class IgxNavigationDrawerComponent implements
      * May require additional layout styling.
      *  
      * ```typescript
-     * this.navdrawer.pin = false;
+     * // get
+     * let navDrawerIsPinned = this.navdrawer.pin;
+     * ```
+     * 
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [pin]='false'></igx-nav-drawer>
      * ```
      */
     @Input() public pin = false;
@@ -113,7 +143,13 @@ export class IgxNavigationDrawerComponent implements
      * Default is 1024, can be set to a falsy value to disable this behavior.
      *  
      * ```typescript
-     * this.navdrawer.pinThreshold = 620;
+     * // get
+     * let navDrawerPinTreshold = this.navdrawer.pinThreshold;
+     * ```
+     * 
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [pinTreshold]='1024'></igx-nav-drawer>
      * ```
      */
     @Input() public pinThreshold = 1024;
@@ -131,7 +167,13 @@ export class IgxNavigationDrawerComponent implements
      * Width of the drawer in its open state. Defaults to "280px".
      *
      * ```typescript
-     * this.navdrawer.width = '228px';
+     * // get
+     * let navDrawerWidth = this.navdrawer.width;
+     * ```
+     * 
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [width]='228px'></igx-nav-drawer>
      * ```
      */
     @Input() public width = '280px';
@@ -140,7 +182,13 @@ export class IgxNavigationDrawerComponent implements
      * Width of the drawer in its mini state. Defaults to 60px.
      *
      * ```typescript
-     * this.navdrawer.miniWidth = '34px';
+     * // get
+     * let navDrawerMiniWidth = this.navdrawer.miniWidth;
+     * ```
+     * 
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [miniWidth]='34px'></igx-nav-drawer>
      * ```
      */
     @Input() public miniWidth = '60px';
@@ -198,10 +246,10 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private _miniTemplate: IgxNavDrawerMiniTemplateDirective;
-   /**
-    * @hidden
-    */
-   public get miniTemplate(): IgxNavDrawerMiniTemplateDirective {
+    /**
+     * @hidden
+     */
+    public get miniTemplate(): IgxNavDrawerMiniTemplateDirective {
         return this._miniTemplate;
     }
     
