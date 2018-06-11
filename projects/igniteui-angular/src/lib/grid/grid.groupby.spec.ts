@@ -11,7 +11,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
 
-fdescribe('IgxGrid - GroupBy', () => {
+describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -1458,7 +1458,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(similarGroupRows[1].expanded).toEqual(true);
     });
 
-    fit('should render disabled non-interactable chip for column that does not allow grouping.', () => {
+    it('should render disabled non-interactable chip for column that does not allow grouping.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
