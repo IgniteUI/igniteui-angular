@@ -1,7 +1,7 @@
 # igx-datePicker Component
 
 The **igx-datePicker** component allows you to choose date from calendar
-which is presented into input field.  
+which is presented into input field.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)
 
 ## Dependencies
@@ -43,7 +43,7 @@ DatePicker with cancel and today buttons
 
 You have also ability to disable the datePicker
 ```html
-<igx-datePicker [isDisabled]="false">
+<igx-datePicker [disabled]="false">
 </igx-datePicker>
 ```
 
@@ -68,7 +68,7 @@ The DatePicker also supports binding through `ngModel` if two-way date-bind is n
 | `todayBottonLabel` | `string` | Renders today button with custom name, which selects today date from calendar, and fill the datePicker input. |
 | `cancelButtonLabel` | `string` | Renders cancel button with custom name, which closes the calendar. |
 | `formatter` | `function` | Applied custom formatter on the selected or passed date. |
-| `isDisabled` | `boolean` | Disable the datePicker. |
+| `disabled` | `boolean` | Disable the datePicker. |
 | `weekStart`| `Number \| WEEKDAYS` | Sets on which day will the week start. |
 | `locale` | `string` | Sets the locale used for formatting and displaying the dates in the calendar. For more information check out [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) page for valid formats. |
 | `formatOptions` | `Object` | The format options passed along with the `locale` property used for formatting the dates. |

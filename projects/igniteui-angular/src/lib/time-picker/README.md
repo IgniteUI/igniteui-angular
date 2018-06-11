@@ -19,7 +19,7 @@ Custom format with passed initial value.
 
 You have also ability to disable the time picker
 ```html
-<igx-time-picker [isDisabled]="true">
+<igx-time-picker [disabled]="true">
 </igx-time-picker>
 ```
 
@@ -35,7 +35,7 @@ The TimePicker also supports binding through `ngModel` if two-way date-bind is n
 </igx-time-picker>
 ```
 
-The TimePicker also has to spin options. Spin loop and limited scroll modes are available. By default `isSpinLoop` is set to true. 
+The TimePicker also has to spin options. Spin loop and limited scroll modes are available. By default `isSpinLoop` is set to true.
 ```html
 <igx-time-picker [isSpinLoop]="false">
 </igx-time-picker>
@@ -54,7 +54,7 @@ The TimePicker has vertical and horizontal layout. By default the `vertical` is 
 | `okButtonLabel` | string | Renders OK button with custom name, which commits the selected time, and fill the timePicker input. By default `okButtonLabel` is set to 'OK'. |
 | `cancelButtonLabel` | string | Renders cancel button with custom name, which closes the dialog. By default `cancelButtonLabel` is set to 'Cancel'. |
 | `value` | Date | Value of the timePicker. |
-| `isDisabled` | boolean | Disable the timePicker. |
+| `disabled` | boolean | Disable the timePicker. |
 | `itemsDelta`| object | Sets the delta for hour and minute items. By default `itemsDelta` is set ti {hours:1, minutes:1} |
 | `minValue` | string | Sets minimum value. It should follow the `format` of the timePicker. |
 | `maxValue` | string | Sets maximum value. It should follow the `format` of the timePicker. |

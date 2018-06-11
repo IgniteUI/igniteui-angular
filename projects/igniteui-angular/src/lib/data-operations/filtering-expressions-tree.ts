@@ -17,7 +17,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     }
 
     public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
-        let index = this.findIndex(fieldName);
+        const index = this.findIndex(fieldName);
 
         if (index > -1) {
             return this.filteringOperands[index];
@@ -45,8 +45,9 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     }
 
     protected isFilteringExpressionsTreeForColumn(expressionsTree: IFilteringExpressionsTree, fieldName: string): boolean {
+        let expr;
         for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-            let expr = expressionsTree.filteringOperands[i];
+            expr = expressionsTree.filteringOperands[i];
             if ((expr instanceof FilteringExpressionsTree)) {
                 return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
             } else {
