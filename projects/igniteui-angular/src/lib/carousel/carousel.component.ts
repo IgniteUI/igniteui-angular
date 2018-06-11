@@ -45,7 +45,7 @@ export enum Direction { NONE, NEXT, PREV }
 
 export class IgxCarouselComponent implements OnDestroy {
     /**
-     * Returns the role attribute of the carousel.
+     * Returns the `role` attribute of the carousel.
      * ```typescript
      * let carouselRole =  this.carousel.role;
      * ```
@@ -54,8 +54,8 @@ export class IgxCarouselComponent implements OnDestroy {
     @HostBinding('attr.role') public role = 'region';
 
     /**
-     * Sets the id of the carousel.
-     * If not set, the id of the first carousel component will be 'igx-carousel-0'.
+     * Sets the `id` of the carousel.
+     * If not set, the `id` of the first carousel component will be `"igx-carousel-0"`.
      * ```html
      * <igx-carousel id="my-first-carousel"></igx-carousel>
      * ```
@@ -66,8 +66,8 @@ export class IgxCarouselComponent implements OnDestroy {
     public id = `igx-carousel-${NEXT_ID++}`;
 
     /**
-     * Sets whether the carousel will pause the slide transitions on user interactions.
-     * Default value is true.
+     * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
+     * Default value is `true`.
      * ```html
      * <igx-carousel [loop]="false"></igx-carousel>
      * ```
@@ -76,9 +76,8 @@ export class IgxCarouselComponent implements OnDestroy {
     @Input() public loop = true;
 
     /**
-     * Sets whether the carousel can pause the slide transitions.
-     * This regards to user interactions only.
-     * Default value is true
+     * Sets whether the carousel will pause the slide transitions on user interactions.
+     * Default value is `true`.
      * ```html
      *  <igx-carousel [pause]="false"></igx-carousel>
      * ```
@@ -87,7 +86,7 @@ export class IgxCarouselComponent implements OnDestroy {
     @Input() public pause = true;
 
     /**
-     * Returns the time interval in milliseconds before the slide changes.
+     * Returns the time `interval` in milliseconds before the slide changes.
      * ```typescript
      * let timeInterval = this.carousel.interval;
      * ```
@@ -99,8 +98,8 @@ export class IgxCarouselComponent implements OnDestroy {
     }
 
     /**
-     * Sets the time interval in milliseconds before the slide changes.
-     * If not set, the carousel will not change slides automatically.
+     * Sets the time `interval` in milliseconds before the slide changes.
+     * If not set, the carousel will not change `slides` automatically.
      * ```html
      * <igx-carousel [interval] = "1000"></carousel>
      * ```
@@ -111,7 +110,7 @@ export class IgxCarouselComponent implements OnDestroy {
         this._restartInterval();
     }
     /**
-     * Returns the tabIndex of the carousel component.
+     * Returns the `tabIndex` of the carousel component.
      * ```typescript
      * let tabIndex =  this.carousel.tabIndex;
      * ```
@@ -123,7 +122,7 @@ export class IgxCarouselComponent implements OnDestroy {
     }
 
     /**
-     * Controls whether the carousel should render the left/right navigation buttons.
+     * Controls whether the carousel should render the left/right `navigation` buttons.
      * Default value is `true`.
      * ```html
      * <igx-carousel [navigation] = "false"></igx-carousel>
@@ -173,7 +172,7 @@ export class IgxCarouselComponent implements OnDestroy {
     @Output() public onCarouselPaused = new EventEmitter<IgxCarouselComponent>();
 
     /**
-     * An event that is emitted after the carousel has resumed transitioning between slides.
+     * An event that is emitted after the carousel has resumed transitioning between `slides`.
      * Provides a reference to the `IgxCarouselComponent` as an event argument.
      * ```html
      * <igx-carousel (onCarouselPlaying)="onCarouselPlaying(carousel:IgxCarouselComponent)"></igx-carousel>
@@ -183,7 +182,7 @@ export class IgxCarouselComponent implements OnDestroy {
     @Output() public onCarouselPlaying = new EventEmitter<IgxCarouselComponent>();
 
     /**
-     * The collection of slides currently in the carousel.
+     * The collection of `slides` currently in the carousel.
      * ```typescript
      * let slides: IgxSlideComponent[] = this.carousel.slides;
      * ```
@@ -216,7 +215,7 @@ export class IgxCarouselComponent implements OnDestroy {
     }
 
     /**
-     * Returns the total number of slides in the carousel.
+     * Returns the total number of `slides` in the carousel.
      * ```typescript
      * let slideCount =  this.carousel.total;
      * ```
@@ -270,7 +269,7 @@ export class IgxCarouselComponent implements OnDestroy {
     }
 
     /**
-     * Returns the slide corresponding to the provided index or null.
+     * Returns the slide corresponding to the provided `index` or null.
      * ```typescript
      * let slide1 =  this.carousel.get(1);
      * ```
@@ -332,7 +331,7 @@ export class IgxCarouselComponent implements OnDestroy {
     }
 
     /**
-     * Kicks in a transition for a given slide with a given direction.
+     * Kicks in a transition for a given slide with a given `direction`.
      * ```typescript
      * this.carousel.select(this.carousel.get(2), Direction.NEXT);
      * ```
@@ -402,7 +401,7 @@ export class IgxCarouselComponent implements OnDestroy {
     }
 
     /**
-     * Stops slide transitions if the `pause` options is set to `true`.
+     * Stops slide transitions if the `pause` option is set to `true`.
      * No operation otherwise.
      * ```typescript
      *  this.carousel.stop();
@@ -501,7 +500,7 @@ export class IgxCarouselComponent implements OnDestroy {
 export class IgxSlideComponent implements OnInit, OnDestroy {
 
     /**
-     * Gets/sets the index of the slide inside the carousel.
+     * Gets/sets the `index` of the slide inside the carousel.
      * ```html
      * <igx-carousel>
      *  <igx-slide index = "1"</igx-slide>
@@ -512,7 +511,7 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
     @Input() public index: number;
 
     /**
-     * Gets/sets the target direction for the slide.
+     * Gets/sets the target `direction` for the slide.
      * ```html
      * <igx-carousel>
      *  <igx-slide direction="NEXT"</igx-slide>
@@ -522,7 +521,7 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
      */
     @Input() public direction: Direction;
     /**
-     * Gets/sets the active of the slide.
+     * Gets/sets the `active` state of the slide.
      * ```html
      * <igx-carousel>
      *  <igx-slide [active] ="false"</igx-slide>
@@ -552,7 +551,10 @@ export interface ISlideEventArgs {
     carousel: IgxCarouselComponent;
     slide: IgxSlideComponent;
 }
-
+/**
+ * The `IgxCarouselModule` provides the {@link IgxCarouselComponent} inside your application.
+ * @class IgxCarouselModule
+ */
 @NgModule({
     declarations: [IgxCarouselComponent, IgxSlideComponent],
     exports: [IgxCarouselComponent, IgxSlideComponent],
