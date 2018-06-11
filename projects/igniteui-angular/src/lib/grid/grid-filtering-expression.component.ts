@@ -42,7 +42,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     set column(val) {
         this._column = val;
         if(this.expression) {
-            this.expression.fieldName = val;
+            this.expression.fieldName = val.field;
         }
     }
 
@@ -61,6 +61,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     @ViewChild("input", { read: ElementRef})
     protected input: ElementRef;
 
+    public booleanFilterAll = 'All';
     private _column: any;
     public expression: IFilteringExpression;
     protected conditionChanged = new Subject();
@@ -78,10 +79,10 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
 
     public ngOnInit() {
         this.expression = { 
-            fieldName: this.column,
+            fieldName: this.column.field,
             condition: null,
             searchVal: null,
-            ignoreCase: null
+            ignoreCase: this.column.filteringIgnoreCase
         }
     }
 
@@ -160,6 +161,10 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     }
 
     public selectionChanged(value): void {
+        if (value === this.booleanFilterAll) {
+            this.clearFiltering(true);
+            return;
+        }
         this.expression.condition = this.getCondition(value);
         if (this.unaryCondition) {
             this.unaryConditionChanged.next(value);
@@ -171,6 +176,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
 
 
     public onInputChanged(val): void {
+        this.expression.condition = this.getCondition(this.select.nativeElement.value);
         if (!val && val !== 0) {
             this.expression.searchVal = val;
             this.onExpressionChanged.emit(this.expression);
@@ -190,6 +196,8 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         }
         if(!resetCondition) {
             this.onExpressionChanged.emit(this.expression);
+        } else {
+            this.select.nativeElement.selectedIndex = 0;
         }
     }
 

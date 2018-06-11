@@ -20,9 +20,10 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
-import { IFilteringOperation } from '../../public_api';
+import { IFilteringOperation, FilteringExpressionsTree } from '../../public_api';
 import { IgxButtonGroupModule, IgxButtonGroupComponent } from "../buttonGroup/buttonGroup.component";
 import { IgxGridFilterExpressionComponent } from "./grid-filtering-expression.component";
+import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -104,6 +105,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @ViewChild('secondExpr', { read: IgxGridFilterExpressionComponent})
     protected secondExpr: IgxGridFilterExpressionComponent;
 
+    @ViewChild('logicOperators', { read: IgxButtonGroupComponent})
+    protected logicOperators: IgxButtonGroupComponent;
+
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
         // this.filterChanged.pipe(
         //     debounceTime(250)
@@ -158,50 +162,42 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             }
         }
         return false;
-    }
-
-    @autoWire(true)
-    public filter(): void {
-        // const grid = this.gridAPI.get(this.gridID);
-        // //this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
-        // this.gridAPI.filter(
-        //     this.column.gridID, this.column.field,
-        //     this._value, this.column.filteringCondition, this.column.filteringIgnoreCase);
-        // grid.onFilteringDone.emit({
-        //     fieldName: this.column.field,
-        //     condition: this.column.filteringCondition,
-        //     ignoreCase: this.column.filteringIgnoreCase,
-        //     searchVal: this._value
-        // });
-    }
+    }    
 
     @autoWire(true)
     public clearFiltering(): void {
         this.firstExpr.clearFiltering(true);
-        this.secondExpr.clearFiltering(true);
+        if (this.secondExpr) {
+            this.secondExpr.clearFiltering(true);
+        }
 
         const grid = this.gridAPI.get(this.gridID);
-        grid.clearSummaryCache();
 
-        this.gridAPI.clear_filter(this.gridID, this.column.field);
-        this.gridAPI.get(this.gridID).clearSummaryCache();
+        //this.gridAPI.clear_filter(this.gridID, this.column.field);
+        //this.gridAPI.get(this.gridID).clearSummaryCache();
+        grid.clearFilter(this.column.field);
 
         grid.onFilteringDone.emit({
             fieldName: this.column.field,
-            condition: undefined,
+            condition: this.firstExpr.expression.condition,
             ignoreCase: this.column.filteringIgnoreCase,
-            searchVal: null
+            searchVal: this.firstExpr.expression.searchVal
         });
     }
 
     @autoWire(true)
     public onSelectLogicOperator(event): void {
         this.isSecondConditionVisible = true;
+        if(this.column.filteringExpressionsTree) {
+            //this.filter();
+        }
     }
 
     @autoWire(true)
     public onUnSelectLogicOperator(event): void {
-        this.isSecondConditionVisible = false;
+        if(this.logicOperators.selectedIndexes.length === 0){ 
+            this.isSecondConditionVisible = false;
+        }
     }
 
     public get disabled() {
@@ -237,12 +233,11 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public onExpressionChanged(args): void {
         const grid = this.gridAPI.get(this.gridID);
         if (args.searchVal || this.isUnaryCondition(args.condition.name)) {
-            this.gridAPI.filter(
-                this.column.gridID, this.column.field,
-            args.searchVal, args.condition, this.column.filteringIgnoreCase);
+            this.filter(args)
+        } else if (!this.secondExpr){
+            grid.clearFilter(this.column.field);
         } else {
-            this.gridAPI.clear_filter(this.gridID, this.column.field);
-            this.gridAPI.get(this.gridID).clearSummaryCache();
+            
         }
 
         grid.onFilteringDone.emit({
@@ -255,14 +250,35 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     protected filteringExpression(): boolean {
         const expr = this.gridAPI.get(this.gridID)
-            .filteringExpressions.find((x) => x.fieldName === this.column.field);
+            .filteringExpressionsTree.find(this.column.field);
 
-        if (expr) {
+        // if (expr) {
 
-            if (!this.isUnaryCondition(expr.condition.name) && !expr.searchVal) {
-                return false;
-            }
+        //     if (!this.isUnaryCondition(expr.condition.name) && !expr.searchVal) {
+        //         return false;
+        //     }
             return true;
+        //}
+    }
+
+    private filter(expression: any) {
+        if(!this.column.filteringExpressionsTree) {
+            this.column.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            this.column.filteringExpressionsTree.filteringOperands.push(this.firstExpr.expression);
+        } else {
+            this.column.filteringExpressionsTree.filteringOperands = [];
+            this.column.filteringExpressionsTree.filteringOperands.push(this.firstExpr.expression);
+            if(this.secondExpr && this.secondExpr.expression.searchVal) {
+                this.column.filteringExpressionsTree.filteringOperands.push(this.secondExpr.expression);
+                if (this.logicOperators.selectedIndexes[0] === 0) {
+                    this.column.filteringExpressionsTree.operator = FilteringLogic.And;
+                } else {
+                    this.column.filteringExpressionsTree.operator = FilteringLogic.Or;
+                }
+            }
         }
+        this.gridAPI.filter(
+            this.column.gridID, this.column.field,
+            expression.searchVal, this.column.filteringExpressionsTree, this.column.filteringIgnoreCase);
     }
 }
