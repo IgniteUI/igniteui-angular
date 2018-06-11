@@ -71,10 +71,10 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      *    let tabStyleClass = this.tab.styleClass;
      * }
      * ```
-     * */
-    @HostBinding('class.igx-tabs__group')
-    get styleClass(): boolean {
-        return true;
+     */
+    @HostBinding('class')
+    get styleClass(): string {
+        return 'igx-tabs__group';
     }
 
     /**
