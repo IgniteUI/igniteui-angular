@@ -6,25 +6,25 @@
 
 /// Chips Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $chip-background [null] - The chips background color.
-/// @param {Color} $chip-hover-background [null] - The chips hover background color.
-/// @param {Color} $text-color [null] - The chips text color.
-/// @param {Color} $text-hover-color [null] - The chips text hover color.
-/// @param {Color} $order-icon-color [null] - The chips order icon color.
-/// @param {Color} $order-icon-hover-color [null] - The chips order icon hover color.
-/// @param {Color} $dir-icon-color [null] - The chips direction icon color.
-/// @param {Color} $remove-icon-color [null] - The chips remove icon color.
-/// @param {Color} $remove-icon-hover-color [null] - The chips remove icon hover color.
+/// @param {Color} $chip-background [null] - The chip background color.
+/// @param {Color} $chip-hover-background [null] - The chip hover background color.
+/// @param {Color} $text-color [null] - The chip text color.
+/// @param {Color} $text-hover-color [null] - The chip text hover color.
+/// @param {Color} $order-icon-color [null] - The chip order icon color.
+/// @param {Color} $order-icon-hover-color [null] - The chip order icon hover color.
+/// @param {Color} $dir-icon-color [null] - The chip direction icon color.
+/// @param {Color} $remove-icon-color [null] - The chip remove icon color.
+/// @param {Color} $remove-icon-hover-color [null] - The chip remove icon hover color.
 ///
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-color
 ///
 /// @example scss Change the background color
-///   $my-chips-theme: igx-chips-theme($chip-background: black);
-///   // Pass the theme to the igx-chips component mixin
-///   @include igx-chips($my-chips-theme);
-@function igx-chips-theme(
+///   $my-chip-theme: igx-chip-theme($chip-background: black);
+///   // Pass the theme to the igx-chip component mixin
+///   @include igx-chip($my-chip-theme);
+@function igx-chip-theme(
     $palette: $default-palette,
 
     $chip-background: null,
@@ -145,7 +145,7 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
 /// @requires var
-@mixin igx-chips($theme) {
+@mixin igx-chip($theme) {
     @include igx-root-css-vars($theme);
 
     %igx-chips-area,
@@ -230,6 +230,16 @@
 
     %igx-chips-area__chip-connector {
         user-select: none;
-        pointer-events: none;
+    }
+
+    %igx-chips-area__item--disabled {
+        %igx-chips-area__item {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        %igx-chips-area__label {
+            opacity: .5;
+        }
     }
 }

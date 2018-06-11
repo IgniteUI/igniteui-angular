@@ -22,9 +22,9 @@
         Drag a column header and drop it here to group by that column
     </div>
     <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
-        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName"
-                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="onChipInteractionEnd($event)">
-            <!--<igx-icon class="igx-chips-area__item-icon" igxPrefix fontSet="material" [name]="'drag_indicator'" [style.height]="'1.5rem'"></igx-icon>-->
+        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable"
+                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="getColumnByName(expr.fieldName).groupable ? onChipInteractionEnd($event): null" [class.igx-chips-area__item--disabled]='!getColumnByName(expr.fieldName).groupable'>
+            <!--<igx-icon class="igx-chip-area__item-icon" igxPrefix fontSet="material" [name]="'drag_indicator'" [style.height]="'1.5rem'"></igx-icon>-->
             <span class="igx-chips-area__label" igxLabel
                     [style.position]="'unset'"
                     [style.width]="'unset'"
@@ -43,8 +43,8 @@
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" role="row">
         <ng-container *ngIf="groupingExpressions.length > 0">
-            <div class="igx-grid__group-indentation" [style.min-width.px]="calcGroupByWidth" [style.flex-basis.px]="calcGroupByWidth">
-                <button (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true" [style.min-width.px]="groupByIndentation" [style.flex-basis.px]="groupByIndentation">
+            <div class="igx-grid__group-indentation-header igx-grid__group-indentation-level-{{groupingExpressions.length}}" #headerGroupContainer>
+                <button class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true">
                     <igx-icon fontSet="material" name="reorder"></igx-icon>
                 </button>
             </div>

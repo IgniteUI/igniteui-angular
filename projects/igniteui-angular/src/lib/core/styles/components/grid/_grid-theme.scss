@@ -597,6 +597,7 @@
         position: relative;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: 12px;
+        min-width: rem(60px);
 
         &::after {
             content: '';
@@ -661,6 +662,9 @@
         cursor: pointer;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: rem(12px);
+        min-width: rem(60px);
+        flex-basis: rem(60px);
+        position: relative;
 
         .igx-icon {
             color: --var($theme, 'expand-icon-color');
@@ -674,6 +678,19 @@
                 color: --var($theme, 'expand-icon-hover-color');
             }
         }
+    }
+
+    %igx-grid__group-indentation-header {
+        position: relative;
+        min-width: rem(60px);
+        flex-basis: rem(60px);
+        padding-right: rem(12);
+    }
+
+    %igx-grid__group-expand-btn {
+        position: absolute;
+        top: calc(50% - 15px);
+        left: calc(#{map-get($grid-grouping-indicator-padding, 'comfortable')} - 3px);
     }
 
     %igx-grid__group-icon {
@@ -691,6 +708,21 @@
         color: --var($theme, 'grouparea-placeholder-color');
         @include ellipsis();
         width: 100%;
+    }
+
+    @for $i from 1 through 10 {
+        %grid__group-indentation-level-#{$i} {
+            padding-left: #{$i*30}px;
+
+            .igx-button--icon {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        %grid__group-indentation-padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
+        }
     }
 
     %grid-summaries {

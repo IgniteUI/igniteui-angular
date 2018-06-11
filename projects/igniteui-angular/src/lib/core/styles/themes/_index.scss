@@ -16,7 +16,7 @@
 @import '../components/card/card-theme';
 @import '../components/carousel/carousel-theme';
 @import '../components/checkbox/checkbox-theme';
-@import '../components/chips/chips-theme';
+@import '../components/chip/chip-theme';
 @import '../components/date-picker/date-picker-theme';
 @import '../components/dialog/dialog-theme';
 @import '../components/drop-down/drop-down-theme';
@@ -134,8 +134,8 @@
         @include igx-checkbox($theme: igx-checkbox-theme());
     }
 
-    @if not(index($exclude, 'igx-chips')) {
-        @include igx-chips($theme: igx-chips-theme());
+    @if not(index($exclude, 'igx-chip')) {
+        @include igx-chip($theme: igx-chip-theme());
     }
 
     @if not(index($exclude, 'igx-date-picker')) {

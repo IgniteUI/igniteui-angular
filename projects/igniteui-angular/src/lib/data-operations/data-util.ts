@@ -1,8 +1,10 @@
-import { IgxFilteringOperand,
+import {
+    IgxFilteringOperand,
     IgxBooleanFilteringOperand,
     IgxDateFilteringOperand,
     IgxNumberFilteringOperand,
-    IgxStringFilteringOperand } from './filtering-condition';
+    IgxStringFilteringOperand
+} from './filtering-condition';
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
 import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
@@ -14,7 +16,7 @@ import { ISortingStrategy, SortingStrategy } from './sorting-strategy';
 import { IPagingState, PagingError } from './paging-state.interface';
 
 import { IDataState } from './data-state.interface';
-import { IGroupByExpandState } from './groupby-expand-state.interface';
+import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 
@@ -63,8 +65,8 @@ export class DataUtil {
         return this.restoreGroupsRecursive(data, 1, state.expressions.length, state.expansion, state.defaultExpanded);
     }
     private static restoreGroupsRecursive(
-            data: any[], level: number, depth: number,
-            expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
+        data: any[], level: number, depth: number,
+        expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
         let i = 0;
         let j: number;
         let result = [];
@@ -79,8 +81,9 @@ export class DataUtil {
                     break;
                 }
             }
+            const hierarchy = this.getHierarchy(g);
             const expandState: IGroupByExpandState = expansion.find((state) =>
-                state.fieldName === g.expression.fieldName && state.value === g.value);
+                this.isHierarchyMatch(state.hierarchy || [{ fieldName: g.expression.fieldName, value: g.value }], hierarchy));
             const expanded = expandState ? expandState.expanded : defaultExpanded;
             result.push(g);
             if (expanded) {
@@ -143,5 +146,24 @@ export class DataUtil {
             data = DataUtil.page(data, state.paging);
         }
         return data;
+    }
+
+    public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
+        const hierarchy: Array<IGroupByKey> = [];
+        hierarchy.push({ fieldName: gRow.expression.fieldName, value: gRow.value });
+        while (gRow.__groupParent) {
+            gRow = gRow.__groupParent;
+            hierarchy.unshift({ fieldName: gRow.expression.fieldName, value: gRow.value });
+        }
+        return hierarchy;
+    }
+
+    public static isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>): boolean {
+        if (h1.length !== h2.length) {
+            return false;
+        }
+        return h1.every((level, index): boolean => {
+            return level.fieldName === h2[index].fieldName && level.value === h2[index].value;
+        });
     }
 }
