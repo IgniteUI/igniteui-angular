@@ -56,7 +56,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     @Input()
     public disabled: boolean;
 
-<<<<<<< HEAD
     /**
      * @hidden
      */
@@ -73,10 +72,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      * }
      * ```
      */
-=======
-    @HostBinding('attr.role') public role = 'tabpanel';
-
->>>>>>> origin/master
     @HostBinding('class')
     get styleClass(): string {
         return 'igx-tabs__group';
