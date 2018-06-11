@@ -31,7 +31,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
 
     /**
     * An @Input property that sets the value of the `label`.
-    *```html
+    *```typescript
     *<igx-tabs-group label="Tab 1" icon="folder">
     *```
     */
@@ -48,9 +48,9 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     public icon: string;
 
     /**
-    * An @Input property that allows you to enable/disable the `isDisabled`.
+    * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
     *```html
-    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" isDisabled="true">
+    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [isDisabled]="true">
     *```
     */
     @Input()
@@ -63,17 +63,15 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     public role = 'tabpanel';
 
     /**
-     * An accessor that returns the class of the tab.
-     * ```html
-     * @ViewChild("MyTab")
+     * An accessor that returns the class of the `IgxTabsGroupComponent`.
+     * ```typescript
+     * @ViewChild("MyTabsGroup")
      * public tab: IgxTabsGroupComponent;
      * ngAfterViewInIt(){
      *    let tabStyleClass = this.tab.styleClass;
      * }
      * ```
-     * Disclaimer:
-     * Svetla Boykova will fix the code to make sense.
-     */
+     * */
     @HostBinding('class.igx-tabs__group')
     get styleClass(): boolean {
         return true;
@@ -81,8 +79,8 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
 
     /**
      * An accessor that returns the value of the `_itemStyle` property.
-     * ```html
-     * @ViewChild("MyTab")
+     * ```typescript
+     * @ViewChild("MyTabsGroup")
      * public tab: IgxTabsGroupComponent;
      * ngAfterViewInIt(){
      *    let tabStyle = this.tab.itemStyle;
@@ -95,9 +93,9 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     }
 
     /**
-     * An accessor that returns the `tab` component.
-     * ```html
-     * @ViewChild("MyTab")
+     * An accessor that returns the `IgxTabItemComponent` component.
+     * ```typescript
+     * @ViewChild("MyTabsGroup")
      * public tab: IgxTabsGroupComponent;
      * ngAfterViewInIt(){
      *    let tabComponent = this.tab.relatedTab;
@@ -112,9 +110,9 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     }
 
     /**
-     * An accessor that returns the value of the index of the tab.
-     * ```html
-     * @ViewChild("MyTab")
+     * An accessor that returns the value of the index of the `IgxTabsGroupComponent`.
+     * ```typescript
+     * @ViewChild("MyTabsGroup")
      * public tab: IgxTabsGroupComponent;
      * ngAfterViewInIt(){
      *    let tabIndex = this.tab.index;
@@ -129,30 +127,14 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     }
 
     /**
-     * An accessor that returns the `_tabTemplate` property.
-     * ```html
-     * @ViewChild("MyTab")
-     * public tab: IgxTabsGroupComponent;
-     * ngAfterViewInIt(){
-     *    let tabTemplate = this.tab.customTabTemplate;
-     *    this.cdr.detectChanges();
-     * }
-     * ```
+     * @hidden
      */
     get customTabTemplate(): TemplateRef<any> {
         return this._tabTemplate;
     }
 
     /**
-     * An accessor that is used to set custom template ot the tab.
-     * ```html
-     * @ViewChild("MyTab")
-     * public tab: IgxTabsGroupComponent;
-     * ngAfterViewInIt(){
-     *    this.tab.customTabTemplate(customTemplate);
-     *    this.cdr.detectChanges();
-     * }
-     * ```
+     *@hidden
      */
     set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
@@ -191,8 +173,8 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
 
     /**
      * A method that sets the focus on a tab.
-     * @memberOf {@link IgxDialogComponent}
-     *```html
+     * @memberOf {@link IgxTabGroupComponent}
+     *```typescript
      *@ViewChild("MyChild")
      *public tab : IgxTabsGroupComponent;
      *ngAfterViewInit(){
