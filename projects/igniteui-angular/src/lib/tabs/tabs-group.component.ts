@@ -23,7 +23,6 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
 })
 
 export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
-    private _itemStyle = 'igx-tabs-group';
     public isSelected = false;
 
     @Input()
@@ -40,10 +39,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     @HostBinding('class')
     get styleClass(): string {
         return 'igx-tabs__group';
-    }
-
-    public get itemStyle(): string {
-        return this._itemStyle;
     }
 
     get relatedTab(): IgxTabItemComponent {
