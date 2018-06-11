@@ -246,6 +246,8 @@
         compact: rem(12px)
     );
 
+    $indicator-icon-width: 24px;
+
     %grid-display {
         display: grid;
         grid-template-rows: auto auto 1fr auto;
@@ -668,6 +670,7 @@
 
         .igx-icon {
             color: --var($theme, 'expand-icon-color');
+            min-width: $indicator-icon-width;
         }
 
         &:hover,
@@ -714,7 +717,7 @@
 
     @for $i from 1 through 10 {
         %grid__group-indentation-level-#{$i} {
-            padding-left: #{$i*30}px;
+            padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + 24px);
 
             .igx-button--icon {
                 width: 30px;
