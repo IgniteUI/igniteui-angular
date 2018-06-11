@@ -76,7 +76,7 @@ export class IgxCarouselComponent implements OnDestroy {
     @Input() public loop = true;
 
     /**
-     * Sets whether the carousel will pause the slide transitions on user interactions.
+     * Sets whether the carousel will `pause` the slide transitions on user interactions.
      * Default value is `true`.
      * ```html
      *  <igx-carousel [pause]="false"></igx-carousel>
