@@ -18,8 +18,8 @@ describe('IgxGrid - GroupBy', () => {
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
-    const DISABLED_CHIP = 'igx-chips-area__item--disabled';
-    const CHIP_REMOVE_ICON = '.igx-chips-area__remove-icon';
+    const DISABLED_CHIP = 'igx-chip--disabled';
+    const CHIP_REMOVE_ICON = '.igx-chip__remove-icon';
     const CHIP = 'igx-chip';
     const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
         const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
