@@ -112,7 +112,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     public onClosed = new EventEmitter();
 
     /**
-     *  Gets/sets the width of the drop down
+     *  Gets the width of the drop down
      * 
      * ```typescript
      * // get
@@ -124,6 +124,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         return this._width;
     }
     /**
+     * Sets the width of the drop down
+     * 
      * ```html
      * <!--set-->
      * <igx-drop-down [width]='160px'></igx-drop-down>
@@ -135,7 +137,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     }
 
     /**
-     * Gets/sets the height of the drop down
+     * Gets the height of the drop down
      * 
      * ```typescript
      * // get
@@ -147,6 +149,8 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
         return this._height;
     }
     /**
+     * Sets the height of the drop down
+     * 
      * ```html
      * <!--set-->
      * <igx-drop-down [height]='400px'></igx-drop-down>
@@ -175,7 +179,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     public allowItemsFocus = true;
 
     /**
-     * Gets/sets the drop down's id
+     * Gets the drop down's id
      *
      * ```typescript
      * // get
@@ -186,8 +190,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     get id(): string {
         return this._id;
     }
-
     /**
+     * Sets the drop down's id
+     * 
      * ```html
      * <!--set-->
      * <igx-drop-down [id]='newDropDownId'></igx-drop-down>
