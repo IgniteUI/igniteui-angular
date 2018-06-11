@@ -66,9 +66,7 @@ export class IgxCarouselComponent implements OnDestroy {
     public id = `igx-carousel-${NEXT_ID++}`;
 
     /**
-     * Sets whether the carousel should loop back to the first slide
-     * after reaching the last slide.
-     *
+     * Sets whether the carousel will pause the slide transitions on user interactions.
      * Default value is true.
      * ```html
      * <igx-carousel [loop]="false"></igx-carousel>
@@ -136,7 +134,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
     /**
      * An event that is emitted after a slide transition has happened.
-     * Provides references to the IgxCarouselComponent and IgxSlideComponent as an event arguments.
+     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
      * ```html
      * <igx-carousel (onSlideChanged)="onSlideChanged(carousel:IgxCarouselComponent, slide:IgxSlideComponent)"></igx-carousel>
      * ```
@@ -146,7 +144,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
     /**
      * An event that is emitted after a slide has been added to the carousel.
-     * Provides references to the IgxCarouselComponent and IgxSlideComponent as an event arguments.
+     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
      * ```html
      * <igx-carousel (onSlideAdded)="onSlideAdded(carousel:IgxCarouselComponent, slide:IgxSlideComponent)"></igx-carousel>
      * ```
@@ -156,7 +154,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
     /**
      * An event that is emitted after a slide has been removed from the carousel.
-     * Provides references to the IgxCarouselComponent and IgxSlideComponent as an event arguments.
+     * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
      * ```html
      * <igx-carousel (onSlideRemoved)="onSlideRemoved(carousel:IgxCarouselComponent, slide:IgxSlideComponent)"></igx-carousel>
      * ```
@@ -166,7 +164,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
     /**
      * An event that is emitted after the carousel has been paused.
-     * Provides a reference to the IgxCarouselComponent as an event argument.
+     * Provides a reference to the `IgxCarouselComponent` as an event argument.
      * ```html
      * <igx-carousel (onCarouselPaused)="onCarouselPaused(carousel:IgxCarouselComponent)"></igx-carousel>
      * ```
@@ -176,7 +174,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
     /**
      * An event that is emitted after the carousel has resumed transitioning between slides.
-     * Provides a reference to the IgxCarouselComponent as an event argument.
+     * Provides a reference to the `IgxCarouselComponent` as an event argument.
      * ```html
      * <igx-carousel (onCarouselPlaying)="onCarouselPlaying(carousel:IgxCarouselComponent)"></igx-carousel>
      * ```
@@ -388,7 +386,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
     /**
      * Resumes playing of the carousel if in paused state.
-     * No-op otherwise.
+     * No operation otherwise.
      * ```typescript
      * this.carousel.play();
      * }
@@ -405,7 +403,7 @@ export class IgxCarouselComponent implements OnDestroy {
 
     /**
      * Stops slide transitions if the `pause` options is set to `true`.
-     * No-op otherwise.
+     * No operation otherwise.
      * ```typescript
      *  this.carousel.stop();
      * }
