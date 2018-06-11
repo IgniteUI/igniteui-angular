@@ -6,7 +6,7 @@
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
 
 # Usage
-## Drop downs are done by adding **igxDropDownListItems** to **igxDropDown** component 
+## Drop downs are done by adding **igxDropDownListItems** to **igxDropDown** component
 
 ```html
 <igx-drop-down>
@@ -16,11 +16,11 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 </igx-drop-down>
 ```
 
-To provide more useful visual information, use `isHeader` to group items semantically or `isDisabled` to display an item as non-interactive.
+To provide more useful visual information, use `isHeader` to group items semantically or `disabled` to display an item as non-interactive.
 
 ```html
 <igx-drop-down>
-    <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+    <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
         {{ item.field }}
     </igx-drop-down-item>
 </igx-drop-down>
@@ -78,7 +78,7 @@ The following inputs are available in the **igx-drop-down-item** component:
 | Name | Type | Description |
 | :--- | :--- | :--- |
 | `isHeader` | boolean| Defines if the item is a group header. |
-| `isDisabled` | boolean| Disables the given item. |
+| `disabled` | boolean| Disables the given item. |
 | `isFocused` | boolean| Defines if the given item is focused. |
 
 #### Getters
