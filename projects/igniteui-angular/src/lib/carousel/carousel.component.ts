@@ -553,7 +553,6 @@ export interface ISlideEventArgs {
 }
 /**
  * The `IgxCarouselModule` provides the {@link IgxCarouselComponent} inside your application.
- * @class IgxCarouselModule
  */
 @NgModule({
     declarations: [IgxCarouselComponent, IgxSlideComponent],
