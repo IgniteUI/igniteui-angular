@@ -486,7 +486,7 @@ export class IgxNavigationDrawerComponent implements
      * this.navdrawer.toggle(fireEvents);
      * ```
      *
-     * @param {boolean} [fireEvents] - Optional flag determining whether events should be fired or not.
+     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
     public toggle(fireEvents?: boolean) {
         if (this.isOpen) {
@@ -504,7 +504,7 @@ export class IgxNavigationDrawerComponent implements
      * this.navdrawer.open(fireEvents);
      * ```
      *
-     * @param {boolean} [fireEvents] - Optional flag determining whether events should be fired or not.
+     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
     public open(fireEvents?: boolean) {
         if (this._panning) {
@@ -537,7 +537,7 @@ export class IgxNavigationDrawerComponent implements
      * this.navdrawer.close(fireEvents);
      * ```
      *
-     * @param {boolean} [fireEvents] - Optional flag determining whether events should be fired or not.
+     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
     public close(fireEvents?: boolean) {
         if (this._panning) {
@@ -577,7 +577,7 @@ export class IgxNavigationDrawerComponent implements
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
      *
      * @hidden
-     * @param {boolean} [mini] - Request mini width instead
+     * @param [mini] - Request mini width instead
      */
     protected getExpectedWidth(mini?: boolean): number {
         if (mini) {
