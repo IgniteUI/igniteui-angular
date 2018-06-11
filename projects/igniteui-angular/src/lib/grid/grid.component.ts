@@ -775,8 +775,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public filter(...rest): void {
-        this._filter(rest[0], rest[1], rest[2], rest[3]);
+    public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase?: boolean) {
+        const col = this.gridAPI.get_column_by_name(this.id, name);
+        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+
+        if (conditionOrExpressionTree) {
+            this.gridAPI.filter(this.id, name, value, conditionOrExpressionTree, filteringIgnoreCase);
+        } else if (col) {
+            this.gridAPI.filter(this.id, name, value, col.filteringExpressionsTree, filteringIgnoreCase);
+        }
     }
 
     public filterGlobal(value: any, condition?, ignoreCase?) {
@@ -1136,18 +1144,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected _sortMultiple(expressions: ISortingExpression[]) {
         this.gridAPI.sort_multiple(this.id, expressions);
-    }
-
-    protected _filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
-        ignoreCase?: boolean) {
-        const col = this.gridAPI.get_column_by_name(this.id, name);
-        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
-
-        if (conditionOrExpressionTree) {
-            this.gridAPI.filter(this.id, name, value, conditionOrExpressionTree, filteringIgnoreCase);
-        } else if (col) {
-            this.gridAPI.filter(this.id, name, value, col.filteringExpressionsTree, filteringIgnoreCase);
-        }
     }
 
     protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
