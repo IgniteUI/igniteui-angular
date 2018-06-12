@@ -57,9 +57,13 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     @Input() public value: Date;
 
+
     /**
      * Propagate calendar properties.
      */
+    @Input() public label: string = "Date";
+    @Input() public isLabelVisible: boolean = true;
+
     @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
 
     @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
