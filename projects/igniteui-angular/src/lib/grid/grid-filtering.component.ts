@@ -133,9 +133,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         this.cdr.detectChanges();
     }
 
-    public isUnaryCondition(condition): boolean {
+    public isUnaryCondition(expression: IFilteringExpression): boolean {
         for (const each of this.UNARY_CONDITIONS) {
-            if ( condition && condition === each) {
+            if (expression.condition && expression.condition.name === each) {
                 return true;
             }
         }
@@ -150,9 +150,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         }
 
         const grid = this.gridAPI.get(this.gridID);
-
-        //this.gridAPI.clear_filter(this.gridID, this.column.field);
-        //this.gridAPI.get(this.gridID).clearSummaryCache();
         grid.clearFilter(this.column.field);
 
         grid.onFilteringDone.emit(this.column.filteringExpressionsTree);
@@ -176,7 +173,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     @autoWire(true)
     public onUnSelectLogicOperator(event): void {
-        if(this.logicOperators.selectedIndexes.length === 0){ 
+        if(this.logicOperators.selectedIndexes.length === 0) {
             this.isSecondConditionVisible = false;
             this.expressionsList.toArray()[1].clearFiltering(false);
             this._filter(this.expressionsList.toArray()[0]);
@@ -216,19 +213,16 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public onExpressionChanged(filterExpression: IgxGridFilterExpressionComponent): void {
         const grid = this.gridAPI.get(this.gridID);
         this._filter(filterExpression)
-
         grid.onFilteringDone.emit(this.column.filteringExpressionsTree);
     }
 
     protected isFilteringApplied(): boolean {
-        const expr = this.gridAPI.get(this.gridID)
-            .filteringExpressionsTree.find(this.column.field);
+        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
 
         if (expr) {
             if (expr instanceof FilteringExpressionsTree) {
                 return expr.filteringOperands.length > 0;
             }
-
             return true;
         }
         return false;
@@ -241,14 +235,14 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         } else {
             this.column.filteringExpressionsTree.filteringOperands = [];
 
-            if(this.expressionsList.toArray()[0].expression.searchVal || this.isUnaryCondition(this.expressionsList.toArray()[0].expression.condition.name)) {
+            if(this.expressionsList.toArray()[0].expression.searchVal || this.isUnaryCondition(this.expressionsList.toArray()[0].expression)) {
                 this.column.filteringExpressionsTree.filteringOperands.push(this.expressionsList.toArray()[0].expression);
             }
 
-            if(this.expressionsList.toArray()[1] && (this.expressionsList.toArray()[1].expression.searchVal || this.isUnaryCondition(this.expressionsList.toArray()[1].expression.condition.name))) {
+            if(this.isSecondConditionVisible && this.expressionsList.toArray()[1] && (this.expressionsList.toArray()[1].expression.searchVal || this.isUnaryCondition(this.expressionsList.toArray()[1].expression))) {
                 this.column.filteringExpressionsTree.filteringOperands.push(this.expressionsList.toArray()[1].expression);
             }
-            
+
             if (this.logicOperators.selectedIndexes.length !== 0) {
                 this.column.filteringExpressionsTree.operator = this.logicOperators.selectedIndexes[0];
             }
@@ -258,8 +252,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
         if(this.column.filteringExpressionsTree.filteringOperands.length === 0) {
             grid.clearFilter(this.column.field);
+        } else {
+            grid.filter(this.column.field, null, this.column.filteringExpressionsTree, this.column.filteringIgnoreCase);
         }
-        grid.filter(this.column.field, null, this.column.filteringExpressionsTree,
-            this.column.filteringIgnoreCase);
     }
 }

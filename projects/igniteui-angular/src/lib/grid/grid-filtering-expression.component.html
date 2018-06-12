@@ -1,7 +1,7 @@
 <ng-template #defaultFilterUI>
     <div *ngIf="!unaryCondition" class="igx-filtering__op">
         <igx-input-group>
-            <input type="text" igxInput placeholder="Value" autocomplete="off" (input)="onInputChanged($event.target.value)" #input/>
+            <input type="text" igxInput placeholder="Value" autocomplete="off" [value]="expression.searchVal" (input)="onInputChanged($event.target.value)" #input/>
             <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
                 <igx-icon>clear</igx-icon>
             </igx-suffix>
@@ -16,6 +16,7 @@
 
 <div>
     <select (change)="selectionChanged($event.target.value)" #select>
+        <option *ngIf="column.dataType === 'boolean'" [value]="booleanFilterAll">{{ booleanFilterAll | filterCondition | titlecase }}</option>
         <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
     </select>
 </div>

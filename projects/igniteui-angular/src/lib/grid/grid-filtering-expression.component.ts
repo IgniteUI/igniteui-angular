@@ -5,8 +5,6 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
-    HostBinding,
-    HostListener,
     Input,
     NgZone,
     OnDestroy,
@@ -16,7 +14,7 @@ import {
     ViewChild,
     AfterViewInit
 } from "@angular/core";
-import { Subject, Subscription } from "rxjs";
+import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { DataType } from "../data-operations/data-util";
 import { IgxToggleDirective } from "../directives/toggle/toggle.directive";
@@ -71,14 +69,9 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
 
-    constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
-         // when condition is unary
-        //this.unaryConditionChanged.subscribe((value) => this.filter());
-        this.unaryConditionChanged.subscribe((value) => this.onExpressionChanged.emit(this));//TODO
-        // when condition is NOT unary
-        //this.conditionChanged.subscribe((value) => { if (!!this._value || this._value === 0) { this.filter(); }});
-        this.conditionChanged.subscribe((value) => this.conditionChangedCallback());//TODO
-
+    constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
+        this.unaryConditionChanged.subscribe((value) => this.unaryConditionChangedCallback());
+        this.conditionChanged.subscribe((value) => this.conditionChangedCallback());
     }
 
     public ngOnInit() {
@@ -122,7 +115,13 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
              this.onExpressionChanged.emit(this); 
         }
-   }
+    }
+
+    @autoWire()
+    public unaryConditionChangedCallback() {
+        //this.expression.searchVal = null;
+        this.onExpressionChanged.emit(this)
+    }
 
     public isActive(value): boolean {
         if(this.expression && this.expression.condition === value) {
@@ -167,6 +166,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public selectionChanged(value): void {
         if (value === this.booleanFilterAll) {
             this.clearFiltering(true);
+            this.onExpressionChanged.emit(this);
             return;
         }
         this.expression.condition = this.getCondition(value);
@@ -175,7 +175,6 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         } else {
             this.conditionChanged.next(value);
         }
-        //this.onExpressionChanged.emit(this.expression);
     }
 
 
@@ -191,7 +190,9 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     }
 
     public clearFiltering(resetCondition: boolean): void {
-        this.input.nativeElement.value = null;
+        if(this.input) {
+            this.input.nativeElement.value = null;
+        }
         this.expression.searchVal = null;
         this.expression.condition = resetCondition ? undefined : this.expression.condition;
         // XXX - Temp fix for (#1183, #1177) (Should be deleted)
