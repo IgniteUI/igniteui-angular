@@ -1038,7 +1038,7 @@ describe('Combo', () => {
     });
 
     // Silently fails (cannot get 0 of undefined on line 846)
-    it('Should properly render grouped items', fakeAsync(() => {
+    fit('Should properly render grouped items', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboInputTestComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -1046,15 +1046,9 @@ describe('Combo', () => {
         tick();
         fix.whenStable().then(() => {
             fix.detectChanges();
-<<<<<<< HEAD
             const dropdownContainer = fix.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
             checkGroupedItemsClass(0, 5, dropdownContainer);
             checkGroupedItemsClass(6, 10, dropdownContainer);
-=======
-            const dropdown = combo.dropdown.element;
-            checkGroupedItemsClass(0, 5, dropdown);
-            checkGroupedItemsClass(6, 10, dropdown);
->>>>>>> 2dd31da16f7131ec715eef723c5f53a5c9c5b77e
             //     combo.dropdown.navigateLast();
             //     fix.detectChanges();
             //     return fix.whenStable();
