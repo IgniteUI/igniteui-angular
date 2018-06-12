@@ -112,9 +112,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     /**
-     * An @Input property that allows you to disable the `igx-time-picker` component. By default `isDisabled` is set to false.
+     * An @Input property that allows you to disable the `igx-time-picker` component. By default `disabled` is set to false.
      * ```html
-     * <igx-time-picker [isDisabled]="true" [vertical]="true" format="h:mm tt" ></igx-time-picker>
+     * <igx-time-picker [disabled]="'true'" [vertical]="true" format="h:mm tt" ></igx-time-picker>
      * ```
      */
     @Input()
@@ -140,8 +140,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public cancelButtonLabel = 'Cancel';
 
     /**
-     * An @Input property that gets/sets the delta by which hour and minute items would be displayed.
-     * By default `itemsDelta` is set to `{hours: 1, minutes:1}`\
+     * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>
+     * when the user presses the Up/Down keys.
+     * By default `itemsDelta` is set to `{hours: 1, minutes:1}`
      * ```html
      *<igx-time-picker [itemsDelta]="{hours:3, minutes:5}" id="time-picker"></igx-time-picker>
      *```
@@ -210,16 +211,15 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
-     *```html
+     *```typescript
      * @ViewChild("toast")
-     *private toast: ElementRef;
-     *public show(toast) {
-     *toast.show();
-     *}
+     *private toast: IgxToastComponent;
      *public onValueChanged(timepicker){
      *    this.toast.show()
      *}
      * //...
+     * ```
+     * ```html
      *<igx-time-picker (onValueChanged)="onValueChanged($event)"></igx-time-picker>
      *<igx-toast #toast message="The value has been changed!"></igx-toast>
      *```
@@ -229,17 +229,17 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      * Emitted when an invalid value is being set. Returns {`timePicker`: `any`, `currentValue`: `Date`, `setThroughUI`: `boolean`}
-     * ```html
+     * ```typescript
      *public min: string = "09:00";
      *public max: string = "18:00";
      *@ViewChild("toast")
-     *private toast: ElementRef;
-     *public show(toast) {
-     *    this.toast.show()
-     *}
+     *private toast: IgxToastComponent;
      *public onValidationFailed(timepicker){
-     *    this.show(this.toast);
+     *    this.toast.show();
      *}
+     * //...
+     * ```
+     * ```html
      *<igx-time-picker [minValue]="min" [maxValue]="max" (onValidationFailed)="onValidationFailed($event)"></igx-time-picker>
      *<igx-toast #toast message="Value must be between 09:00 and 18:00!"></igx-toast>
      * ```
@@ -251,13 +251,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * Emitted when a timePicker is being opened.
      * ```html
      *@ViewChild("toast")
-     *private toast: ElementRef;
-     *public show(toast) {
-     *    toast.show();
-     *}
+     *private toast: IgxToastComponent;
      *public onOpen(timepicker){
-     *    this.show(this.toast);
+     *    this.toast.show();
      *}
+     * //...
+     * ```
+     * ```html
      *<igx-time-picker [minValue]="min" [maxValue]="max" (onOpen)="onOpen($event)"></igx-time-picker>
      *<igx-toast #toast message="The time picker has been opened!"></igx-toast>
      * ```
@@ -342,7 +342,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * Returns the current time formatted as string using the `format` option.
      * If there is no set time the return is an empty string.
-     *```html
+     *```typescript
      *@ViewChild("MyChild")
      *private picker: IgxTimePickerComponent;
      *ngAfterViewInit(){
@@ -743,7 +743,6 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      * Scrolls a hour item into view.
-     * @param item to be scrolled in view.
      * ```typescript
      *scrhintoView(tp) {
      *tp.scrollHourIntoView('2');
@@ -752,6 +751,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      *```html
      *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrhintoView(tp)"></igx-time-picker>
      *```
+     *@param item to be scrolled in view.
      */
     public scrollHourIntoView(item: string): void {
         const hourIntoView = this._scrollItemIntoView(item, this._hourItems, this.selectedHour, this._isHourListLoop, 'hour');
@@ -763,7 +763,6 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      * Scrolls a minute item into view.
-     * @param item to be scrolled in view.
      * ```typescript
      *scrhintoView(tp) {
      *tp.scrollMinuteIntoView('3');
@@ -772,6 +771,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      *```html
      *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrMintoView(tp)"></igx-time-picker>
      *```
+     * @param item to be scrolled in view.
      */
     public scrollMinuteIntoView(item: string): void {
         const minuteIntoView = this._scrollItemIntoView(item, this._minuteItems, this.selectedMinute, this._isMinuteListLoop, 'minute');
@@ -783,7 +783,6 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      * Scrolls an ampm item into view.
-     * @param item to be scrolled in view.
      * ```typescript
      *scrhintoView(tp) {
      *tp.scrollAmPmIntoView('PM');
@@ -792,6 +791,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      *```html
      *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrAmPmIntoView(tp)"></igx-time-picker>
      *```
+     * @param item to be scrolled in view.
      */
     public scrollAmPmIntoView(item: string): void {
         const ampmIntoView = this._scrollItemIntoView(item, this._ampmItems, this.selectedAmPm, false, null);
