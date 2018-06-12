@@ -75,7 +75,7 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
      * Emitted before the dropdown is opened
      *
      * ```html
-     * <igx-drop-down (onOpening)='handleOpening()'></igx-dro-down>
+     * <igx-drop-down (onOpening)='handleOpening()'></igx-drop-down>
      * ```
      */
     @Output()
@@ -206,7 +206,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Gets if the dropdown is collapsed
      *
-     * @hidden
+     * ```typescript
+     * let isCollapsed = this.dropdown.collapsed;
+     * ```
      */
     public get collapsed(): boolean {
         return this.toggleDirective.collapsed;
@@ -300,7 +302,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Opens the dropdown
      *
-     * @hidden
+     * ```typescript
+     * this.dropdown.open();
+     * ```
      */
     open() {
         this.toggleDirective.open(true);
@@ -309,7 +313,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Closes the dropdown
      *
-     * @hidden
+     * ```typescript
+     * this.dropdown.close();
+     * ```
      */
     close() {
         this.toggleDirective.close(true);
@@ -318,7 +324,9 @@ export class IgxDropDownComponent implements IToggleView, OnInit {
     /**
      * Toggles the dropdown
      *
-     * @hidden
+     * ```typescript
+     * this.dropdown.toggle();
+     * ```
      */
     toggle() {
         if (this.toggleDirective.collapsed) {
