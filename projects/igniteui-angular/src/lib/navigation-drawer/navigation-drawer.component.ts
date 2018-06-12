@@ -86,7 +86,7 @@ export class IgxNavigationDrawerComponent implements
      *
      * ```html
      * <!--set-->
-     * <igx-nav-drawer [position]='left'></igx-nav-drawer>
+     * <igx-nav-drawer [position]="'left'"></igx-nav-drawer>
      * ```
      */
     @Input() public position = 'left';
@@ -173,7 +173,7 @@ export class IgxNavigationDrawerComponent implements
      *
      * ```html
      * <!--set-->
-     * <igx-nav-drawer [width]='228px'></igx-nav-drawer>
+     * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
      * ```
      */
     @Input() public width = '280px';
@@ -188,7 +188,7 @@ export class IgxNavigationDrawerComponent implements
      *
      * ```html
      * <!--set-->
-     * <igx-nav-drawer [miniWidth]='34px'></igx-nav-drawer>
+     * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
     @Input() public miniWidth = '60px';
