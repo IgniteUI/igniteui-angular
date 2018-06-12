@@ -105,24 +105,24 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     get inEditMode(): boolean {
-        return this._inEditMode;
+        const editableCell = this.gridAPI.getCell_InEditMode_ID(this.gridID);
+        if (editableCell) {
+            return this.cellID.rowID === editableCell.rowID &&
+            this.cellID.columnID === editableCell.columnID;
+        } else {
+            return false;
+        }
     }
 
     @autoWire(true)
     set inEditMode(value: boolean) {
-        const originalValue = this._inEditMode;
-
-        this._inEditMode = value;
-
-        if (this._inEditMode) {
-            this.grid.cellInEditMode = this;
-            // if (!this.column.inlineEditorTemplate) {
+        if (this.column.editable && value) {
             this.editValue = this.value;
-            // }
-            this.cdr.detectChanges();
-        } else if (!originalValue) {
-            this.grid.cellInEditMode = null;
+            this.gridAPI.setCell_inEditMode(this.gridID, this, value);
+        } else {
+            this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }
+        this.cdr.detectChanges();
     }
 
     @HostBinding('attr.tabindex')
@@ -163,7 +163,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @HostBinding('class.igx-grid__td--editing')
     get editModeCSS() {
-        return this._inEditMode;
+        return this.inEditMode;
     }
 
     @autoWire(true)
@@ -220,7 +220,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     protected defaultCssClass = 'igx-grid__td';
     protected isFocused = false;
     protected isSelected = false;
-    protected _inEditMode = false;
     protected chunkLoadedHor;
     protected chunkLoadedVer;
     private cellSelectionID: string;
@@ -239,6 +238,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         if (this.column.editable && this.previousCellEditMode) {
             this.inEditMode = true;
         }
+        this.cdr.detectChanges();
     }
 
     private _clearCellSelection() {
@@ -246,11 +246,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         if (cell) {
             cell.selected = false;
             cell.focused = false;
-            this.previousCellEditMode = cell.inEditMode;
-            if (cell.inEditMode) {
-                cell.inEditMode = false;
-                cell.submitValue();
-            }
+        }
+        const editCellID = this.gridAPI.getCell_InEditMode_ID(this.gridID);
+        if (editCellID) {
+            this.gridAPI.submitValue(this.gridID);
+            this.gridAPI.escape_editMode(this.gridID, editCellID);
+            this.previousCellEditMode = true;
         }
         this.selectionApi.set_selection(this.cellSelectionID, []);
     }
@@ -306,16 +307,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             this.highlight.highlight(this.grid.lastSearchInfo.searchText, this.grid.lastSearchInfo.caseSensitive);
             this.highlight.activateIfNecessary();
         }
-    }
-
-    @autoWire(true)
-    public update(val: any) {
-        const args: IGridEditEventArgs = { row: this.row, cell: this, currentValue: this.value, newValue: val };
-        this.grid.onEditDone.emit(args);
-        this.value = args.newValue;
-        this.gridAPI.update(this.gridID, this);
-
-        this.grid.refreshSearch();
     }
 
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
@@ -391,14 +382,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             cell: this,
             event
         });
-    }
-    datePickerOpen() {
-        this.zone.run(() => this.cdr.detectChanges());
-    }
-
-    @autoWire()
-    public datePickerClosed() {
-        requestAnimationFrame(() => this.nativeElement.focus());
     }
 
     @HostListener('blur', ['$event'])
@@ -670,27 +653,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     @HostListener('keydown.f2')
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
+            if (this.inEditMode) {
+                this.gridAPI.submitValue(this.gridID);
+            }
             this.inEditMode = !this.inEditMode;
-            if (!this.inEditMode) {
-                this.submitValue();
-            }
-            if (!(this.column.dataType === DataType.Date)) {
-                this.nativeElement.focus();
-            }
+            this.nativeElement.focus();
         }
-    }
-
-    submitValue() {
-        // if (this.editValue !== undefined) {
-        if (!this.column.inlineEditorTemplate && this.column.dataType === DataType.Number) {
-            const val = parseFloat(this.editValue);
-            if (!isNaN(this.editValue) || isFinite(this.editValue)) {
-                this.update(val);
-            }
-        } else {
-            this.update(this.editValue);
-        }
-        // }
     }
 
     @HostListener('keydown.escape')

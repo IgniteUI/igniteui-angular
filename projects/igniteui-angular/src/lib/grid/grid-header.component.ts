@@ -134,7 +134,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
             event.stopPropagation();
             if (this.column.sortable) {
                 const grid = this.gridAPI.get(this.gridID);
-
+                if (grid.cellInEditMode) {
+                    grid.cellInEditMode.inEditMode = false;
+                }
                 this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
                     : this.sortDirection;
                 this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);

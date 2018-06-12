@@ -15,6 +15,7 @@ export class IgxGridAPIService {
 
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
+    protected editCellState: Map<string, any> = new Map<string, any>();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     public register(grid: IgxGridComponent) {
@@ -23,6 +24,12 @@ export class IgxGridAPIService {
 
     public get(id: string): IgxGridComponent {
         return this.state.get(id);
+    }
+
+    public unset(id: string) {
+        this.state.delete(id);
+        this.summaryCacheMap.delete(id);
+        this.editCellState.delete(id);
     }
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
@@ -55,6 +62,43 @@ export class IgxGridAPIService {
                 this.summaryCacheMap.get(id).delete(name);
             }
         }
+    }
+
+    public setCell_inEditMode(gridId: string, cell,  editMode: boolean) {
+        if (!this.editCellState.has(gridId)) {
+            this.editCellState.set(gridId, null);
+        }
+        if (!this.getCell_InEditMode_ID(gridId) && editMode) {
+            this.editCellState.set(gridId, {cellID: cell.cellID, cell: Object.assign({}, cell)});
+        }
+    }
+
+    public escape_editMode(gridId, cellId) {
+        console.log('escape', cellId);
+        const editableCell = this.getCell_InEditMode_ID(gridId);
+        if (editableCell && cellId.rowID === editableCell.rowID &&
+            cellId.columnID === editableCell.columnID) {
+            this.editCellState.delete(gridId);
+        }
+    }
+
+    public getCell_InEditMode_ID(gridId: string) {
+        const editCellId = this.editCellState.get(gridId);
+        if (editCellId) {
+            return editCellId.cellID;
+        } else {
+            return null;
+        }
+    }
+
+    public getCell_InEditMode(gridId) {
+        const editCellId = this.editCellState.get(gridId);
+        if (editCellId) {
+            return editCellId.cell;
+        } else {
+            return null;
+        }
+
     }
 
     public get_row_by_key(id: string, rowSelector: any): IgxGridRowComponent {
@@ -94,9 +138,34 @@ export class IgxGridAPIService {
         }
     }
 
-    public update(id: string, cell: IgxGridCellComponent): void {
-        const index = this.get(id).data.indexOf(cell.row.rowData);
-        this.get(id).data[index][cell.column.field] = cell.value;
+    public submitValue(gridId) {
+        const editableCell = this.getCell_InEditMode(gridId);
+        const editableCellId = this.getCell_InEditMode_ID(gridId);
+        if (editableCell) {
+            if (!editableCell.column.inlineEditorTemplate && editableCell.column.dataType === 'number') {
+                if (!this.getCell_InEditMode(gridId).editValue) {
+                    this.updateCell(gridId, editableCellId.rowIndex, editableCellId.columnID, 0);
+                } else {
+                    const val = parseFloat(this.getCell_InEditMode(gridId).editValue);
+                    if (!isNaN(val) || isFinite(val)) {
+                        this.updateCell(gridId, editableCellId.rowIndex, editableCellId.columnID, val);
+                    }
+                }
+            } else {
+                this.updateCell(gridId, editableCellId.rowIndex, editableCellId.columnID, editableCell.editValue);
+            }
+        }
+    }
+
+    public updateCell(id: string, rowIndex, columnID, editValue) {
+        const cell = this.get(id).columnList.toArray()[columnID].cells[rowIndex] ?
+        this.get(id).columnList.toArray()[columnID].cells[rowIndex] :  this.getCell_InEditMode(id);
+        if (cell) {
+            const args: IGridEditEventArgs = { row: cell.row, cell: cell, currentValue: cell.value, newValue: editValue };
+            this.get(id).onEditDone.emit(args);
+            const column =  this.get(id).columnList.toArray()[columnID];
+            this.get(id).data[rowIndex][column.field] = args.newValue;
+        }
     }
 
     public update_row(value: any, id: string, row: IgxGridRowComponent): void {

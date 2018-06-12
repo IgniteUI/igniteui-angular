@@ -448,13 +448,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
     }
 
+    public get cellInEditMode() {
+        const editCellId = this.gridAPI.getCell_InEditMode_ID(this.id);
+        if (editCellId) {
+            return this.gridAPI.get_cell_by_index(this.id, editCellId.rowIndex, editCellId.columnID);
+        } else {
+            return null;
+        }
+    }
+
     public pagingState;
     public calcWidth: number;
     public calcRowCheckboxWidth: number;
     public calcHeight: number;
     public tfootHeight: number;
-
-    public cellInEditMode: IgxGridCellComponent;
 
     public eventBus = new Subject<boolean>();
 
@@ -517,7 +524,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
-        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { this.clearSummaryCache(editCell); });
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { console.log(editCell);
+            this.clearSummaryCache(editCell); });
     }
 
     public ngAfterContentInit() {
@@ -575,6 +583,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
         this.destroy$.next(true);
         this.destroy$.complete();
+        this.gridAPI.unset(this.id);
     }
 
     public dataLoading(event) {
@@ -739,12 +748,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateCell(value: any, rowSelector: any, column: string): void {
-        const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
-        if (cell) {
-            cell.update(value);
-            this.cdr.detectChanges();
-            this._pipeTrigger++;
-        }
+        debugger;
+        const columnEdit = this.columnList.toArray().filter((col) => col.field === column)[0];
+        const columnId = this.columnList.toArray().indexOf(columnEdit);
+        this.gridAPI.updateCell(this.id, rowSelector, columnId, value);
+        this.cdr.detectChanges();
+        this._pipeTrigger++;
     }
 
     public updateRow(value: any, rowSelector: any): void {
@@ -1234,9 +1243,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             delay(DEBOUNCE_TIME),
             repeat()
         ).subscribe(() => {
-            if (this.cellInEditMode) {
-                this.cellInEditMode.inEditMode = false;
-            }
             this.eventBus.next();
         });
     }
