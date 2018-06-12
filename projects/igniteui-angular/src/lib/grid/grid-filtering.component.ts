@@ -227,7 +227,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     private _filter(filterExpression: IgxGridFilterExpressionComponent) {
         if(!this.column.filteringExpressionsTree) {
-            this.column.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            this.column.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, this.column.field);
             this.column.filteringExpressionsTree.filteringOperands.push(filterExpression.expression);
         } else {
             this.column.filteringExpressionsTree.filteringOperands = [];
