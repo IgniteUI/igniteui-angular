@@ -75,7 +75,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
      * Sets the id of the `label` element in the switch component.
      * If not set, the label of the first switch component will have an id=`"igx-switch-0-label"`;
      * ```html
-     * <igx-switch labrlId="Label1"></igx-switch>
+     * <igx-switch labelId="Label1"></igx-switch>
      * ```
      * @memberof IgxSwitchComponent
      */
@@ -105,7 +105,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     /**
      * Sets the value of the `tabindex` attribute of the switch component.
      * ```html
-     * <igx-switch [labelPosition]="1"></igx-switch>
+     * <igx-switch [tabindex]="1"></igx-switch>
      * ```
      * @memberof IgxSwitchComponent
      */
@@ -129,8 +129,8 @@ export class IgxSwitchComponent implements ControlValueAccessor {
      */
     @Input() public disableRipple = false;
     /**
-     * Sets the required state of the switch component.
-     * If not set, the required state will have value `false`.
+     * Sets whether the state of the switch component should be required.
+     * If not set, `required` will have value `false`.
      * ```html
      * <igx-switch [required]="true"></igx-switch>
      * ```
@@ -140,7 +140,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     /**
      * Sets the `aria-labelledBy` attribute of the switch component.
      * If not set, the  value of `aria-labelledBy` will be equal to the value of `labelId` attribute.
-     * ```
+     * ```html
      * <igx-switch aria-labelledby = "Switch1"></igx-switch>
      * ```
      * @memberof IgxSwitchComponent
