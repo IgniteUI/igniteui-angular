@@ -28,6 +28,7 @@ import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
+import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
@@ -164,6 +165,10 @@ const appRoutes = [
     {
         path: 'virtualForDirective',
         component: VirtualForSampleComponent
+    },
+    {
+        path: 'gridCellEditing',
+        component: GridCellEditingComponent
     },
     {
         path: 'grid',
