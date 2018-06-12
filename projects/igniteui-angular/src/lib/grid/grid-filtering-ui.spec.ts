@@ -1191,7 +1191,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
     });
 
-    fit('When filter column with value 0 and dataType number, filtering icon class indicator should be applied', async(() => {
+    it('When filter column with value 0 and dataType number, filtering icon class indicator should be applied', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
