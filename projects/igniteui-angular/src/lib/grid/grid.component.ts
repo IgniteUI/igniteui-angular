@@ -459,29 +459,86 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /* Toolbar related definitions */
 
+    private _showToolbar = false;
+    private _exportExcel = false;
+    private _exportCsv = false;
+    private _toolbarTitle: string = null;
+    private _exportText: string = null;
+    private _exportExcelText: string = null;
+    private _exportCsvText: string = null;
+
     @ViewChild('toolbar', { read: IgxGridToolbarComponent })
     public toolbar: IgxGridToolbarComponent = null;
 
     @Input()
-    public showToolbar = false;
+    public get showToolbar(): boolean {
+        return this._showToolbar;
+    }
+
+    public set showToolbar(newValue: boolean) {
+        this._showToolbar = newValue;
+        this.cdr.markForCheck();
+    }
 
     @Input()
-    public toolbarTitle: string = null;
+    public get toolbarTitle(): string {
+        return this._toolbarTitle;
+    }
+
+    public set toolbarTitle(newValue: string) {
+        this._toolbarTitle = newValue;
+        this.cdr.markForCheck();
+    }
 
     @Input()
-    public exportExcel = false;
+    public get exportExcel(): boolean {
+        return this._exportExcel;
+    }
+
+    public set exportExcel(newValue: boolean) {
+        this._exportExcel = newValue;
+        this.cdr.markForCheck();
+    }
 
     @Input()
-    public exportCsv = false;
+    public get exportCsv(): boolean {
+        return this._exportCsv;
+    }
+
+    public set exportCsv(newValue: boolean) {
+        this._exportCsv = newValue;
+        this.cdr.markForCheck();
+    }
 
     @Input()
-    public exportText: string = null;
+    public get exportText(): string {
+        return this._exportText;
+    }
+
+    public set exportText(newValue: string) {
+        this._exportText = newValue;
+        this.cdr.markForCheck();
+    }
 
     @Input()
-    public exportExcelText: string = null;
+    public get exportExcelText(): string {
+        return this._exportExcelText;
+    }
+
+    public set exportExcelText(newValue: string) {
+        this._exportExcelText = newValue;
+        this.cdr.markForCheck();
+    }
 
     @Input()
-    public exportCsvText: string = null;
+    public get exportCsvText(): string {
+        return this._exportCsvText;
+    }
+
+    public set exportCsvText(newValue: string) {
+        this._exportCsvText = newValue;
+        this.cdr.markForCheck();
+    }
 
     @Output()
     public onToolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
