@@ -1009,7 +1009,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return;
         }
         if (!this.nativeElement.parentNode.clientHeight) {
-            const viewPortHeight = screen.height;
+            const viewPortHeight = document.documentElement.clientHeight;
             this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
         } else {
             const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
