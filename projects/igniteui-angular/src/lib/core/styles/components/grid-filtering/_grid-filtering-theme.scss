@@ -191,15 +191,15 @@
         padding: $grid-filtering-options-padding;
         z-index: 10;
 
-        @include igx-button(igx-button-theme(
-            $flat-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-hover-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-hover-background: --var($theme, 'menu-button-text-color'),
-            $flat-focus-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-focus-background: --var($theme, 'menu-button-text-color'),
-            $disabled-color: --var($theme, 'menu-button-disabled-text-color'),
-            $disabled-background: transparent
-        ));
+        // @include igx-button(igx-button-theme(
+        //     $flat-text-color: --var($theme, 'menu-button-text-color'),
+        //     $flat-hover-text-color: --var($theme, 'menu-button-text-color'),
+        //     $flat-hover-background: --var($theme, 'menu-button-text-color'),
+        //     $flat-focus-text-color: --var($theme, 'menu-button-text-color'),
+        //     $flat-focus-background: --var($theme, 'menu-button-text-color'),
+        //     $disabled-color: --var($theme, 'menu-button-disabled-text-color'),
+        //     $disabled-background: transparent
+        // ));
 
         // TODO: remove after SELECT theme is created
         select {
