@@ -764,7 +764,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * Scrolls a minute item into view.
      * ```typescript
-     *scrhintoView(tp) {
+     *scrMintoView(tp) {
      *tp.scrollMinuteIntoView('3');
      *}
      * ```
@@ -784,7 +784,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * Scrolls an ampm item into view.
      * ```typescript
-     *scrhintoView(tp) {
+     *scrAmPmIntoView(tp) {
      *tp.scrollAmPmIntoView('PM');
      *}
      * ```
