@@ -1,13 +1,16 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 6.1.0
-- **Breaking changes**:
-    - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
 
 ## 6.0.1
+- Introduced migration schematics to integrate with the Angular CLI update command. You can now run
+  
+  `ng update igniteui-angular`
+  
+  in existing projects to both update the package and apply any migrations needed to your project. Make sure to commit project state before proceeding.
+  Currently these cover converting submodule imports as well as the deprecation of `igxForRemote` and rename of `igx-tab-bar` to `igx-bottom-nav` from 6.0.0.
 - **Breaking changes**:
-    - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
+    - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package. You can use `ng update igniteui-angular` when updating to automatically convert existing submodule imports in the project.
 
 ## 6.0.0
 - Theming - You can now use css variables to style the component instances you include in your project.
