@@ -154,8 +154,9 @@
     $grid-head-fs: rem(12px);
     $grid-head-fw: 600;
 
-    $grid-cell-padding: rem(16px) rem(24px);
-    $grid-cell-padding--e: 0 rem(24px);
+    // Cell
+    // $grid-cell-padding: 0 rem(24px);
+    // $grid-cell-padding--e: 0 rem(24px);
     $grid-cell-align-num: right;
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
@@ -165,6 +166,24 @@
     $cell-pin: (
         style: --var($theme, 'pinned-border-width') --var($theme, 'pinned-border-style'),
         color: --var($theme, 'pinned-border-color')
+    );
+
+    $grid-header-padding: (
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
+    );
+
+    $grid-header-height: (
+        comfortable: rem(50px),
+        cosy: rem(40px),
+        compact: rem(32px)
+    );
+
+    $grid-cell-padding: (
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
     );
 
     %grid-display {
@@ -282,9 +301,11 @@
     }
 
     %grid-cell-display {
+        display: flex;
         flex: 1 1 0%;
+        align-items: center;
         outline-style: none;
-        padding: $grid-cell-padding;
+        padding: map-get($grid-cell-padding, 'comfortable');
         font-size: $grid-cell-fs;
         line-height: $grid-cell-lh;
         color: inherit;
@@ -292,6 +313,14 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+
+    %grid-cell-display--cosy {
+        padding: map-get($grid-cell-padding, 'cosy');
+    }
+
+    %grid-cell-display--compact {
+        padding: map-get($grid-cell-padding, 'compact');
     }
 
     %grid-cell--fixed-width {
@@ -305,10 +334,14 @@
     }
 
     %grid-cell--editing {
-        padding: $grid-cell-padding--e;
         background-color: --var($theme, 'cell-editing-background') !important;
         border: 1px solid --var($theme, 'cell-selected-background');
         box-shadow: igx-elevation($elevations, 2);
+
+        igx-input-group {
+            width: 100%;
+            margin-top: 0;
+        }
     }
 
     %grid-cell--pinned {
@@ -322,20 +355,30 @@
     }
 
     %grid-cell-header {
-        display: flex;
         position: relative;
         flex-flow: row nowrap;
-        align-items: center;
         justify-content: space-between;
         font-size: $grid-head-fs;
         font-weight: $grid-head-fw;
-        overflow: visible;
         min-width: 0;
+        min-height: map-get($grid-header-height, 'comfortable');
+        padding: map-get($grid-header-padding, 'comfortable');
         border-right: 1px dotted igx-color($palette, 'grays', 400);
+        overflow: visible;
 
         &:last-of-type {
             border-right: transparent;
         }
+    }
+
+    %grid-cell-header--cosy {
+        padding: map-get($grid-header-padding, 'cosy');
+        min-height: map-get($grid-header-height, 'cosy');
+    }
+
+    %grid-cell-header--compact {
+        padding: map-get($grid-header-padding, 'compact');
+        min-height: map-get($grid-header-height, 'compact');
     }
 
     %grid-cell-header-title {
@@ -367,6 +410,7 @@
 
     %grid-cell-number {
         text-align: $grid-cell-align-num;
+        justify-content: flex-end;
 
         %grid-cell-header-icons {
             justify-content: flex-start;
@@ -419,5 +463,10 @@
         &::after {
             left: 100%;
         }
+    }
+
+    %grid-summaries {
+        display: flex;
+        background: inherit;
     }
 }

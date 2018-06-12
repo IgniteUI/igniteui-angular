@@ -6,11 +6,11 @@ import { Calendar } from '../calendar';
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxStringFilteringOperand } from '../../public_api';
 
 const selectedCellClass = '.igx-grid__td--selected';
 let data = [
@@ -659,7 +659,7 @@ describe('IgxGrid - Row Selection', () => {
         rowsCollection = grid.selectedRows();
         expect(rowsCollection).toEqual([]);
 
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
@@ -680,7 +680,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
@@ -702,7 +702,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
         expect(grid.getRowByIndex(2).isSelected).toBeTruthy();
 
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeTruthy();
         expect(headerCheckbox.indeterminate).toBeFalsy();
@@ -727,7 +727,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(headerCheckbox.indeterminate).toBeTruthy();
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
 
-        grid.filter('ProductName', 'Ignite', STRING_FILTERS.contains, true);
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
         expect(headerCheckbox.checked).toBeFalsy();
         expect(headerCheckbox.indeterminate).toBeTruthy();
@@ -914,6 +914,28 @@ describe('IgxGrid - Row Selection', () => {
             expect(firstRow.isSelected).toBeFalsy();
             expect(secondRow.isSelected).toBeFalsy();
             expect(thirdRow.isSelected).toBeFalsy();
+        });
+    }));
+
+    it('Should be able to correctly select all rows programatically', async(() => {
+        const fixture = TestBed.createComponent(GridWithSelectionComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector('.igx-grid');
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
+        expect(firstRow.isSelected).toBeFalsy();
+        grid.selectAllRows();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeTruthy();
+            firstRowCheckbox.dispatchEvent(new Event('click', {}));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
         });
     }));
 

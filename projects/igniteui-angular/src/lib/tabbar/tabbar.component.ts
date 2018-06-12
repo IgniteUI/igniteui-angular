@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewChecked,
     AfterViewInit,
     Component,
     ContentChild,
@@ -28,6 +29,8 @@ export interface ISelectTabEventArgs {
     panel: IgxTabPanelComponent;
 }
 
+let NEXT_ID = 0;
+
 @Directive({
     selector: '[igxTab]'
 })
@@ -51,7 +54,6 @@ export class IgxTabTemplateDirective {
  * </igx-bottom-nav>
  * ```
  */
-let NEXT_ID = 0;
 @Component({
     selector: 'igx-tab-bar, igx-bottom-nav',
     templateUrl: 'tab-bar-content.component.html'
@@ -89,7 +91,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
         // initial selection
         setTimeout(() => {
             if (this.selectedIndex === -1) {
-                const selectablePanels = this.panels.filter((p) => !p.isDisabled);
+                const selectablePanels = this.panels.filter((p) => !p.disabled);
                 const panel = selectablePanels[0];
 
                 if (panel) {
@@ -112,7 +114,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
 
     private _deselectPanel(panel: IgxTabPanelComponent) {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
-        if (panel.isDisabled || this.selectedTab.index === panel.index) {
+        if (panel.disabled || this.selectedTab.index === panel.index) {
             return;
         }
 
@@ -128,13 +130,12 @@ export class IgxBottomNavComponent implements AfterViewInit {
     templateUrl: 'tab-panel.component.html'
 })
 
-export class IgxTabPanelComponent implements AfterContentInit {
+export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked {
     private _itemStyle = 'igx-tab-panel';
-    public isSelected = false;
 
     @Input() public label: string;
     @Input() public icon: string;
-    @Input() public isDisabled: boolean;
+    @Input() public disabled: boolean;
 
     @HostBinding('attr.role') public role = 'tabpanel';
 
@@ -142,19 +143,9 @@ export class IgxTabPanelComponent implements AfterContentInit {
     get styleClass(): boolean {
         return (!this.isSelected);
     }
-    @HostBinding('class.igx-bottom-nav__panel--selected')
-    get selected(): boolean {
-        return this.isSelected;
-    }
-    @HostBinding('attr.aria-labelledby')
-    get labelledBy(): string {
-        return 'igx-tab-' + this.index;
-    }
 
-    @HostBinding('attr.id')
-    get id(): string {
-        return 'igx-bottom-nav__panel-' + this.index;
-    }
+    @HostBinding('class.igx-bottom-nav__panel--selected')
+    public isSelected = false;
 
     public get itemStyle(): string {
         return this._itemStyle;
@@ -166,7 +157,9 @@ export class IgxTabPanelComponent implements AfterContentInit {
         }
     }
     get index() {
-        return this._tabBar.panels.toArray().indexOf(this);
+        if (this._tabBar.panels) {
+            return this._tabBar.panels.toArray().indexOf(this);
+        }
     }
 
     get customTabTemplate(): TemplateRef<any> {
@@ -182,7 +175,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
     @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
     protected tabTemplate: IgxTabTemplateDirective;
 
-    constructor(private _tabBar: IgxBottomNavComponent) {
+    constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
     }
 
     public ngAfterContentInit(): void {
@@ -191,8 +184,13 @@ export class IgxTabPanelComponent implements AfterContentInit {
         }
     }
 
+    public ngAfterViewChecked() {
+        this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-${this.index}`);
+        this._element.nativeElement.setAttribute('id', `igx-bottom-nav__panel-${this.index}`);
+    }
+
     public select() {
-        if (this.isDisabled || this._tabBar.selectedIndex === this.index) {
+        if (this.disabled || this._tabBar.selectedIndex === this.index) {
             return;
         }
 
@@ -220,11 +218,11 @@ export class IgxTabComponent {
         return this._changesCount;
     }
 
-    get isDisabled(): boolean {
+    get disabled(): boolean {
         const panel = this.relatedPanel;
 
         if (panel) {
-            return panel.isDisabled;
+            return panel.disabled;
         }
     }
 

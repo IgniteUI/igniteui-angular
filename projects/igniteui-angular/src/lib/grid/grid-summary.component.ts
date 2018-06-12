@@ -1,16 +1,18 @@
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, DoCheck, HostBinding, Input, OnInit
+} from '@angular/core';
+import { DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-summary',
     templateUrl: './grid-summary.component.html'
 })
-export class IgxGridSummaryComponent implements OnInit, OnDestroy, DoCheck, AfterContentInit {
+export class IgxGridSummaryComponent implements OnInit, DoCheck, AfterContentInit {
 
     fieldName: string;
 
@@ -22,6 +24,24 @@ export class IgxGridSummaryComponent implements OnInit, OnDestroy, DoCheck, Afte
 
     get dataType(): DataType {
         return this.column.dataType;
+    }
+
+    @HostBinding('attr.class')
+    get defaultClass(): string {
+        switch (this.displayDensity) {
+            case DisplayDensity.compact:
+                return 'igx-grid-summary--compact';
+            case DisplayDensity.cosy:
+                return 'igx-grid-summary--cosy';
+            case DisplayDensity.comfortable:
+            default:
+                return 'igx-grid-summary';
+        }
+    }
+
+    @HostBinding('class.igx-grid-summary--fw')
+    get widthPersistenceClass(): boolean {
+        return this.column.width !== null;
     }
 
     @HostBinding('class.igx-grid-summary--pinned')
@@ -44,49 +64,22 @@ export class IgxGridSummaryComponent implements OnInit, OnDestroy, DoCheck, Afte
         return !this.column.hasSummary;
     }
 
-    @HostBinding('class.igx-grid-summary')
-    get defaultClass(): boolean {
-        return this.column.hasSummary;
-    }
-
-    @HostBinding('class.igx-grid-summary--fw')
-    get widthPersistenceClass(): boolean {
-        return this.column.width !== null;
-    }
-
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
     get width() {
         return this.column.width;
     }
 
-    protected subscriptionOnEdit$;
-    protected subscriptionOnAdd$;
-    protected subscriptionOnDelete$;
-    protected subscriptionOnFilter$;
+    public summaryItemHeight;
     public itemClass = 'igx-grid-summary__item';
     private hiddenItemClass = 'igx-grid-summary__item--inactive';
     private summaryResultClass = 'igx-grid-summary-item__result--left-align';
     private numberSummaryResultClass = 'igx-grid-summary-item__result';
+    private displayDensity: DisplayDensity | string;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
     public ngOnInit() {
-    }
-
-    public ngOnDestroy() {
-        if (this.subscriptionOnEdit$) {
-            this.subscriptionOnEdit$.unsubscribe();
-        }
-        if (this.subscriptionOnAdd$) {
-            this.subscriptionOnAdd$.unsubscribe();
-        }
-        if (this.subscriptionOnDelete$) {
-            this.subscriptionOnDelete$.unsubscribe();
-        }
-        if (this.subscriptionOnFilter$) {
-            this.subscriptionOnFilter$.unsubscribe();
-        }
     }
 
     ngDoCheck() {
@@ -94,32 +87,8 @@ export class IgxGridSummaryComponent implements OnInit, OnDestroy, DoCheck, Afte
     }
 
     ngAfterContentInit() {
-        if (this.column.hasSummary) {
-            this.subscriptionOnEdit$ = this.gridAPI.get(this.gridID).onEditDone.subscribe((editCell) => {
-                if (editCell.cell) {
-                    this.fieldName = editCell.cell.column.field;
-                    this.clearCache(editCell.cell.column.field);
-                } else {
-                    this.clearAll();
-                }
-            });
-            this.subscriptionOnFilter$ = this.gridAPI.get(this.gridID).onFilteringDone.subscribe((data) => {
-                this.fieldName = data.fieldName;
-                this.clearAll();
-            });
-            this.subscriptionOnAdd$ = this.gridAPI.get(this.gridID).onRowAdded.subscribe(() => this.clearAll());
-            this.subscriptionOnDelete$ = this.gridAPI.get(this.gridID).onRowDeleted.subscribe(() => this.clearAll());
-        }
-    }
-
-    clearCache(field) {
-        this.gridAPI.remove_summary(this.gridID, field);
-    }
-
-    clearAll() {
-        this.gridAPI.remove_summary(this.gridID);
-        this.gridAPI.get(this.gridID).markForCheck();
-        this.cdr.detectChanges();
+        this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;
+        this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
     }
 
     get resolveSummaries(): any[] {
@@ -137,13 +106,4 @@ export class IgxGridSummaryComponent implements OnInit, OnDestroy, DoCheck, Afte
             return this.gridAPI.get_summaries(this.gridID).get(this.column.field);
         }
     }
-
-    public summaryValueClass(result: any): string {
-        if (typeof result === 'number') {
-            return this.numberSummaryResultClass;
-        } else {
-            return this.summaryResultClass;
-        }
-    }
-
 }

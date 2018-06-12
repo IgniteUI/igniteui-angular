@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewChecked,
     Component,
     ContentChild,
     Directive,
+    ElementRef,
     forwardRef,
     HostBinding,
     Inject,
@@ -20,8 +22,7 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
     templateUrl: 'tabs-group.component.html'
 })
 
-export class IgxTabsGroupComponent implements AfterContentInit {
-    private _itemStyle = 'igx-tabs-group';
+export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
     public isSelected = false;
 
     @Input()
@@ -31,27 +32,13 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     public icon: string;
 
     @Input()
-    public isDisabled: boolean;
+    public disabled: boolean;
 
     @HostBinding('attr.role') public role = 'tabpanel';
 
-    @HostBinding('class.igx-tabs__group')
-    get styleClass(): boolean {
-        return true;
-    }
-
-    @HostBinding('attr.aria-labelledby')
-    get labelledBy(): string {
-        return 'igx-tab-item-' + this.index;
-    }
-
-    @HostBinding('attr.id')
-    get id(): string {
-        return 'igx-tabs__group-' + this.index;
-    }
-
-    public get itemStyle(): string {
-        return this._itemStyle;
+    @HostBinding('class')
+    get styleClass(): string {
+        return 'igx-tabs__group';
     }
 
     get relatedTab(): IgxTabItemComponent {
@@ -61,7 +48,9 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     }
 
     get index() {
-        return this._tabs.groups.toArray().indexOf(this);
+        if (this._tabs.groups) {
+            return this._tabs.groups.toArray().indexOf(this);
+        }
     }
 
     get customTabTemplate(): TemplateRef<any> {
@@ -77,8 +66,10 @@ export class IgxTabsGroupComponent implements AfterContentInit {
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
-    constructor(@Inject(forwardRef(() => IgxTabsComponent))
-    private _tabs: IgxTabsComponent) {
+    constructor(
+        @Inject(forwardRef(() => IgxTabsComponent))
+        private _tabs: IgxTabsComponent,
+        private _element: ElementRef) {
     }
 
     public ngAfterContentInit(): void {
@@ -87,8 +78,13 @@ export class IgxTabsGroupComponent implements AfterContentInit {
         }
     }
 
+    public ngAfterViewChecked() {
+        this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
+        this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
+    }
+
     public select(focusDelay = 50, onInit = false) {
-        if (this.isDisabled || this._tabs.selectedIndex === this.index) {
+        if (this.disabled || this._tabs.selectedIndex === this.index) {
             return;
         }
 
