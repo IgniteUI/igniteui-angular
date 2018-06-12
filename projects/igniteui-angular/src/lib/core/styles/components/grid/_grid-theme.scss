@@ -8,6 +8,9 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
+/// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
+/// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
+/// @param {Color} $ghost-header-background [null] - The dragged header background color.
 /// @param {Color} $content-background [null] - The table body background color.
 /// @param {Color} $content-text-color [null] - The table body text color.
 /// @param {Color} $row-selected-background [null] - The selected row background color.
@@ -65,7 +68,7 @@
         content-text-color: igx-color($palette, 'grays', 800),
 
         ghost-header-text-color: igx-color($palette, 'grays', 600),
-        ghost-header-icon-color: igx-color($palette, 'secondary'),
+        ghost-header-icon-color: igx-color($palette, 'grays'),
         ghost-header-background: #fff,
 
         row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
@@ -85,6 +88,14 @@
 
         drop-indicator-color: igx-color($palette, 'secondary')
     );
+
+    @if not($ghost-header-icon-color) and $ghost-header-background {
+        $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
+    }
+
+    @if not($ghost-header-text-color) and $ghost-header-background {
+        $ghost-header-text-color: text-contrast($ghost-header-background);
+    }
 
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
@@ -508,6 +519,11 @@
     }
 
     %igx-grid__th-drop-indicator--active {
+        &%igx-grid__th-drop-indicator-left,
+        &%igx-grid__th-drop-indicator-right {
+            border-right: 1px dotted --var($theme, 'drop-indicator-color');
+        }
+
         &::after,
         &::before {
             content: '';
@@ -515,7 +531,7 @@
             width: 0;
             height: 0;
             border-style: solid;
-            right: -4.5px;
+            left: -4.5px;
         }
 
         &::before {
@@ -567,14 +583,24 @@
         left: -99999px;
         overflow: visible;
         box-shadow: igx-elevation($elevations, 5);
+
+        %grid-cell-header-title {
+            min-width: rem(24px);
+        }
     }
 
     %grid__drag-ghost-image-icon {
-        color: #e41c77;
-        font-size: 24px;
+        color: --var($theme, 'ghost-header-icon-color');
+        font-size: rem(24px);
+        margin-right: rem(8);
     }
 
-    %grid__drag-col-header {
-        background-color: #fff;
+    %igx-grid__drag-col-header {
+        background-color: lighten(--var($theme, 'header-background'), 10%);
+
+        %grid-cell-header-title,
+        %grid-cell-header-icons {
+            opacity: .4;
+        }
     }
 }

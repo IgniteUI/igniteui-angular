@@ -198,6 +198,6 @@
     }
 
     @include e(drag-col-header) {
-        @extend %grid__drag-col-header !optional;
+        @extend %igx-grid__drag-col-header !optional;
     }
 }
