@@ -13,7 +13,8 @@ import { IFilteringState } from './filtering-state.interface';
 import {IPagingState, PagingError} from './paging-state.interface';
 import {ISortingExpression, SortingDirection} from './sorting-expression.interface';
 import {ISortingState} from './sorting-state.interface';
-import { IgxNumberFilteringOperand } from '../../public_api';
+import { IgxNumberFilteringOperand, FilteringExpressionsTree } from '../../public_api';
+import { FilteringLogic } from 'dist/igniteui-angular/public_api';
 
 describe('DataContainer', () => {
     let dataGenerator: DataGenerator;
@@ -28,15 +29,17 @@ describe('DataContainer', () => {
         // test filtering
         dc.state = {
             filtering: {
-                expressions: [
-                    {
-                        condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'),
-                        fieldName: 'number',
-                        searchVal: 1
-                    }
-                ]
+                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
             }
         };
+        dc.state.filtering.expressionsTree.filteringOperands = [
+            {
+                condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'),
+                fieldName: 'number',
+                searchVal: 1
+            }
+        ];
+
         dc.process();
         expect(dataGenerator.getValuesForColumn(dc.transformedData, 'number'))
             .toEqual([1, 2, 3, 4]);
@@ -88,14 +91,16 @@ describe('DataContainer', () => {
         // apply sorting without removing filtering
         let res;
         const filteringState: IFilteringState = {
-            expressions: [
-                {
-                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
-                    fieldName: 'number',
-                    searchVal: 4
-                }
-            ]
+            expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
         };
+        filteringState.expressionsTree.filteringOperands = [
+            {
+                condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                fieldName: 'number',
+                searchVal: 4
+            }
+        ];
+
         res = dc.process({filtering: filteringState});
         expect(dataGenerator.getValuesForColumn(dc.transformedData, 'number'))
             .toEqual([0, 1, 2, 3]);

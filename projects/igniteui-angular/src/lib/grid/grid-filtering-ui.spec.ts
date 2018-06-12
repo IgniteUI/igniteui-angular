@@ -1148,14 +1148,8 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const column = grid.getColumnByName(columnName);
-        const args = {
-            fieldName: column.field,
-            condition: column.filteringCondition,
-            ignoreCase: column.filteringIgnoreCase,
-            searchVal: filterVal
-        };
 
-        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(column.filteringExpressionsTree);
 });
 
     it("Clicking And/Or button shows second select and input for adding second condition", async(() => {
@@ -1230,14 +1224,8 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const column = grid.getColumnByName(columnName);
-        const args = {
-            fieldName: column.field,
-            condition: column.filteringCondition,
-            ignoreCase: column.filteringIgnoreCase,
-            searchVal: filterValue
-        };
 
-        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(column.filteringExpressionsTree);
     });
 });
 
