@@ -1,23 +1,18 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ExportUtilities } from '../exporter-common/export-utilities';
-import { ExcelFileTypes } from './excel-enums';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-import { ExcelStrings } from './excel-strings';
-import { JSZipFiles } from './jszip-helper';
-import { IFileContent, JSZipWrapper, ObjectComparer  } from './jszip-verification-wrapper.spec';
-import { ExportTestDataService, FileContentData, ValueData } from './test-data.service.spec';
+import { JSZipWrapper } from './jszip-verification-wrapper.spec';
+import { FileContentData } from './test-data.service.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('Excel Exporter', () => {
-    let sourceData: ExportTestDataService;
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
     let actualData: FileContentData;
 
     beforeEach(() => {
         exporter = new IgxExcelExporterService();
-        sourceData = new ExportTestDataService();
         actualData = new FileContentData();
         options = new IgxExcelExporterOptions('ExcelExport');
 
@@ -36,7 +31,6 @@ describe('Excel Exporter', () => {
 
     it('should export empty objects successfully.', (done) => {
         getExportedData(SampleTestData.emptyObjectData, options).then((wrapper) => {
-        // getExportedData(sourceData.emptyObjectData, options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             done();
@@ -127,8 +121,8 @@ describe('Excel Exporter', () => {
         done();
     });
 
-    async function getExportedData(data: any[], exportOptions: IgxExcelExporterOptions) {
-        const result = await new Promise<JSZipWrapper>((resolve) => {
+    function getExportedData(data: any[], exportOptions: IgxExcelExporterOptions) {
+        const result = new Promise<JSZipWrapper>((resolve) => {
             exporter.onExportEnded.subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);

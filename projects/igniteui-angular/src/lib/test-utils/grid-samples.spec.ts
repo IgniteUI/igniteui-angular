@@ -574,8 +574,15 @@ export class GridAllFeaturesComponent extends GridWithSizeComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
-        '', ColumnDefinitions.nameJobTitleId)
+    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameJobTitleId)
 })
-export class ReorderedColumnsComponent extends PagingComponent {
+export class ReorderedColumnsComponent extends BasicGridComponent {
+    data = SampleTestData.personJobData;
+}
+
+@Component({
+    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobTitleEditable)
+})
+export class GridIDNameJobTitleComponent extends PagingComponent {
+    data = SampleTestData.personJobDataFull;
 }

@@ -130,3 +130,4 @@ export class PagingComponent extends BasicGridComponent {
 export class SelectionComponent extends BasicGridComponent {
     public rowSelectable = true;
 }
+

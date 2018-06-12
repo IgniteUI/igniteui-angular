@@ -749,6 +749,30 @@ export class SampleTestData {
         return data;
     }
 
+    /* Fields: name: string, phone: string; 6 items. Remarks: Contains special and cyrilic characters.
+    Certain characters serving as delimiters can be changed. Mostly used in CSV exporters tests. */
+    public static getContactsFunkyData(delimiter) {
+        return [{
+            name: 'Terrance Mc\'Orta',
+            phone: '(+359)770-504-2217 | 2218'
+        }, {
+            name: 'Richard Mahoney /LongerName/',
+            phone: ''
+        }, {
+            name: 'Donna' + delimiter + ' \/; Price',
+            phone: '859 496 28**'
+        }, {
+            name: '\r\n',
+            phone: '901-747-3428'
+        }, {
+            name: 'Dorothy "H." Spencer',
+            phone: '573-394-9254[fax]'
+        }, {
+            name: 'Иван Иванов (1' + delimiter + '2)',
+            phone: '№ 573-394-9254'
+        }];
+    }
+
     /* Gets the name of the identifier column if exists. */
     private static getIDColumnName(dataItem: any) {
         if (!dataItem) {
