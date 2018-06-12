@@ -1190,6 +1190,40 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
     });
+
+    fit('When filter column with value 0 and dataType number, filtering icon class indicator should be applied', async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const gridheaders = fix.debugElement.queryAll(By.css('igx-grid-header'));
+        const headerOfTypeNumber = gridheaders.find(gh => gh.nativeElement.classList.contains('igx-grid__th--number'));
+        const filterUiContainer = headerOfTypeNumber.query(By.css(FILTER_UI_CONTAINER));
+        const filterIcon = filterUiContainer.query(By.css('igx-icon'));
+        const gridFilteringToggle = filterUiContainer.query(By.css('.igx-filtering__toggle'));
+        const input = filterUiContainer.query(By.directive(IgxInputDirective));
+
+        fix.whenStable().then(() => {
+            filterIcon.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            sendInput(input, 0, fix);
+            return fix.whenStable();
+        }).then(() => {
+            expect(gridFilteringToggle.nativeElement.classList.contains('igx-filtering__toggle--active')).toBeTruthy();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            grid.nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            setTimeout(() => {
+                expect(gridFilteringToggle.nativeElement.classList.contains('igx-filtering__toggle--filtered')).toBeTruthy();
+            }, 500);
+        });
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
