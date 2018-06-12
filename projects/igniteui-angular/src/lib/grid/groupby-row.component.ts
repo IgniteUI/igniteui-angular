@@ -2,30 +2,17 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
     ElementRef,
-    forwardRef,
     HostBinding,
     HostListener,
     Input,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    TemplateRef,
     ViewChild,
-    ViewChildren
 } from '@angular/core';
-import { take } from 'rxjs/operators';
-import { IgxBadgeComponent } from '../badge/badge.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
+import { autoWire } from './grid.common';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridRowComponent } from './row.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

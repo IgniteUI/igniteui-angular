@@ -5,9 +5,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactory,
     ComponentFactoryResolver,
-    ComponentRef,
     ContentChild,
     ContentChildren,
     ElementRef,
@@ -34,11 +32,10 @@ import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IForOfState } from '../directives/for-of/IForOfState';
-import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -52,7 +49,6 @@ import { IFilteringOperation } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
-const DEFAULT_SUMMARY_HEIGHT = 36.36;
 const MINIMUM_COLUMN_WIDTH = 136;
 
 export interface IGridCellEventArgs {
