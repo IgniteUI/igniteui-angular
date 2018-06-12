@@ -113,7 +113,13 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     private _startResizePos;
     private _pinnedMaxWidth;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone, private cms: IgxColumnMovingService) { }
+    constructor(
+        public gridAPI: IgxGridAPIService,
+        public cdr: ChangeDetectorRef,
+        public elementRef: ElementRef,
+        public zone: NgZone,
+        private cms: IgxColumnMovingService
+    ) { }
 
     public ngOnInit() {
         this.cdr.markForCheck();
