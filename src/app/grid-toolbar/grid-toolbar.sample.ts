@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
-import { IgxGridComponent, IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular';
+import { IgxGridComponent, IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-toolbar-sample',
@@ -41,6 +41,17 @@ export class GridToolbarSampleComponent implements OnInit {
                 // configure and perform export operation
                 break;
         }
+    }
+
+    public initColumns(column: IgxColumnComponent) {
+        column.filterable = true;
+        column.sortable = true;
+        column.editable = true;
+        column.resizable = true;
+        // column.pinned = true;
+        // column.hidden = true;
+        // column.width = '150';
+        // column.hasSummary = true;
     }
 
 }

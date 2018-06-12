@@ -470,6 +470,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('toolbar', { read: IgxGridToolbarComponent })
     public toolbar: IgxGridToolbarComponent = null;
 
+    @ViewChild('toolbar', { read: ElementRef })
+    private toolbarHtml: ElementRef = null;
+
     @Input()
     public get showToolbar(): boolean {
         return this._showToolbar;
@@ -1112,6 +1115,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
+            let toolbarHeight = 0;
+            if (this.showToolbar) {
+                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                    this.toolbarHtml.nativeElement.offsetHeight : 0;
+            }
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
@@ -1123,9 +1131,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
             this.calcHeight = parseInt(computed.getPropertyValue('height'), 10) -
                 this.theadRow.nativeElement.clientHeight -
-                this.tfootHeight - pagingHeight -
+                this.tfootHeight - pagingHeight - toolbarHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
+            let toolbarHeight = 0;
+            if (this.showToolbar) {
+                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                    this.toolbarHtml.nativeElement.offsetHeight : 0;
+            }
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
@@ -1137,7 +1150,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
             this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
-                this.tfootHeight - pagingHeight -
+                this.tfootHeight - pagingHeight - toolbarHeight -
                 this.scr.nativeElement.clientHeight;
         }
     }
