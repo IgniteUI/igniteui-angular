@@ -70,8 +70,8 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     protected unaryConditionChanged = new Subject();
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
-        this.unaryConditionChanged.subscribe((value) => this.unaryConditionChangedCallback());
-        this.conditionChanged.subscribe((value) => this.conditionChangedCallback());
+        this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
+        this.conditionChanged.subscribe(() => this.conditionChangedCallback());
     }
 
     public ngOnInit() {

@@ -87,9 +87,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     protected logicOperators: IgxButtonGroupComponent;
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
-        // this.filterChanged.pipe(
-        //     debounceTime(250)
-        // ).subscribe((value) => this.value = value);
 
         this.filteringLogicOptions= [
             {
@@ -128,7 +125,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public refresh() {
         this.dialogShowing = !this.dialogShowing;
         if (this.dialogShowing) {
-            //this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
+            //this.column.filteringExpressionsTree = this.getCondition(this.select.nativeElement.value);
         }
         this.cdr.detectChanges();
     }
