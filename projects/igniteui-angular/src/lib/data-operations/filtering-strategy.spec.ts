@@ -9,8 +9,8 @@ import { DataGenerator } from './test-util/data-generator';
 
 import { FilteringLogic, FilteringStrategy, IFilteringExpression, IFilteringState, IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand} from '../../public_api';
-import { FilteringExpressionsTree } from 'dist/igniteui-angular/public_api';
+    IgxBooleanFilteringOperand,
+    FilteringExpressionsTree } from '../../public_api';
 
 describe('Unit testing FilteringStrategy', () => {
     let dataGenerator: DataGenerator;
