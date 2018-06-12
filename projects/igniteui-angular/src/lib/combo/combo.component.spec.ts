@@ -605,7 +605,6 @@ describe('Combo', () => {
         fix.detectChanges();
         spyOn(combo.onAddition, 'emit').and.callThrough();
         combo.addItemToCollection();
-        // tslint:disable-next-line:no-debugger
         fix.detectChanges();
         expect(initialData.length).toBeLessThan(combo.data.length);
         expect(combo.data.length).toEqual(initialData.length + 1);
@@ -1320,13 +1319,9 @@ describe('Combo', () => {
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            // tslint:disable-next-line:no-debugger
-            debugger;
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement as HTMLElement;
             const scrollbarContainer = dropdownList.children[1]; // searchInput moved IN dropdown
             const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
-            // tslint:disable-next-line:no-debugger
-            debugger;
             expect(hasScrollbar).toBeTruthy();
         });
     }));
@@ -1919,10 +1914,85 @@ describe('Combo', () => {
     it('Custom values - Enter key adds the new item in the dropdown list', () => {
         // TO DO
     });
-    it('Custom values - clear button dismisses the input text', () => {
-        // TO DO
-    });
-    it('Custom values - typing a value that matches an item from the list selects it', () => {
+
+    it('Existing values - clear button dismisses the input text', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const component = fix.componentInstance;
+        const combo = fix.componentInstance.combo;
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        expect(combo.selectedItems()).toEqual([]);
+        expect(combo.value).toEqual('');
+        expect(combo.comboInput.nativeElement.value).toEqual('');
+        const triggerSelectionSpy = spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
+        const valueSetterSpy = spyOnProperty<any>(combo, 'value', 'set').and.callThrough();
+        combo.selectItems([component.items[0], component.items[1]]);
+        tick();
+        fix.whenStable().then(() => {
+            tick();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(valueSetterSpy).toHaveBeenCalled();
+            expect(triggerSelectionSpy).toHaveBeenCalled();
+            expect(combo.comboInput.nativeElement.value).toEqual(component.items[0].field + ', ' + component.items[1].field);
+            expect(combo.value).toEqual(component.items[0].field + ', ' + component.items[1].field);
+            expect(combo.selectedItems()).toEqual([component.items[0], component.items[1]]);
+            fix.debugElement.query(By.css('.clearButton')).nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.comboInput.nativeElement.value).toEqual('');
+            expect(combo.value).toEqual('');
+            expect(combo.selectedItems()).toEqual([]);
+        });
+    }));
+
+    it('Custom values - clear button dismisses the input text', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const component = fix.componentInstance;
+        const combo = fix.componentInstance.combo;
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        expect(combo.selectedItems()).toEqual([]);
+        expect(combo.value).toEqual('');
+        expect(combo.comboInput.nativeElement.value).toEqual('');
+        combo.searchValue = 'New ';
+        const mockEvent = jasmine.createSpyObj('event', ['stopPropagation', 'preventDefaults']);
+        tick();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.isAddButtonVisible()).toEqual(true);
+            const addItemButton = fix.debugElement.query(By.css('.igx-combo__add'));
+            expect(addItemButton.nativeElement).toBeDefined();
+            addItemButton.nativeElement.click(mockEvent);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.selectedItems()).toEqual([{ field: 'New'}]);
+            expect(combo.comboInput.nativeElement.value).toEqual('New');
+            fix.debugElement.query(By.css('.clearButton')).nativeElement.click(mockEvent);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.selectedItems()).toEqual([]);
+            expect(combo.comboInput.nativeElement.value).toEqual('');
+        });
+    }));
+
+    xit('Custom values - typing a value that matches an item from the list selects it', () => {
         // TO DO
     });
     it('Custom values - typing a value that matches an already selected item should remove the ADD ITEM button', fakeAsync(() => {
@@ -1958,8 +2028,6 @@ describe('Combo', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            // tslint:disable-next-line:no-debugger
-            debugger;
             addItem = fix.debugElement.query(By.css('.igx-combo__add'));
             expect(addItem).toEqual(null);
             expect(combo.children.length).toBeTruthy();
@@ -2027,14 +2095,14 @@ describe('Combo', () => {
         expect(combo.selectedItems()).toEqual(comboFormReference.value);
 
         // Form -> Combo
-        comboFormReference.setValue([{ field: 'Missouri', region: 'West North Central'}]);
+        comboFormReference.setValue([{ field: 'Missouri', region: 'West North Central' }]);
         fix.detectChanges();
-        expect(combo.selectedItems()).toEqual([{ field: 'Missouri', region: 'West North Central'}]);
+        expect(combo.selectedItems()).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
 
         // Combo -> Form
-        combo.selectItems([{ field: 'South Carolina', region: 'South Atlantic'}], true);
+        combo.selectItems([{ field: 'South Carolina', region: 'South Atlantic' }], true);
         fix.detectChanges();
-        expect(comboFormReference.value).toEqual([{ field: 'South Carolina', region: 'South Atlantic'}]);
+        expect(comboFormReference.value).toEqual([{ field: 'South Carolina', region: 'South Atlantic' }]);
     });
 
     it('Should properly submit values when used as a form control', () => {
