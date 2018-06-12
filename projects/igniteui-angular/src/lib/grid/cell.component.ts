@@ -223,7 +223,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     protected chunkLoadedHor;
     protected chunkLoadedVer;
     private cellSelectionID: string;
-    private previousCellEditMode: boolean;
+    private previousCellEditMode = false;
 
     constructor(
         public gridAPI: IgxGridAPIService,
@@ -252,6 +252,8 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             this.gridAPI.submitValue(this.gridID);
             this.gridAPI.escape_editMode(this.gridID, editCellID);
             this.previousCellEditMode = true;
+        } else {
+            this.previousCellEditMode = false;
         }
         this.selectionApi.set_selection(this.cellSelectionID, []);
     }
@@ -291,6 +293,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                 }
                 this.cdr.markForCheck();
             });
+    }
+
+    @autoWire(true)
+    public update(val: any) {
+        this.gridAPI.updateCell(this.gridID, this.cellID.rowIndex, this.cellID.columnID, val);
     }
 
     public ngOnDestroy() {

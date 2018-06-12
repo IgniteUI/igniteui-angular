@@ -524,8 +524,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
-        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { console.log(editCell);
-            this.clearSummaryCache(editCell); });
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
     }
 
     public ngAfterContentInit() {
@@ -748,7 +747,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateCell(value: any, rowSelector: any, column: string): void {
-        debugger;
         const columnEdit = this.columnList.toArray().filter((col) => col.field === column)[0];
         const columnId = this.columnList.toArray().indexOf(columnEdit);
         this.gridAPI.updateCell(this.id, rowSelector, columnId, value);

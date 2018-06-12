@@ -74,7 +74,6 @@ export class IgxGridAPIService {
     }
 
     public escape_editMode(gridId, cellId) {
-        console.log('escape', cellId);
         const editableCell = this.getCell_InEditMode_ID(gridId);
         if (editableCell && cellId.rowID === editableCell.rowID &&
             cellId.columnID === editableCell.columnID) {
@@ -157,14 +156,19 @@ export class IgxGridAPIService {
         }
     }
 
-    public updateCell(id: string, rowIndex, columnID, editValue) {
-        const cell = this.get(id).columnList.toArray()[columnID].cells[rowIndex] ?
-        this.get(id).columnList.toArray()[columnID].cells[rowIndex] :  this.getCell_InEditMode(id);
-        if (cell) {
-            const args: IGridEditEventArgs = { row: cell.row, cell: cell, currentValue: cell.value, newValue: editValue };
-            this.get(id).onEditDone.emit(args);
-            const column =  this.get(id).columnList.toArray()[columnID];
-            this.get(id).data[rowIndex][column.field] = args.newValue;
+    public updateCell(id: string, rowSelector, columnID, editValue) {
+        const row = this.get_row_by_key(id, rowSelector);
+        if (row) {
+            const rowIndex = row.index;
+            const cell = this.get(id).columnList.toArray()[columnID].cells[rowIndex] ?
+            this.get(id).columnList.toArray()[columnID].cells[rowIndex] :  this.getCell_InEditMode(id);
+            if (cell) {
+                const args: IGridEditEventArgs = { row: cell.row, cell: cell, currentValue: cell.value, newValue: editValue };
+                this.get(id).onEditDone.emit(args);
+                const column =  this.get(id).columnList.toArray()[columnID];
+                this.get(id).data[rowIndex][column.field] = args.newValue;
+                this.get(id).refreshSearch();
+            }
         }
     }
 
