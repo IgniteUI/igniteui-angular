@@ -4,12 +4,12 @@
 _Components_
 
 ## Description
-_igx-bottom-nav represents a single content area with multiple panels, each associated with a tab. Tabs are located at the bottom of the component._  
+_igx-bottom-nav represents a single content area with multiple panels, each associated with a tab. Tabs are located at the bottom of the component._
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar.html)
 
 ### More Info
-igx-bottom-nav provides two observable collections (QueryLists): one with panels and one with related tabs. 
-The children components of the igx-bottom-nav are: 
+igx-bottom-nav provides two observable collections (QueryLists): one with panels and one with related tabs.
+The children components of the igx-bottom-nav are:
 
 -  *Igx-Tab-Panel* - represents the wrapper of the content that needs to be displayed
 - *Igx-Tab* - button that triggers displaying of the associated panel
@@ -39,7 +39,7 @@ _Child component of igx-bottom-nav, that represents the container of the content
 
 ## Properties
 - `isSelected` - Determines whether the panel is selected
-- `isDisabled` - Determines whether the panel is disabled
+- `disabled` - Determines whether the panel is disabled
 - `index` - Gets the index of a panel in the panel collection
 - `relatedTab` - Get the tab, associated with the panel
 - `label` - Defines the label on the associated tab
@@ -61,8 +61,8 @@ _Child component of igx-bottom-nav, that represents the button that triggers dis
 
 ## Properties
 - `id` - Unique identifier of the component. If not provided it will be automatically generated.
-- `isDisabled` - Determines whether the tab is disabled
-- `isSelected` - Determines whether the tab is selected
+- `disabled` - Determines whether the tab is disabled
+- `selected` - Determines whether the tab is selected
 - `index` - Gets the index of a tab in the tab collection
 - `relatedPanel` - Get the panel, associated with the tab
 
