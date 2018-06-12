@@ -8,3 +8,4 @@ export * from './exporter-common/exporter-options-base';
 export * from './overlay/overlay';
 export * from './overlay/position';
 export * from './overlay/utilities';
+export * from './overlay/scroll';

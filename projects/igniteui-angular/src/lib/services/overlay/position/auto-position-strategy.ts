@@ -5,7 +5,7 @@ import { Inject } from '@angular/core';
 
 export class AutoPositionStrategy implements IPositionStrategy {
 
-	// TODO: rename options to settings
+    // TODO: rename options to settings
     public _options: PositionSettings;
     public wrapperClass: string;
     private _wrapper: HTMLElement;

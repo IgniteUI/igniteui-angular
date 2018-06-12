@@ -13,6 +13,7 @@ import {
     Injector,
     ComponentRef
 } from '@angular/core';
+import { ScrollStrategyFactory } from './scroll/ScrollStrategyFactory';
 
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
@@ -56,15 +57,15 @@ export class IgxOverlayService {
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
         private _injector: Injector,
-        @Inject(DOCUMENT) private _document: any) { }
+        @Inject(DOCUMENT) private _document: any,
+        @Inject(ScrollStrategyFactory) private scrollFactory: ScrollStrategyFactory) { }
 
     /**
      * Attaches provided component's native element to the OverlayElement
-     * @param component Component to show in the overlay
-     */
+    * @param component Component to show in the overlay
+    */
     show(component, id: string, positionStrategy?: IPositionStrategy): string {
         const element = this.getElement(component, id);
-
         const componentWrapper = this._document.createElement('div');
         componentWrapper.appendChild(element);
 

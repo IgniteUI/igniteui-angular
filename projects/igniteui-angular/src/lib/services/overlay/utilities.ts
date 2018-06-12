@@ -24,6 +24,6 @@ export class PositionSettings {
         public horizontalDirection = HorizontalAlignment.Center,
         public verticalDirection = VerticalAlignment.Middle,
         public element?: HTMLElement,
-        public horizontalStartPoint?: HorizontalAlignment | HorizontalAlignment.Center,
-        public verticalStartPoint?: VerticalAlignment | VerticalAlignment.Middle) { }
+        public horizontalStartPoint: HorizontalAlignment = HorizontalAlignment.Center,
+        public verticalStartPoint: VerticalAlignment = VerticalAlignment.Middle) { }
 }
