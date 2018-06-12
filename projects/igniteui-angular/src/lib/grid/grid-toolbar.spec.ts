@@ -126,6 +126,33 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(exportButton).toBe(null);
     });
 
+    it('testing main export button text', () => {
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        fixture.detectChanges();
+        const testPage = fixture.componentInstance;
+
+        testPage.grid1.showToolbar = true;
+        testPage.grid1.cdr.detectChanges();
+        fixture.detectChanges();
+
+        const grid = fixture.debugElement.query(By.css('igx-grid'));
+        const gridToolbar = grid.query(By.css('igx-grid-toolbar'));
+
+        let exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport span span'));
+        expect(exportButton).toBe(null);
+
+        testPage.grid1.exportText = 'NEWVALUE';
+        testPage.grid1.exportExcel = true;
+        testPage.grid1.exportCsv = true;
+        testPage.grid1.cdr.detectChanges();
+        fixture.detectChanges();
+
+        expect(testPage.grid1.exportText).toBe('NEWVALUE');
+        exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport span span'));
+        expect(exportButton).not.toBe(null);
+        expect(exportButton.nativeElement.innerText).toBe('NEWVALUE');
+    });
+
     it('testing export to Excel button visibility', () => {
         const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
@@ -156,6 +183,32 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(exportButton).toBe(null);
     });
 
+    it('testing export to Excel button text', () => {
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        fixture.detectChanges();
+        const testPage = fixture.componentInstance;
+
+        testPage.grid1.showToolbar = true;
+        testPage.grid1.exportExcel = true;
+        testPage.grid1.exportCsv = true;
+        testPage.grid1.cdr.detectChanges();
+        fixture.detectChanges();
+
+        const grid = fixture.debugElement.query(By.css('igx-grid'));
+        const gridToolbar = grid.query(By.css('igx-grid-toolbar'));
+
+        let exportButton = gridToolbar.query(By.css('li#btnExportExcel'));
+        expect(exportButton.nativeElement.innerText).toBe('');
+
+        testPage.grid1.exportExcelText = 'NEWVALUE';
+        testPage.grid1.cdr.detectChanges();
+        fixture.detectChanges();
+
+        expect(testPage.grid1.exportExcelText).toBe('NEWVALUE');
+        exportButton = gridToolbar.query(By.css('li#btnExportExcel'));
+        expect(exportButton.nativeElement.innerText).toBe('NEWVALUE');
+    });
+
     it('testing export to CSV button visibility', () => {
         const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
@@ -184,6 +237,32 @@ describe('IgxGrid - Grid Toolbar', () => {
 
         exportButton = gridToolbar.query(By.css('li#btnExportCsv'));
         expect(exportButton).toBe(null);
+    });
+
+    it('testing export to CSV button text', () => {
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        fixture.detectChanges();
+        const testPage = fixture.componentInstance;
+
+        testPage.grid1.showToolbar = true;
+        testPage.grid1.exportExcel = true;
+        testPage.grid1.exportCsv = true;
+        testPage.grid1.cdr.detectChanges();
+        fixture.detectChanges();
+
+        const grid = fixture.debugElement.query(By.css('igx-grid'));
+        const gridToolbar = grid.query(By.css('igx-grid-toolbar'));
+
+        let exportButton = gridToolbar.query(By.css('li#btnExportCsv'));
+        expect(exportButton.nativeElement.innerText).toBe('');
+
+        testPage.grid1.exportCsvText = 'NEWVALUE';
+        testPage.grid1.cdr.detectChanges();
+        fixture.detectChanges();
+
+        expect(testPage.grid1.exportCsvText).toBe('NEWVALUE');
+        exportButton = gridToolbar.query(By.css('li#btnExportCsv'));
+        expect(exportButton.nativeElement.innerText).toBe('NEWVALUE');
     });
 
     it('testing export dropdown visibility when pressing the export button', () => {
