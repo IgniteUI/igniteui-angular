@@ -212,7 +212,7 @@ export class IgxGridAPIService {
                 filteringState.filteringOperands.push(expressionsTree);
             } else if (condition) {
                 // create expressions tree for this field and add the new expression to it
-                newExpressionsTree = new FilteringExpressionsTree(filteringState.operator);
+                newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
                 newExpressionsTree.filteringOperands.push(newExpression);
                 filteringState.filteringOperands.push(newExpressionsTree);
             }
@@ -231,7 +231,7 @@ export class IgxGridAPIService {
                 } else {
                     // the element found for this field is an expression but it should be an expressions tree
                     // so create new expressions tree for this field
-                    newExpressionsTree = new FilteringExpressionsTree(filteringState.operator);
+                    newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
                     newExpressionsTree.filteringOperands.push(newExpression);
                     // and replace the old expression with the newly created expressions tree
                     filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, newExpressionsTree);
