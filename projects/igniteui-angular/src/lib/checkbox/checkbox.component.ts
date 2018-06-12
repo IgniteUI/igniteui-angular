@@ -74,7 +74,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @Input() public id = `igx-checkbox-${nextId++}`;
     /**
      * Sets the id of the `label` element in the checkbox component.
-     * If not set, the id of the `label` in the first component will be `"igx-checkbox-0-label"`.
+     * If not set, the id of the `label` in the first checkbox component will be `"igx-checkbox-0-label"`.
      * ```html
      * <igx-checkbox labelId = "Label1"></igx-checkbox>
      * ```
@@ -215,7 +215,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @Input() public disabled = false;
     /**
      * Sets the id of the `input` element in the checkbox component.
-     * If not set, the `input` of the first component will have an id=`"igx-checkbox-0-input"`.
+     * If not set, the `input` of the first checkbox component will have an id=`"igx-checkbox-0-input"`.
      * ```typescript
      * this.checkbox.inputId = "Input1";
      * ```
