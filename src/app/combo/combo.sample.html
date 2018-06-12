@@ -28,6 +28,7 @@
                 <igx-combo class="input-container" placeholder="Location(s)"
                            (onAddition)="handleAddition($event)"
                            [data]="items"
+                           [allowCustomValues]="true"
                            [filterable]="true" [textKey]="'field'" [valueKey]="'field'"
                            [groupKey]="'region'" [width]="'100%'">
                     <ng-template #dropdownItemTemplate let-display let-key="valueKey">
@@ -67,7 +68,7 @@
         </p>
     </form> -->
     
-    <div class="input-wrapper">
+    <div class="input-wrapper" style="display: none; visibility: hidden;">
         <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
             <p>
                 <label>First Name:</label>

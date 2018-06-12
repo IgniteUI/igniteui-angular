@@ -11,8 +11,7 @@ import { FilteringStrategy } from '../data-operations/filtering-strategy';
 
 
 @Pipe({
-    name: 'comboFiltering',
-    pure: true
+    name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
 
@@ -27,12 +26,10 @@ export class IgxComboFilteringPipe implements PipeTransform {
         state.expressions = this.combo.filteringExpressions;
 
         if (!state.expressions.length) {
-            this.combo.filteredData = collection;
             return collection;
         }
 
         const result = DataUtil.filter(cloneArray(collection), state);
-        this.combo.filteredData = result;
         return result;
     }
 }
@@ -60,17 +57,14 @@ export class IgxComboSortingPipe implements PipeTransform {
         state.expressions = this.combo.sortingExpressions;
 
         if (!state.expressions.length) {
-            this.combo.filteredData = collection;
             return collection;
         }
         const result = DataUtil.sort(cloneArray(collection), state);
-        this.combo.filteredData = result;
         return result;
     }
 }
 @Pipe({
-    name: 'comboGrouping',
-    pure: true
+    name: 'comboGrouping'
 })
 export class IgxComboGroupingPipe implements PipeTransform {
 
@@ -80,10 +74,8 @@ export class IgxComboGroupingPipe implements PipeTransform {
     ) { }
 
     public transform(collection: any[], groupKey: any) {
-        if (!groupKey && groupKey !== 0) {
-            return collection;
-        }
-        if (!collection.length) {
+        this.combo.filteredData = collection;
+        if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
         }
         const data = cloneArray(collection);

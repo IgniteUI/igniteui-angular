@@ -62,8 +62,9 @@ Basic usage of `igx-combo`
 |Name|Description|Cancelable|Parameters|
 |--|--|--|--|
 | `onSelectionChange` | -- | -- | { oldSelection: `Array<any>`, newSelection: `Array<any>`, event: Event }|
-| `searchInput` | -- | -- | { oldValue: `any`, newValue: `any`, event: Event }|
+| `onSearchInput` | -- | -- | { oldValue: `any`, newValue: `any`, event: Event }|
 | `dropDownOpening` | -- | -- | { event: Event }|
 | `dropDownOpened` | -- | -- | { event: Event }|
 | `dropDownClosing` | -- | -- | { event: Event }|
 | `dropDownClosed` | -- | -- | { event: Event }|
+| `onAddition` | -- | -- | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>` }|

@@ -8,10 +8,11 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import {
-    IgxDropDownBase, IgxDropDownComponent, IgxDropDownItemNavigationDirective, IgxDropDownModule
+    IgxDropDownBase, IgxDropDownComponent, IgxDropDownItemNavigationDirective, IgxDropDownModule, Navigate
 } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IgxComboDropDownComponent } from './combo.component';
+import { FormGroup, FormControl, Validators, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
@@ -49,7 +50,7 @@ function wrapPromise(callback, resolve, time) {
     });
 }
 
-fdescribe('Combo', () => {
+describe('Combo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -57,12 +58,14 @@ fdescribe('Combo', () => {
                 IgxComboTestComponent,
                 IgxComboSampleComponent,
                 IgxComboInputTestComponent,
-                IgxComboScrollTestComponent
+                IgxComboScrollTestComponent,
+                IgxComboFormComponent
             ],
             imports: [
                 IgxComboModule,
                 NoopAnimationsModule,
-                IgxToggleModule
+                IgxToggleModule,
+                ReactiveFormsModule
             ]
         }).compileComponents();
     }));
@@ -122,6 +125,175 @@ fdescribe('Combo', () => {
         expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
         expect(combo.dropdown.toggle).toHaveBeenCalledTimes(1);
         // expect(stub).toEqual('fake');
+    });
+
+    it('Should properly call dropdown navigatePrev method', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        const dropdown = combo.dropdown;
+        expect(combo).toBeDefined();
+        expect(dropdown).toBeDefined();
+        expect(dropdown.focusedItem).toBeFalsy();
+        expect(dropdown.verticalScrollContainer).toBeDefined();
+        const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
+        const mockSearchInput = spyOnProperty(combo, 'searchInput', 'get').and.returnValue({ nativeElement: mockObj });
+        const mockFn = () => dropdown.navigatePrev();
+        expect(mockFn).toThrow();
+        expect(dropdown.focusedItem).toEqual(null);
+        expect(combo.collapsed).toBeTruthy();
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        expect(mockObj.focus).toHaveBeenCalledTimes(1);
+        expect(combo.collapsed).toBeFalsy();
+        combo.handleKeyDown({ key: 'ArrowDown' });
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(dropdown.focusedItem).toBeTruthy();
+            expect(dropdown.focusedItem.index).toEqual(0);
+            expect(dropdown.verticalScrollContainer.state.startIndex).toEqual(0);
+            spyOn(dropdown, 'onBlur').and.callThrough();
+            dropdown.navigatePrev();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            // expect(dropdown.onBlur).toHaveBeenCalledTimes(1);
+            expect(mockObj.focus).toHaveBeenCalledTimes(2);
+            combo.handleKeyDown({ key: 'ArrowDown' });
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(dropdown.focusedItem).toBeTruthy();
+            expect(dropdown.focusedItem.index).toEqual(0);
+            dropdown.navigateNext();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(dropdown.focusedItem).toBeTruthy();
+            expect(dropdown.focusedItem.index).toEqual(1);
+            expect(dropdown.verticalScrollContainer.state.startIndex).toEqual(0);
+            spyOn(IgxDropDownBase.prototype, 'navigatePrev').and.callThrough();
+            dropdown.navigatePrev();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            expect(dropdown.focusedItem).toBeTruthy();
+            expect(dropdown.focusedItem.index).toEqual(0);
+            expect(dropdown.verticalScrollContainer.state.startIndex).toEqual(0);
+            expect(IgxDropDownBase.prototype.navigatePrev).toHaveBeenCalledTimes(1);
+        });
+    }));
+
+    it('Should properly call dropdown navigateNext with virutal items', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        const dropdown = combo.dropdown;
+        expect(combo).toBeDefined();
+        expect(dropdown).toBeDefined();
+        expect(dropdown.focusedItem).toBeFalsy();
+        expect(dropdown.verticalScrollContainer).toBeDefined();
+        const mockClick = jasmine.createSpyObj('event', ['preventDefault', 'stopPropagation']);
+        const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
+        const mockSearchInput = spyOnProperty(combo, 'searchInput', 'get').and.returnValue({ nativeElement: mockObj });
+        const mockFn = () => dropdown.navigatePrev();
+        const virtualMock = spyOn<any>(dropdown, 'navigateVirtualItem').and.callThrough();
+        expect(mockFn).toThrow();
+        expect(dropdown.focusedItem).toEqual(null);
+        expect(combo.collapsed).toBeTruthy();
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        expect(mockObj.focus).toHaveBeenCalledTimes(1);
+        expect(combo.collapsed).toBeFalsy();
+        dropdown.verticalScrollContainer.scrollTo(51);
+        tick();
+        fix.whenStable().then(() => {
+            // TEST move to last item;
+            fix.detectChanges();
+            const lastItem = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM))[8].componentInstance;
+            expect(lastItem).toBeDefined();
+            lastItem.clicked(mockClick);
+            fix.detectChanges();
+            expect(dropdown.focusedItem).toEqual(lastItem);
+            const mockFunc = () => dropdown.navigateItem(lastItem.index + 1);
+            expect(mockFunc).toThrow();
+            dropdown.navigateItem(-1);
+            fix.detectChanges();
+            expect(virtualMock).toHaveBeenCalledTimes(1);
+            lastItem.clicked(mockClick);
+            fix.detectChanges();
+            expect(dropdown.focusedItem).toEqual(lastItem);
+            dropdown.navigateItem(-1, Navigate.Down);
+            fix.detectChanges();
+            expect(virtualMock).toHaveBeenCalledTimes(2);
+            combo.searchValue = 'New';
+            tick();
+            lastItem.clicked(mockClick);
+            fix.detectChanges();
+            expect(dropdown.focusedItem).toEqual(lastItem);
+            fix.detectChanges();
+            expect(combo.customValueFlag && combo.searchValue !== '').toBeTruthy();
+            dropdown.navigateItem(-1, Navigate.Down);
+            expect(virtualMock).toHaveBeenCalledTimes(3);
+            lastItem.itemData = dropdown.verticalScrollContainer.igxForOf[dropdown.verticalScrollContainer.igxForOf.length - 1];
+            lastItem.clicked(mockClick);
+            fix.detectChanges();
+            expect(dropdown.focusedItem).toEqual(lastItem);
+            dropdown.navigateItem(-1, Navigate.Down);
+            expect(virtualMock).toHaveBeenCalledTimes(3);
+            // expect(dropdown.focusedItem.itemData).toEqual('ADD ITEM');
+
+            // TEST move from first item
+            dropdown.verticalScrollContainer.scrollTo(0);
+            tick();
+            fix.detectChanges();
+            const firstItem = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM))[0].componentInstance;
+            firstItem.clicked(mockClick);
+            fix.detectChanges();
+            expect(dropdown.focusedItem).toEqual(firstItem);
+            expect(dropdown.focusedItem.index).toEqual(0);
+            // spyOnProperty(dropdown, 'focusedItem', 'get').and.returnValue(firstItem);
+            dropdown.navigateItem(-1);
+            fix.detectChanges();
+            expect(virtualMock).toHaveBeenCalledTimes(4);
+            spyOn(dropdown, 'onBlur').and.callThrough();
+            dropdown.navigateItem(-1, Navigate.Up);
+            tick();
+            fix.detectChanges();
+            expect(virtualMock).toHaveBeenCalledTimes(5);
+        });
+    }));
+
+    it('Should properly return the selected value(s)', () => {
+        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        expect(combo).toBeDefined();
+        expect(combo.values).toEqual([]);
+        combo.valueKey = undefined;
+        expect(combo.values).toEqual([]);
+    });
+
+    it('Should properly return the context (this)', () => {
+        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        expect(combo.context.$implicit).toEqual(combo);
+    });
+
+    it('Should properly call "writeValue" (method)', () => {
+        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        spyOn(combo, 'selectItems');
+        combo.writeValue(['EXAMPLE']);
+        fixture.detectChanges();
+        expect(combo.selectItems).toHaveBeenCalledTimes(1);
+        expect(combo.selectItems).toHaveBeenCalledWith(['EXAMPLE']);
     });
 
     it('Should properly accept input properties', () => {
@@ -435,7 +607,6 @@ fdescribe('Combo', () => {
         fix.detectChanges();
         spyOn(combo.onAddition, 'emit').and.callThrough();
         combo.addItemToCollection();
-        // tslint:disable-next-line:no-debugger
         fix.detectChanges();
         expect(initialData.length).toBeLessThan(combo.data.length);
         expect(combo.data.length).toEqual(initialData.length + 1);
@@ -734,6 +905,7 @@ fdescribe('Combo', () => {
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
         spyOn(combo, 'sort').and.callThrough();
+        const clearSpy = spyOn<any>(combo, 'clearSorting').and.callThrough();
         combo.toggle();
         tick();
         fix.detectChanges();
@@ -752,6 +924,16 @@ fdescribe('Combo', () => {
         expect(combo.sortingExpressions.length).toEqual(0);
         expect(combo.sortingExpressions[0]).toBeUndefined();
         expect(combo.filteredData[0].field !== initialFirstItem).toBeTruthy();
+        expect(clearSpy).toHaveBeenCalledTimes(1);
+        combo.groupKey = null;
+        tick();
+        fix.detectChanges();
+        expect(combo.sort).toHaveBeenCalledTimes(2);
+        expect(combo.groupKey).toEqual(null);
+        expect(combo.sortingExpressions.length).toEqual(0);
+        expect(combo.sortingExpressions[0]).toBeUndefined();
+        expect(combo.filteredData[0].field !== initialFirstItem).toBeTruthy();
+        expect(clearSpy).toHaveBeenCalledTimes(2);
     }));
 
     it('Should properly handle dropdown.focusItem', fakeAsync(() => {
@@ -864,9 +1046,15 @@ fdescribe('Combo', () => {
         tick();
         fix.whenStable().then(() => {
             fix.detectChanges();
+<<<<<<< HEAD
             const dropdownContainer = fix.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
             checkGroupedItemsClass(0, 5, dropdownContainer);
             checkGroupedItemsClass(6, 10, dropdownContainer);
+=======
+            const dropdown = combo.dropdown.element;
+            checkGroupedItemsClass(0, 5, dropdown);
+            checkGroupedItemsClass(6, 10, dropdown);
+>>>>>>> 2dd31da16f7131ec715eef723c5f53a5c9c5b77e
             //     combo.dropdown.navigateLast();
             //     fix.detectChanges();
             //     return fix.whenStable();
@@ -1190,13 +1378,9 @@ fdescribe('Combo', () => {
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            // tslint:disable-next-line:no-debugger
-            debugger;
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement as HTMLElement;
             const scrollbarContainer = dropdownList.children[1]; // searchInput moved IN dropdown
             const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
-            // tslint:disable-next-line:no-debugger
-            debugger;
             expect(hasScrollbar).toBeTruthy();
         });
     }));
@@ -1876,33 +2060,117 @@ fdescribe('Combo', () => {
     it('Custom values - Enter key adds the new item in the dropdown list', () => {
         // TO DO
     });
-    it('Custom values - clear button dismisses the input text', () => {
+
+    it('Existing values - clear button dismisses the input text', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const component = fix.componentInstance;
+        const combo = fix.componentInstance.combo;
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        expect(combo.selectedItems()).toEqual([]);
+        expect(combo.value).toEqual('');
+        expect(combo.comboInput.nativeElement.value).toEqual('');
+        const triggerSelectionSpy = spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
+        const valueSetterSpy = spyOnProperty<any>(combo, 'value', 'set').and.callThrough();
+        combo.selectItems([component.items[0], component.items[1]]);
+        tick();
+        fix.whenStable().then(() => {
+            tick();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(valueSetterSpy).toHaveBeenCalled();
+            expect(triggerSelectionSpy).toHaveBeenCalled();
+            expect(combo.comboInput.nativeElement.value).toEqual(component.items[0].field + ', ' + component.items[1].field);
+            expect(combo.value).toEqual(component.items[0].field + ', ' + component.items[1].field);
+            expect(combo.selectedItems()).toEqual([component.items[0], component.items[1]]);
+            fix.debugElement.query(By.css('.clearButton')).nativeElement.click();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.comboInput.nativeElement.value).toEqual('');
+            expect(combo.value).toEqual('');
+            expect(combo.selectedItems()).toEqual([]);
+        });
+    }));
+
+    it('Custom values - clear button dismisses the input text', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const component = fix.componentInstance;
+        const combo = fix.componentInstance.combo;
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        expect(combo.selectedItems()).toEqual([]);
+        expect(combo.value).toEqual('');
+        expect(combo.comboInput.nativeElement.value).toEqual('');
+        combo.searchValue = 'New ';
+        const mockEvent = jasmine.createSpyObj('event', ['stopPropagation', 'preventDefaults']);
+        tick();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.isAddButtonVisible()).toEqual(true);
+            const addItemButton = fix.debugElement.query(By.css('.igx-combo__add'));
+            expect(addItemButton.nativeElement).toBeDefined();
+            addItemButton.nativeElement.click(mockEvent);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.selectedItems()).toEqual([{ field: 'New'}]);
+            expect(combo.comboInput.nativeElement.value).toEqual('New');
+            fix.debugElement.query(By.css('.clearButton')).nativeElement.click(mockEvent);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.selectedItems()).toEqual([]);
+            expect(combo.comboInput.nativeElement.value).toEqual('');
+        });
+    }));
+
+    xit('Custom values - typing a value that matches an item from the list selects it', () => {
         // TO DO
     });
-    it('Custom values - typing a value that matches an item from the list selects it', () => {
-        // TO DO
-    });
-    xit('Custom values - typing a value that matches an already selected item should remove the corresponding tag', () => {
+    it('Custom values - typing a value that matches an already selected item should remove the ADD ITEM button', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         let addItem;
         const combo = fix.componentInstance.combo;
         combo.dropdown.toggle();
+        tick();
         fix.whenStable().then(() => {
             fix.detectChanges();
             addItem = fix.debugElement.query(By.css('.igx-combo__add'));
             expect(addItem).toEqual(null);
             expect(combo.children.length).toBeTruthy();
-            combo.searchValue = 'New';
-
+            combo.searchInput.nativeElement.value = 'New';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
+            expect(combo.searchValue).toEqual('New');
             addItem = fix.debugElement.query(By.css('.igx-combo__add'));
             expect(addItem === null).toBeFalsy();
             expect(combo.children.length).toBeTruthy();
 
-            combo.searchValue = 'New York';
+            combo.searchInput.nativeElement.value = 'New York';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(combo.searchValue).toEqual('New York');
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -1910,6 +2178,97 @@ fdescribe('Combo', () => {
             expect(addItem).toEqual(null);
             expect(combo.children.length).toBeTruthy();
         });
+    }));
+
+    it('Should properly initialize when used as a form control', () => {
+        const fix = TestBed.createComponent(IgxComboFormComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        const comboFormReference = fix.componentInstance.reactiveForm.controls.townCombo;
+        expect(comboFormReference).toBeDefined();
+        expect(combo.selectedItems()).toEqual(comboFormReference.value);
+        expect(combo.selectedItems().length).toEqual(1);
+        expect(combo.selectedItems()[0].field).toEqual('Connecticut');
+    });
+
+    it('Can be enabled/disabled when used as a form control', () => {
+        const fix = TestBed.createComponent(IgxComboFormComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        const form = fix.componentInstance.reactiveForm;
+        const comboFormReference = form.controls.townCombo;
+        expect(comboFormReference).toBeDefined();
+        expect(combo.disabled).toBeFalsy();
+        expect(comboFormReference.disabled).toBeFalsy();
+        spyOn(combo, 'onInputClick');
+        spyOn(combo, 'setDisabledState').and.callThrough();
+        const mockClick = jasmine.createSpyObj('event', ['stopPropagation', 'preventDefault']);
+        combo.comboInput.nativeElement.click(mockClick);
+        fix.detectChanges();
+        expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+
+        form.disable();
+
+        // Disabling the form disables all of the controls in it
+        fix.detectChanges();
+        expect(comboFormReference.disabled).toBeTruthy();
+        expect(combo.disabled).toBeTruthy();
+        expect(combo.setDisabledState).toHaveBeenCalledTimes(1);
+
+        // Disabled form controls don't handle click events
+        combo.comboInput.nativeElement.click(mockClick);
+        fix.detectChanges();
+        expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+
+        // Can enabling the form re-enables all of the controls in it
+
+        form.enable();
+        fix.detectChanges();
+        expect(comboFormReference.disabled).toBeFalsy();
+        expect(combo.disabled).toBeFalsy();
+    });
+
+    it('Should change value when addressed as a form control', () => {
+        const fix = TestBed.createComponent(IgxComboFormComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        const form = fix.componentInstance.reactiveForm;
+        const comboFormReference = form.controls.townCombo;
+        expect(comboFormReference).toBeDefined();
+        expect(combo.selectedItems()).toEqual(comboFormReference.value);
+
+        // Form -> Combo
+        comboFormReference.setValue([{ field: 'Missouri', region: 'West North Central' }]);
+        fix.detectChanges();
+        expect(combo.selectedItems()).toEqual([{ field: 'Missouri', region: 'West North Central' }]);
+
+        // Combo -> Form
+        combo.selectItems([{ field: 'South Carolina', region: 'South Atlantic' }], true);
+        fix.detectChanges();
+        expect(comboFormReference.value).toEqual([{ field: 'South Carolina', region: 'South Atlantic' }]);
+    });
+
+    it('Should properly submit values when used as a form control', () => {
+        const fix = TestBed.createComponent(IgxComboFormComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        const form = fix.componentInstance.reactiveForm;
+        const comboFormReference = form.controls.townCombo;
+        expect(comboFormReference).toBeDefined();
+        expect(combo.selectedItems()).toEqual(comboFormReference.value);
+        expect(form.status).toEqual('INVALID');
+        form.controls.password.setValue('TEST');
+        form.controls.firstName.setValue('TEST');
+
+        spyOn(console, 'log');
+        fix.detectChanges();
+        expect(form.status).toEqual('VALID');
+        fix.debugElement.query(By.css('button')).nativeElement.click();
+        expect(console.log).toHaveBeenCalledTimes(2);
     });
 });
 
@@ -1975,7 +2334,7 @@ class IgxComboScrollTestComponent {
         <button class='igx-button' igxRipple (click)="changeData('complex')">Complex</button>
         <button class='igx-button' igxRipple (click)="changeData()">Initial</button>
         <igx-combo #combo [placeholder]="'Location'" [data]='items'
-        [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'">
+        [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" [allowCustomValues]="true">
             <ng-template #dropdownItemTemplate let-display let-key="valueKey">
                 <div class="state-card--simple">
                     <span class="small-red-circle"></span>
@@ -2104,5 +2463,91 @@ class IgxComboInputTestComponent {
         }
         this.initData = this.items;
     }
+}
+
+@Component({
+    template: `
+        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+            <p>
+                <label>First Name:</label>
+                <input type="text" formControlName="firstName">
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type="password" formControlName="password">
+            </p>
+            <p>
+                <igx-combo #comboReactive formControlName="townCombo"
+                    class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
+                    [data]="items" [textKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
+            </p>
+            <p>
+                <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+            </p>
+        </form>
+`
+})
+
+class IgxComboFormComponent {
+    @ViewChild('comboReactive', { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+    public items = [];
+
+    get valuesTemplate() {
+        return this.combo.selectedItems();
+    }
+    set valuesTemplate(values: Array<any>) {
+        this.combo.selectItems(values);
+    }
+
+    reactiveForm: FormGroup;
+
+    constructor(fb: FormBuilder) {
+
+        const division = {
+            'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
+            'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
+            'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
+            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 01': ['Illinois', 'Indiana'],
+            'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
+            'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
+            'South Atlantic 01': ['Delaware', 'Florida', 'Georgia', 'Maryland'],
+            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia', 'District of Columbia', 'West Virginia'],
+            'South Atlantic 03': ['District of Columbia', 'West Virginia'],
+            'East South Central 01': ['Alabama', 'Kentucky'],
+            'East South Central 02': ['Mississippi', 'Tennessee'],
+            'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
+            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            'Pacific 01': ['Alaska', 'California'],
+            'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
+        };
+        const keys = Object.keys(division);
+        for (const key of keys) {
+            division[key].map((e) => {
+                this.items.push({
+                    field: e,
+                    region: key.substring(0, key.length - 3)
+                });
+            });
+        }
+
+        this.reactiveForm = fb.group({
+            'firstName': new FormControl('', Validators.required),
+            'password': ['', Validators.required],
+            'townCombo': [[this.items[0]], Validators.required]
+        });
+
+    }
+    onSubmitReactive() {
+        console.log('model-based form submitted');
+        console.log(this.reactiveForm);
+    }
+
+    onSubmitTemplateBased() {
+        console.log('template-driven form submitted');
+        console.log(this.reactiveForm);
+    }
+
 }
 
