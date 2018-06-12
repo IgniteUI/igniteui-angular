@@ -103,6 +103,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
 
     /**
      * An @Input property to set the left button `type`. The types are `flat`, `raised` and `fab`.
+     * The `flat` type button is a rectangle and doesn't have a shadow. <br>
+     * The `raised` type button is also a rectangle but has a shadow. <br>
+     * The `fab` type button is a circle with a shadow. <br>
      * The default value is `flat`.
      *```html
      *<igx-dialog leftButtonType="raised" leftButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
@@ -147,7 +150,11 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public rightButtonLabel = '';
 
     /**
-     * An @Input property to set the right button `type`. The types are flat, raised and fab.
+     * An @Input property to set the right button `type`. The types are `flat`, `raised` and `fab`.
+     * The `flat` type button is a rectangle and doesn't have a shadow. <br>
+     * The `raised` type button is also a rectangle but has a shadow. <br>
+     * The `fab` type button is a circle with a shadow. <br>
+     * The default value is `flat`.
      *```html
      *<igx-dialog rightButtonType="fab" rightButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
      *```
@@ -185,7 +192,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     /**
      * An @Input property that allows you to enable the "close on click outside the dialog". By default it's disabled.
      *```html
-     *<igx-dialog closeOnOutsideSelect="true" #dialog leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
+     *<igx-dialog closeOnOutsideSelect="true" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()"
      *rightButtonLabel="OK" rightButtonRipple="#4CAF50" (onRightButtonSelect)="onDialogOKSelected($event)">
      *</igx-dialog>
      *```
@@ -196,7 +203,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     /**
      * An @Output property that triggers a function when the dialog is opened.
      *```html
-     *<igx-dialog (onOpen)="alert.open()" #dialog leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
+     *<igx-dialog (onOpen)="onDialogOpenHandler($event)" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
      *</igx-dialog>
      *```
      */
@@ -206,7 +213,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     /**
      * An @Output property that triggers a function when the dialog is closed.
      *```html
-     *<igx-dialog (onClose)="dialog.open()" #dialog title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK">
+     *<igx-dialog (onClose)="onDialogCloseHandler($event)" title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK">
      *</igx-dialog>
      *```
      */
@@ -257,7 +264,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Returns the value of state.
-     *```html
+     *```typescript
      *@ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
      *ngAfterViewInit() {
@@ -271,7 +278,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Returns whether the dialog is visible to the end user.
-     *```html
+     *```typescript
      *@ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
      *ngAfterViewInit() {
@@ -286,7 +293,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
 
     /**
      *Returns the value of the role of the dialog. The valid values are `dialog`, `alertdialog`, `alert`.
-     *```html
+     *```typescript
      *@ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
      *ngAfterViewInit() {
@@ -310,7 +317,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
 
     /**
      *Returns the value of the title.
-     *```html
+     *```typescript
      *@ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
      *ngAfterViewInit() {
