@@ -166,11 +166,15 @@
     }
 
     @include e(th-drop-indicator-left) {
-        @extend %grid__drop-indicator-left !optional;
+        @extend %igx-grid__th-drop-indicator-left !optional;
     }
 
     @include e(th-drop-indicator-right) {
-        @extend %grid__drop-indicator-right !optional;
+        @extend %igx-grid__th-drop-indicator-right !optional;
+    }
+
+    @include e(th-drop-indicator, $m: active) {
+        @extend %igx-grid__th-drop-indicator--active !optional;
     }
 
     @include e(scroll-on-drag-left) {
@@ -179,10 +183,6 @@
 
     @include e(scroll-on-drag-right) {
         @extend %grid__scroll-on-drag-right !optional;
-    }
-
-    @include e(drop-indicator-active) {
-        @extend %grid__drop-indicator-active !optional;
     }
 
     @include e(drag-ghost-image) {
