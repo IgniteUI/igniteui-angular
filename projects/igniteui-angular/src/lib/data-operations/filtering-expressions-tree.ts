@@ -3,6 +3,7 @@ import { FilteringLogic, IFilteringExpression } from '../../public_api';
 export declare interface IFilteringExpressionsTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
     operator: FilteringLogic;
+    fieldName?: string;
 
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
     findIndex(fieldName: string): number;
@@ -11,9 +12,11 @@ export declare interface IFilteringExpressionsTree {
 export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[] = [];
     operator: FilteringLogic;
+    fieldName?: string;
 
-    constructor(operator: FilteringLogic) {
+    constructor(operator: FilteringLogic, fieldName?: string) {
         this.operator = operator;
+        this.fieldName = fieldName;
     }
 
     public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
@@ -45,6 +48,10 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     }
 
     protected isFilteringExpressionsTreeForColumn(expressionsTree: IFilteringExpressionsTree, fieldName: string): boolean {
+        if (expressionsTree.fieldName === fieldName) {
+            return true;
+        }
+
         let expr;
         for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
             expr = expressionsTree.filteringOperands[i];
