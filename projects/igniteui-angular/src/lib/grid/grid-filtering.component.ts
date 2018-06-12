@@ -287,7 +287,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             this._value = expr.searchVal;
             this._filterCondition = expr.condition.name;
 
-            if (!this.unaryCondition && !this._value) {
+            if (!this.unaryCondition && !this._value && this._value !== 0) {
                 return false;
             }
             return true;
