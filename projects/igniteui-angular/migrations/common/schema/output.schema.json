@@ -1,0 +1,68 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "ElementType": {
+            "enum": [
+                "component",
+                "directive"
+            ],
+            "type": "string"
+        },
+        "OutputChange": {
+            "properties": {
+                "name": {
+                    "description": "Name of the output property to change",
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "#/definitions/TemplateElement",
+                    "description": "Component that emits the output"
+                },
+                "remove": {
+                    "description": "Remove directive/component",
+                    "type": "boolean"
+                },
+                "replaceWith": {
+                    "description": "Replace original selector with new one",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "owner"
+            ],
+            "type": "object"
+        },
+        "TemplateElement": {
+            "properties": {
+                "selector": {
+                    "description": "Original selector to apply change to",
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/ElementType",
+                    "description": "Type of selector the change applies to - either component or directive"
+                }
+            },
+            "required": [
+                "selector",
+                "type"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "changes": {
+            "description": "An array of changes to output properties",
+            "items": {
+                "$ref": "#/definitions/OutputChange"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "changes"
+    ],
+    "type": "object"
+}
+

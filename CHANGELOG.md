@@ -2,6 +2,39 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
+- `igxGrid` filtering operands
+    - **Breaking change** `IFilteringExpression` condition property is no longer a direct reference to a filtering condition method, instead it's a reference to an `IFilteringOperation`
+    - 5 filtering operand classes are now exposed
+        - `IgxFilteringOperand` is a base filtering operand, which can be inherited when defining custom filtering conditions
+        - `IgxBooleanFilteringOperand` defines all default filtering conditions for `boolean` types
+        - `IgxNumberFilteringOperand` defines all default filtering conditions for `numeric` types
+        - `IgxStringFilteringOperand` defines all default filtering conditions for `string` types
+        - `IgxDateFilteringOperand` defines all default filtering conditions for `Date` types
+    - `IgxColumnComponent` now exposes a `filters` property, which takes an `IgxFilteringOperand` class reference
+        - Custom filters can now be provided to grid columns by populating the `operations` property of the `IgxFilteringOperand` with operations of `IFilteringOperation` type
+```
+export class IgxCustomFilteringOperand extends IgxFilteringOperand {
+    // Making the implementation singleton
+    private static _instance: IgxCustomFilteringOperand = null;
+
+    protected constructor() {
+        super();
+        this.operations = [{
+            name: 'custom',
+            logic: (target: string) => {
+                return target === 'My custom filter';
+            }
+        }].concat(this.operations); // Keep the empty and notEmpty conditions from base
+    }
+
+    // singleton
+    // Must implement this method, because the IgxColumnComponent expects it
+    public static instance(): IgxCustomFilteringOperand {
+        return this._instance || (this._instance = new this());
+    }
+}
+```
+
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
@@ -12,6 +45,7 @@ All notable changes for each version of this project will be documented in this 
         - `igxToggle` is renamed to `igxOverlay`.
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
+- **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
 
 ## 6.0.1
 - **Breaking changes**:
