@@ -12,6 +12,7 @@ import {
 } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IgxComboDropDownComponent } from './combo.component';
+import { FormGroup, FormControl, Validators, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
@@ -55,12 +56,14 @@ describe('Combo', () => {
                 IgxComboTestComponent,
                 IgxComboSampleComponent,
                 IgxComboInputTestComponent,
-                IgxComboScrollTestComponent
+                IgxComboScrollTestComponent,
+                IgxComboFormComponent
             ],
             imports: [
                 IgxComboModule,
                 NoopAnimationsModule,
-                IgxToggleModule
+                IgxToggleModule,
+                ReactiveFormsModule
             ]
         }).compileComponents();
     }));
@@ -132,7 +135,7 @@ describe('Combo', () => {
         expect(dropdown.focusedItem).toBeFalsy();
         expect(dropdown.verticalScrollContainer).toBeDefined();
         const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
-        const mockSearchInput = spyOnProperty(combo, 'searchInput', 'get').and.returnValue({nativeElement : mockObj});
+        const mockSearchInput = spyOnProperty(combo, 'searchInput', 'get').and.returnValue({ nativeElement: mockObj });
         const mockFn = () => dropdown.navigatePrev();
         expect(mockFn).toThrow();
         expect(dropdown.focusedItem).toEqual(null);
@@ -142,7 +145,7 @@ describe('Combo', () => {
         fix.detectChanges();
         expect(mockObj.focus).toHaveBeenCalledTimes(1);
         expect(combo.collapsed).toBeFalsy();
-        combo.handleKeyDown({ key: 'ArrowDown'});
+        combo.handleKeyDown({ key: 'ArrowDown' });
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(dropdown.focusedItem).toBeTruthy();
@@ -156,7 +159,7 @@ describe('Combo', () => {
             fix.detectChanges();
             // expect(dropdown.onBlur).toHaveBeenCalledTimes(1);
             expect(mockObj.focus).toHaveBeenCalledTimes(2);
-            combo.handleKeyDown({ key: 'ArrowDown'});
+            combo.handleKeyDown({ key: 'ArrowDown' });
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -193,7 +196,7 @@ describe('Combo', () => {
         expect(dropdown.verticalScrollContainer).toBeDefined();
         const mockClick = jasmine.createSpyObj('event', ['preventDefault', 'stopPropagation']);
         const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
-        const mockSearchInput = spyOnProperty(combo, 'searchInput', 'get').and.returnValue({nativeElement : mockObj});
+        const mockSearchInput = spyOnProperty(combo, 'searchInput', 'get').and.returnValue({ nativeElement: mockObj });
         const mockFn = () => dropdown.navigatePrev();
         const virtualMock = spyOn<any>(dropdown, 'navigateVirtualItem').and.callThrough();
         expect(mockFn).toThrow();
@@ -417,7 +420,7 @@ describe('Combo', () => {
             expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: [targetItem.itemID], newSelection: [] });
 
             spyOn(combo, 'addItemToCollection');
-            combo.dropdown.selectItem({ itemData: 'ADD ITEM'} as IgxComboItemComponent);
+            combo.dropdown.selectItem({ itemData: 'ADD ITEM' } as IgxComboItemComponent);
             fix.detectChanges();
             expect(combo.addItemToCollection).toHaveBeenCalledTimes(1);
         });
@@ -740,7 +743,7 @@ describe('Combo', () => {
             // expect(document.activeElement === combo.searchInput.nativeElement).toBeFalsy();
 
             const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
-            spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({element: { nativeElement: mockObj}});
+            spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } });
             combo.dropdown.headers[0].clicked({});
             fix.detectChanges();
             expect(mockObj.focus).toHaveBeenCalled();
@@ -851,11 +854,11 @@ describe('Combo', () => {
             combo.filteringExpressions = [];
             tick();
             return fix.whenStable();
-       }).then(() => {
-           fix.detectChanges();
-           expect(combo.filteredData.length).toEqual(initialData.length);
-           expect(combo.filter).toHaveBeenCalledTimes(3);
-       });
+        }).then(() => {
+            fix.detectChanges();
+            expect(combo.filteredData.length).toEqual(initialData.length);
+            expect(combo.filter).toHaveBeenCalledTimes(3);
+        });
     }));
 
     it('Should properly select/deselect filteredData', fakeAsync(() => {
@@ -1045,10 +1048,10 @@ describe('Combo', () => {
             const dropdown = combo.dropdown.element;
             checkGroupedItemsClass(0, 5, dropdown);
             checkGroupedItemsClass(6, 10, dropdown);
-        //     combo.dropdown.navigateLast();
-        //     fix.detectChanges();
-        //     return fix.whenStable();
-        // }).then(() => {
+            //     combo.dropdown.navigateLast();
+            //     fix.detectChanges();
+            //     return fix.whenStable();
+            // }).then(() => {
             // TO DO
             // Navigate down and check the rest of the items
         });
@@ -1668,54 +1671,54 @@ describe('Combo', () => {
         });
     }));
     it('Groupped items should be selectable ', fakeAsync(() => {
-            const expectedOutput = 'Michigan, Tennessee, Illinois';
-            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        const expectedOutput = 'Michigan, Tennessee, Illinois';
+        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+        const inputElement = input.nativeElement;
+        let checkbox_1: HTMLElement;
+        let checkbox_2: HTMLElement;
+        let checkbox_3: HTMLElement;
+        let dropdownItem_1;
+        let dropdownItem_2;
+        let dropdownItem_3;
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            const combo = fixture.componentInstance.combo;
-            const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-            const inputElement = input.nativeElement;
-            let checkbox_1: HTMLElement;
-            let checkbox_2: HTMLElement;
-            let checkbox_3: HTMLElement;
-            let dropdownItem_1;
-            let dropdownItem_2;
-            let dropdownItem_3;
-            combo.dropdown.toggle();
-            tick();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-                const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                const item_1 = dropdownItems[3];
-                dropdownItem_1 = combo.data[9];
-                checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_1.click();
-                fixture.detectChanges();
-                expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(dropdownItem_1)).toBeTruthy();
-                expect(combo.selectedItems()[0]).toEqual(dropdownItem_1);
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            const item_1 = dropdownItems[3];
+            dropdownItem_1 = combo.data[9];
+            checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_1.click();
+            fixture.detectChanges();
+            expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(dropdownItem_1)).toBeTruthy();
+            expect(combo.selectedItems()[0]).toEqual(dropdownItem_1);
 
-                const item_2 = dropdownItems[7];
-                dropdownItem_2 = combo.data[33];
-                checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_2.click();
-                fixture.detectChanges();
-                expect(checkbox_2.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(dropdownItem_2)).toBeTruthy();
-                expect(combo.selectedItems()[1]).toEqual(dropdownItem_2);
+            const item_2 = dropdownItems[7];
+            dropdownItem_2 = combo.data[33];
+            checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_2.click();
+            fixture.detectChanges();
+            expect(checkbox_2.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(dropdownItem_2)).toBeTruthy();
+            expect(combo.selectedItems()[1]).toEqual(dropdownItem_2);
 
-                const item_3 = dropdownItems[1];
-                dropdownItem_3 = combo.data[12];
-                checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_3.click();
-                fixture.detectChanges();
-                expect(checkbox_3.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(dropdownItem_3)).toBeTruthy();
-                expect(combo.selectedItems()[2]).toEqual(dropdownItem_3);
-                return fixture.whenStable();
-            }).then(() => {
-                expect(inputElement.value).toEqual(expectedOutput);
-            });
+            const item_3 = dropdownItems[1];
+            dropdownItem_3 = combo.data[12];
+            checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_3.click();
+            fixture.detectChanges();
+            expect(checkbox_3.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(dropdownItem_3)).toBeTruthy();
+            expect(combo.selectedItems()[2]).toEqual(dropdownItem_3);
+            return fixture.whenStable();
+        }).then(() => {
+            expect(inputElement.value).toEqual(expectedOutput);
+        });
     }));
     it('Groupped item headdings should not be selectable ', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
@@ -1744,65 +1747,65 @@ describe('Combo', () => {
         });
     }));
     it('Selecting items using the "selectItem" method should add the items to the previously selected items', fakeAsync(() => {
-            let expectedOutput = 'Paris, Oslo, Sofia, Madrid';
-            const fixture = TestBed.createComponent(IgxComboTestComponent);
+        let expectedOutput = 'Paris, Oslo, Sofia, Madrid';
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+        const inputElement = input.nativeElement;
+        let checkbox_1: HTMLElement;
+        let checkbox_2: HTMLElement;
+        let checkbox_3: HTMLElement;
+        let dropdownItem_1;
+        let dropdownItem_2;
+        let dropdownItem_3;
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
             fixture.detectChanges();
-            const combo = fixture.componentInstance.combo;
-            const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-            const inputElement = input.nativeElement;
-            let checkbox_1: HTMLElement;
-            let checkbox_2: HTMLElement;
-            let checkbox_3: HTMLElement;
-            let dropdownItem_1;
-            let dropdownItem_2;
-            let dropdownItem_3;
-            combo.dropdown.toggle();
-            tick();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-                const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                const item_1 = dropdownItems[3];
-                dropdownItem_1 = combo.data[3];
-                checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_1.click();
-                fixture.detectChanges();
-                expect(combo.selectedItems()[0]).toEqual('Paris');
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            const item_1 = dropdownItems[3];
+            dropdownItem_1 = combo.data[3];
+            checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_1.click();
+            fixture.detectChanges();
+            expect(combo.selectedItems()[0]).toEqual('Paris');
 
-                const item_2 = dropdownItems[7];
-                dropdownItem_2 = combo.data[7];
-                checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_2.click();
-                fixture.detectChanges();
-                expect(combo.selectedItems()[1]).toEqual('Oslo');
+            const item_2 = dropdownItems[7];
+            dropdownItem_2 = combo.data[7];
+            checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_2.click();
+            fixture.detectChanges();
+            expect(combo.selectedItems()[1]).toEqual('Oslo');
 
-                const item_3 = dropdownItems[1];
-                dropdownItem_3 = combo.data[1];
-                checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_3.click();
-                fixture.detectChanges();
-                expect(combo.selectedItems()[2]).toEqual('Sofia');
+            const item_3 = dropdownItems[1];
+            dropdownItem_3 = combo.data[1];
+            checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox_3.click();
+            fixture.detectChanges();
+            expect(combo.selectedItems()[2]).toEqual('Sofia');
 
-                const item_4 = combo.dropdown.items[10] as IgxComboItemComponent;
-                combo.dropdown.selectItem(item_4);
-                fixture.detectChanges();
-                return fixture.whenStable();
-            }).then(() => {
-                expect(combo.selectedItems()[3]).toEqual('Madrid');
-                // expect(checkbox_4.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(combo.data[10])).toBeTruthy();
-                expect(inputElement.value).toEqual(expectedOutput);
+            const item_4 = combo.dropdown.items[10] as IgxComboItemComponent;
+            combo.dropdown.selectItem(item_4);
+            fixture.detectChanges();
+            return fixture.whenStable();
+        }).then(() => {
+            expect(combo.selectedItems()[3]).toEqual('Madrid');
+            // expect(checkbox_4.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(combo.data[10])).toBeTruthy();
+            expect(inputElement.value).toEqual(expectedOutput);
 
-                const item_5 = combo.dropdown.items[9] as IgxComboItemComponent;
-                combo.dropdown.selectItem(item_5);
-                fixture.detectChanges();
-                return fixture.whenStable();
-            }).then(() => {
-                expectedOutput += ', Rome';
-                expect(combo.selectedItems()[4]).toEqual('Rome');
-                // expect(checkbox_5.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(combo.data[9])).toBeTruthy();
-                expect(inputElement.value).toEqual(expectedOutput);
+            const item_5 = combo.dropdown.items[9] as IgxComboItemComponent;
+            combo.dropdown.selectItem(item_5);
+            fixture.detectChanges();
+            return fixture.whenStable();
+        }).then(() => {
+            expectedOutput += ', Rome';
+            expect(combo.selectedItems()[4]).toEqual('Rome');
+            // expect(checkbox_5.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            expect(combo.isItemSelected(combo.data[9])).toBeTruthy();
+            expect(inputElement.value).toEqual(expectedOutput);
         });
     }));
     // Filtering
@@ -1962,6 +1965,97 @@ describe('Combo', () => {
             expect(combo.children.length).toBeTruthy();
         });
     }));
+
+    it('Should properly initialize when used as a form control', () => {
+        const fix = TestBed.createComponent(IgxComboFormComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        const comboFormReference = fix.componentInstance.reactiveForm.controls.townCombo;
+        expect(comboFormReference).toBeDefined();
+        expect(combo.selectedItems()).toEqual(comboFormReference.value);
+        expect(combo.selectedItems().length).toEqual(1);
+        expect(combo.selectedItems()[0].field).toEqual('Connecticut');
+    });
+
+    it('Can be enabled/disabled when used as a form control', () => {
+        const fix = TestBed.createComponent(IgxComboFormComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        const form = fix.componentInstance.reactiveForm;
+        const comboFormReference = form.controls.townCombo;
+        expect(comboFormReference).toBeDefined();
+        expect(combo.disabled).toBeFalsy();
+        expect(comboFormReference.disabled).toBeFalsy();
+        spyOn(combo, 'onInputClick');
+        spyOn(combo, 'setDisabledState').and.callThrough();
+        const mockClick = jasmine.createSpyObj('event', ['stopPropagation', 'preventDefault']);
+        combo.comboInput.nativeElement.click(mockClick);
+        fix.detectChanges();
+        expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+
+        form.disable();
+
+        // Disabling the form disables all of the controls in it
+        fix.detectChanges();
+        expect(comboFormReference.disabled).toBeTruthy();
+        expect(combo.disabled).toBeTruthy();
+        expect(combo.setDisabledState).toHaveBeenCalledTimes(1);
+
+        // Disabled form controls don't handle click events
+        combo.comboInput.nativeElement.click(mockClick);
+        fix.detectChanges();
+        expect(combo.onInputClick).toHaveBeenCalledTimes(1);
+
+        // Can enabling the form re-enables all of the controls in it
+
+        form.enable();
+        fix.detectChanges();
+        expect(comboFormReference.disabled).toBeFalsy();
+        expect(combo.disabled).toBeFalsy();
+    });
+
+    it('Should change value when addressed as a form control', () => {
+        const fix = TestBed.createComponent(IgxComboFormComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        const form = fix.componentInstance.reactiveForm;
+        const comboFormReference = form.controls.townCombo;
+        expect(comboFormReference).toBeDefined();
+        expect(combo.selectedItems()).toEqual(comboFormReference.value);
+
+        // Form -> Combo
+        comboFormReference.setValue([{ field: 'Missouri', region: 'West North Central'}]);
+        fix.detectChanges();
+        expect(combo.selectedItems()).toEqual([{ field: 'Missouri', region: 'West North Central'}]);
+
+        // Combo -> Form
+        combo.selectItems([{ field: 'South Carolina', region: 'South Atlantic'}], true);
+        fix.detectChanges();
+        expect(comboFormReference.value).toEqual([{ field: 'South Carolina', region: 'South Atlantic'}]);
+    });
+
+    it('Should properly submit values when used as a form control', () => {
+        const fix = TestBed.createComponent(IgxComboFormComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        const form = fix.componentInstance.reactiveForm;
+        const comboFormReference = form.controls.townCombo;
+        expect(comboFormReference).toBeDefined();
+        expect(combo.selectedItems()).toEqual(comboFormReference.value);
+        expect(form.status).toEqual('INVALID');
+        form.controls.password.setValue('TEST');
+        form.controls.firstName.setValue('TEST');
+
+        spyOn(console, 'log');
+        fix.detectChanges();
+        expect(form.status).toEqual('VALID');
+        fix.debugElement.query(By.css('button')).nativeElement.click();
+        expect(console.log).toHaveBeenCalledTimes(2);
+    });
 });
 
 @Component({
@@ -2152,5 +2246,91 @@ class IgxComboInputTestComponent {
         }
         this.initData = this.items;
     }
+}
+
+@Component({
+    template: `
+        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+            <p>
+                <label>First Name:</label>
+                <input type="text" formControlName="firstName">
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type="password" formControlName="password">
+            </p>
+            <p>
+                <igx-combo #comboReactive formControlName="townCombo"
+                    class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
+                    [data]="items" [textKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
+            </p>
+            <p>
+                <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+            </p>
+        </form>
+`
+})
+
+class IgxComboFormComponent {
+    @ViewChild('comboReactive', { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+    public items = [];
+
+    get valuesTemplate() {
+        return this.combo.selectedItems();
+    }
+    set valuesTemplate(values: Array<any>) {
+        this.combo.selectItems(values);
+    }
+
+    reactiveForm: FormGroup;
+
+    constructor(fb: FormBuilder) {
+
+        const division = {
+            'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
+            'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
+            'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
+            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 01': ['Illinois', 'Indiana'],
+            'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
+            'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
+            'South Atlantic 01': ['Delaware', 'Florida', 'Georgia', 'Maryland'],
+            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia', 'District of Columbia', 'West Virginia'],
+            'South Atlantic 03': ['District of Columbia', 'West Virginia'],
+            'East South Central 01': ['Alabama', 'Kentucky'],
+            'East South Central 02': ['Mississippi', 'Tennessee'],
+            'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
+            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            'Pacific 01': ['Alaska', 'California'],
+            'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
+        };
+        const keys = Object.keys(division);
+        for (const key of keys) {
+            division[key].map((e) => {
+                this.items.push({
+                    field: e,
+                    region: key.substring(0, key.length - 3)
+                });
+            });
+        }
+
+        this.reactiveForm = fb.group({
+            'firstName': new FormControl('', Validators.required),
+            'password': ['', Validators.required],
+            'townCombo': [[this.items[0]], Validators.required]
+        });
+
+    }
+    onSubmitReactive() {
+        console.log('model-based form submitted');
+        console.log(this.reactiveForm);
+    }
+
+    onSubmitTemplateBased() {
+        console.log('template-driven form submitted');
+        console.log(this.reactiveForm);
+    }
+
 }
 

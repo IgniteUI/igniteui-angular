@@ -1182,7 +1182,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public writeValue(value: any): void {
-        this.selectItems(value);
+        this.selectItems(value, true);
     }
 
     /**
@@ -1201,7 +1201,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public setDisabledState(isDisabled: boolean): void {
-        this.disabled = true;
+        this.disabled = isDisabled;
     }
 
     public get template(): TemplateRef<any> {
