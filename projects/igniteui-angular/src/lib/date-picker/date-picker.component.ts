@@ -61,8 +61,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * Propagate calendar properties.
      */
-    @Input() public label: string = 'Date';
-    @Input() public isLabelVisible: boolean = true;
+    @Input() public label = 'Date';
+    @Input() public isLabelVisible = true;
 
     @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
 
