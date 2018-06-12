@@ -169,7 +169,7 @@ describe('IgxInput', () => {
         expect(inputElement.disabled).toBe(false);
         expect(igxInput.disabled).toBe(false);
 
-        fixture.componentInstance.isDisabled = true;
+        fixture.componentInstance.disabled = true;
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(true);
@@ -323,13 +323,13 @@ class InitiallyFilledInputComponent {
 
 @Component({ template: `<igx-input-group #igxInputGroup>
                             <label for="test" igxLabel>Test</label>
-                            <input name="test" #igxInput type="text" igxInput [disabled]="isDisabled" />
+                            <input name="test" #igxInput type="text" igxInput [disabled]="disabled" />
                         </igx-input-group>` })
 class DataBoundDisabledInputComponent {
     @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
     @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
 
-    public isDisabled = false;
+    public disabled = false;
 }
 
 function testRequiredValidation(inputElement, fixture) {
