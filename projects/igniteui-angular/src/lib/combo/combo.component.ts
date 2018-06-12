@@ -197,18 +197,29 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         // which is not part of the this.items collection.
         // In that case the real item is not hidden, but not loaded at all by the virtualization,
         // and this is the same case as normal scroll up.
+        const vContainer = this.verticalScrollContainer;
         const extraScroll = this.parentElement.isAddButtonVisible();
         if (direction) {
-            if (direction === Navigate.Down
-                && this.focusedItem.itemData === this.verticalScrollContainer.igxForOf[this.verticalScrollContainer.igxForOf.length - 1]
-                && extraScroll) {
+            if (direction === Navigate.Down && extraScroll) {
+                if (vContainer.igxForOf[vContainer.igxForOf.length - 1] === this.focusedItem.itemData) {
                     if (this.focusedItem) {
                         this.focusedItem.isFocused = false;
                     }
                     this.focusedItem = this.children.last;
                     this.focusedItem.isFocused = true;
                     return;
+                } else if (vContainer.igxForOf[vContainer.state.chunkSize + vContainer.state.startIndex - 2] ===
+                    this.focusedItem.itemData) {
+                        this.subscribeNext(vContainer, () => {
+                            if (this.focusedItem.isHeader &&
+                                vContainer.state.startIndex + vContainer.state.chunkSize < vContainer.igxForOf.length) {
+                                vContainer.scrollNext();
+                            }
+                        });
+                    vContainer.scrollNext();
+                    return;
                 }
+            }
         }
         if (newIndex === -1 || newIndex === this.items.length - 1) {
             this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
@@ -243,7 +254,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
                 vContainer.scrollTo(0); // Scrolls to the beginning of the list and switches focus to the searchInput
                 this.subscribeNext(vContainer, () => {
                     this.parentElement.searchInput.nativeElement.focus();
-                    this.focusedItem.isFocused = false;
+                    if (this.focusedItem) {
+                        this.focusedItem.isFocused = false;
+                    }
                     this.focusedItem = null;
                 });
                 return;
@@ -911,7 +924,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.customValueFlag = this.textKey || this.textKey === 0 ?
             !this.filteredData
                 .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) &&
-                this.allowCustomValues :
+            this.allowCustomValues :
             !this.filteredData
                 .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
     }
