@@ -187,8 +187,9 @@ export function autoWire(markForCheck = false) {
 
 @Injectable()
 export class IgxColumnMovingService {
-    private _column: IgxColumnComponent;
     private _icon: any;
+    private _column: IgxColumnComponent;
+    private _target: IgxColumnComponent;
 
     get column(): IgxColumnComponent {
         return this._column;
@@ -196,6 +197,15 @@ export class IgxColumnMovingService {
     set column(val: IgxColumnComponent) {
         if (val) {
             this._column = val;
+        }
+    }
+
+    get target(): IgxColumnComponent {
+        return this._target;
+    }
+    set target(val: IgxColumnComponent) {
+        if (val) {
+            this._target = val;
         }
     }
 
@@ -308,7 +318,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         const s = document.defaultView.getComputedStyle(this.element.nativeElement);
         this._dragGhost.style.width = Math.ceil(range.getBoundingClientRect().width +
             parseFloat(s.borderRightWidth) + parseFloat(s.borderLeftWidth) + parseFloat(s.paddingLeft) +
-            parseFloat(s.paddingRight) + icon.getBoundingClientRect().width) + 'px';
+            parseFloat(s.paddingRight) + icon.getBoundingClientRect().width) +
+            parseFloat(document.defaultView.getComputedStyle(icon).marginRight) + 'px';
 
         this.left = this._dragStartX = event.clientX -
             (((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 3) * 2);
