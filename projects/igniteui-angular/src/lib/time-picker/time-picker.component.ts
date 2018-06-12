@@ -118,7 +118,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * ```
      */
     @Input()
-    public isDisabled = false;
+    public disabled = false;
 
     /**
      * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
