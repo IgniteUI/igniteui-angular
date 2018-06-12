@@ -85,6 +85,10 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'equals',
             logic: (target: Date, searchVal: Date) => {
+                if (!(target instanceof Date)) {
+                    throw new Error('Could not perform filtering on "date" column because the datasource object type is not "Date".');
+                }
+
                 const targetp = IgxDateFilteringOperand.getDateParts(target, 'yMd');
                 const searchp = IgxDateFilteringOperand.getDateParts(searchVal, 'yMd');
                 return targetp.year === searchp.year &&
