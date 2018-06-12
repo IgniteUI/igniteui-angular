@@ -181,11 +181,23 @@
         @extend %grid__scroll-on-drag-right !optional;
     }
 
+    @include e(scroll-on-drag-pinned) {
+        @extend %grid__scroll-on-drag-pinned !optional;
+    }
+
     @include e(drop-indicator-active) {
         @extend %grid__drop-indicator-active !optional;
     }
 
     @include e(drag-ghost-image) {
         @extend %grid__drag-ghost-image !optional;
+    }
+
+    @include e(drag-ghost-image-icon) {
+        @extend %grid__drag-ghost-image-icon !optional;
+    }
+
+    @include e(drag-col-header) {
+        @extend %grid__drag-col-header !optional;
     }
 }

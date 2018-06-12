@@ -504,13 +504,21 @@
         z-index: 25;
     }
 
+    %grid__scroll-on-drag-pinned {
+        position: absolute;
+        width: 15px;
+        height: 100%;
+        top: 0;
+        z-index: 25;
+    }
+
     %grid__drop-indicator-active {
         background-color: #e41c77;
     }
 
     %grid__drag-ghost-image {
         border: 1px solid #e41c77;
-        background-color: gainsboro;
+        background-color: lightgray;
         position: absolute;
         opacity: .7;
         z-index: 20;
@@ -522,5 +530,14 @@
         &:last-of-type {
             border-right: 1px solid #e41c77;
         }
+    }
+
+    %grid__drag-ghost-image-icon {
+        color: #e41c77;
+        font-size: 24px;
+    }
+
+    %grid__drag-col-header {
+        background-color: #fff;
     }
 }
