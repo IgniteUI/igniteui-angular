@@ -1191,7 +1191,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
     });
 
-    it('When filter column with value 0 and dataType number, filtering icon class indicator should be applied', async(() => {
+    it('When filter column with value 0 and dataType number, filtering icon class indicator should be applied', ((done) => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1221,6 +1221,7 @@ describe('IgxGrid - Filtering actions', () => {
             fix.detectChanges();
             setTimeout(() => {
                 expect(gridFilteringToggle.nativeElement.classList.contains('igx-filtering__toggle--filtered')).toBeTruthy();
+                done();
             }, 500);
         });
     }));
