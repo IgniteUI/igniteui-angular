@@ -19,7 +19,7 @@ import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
+import { autoWire, IGridBus, IgxColumnMovingService } from './grid.common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,6 +76,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         return this.sortDirection !== SortingDirection.None;
     }
 
+    @HostBinding('class.igx-grid__drag-col-header')
+    get dragged() {
+        return this.column === this.cms.column && this.column.grid.isColumnMoving;
+    }
+
     @HostBinding('style.z-index')
     get zIndex() {
         if (!this.column.pinned) {
@@ -108,7 +113,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     private _startResizePos;
     private _pinnedMaxWidth;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone) { }
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone, private cms: IgxColumnMovingService) { }
 
     public ngOnInit() {
         this.cdr.markForCheck();

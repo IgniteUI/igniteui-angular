@@ -286,8 +286,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     protected createDragGhost(event) {
         super.createDragGhost(event);
-
-        // this._dragGhost.children[1].style.overflow = 'visible';
         this._dragGhost.removeChild(this._dragGhost.children[2]);
 
         const icon = document.createElement('i');
@@ -314,7 +312,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         this.left = this._dragStartX = event.clientX -
             (((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 3) * 2);
-        this.top = this._dragStartY = event.clientY - ((parseFloat(s.height) / 4) * 3);
+        this.top = this._dragStartY = event.clientY - ((parseFloat(s.height) / 3) * 2);
     }
 }
 
@@ -385,14 +383,18 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 this.cms.icon.innerText = 'swap_horiz';
             }
 
-            const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
-            if (!this.cms.column.pinned && this.column.pinned && nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
+            if (!this.cms.column.pinned && this.column.pinned) {
+                const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
 
-                this._dropIndicator = this.elementRef.nativeElement.children[0];
-                this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+                if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
+                    this._dropIndicator = this.elementRef.nativeElement.children[0];
+                    this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+
+                    this.cms.icon.innerText = 'lock';
+                } else {
+                    this.cms.icon.innerText = 'block';
+                }
             }
-
-            this.cms.icon.innerText = this.column.pinned && !this.cms.column.pinned ? 'lock' : 'swap_horiz';
         } else {
             this.cms.icon.innerText = 'swap_horiz';
         }
