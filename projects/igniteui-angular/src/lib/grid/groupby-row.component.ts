@@ -31,13 +31,7 @@ import { IgxGridRowComponent } from './row.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-groupby-row',
-    templateUrl: './groupby-row.component.html',
-    styles: [ `:host {
-        display: flex;
-        background: inherit;
-        outline-style: none;
-        height: 50px;
-    }`]
+    templateUrl: './groupby-row.component.html'
 })
 export class IgxGridGroupByRowComponent {
 
@@ -46,8 +40,8 @@ export class IgxGridGroupByRowComponent {
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
-    protected defaultCssClass = 'igx-grid__tr--group';
-    protected paddingIndentationCssClass = 'igx-grid__group-indentation-padding-level';
+    protected defaultCssClass = 'igx-grid__group-row';
+    protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
     protected isFocused = false;
 
     get focused(): boolean {

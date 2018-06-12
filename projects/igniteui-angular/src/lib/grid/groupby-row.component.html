@@ -10,12 +10,13 @@
     </div>
 
     <ng-template #defaultGroupByTemplate>
-        <div class="igx-grid__group-label">
-            <igx-icon fontSet="material" name="group_work" class="igx-grid__group-icon"></igx-icon>
-            <span class="igx-grid__group-field">
+        <div class="igx-group-label">
+            <igx-icon fontSet="material" name="group_work" class="igx-group-label__icon"></igx-icon>
+            <span class="igx-group-label__column-name">
             {{ groupRow.expression.fieldName }}:
-        </span>
-            <span class="igx-grid__group-text">{{ groupRow.value }}</span><igx-badge [value]="groupRow.records.length" class='igx-grid__group-count'></igx-badge>
+            </span>
+            <span class="igx-group-label__text">{{ groupRow.value }}</span>
+            <igx-badge [value]="groupRow.records.length" class='igx-group-label__count-badge'></igx-badge>
         </div>
     </ng-template>
 </ng-container>
