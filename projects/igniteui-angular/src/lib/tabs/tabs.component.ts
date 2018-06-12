@@ -145,7 +145,7 @@ export class IgxTabsComponent implements AfterViewInit {
         // initial selection
         setTimeout(() => {
             if (this.selectedIndex === -1) {
-                const selectableGroups = this.groups.filter((p) => !p.isDisabled);
+                const selectableGroups = this.groups.filter((p) => !p.disabled);
                 const group = selectableGroups[0];
 
                 if (group) {
@@ -169,7 +169,7 @@ export class IgxTabsComponent implements AfterViewInit {
 
     private _deselectGroup(group: IgxTabsGroupComponent) {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
-        if (group.isDisabled || this.selectedTabItem.index === group.index) {
+        if (group.disabled || this.selectedTabItem.index === group.index) {
             return;
         }
 

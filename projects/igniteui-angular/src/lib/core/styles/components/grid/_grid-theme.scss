@@ -549,6 +549,14 @@
         z-index: 25;
     }
 
+    %grid__scroll-on-drag-pinned {
+        position: absolute;
+        width: 15px;
+        height: 100%;
+        top: 0;
+        z-index: 25;
+    }
+
     %grid__drag-ghost-image {
         background-color: --var($theme, 'ghost-header-background');
         color: --var($theme, 'ghost-header-text-color');
@@ -559,5 +567,14 @@
         left: -99999px;
         overflow: visible;
         box-shadow: igx-elevation($elevations, 5);
+    }
+
+    %grid__drag-ghost-image-icon {
+        color: #e41c77;
+        font-size: 24px;
+    }
+
+    %grid__drag-col-header {
+        background-color: #fff;
     }
 }

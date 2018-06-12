@@ -228,6 +228,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     private _column: IgxColumnComponent;
+    private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
 
     constructor(
         _element: ElementRef,
@@ -290,12 +291,11 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this._dragGhost.removeChild(this._dragGhost.children[2]);
 
         const icon = document.createElement('i');
-        const text = document.createTextNode('block');
+        const text = document.createTextNode('swap_horiz');
         icon.appendChild(text);
 
-        icon.style.color = '#e41c77';
-        icon.style.fontSize = '24px';
         icon.classList.add('material-icons');
+        this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
         this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
 
@@ -313,8 +313,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             parseFloat(s.paddingRight) + icon.getBoundingClientRect().width) + 'px';
 
         this.left = this._dragStartX = event.clientX -
-            ((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 2);
-        this.top = this._dragStartY = event.clientY - (parseFloat(s.height) / 2);
+            (((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 3) * 2);
+        this.top = this._dragStartY = event.clientY - ((parseFloat(s.height) / 4) * 3);
     }
 }
 
@@ -381,6 +381,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                     this.elementRef.nativeElement.children[0];
 
                 this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+
+                this.cms.icon.innerText = 'swap_horiz';
             }
 
             const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
@@ -391,6 +393,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             }
 
             this.cms.icon.innerText = this.column.pinned && !this.cms.column.pinned ? 'lock' : 'swap_horiz';
+        } else {
+            this.cms.icon.innerText = 'swap_horiz';
         }
 
         if (this.horizontalScroll) {

@@ -19,7 +19,8 @@
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" role="row">
-        <span *ngIf="hasMovableColumns && isColumnMoving" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
+        <span *ngIf="hasMovableColumns && isColumnMoving && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
+        <span *ngIf="hasMovableColumns && isColumnMoving && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-container *ngIf="rowSelectable">
             <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
@@ -37,7 +38,8 @@
 </div>
 
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody>
-    <span *ngIf="hasMovableColumns && isColumnMoving" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
+    <span *ngIf="hasMovableColumns && isColumnMoving && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
+    <span *ngIf="hasMovableColumns && isColumnMoving && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressions:filteringLogic:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
         | gridPaging:page:perPage:id:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
