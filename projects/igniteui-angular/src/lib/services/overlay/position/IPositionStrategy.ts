@@ -1,10 +1,17 @@
 import { PositionSettings } from './../utilities';
+
 export interface IPositionStrategy {
     wrapperClass: string;
-
-	// TODO: rename this to _settings
-    _options: PositionSettings;
+    _settings: PositionSettings;
 
     /** Position the element based on the PositionStrategy implementing this interface */
-    position(element: HTMLElement): void;
+     position(element: HTMLElement, wrapper: HTMLElement, size: {}): void;
 }
+// export interface OverlayEntry {
+//     element: HTMLElement;
+//     wrapper: HTMLElement;
+//     size: {
+//         width: number;
+//         height: number;
+//     };
+// }

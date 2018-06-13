@@ -67,11 +67,16 @@ export class IgxOverlayService {
     * @param component Component to show in the overlay
     */
 
+    //passs component, id? and OverlaySettings?
     show(component, id?: string, positionStrategy?: IPositionStrategy): string {
         debugger;
         id = this.getElement(component, id);
+        //get the element for both static and dynamic components
         const element = this._elements.find(x => x.id === id).elementRef.nativeElement;
         const rect = element.getBoundingClientRect();
+
+        console.log('show(component, id?: string, positionStrategy?: IPositionStrategy) -->eWidth: '
+        + rect.width + ' eHeight: ' + rect.height );
 
         const componentWrapper = this._document.createElement('div');
         positionStrategy = this.getPositionStrategy(positionStrategy);

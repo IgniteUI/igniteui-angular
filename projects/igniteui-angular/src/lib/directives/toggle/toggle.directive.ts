@@ -76,27 +76,37 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
     public open(fireEvents?: boolean, positionStrategy?: IPositionStrategy) {
         if (!this.collapsed) { return; }
 
-        const player = this.animationActivation();
-        player.onStart(() => {
-            positionStrategy = this.getPositionStrategy(positionStrategy);
-            const id = this.overlayService.show(this.elementRef, this.id, positionStrategy);
-            if (!this.id) {
-                this.id = id;
-            }
-        });
-        player.onDone(() => {
-            player.destroy();
-            if (fireEvents) {
-                this.onOpened.emit();
-            }
-        });
+       // const player = this.animationActivation();
+       // player.onStart(() => {
+       // });
+       // player.onDone(() => {
+       //     player.destroy();
+       // });
 
         if (fireEvents) {
             this.onOpening.emit();
         }
 
+        console.log('this.collapsed = ' + this.collapsed);
+        console.log('before player.play();-->eWidth: ' + this.elementRef.nativeElement.getBoundingClientRect().width
+        + ' eHeight: ' + this.elementRef.nativeElement.getBoundingClientRect().height );
+        debugger;
+
+
         this.collapsed = false;
-        player.play();
+        this.cdr.detectChanges();
+
+        positionStrategy = this.getPositionStrategy(positionStrategy);
+        const id = this.overlayService.show(this.elementRef, this.id, positionStrategy);
+        if (!this.id) {
+            this.id = id;
+        }
+
+        if (fireEvents) {
+            this.onOpened.emit();
+        }
+        //crop all animations and pass animation options to the overlay.
+        //player.play();
     }
 
     public close(fireEvents?: boolean) {
@@ -104,24 +114,25 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
 
         this.overlayService.hide(this.id);
 
-        const player = this.animationActivation();
-        player.onDone(() => {
-            this.collapsed = true;
+       // const player = this.animationActivation();
+       // player.onDone(() => {
+
             // When using directive into component with OnPush it is necessary to
             // trigger change detection again when close animation ends
             // due to late updated @collapsed property.
-            this.cdr.markForCheck();
-            player.destroy();
-            if (fireEvents) {
-                this.onClosed.emit();
-            }
-        });
+        //    this.cdr.markForCheck();
+        //    player.destroy();
+        //});
 
         if (fireEvents) {
             this.onClosing.emit();
         }
 
-        player.play();
+        this.collapsed = true;
+       // player.play();
+        if (fireEvents) {
+            this.onClosed.emit();
+        }
     }
 
     public toggle(fireEvents?: boolean, positionStrategy?: IPositionStrategy) {
@@ -166,14 +177,14 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
 
     private getPositionStrategy(positionStrategy?: IPositionStrategy): IPositionStrategy {
         positionStrategy = positionStrategy ? positionStrategy : new GlobalPositionStrategy();
-        if (positionStrategy._options && positionStrategy._options.element) {
-            const elementRect = positionStrategy._options.element.getBoundingClientRect();
-            const x = elementRect.right + elementRect.width * positionStrategy._options.horizontalStartPoint;
-            const y = elementRect.bottom + elementRect.height * positionStrategy._options.verticalStartPoint;
-            positionStrategy._options.point = new Point(x, y);
+        if (positionStrategy._settings && positionStrategy._settings.element) {
+            const elementRect = positionStrategy._settings.element.getBoundingClientRect();
+            const x = elementRect.right + elementRect.width * positionStrategy._settings.horizontalStartPoint;
+            const y = elementRect.bottom + elementRect.height * positionStrategy._settings.verticalStartPoint;
+            positionStrategy._settings.point = new Point(x, y);
         }
 
-        positionStrategy._options = positionStrategy._options ? positionStrategy._options : new PositionSettings();
+        positionStrategy._settings = positionStrategy._settings ? positionStrategy._settings : new PositionSettings();
         return positionStrategy;
     }
 }

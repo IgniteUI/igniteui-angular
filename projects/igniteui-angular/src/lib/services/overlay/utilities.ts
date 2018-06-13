@@ -1,3 +1,6 @@
+import { DOCUMENT } from '@angular/common';
+import { Inject } from '@angular/core';
+
 export enum HorizontalAlignment {
     Left = -1,
     Center = -0.5,
@@ -27,3 +30,7 @@ export class PositionSettings {
         public horizontalStartPoint: HorizontalAlignment = HorizontalAlignment.Center,
         public verticalStartPoint: VerticalAlignment = VerticalAlignment.Middle) { }
 }
+
+// TODO
+// Overlay settings contain PositionSettings, ScrollSettings and AnimationsSettings
+// (all will be optional)
