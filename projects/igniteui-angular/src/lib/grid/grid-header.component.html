@@ -2,6 +2,9 @@
     {{ column.header || column.field }}
 </ng-template>
 
+<span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left">
+</span>
+
 <span class="igx-grid__th-title">
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
     </ng-container>
@@ -25,4 +28,7 @@
         (resizeEnd)="onResize($event)">
     </div>
 
+</span>
+
+<span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right">
 </span>
