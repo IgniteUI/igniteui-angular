@@ -1,10 +1,8 @@
 import { forwardRef, Inject, Pipe, PipeTransform } from '@angular/core';
-import { callLifecycleHooksChildrenFirst } from '@angular/core/src/view/provider';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { ISortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxComboComponent } from './combo.component';
 import { IFilteringState } from '../data-operations/filtering-state.interface';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';

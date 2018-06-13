@@ -2,15 +2,13 @@ import {
     Component,
     ElementRef,
     forwardRef,
-    HostBinding,
     HostListener,
     Inject,
     Input
 } from '@angular/core';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
-import { IgxComboDropDownComponent } from './combo.component';
+import { IgxComboDropDownComponent } from './combo-dropdown.component';
 
 @Component({
     selector: 'igx-combo-item',
@@ -49,7 +47,6 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
             }
             return;
         }
-        // this.parentElement.parentElement.searchInput.nativeElement.focus();
         this.parentElement.selectItem(this);
     }
 }
