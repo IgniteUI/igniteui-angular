@@ -87,7 +87,7 @@ export class IgxSnackbarComponent {
 
     /**
      * Sets/gets the `id` of the snackbar.
-     * If not set, the `id` of the first snackbar component  will be `"igx-snackbar-0";
+     * If not set, the `id` of the first snackbar component  will be `"igx-snackbar-0"`;
      * ```html
      * <igx-snackbar id = "Snackbar1"></igx-snackbar>
      * ```
@@ -135,7 +135,7 @@ export class IgxSnackbarComponent {
     @Input() public autoHide = true;
 
     /**
-     * Sets/gets the duration of time(in milliseconds) in which snackbar component will be visible after it is being shown.
+     * Sets/gets the duration of time(in milliseconds) in which the snackbar will be visible after it is being shown.
      * Default value is 4000.
      * ```html
      * <igx-snackbar [displayTime] = "2000"></igx-snackbar>
@@ -179,7 +179,7 @@ private timeoutId;
     constructor(private zone: NgZone) { }
 
     /**
-     * Shows the snackbar and hides it after the `displayTime` if `autoHide` is set to `true`.
+     * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
      * ```typescript
      * this.snackbar.show();
      * ```
