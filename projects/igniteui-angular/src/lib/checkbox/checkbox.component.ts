@@ -51,15 +51,27 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
      */
     protected _value: any;
     /**
-     *@hidden
+     * Returns reference to the native checkbox element.
+     * ```typescript
+     * let checkboxElement =  this.checkbox.checkboxElement;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('checkbox') public nativeCheckbox;
     /**
-     *@hidden
+     * Returns reference to the native label element.
+     * ```typescript
+     * let labelElement =  this.checkbox.nativeLabel;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('label') public nativeLabel;
     /**
-     *@hidden
+     * Returns reference to the label placeholder element.
+     * ```typescript
+     * let labelPlaceholder =  this.checkbox.placeholderLabel;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('placeholderLabel') public placeholderLabel;
     /**
