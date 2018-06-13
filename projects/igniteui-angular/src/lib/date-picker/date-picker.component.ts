@@ -53,13 +53,17 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     // Custom formatter function
     @Input() public formatter: (val: Date) => string;
 
-    @Input() public isDisabled: boolean;
+    @Input() public disabled: boolean;
 
     @Input() public value: Date;
+
 
     /**
      * Propagate calendar properties.
      */
+    @Input() public label = 'Date';
+    @Input() public isLabelVisible = true;
+
     @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
 
     @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;

@@ -23,7 +23,6 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
 })
 
 export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
-    private _itemStyle = 'igx-tabs-group';
     public isSelected = false;
 
     @Input()
@@ -33,17 +32,13 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     public icon: string;
 
     @Input()
-    public isDisabled: boolean;
+    public disabled: boolean;
 
     @HostBinding('attr.role') public role = 'tabpanel';
 
     @HostBinding('class')
     get styleClass(): string {
         return 'igx-tabs__group';
-    }
-
-    public get itemStyle(): string {
-        return this._itemStyle;
     }
 
     get relatedTab(): IgxTabItemComponent {
@@ -89,7 +84,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     }
 
     public select(focusDelay = 50, onInit = false) {
-        if (this.isDisabled || this._tabs.selectedIndex === this.index) {
+        if (this.disabled || this._tabs.selectedIndex === this.index) {
             return;
         }
 
