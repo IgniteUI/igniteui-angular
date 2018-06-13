@@ -268,7 +268,7 @@ describe('IgxGrid - Filtering actions', () => {
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
         IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
-        expect(grid.rowList.length).toEqual(5);
+        expect(grid.rowList.length).toEqual(4);
 
         // DoesNotEqual filter
         grid.clearFilter('ReleaseDate');
@@ -380,8 +380,10 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(3);
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
-        expect(grid.filteringExpressionsTree.filteringOperands[0] instanceof FilteringExpressionsTree).toBeTruthy();
-        expect(grid.filteringExpressionsTree.filteringOperands[1] instanceof FilteringExpressionsTree).toBeTruthy();
+        let expression = grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpression;
+        expect(expression).toBeDefined();
+        expression = grid.filteringExpressionsTree.filteringOperands[1] as IFilteringExpression;
+        expect(expression).toBeDefined();
 
         grid.clearFilter();
         fix.detectChanges();

@@ -189,6 +189,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public selectionChanged(value): void {
         if (value === this.booleanFilterAll) {
             this.clearFiltering(true);
+            this.onExpressionChanged.emit(this.expression);
             return;
         }
         this.focusInput();
