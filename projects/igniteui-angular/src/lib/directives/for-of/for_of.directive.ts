@@ -249,11 +249,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    public addScrollTop(addTop: number) {
+    public addScrollTop(addTop: number): boolean {
         if (addTop === 0 && this.igxForScrollOrientation === 'horizontal') {
-            return;
+            return false;
         }
-
+        const originalVirtScrollTop = this._virtScrollTop;
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const maxVirtScrollTop = this._virtHeight - containerSize;
 
@@ -285,6 +285,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             // Actual scroll position is not at the bottom, but virtual scroll is. Just update the acual scroll
             this.vh.instance.elementRef.nativeElement.scrollTop = maxRealScrollTop;
         }
+        return this._virtScrollTop !== originalVirtScrollTop;
     }
 
     public scrollTo(index) {
