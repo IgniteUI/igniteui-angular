@@ -28,29 +28,7 @@ const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_SCROLLBAR = 'igx-vhelper__placeholder-content';
 
-const employeeData = [
-    { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z' },
-    { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z' },
-    { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', HireDate: '2005-11-18T11:23:17.714Z' },
-    { ID: 4, Name: 'Jack Simon', JobTitle: 'Software Developer', HireDate: '2008-12-18T11:23:17.714Z' },
-    { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software Developer', HireDate: '2007-12-19T11:23:17.714Z' },
-    { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z' },
-    { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z' },
-    { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z' },
-    { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
-    { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
-];
-
-function wrapPromise(callback, resolve, time) {
-    return new Promise((res, rej) => {
-        return setTimeout(() => {
-            callback();
-            return res(resolve);
-        }, time);
-    });
-}
-
-describe('Combo', () => {
+fdescribe('Combo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -293,7 +271,8 @@ describe('Combo', () => {
         combo.writeValue(['EXAMPLE']);
         fixture.detectChanges();
         expect(combo.selectItems).toHaveBeenCalledTimes(1);
-        expect(combo.selectItems).toHaveBeenCalledWith(['EXAMPLE']);
+        // Calling "SelectItems" through the writeValue accessor should clear the previous values;
+        expect(combo.selectItems).toHaveBeenCalledWith(['EXAMPLE'], true);
     });
 
     it('Should properly accept input properties', () => {
@@ -366,7 +345,6 @@ describe('Combo', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            // spyOnProperty(combo, 'collapsed', 'get').and.returnValue(false);
             combo.dropdown.toggle();
             tick();
             return fixture.whenStable();
@@ -1038,7 +1016,7 @@ describe('Combo', () => {
     });
 
     // Silently fails (cannot get 0 of undefined on line 846)
-    fit('Should properly render grouped items', fakeAsync(() => {
+    it('Should properly render grouped items', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboInputTestComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -1057,7 +1035,7 @@ describe('Combo', () => {
             // Navigate down and check the rest of the items
         });
 
-        const checkGroupedItemsClass = function (startIndex: number, endIndex: number, dropdownContainer: any) {
+        const checkGroupedItemsClass = function (startIndex: number, endIndex: number, dropdownContainer: HTMLElement) {
             const dropdownItems = dropdownContainer.children;
             expect(dropdownItems[startIndex].classList.contains(CSS_CLASS_HEADER)).toBeTruthy();
             for (let index = startIndex + 1; index <= endIndex; index++) {
@@ -1104,9 +1082,6 @@ describe('Combo', () => {
         combo.toggle();
         tick();
         fixture.detectChanges();
-
-        const virtualSpy = spyOn<any>(dropdown, 'navigateVirtualItem');
-        spyOn(IgxComboDropDownComponent.prototype, 'navigateItem').and.callThrough();
         dropdown.navigateItem(2);
         fixture.detectChanges();
 
@@ -1123,7 +1098,7 @@ describe('Combo', () => {
         expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
     }));
 
-    it('Should properly render focused items when gouped', fakeAsync(() => {
+    it('Should properly render focused items when grouped', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
@@ -1132,8 +1107,6 @@ describe('Combo', () => {
         tick();
         fixture.detectChanges();
 
-        const virtualSpy = spyOn<any>(dropdown, 'navigateVirtualItem');
-        spyOn(IgxComboDropDownComponent.prototype, 'navigateItem').and.callThrough();
         dropdown.navigateItem(2);
         fixture.detectChanges();
 
@@ -1500,10 +1473,6 @@ describe('Combo', () => {
         let checkbox_2: HTMLElement;
         let checkbox_3: HTMLElement;
         let checkbox_4: HTMLElement;
-        let dropdownItem_1;
-        let dropdownItem_2;
-        let dropdownItem_3;
-        let dropdownItem_4;
         combo.dropdown.toggle();
         tick();
         fixture.whenStable().then(() => {
@@ -1511,19 +1480,16 @@ describe('Combo', () => {
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             const item_1 = dropdownItems[3];
-            dropdownItem_1 = combo.data[3];
             checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
             checkbox_1.click();
             fixture.detectChanges();
 
             const item_2 = dropdownItems[7];
-            dropdownItem_2 = combo.data[7];
             checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
             checkbox_2.click();
             fixture.detectChanges();
 
             const item_3 = dropdownItems[1];
-            dropdownItem_3 = combo.data[1];
             checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
             checkbox_3.click();
             fixture.detectChanges();
@@ -1536,7 +1502,6 @@ describe('Combo', () => {
         }).then(() => {
             expect(inputElement.value).toEqual('Paris, Sofia');
             const item_4 = dropdownItems[8];
-            dropdownItem_4 = combo.data[1];
             checkbox_4 = item_4.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
             checkbox_4.click();
             fixture.detectChanges();
@@ -1637,12 +1602,9 @@ describe('Combo', () => {
         const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
-        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-        const inputElement = input.nativeElement;
         let checkbox_1: HTMLElement;
         let checkbox_2: HTMLElement;
         let checkbox_3: HTMLElement;
-        let dropdownItem_1;
         let dropdownItem_2;
         let dropdownItem_3;
         combo.dropdown.toggle();
@@ -1652,7 +1614,6 @@ describe('Combo', () => {
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             const item_1 = dropdownItems[3];
-            dropdownItem_1 = combo.data[3];
             checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
             checkbox_1.click();
             fixture.detectChanges();
@@ -1687,12 +1648,11 @@ describe('Combo', () => {
             expect(combo.selectedItems()[1]).toEqual('Sofia');
         });
     }));
+
     it('Item selection/deselection should trigger onSelectionChange event ', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
-        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-        const inputElement = input.nativeElement;
         let selectedItem: HTMLElement;
         let itemCheckbox: HTMLElement;
         let result = 1;
@@ -1750,7 +1710,8 @@ describe('Combo', () => {
             expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: ['Paris', 'Sofia'], newSelection: ['Paris'] });
         });
     }));
-    it('Groupped items should be selectable ', fakeAsync(() => {
+
+    it('Grouped items should be selectable ', fakeAsync(() => {
         const expectedOutput = 'Michigan, Tennessee, Illinois';
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
@@ -1800,7 +1761,8 @@ describe('Combo', () => {
             expect(inputElement.value).toEqual(expectedOutput);
         });
     }));
-    it('Groupped item headdings should not be selectable ', fakeAsync(() => {
+
+    it('Grouped item headings should not be selectable ', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
@@ -1826,6 +1788,7 @@ describe('Combo', () => {
             expect(inputElement.value).toEqual('');
         });
     }));
+
     it('Selecting items using the "selectItem" method should add the items to the previously selected items', fakeAsync(() => {
         let expectedOutput = 'Paris, Oslo, Sofia, Madrid';
         const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -1836,9 +1799,6 @@ describe('Combo', () => {
         let checkbox_1: HTMLElement;
         let checkbox_2: HTMLElement;
         let checkbox_3: HTMLElement;
-        let dropdownItem_1;
-        let dropdownItem_2;
-        let dropdownItem_3;
         combo.dropdown.toggle();
         tick();
         fixture.whenStable().then(() => {
@@ -1846,21 +1806,18 @@ describe('Combo', () => {
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             const item_1 = dropdownItems[3];
-            dropdownItem_1 = combo.data[3];
             checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
             checkbox_1.click();
             fixture.detectChanges();
             expect(combo.selectedItems()[0]).toEqual('Paris');
 
             const item_2 = dropdownItems[7];
-            dropdownItem_2 = combo.data[7];
             checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
             checkbox_2.click();
             fixture.detectChanges();
             expect(combo.selectedItems()[1]).toEqual('Oslo');
 
             const item_3 = dropdownItems[1];
-            dropdownItem_3 = combo.data[1];
             checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
             checkbox_3.click();
             fixture.detectChanges();
@@ -1942,31 +1899,30 @@ describe('Combo', () => {
             expect(dropdownItems.length).toEqual(0);
         });
 
-        const checkFilteredItems = function(listItems: any) {
+        const checkFilteredItems = function(listItems: HTMLElement[]) {
             listItems.forEach(function (el) {
-                const dropdownItem = el as HTMLElement;
-                const itemText: string = dropdownItem.textContent.trim();
+                const itemText: string = el.textContent.trim();
                 expect(expectedValues).toContain(itemText);
             });
         };
     }));
-    it('Typing in the textbox should fire onFilterChanged event', () => {
+    it('Typing in the textbox should fire onSearchInput event', () => {
         // TO DO
     });
     it('Clearing the filter textbox should restore the initial combo dropdown list', () => {
         // TO DO
     });
     xit('Enter key should select and append the closest suggestion item from the filtered items list', () => {
-        // TO DO
+        // Not applicable
     });
     it('Escape key should clear the textbox input and close the dropdown list', () => {
         // TO DO
     });
     xit('When no results are filtered, the "Select All" checkbox should not be visible', () => {
-        // TO DO
+        // Not applicable
     });
     xit('After adding a custom value, the "Select All" checkbox should appear checked', () => {
-        // TO DO
+        // Not applicable
     });
     it('When no results are filtered for a group, the group header should not be visible', () => {
         // TO DO
@@ -1992,7 +1948,6 @@ describe('Combo', () => {
         combo.dropdown.toggle();
         fix.whenStable().then(() => {
             fix.detectChanges();
-            const dropdown = combo.dropdown.element as DebugElement;
             expect(combo.groupKey).toEqual('region');
             expect(combo.dropdown.items[0].itemData.field === combo.data[0].field).toBeFalsy();
             expect(combo.sortingExpressions[0]).toEqual({
@@ -2037,13 +1992,13 @@ describe('Combo', () => {
     });
 
     // Suggestions
-    it('Combo should complete the input with the first text match', () => {
+    xit('Combo should complete the input with the first text match', () => {
+        // Not applicable
+    });
+    it('Combo should not display any suggestions when the text match does not CONTAIN with the current input', () => {
         // TO DO
     });
-    it('Combo should not display any suggestions when the text match does not begin with the current input', () => {
-        // TO DO
-    });
-    it('Combo should not display any suggestions when there is not any text match', () => {
+    it('Combo should not display any suggestions when there is no text match', () => {
         // TO DO
     });
 
@@ -2051,8 +2006,8 @@ describe('Combo', () => {
     it('Custom values - combo should display info icon when typing in the input', () => {
         // TO DO
     });
-    it('Custom values - Enter key adds the new item in the dropdown list', () => {
-        // TO DO
+    xit('Custom values - Enter key adds the new item in the dropdown list', () => {
+        // Not applicable
     });
 
     it('Existing values - clear button dismisses the input text', fakeAsync(() => {
@@ -2095,7 +2050,6 @@ describe('Combo', () => {
     it('Custom values - clear button dismisses the input text', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
-        const component = fix.componentInstance;
         const combo = fix.componentInstance.combo;
         combo.toggle();
         tick();
@@ -2133,7 +2087,7 @@ describe('Combo', () => {
     }));
 
     xit('Custom values - typing a value that matches an item from the list selects it', () => {
-        // TO DO
+        // Not applicable
     });
     it('Custom values - typing a value that matches an already selected item should remove the ADD ITEM button', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
