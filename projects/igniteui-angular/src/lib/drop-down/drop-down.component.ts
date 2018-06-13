@@ -13,11 +13,11 @@ import {
     QueryList,
     ViewChild
 } from '@angular/core';
-import { IToggleView } from '../core/navigation';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxOverlayDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
+import { OverlaySettings } from '../services';
 
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemComponent;
@@ -214,8 +214,8 @@ export class IgxDropDownComponent implements OnInit {
     /**
      * Opens the dropdown
      */
-    open(positionStrategy?: IPositionStrategy) {
-        this.toggleDirective.open(true, positionStrategy);
+    open(overlaySettings?: OverlaySettings) {
+        this.toggleDirective.open(true, overlaySettings);
     }
 
     /**
@@ -228,9 +228,9 @@ export class IgxDropDownComponent implements OnInit {
     /**
      * Toggles the dropdown
      */
-    toggle(positionStrategy?: IPositionStrategy) {
+    toggle(overlaySettings?: OverlaySettings) {
         if (this.toggleDirective.collapsed) {
-            this.open(positionStrategy);
+            this.open(overlaySettings);
         } else {
             this.close();
         }

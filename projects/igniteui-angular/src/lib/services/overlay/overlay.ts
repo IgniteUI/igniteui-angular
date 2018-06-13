@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { PositionSettings } from './utilities';
+import { PositionSettings, Point, OverlaySettings } from './utilities';
 
 import {
     ApplicationRef,
@@ -18,7 +18,12 @@ import { ScrollStrategyFactory } from './scroll/ScrollStrategyFactory';
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
     private _componentId = 0;
-    private _elements: { id: string, elementRef: ElementRef, componentRef: ComponentRef<{}>, rect: {width, height} }[] = [];
+    private _elements: {
+        id: string,
+        elementRef: ElementRef,
+        componentRef: ComponentRef<{}>,
+        size: { width: number, height: number }
+    }[] = [];
     private _overlayElement: HTMLElement;
 
     /**
@@ -26,25 +31,8 @@ export class IgxOverlayService {
      */
     private get OverlayElement(): HTMLElement {
         if (!this._overlayElement) {
-            debugger;
             this._overlayElement = this._document.createElement('div');
-            // this._overlayElement.addEventListener("click", (event) => {
-            //     let lastChild: Node = this._overlayElement.lastChild;
-            //     while (lastChild) {
-            //         this._overlayElement.removeChild(lastChild);
-            //         lastChild = this._overlayElement.lastChild;
-            //     }
-
-            //     this._overlayElement.style.display = "none";
-            // });
-
-            this._overlayElement.style.position = 'fixed';
-            this._overlayElement.style.top = '0';
-            this._overlayElement.style.left = '0';
-            this._overlayElement.style.width = '100%';
-            this._overlayElement.style.height = '100%';
-            this._overlayElement.style.visibility = 'hidden';
-            this._overlayElement.classList.add('overlay');
+            this._overlayElement.classList.add('igx-overlay');
             this._document.body.appendChild(this._overlayElement);
         }
 
@@ -67,27 +55,20 @@ export class IgxOverlayService {
     * @param component Component to show in the overlay
     */
 
-    //passs component, id? and OverlaySettings?
-    show(component, id?: string, positionStrategy?: IPositionStrategy): string {
-        debugger;
-        id = this.getElement(component, id);
-        //get the element for both static and dynamic components
-        const element = this._elements.find(x => x.id === id).elementRef.nativeElement;
-        const rect = element.getBoundingClientRect();
+    // TODO: pass component, id? and OverlaySettings?
+    show(component, id?: string, overlaySettings?: OverlaySettings): string {
+        id = this.getId(id);
 
-        console.log('show(component, id?: string, positionStrategy?: IPositionStrategy) -->eWidth: '
-        + rect.width + ' eHeight: ' + rect.height );
+        // get the element for both static and dynamic components
+        const element = this.getElement(component, id);
 
-        const componentWrapper = this._document.createElement('div');
-        positionStrategy = this.getPositionStrategy(positionStrategy);
-        componentWrapper.appendChild(element);
-        this.OverlayElement.appendChild(componentWrapper);
-        this.OverlayElement.style.visibility = 'visible';
-        positionStrategy.position(element, componentWrapper, this._elements.find(x => x.id === id).rect);
+        const wrapperElement = this.getWrapperElement(overlaySettings);
+        const contentElement = this.getContentElement(wrapperElement);
+        contentElement.appendChild(element);
+        this.OverlayElement.appendChild(wrapperElement);
 
-        //1- should be prior to componentWrapper.appendChild
-        //2) returns element and attach to component wrapper
-        //const componentWrapper: Element = positionStrategy.position(element);
+        const positionStrategy = this.getPositionStrategy(overlaySettings.positionStrategy);
+        positionStrategy.position(element, contentElement, this._elements.find(e => e.id === id).size);
 
         return this._elements[this._elements.length - 1].id;
     }
@@ -102,11 +83,7 @@ export class IgxOverlayService {
         }
 
         const child: HTMLElement = itemToHide.elementRef.nativeElement;
-        this.OverlayElement.removeChild(child.parentNode);
-
-        if (children.length === 0) {
-            this._overlayElement.style.visibility = 'hidden';
-        }
+        this.OverlayElement.removeChild(child.parentNode.parentNode);
     }
 
     hideAll() {
@@ -115,14 +92,21 @@ export class IgxOverlayService {
         }
     }
 
-    private getElement(component: any, id?: string): string {
+    private getId(id?: string) {
+        return id ? id : (this._componentId++).toString();
+    }
+
+    private getElement(component: any, id: string): HTMLElement {
         let element: HTMLElement;
-        id = id ? id : (this._componentId++).toString();
+
+        if (this._elements.find(e => e.id === id)) {
+            return this._elements.find(e => e.id === id).elementRef.nativeElement;
+        }
 
         if (component instanceof ElementRef) {
             element = component.nativeElement;
-            this._elements.push({ id: id, elementRef: <ElementRef>component, componentRef: null, rect: element.getBoundingClientRect() });
-            return id;
+            this._elements.push({ id: id, elementRef: <ElementRef>component, componentRef: null, size: element.getBoundingClientRect() });
+            return element;
         }
 
         let dynamicFactory: ComponentFactory<{}>;
@@ -138,15 +122,41 @@ export class IgxOverlayService {
         element = dc.location.nativeElement;
         this._appRef.attachView(dc.hostView);
 
-        this._elements.push({ id: id, elementRef: dc.location, componentRef: dc, rect: element.getBoundingClientRect() });
-        return id;
+        this._elements.push({ id: id, elementRef: dc.location, componentRef: dc, size: element.getBoundingClientRect() });
+        return element;
     }
 
-    private getPositionStrategy(positionStrategy: IPositionStrategy): IPositionStrategy {
-        if (positionStrategy) {
-            return positionStrategy;
-        } else {
-            return new GlobalPositionStrategy(this._document);
+    private getPositionStrategy(positionStrategy?: IPositionStrategy): IPositionStrategy {
+        positionStrategy = positionStrategy ? positionStrategy : new GlobalPositionStrategy();
+        if (positionStrategy._settings && positionStrategy._settings.element) {
+            const elementRect = positionStrategy._settings.element.getBoundingClientRect();
+            const x = elementRect.right + elementRect.width * positionStrategy._settings.horizontalStartPoint;
+            const y = elementRect.bottom + elementRect.height * positionStrategy._settings.verticalStartPoint;
+            positionStrategy._settings.point = new Point(x, y);
         }
+
+        positionStrategy._settings = positionStrategy._settings ? positionStrategy._settings : new PositionSettings();
+        return positionStrategy;
+    }
+
+    private getWrapperElement(overlaySettings: OverlaySettings): HTMLElement {
+        const wrapper = this._document.createElement('div');
+        if (overlaySettings.modal) {
+            wrapper.classList.add('igx-overlay__wrapper');
+        } else {
+            wrapper.classList.add('igx-overlay__wrapper--no-modal');
+        }
+        return wrapper;
+    }
+
+    private getContentElement(wrapperElement: HTMLElement): HTMLElement {
+        const content = this._document.createElement('div');
+        if (wrapperElement.classList.contains('igx-overlay__wrapper--no-modal')) {
+            content.classList.add('igx-overlay__content--no-modal');
+        } else {
+            content.classList.add('igx-overlay__content');
+        }
+        wrapperElement.appendChild(content);
+        return content;
     }
 }

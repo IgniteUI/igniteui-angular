@@ -23,10 +23,8 @@ import {
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
-import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
 import { IPositionStrategy } from '../../services/overlay/position/IPositionStrategy';
-import { GlobalPositionStrategy } from '../../services/overlay/position/global-position-strategy';
+import { OverlaySettings } from '../../services';
 
 @Directive({
     exportAs: 'overlay',
@@ -73,31 +71,25 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
         @Inject(IgxOverlayService) private overlayService: IgxOverlayService,
         @Optional() private navigationService: IgxNavigationService) { }
 
-    public open(fireEvents?: boolean, positionStrategy?: IPositionStrategy) {
+    public open(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
         if (!this.collapsed) { return; }
 
-       // const player = this.animationActivation();
-       // player.onStart(() => {
-       // });
-       // player.onDone(() => {
-       //     player.destroy();
-       // });
+        // const player = this.animationActivation();
+        // player.onStart(() => {
+        // });
+        // player.onDone(() => {
+        //     player.destroy();
+        // });
 
         if (fireEvents) {
             this.onOpening.emit();
         }
 
-        console.log('this.collapsed = ' + this.collapsed);
-        console.log('before player.play();-->eWidth: ' + this.elementRef.nativeElement.getBoundingClientRect().width
-        + ' eHeight: ' + this.elementRef.nativeElement.getBoundingClientRect().height );
-        debugger;
-
-
         this.collapsed = false;
         this.cdr.detectChanges();
 
-        positionStrategy = this.getPositionStrategy(positionStrategy);
-        const id = this.overlayService.show(this.elementRef, this.id, positionStrategy);
+        const id = this.overlayService.show(this.elementRef, this.id, overlaySettings);
+
         if (!this.id) {
             this.id = id;
         }
@@ -105,38 +97,40 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
         if (fireEvents) {
             this.onOpened.emit();
         }
-        //crop all animations and pass animation options to the overlay.
-        //player.play();
+        // TODO: crop all animations and pass animation options to the overlay
+        // player.play();
     }
 
     public close(fireEvents?: boolean) {
         if (this.collapsed) { return; }
 
-        this.overlayService.hide(this.id);
+        // const player = this.animationActivation();
+        // player.onDone(() => {
 
-       // const player = this.animationActivation();
-       // player.onDone(() => {
-
-            // When using directive into component with OnPush it is necessary to
-            // trigger change detection again when close animation ends
-            // due to late updated @collapsed property.
-        //    this.cdr.markForCheck();
-        //    player.destroy();
-        //});
+        //     // When using directive into component with OnPush it is necessary to
+        //     // trigger change detection again when close animation ends
+        //     // due to late updated @collapsed property.
+        //     this.cdr.markForCheck();
+        //     player.destroy();
+        // });
 
         if (fireEvents) {
             this.onClosing.emit();
         }
 
+        this.overlayService.hide(this.id);
         this.collapsed = true;
-       // player.play();
+        this.cdr.detectChanges();
+
         if (fireEvents) {
             this.onClosed.emit();
         }
+
+        // player.play();
     }
 
-    public toggle(fireEvents?: boolean, positionStrategy?: IPositionStrategy) {
-        this.collapsed ? this.open(fireEvents, positionStrategy) : this.close(fireEvents);
+    public toggle(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
+        this.collapsed ? this.open(fireEvents, overlaySettings) : this.close(fireEvents);
     }
 
     public ngOnInit() {
@@ -173,19 +167,6 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
             style({ transform: 'translateY(0)', opacity: 1 }),
             animate('120ms ease-in', style({ transform: 'translateY(-12px)', opacity: 0 }))
         ]);
-    }
-
-    private getPositionStrategy(positionStrategy?: IPositionStrategy): IPositionStrategy {
-        positionStrategy = positionStrategy ? positionStrategy : new GlobalPositionStrategy();
-        if (positionStrategy._settings && positionStrategy._settings.element) {
-            const elementRect = positionStrategy._settings.element.getBoundingClientRect();
-            const x = elementRect.right + elementRect.width * positionStrategy._settings.horizontalStartPoint;
-            const y = elementRect.bottom + elementRect.height * positionStrategy._settings.verticalStartPoint;
-            positionStrategy._settings.point = new Point(x, y);
-        }
-
-        positionStrategy._settings = positionStrategy._settings ? positionStrategy._settings : new PositionSettings();
-        return positionStrategy;
     }
 }
 

@@ -9,10 +9,33 @@
 }
 
 @include b(igx-overlay) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    visibility: hidden;
+    @include e(wrapper) {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        position: fixed;
+    }
+
+    @include e(wrapper, $m: no-modal) {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        position: fixed;
+        pointer-events: none;
+        position: absolute;
+    }
+
+    @include e(content) {
+        position: fixed;
+    }
+
+    @include e(content, $m: no-modal) {
+        position: fixed;
+        pointer-events: all;
+        position: absolute;
+    }
 }
