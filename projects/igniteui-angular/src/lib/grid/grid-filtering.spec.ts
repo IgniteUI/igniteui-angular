@@ -422,7 +422,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_CLASS)).toBe(true);
     });
 
-    it("Should correctly apply two conditions to two columns at once.", () => {
+    it('Should correctly apply two conditions to two columns at once.', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -430,14 +430,14 @@ describe('IgxGrid - Filtering actions', () => {
 
         const colDownloadsExprTree = new FilteringExpressionsTree(FilteringLogic.And);
         colDownloadsExprTree.filteringOperands = [
-            { fieldName: "Downloads", searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
-            { fieldName: "Downloads", searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo') }
+            { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
+            { fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo') }
         ];
 
         const colIdExprTree = new FilteringExpressionsTree(FilteringLogic.And);
         colIdExprTree.filteringOperands = [
-            { fieldName: "ID", searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
-            { fieldName: "ID", searchVal: 5, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
+            { fieldName: 'ID', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
+            { fieldName: 'ID', searchVal: 5, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
         ];
 
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -456,28 +456,25 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
     });
 
-    it("Should correctly apply two conditions to number column.", () => {
+    it('Should correctly apply two conditions to number column.', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        //TODO
     });
 
-    it("Should correctly apply two conditions to string column.", () => {
+    it('Should correctly apply two conditions to string column.', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        //TODO
     });
 
-    it("Should correctly apply two conditions to date column.", () => {
+    it('Should correctly apply two conditions to date column.', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        //TODO
     });
 });
 
@@ -500,16 +497,16 @@ export class CustomFilter extends IgxFilteringOperand {
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px">
-        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
-        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
-            [filterable]="true" dataType="date">
+    template: `<igx-grid [data]='data' height='500px'>
+        <igx-column [field]=''ID'' [header]=''ID''></igx-column>
+        <igx-column [field]=''ProductName'' [filterable]='true' dataType='string'></igx-column>
+        <igx-column [field]=''Downloads'' [filterable]='true' dataType='number'></igx-column>
+        <igx-column [field]=''Released'' [filterable]='true' dataType='boolean'></igx-column>
+        <igx-column [field]=''ReleaseDate'' [header]=''ReleaseDate'' headerClasses='header-release-date'
+            [filterable]='true' dataType='date'>
         </igx-column>
-        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
-            dataType="string" [filters]="customFilter">
+        <igx-column [field]=''AnotherField'' [header]=''Anogther Field'' [filterable]='true'
+            dataType='string' [filters]='customFilter'>
         </igx-column>
     </igx-grid>`
 })

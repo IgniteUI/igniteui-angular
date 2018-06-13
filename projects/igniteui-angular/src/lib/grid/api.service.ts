@@ -203,7 +203,7 @@ export class IgxGridAPIService {
                           null : conditionOrExpressionsTree as IFilteringOperation;
         const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
 
-        if (oldExpressionsTreeIndex == -1) {
+        if (oldExpressionsTreeIndex === -1) {
             // no expressions tree found for this field
             if (expressionsTree) {
                 filteringState.filteringOperands.push(expressionsTree);
