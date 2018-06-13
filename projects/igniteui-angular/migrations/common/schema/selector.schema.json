@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "ElementType": {
+            "enum": [
+                "component",
+                "directive"
+            ],
+            "type": "string"
+        },
+        "SelectorChange": {
+            "properties": {
+                "remove": {
+                    "description": "Remove directive/component",
+                    "type": "boolean"
+                },
+                "replaceWith": {
+                    "description": "Replace original selector with new one",
+                    "type": "string"
+                },
+                "selector": {
+                    "description": "Original selector to apply change to",
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/ElementType",
+                    "description": "Type of selector the change applies to - either component or directive"
+                }
+            },
+            "required": [
+                "selector",
+                "type"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "changes": {
+            "description": "An array of changes to component/directive selectors",
+            "items": {
+                "$ref": "#/definitions/SelectorChange"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "changes"
+    ],
+    "type": "object"
+}
+

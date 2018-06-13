@@ -22,14 +22,6 @@ function wrapPromise(callback, resolve, time) {
         }, time);
     });
 }
-// @Directive({
-//     selector: '[igxDropDownItemNavigation]'
-// })
-// class MockDirective extends IgxDropDownItemNavigationDirective {
-//     constructor(element: ElementRef, @Host() dropdown: IgxDropDownComponent) {
-//         super(element, dropdown);
-//     }
-// }
 describe('IgxDropDown ', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -75,8 +67,6 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             const currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem).toBeDefined();
-            // tslint:disable-next-line:no-debugger
-            debugger;
             expect(currentItem.componentInstance.index).toEqual(1);
             expect(list.selectedItem).toBeFalsy();
             targetElement.triggerEventHandler('keydown.Space', mockObj);
@@ -371,14 +361,14 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DISABLED));
             expect(currentItem.length).toEqual(3);
-            expect(list.items[4].isDisabled).toBeFalsy();
-            list.items[4].isDisabled = true;
+            expect(list.items[4].disabled).toBeFalsy();
+            list.items[4].disabled = true;
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
             const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DISABLED));
             expect(currentItem.length).toEqual(4);
-            expect(list.items[4].isDisabled).toBeTruthy();
+            expect(list.items[4].disabled).toBeTruthy();
         });
     });
 
@@ -931,7 +921,7 @@ class IgxDropDownTestScrollComponent {
     <button (click)="toggleDropDown()">Show</button>
     <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down igxDropDownItemNavigation #dropdownDisabledAny>
-        <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>
@@ -974,7 +964,7 @@ class IgxDropDownTestDisabledAnyComponent {
     <button (click)="toggleDropDown()">Show</button>
     <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down igxDropDownItemNavigation #dropdownDisabled>
-        <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>
@@ -1016,7 +1006,7 @@ class IgxDropDownTestDisabledComponent {
     template: `
     <button (click)="toggleDropDown()">Show</button>
     <igx-drop-down igxDropDownItemNavigation #dropdownDisabled>
-        <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>

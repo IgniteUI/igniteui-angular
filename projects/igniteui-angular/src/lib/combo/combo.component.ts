@@ -747,7 +747,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
         const newItem = this.dropdown.items.find((item) => item.itemID === itemID);
         if (newItem) {
-            if (newItem.isDisabled || newItem.isHeader) {
+            if (newItem.disabled || newItem.isHeader) {
                 return;
             }
             if (!newItem.isSelected) {

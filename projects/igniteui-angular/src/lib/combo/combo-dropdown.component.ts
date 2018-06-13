@@ -15,6 +15,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
     templateUrl: '../drop-down/drop-down.component.html'
 })
 export class IgxComboDropDownComponent extends IgxDropDownBase {
+    private _children: QueryList<IgxDropDownItemBase>;
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -65,6 +66,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     protected get children(): QueryList<IgxDropDownItemBase> {
         return this.parentElement.children;
+    }
+
+    protected set children(list: QueryList<IgxDropDownItemBase>) {
+        this._children = list;
     }
 
     /**

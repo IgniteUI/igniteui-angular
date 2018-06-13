@@ -40,7 +40,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
 
     @HostListener('click', ['$event'])
     clicked(event) {
-        if (this.isDisabled || this.isHeader) {
+        if (this.disabled || this.isHeader) {
             const focusedItem = this.parentElement.focusedItem;
             if (focusedItem) {
                 focusedItem.element.nativeElement.focus({ preventScroll: true });

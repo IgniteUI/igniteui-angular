@@ -53,7 +53,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     // Custom formatter function
     @Input() public formatter: (val: Date) => string;
 
-    @Input() public isDisabled: boolean;
+    @Input() public disabled: boolean;
 
     @Input() public value: Date;
 

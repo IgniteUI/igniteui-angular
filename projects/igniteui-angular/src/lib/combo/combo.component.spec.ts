@@ -2083,7 +2083,7 @@ describe('Combo', () => {
             expect(searchInputElement.textContent).toEqual('');
         });
     }));
-    fit('When no results are filtered for a group, the group header should not be visible', fakeAsync(() => {
+    it('When no results are filtered for a group, the group header should not be visible', fakeAsync(() => {
         let searchInputElement;
         let dropdownList;
         const fixture = TestBed.createComponent(IgxComboInputTestComponent);

@@ -58,7 +58,7 @@
             </ng-template>
         </div>
         <igx-combo-item *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
-                        class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [isDisabled]="false" [itemData]="'ADD ITEM'" role="button" aria-label="Add Item">
+                        class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false" [itemData]="'ADD ITEM'" role="button" aria-label="Add Item">
             Add item to collection
             <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
         </igx-combo-item>
