@@ -1,0 +1,21 @@
+<div class="wrapper">
+    <igx-grid #grid1 [data]="data" (onColumnMovingStart)="onColumnMovingStart($event)" (onColumnMoving)="onColumnMoving($event)" (onColumnMovingEnd)="onColumnMovingEnd($event)" [rowSelectable]="true" [paging]="false" [width]="'900px'" [height]="'500px'">
+        <igx-column *ngFor="let c of columns" [field]="c.field"
+                                              [header]="c.field"
+                                              [movable]="c.movable"
+                                              [resizable]="c.resizable"
+                                              [width]="c.width"
+                                              [sortable]="true"
+                                              [filterable]="true"
+                                              [editable]="true"
+                                              [hidden]="c.hidden"
+                                              [hasSummary]="c.summary"
+                                              [minWidth]="c.minWidth"
+                                              [maxWidth]="c.maxWidth">
+        </igx-column>
+    </igx-grid>
+    <br />
+    <button igxButton="raised" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
+    <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
+    <button igxButton="raised" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
+</div>
