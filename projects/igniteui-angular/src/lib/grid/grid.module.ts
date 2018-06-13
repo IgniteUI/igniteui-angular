@@ -43,6 +43,7 @@ import {
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
+import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { IgxChipsModule } from '../chips/chips.module';
     IgxTextSelectionModule,
     IgxCheckboxModule,
     IgxBadgeModule,
-    IgxChipsModule
+    IgxChipsModule,
+    IgxDragDropModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })

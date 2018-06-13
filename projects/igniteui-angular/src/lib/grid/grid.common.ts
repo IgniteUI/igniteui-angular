@@ -243,7 +243,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     get draggable(): boolean {
-        return this.column && this.column.movable;
+        return this.column && (this.column.movable || this.column.groupable);
     }
 
     private _column: IgxColumnComponent;
@@ -262,7 +262,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     public onPointerDown(event) {
 
         const resizeArea = document.elementFromPoint(event.pageX, event.pageY);
-        if (!this.draggable || this.element.nativeElement.children[3].isEqualNode(resizeArea)) {
+        if (!this.draggable ||
+            (this.element.nativeElement.children[3] && this.element.nativeElement.children[3].isEqualNode(resizeArea))) {
             return;
         }
 

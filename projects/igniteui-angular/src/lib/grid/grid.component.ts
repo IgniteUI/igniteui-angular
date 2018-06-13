@@ -44,7 +44,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
-import { IgxGroupByRowTemplateDirective } from './grid.common';
+import { IgxGroupByRowTemplateDirective, IgxColumnMovingDragDirective } from './grid.common';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
@@ -1865,6 +1865,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.lastSearchInfo.activeMatchIndex = 0;
             this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
         }
+    }
+
+    public onGroupAreaDrop(event) {
+        if (event.drag instanceof IgxColumnMovingDragDirective) {
+            const column: IgxColumnComponent = event.drag.column;
+            this.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
+        }
+        event.cancel = true;
     }
 
     public onChipRemoved(event) {
