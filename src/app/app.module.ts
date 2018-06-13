@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
+import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
 
 import { routing } from './routing';
 import { AppComponent } from './app.component';
@@ -17,6 +18,7 @@ import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
+import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -41,6 +43,7 @@ import { RemoteService } from './shared/remote.service';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { LocalService } from './shared/local.service';
 import { GridSampleComponent } from './grid/grid.sample';
+import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
@@ -63,6 +66,7 @@ const components = [
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    DragDropSampleComponent,
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
@@ -84,6 +88,7 @@ const components = [
     VirtualForSampleComponent,
     ButtonGroupSampleComponent,
     GridSampleComponent,
+    GridColumnMovingSampleComponent,
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
     GridSummaryComponent,
@@ -107,6 +112,7 @@ const components = [
         HttpClientModule,
         IgxIconModule.forRoot(),
         IgxGridModule.forRoot(),
+        IgxDragDropModule,
         SharedModule,
         routing
     ],

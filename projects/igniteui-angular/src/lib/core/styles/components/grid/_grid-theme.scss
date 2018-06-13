@@ -8,6 +8,9 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
+/// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
+/// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
+/// @param {Color} $ghost-header-background [null] - The dragged header background color.
 /// @param {Color} $content-background [null] - The table body background color.
 /// @param {Color} $content-text-color [null] - The table body text color.
 /// @param {Color} $row-selected-background [null] - The selected row background color.
@@ -35,6 +38,10 @@
     $content-background: null,
     $content-text-color: null,
 
+    $ghost-header-text-color: null,
+    $ghost-header-icon-color: null,
+    $ghost-header-background: null,
+
     $row-selected-background: null,
     $row-selected-text-color: null,
     $row-hover-background: null,
@@ -48,7 +55,8 @@
     $cell-selected-text-color: null,
     $cell-editing-background: null,
 
-    $resize-line-color: null
+    $resize-line-color: null,
+    $drop-indicator-color: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -58,6 +66,10 @@
 
         content-background: #fff,
         content-text-color: igx-color($palette, 'grays', 800),
+
+        ghost-header-text-color: igx-color($palette, 'grays', 600),
+        ghost-header-icon-color: igx-color($palette, 'grays'),
+        ghost-header-background: #fff,
 
         row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
         row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
@@ -72,8 +84,18 @@
         cell-selected-text-color: igx-contrast-color($palette, 'primary'),
         cell-editing-background: #fff,
 
-        resize-line-color: igx-color($palette, 'secondary')
+        resize-line-color: igx-color($palette, 'secondary'),
+
+        drop-indicator-color: igx-color($palette, 'secondary')
     );
+
+    @if not($ghost-header-icon-color) and $ghost-header-background {
+        $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
+    }
+
+    @if not($ghost-header-text-color) and $ghost-header-background {
+        $ghost-header-text-color: text-contrast($ghost-header-background);
+    }
 
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
@@ -109,6 +131,10 @@
         header-background: $header-background,
         header-text-color: $header-text-color,
 
+        ghost-header-text-color: $ghost-header-text-color,
+        ghost-header-icon-color: $ghost-header-icon-color,
+        ghost-header-background: $ghost-header-background,
+
         content-background: $content-background,
         content-text-color: $content-text-color,
 
@@ -125,7 +151,9 @@
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
 
-        resize-line-color: $resize-line-color
+        resize-line-color: $resize-line-color,
+
+        drop-indicator-color: $drop-indicator-color
     ));
 }
 
@@ -509,5 +537,111 @@
     %grid-summaries {
         display: flex;
         background: inherit;
+    }
+
+
+    // Column moving
+
+    %igx-grid__th-drop-indicator-left {
+        position: absolute;
+        width: 1px;
+        top: 0;
+        left: -1px;
+        height: 100%;
+    }
+
+
+    %igx-grid__th-drop-indicator-right {
+        position: absolute;
+        width: 1px;
+        top: 0;
+        right: -1px;
+        height: 100%;
+    }
+
+    %igx-grid__th-drop-indicator--active {
+        &%igx-grid__th-drop-indicator-left,
+        &%igx-grid__th-drop-indicator-right {
+            border-right: 1px dotted --var($theme, 'drop-indicator-color');
+        }
+
+        &::after,
+        &::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            left: -4.5px;
+        }
+
+        &::before {
+            bottom: 0;
+            border-width: 0 5px 5px;
+            border-color: transparent transparent --var($theme, 'drop-indicator-color');
+        }
+
+        &::after {
+            top: 0;
+            border-width: 5px 5px 0;
+            border-color: --var($theme, 'drop-indicator-color') transparent transparent;
+        }
+    }
+
+    %grid__scroll-on-drag-left {
+        position: absolute;
+        width: 15px;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 25;
+    }
+
+    %grid__scroll-on-drag-right {
+        position: absolute;
+        width: 15px;
+        top: 0;
+        right: 0;
+        height: 100%;
+        z-index: 25;
+    }
+
+    %grid__scroll-on-drag-pinned {
+        position: absolute;
+        width: 15px;
+        height: 100%;
+        top: 0;
+        z-index: 25;
+    }
+
+    %grid__drag-ghost-image {
+        background-color: --var($theme, 'ghost-header-background');
+        color: --var($theme, 'ghost-header-text-color');
+        position: absolute;
+        z-index: 20;
+        height: auto;
+        top: -99999px;
+        left: -99999px;
+        overflow: visible;
+        box-shadow: igx-elevation($elevations, 5);
+
+        %grid-cell-header-title {
+            min-width: rem(24px);
+        }
+    }
+
+    %grid__drag-ghost-image-icon {
+        color: --var($theme, 'ghost-header-icon-color');
+        font-size: rem(24px);
+        margin-right: rem(8);
+    }
+
+    %igx-grid__drag-col-header {
+        background-color: lighten(--var($theme, 'header-background'), 10%);
+
+        %grid-cell-header-title,
+        %grid-cell-header-icons {
+            opacity: .4;
+        }
     }
 }
