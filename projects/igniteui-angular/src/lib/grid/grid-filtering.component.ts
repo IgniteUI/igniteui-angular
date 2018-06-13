@@ -148,15 +148,17 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         }
 
         const grid = this.gridAPI.get(this.gridID);
-        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
         grid.clearFilter(this.column.field);
+
+        const expr = grid.filteringExpressionsTree.find(this.column.field);
         grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
     }
 
     @autoWire(true)
     public onSelectLogicOperator(event): void {
         this.isSecondConditionVisible = true;
-        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+        const grid = this.gridAPI.get(this.gridID);
+        const expr = grid.filteringExpressionsTree.find(this.column.field);
         if (expr) {
             if (this.logicOperators.selectedIndexes.length > 1) {
                 (expr as FilteringExpressionsTree).operator = this.logicOperators.selectedIndexes[1];
@@ -168,7 +170,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             }
 
             if ((expr as FilteringExpressionsTree).filteringOperands.length >= 2) {
-                const grid = this.gridAPI.get(this.gridID);
                 grid.filter(this.column.field, null, (expr as FilteringExpressionsTree), this.column.filteringIgnoreCase);
             }
         }
@@ -223,7 +224,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public onExpressionChanged(expression: IFilteringExpression): void {
         const grid = this.gridAPI.get(this.gridID);
         this._filter(expression);
-        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+        const expr = grid.filteringExpressionsTree.find(this.column.field);
         grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
     }
 
@@ -240,7 +241,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     private _filter(expression: IFilteringExpression) {
-        let expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+        const grid = this.gridAPI.get(this.gridID);
+        let expr = grid.filteringExpressionsTree.find(this.column.field);
         if (!expr) {
             expr = new FilteringExpressionsTree(FilteringLogic.And, this.column.field);
             expr.filteringOperands.push(expression);
@@ -260,8 +262,6 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
                 (expr as FilteringExpressionsTree).operator = this.logicOperators.selectedIndexes[0];
             }
         }
-
-        const grid = this.gridAPI.get(this.gridID);
 
         if ((expr as FilteringExpressionsTree).filteringOperands.length === 0) {
             grid.clearFilter(this.column.field);
