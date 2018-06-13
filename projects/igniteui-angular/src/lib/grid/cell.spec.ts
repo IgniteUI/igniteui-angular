@@ -8,7 +8,7 @@ import { IgxColumnComponent } from './column.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
-describe('IgxGrid - Cell component', () => {
+fdescribe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateVerticallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
