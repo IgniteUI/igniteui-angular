@@ -7,12 +7,12 @@
 </div>
 
 <span igxToggle (onOpened)="refresh()" (onClosed)="refresh()" #directive="toggle" [attr.class]="dialogPosition">
-    <igx-grid-filter-expression (onExpressionChanged)="onExpressionChanged($event)" [column]="column">
+    <igx-grid-filter-expression name="firstExpr" (onExpressionChanged)="onExpressionChanged($event)" [column]="column">
     </igx-grid-filter-expression>
     <igx-buttongroup #logicOperators (onSelect)="onSelectLogicOperator($event)" (onUnselect)="onUnSelectLogicOperator($event)" [multiSelection]="false" [values]="filteringLogicOptions">
     </igx-buttongroup>
     <div *ngIf="isSecondConditionVisible">
-        <igx-grid-filter-expression (onExpressionChanged)="onExpressionChanged($event)" [column]="column"></igx-grid-filter-expression>
+        <igx-grid-filter-expression name="secondExpr" (onExpressionChanged)="onExpressionChanged($event)" [column]="column"></igx-grid-filter-expression>
     </div>
     <div class="igx-filtering__options-bgroup">
         <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>

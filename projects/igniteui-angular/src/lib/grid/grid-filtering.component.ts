@@ -11,20 +11,17 @@ import {
     OnDestroy,
     OnInit,
     QueryList,
-    TemplateRef,
     ViewChild,
     ViewChildren
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { IFilteringOperation, IgxFilteringOperand } from '../data-operations/filtering-condition';
-import { IgxButtonGroupModule, IgxButtonGroupComponent } from "../buttonGroup/buttonGroup.component";
+import { IgxButtonGroupComponent } from "../buttonGroup/buttonGroup.component";
 import { IgxGridFilterExpressionComponent } from "./grid-filtering-expression.component";
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 
@@ -69,6 +66,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public isSecondConditionVisible = false;
     protected chunkLoaded = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
+    private _secondExpression = null;
 
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
     protected toggleDirective: IgxToggleDirective;
@@ -121,14 +119,24 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
             const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
 
-            // if (expr) {
-            //     if (expr instanceof FilteringExpressionsTree) {
-            //      this.expressionsList.toArray()[0].value = (expr.filteringOperands[0] as IFilteringExpression).searchVal;
-            //      this.expressionsList.toArray()[0].expression.condition = (expr.filteringOperands[0] as IFilteringExpression).condition;
-                
-            //     }
-            // else = null
-            // }
+            if (expr) {
+                if (expr instanceof FilteringExpressionsTree) {
+                    this.expressionsList.toArray()[0].value = (expr.filteringOperands[0] as IFilteringExpression).searchVal;
+                    this.expressionsList.toArray()[0].expression.condition = (expr.filteringOperands[0] as IFilteringExpression).condition;
+                    if (expr.filteringOperands[1]) {
+                        this.isSecondConditionVisible = true;
+                        this.logicOperators.selectButton(expr.operator);
+                    }
+                }
+            }
+            else {
+                this.expressionsList.toArray()[0].value = null;
+                this.expressionsList.toArray()[0].expression.condition = undefined;
+                if (this.expressionsList.toArray()[1]) {
+                    this.expressionsList.toArray()[1].value = null;
+                this.expressionsList.toArray()[1].expression.condition = undefined;
+                }
+            }
         }
         this.cdr.detectChanges();
     }
@@ -141,22 +149,29 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         }
 
         const grid = this.gridAPI.get(this.gridID);
+        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
         grid.clearFilter(this.column.field);
-        grid.onFilteringDone.emit(this.column.filteringExpressionsTree);
+        grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
     }
 
     @autoWire(true)
     public onSelectLogicOperator(event): void {
         this.isSecondConditionVisible = true;
-        if(this.column.filteringExpressionsTree) {
-            if (this.logicOperators.selectedIndexes.length !== 0) {
-                this.column.filteringExpressionsTree.operator = this.logicOperators.selectedIndexes[1];
+        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+        if(expr) {
+            if (this.logicOperators.selectedIndexes.length > 1) {
+                (expr as FilteringExpressionsTree).operator = this.logicOperators.selectedIndexes[1];
+            }
+            else {
+                (expr as FilteringExpressionsTree).operator = this.logicOperators.selectedIndexes[0];
+                if(this._secondExpression) {
+                    (expr as FilteringExpressionsTree).filteringOperands.push(this._secondExpression);
+                }
             }
 
-            if(this.column.filteringExpressionsTree.filteringOperands.length >=2) {
+            if((expr as FilteringExpressionsTree).filteringOperands.length >=2) {
                 const grid = this.gridAPI.get(this.gridID);
-                grid.filter(this.column.field, null, this.column.filteringExpressionsTree,
-                    this.column.filteringIgnoreCase);
+                grid.filter(this.column.field, null, (expr as FilteringExpressionsTree), this.column.filteringIgnoreCase);
             }
         }
     }
@@ -165,6 +180,15 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public onUnSelectLogicOperator(event): void {
         if(this.logicOperators.selectedIndexes.length === 0) {
             this.isSecondConditionVisible = false;
+
+            //
+            this._secondExpression = { 
+                fieldName: this.expressionsList.toArray()[1].expression.fieldName,
+                condition: this.expressionsList.toArray()[1].expression.condition,
+                searchVal: this.expressionsList.toArray()[1].expression.searchVal,
+                ignoreCase: this.expressionsList.toArray()[1].expression.ignoreCase
+            }
+
             this.expressionsList.toArray()[1].clearFiltering(false);
             this._filter(this.expressionsList.toArray()[0].expression);
         }
@@ -202,7 +226,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public onExpressionChanged(expression: IFilteringExpression): void {
         const grid = this.gridAPI.get(this.gridID);
         this._filter(expression)
-        grid.onFilteringDone.emit(this.column.filteringExpressionsTree);
+        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+        grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
     }
 
     protected isFilteringApplied(): boolean {
@@ -218,31 +243,32 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     private _filter(expression: IFilteringExpression) {
-        if(!this.column.filteringExpressionsTree) {
-            this.column.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, this.column.field);
-            this.column.filteringExpressionsTree.filteringOperands.push(expression);
+        let expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+        if(!expr) {
+            expr = new FilteringExpressionsTree(FilteringLogic.And, this.column.field);
+            expr.filteringOperands.push(expression);
         } else {
-            this.column.filteringExpressionsTree.filteringOperands = [];
+            (expr as FilteringExpressionsTree).filteringOperands = [];
 
             if(this.expressionsList.toArray()[0].expression.searchVal || this.expressionsList.toArray()[0].isUnaryCondition()) {
-                this.column.filteringExpressionsTree.filteringOperands.push(this.expressionsList.toArray()[0].expression);
+                (expr as FilteringExpressionsTree).filteringOperands.push(this.expressionsList.toArray()[0].expression);
             }
 
             if(this.isSecondConditionVisible && this.expressionsList.toArray()[1] && (this.expressionsList.toArray()[1].expression.searchVal || this.expressionsList.toArray()[1].isUnaryCondition())) {
-                this.column.filteringExpressionsTree.filteringOperands.push(this.expressionsList.toArray()[1].expression);
+                (expr as FilteringExpressionsTree).filteringOperands.push(this.expressionsList.toArray()[1].expression);
             }
 
             if (this.logicOperators.selectedIndexes.length !== 0) {
-                this.column.filteringExpressionsTree.operator = this.logicOperators.selectedIndexes[0];
+                (expr as FilteringExpressionsTree).operator = this.logicOperators.selectedIndexes[0];
             }
         }
 
         const grid = this.gridAPI.get(this.gridID);
 
-        if(this.column.filteringExpressionsTree.filteringOperands.length === 0) {
+        if((expr as FilteringExpressionsTree).filteringOperands.length === 0) {
             grid.clearFilter(this.column.field);
         } else {
-            grid.filter(this.column.field, null, this.column.filteringExpressionsTree, this.column.filteringIgnoreCase);
+            grid.filter(this.column.field, null, expr as FilteringExpressionsTree, this.column.filteringIgnoreCase);
         }
     }
 }

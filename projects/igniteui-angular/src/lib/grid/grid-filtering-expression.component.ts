@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    DoCheck,
     ElementRef,
     EventEmitter,
     Input,
@@ -15,14 +14,12 @@ import {
     AfterViewInit
 } from "@angular/core";
 import { Subject } from "rxjs";
-import { debounceTime } from "rxjs/operators";
 import { DataType } from "../data-operations/data-util";
-import { IgxToggleDirective } from "../directives/toggle/toggle.directive";
 import { IgxGridAPIService } from "./api.service";
 import { IgxColumnComponent } from "./column.component";
 import { autoWire, IGridBus } from "./grid.common";
-import { IgxButtonGroupModule, IgxButtonGroupComponent } from "../buttonGroup/buttonGroup.component";
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 
 
@@ -57,11 +54,10 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
             this._value = this.transformValue(val);
         }
         this.expression.searchVal = this._value;
-        if (!this._isReset) {
-            this.onExpressionChanged.emit(this.expression);
-        }
-        this._isReset = false;
     }
+
+    @Input()
+    public name;
 
     @Output()
     public onExpressionChanged = new EventEmitter<IFilteringExpression>();
@@ -80,7 +76,6 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
 
     public booleanFilterAll = 'All';
     private _column: any;
-    private _isReset = false;
     public expression: IFilteringExpression;
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
@@ -94,14 +89,23 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public ngOnInit() {
         this.expression = { 
             fieldName: this.column.field,
-            condition: null,
-            searchVal: null,
+            condition: this.conditions[0],
+            searchVal: this.value,
             ignoreCase: this.column.filteringIgnoreCase
         }
     }
 
     public ngAfterViewInit() {
-        this.expression.condition = this.getCondition(this.select.nativeElement.value);
+        if(this.name === "secondExpr") {
+            const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+            if (expr && (expr as FilteringExpressionsTree).filteringOperands[1]) {
+                this.value = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).searchVal;
+                this.expression.condition = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).condition;
+            } else {
+                this.value = null;
+                this.expression.condition = undefined;
+            }
+        }
     }
 
     public ngOnDestroy() {
@@ -200,18 +204,21 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public onInputChanged(val): void {
         this.expression.condition = this.getCondition(this.select.nativeElement.value);
         this.value = val;
+        this.onExpressionChanged.emit(this.expression)
     }
 
     public focusInput(): void {
         if (this.input) {
-        this.input.nativeElement.focus();
+            this.input.nativeElement.focus();
         }
     }
 
     public clearFiltering(resetCondition: boolean): void {
-        this._isReset = resetCondition;
         this.expression.condition = resetCondition ? undefined : this.expression.condition;
         this.value = null;
+        if(!resetCondition) {
+            this.onExpressionChanged.emit(this.expression)
+        }
         this.cdr.detectChanges();
     }
 
