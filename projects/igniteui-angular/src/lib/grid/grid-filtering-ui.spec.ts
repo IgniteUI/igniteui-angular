@@ -1241,16 +1241,16 @@ export class CustomFilter extends IgxFilteringOperand {
 
 
 @Component({
-    template: `<igx-grid [data]='data' height='500px'>
-        <igx-column [field]=''ID'' [header]=''ID''></igx-column>
-        <igx-column [field]=''ProductName'' [filterable]='true' dataType='string'></igx-column>
-        <igx-column [field]=''Downloads'' [filterable]='true' dataType='number'></igx-column>
-        <igx-column [field]=''Released'' [filterable]='true' dataType='boolean'></igx-column>
-        <igx-column [field]=''ReleaseDate'' [header]=''ReleaseDate''
-            [filterable]='true' dataType='date'>
+    template: `<igx-grid [data]="data" height="500px">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="true" dataType="date">
         </igx-column>
-        <igx-column [field]=''AnotherField'' [header]=''Anogther Field'' [filterable]='true'
-            dataType='string' [filters]='customFilter'>
+        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
+            dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
 })
