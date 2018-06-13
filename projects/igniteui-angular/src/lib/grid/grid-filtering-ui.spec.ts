@@ -600,7 +600,7 @@ describe('IgxGrid - Filtering actions', () => {
         select.nativeElement.dispatchEvent(new Event('change'));
         fix.detectChanges();
 
-        // only one record is populated with "today" date, this is why rows must be 1
+        // only one record is populated with 'today' date, this is why rows must be 1
         expect(grid.rowList.length).toEqual(1);
     });
 
@@ -1152,51 +1152,45 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(column.filteringExpressionsTree);
 });
 
-    it("Clicking And/Or button shows second select and input for adding second condition", async(() => {
+    it('Clicking And/Or button shows second select and input for adding second condition', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        //TODO
+        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
 
     }));
 
-    it("Adding two conditions to a single column trough API correctly updates the filter dialog", async(() => {
+    it('Adding two conditions to a single column trough API correctly updates the filter dialog', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        //TODO
+        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
 
     }));
 
-    it("After filling the first condition the grid is filtered, then after adding the second condition the grid is updated", async(() => {
+    it('After filling the first condition the grid is filtered, then after adding the second condition the grid is updated', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        //TODO
+        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
 
     }));
 
-    it("Clicking Reset button clears all conditions", async(() => {
+    it('Clicking Reset button clears all conditions', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        //TODO
+        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
 
     }));
 
-    it("After edit/remove first or second condition the grid is updated", async(() => {
+    it('After edit/remove first or second condition the grid is updated', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        //TODO
+        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
 
     }));
 
-    it("Unselecting And/Or hides second condition UI and removes the second filter expression", async(() => {
+    it('Unselecting And/Or hides second condition UI and removes the second filter expression', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css("igx-grid-filter"))[3];
-        //TODO
+        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
 
     }));
 
@@ -1249,16 +1243,16 @@ export class CustomFilter extends IgxFilteringOperand {
 
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px">
-        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
-        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
-            [filterable]="true" dataType="date">
+    template: `<igx-grid [data]='data' height='500px'>
+        <igx-column [field]=''ID'' [header]=''ID''></igx-column>
+        <igx-column [field]=''ProductName'' [filterable]='true' dataType='string'></igx-column>
+        <igx-column [field]=''Downloads'' [filterable]='true' dataType='number'></igx-column>
+        <igx-column [field]=''Released'' [filterable]='true' dataType='boolean'></igx-column>
+        <igx-column [field]=''ReleaseDate'' [header]=''ReleaseDate''
+            [filterable]='true' dataType='date'>
         </igx-column>
-        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
-            dataType="string" [filters]="customFilter">
+        <igx-column [field]=''AnotherField'' [header]=''Anogther Field'' [filterable]='true'
+            dataType='string' [filters]='customFilter'>
         </igx-column>
     </igx-grid>`
 })

@@ -12,12 +12,12 @@ import {
     TemplateRef,
     ViewChild,
     AfterViewInit
-} from "@angular/core";
-import { Subject } from "rxjs";
-import { DataType } from "../data-operations/data-util";
-import { IgxGridAPIService } from "./api.service";
-import { IgxColumnComponent } from "./column.component";
-import { autoWire, IGridBus } from "./grid.common";
+} from '@angular/core';
+import { Subject } from 'rxjs';
+import { DataType } from '../data-operations/data-util';
+import { IgxGridAPIService } from './api.service';
+import { IgxColumnComponent } from './column.component';
+import { autoWire, IGridBus } from './grid.common';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
@@ -26,8 +26,8 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    selector: "igx-grid-filter-expression",
-    templateUrl: "./grid-filtering-expression.component.html"
+    selector: 'igx-grid-filter-expression',
+    templateUrl: './grid-filtering-expression.component.html'
 })
 export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
 
@@ -38,7 +38,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     @Input()
     set column(val) {
         this._column = val;
-        if(this.expression) {
+        if (this.expression) {
             this.expression.fieldName = val.field;
         }
     }
@@ -62,24 +62,30 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     @Output()
     public onExpressionChanged = new EventEmitter<IFilteringExpression>();
 
-    @ViewChild("defaultFilterUI", { read: TemplateRef })
+    @ViewChild('defaultFilterUI', { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
 
-    @ViewChild("defaultDateUI", { read: TemplateRef })
+    @ViewChild('defaultDateUI', { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild("select", { read: ElementRef})
+    @ViewChild('select', { read: ElementRef})
     protected select: ElementRef;
 
-    @ViewChild("input", { read: ElementRef})
+    @ViewChild('input', { read: ElementRef})
     protected input: ElementRef;
 
-    public booleanFilterAll = 'All';
     private _column: any;
+    public booleanFilterAll = 'All';
     public expression: IFilteringExpression;
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
     protected _value = null;
+
+    protected UNARY_CONDITIONS = [
+        'true', 'false', 'null', 'notNull', 'empty', 'notEmpty',
+        'yesterday', 'today', 'thisMonth', 'lastMonth', 'nextMonth',
+        'thisYear', 'lastYear', 'nextYear'
+    ];
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
@@ -87,16 +93,16 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     }
 
     public ngOnInit() {
-        this.expression = { 
+        this.expression = {
             fieldName: this.column.field,
             condition: this.conditions[0],
             searchVal: this.value,
             ignoreCase: this.column.filteringIgnoreCase
-        }
+        };
     }
 
     public ngAfterViewInit() {
-        if(this.name === "secondExpr") {
+        if (this.name === 'secondExpr') {
             const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
             if (expr && (expr as FilteringExpressionsTree).filteringOperands[1]) {
                 this.value = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).searchVal;
@@ -113,12 +119,6 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         this.unaryConditionChanged.unsubscribe();
     }
 
-    protected UNARY_CONDITIONS = [
-        "true", "false", "null", "notNull", "empty", "notEmpty",
-        "yesterday", "today", "thisMonth", "lastMonth", "nextMonth",
-        "thisYear", "lastYear", "nextYear"
-    ];
-
     get template() {
         switch (this.column.dataType) {
             case DataType.String:
@@ -129,27 +129,26 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
             case DataType.Boolean:
                 return null;
         }
-    }    
+    }
 
     @autoWire()
     public conditionChangedCallback() {
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
-             this.onExpressionChanged.emit(this.expression); 
+            this.onExpressionChanged.emit(this.expression);
         }
     }
 
     @autoWire()
     public unaryConditionChangedCallback() {
-        this.onExpressionChanged.emit(this.expression)
+        this.onExpressionChanged.emit(this.expression);
     }
 
     public isActive(value): boolean {
-        if(this.expression && this.expression.condition && this.expression.condition.name === value) {
+        if (this.expression && this.expression.condition && this.expression.condition.name === value) {
             return true;
-        }
-        else {
+        } else {
             return false;
-        } 
+        }
     }
 
     get gridID(): string {
@@ -204,7 +203,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public onInputChanged(val): void {
         this.expression.condition = this.getCondition(this.select.nativeElement.value);
         this.value = val;
-        this.onExpressionChanged.emit(this.expression)
+        this.onExpressionChanged.emit(this.expression);
     }
 
     public focusInput(): void {
@@ -216,8 +215,8 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public clearFiltering(resetCondition: boolean): void {
         this.expression.condition = resetCondition ? undefined : this.expression.condition;
         this.value = null;
-        if(!resetCondition) {
-            this.onExpressionChanged.emit(this.expression)
+        if (!resetCondition) {
+            this.onExpressionChanged.emit(this.expression);
         }
         this.cdr.detectChanges();
     }
@@ -230,6 +229,4 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     onDatePickerClick() {
         this.zone.run(() => {});
     }
-
-
 }
