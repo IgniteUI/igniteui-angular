@@ -94,7 +94,9 @@ export class IgxGridToolbarComponent implements IGridBus {
             return;
         }
         const fileName = 'ExportedData';
-        const options = exportType === 'excel' ? new IgxExcelExporterOptions(fileName) : new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
+        const options = exportType === 'excel' ?
+            new IgxExcelExporterOptions(fileName) :
+            new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
         exp.export(this.grid, options);
     }
 
