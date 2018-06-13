@@ -158,7 +158,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             let cellWidth = this.isLastUnpinned && hasVerticalScroll ?
                             parseInt(colWidth, 10) - 18 + '' : colWidth;
 
-            if (cellWidth.endsWith('px') === false) {
+            if (typeof cellWidth === 'string' && cellWidth.endsWith('px') === false) {
                 cellWidth += 'px';
             }
 
