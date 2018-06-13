@@ -428,13 +428,13 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
 
-        const colDownloadsExprTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const colDownloadsExprTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
         colDownloadsExprTree.filteringOperands = [
             { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
             { fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo') }
         ];
 
-        const colIdExprTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const colIdExprTree = new FilteringExpressionsTree(FilteringLogic.And, 'ID');
         colIdExprTree.filteringOperands = [
             { fieldName: 'ID', searchVal: 1, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
             { fieldName: 'ID', searchVal: 5, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
@@ -447,7 +447,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         expect(grid.rowList.length).toEqual(1);
-        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(4);
+        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
 
         grid.clearFilter();
         fix.detectChanges();
@@ -461,6 +461,18 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
+
+        var filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
+        var expression = { fieldName: 'Downloads', searchVal: 50, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') };
+        var expression1 = { fieldName: 'Downloads', searchVal: 500, condition: IgxNumberFilteringOperand.instance().condition('lessThan') };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        filteringExpressionsTree.filteringOperands.push(expression1);
+        grid.filter('Downloads', null, filteringExpressionsTree);
+
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(3);
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     });
 
     it('Should correctly apply two conditions to string column.', () => {
@@ -468,6 +480,18 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
+
+        var filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        var expression = { fieldName: 'ProductName', searchVal: 'Ignite', condition: IgxStringFilteringOperand.instance().condition('startsWith') };
+        var expression1 = { fieldName: 'ProductName', searchVal: 'Angular', condition: IgxStringFilteringOperand.instance().condition('contains') };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        filteringExpressionsTree.filteringOperands.push(expression1);
+        grid.filter('ProductName', null, filteringExpressionsTree);
+
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(1);
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     });
 
     it('Should correctly apply two conditions to date column.', () => {
@@ -475,6 +499,23 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
+        const today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+
+        var filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ReleaseDate');
+        var expression = { fieldName: 'ReleaseDate', searchVal: null, condition: IgxDateFilteringOperand.instance().condition('thisMonth') };
+        var expression1 = {
+            fieldName: 'ReleaseDate',
+            searchVal: today,
+            condition: IgxDateFilteringOperand.instance().condition('after')
+        };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        filteringExpressionsTree.filteringOperands.push(expression1);
+        grid.filter('ReleaseDate', null, filteringExpressionsTree);
+
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(2);
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     });
 });
 
@@ -497,16 +538,16 @@ export class CustomFilter extends IgxFilteringOperand {
 }
 
 @Component({
-    template: `<igx-grid [data]='data' height='500px'>
-        <igx-column [field]=''ID'' [header]=''ID''></igx-column>
-        <igx-column [field]=''ProductName'' [filterable]='true' dataType='string'></igx-column>
-        <igx-column [field]=''Downloads'' [filterable]='true' dataType='number'></igx-column>
-        <igx-column [field]=''Released'' [filterable]='true' dataType='boolean'></igx-column>
-        <igx-column [field]=''ReleaseDate'' [header]=''ReleaseDate'' headerClasses='header-release-date'
-            [filterable]='true' dataType='date'>
+    template: `<igx-grid [data]="data" height="500px">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="true" dataType="date">
         </igx-column>
-        <igx-column [field]=''AnotherField'' [header]=''Anogther Field'' [filterable]='true'
-            dataType='string' [filters]='customFilter'>
+        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
+            dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
 })
