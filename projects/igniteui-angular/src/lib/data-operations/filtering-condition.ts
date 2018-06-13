@@ -47,7 +47,7 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'true',
             logic: (target: boolean) => {
-                return target;
+                return target && target !== null && target !== undefined;
             }
         }, {
             name: 'false',
@@ -85,9 +85,11 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'equals',
             logic: (target: Date, searchVal: Date) => {
-                if (!(target instanceof Date)) {
-                    throw new Error('Could not perform filtering on "date" column because the datasource object type is not "Date".');
+                if (!target) {
+                    return false;
                 }
+
+                this.validateInputData(target);
 
                 const targetp = IgxDateFilteringOperand.getDateParts(target, 'yMd');
                 const searchp = IgxDateFilteringOperand.getDateParts(searchVal, 'yMd');
@@ -103,16 +105,34 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'before',
             logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 return target < searchVal;
             }
         }, {
             name: 'after',
             logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 return target > searchVal;
             }
         }, {
             name: 'today',
             logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 const d = IgxDateFilteringOperand.getDateParts(target, 'yMd');
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'yMd');
                 return  d.year === now.year &&
@@ -122,6 +142,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'yesterday',
             logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 const td = IgxDateFilteringOperand.getDateParts(target, 'yMd');
                 const y = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
                 const yesterday = IgxDateFilteringOperand.getDateParts(y, 'yMd');
@@ -132,6 +158,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'thisMonth',
             logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 const d = IgxDateFilteringOperand.getDateParts(target, 'yM');
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'yM');
                 return  d.year === now.year &&
@@ -140,6 +172,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'lastMonth',
             logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 const d = IgxDateFilteringOperand.getDateParts(target, 'yM');
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'yM');
                 if (!now.month) {
@@ -154,6 +192,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'nextMonth',
             logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 const d = IgxDateFilteringOperand.getDateParts(target, 'yM');
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'yM');
                 if (now.month === 11) {
@@ -168,6 +212,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'thisYear',
             logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 const d = IgxDateFilteringOperand.getDateParts(target, 'y');
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'y');
                 return  d.year === now.year;
@@ -175,6 +225,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'lastYear',
             logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 const d = IgxDateFilteringOperand.getDateParts(target, 'y');
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'y');
                 return  d.year === now.year - 1;
@@ -182,6 +238,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'nextYear',
             logic: (target: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+
                 const d = IgxDateFilteringOperand.getDateParts(target, 'y');
                 const now = IgxDateFilteringOperand.getDateParts(new Date(), 'y');
                 return  d.year === now.year + 1;
@@ -243,6 +305,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
             res.milliseconds = date.getMilliseconds();
         }
         return res;
+    }
+
+    private validateInputData(target: Date) {
+        if (!(target instanceof Date)) {
+            throw new Error('Could not perform filtering on \'date\' column because the datasource object type is not \'Date\'.');
+        }
     }
 }
 
