@@ -44,15 +44,27 @@ const noop = () => { };
 
 export class IgxRadioComponent implements ControlValueAccessor {
     /**
-     *@hidden
+     * Returns reference to native radio element.
+     * ```typescript
+     * let radioElement =  this.radio.nativeRadio;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('radio') public nativeRadio;
     /**
-     *@hidden
+     * Returns reference to native label element.
+     * ```typescript
+     * let labelElement =  this.radio.nativeLabel;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('nativeLabel') public nativeLabel;
     /**
-     *@hidden
+     * Returns reference to the label placeholder element.
+     * ```typescript
+     * let labelPlaceholder =  this.radio.placeholderLabel;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('placeholderLabel') public placeholderLabel;
 
