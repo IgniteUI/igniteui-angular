@@ -23,6 +23,20 @@
         }
     }
 
+    @include e(thead-title) {
+        @extend %grid-cell-display !optional;
+        @extend %grid-cell-header !optional;
+        @extend %grid-thead-title !optional;
+    }
+
+    @include e(thead-group) {
+        @extend %grid-thead-group !optional;
+    }
+
+    @include e(thead-title, $m: pinned-last) {
+        @extend %grid-thead-title--pinned !optional;
+    }
+
     @include e(tbody) {
         @extend %grid-tbody !optional;
     }
@@ -144,8 +158,20 @@
     @include m(cosy) {
         @extend %grid-display !optional;
 
+        @include e(thead-title) {
+            @extend %grid-thead-title--cosy !optional;
+        }
+
         @include e(th) {
             @extend %grid-cell-header--cosy !optional;
+        }
+
+        @include e(th-title) {
+            @extend %grid-cell-header-title--cosy !optional;
+        }
+
+        @include e(th-icons) {
+            @extend %grid-cell-header-icons--cosy !optional;
         }
 
         @include e(td) {
@@ -156,8 +182,20 @@
     @include m(compact) {
         @extend %grid-display !optional;
 
+        @include e(thead-title) {
+            @extend %grid-thead-title--compact !optional;
+        }
+
         @include e(th) {
             @extend %grid-cell-header--compact !optional;
+        }
+
+        @include e(th-title) {
+            @extend %grid-cell-header-title--compact !optional;
+        }
+
+        @include e(th-icons) {
+            @extend %grid-cell-header-icons--compact !optional;
         }
 
         @include e(td) {

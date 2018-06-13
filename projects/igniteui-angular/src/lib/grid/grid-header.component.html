@@ -3,13 +3,14 @@
 </ng-template>
 
 <ng-container *ngIf="column.columnGroup">
-    <div style="display: block; height: 50px; text-align: center; border-bottom: 1px solid #ddd; border-right: 1px solid #ddd;">{{ column.header }}</div>
-    <div style="display: flex; flex-flow: row;">
+    <div class="igx-grid__thead-title">{{ column.header }}</div>
+    <div class="igx-grid__thead-group">
         <ng-container *ngFor="let child of column.children">
             <igx-grid-header *ngIf="!child.hidden" [gridID]="column.gridID" [column]="child" [style.min-width.px]="child.width" [style.flex-basis.px]='child.width'></igx-grid-header>
         </ng-container>
     </div>
 </ng-container>
+
 <ng-container *ngIf="!column.columnGroup">
     <span class="igx-grid__th-title">
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
