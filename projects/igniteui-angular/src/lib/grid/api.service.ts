@@ -142,13 +142,12 @@ export class IgxGridAPIService {
             grid.page = 0;
         }
 
-        for (const column of grid.columns) {
-            if (condition) {
+        filteringTree.filteringOperands = [];
+
+        if (condition) {
+            for (const column of grid.columns) {
                 this.prepare_filtering_expression(filteringTree, column.field, term,
                     condition, ignoreCase || column.filteringIgnoreCase);
-            } else {
-                this.prepare_filtering_expression(filteringTree, column.field, term,
-                    column.filteringExpressionsTree, ignoreCase || column.filteringIgnoreCase);
             }
         }
 
@@ -161,8 +160,6 @@ export class IgxGridAPIService {
             if (!column) {
                 return;
             }
-
-            column.filteringExpressionsTree = null;
         }
 
         const grid = this.get(id);

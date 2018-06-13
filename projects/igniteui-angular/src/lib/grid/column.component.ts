@@ -121,9 +121,6 @@ export class IgxColumnComponent implements AfterContentInit {
     public formatter: (value: any) => any;
 
     @Input()
-    public filteringExpressionsTree: IFilteringExpressionsTree;
-
-    @Input()
     public filteringIgnoreCase = true;
 
     @Input()
