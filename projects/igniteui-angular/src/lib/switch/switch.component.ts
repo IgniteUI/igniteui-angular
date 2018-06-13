@@ -49,33 +49,51 @@ export class IgxSwitchComponent implements ControlValueAccessor {
      */
     protected _value: any;
     /**
-     *@hidden
+     * Returns reference to the native checkbox element.
+     * ```typescript
+     * let checkboxElement =  this.switch.nativeCheckbox;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('checkbox') public nativeCheckbox;
     /**
-     *@hidden
+     * Returns reference to the native label element.
+     * ```typescript
+     * let labelElement =  this.switch.nativeLabel;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('label') public nativeLabel;
     /**
-     *@hidden
+     * Returns reference to the label placeholder element.
+     * ```typescript
+     * let labelPlaceholder =  this.switch.placeholderLabel;
+     * ```
+     * @memberof IgxSwitchComponent
      */
     @ViewChild('placeholderLabel') public placeholderLabel;
 
     /**
-     * Sets the `id` of the switch component.
+     * Sets/gets the `id` of the switch component.
      * If not set, the `id` of the first switch component will be `"igx-switch-0"`.
      * ```html
      * <igx-switch id="my-first-switch"></igx-switch>
+     * ```
+     * ```typescript
+     * let switchId =  this.switch.id;
      * ```
      * @memberof IgxSwitchComponent
      */
     @HostBinding('attr.id')
     @Input() public id = `igx-switch-${nextId++}`;
     /**
-     * Sets the id of the `label` element in the switch component.
+     * Sets/gets the id of the `label` element in the switch component.
      * If not set, the label of the first switch component will have an id=`"igx-switch-0-label"`;
      * ```html
      * <igx-switch labelId="Label1"></igx-switch>
+     * ```
+     * ```typescript
+     * let labelId =  this.switch.labelId;
      * ```
      * @memberof IgxSwitchComponent
      */
@@ -83,7 +101,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     /**
      * Sets/gets the `value` attribute of the switch component.
      * ```html
-     * <igx-switch [value] = "1"></igx-switch>
+     * <igx-switch [value] = "switchValue"></igx-switch>
      * ```
      * ```typescript
      * let value =  this.switch.value;
@@ -103,61 +121,79 @@ export class IgxSwitchComponent implements ControlValueAccessor {
      */
     @Input() public name: string;
     /**
-     * Sets the value of the `tabindex` attribute of the switch component.
+     * Sets/gets the value of the `tabindex` attribute.
      * ```html
      * <igx-switch [tabindex]="1"></igx-switch>
+     * ```
+     * ```typescript
+     * let tabIndex =  this.switch.tabindex;
      * ```
      * @memberof IgxSwitchComponent
      */
     @Input() public tabindex: number = null;
     /**
-     * Sets the position of the `label` in the switch component.
+     * Sets/gets the position of the `label` in the switch component.
      * If not set, `labelPosition` will have value `"after"`.
      * ```html
      * <igx-switch labelPosition="before"></igx-switch>
+     * ```
+     * ```typescript
+     * let labelPosition =  this.switch.labelPosition;
      * ```
      * @memberof IgxSwitchComponent
      */
     @Input() public labelPosition: SwitchLabelPosition | string = 'after';
     /**
-     * Sets the `disableRipple` attribute of the switch component.
+     * Enables/Disables the ripple effect
      * If not set, `disableRipple` will have value `false`.
      * ```html
      * <igx-switch [disableRipple]="true"></igx-switch>
+     * ```
+     * ```typescript
+     * let isRippleDisabled = this.switch.disableRipple;
      * ```
      * @memberof IgxSwitchComponent
      */
     @Input() public disableRipple = false;
     /**
-     * Sets whether the state of the switch component should be required.
+     * Sets/gets whether switch is required.
      * If not set, `required` will have value `false`.
      * ```html
      * <igx-switch [required]="true"></igx-switch>
+     * ```
+     * ```typescript
+     * let isRequired = this.switch.required;
      * ```
      * @memberof IgxSwitchComponent
      */
     @Input() public required = false;
     /**
-     * Sets the `aria-labelledBy` attribute of the switch component.
+     * Sets/gets the `aria-labelledBy` attribute.
      * If not set, the  value of `aria-labelledBy` will be equal to the value of `labelId` attribute.
      * ```html
      * <igx-switch aria-labelledby = "Switch1"></igx-switch>
+     * ```
+     * ```typescript
+     * let ariaLabelledBy = this.switch.ariaLabelledBy;
      * ```
      * @memberof IgxSwitchComponent
      */
     @Input('aria-labelledby')
     public ariaLabelledBy = this.labelId;
     /**
-     * Sets the value of the `aria-label` attribute of the switch component.
+     * Sets/gets the value of the `aria-label` attribute.
      * ```html
      * <igx-switch aria-label="Switch1"></igx-switch>
+     * ```
+     * ```typescript
+     * let ariaLabel =  this.switch.ariaLabel;
      * ```
      * @memberof IgxSwitchComponent
      */
     @Input('aria-label')
     public ariaLabel: string | null = null;
     /**
-     * An event that is emitted when the switch state is changed.
+     * An event that is emitted after the switch state is changed.
      * Provides references to the `IgxSwitchComponent` and the `checked` property as event arguments.
      * @memberof IgxSwitchComponent
      */
@@ -183,48 +219,50 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     @HostBinding('class.igx-switch')
     public cssClass = 'igx-switch';
     /**
-     * Sets whether the switch is on or off.
+     * Sets/gets whether the switch is on or off.
      * Default value is 'false'.
      * ```html
      *  <igx-switch [checked] = "true"></igx-switch>
+     * ```
+     * ```typescript
+     * let isChecked =  this.switch.checked;
      * ```
      * @memberof IgxSwitchComponent
      */
     @HostBinding('class.igx-switch--checked')
     @Input() public checked = false;
     /**
-     * Sets whether the switch is desabled.
+     * Sets/gets the `disabled` attribute.
      * Default value is `false`.
      * ```html
-     * <igx-switch [desabled] = "true"><igx-switch>
+     * <igx-switch [disabled] = "true"><igx-switch>
+     * ```
+     * ```typescript
+     * let isDisabled =  this.switch.disabled;
      * ```
      * @memberof IgxSwitchComponent
      */
     @HostBinding('class.igx-switch--disabled')
     @Input() public disabled = false;
     /**
-     * Sets whether the switch component is on focus.
+     * Sets/gets whether the switch component is on focus.
      * Default value is `false`.
      * ```typescript
      * this.switch.focused = true;
+     * ```
+     * ```typescript
+     * let isFocused =  this.switch.focused;
      * ```
      * @memberof IgxSwitchComponent
      */
     @HostBinding('class.igx-switch--focused')
     public focused = false;
     /**
-     * Sets the id of the `input` element in the switch component.
-     * If not set, the `input` of the first switch component will have na id=`"igx-switch-0-input"`.
-     * ```typescript
-     * this.switch.inputId = "Input1";
-     * ```
-     * @memberof IgxSwitchComponent
+     *@hidden
      */
     public inputId = `${this.id}-input`;
     /**
-     * If `disabled` is `false`, inverts the `checked` value of the switch component.
-     * Removes the focus on the switch.
-     * Emits an event after the switch is toggled.
+     * Toggles the checked state of the switch.
      * ```typescript
      * this.switch.toggle();
      * ```
