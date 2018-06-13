@@ -106,6 +106,21 @@ export interface IGridToolbarExportEventArgs {
     cancel: boolean;
 }
 
+export interface IColumnMovingStartEventArgs {
+    source: IgxColumnComponent;
+}
+
+export interface IColumnMovingEventArgs {
+    source: IgxColumnComponent;
+    target: IgxColumnComponent;
+    cancel: boolean;
+}
+
+export interface IColumnMovingEndEventArgs {
+    source: IgxColumnComponent;
+    target: IgxColumnComponent;
+}
+
 /**
  * **Ignite UI for Angular Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
@@ -365,6 +380,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
+    @Output()
+    public onColumnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
+
+    @Output()
+    public onColumnMoving = new EventEmitter<IColumnMovingEventArgs>();
+
+    @Output()
+    public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -555,6 +579,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public tfootHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
+    public isColumnMoving: boolean;
+    public isColumnResizing: boolean;
 
     public eventBus = new Subject<boolean>();
 
@@ -785,6 +811,43 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             totalWidth += parseInt(cols[i].width, 10) || 0;
         }
         return totalWidth;
+    }
+
+    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+        if (column.pinned) {
+            const fromIndex = this._pinnedColumns.indexOf(column);
+
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+                this._unpinnedColumns.indexOf(dropTarget);
+
+            this._pinnedColumns.splice(fromIndex, 1);
+
+            if (dropTarget.pinned) {
+                column.pinned = true;
+                this._pinnedColumns.splice(toIndex, 0, column);
+            } else {
+                column.pinned = false;
+                this._unpinnedColumns.splice(toIndex + 1, 0, column);
+            }
+        } else {
+            const fromIndex = this._unpinnedColumns.indexOf(column);
+
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+                this._unpinnedColumns.indexOf(dropTarget);
+
+            this._unpinnedColumns.splice(fromIndex, 1);
+
+            if (dropTarget.pinned) {
+                column.pinned = true;
+                this._pinnedColumns.splice(toIndex, 0, column);
+            } else {
+                column.pinned = false;
+                this._unpinnedColumns.splice(toIndex, 0, column);
+            }
+        }
+
+        this.columnList.reset(this._pinnedColumns.concat(this._unpinnedColumns));
+        this.columnList.notifyOnChanges();
     }
 
     public nextPage(): void {
@@ -1063,6 +1126,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList.some((col) => col.hasSummary);
     }
 
+    get hasMovableColumns(): boolean {
+        return this.columnList.some((col) => col.movable);
+    }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
@@ -1217,7 +1284,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Gets calculated width of the start pinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
-    protected getPinnedWidth(takeHidden = false) {
+    public getPinnedWidth(takeHidden = false) {
         const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
         let sum = 0;
         for (const col of fc) {
