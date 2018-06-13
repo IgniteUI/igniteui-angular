@@ -50,7 +50,7 @@ function wrapPromise(callback, resolve, time) {
     });
 }
 
-describe('Combo', () => {
+fdescribe('Combo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -1038,7 +1038,7 @@ describe('Combo', () => {
     });
 
     // Silently fails (cannot get 0 of undefined on line 846)
-    fit('Should properly render grouped items', fakeAsync(() => {
+    it('Should properly render grouped items', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboInputTestComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -1942,7 +1942,7 @@ describe('Combo', () => {
             expect(dropdownItems.length).toEqual(0);
         });
 
-        const checkFilteredItems = function(listItems: any) {
+        const checkFilteredItems = function (listItems: any) {
             listItems.forEach(function (el) {
                 const dropdownItem = el as HTMLElement;
                 const itemText: string = dropdownItem.textContent.trim();
@@ -1950,32 +1950,164 @@ describe('Combo', () => {
             });
         };
     }));
-    it('Typing in the textbox should fire onFilterChanged event', () => {
-        // TO DO
-    });
-    it('Clearing the filter textbox should restore the initial combo dropdown list', () => {
-        // TO DO
-    });
-    xit('Enter key should select and append the closest suggestion item from the filtered items list', () => {
-        // TO DO
-    });
-    it('Escape key should clear the textbox input and close the dropdown list', () => {
-        // TO DO
-    });
-    xit('When no results are filtered, the "Select All" checkbox should not be visible', () => {
-        // TO DO
-    });
-    xit('After adding a custom value, the "Select All" checkbox should appear checked', () => {
-        // TO DO
-    });
-    it('When no results are filtered for a group, the group header should not be visible', () => {
-        // TO DO
-    });
-
-    xit('The SPACE key is not allowed inside the filtering box', () => {
-        // TO DO
-    });
-
+    it('Typing in the textbox should fire onSearchInput event', fakeAsync(() => {
+        let searchInputElement;
+        let timesFired = 1;
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        spyOn(combo.onSearchInput, 'emit').and.callThrough();
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
+            searchInputElement.value = 'P';
+            searchInputElement.dispatchEvent(new Event('input'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(timesFired);
+            searchInputElement.value = 'Pa';
+            searchInputElement.dispatchEvent(new Event('input'));
+            timesFired++;
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(timesFired);
+            searchInputElement.value = 'Pal';
+            searchInputElement.dispatchEvent(new Event('input'));
+            timesFired++;
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(timesFired);
+            searchInputElement.value = 'Pala';
+            searchInputElement.dispatchEvent(new Event('input'));
+            timesFired++;
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(timesFired);
+        });
+    }));
+    it('Clearing the filter textbox should restore the initial combo dropdown list', fakeAsync(() => {
+        let searchInputElement;
+        let dropdownList;
+        let dropdownItems;
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
+            searchInputElement.value = 'P';
+            searchInputElement.dispatchEvent(new Event('input'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
+            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            expect(dropdownItems.length).toEqual(5);
+            expect(combo.filteredData.length).toEqual(5);
+            searchInputElement.value = 'Pa';
+            searchInputElement.dispatchEvent(new Event('input'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            expect(dropdownItems.length).toEqual(4);
+            expect(combo.filteredData.length).toEqual(4);
+            searchInputElement.value = 'P';
+            searchInputElement.dispatchEvent(new Event('input'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            expect(dropdownItems.length).toEqual(5);
+            expect(combo.filteredData.length).toEqual(5);
+            searchInputElement.value = '';
+            searchInputElement.dispatchEvent(new Event('input'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            expect(dropdownItems.length).toEqual(10);
+            expect(combo.filteredData.length).toEqual(combo.data.length);
+            combo.filteredData.forEach(function (item) {
+                expect(combo.data).toContain(item);
+            });
+        });
+    }));
+    it('Escape key should clear the textbox input and close the dropdown list', fakeAsync(() => {
+        let searchInputElement;
+        let dropdownList;
+        let dropdownItems;
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
+            searchInputElement.value = 'P';
+            searchInputElement.dispatchEvent(new Event('input'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
+            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            expect(dropdownItems.length).toEqual(5);
+            const event = new KeyboardEvent('keyup', { 'key': 'Escape' });
+            searchInputElement.dispatchEvent(event);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(combo.dropdown.collapsed).toBeTruthy();
+            expect(searchInputElement.textContent).toEqual('');
+        });
+    }));
+    fit('When no results are filtered for a group, the group header should not be visible', fakeAsync(() => {
+        let searchInputElement;
+        let dropdownList;
+        const fixture = TestBed.createComponent(IgxComboInputTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        // const nonFilteredItems = combo.data.filter(function (item) {
+        //     return item.field.toLowerCase().trim().includes('mi');
+        // });
+        const nonFilteredHeaders: string[] = [];
+        const filteredItems: { [index: string]: any; } = combo.data.reduce(function (filteredArray, item) {
+            if (item.field.toLowerCase().trim().includes('mi')) {
+                (filteredArray[item['region']] = filteredArray[item['region']] || []).push(item);
+            }
+            return filteredArray;
+        }, {});
+        console.log(nonFilteredHeaders);
+        combo.dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
+            searchInputElement.value = 'Mi';
+            searchInputElement.dispatchEvent(new Event('input'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
+            const listHeaders: NodeListOf<HTMLElement> = dropdownList.querySelectorAll('.' + CSS_CLASS_HEADER);
+            expect(listHeaders.length).toEqual(Object.keys(filteredItems).length);
+            const headers = Array.prototype.map.call(listHeaders, function (item) {
+                return item.textContent.trim();
+            });
+            Object.keys(filteredItems).forEach(key => {
+                expect(headers).toContain(key);
+            });
+        });
+    }));
     // Templates
     it('Combo header template', () => {
         // TO DO
@@ -2119,7 +2251,7 @@ describe('Combo', () => {
             fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
-            expect(combo.selectedItems()).toEqual([{ field: 'New'}]);
+            expect(combo.selectedItems()).toEqual([{ field: 'New' }]);
             expect(combo.comboInput.nativeElement.value).toEqual('New');
             fix.debugElement.query(By.css('.clearButton')).nativeElement.click(mockEvent);
             return fix.whenStable();
