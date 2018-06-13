@@ -479,8 +479,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public set showToolbar(newValue: boolean) {
-        this._showToolbar = newValue;
-        this.cdr.markForCheck();
+        if (this._showToolbar !== newValue) {
+            this._showToolbar = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
     }
 
     @Input()
@@ -489,8 +494,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public set toolbarTitle(newValue: string) {
-        this._toolbarTitle = newValue;
-        this.cdr.markForCheck();
+        if (this._toolbarTitle !== newValue) {
+            this._toolbarTitle = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
     }
 
     @Input()
@@ -499,8 +509,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public set exportExcel(newValue: boolean) {
-        this._exportExcel = newValue;
-        this.cdr.markForCheck();
+        if (this._exportExcel !== newValue) {
+            this._exportExcel = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
     }
 
     @Input()
@@ -509,8 +524,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public set exportCsv(newValue: boolean) {
-        this._exportCsv = newValue;
-        this.cdr.markForCheck();
+        if (this._exportCsv !== newValue) {
+            this._exportCsv = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
     }
 
     @Input()
@@ -519,8 +539,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public set exportText(newValue: string) {
-        this._exportText = newValue;
-        this.cdr.markForCheck();
+        if (this._exportText !== newValue) {
+            this._exportText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
     }
 
     @Input()
@@ -529,8 +554,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public set exportExcelText(newValue: string) {
-        this._exportExcelText = newValue;
-        this.cdr.markForCheck();
+        if (this._exportExcelText !== newValue) {
+            this._exportExcelText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
     }
 
     @Input()
@@ -539,8 +569,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public set exportCsvText(newValue: string) {
-        this._exportCsvText = newValue;
-        this.cdr.markForCheck();
+        if (this._exportCsvText !== newValue) {
+            this._exportCsvText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
     }
 
     @Output()
@@ -586,6 +621,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _height = '100%';
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;
+    private _ngAfterViewInitPaassed = false;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -668,7 +704,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
         this._derivePossibleWidth();
         this.calculateGridSizes();
-
+        this._ngAfterViewInitPaassed = true;
     }
 
     public ngOnDestroy() {
@@ -1116,7 +1152,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
             let toolbarHeight = 0;
-            if (this.showToolbar) {
+            if (this.showToolbar && this.toolbarHtml != null) {
                 toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
                     this.toolbarHtml.nativeElement.offsetHeight : 0;
             }
@@ -1135,7 +1171,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.scr.nativeElement.clientHeight;
         } else {
             let toolbarHeight = 0;
-            if (this.showToolbar) {
+            if (this.showToolbar && this.toolbarHtml != null) {
                 toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
                     this.toolbarHtml.nativeElement.offsetHeight : 0;
             }

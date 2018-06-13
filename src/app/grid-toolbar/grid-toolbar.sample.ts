@@ -11,6 +11,8 @@ export class GridToolbarSampleComponent implements OnInit {
     @ViewChild('grid1', { read: IgxGridComponent })
     public igxGrid1: IgxGridComponent;
 
+    private toolbarShown = true;
+
     data = [
         {
             Name: 'Alice',
@@ -41,6 +43,11 @@ export class GridToolbarSampleComponent implements OnInit {
                 // configure and perform export operation
                 break;
         }
+    }
+
+    public buttonToolbarClickedHandler() {
+        this.toolbarShown = !this.toolbarShown;
+        this.igxGrid1.showToolbar = this.toolbarShown;
     }
 
     public initColumns(column: IgxColumnComponent) {

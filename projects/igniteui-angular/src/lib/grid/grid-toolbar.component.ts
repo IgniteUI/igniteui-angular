@@ -14,6 +14,7 @@ import {
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { CsvFileTypes,
+         IgxBaseExporter,
          IgxCsvExporterOptions,
          IgxCsvExporterService,
          IgxExcelExporterOptions,
@@ -44,14 +45,12 @@ export class IgxGridToolbarComponent implements IGridBus {
     }
 
     public get shouldShowExportExcelButton(): boolean {
-        return this.grid.exportExcel;
+        return (this.grid != null && this.grid.exportExcel);
     }
 
     public get shouldShowExportCsvButton(): boolean {
-        return this.grid.exportCsv;
+        return (this.grid != null && this.grid.exportCsv);
     }
-
-    private _exportEventSubscription;
 
     constructor(public gridAPI: IgxGridAPIService,
                 public cdr: ChangeDetectorRef,
@@ -80,35 +79,23 @@ export class IgxGridToolbarComponent implements IGridBus {
     }
 
     public exportToExcelClicked() {
-        this.toggleDirective.collapsed = !this.toggleDirective.collapsed;
-        const args = { grid: this.grid, exporter: this.excelExporter, type: 'excel', cancel: false };
-        this.grid.onToolbarExporting.emit(args);
-        if (args.cancel) {
-            return;
-        }
-        this._exportEventSubscription = this.excelExporter.onExportEnded.subscribe((ev) => this._exportEndedHandler());
-        // show busy indicator here
-        this.excelExporter.export(this.grid, new IgxExcelExporterOptions('ExportedData'));
+        this.performExport(this.excelExporter, 'excel');
     }
 
     public exportToCsvClicked() {
-        this.toggleDirective.collapsed = !this.toggleDirective.collapsed;
-        const args = { grid: this.grid, exporter: this.csvExporter, type: 'csv', cancel: false };
+        this.performExport(this.csvExporter, 'csv');
+    }
+
+    private performExport(exp: IgxBaseExporter, exportType: string) {
+        this.exportClicked();
+        const args = { grid: this.grid, exporter: exp, type: exportType, cancel: false };
         this.grid.onToolbarExporting.emit(args);
         if (args.cancel) {
             return;
         }
-        this._exportEventSubscription = this.csvExporter.onExportEnded.subscribe((ev) => this._exportEndedHandler());
-        // show busy indicator here
-        this.csvExporter.export(this.grid, new IgxCsvExporterOptions('ExportedData', CsvFileTypes.CSV));
-    }
-
-    private _exportEndedHandler() {
-        if (this._exportEventSubscription) {
-            this._exportEventSubscription.unsubscribe();
-            this._exportEventSubscription = null;
-        }
-        // hide busy indicator here
+        const fileName = 'ExportedData';
+        const options = exportType === 'excel' ? new IgxExcelExporterOptions(fileName) : new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
+        exp.export(this.grid, options);
     }
 
 }
