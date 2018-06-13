@@ -75,15 +75,15 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
 
     public open(fireEvents?: boolean, positionStrategy?: IPositionStrategy) {
         if (!this.collapsed) { return; }
-        positionStrategy = this.getPositionStrategy(positionStrategy);
-        const id = this.overlayService.show(this.elementRef, this.id, positionStrategy);
-
-        if (!this.id) {
-            this.id = id;
-        }
 
         const player = this.animationActivation();
-        player.onStart(() => this.collapsed = false);
+        player.onStart(() => {
+            positionStrategy = this.getPositionStrategy(positionStrategy);
+            const id = this.overlayService.show(this.elementRef, this.id, positionStrategy);
+            if (!this.id) {
+                this.id = id;
+            }
+        });
         player.onDone(() => {
             player.destroy();
             if (fireEvents) {
@@ -95,6 +95,7 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
             this.onOpening.emit();
         }
 
+        this.collapsed = false;
         player.play();
     }
 

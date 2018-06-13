@@ -17,7 +17,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
     private _componentId = 0;
-    private _elements: { id: string, elementRef: ElementRef, componentRef: ComponentRef<{}> }[] = [];
+    private _elements: { id: string, elementRef: ElementRef, componentRef: ComponentRef<{}>, rect: {width, height} }[] = [];
     private _overlayElement: HTMLElement;
 
     /**
@@ -25,6 +25,7 @@ export class IgxOverlayService {
      */
     private get OverlayElement(): HTMLElement {
         if (!this._overlayElement) {
+            debugger;
             this._overlayElement = this._document.createElement('div');
             // this._overlayElement.addEventListener("click", (event) => {
             //     let lastChild: Node = this._overlayElement.lastChild;
@@ -62,19 +63,25 @@ export class IgxOverlayService {
      * Attaches provided component's native element to the OverlayElement
      * @param component Component to show in the overlay
      */
-    show(component, id: string, positionStrategy?: IPositionStrategy): string {
-        const element = this.getElement(component, id);
+    show(component, id?: string, positionStrategy?: IPositionStrategy): string {
+        debugger;
+        id = this.getElement(component, id);
+
+        const element = this._elements.find(x => x.id === id).elementRef.nativeElement;
+        const rect = element.getBoundingClientRect();
 
         const componentWrapper = this._document.createElement('div');
-        componentWrapper.appendChild(element);
-
         positionStrategy = this.getPositionStrategy(positionStrategy);
-
-        // Call the strategy to attach the needed css class.
-        positionStrategy.position(element);
-
-        this.OverlayElement.style.visibility = 'visible';
+        componentWrapper.appendChild(element);
         this.OverlayElement.appendChild(componentWrapper);
+        this.OverlayElement.style.visibility = 'visible';
+
+        positionStrategy.position(element, componentWrapper, this._elements.find(x => x.id === id).rect);
+
+        //1- should be prior to componentWrapper.appendChild
+        //2) returns element and attach to component wrapper
+        //const componentWrapper: Element = positionStrategy.position(element);
+
         return this._elements[this._elements.length - 1].id;
     }
 
@@ -101,14 +108,14 @@ export class IgxOverlayService {
         }
     }
 
-    private getElement(component: any, id: string): HTMLElement {
+    private getElement(component: any, id?: string): string {
         let element: HTMLElement;
         id = id ? id : (this._componentId++).toString();
 
         if (component instanceof ElementRef) {
-            this._elements.push({ id: id, elementRef: <ElementRef>component, componentRef: null });
             element = component.nativeElement;
-            return element;
+            this._elements.push({ id: id, elementRef: <ElementRef>component, componentRef: null, rect: element.getBoundingClientRect() });
+            return id;
         }
 
         let dynamicFactory: ComponentFactory<{}>;
@@ -120,10 +127,10 @@ export class IgxOverlayService {
         }
 
         const dc: ComponentRef<{}> = dynamicFactory.create(this._injector);
-        this._elements.push({ id: id, elementRef: dc.location, componentRef: dc });
-        this._appRef.attachView(dc.hostView);
         element = dc.location.nativeElement;
-        return element;
+        this._appRef.attachView(dc.hostView);
+        this._elements.push({ id: id, elementRef: dc.location, componentRef: dc, rect: element.getBoundingClientRect() });
+        return id;
     }
 
     private getPositionStrategy(positionStrategy: IPositionStrategy): IPositionStrategy {
