@@ -13,6 +13,7 @@ import {
     Injector,
     ComponentRef
 } from '@angular/core';
+import { ScrollStrategyFactory } from './scroll/ScrollStrategyFactory';
 
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
@@ -57,16 +58,18 @@ export class IgxOverlayService {
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
         private _injector: Injector,
-        @Inject(DOCUMENT) private _document: any) { }
+        @Inject(DOCUMENT) private _document: any,
+        @Inject(ScrollStrategyFactory) private scrollFactory: ScrollStrategyFactory) { }
 
     /**
      * Attaches provided component's native element to the OverlayElement
-     * @param component Component to show in the overlay
-     */
+
+    * @param component Component to show in the overlay
+    */
+
     show(component, id?: string, positionStrategy?: IPositionStrategy): string {
         debugger;
         id = this.getElement(component, id);
-
         const element = this._elements.find(x => x.id === id).elementRef.nativeElement;
         const rect = element.getBoundingClientRect();
 
@@ -75,7 +78,6 @@ export class IgxOverlayService {
         componentWrapper.appendChild(element);
         this.OverlayElement.appendChild(componentWrapper);
         this.OverlayElement.style.visibility = 'visible';
-
         positionStrategy.position(element, componentWrapper, this._elements.find(x => x.id === id).rect);
 
         //1- should be prior to componentWrapper.appendChild
@@ -127,8 +129,10 @@ export class IgxOverlayService {
         }
 
         const dc: ComponentRef<{}> = dynamicFactory.create(this._injector);
+
         element = dc.location.nativeElement;
         this._appRef.attachView(dc.hostView);
+
         this._elements.push({ id: id, elementRef: dc.location, componentRef: dc, rect: element.getBoundingClientRect() });
         return id;
     }

@@ -6,9 +6,9 @@ import {
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { STRING_FILTERS } from '../data-operations/filtering-condition';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxStringFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -19,7 +19,8 @@ describe('IgxGrid - search API', () => {
                 SimpleGridComponent,
                 ScrollableGridComponent,
                 PagingGridComponent,
-                HiddenColumnsGridComponent
+                HiddenColumnsGridComponent,
+                GridWithAvatarComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -436,7 +437,7 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         fix.whenStable().then(() => {
-            grid.filter('JobTitle', 'Vice', STRING_FILTERS.contains);
+            grid.filter('JobTitle', 'Vice', IgxStringFilteringOperand.instance().condition('contains'));
             fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
@@ -590,7 +591,7 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.filter('Name', 'Tanya', STRING_FILTERS.contains);
+            grid.filter('Name', 'Tanya', IgxStringFilteringOperand.instance().condition('contains'));
             fix.detectChanges();
 
             return fix.whenStable();
@@ -720,6 +721,15 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
         });
+    });
+
+    it('Cells with no text should be excluded from the search', () => {
+        const fix = TestBed.createComponent(GridWithAvatarComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        const matches = grid.findNext('https');
+        expect(matches).toBe(0);
     });
 
     function triggerKeyDownEvtUponElem(evtName, elem, fix) {
@@ -913,6 +923,44 @@ export class HiddenColumnsGridComponent {
         { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z' },
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
+    ];
+
+    @ViewChild('gridSearch', { read: IgxGridComponent })
+    public gridSearch: IgxGridComponent;
+
+    public highlightClass = 'igx-highlight';
+    public activeClass = 'igx-highlight__active';
+}
+
+@Component({
+    template: `
+    <igx-grid #gridSearch id="gridSearch" [data]="data" [autoGenerate]="false" height="600px"
+    width="1000px" columnWidth="300">
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'Avatar'" header="Photo" [searchable]="false">
+            <ng-template igxCell let-cell="cell">
+                <div class="cell__inner avatar-cell">
+                    <img [src]="cell.row.rowData.Avatar" width="30px" height="30px"/>
+                </div>
+            </ng-template>
+        </igx-column>
+    </igx-grid>
+    `
+})
+export class GridWithAvatarComponent {
+    public data = [
+        {
+            Name: 'Person 1',
+            Avatar: 'https://randomuser.me/api/portraits/men/43.jpg'
+        },
+        {
+            Name: 'Person 2',
+            Avatar: 'https://randomuser.me/api/portraits/women/66.jpg'
+        },
+        {
+            Name: 'Person 3',
+            Avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
+        }
     ];
 
     @ViewChild('gridSearch', { read: IgxGridComponent })
