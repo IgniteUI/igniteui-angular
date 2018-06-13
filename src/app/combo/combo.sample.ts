@@ -33,11 +33,12 @@ const complex = [{
 export class ComboSampleComponent implements OnInit {
     private width = '160px';
     @ViewChild(IgxComboComponent) public igxCombo: IgxComboComponent;
-    @ViewChild('comboTemplate', { read: IgxComboComponent}) public comboTemplate: IgxComboComponent;
+    @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
     public toggleItemState = false;
     private initData: any[] = [];
     public items: any[] = [];
-    private currentDataType = '';
+    public valueKeyVar = 'field';
+    public currentDataType = '';
 
     get valuesTemplate() {
         return this.comboTemplate.selectedItems();
@@ -92,7 +93,7 @@ export class ComboSampleComponent implements OnInit {
         this.reactiveForm = fb.group({
             'firstName': new FormControl('', Validators.required),
             'password': ['', Validators.required],
-            'townCombo': [{value: [this.items[0]], disabled: true}, Validators.required]
+            'townCombo': [{ value: [this.items[0]], disabled: true }, Validators.required]
         });
 
     }
@@ -100,18 +101,25 @@ export class ComboSampleComponent implements OnInit {
     changeData(type) {
         switch (type) {
             case 'complex':
-                this.items = complex;
+                this.igxCombo.deselectAllItems();
+                this.valueKeyVar = 'field';
                 this.currentDataType = 'complex';
+                this.items = complex;
                 console.log(this.items, complex);
                 break;
             case 'primitive':
-                this.items = primitive;
+                this.igxCombo.deselectAllItems();
                 this.currentDataType = 'primitive';
+                this.igxCombo.groupKey = '';
+                this.valueKeyVar = '';
+                this.items = primitive;
                 console.log(this.items);
                 break;
             default:
-                this.items = this.initData;
+                this.igxCombo.deselectAllItems();
+                this.valueKeyVar = 'field';
                 this.currentDataType = 'initial';
+                this.items = this.initData;
                 console.log(this.items);
         }
     }
