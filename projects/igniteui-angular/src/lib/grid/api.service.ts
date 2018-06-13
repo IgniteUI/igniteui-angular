@@ -131,6 +131,11 @@ export class IgxGridAPIService {
             grid.page = 0;
         }
 
+        const fieldFilterIndex = filteringTree.findIndex(fieldName);
+        if (fieldFilterIndex > -1) {
+            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
+        }
+
         this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase);
         grid.filteringExpressionsTree = filteringTree;
     }
