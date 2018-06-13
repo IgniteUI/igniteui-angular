@@ -592,7 +592,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector('igx-display-container');
 
         expect(grid.calcHeight).toEqual(243);
         expect(grid.columns[0].width).toEqual('100px');
