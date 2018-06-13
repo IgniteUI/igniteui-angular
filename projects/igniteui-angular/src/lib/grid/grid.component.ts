@@ -567,6 +567,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
         });
         this._derivePossibleWidth();
+        this.initPinning();
         this.calculateGridSizes();
 
     }
@@ -679,7 +680,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get totalWidth(): number {
-        const cols = this.visibleColumns;
+        // Take only top level columns
+        const cols = this.visibleColumns.filter(col => col.level === 0);
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
@@ -839,85 +841,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    // TODO: We have return values here. Move them to event args ??
+
     public pinColumn(columnName: string | IgxColumnComponent): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
-        const colWidth = parseInt(col.width, 10);
-
-        if (col.pinned) {
-            return false;
-        }
-        /**
-         * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
-         * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
-         */
-        if (this.getUnpinnedWidth(true) - colWidth < this.unpinnedAreaMinWidth) {
-            return false;
-        }
-        this._pinCol(col);
-        // if (col.isColumnGroup) {
-        //     col.children.forEach(child => this.pinColumn(child));
-        // }
-
-        // const oldIndex = col.visibleIndex;
-
-        // col.pinned = true;
-        // const index = this._pinnedColumns.length;
-
-        // const args = { column: col, insertAtIndex: index };
-        // this.onColumnPinning.emit(args);
-
-        // // update grid collections.
-        // if (this._pinnedColumns.indexOf(col) === -1) {
-        //     this._pinnedColumns.splice(args.insertAtIndex, 0, col);
-
-        //     if (this._unpinnedColumns.indexOf(col) !== -1) {
-        //         this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
-        //     }
-        // }
-        // this.markForCheck();
-
-        // const newIndex = col.visibleIndex;
-        // col.updateHighlights(oldIndex, newIndex);
+        col.pinned = true;
         return true;
-    }
-
-    protected _pinCol(column: IgxColumnComponent) {
-        column.pinned = true;
-        const oldIndex = column.visibleIndex;
-        const index = this._pinnedColumns.length;
-
-        if (this._pinnedColumns.indexOf(column) === -1) {
-            this._pinnedColumns.splice(index, 0, column);
-
-            if (this._unpinnedColumns.indexOf(column) !== -1) {
-                this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(column), 1);
-            }
-        }
-        if (column.columnGroup) {
-            column.children.forEach(c => this._pinCol(c));
-        }
-        this.markForCheck();
-        const newIndex = column.visibleIndex;
-
-        column.updateHighlights(oldIndex, newIndex);
     }
 
     public unpinColumn(columnName: string | IgxColumnComponent): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
-
-        if (!col.pinned) {
-            return false;
-        }
-        const oldIndex = col.visibleIndex;
         col.pinned = false;
-        this._unpinnedColumns.splice(col.index, 0, col);
-        if (this._pinnedColumns.indexOf(col) !== -1) {
-            this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
-        }
-        this.markForCheck();
-
-        const newIndex = col.visibleIndex;
-        col.updateHighlights(oldIndex, newIndex);
         return true;
     }
 
@@ -1031,8 +965,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const maxHeadersDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
 
+        // TODO: Calculate based on grid density
         if (maxHeadersDepth) {
-            this.theadRow.nativeElement.style.height = `${maxHeadersDepth * 50}px`;
+            this.theadRow.nativeElement.style.height = `${(maxHeadersDepth + 1) * 50}px`;
         }
 
         if (!this._height) {
@@ -1251,9 +1186,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._columns = this.columnList.toArray();
         this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
-
-        // this.columnList.filter(group => group.isColumnGroup)
-        //     .forEach(x => x.width = (x as any).childWidth);
     }
 
     protected setEventBusSubscription() {
@@ -1490,6 +1422,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         return data;
+    }
+
+    protected initPinning() {
+        this._pinnedColumns.forEach(col => {
+            if (col.parent) {
+                col.parent.pinned = true;
+            }
+            if (col.columnGroup) {
+                col.children.forEach(child => child.pinned = true);
+            }
+        });
+        this._pinnedColumns = this.columnList.filter(col => col.pinned);
     }
 
     private scrollTo(row: number, column: number, page: number): void {

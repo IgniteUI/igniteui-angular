@@ -116,7 +116,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         const col = grid.getColumnByName('ID');
 
-        col.pin();
+        col.pinned = true;
         fix.detectChanges();
 
         // verify column is pinned
@@ -130,7 +130,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.pinnedWidth).toEqual(600);
         expect(grid.unpinnedWidth).toEqual(200);
 
-        col.unpin();
+        col.pinned = false;
 
         // verify column is unpinned
         expect(col.pinned).toBe(false);
@@ -152,7 +152,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(col.index).toEqual(2);
 
         // unpin
-        col.unpin();
+        col.pinned = false;
         fix.detectChanges();
 
         // check props
@@ -174,13 +174,13 @@ describe('IgxGrid - Column Pinning ', () => {
         const grid = fix.componentInstance.instance;
 
         let col = grid.getColumnByName('ID');
-        col.pin();
+        col.pinned = true;
         fix.detectChanges();
 
         expect(col.visibleIndex).toEqual(0);
 
         col = grid.getColumnByName('City');
-        col.pin();
+        col.pinned = true;
 
         fix.detectChanges();
         expect(col.visibleIndex).toEqual(0);
@@ -353,8 +353,8 @@ describe('IgxGrid - Column Pinning ', () => {
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        grid.getColumnByName('CompanyName').pin();
-        grid.getColumnByName('ContactName').pin();
+        grid.getColumnByName('CompanyName').pinned = true;
+        grid.getColumnByName('ContactName').pinned = true;
 
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -440,8 +440,8 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         const mockEvent = { preventDefault: () => { } };
         const grid = fix.componentInstance.instance;
-        grid.getColumnByName('CompanyName').pin();
-        grid.getColumnByName('ContactName').pin();
+        grid.getColumnByName('CompanyName').pinned = true;
+        grid.getColumnByName('ContactName').pinned = true;
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
@@ -472,7 +472,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         const col = grid.getColumnByName('CompanyName');
-        col.pin();
+        col.pinned = true;
         fix.detectChanges();
         expect(grid.pinnedColumns.length).toEqual(1);
         expect(grid.unpinnedColumns.length).toEqual(9);
@@ -507,7 +507,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const col = grid.getColumnByName('CompanyName');
 
         col.hidden = true;
-        col.pin();
+        col.pinned = true;
         fix.detectChanges();
 
         expect(grid.pinnedColumns.length).toEqual(0);
@@ -527,7 +527,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const col1 = grid.getColumnByName('CompanyName');
         const col2 = grid.getColumnByName('ID');
 
-        col1.pin();
+        col1.pinned = true;
         fix.detectChanges();
         col2.hidden = true;
         fix.detectChanges();
@@ -570,7 +570,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         let col = grid.getColumnByName('CompanyName');
 
-        let result = col.pin();
+        let result = col.pinned = true;
         fix.detectChanges();
 
         expect(grid.pinnedColumns.length).toEqual(pinnedColumnsLength);
@@ -578,7 +578,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         col = grid.getColumnByName('City');
 
-        result = col.unpin();
+        result = col.pinned = false;
         fix.detectChanges();
 
         expect(grid.unpinnedColumns.length).toEqual(unpinnedColumnsLength);
@@ -592,7 +592,7 @@ describe('IgxGrid - Column Pinning ', () => {
         grid.columns.forEach((column) => {
             if (column.index === 0 || column.index === 1 || column.index === 4 ||
                     column.index === 6) {
-                column.pin();
+                column.pinned = true;
             }
         });
         fix.detectChanges();

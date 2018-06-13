@@ -484,7 +484,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
         const lastCol: IgxColumnComponent = columns.last;
-        lastCol.pin();
+        lastCol.pinned = true;
         fix.detectChanges();
         lastCol.cells.forEach((cell) => {
             expect(cell.width).toEqual('200px');

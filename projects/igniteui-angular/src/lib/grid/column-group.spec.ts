@@ -1,6 +1,11 @@
 import { async, TestBed } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
+import { IgxGridComponent } from './grid.component';
+import { Component, ViewChild } from '@angular/core';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+const expectedColumnGroups = 5;
+const expectedLevel = 2;
 
 describe('IgxGrid - multi-column headers', () => {
 
@@ -9,18 +14,55 @@ describe('IgxGrid - multi-column headers', () => {
             declarations: [
                 ColumnGroupTestComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [
+                NoopAnimationsModule,
+                IgxGridModule.forRoot()
+            ]
         })
         .compileComponents();
     }));
 
-    it();
+
+    it('should initialize a grid with column groups', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
+        expect(grid.getColumnByName('ContactName').level).toEqual(expectedLevel);
+    });
+
+    it('column hiding - parent level', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const addressGroup = grid.columnList.filter(c => c.header === 'Address Information')[0];
+
+        addressGroup.hidden = true;
+        fixture.detectChanges();
+
+        expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
+    });
+
+    it('column hiding - child level', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const addressGroup = grid.columnList.filter(c => c.header === 'Address Information')[0];
+
+        addressGroup.children.first.hidden = true;
+        fixture.detectChanges();
+
+        expect(document.querySelectorAll('igx-grid-header').length).toEqual(11);
+        expect(addressGroup.children.first.hidden).toBe(true);
+        expect(addressGroup.children.first.children.toArray().every(c => c.hidden === true)).toEqual(true);
+    });
 });
 
 
 @Component({
     template: `
-    <igx-grid [data]="data">
+    <igx-grid #grid [data]="data">
         <igx-column field="ID"></igx-column>
         <igx-column-group header="General Information">
             <igx-column filterable="true" sortable="true" resizable="true" field="CompanyName"></igx-column>
@@ -46,6 +88,9 @@ describe('IgxGrid - multi-column headers', () => {
     `
 })
 export class ColumnGroupTestComponent {
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
 
     data = [
         // tslint:disable:max-line-length

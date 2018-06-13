@@ -5,11 +5,10 @@ import {
     HostBinding,
     Input,
     NgModule,
-    OnInit,
     Output
 } from '@angular/core';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon';
+import { IgxIconModule } from '../icon/index';
 
 let NEXT_ID = 0;
 /**

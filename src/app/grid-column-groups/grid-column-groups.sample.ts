@@ -8,7 +8,7 @@ import { IgxGridComponent } from 'igniteui-angular';
 export class GridColumnGroupsSampleComponent {
 
     @ViewChild('grid', { read: IgxGridComponent })
-    grid;
+    grid: IgxGridComponent;
 
     data = [
         // tslint:disable:max-line-length
@@ -43,18 +43,14 @@ export class GridColumnGroupsSampleComponent {
     // tslint:enable:max-line-length
 
     pinGroup() {
-        this.grid.pinColumn(this.grid.columnList.filter(c => c.header === 'General Information')[0]);
-        this.grid.getColumnByName('Missing').pin();
-    }
-
-    log() {
-        console.log(this.grid);
+        const t = this.grid.columnList.filter(c => c.header === 'General Information')[0];
+        t.pinned = !t.pinned;
+        const missing = this.grid.getColumnByName('Missing');
+        missing.pinned = !missing.pinned;
     }
 
     hideGroup() {
-        // const col = this.grid.columnList.filter(c => c.header === 'General Information')[0];
         const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
-        // const col = this.grid.getColumnByName('ContactName');
         col.hidden = !col.hidden;
     }
 }

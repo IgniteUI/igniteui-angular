@@ -8,7 +8,8 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef
+    forwardRef,
+    AfterViewInit
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -139,7 +140,16 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     public set pinned(value: boolean) {
-        this._pinned = value;
+        if (this._pinned !== value) {
+            if (this.grid && this.width && !isNaN(parseInt(this.width, 10))) {
+                value ? this._pinColumn() : this._unpinColumn();
+                return;
+            }
+            /* No grid/width available at initialization. `initPinning` in the grid
+               will re-init the group (if present)
+            */
+            this._pinned = value;
+        }
     }
 
     public gridID: string;
@@ -240,7 +250,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return lvl;
     }
 
-    parent;
+    parent = null;
     children;
 
     protected _pinned = false;
@@ -315,18 +325,10 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    public pin(): boolean {
-        return this.grid.pinColumn(this.field);
-    }
-
-    public unpin(): boolean {
-        return this.grid.unpinColumn(this.field);
-    }
-
     public updateHighlights(oldIndex: number, newIndex: number) {
         const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
 
-        if (activeInfo.columnIndex === oldIndex) {
+        if (activeInfo && activeInfo.columnIndex === oldIndex) {
             IgxTextHighlightDirective.setActiveHighlight(this.grid.id,
                 newIndex,
                 activeInfo.rowIndex,
@@ -335,6 +337,77 @@ export class IgxColumnComponent implements AfterContentInit {
 
             this.grid.refreshSearch(true);
         }
+    }
+
+    protected _pinColumn() {
+        // TODO: Probably should the return type of the old functions
+        // should be moved as a event parameter.
+
+        if (this.parent && !this.parent.pinned) {
+            this.topLevelParent(this).pinned = true;
+            return;
+        }
+
+        const grid = (this.grid as any);
+        const width = parseInt(this.width, 10);
+
+        if (grid.getUnpinnedWidth(true) - width < grid.unpinnedAreaMinWidth) {
+            return false;
+        }
+
+        this._pinned = true;
+        const oldIndex = this.visibleIndex;
+        const index = grid._pinnedColumns.length;
+        const args = { column: this, insertAtIndex: index };
+        grid.onColumnPinning.emit(args);
+
+        if (grid._pinnedColumns.indexOf(this) === -1) {
+            grid._pinnedColumns.splice(index, 0, this);
+
+            if (grid._unpinnedColumns.indexOf(this) !== -1) {
+                grid._unpinnedColumns.splice(grid._unpinnedColumns.indexOf(this), 1);
+            }
+        }
+
+        if (this.columnGroup) {
+            this.children.forEach(child => child.pinned = true);
+        }
+
+        grid.markForCheck();
+        const newIndex = this.visibleIndex;
+        this.updateHighlights(oldIndex, newIndex);
+    }
+
+    protected _unpinColumn() {
+        if (this.parent && this.parent.pinned) {
+            this.topLevelParent(this).pinned = false;
+            return;
+        }
+
+        const grid = (this.grid as any);
+        const oldIndex = this.visibleIndex;
+        this._pinned = false;
+
+        grid._unpinnedColumns.splice(this.index, 0, this);
+        if (grid._pinnedColumns.indexOf(this) !== -1) {
+            grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
+        }
+
+        if (this.columnGroup) {
+            this.children.forEach(child => child.pinned = false);
+        }
+
+        grid.markForCheck();
+        const newIndex = this.visibleIndex;
+        this.updateHighlights(oldIndex, newIndex);
+    }
+
+    public topLevelParent(column: IgxColumnComponent) {
+        let parent = column.parent;
+        while (parent && parent.parent) {
+            parent = parent.parent;
+        }
+        return parent;
     }
 
     protected check() {
@@ -355,7 +428,7 @@ export class IgxColumnComponent implements AfterContentInit {
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
-    children: QueryList<IgxColumnComponent>;
+    children = new QueryList<IgxColumnComponent>();
 
 
     @Input()
@@ -365,7 +438,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     set hidden(value: boolean) {
         this._hidden = value;
-        this.children.map(child => child.hidden = value);
+        this.children.forEach(child => child.hidden = value);
     }
 
     ngAfterContentInit() {
@@ -388,12 +461,4 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
 
     set width(val) {}
-
-    public pin(): boolean {
-        return this.grid.pinColumn(this);
-    }
-
-    public unpin(): boolean {
-        return this.grid.unpinColumn(this);
-    }
 }
