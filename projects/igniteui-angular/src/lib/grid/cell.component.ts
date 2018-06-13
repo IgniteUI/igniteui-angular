@@ -327,6 +327,13 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    private performVerticalScroll(amout: number, rowIndex: number) {
+        const scrolled = this.grid.verticalScrollContainer.addScrollTop(amout);
+        if (scrolled) {
+            this._focusNextCell(rowIndex, this.visibleColumnIndex);
+        }
+    }
+
     @HostListener('dblclick', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {
@@ -581,16 +588,14 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && target.row.element.nativeElement.offsetTop < this.grid.rowHeight) { // the target is in the first row
 
-                this.grid.verticalScrollContainer.addScrollTop(-this.grid.rowHeight);
-                this._focusNextCell(rowIndex, this.visibleColumnIndex);
+                this.performVerticalScroll(-this.grid.rowHeight, rowIndex);
             }
             target.nativeElement.focus();
         } else {
             const scrollOffset =
                 -parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scrollAmount = this.grid.rowHeight + scrollOffset;
-            this.grid.verticalScrollContainer.addScrollTop(-scrollAmount);
-            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
+            this.performVerticalScroll(-scrollAmount, this.rowIndex);
         }
     }
 
@@ -618,20 +623,17 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 const scrollAmount = targetEndTopOffset - containerHeight;
-                this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
-
-                this._focusNextCell(rowIndex, this.visibleColumnIndex);
+                this.performVerticalScroll(scrollAmount, rowIndex);
             } else {
                 target.nativeElement.focus();
             }
         } else {
-            const containerHeight = this.grid.calcHeight;
             const contentHeight = this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
             const scrollOffset = parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const lastRowOffset = contentHeight + scrollOffset - this.grid.calcHeight;
             const scrollAmount = this.grid.rowHeight + lastRowOffset;
-            this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
-            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
+
+            this.performVerticalScroll(scrollAmount, this.rowIndex);
         }
     }
 
