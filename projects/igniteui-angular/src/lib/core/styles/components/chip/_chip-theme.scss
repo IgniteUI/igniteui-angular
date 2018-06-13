@@ -150,6 +150,12 @@
 
     $transition: all 120ms $ease-in-out-cubic;
 
+    $chip-height: (
+        comfortable: rem(40px),
+        cosy: rem(32px),
+        compact: rem(32px)
+    );
+
     %igx-chips-area {
         display: flex;
         align-items: center;
@@ -168,9 +174,9 @@
     %igx-chip__item {
         user-select: none;
         cursor: pointer;
-        border-radius: rem(17px);
+        border-radius: map-get($chip-height, 'comfortable') / 2;
         padding: rem(4) rem(16);
-        height: rem(34px);
+        height: map-get($chip-height, 'comfortable');
         transition: $transition;
         background: --var($theme, 'chip-background');
 
@@ -195,6 +201,20 @@
             width: rem(16px);
             height: rem(16px);
             font-size: rem(16px);
+        }
+    }
+
+    .igx-grid--cosy {
+        %igx-chip__item {
+            border-radius: map-get($chip-height, 'cosy') / 2;
+            height: map-get($chip-height, 'cosy');
+        }
+    }
+
+    .igx-grid--compact {
+        %igx-chip__item {
+            border-radius: map-get($chip-height, 'compact') / 2;
+            height: map-get($chip-height, 'compact');
         }
     }
 

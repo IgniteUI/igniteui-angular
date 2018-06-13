@@ -544,7 +544,6 @@
         }
     }
 
-
     %grid-summaries {
         display: flex;
         background: inherit;
@@ -556,7 +555,15 @@
         background-color: --var($theme, 'group-row-background');
         display: flex;
         outline-style: none;
-        height: 50px;
+        min-height: map-get($grid-header-height, 'comfortable');
+    }
+
+    %igx-grid__group-row--cosy {
+        min-height: map-get($grid-header-height, 'cosy');
+    }
+
+    %igx-grid__group-row--compact {
+        min-height: map-get($grid-header-height, 'compact');
     }
 
     %igx-group-label {
@@ -605,7 +612,15 @@
 
     [dir='rtl'] {
         %igx-grid__group-content {
-            padding-right: rem(34px);
+            padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
+        }
+
+        %igx-grid__group-content--cosy {
+            padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+        }
+
+        %igx-grid__group-content--compact{
+            padding-left: map-get($grid-grouping-indicator-padding, 'compact');
         }
 
         %igx-group-label {
@@ -632,6 +647,14 @@
         }
     }
 
+    %igx-grid__group-content--cosy {
+        padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+    }
+
+    %igx-grid__group-content--compact{
+        padding-left: map-get($grid-grouping-indicator-padding, 'compact');
+    }
+
     %igx-grid__row-indentation {
         background: --var($theme, 'header-background');
         z-index: 9999;
@@ -641,7 +664,6 @@
         position: relative;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: 12px;
-        min-width: rem(60px);
 
         &::after {
             content: '';
@@ -667,11 +689,19 @@
         }
     }
 
+    %igx-grid__row-indentation--cosy {
+        padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+    }
+
+    %igx-grid__row-indentation--compact {
+        padding-left: map-get($grid-grouping-indicator-padding, 'compact');
+    }
+
     %igx-grid__grouparea {
         grid-row: 1;
         border-bottom: 1px solid --var($theme, 'row-border-color');
         z-index: 2;
-        height: 70px;
+        height: calc(#{map-get($grid-header-height, 'comfortable')} + #{rem(16px)});
         background: --var($theme, 'grouparea-background');
         display: flex;
         align-items: center;
@@ -682,6 +712,16 @@
         &:focus {
             outline: transparent;
         }
+    }
+
+    %igx-grid__grouparea--cosy {
+        padding: map-get($grid-cell-padding, 'cosy');
+        height: calc(#{map-get($grid-header-height, 'cosy')} + #{rem(16px)});
+    }
+
+    %igx-grid__grouparea--compact {
+        padding: map-get($grid-cell-padding, 'compact');
+        height: calc(#{map-get($grid-header-height, 'compact')} + #{rem(16px)});
     }
 
     %igx-grid__grouparea-placeholder {
@@ -697,8 +737,6 @@
         cursor: pointer;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: rem(12px);
-        min-width: rem(60px);
-        flex-basis: rem(60px);
         position: relative;
 
         %igx-icon-display {
@@ -707,13 +745,21 @@
         }
 
         &:hover,
-        &:focus{
+        &:focus {
             outline: transparent;
 
             %igx-icon-display {
                 color: --var($theme, 'expand-icon-hover-color');
             }
         }
+    }
+
+    %igx-grid__grouping-indicator--cosy {
+        padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+    }
+
+    %igx-grid__grouping-indicator--compact {
+        padding-left: map-get($grid-grouping-indicator-padding, 'compact');
     }
 
     %igx-grid__header-indentation {
@@ -731,7 +777,16 @@
         left: calc(#{map-get($grid-grouping-indicator-padding, 'comfortable')} - 6px);
     }
 
+    %igx-grid__group-expand-btn--cosy {
+        left: calc(#{map-get($grid-grouping-indicator-padding, 'cosy')} - 6px);
+    }
+
+    %igx-grid__group-expand-btn--compact {
+        left: calc(#{map-get($grid-grouping-indicator-padding, 'compact')} - 6px);
+    }
+
     @for $i from 1 through 10 {
+        // COMFORTABLE
         %igx-grid__row-indentation--level-#{$i} {
             padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
         }
@@ -739,6 +794,23 @@
         %igx-grid__group-row--padding-level-#{$i} {
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
         }
+
+        // COSY
+        %igx-grid__row-indentation-cosy--level-#{$i} {
+            padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
+        }
+
+        %igx-grid__group-row-cosy--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
+        }
+
+        // COMPACT
+        %igx-grid__row-indentation-compact--level-#{$i} {
+            padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
+        }
+
+        %igx-grid__group-row-compact--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
+        }
     }
 }
-
