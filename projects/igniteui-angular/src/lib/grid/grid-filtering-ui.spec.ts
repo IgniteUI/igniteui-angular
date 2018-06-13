@@ -1147,10 +1147,9 @@ describe('IgxGrid - Filtering actions', () => {
         reset.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
 
-        const column = grid.getColumnByName(columnName);
-
-        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(column.filteringExpressionsTree);
-});
+        const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(columnName);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(columnFilteringExpressionsTree);
+    });
 
     it("Clicking And/Or button shows second select and input for adding second condition", async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
@@ -1223,9 +1222,8 @@ describe('IgxGrid - Filtering actions', () => {
         clearSuffix.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
 
-        const column = grid.getColumnByName(columnName);
-
-        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(column.filteringExpressionsTree);
+        const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(columnName);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(columnFilteringExpressionsTree);
     });
 });
 
