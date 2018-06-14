@@ -217,6 +217,11 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
                 return;
             }
         }
+        // If it is the very last item in the collection, when moving down
+        if (newScrollStartIndex + state.chunkSize === data.length + 1) {
+            vContainer.scrollTo(newScrollStartIndex);
+            return;
+        }
         vContainer.scrollTo(newScrollStartIndex);
         this.subscribeNext(vContainer, () => {
             state = vContainer.state;
