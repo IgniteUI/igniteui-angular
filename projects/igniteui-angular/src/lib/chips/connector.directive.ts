@@ -1,9 +1,9 @@
 import { Directive, HostBinding } from '@angular/core';
 
 @Directive({
-    selector: 'igx-suffix-connector,[igxSuffixConnector]'
+    selector: 'igx-connector,[igxConnector]'
 })
-export class IgxSuffixConnectorDirective {
+export class IgxConnectorDirective {
     @HostBinding('class.igx-input-group__bundle-suffix')
     public defaultClass = true;
 }

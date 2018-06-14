@@ -47,6 +47,10 @@
     @include e(connector) {
         @extend %igx-chip__connector  !optional;
     }
+
+    @include e(ghost) {
+        @extend %igx-chip__ghost  !optional;
+    }
 }
 
 
