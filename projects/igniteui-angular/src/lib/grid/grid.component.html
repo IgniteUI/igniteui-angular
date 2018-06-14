@@ -20,10 +20,6 @@
 </ng-template>
 
 <div [style.width.px]='calcWidth' class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
-    <div igxGroupAreaDrop *ngIf="groupingExpressions.length === 0" class="igx-grid__grouparea-placeholder">
-        <igx-icon fontSet="material" name="group_work" class="igx-grid__grouparea-placeholder-icon"></igx-icon>
-        <span class="igx-grid__grouparea-placeholder-text">Drag a column header and drop it here to group by that column</span>
-    </div>
     <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsMoveEnd)="chipsMovingEnded()">
         <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [removable]="getColumnByName(expr.fieldName).groupable"
                 (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [class.igx-chip--disabled]='!getColumnByName(expr.fieldName).groupable'>
@@ -40,6 +36,10 @@
             <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
     </igx-chips-area>
+    <div igxGroupAreaDrop class="igx-grid__grouparea-placeholder">
+        <igx-icon fontSet="material" name="group_work" class="igx-grid__grouparea-placeholder-icon"></igx-icon>
+        <span class="igx-grid__grouparea-placeholder-text">Drag a column header and drop it here to group by that column</span>
+    </div>
 </div>
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
