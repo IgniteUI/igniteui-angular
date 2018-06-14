@@ -8,6 +8,8 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxFilteringOperand, IgxStringFilteringOperand } from '../../public_api';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
@@ -1151,28 +1153,23 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(columnFilteringExpressionsTree);
     });
 
-    it('Clicking And/Or button shows second select and input for adding second condition', async(() => {
+    it('Clicking And/Or button shows second select and input for adding second condition', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
+        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[2];
 
-    }));
-
-    it('Adding two conditions to a single column trough API correctly updates the filter dialog', async(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        filterIcon.nativeElement.click();
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
 
-    }));
+        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
+        andButton.nativeElement.click();
+        fix.detectChanges();
+
+        const secondExpr = fix.debugElement.queryAll(By.css('igx-grid-filter-expression'))[1];
+        expect(secondExpr.attributes["name"]).toEqual('secondExpr');
+    });
 
     it('After filling the first condition the grid is filtered, then after adding the second condition the grid is updated', async(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
-
-    }));
-
-    it('Clicking Reset button clears all conditions', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
