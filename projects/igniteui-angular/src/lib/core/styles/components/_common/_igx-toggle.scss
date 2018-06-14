@@ -16,6 +16,7 @@
         bottom: 0;
         display: flex;
         position: fixed;
+        background-color: rgba(50,50,50,0.3);
     }
 
     @include e(wrapper, $m: no-modal) {

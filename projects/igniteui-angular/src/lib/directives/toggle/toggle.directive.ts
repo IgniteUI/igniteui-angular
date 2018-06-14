@@ -69,7 +69,9 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
         private builder: AnimationBuilder,
         private cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private overlayService: IgxOverlayService,
-        @Optional() private navigationService: IgxNavigationService) { }
+        @Optional() private navigationService: IgxNavigationService) {
+        this.overlayService.onClosed.subscribe(this.overlayClosed);
+    }
 
     public open(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
         if (!this.collapsed) { return; }
@@ -167,6 +169,10 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
             style({ transform: 'translateY(0)', opacity: 1 }),
             animate('120ms ease-in', style({ transform: 'translateY(-12px)', opacity: 0 }))
         ]);
+    }
+
+    private overlayClosed = () => {
+        this.collapsed = true;
     }
 }
 
