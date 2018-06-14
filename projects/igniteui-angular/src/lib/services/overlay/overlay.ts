@@ -58,7 +58,7 @@ export class IgxOverlayService {
     // TODO: pass component, id? and OverlaySettings?
     show(component, id?: string, overlaySettings?: OverlaySettings): string {
         id = this.getId(id);
-
+        overlaySettings = overlaySettings ? overlaySettings : new OverlaySettings();
         // get the element for both static and dynamic components
         const element = this.getElement(component, id);
 
@@ -139,8 +139,9 @@ export class IgxOverlayService {
         return positionStrategy;
     }
 
-    private getWrapperElement(overlaySettings: OverlaySettings): HTMLElement {
+    private getWrapperElement(overlaySettings?: OverlaySettings): HTMLElement {
         const wrapper = this._document.createElement('div');
+
         if (overlaySettings.modal) {
             wrapper.classList.add('igx-overlay__wrapper');
         } else {

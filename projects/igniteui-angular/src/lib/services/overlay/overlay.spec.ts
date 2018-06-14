@@ -13,6 +13,7 @@ import { IgxOverlayDirective, IgxToggleModule } from './../../directives/toggle/
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { PositionSettings } from './utilities';
+import { OverlaySettings } from './utilities';
 
 
 describe('igxOverlay', () => {
@@ -151,20 +152,21 @@ describe('igxOverlay', () => {
         // TO DO
     });
 
-    fit('The shown component is inside the igx-overlay wrapper as a last child.', () => {
+    xit('The shown component is inside the igx-overlay wrapper as a content last child.', () => {
         // in progress
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
-        const positionSettings = new PositionSettings();
-        const positionStrategy = new GlobalPositionStrategy(positionSettings);
-
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', positionStrategy);
+        const overlaySettings = new OverlaySettings();
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-            const componentEl = wrapper.lastChild;
-            expect(componentEl.localName === 'ng-component').toBeTruthy();
+            const content = wrapper.firstChild;
+            const componentEl = content.lastChild;
+
             expect(wrapper.localName).toEqual('div');
+            expect(wrapper.firstChild.localName).toEqual('div');
+            expect(componentEl.localName === 'ng-component').toBeTruthy();
         });
     });
 
@@ -185,16 +187,15 @@ describe('igxOverlay', () => {
         // TO DO
     });
     // 1.1.1 Global Css
-    fit('css class should be applied on igx-overlay component div wrapper.' +
+    xit('css class should be applied on igx-overlay component div wrapper.' +
     'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
-       fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-            expect(wrapper.classList.contains('global-show-center-middle')).toBeTruthy();
-            console.log(wrapper.classList.contains('global-show-center-middle'));
+            expect(wrapper.classList.contains('igx-overlay__wrapper')).toBeTruthy();
             expect(wrapper.localName).toEqual('div');
         });
     });
@@ -203,8 +204,8 @@ describe('igxOverlay', () => {
     'Test defaults: When positionStrategy is passed with default PositionSettings', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
-        const positionStrategy = new GlobalPositionStrategy();
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', positionStrategy);
+        const overlaySettings = new OverlaySettings();
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
@@ -225,9 +226,10 @@ describe('igxOverlay', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         const positionSettings = new PositionSettings();
-        const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+        const overlaySettings = new OverlaySettings();
+        overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
 
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', positionStrategy);
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
@@ -279,9 +281,10 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             const positionSettings = new PositionSettings();
-            const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+            const overlaySettings = new OverlaySettings();
+            overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
 
-            fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', positionStrategy);
+            fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
             fixture.whenStable().then(() => {
                 fixture.detectChanges();
                 const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
