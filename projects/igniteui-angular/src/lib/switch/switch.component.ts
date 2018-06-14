@@ -88,7 +88,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     @Input() public id = `igx-switch-${nextId++}`;
     /**
      * Sets/gets the id of the `label` element in the switch component.
-     * If not set, the label of the first switch component will have an id=`"igx-switch-0-label"`;
+     * If not set, the label of the first switch component will have value `"igx-switch-0-label"`.
      * ```html
      * <igx-switch labelId="Label1"></igx-switch>
      * ```
@@ -112,7 +112,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     /**
      * Sets/gets the `name` attribute of the switch component.
      * ```html
-     * <igx-switch name = "switch1"></igx-switch>
+     * <igx-switch name = "Switch1"></igx-switch>
      * ```
      * ```typescript
      * let name =  this.switch.name;
@@ -171,7 +171,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
      * Sets/gets the `aria-labelledBy` attribute.
      * If not set, the  value of `aria-labelledBy` will be equal to the value of `labelId` attribute.
      * ```html
-     * <igx-switch aria-labelledby = "Switch1"></igx-switch>
+     * <igx-switch aria-labelledby = "Label1"></igx-switch>
      * ```
      * ```typescript
      * let ariaLabelledBy = this.switch.ariaLabelledBy;
@@ -183,7 +183,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     /**
      * Sets/gets the value of the `aria-label` attribute.
      * ```html
-     * <igx-switch aria-label="Switch1"></igx-switch>
+     * <igx-switch aria-label="Label1"></igx-switch>
      * ```
      * ```typescript
      * let ariaLabel =  this.switch.ariaLabel;
@@ -354,7 +354,7 @@ export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
 })
 export class IgxSwitchRequiredDirective extends CheckboxRequiredValidator { }
 /**
- * The IgxSwitchModule proved the {@link IgxSwitchComponent} inside your application.
+ * The IgxSwitchModule provides the {@link IgxSwitchComponent} inside your application.
  */
 @NgModule({
     declarations: [IgxSwitchComponent, IgxSwitchRequiredDirective],
