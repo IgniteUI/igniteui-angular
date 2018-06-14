@@ -95,7 +95,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _children: QueryList<IgxDropDownItemBase>;
     private _dropdownContainer: ElementRef = null;
     private _searchInput: ElementRef<HTMLInputElement> = null;
-    private _comboInput: ElementRef = null;
+    private _comboInput: ElementRef<HTMLInputElement> = null;
     private _onChangeCallback: (_: any) => void = noop;
 
     private _value = '';
@@ -144,7 +144,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     @ViewChild('comboInput')
-    set comboInput(content: ElementRef) {
+    set comboInput(content: ElementRef<HTMLInputElement>) {
         this._comboInput = content;
     }
 
@@ -362,7 +362,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public dropDownHeight = 320;
 
     /**
-     * Configures the drop down list item height
+     * Configures the drop down list width
      *
      * ```typescript
      * // get
@@ -378,7 +378,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public dropDownWidth = this.width;
 
     /**
-     * Gets/sets a property by which the items from the collection should be grouped
+     * Configures the drop down list item height
      *
      * ```typescript
      * // get
@@ -436,6 +436,22 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public placeholder = '';
 
     /**
+     * Defines the placeholder value for the combo dropdown search field
+     *
+     * ```typescript
+     * // get
+     * let myComboSearchPlaceholder = this.combo.searchPlaceholder;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [searchPlaceholder]='newPlaceHolder'></igx-combo>
+     * ```
+     */
+    @Input()
+    public searchPlaceholder = 'Enter a Search Term';
+
+    /**
      * @hidden
      */
     @Input()
@@ -475,7 +491,21 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public filteringLogic = FilteringLogic.Or;
 
     /**
-     * @hidden
+     * Combo text data source propery.
+     *
+     * ```typescript
+     * // get
+     * let myComboTextKey = this.combo.textKey;
+     *
+     * // set
+     * this.combo.textKey = 'val';
+     *
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [textKey]='myTextKey'></igx-combo>
+     * ```
      */
     @Input()
     set textKey(val: string | number) {

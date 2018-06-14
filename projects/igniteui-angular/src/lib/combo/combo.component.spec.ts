@@ -275,6 +275,7 @@ describe('Combo', () => {
         const combo = fixture.componentInstance.combo;
         expect(combo.width).toEqual('400px');
         expect(combo.placeholder).toEqual('Location');
+        expect(combo.searchPlaceholder).toEqual('Enter a Search Term'); // Default;
         expect(combo.filterable).toEqual(true);
         expect(combo.height).toEqual('400px');
         expect(combo.dropDownHeight).toEqual(400);
@@ -286,6 +287,8 @@ describe('Combo', () => {
         expect(combo.width).toEqual('500px');
         combo.placeholder = 'Destination';
         expect(combo.placeholder).toEqual('Destination');
+        combo.searchPlaceholder = 'Filter';
+        expect(combo.searchPlaceholder).toEqual('Filter');
         combo.filterable = false;
         expect(combo.filterable).toEqual(false);
         combo.height = '500px';
@@ -316,6 +319,40 @@ describe('Combo', () => {
         expect(combo.data.length).toEqual(0);
     });
 
+    it('Should properly render placeholder values for inputs', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        combo.toggle();
+        tick();
+        fix.detectChanges();
+        fix.whenStable().then(() => {
+            expect(combo.collapsed).toBeFalsy();
+            expect(combo.placeholder).toEqual('Location');
+            expect(combo.comboInput.nativeElement.placeholder).toEqual('Location');
+
+            expect(combo.searchPlaceholder).toEqual('Enter a Search Term');
+            expect(combo.searchInput.nativeElement.placeholder).toEqual('Enter a Search Term');
+
+            combo.searchPlaceholder = 'Filter';
+            fix.detectChanges();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(combo.searchPlaceholder).toEqual('Filter');
+            expect(combo.searchInput.nativeElement.placeholder).toEqual('Filter');
+
+            combo.placeholder = 'States';
+            fix.detectChanges();
+            tick();
+            return fix.whenStable();
+        }).then(() => {
+            expect(combo.placeholder).toEqual('States');
+            expect(combo.comboInput.nativeElement.placeholder).toEqual('States');
+        });
+    }));
+
     it('Should properly render dropdown list and item height', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
@@ -325,6 +362,7 @@ describe('Combo', () => {
         fix.detectChanges();
         fix.whenStable().then(() => {
             expect(combo.collapsed).toBeFalsy();
+            // NOTE: Minimum dropDownItemHeight is 2 rem, per Material Design Guidelines
             expect(combo.dropDownItemHeight).toEqual(32); // Default value for dropdownItemHeight
             expect(combo.dropDownHeight).toEqual(320); // Default value for dropdownHeight
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
@@ -332,18 +370,18 @@ describe('Combo', () => {
             expect(dropdownList.nativeElement.clientHeight).toEqual(320);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(32);
 
-            combo.dropDownItemHeight = 23;
+            combo.dropDownItemHeight = 47;
             tick();
             fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(combo.dropDownItemHeight).toEqual(23);
+            expect(combo.dropDownItemHeight).toEqual(47);
             expect(combo.dropDownHeight).toEqual(320);
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
             expect(dropdownList.nativeElement.clientHeight).toEqual(320);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(23);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
 
             combo.dropDownHeight = 438;
             tick();
@@ -351,27 +389,14 @@ describe('Combo', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(combo.dropDownItemHeight).toEqual(23);
+            expect(combo.dropDownItemHeight).toEqual(47);
             expect(combo.dropDownHeight).toEqual(438);
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
             expect(dropdownList.nativeElement.clientHeight).toEqual(438);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(23);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
 
             combo.dropDownHeight = 1171;
-            tick();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(combo.dropDownItemHeight).toEqual(23);
-            expect(combo.dropDownHeight).toEqual(1171);
-            const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
-            const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
-            expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(23);
-
-            combo.dropDownItemHeight = 47;
             tick();
             fix.detectChanges();
             return fix.whenStable();
@@ -383,6 +408,19 @@ describe('Combo', () => {
             const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
             expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+
+            combo.dropDownItemHeight = 83;
+            tick();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(combo.dropDownItemHeight).toEqual(83);
+            expect(combo.dropDownHeight).toEqual(1171);
+            const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
+            const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
+            expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(83);
         });
     }));
 
@@ -2342,7 +2380,7 @@ describe('Combo', () => {
         spyOn(combo, 'onInputClick');
         spyOn(combo, 'setDisabledState').and.callThrough();
         const mockClick = jasmine.createSpyObj('event', ['stopPropagation', 'preventDefault']);
-        combo.comboInput.nativeElement.click(mockClick);
+        combo.comboInput.nativeElement.click();
         fix.detectChanges();
         expect(combo.onInputClick).toHaveBeenCalledTimes(1);
 
@@ -2355,7 +2393,7 @@ describe('Combo', () => {
         expect(combo.setDisabledState).toHaveBeenCalledTimes(1);
 
         // Disabled form controls don't handle click events
-        combo.comboInput.nativeElement.click(mockClick);
+        combo.comboInput.nativeElement.click();
         fix.detectChanges();
         expect(combo.onInputClick).toHaveBeenCalledTimes(1);
 

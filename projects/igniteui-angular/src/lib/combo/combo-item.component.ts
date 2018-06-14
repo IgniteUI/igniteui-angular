@@ -3,6 +3,7 @@ import {
     ElementRef,
     forwardRef,
     HostListener,
+    HostBinding,
     Inject,
     Input
 } from '@angular/core';
@@ -18,6 +19,11 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
     /**
      * Gets if the item is the currently selected one in the dropdown
      */
+
+    @HostBinding('style.height.px')
+    get itemHeight() {
+        return this.parentElement.parentElement.dropDownItemHeight;
+    }
 
     @Input()
     public itemData;
