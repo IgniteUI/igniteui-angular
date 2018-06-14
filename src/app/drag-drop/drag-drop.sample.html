@@ -1,0 +1,16 @@
+<div class="sample-wrapper">
+    <app-page-header title="Drag and Drop directives" description="description for drag and drop directives"></app-page-header>
+    <section class="sample-content">
+        <div [style.width]="'70%'">
+            <h4>Drag a suspect inside or outside the cage:</h4>
+            <div igxDrop class="initialArea">
+                <div igxDrag [hideBaseOnDrag]="true" [animateOnRelease]="true" *ngFor="let elem of draggableElems" class="draggableElem" (dragStart)="onDragStart()" (dragEnd)="onDragEnd()">
+                    <span [style.margin]="'auto'">{{elem}}</span>
+                </div>
+            </div>
+
+            <div class="cageArea" igxDrop (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
+            </div>
+        </div>
+    </section>
+</div>
