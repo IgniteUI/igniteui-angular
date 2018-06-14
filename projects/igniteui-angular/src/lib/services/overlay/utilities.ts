@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject } from '@angular/core';
+import { GlobalPositionStrategy, IPositionStrategy } from './position';
+import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -29,6 +29,14 @@ export class PositionSettings {
         public element?: HTMLElement,
         public horizontalStartPoint: HorizontalAlignment = HorizontalAlignment.Center,
         public verticalStartPoint: VerticalAlignment = VerticalAlignment.Middle) { }
+}
+
+export class OverlaySettings {
+    constructor(
+        public positionStrategy: IPositionStrategy = new GlobalPositionStrategy(),
+        public scrollStrategy: IScrollStrategy = new NoOpScrollStrategy(),
+        public modal: boolean = true
+    ) { }
 }
 
 // TODO

@@ -1,29 +1,28 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { DOCUMENT } from '@angular/common';
 import { PositionSettings } from './../utilities';
-export class GlobalPositionStrategy implements IPositionStrategy {
-    public _settings: PositionSettings;
-    public wrapperClass: string;
 
-    constructor(
-        settings?: PositionSettings
-   ) {
+export class GlobalPositionStrategy implements IPositionStrategy {
+    public _wrapperClass: string;
+    public _settings: PositionSettings;
+
+    constructor(settings?: PositionSettings) {
         this._settings = settings ? settings : new PositionSettings();
-        this.wrapperClass = 'global-show';
+        this._wrapperClass = 'global';
     }
 
-    position (element: HTMLElement, wrapper: HTMLElement, size: {}): void {
-        const componentWrapper = wrapper;
-
+    position(element: HTMLElement, wrapper: HTMLElement, size: {}): void {
         switch (this._settings.horizontalDirection) {
             case -1:
-                this.wrapperClass += '-left';
+            wrapper.parentElement.style.justifyContent = 'flex-start';
+                this._wrapperClass += '-left';
                 break;
             case -0.5:
-                this.wrapperClass += '-center';
+            wrapper.parentElement.style.justifyContent = 'center';
+            this._wrapperClass += '-center';
                 break;
             case 0:
-                this.wrapperClass += '-right';
+            wrapper.parentElement.style.justifyContent = 'flex-end';
+            this._wrapperClass += '-right';
                 break;
             default:
                 break;
@@ -31,29 +30,20 @@ export class GlobalPositionStrategy implements IPositionStrategy {
 
         switch (this._settings.verticalDirection) {
             case -1:
-                this.wrapperClass += '-top';
+            wrapper.parentElement.style.alignItems = 'flex-start';
+            this._wrapperClass += '-top';
                 break;
             case -0.5:
-                this.wrapperClass += '-middle';
+            wrapper.parentElement.style.alignItems = 'center';
+                this._wrapperClass += '-middle';
                 break;
             case 0:
-                this.wrapperClass += '-bottom';
+            wrapper.parentElement.style.alignItems = 'flex-end';
+            this._wrapperClass += '-bottom';
                 break;
             default:
                 break;
         }
-
-        element.parentElement.classList.add(this.wrapperClass);
-
-        // For test only - Remove the hard coded css
-        element.parentElement.style.display = 'flex';
-        element.parentElement.style.position = 'fixed';
-        element.parentElement.style.alignItems = 'center';
-        element.parentElement.style.justifyContent = 'center';
-        element.parentElement.style.top = '0';
-        element.parentElement.style.right = '0';
-        element.parentElement.style.left = '0';
-        element.parentElement.style.bottom = '0';
     }
 }
 

@@ -4,7 +4,8 @@ import {
     ConnectedPositioningStrategy,
     PositionSettings,
     HorizontalAlignment,
-    VerticalAlignment
+    VerticalAlignment,
+    OverlaySettings
 } from 'igniteui-angular';
 
 @Component({
@@ -115,14 +116,17 @@ export class DropDownSampleComponent implements OnInit {
     }
 
     public toggleDropDown() {
-        const positionSettings = new PositionSettings();
-        positionSettings.element = this.button.nativeElement;
-        positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
-        positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
-        positionSettings.horizontalDirection = HorizontalAlignment.Right;
-        positionSettings.verticalDirection = VerticalAlignment.Bottom;
-        const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-        this.igxDropDown.toggle(positionStrategy);
+        const overlaySettings = new OverlaySettings();
+        // overlaySettings.modal = false;
+        // const positionSettings = new PositionSettings();
+        // positionSettings.element = this.button.nativeElement;
+        // positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
+        // positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
+        // positionSettings.horizontalDirection = HorizontalAlignment.Right;
+        // positionSettings.verticalDirection = VerticalAlignment.Bottom;
+        // const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+        // overlaySettings.positionStrategy = positionStrategy;
+        this.igxDropDown.toggle(overlaySettings);
     }
 
     onSelection(ev) {
