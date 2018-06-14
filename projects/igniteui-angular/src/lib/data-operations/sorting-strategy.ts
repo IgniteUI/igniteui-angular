@@ -1,6 +1,4 @@
-import { expand } from 'rxjs/operators';
 import { cloneArray } from '../core/utils';
-import { IGroupByExpandState } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 
@@ -117,7 +115,7 @@ export class SortingStrategy implements ISortingStrategy {
                 level,
                 records: cloneArray(group),
                 value: group[0][expressions[level].fieldName],
-                __groupParent: parent
+                groupParent: parent
             };
             if (level < expressions.length - 1) {
                 result = result.concat(this.groupDataRecursive(group, expressions, level + 1, groupRow));
