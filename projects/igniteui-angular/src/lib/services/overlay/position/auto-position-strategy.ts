@@ -9,11 +9,11 @@ enum Axis {
     Y = 0
 }
 export class AutoPositionStrategy implements IPositionStrategy {
-    public _wrapperClass: string;
+    // public _wrapperClass: string;
     public _settings: PositionSettings;
     public wrapperClass: string;
     private _wrapper: HTMLElement;
-    private _offsetPadding = 15;
+    private _offsetPadding = 16;
     constructor(
         private options?: any,
         // @Inject(forwardRef(() => DOCUMENT)) private document?: Document

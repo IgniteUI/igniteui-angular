@@ -7,7 +7,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
 
     constructor(settings?: PositionSettings) {
         this._settings = settings ? settings : new PositionSettings();
-        //this._wrapperClass = 'global';
+        // this._wrapperClass = 'global';
     }
 
     position(element: HTMLElement, wrapper: HTMLElement, size: {}): void {
