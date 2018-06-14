@@ -16,13 +16,14 @@ export class GridGroupBySampleComponent implements OnInit {
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 100, hidden: true },
-            { field: 'CompanyName', width: 300, groupable: true },
-            { field: 'ContactName', width: 200, pinned: true, groupable: true },
-            { field: 'ContactTitle', width: 200, pinned: true, groupable: false},
+            { field: 'CompanyName', width: 300 },
+            { field: 'ContactName', width: 200, pinned: true },
+            { field: 'ContactTitle', width: 200, pinned: true, groupable: true },
             { field: 'Address', width: 300 },
+            { field: 'Country', width: 150, groupable: true },
             { field: 'City', width: 150, groupable: true },
             { field: 'Region', width: 150 },
-            { field: 'PostalCode', width: 150, groupable: true },
+            { field: 'PostalCode', width: 150 },
             { field: 'Phone', width: 150 },
             { field: 'Fax', width: 150 }
         ];
@@ -57,8 +58,6 @@ export class GridGroupBySampleComponent implements OnInit {
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
     }
-    /* tslint:enable */
-
     groupBy(name: string) {
         const expressions = this.grid1.groupingExpressions;
         for (let i = 0; i < expressions.length; i++) {

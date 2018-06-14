@@ -28,6 +28,7 @@ import {
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective,
     IgxColumnMovingService,
     IgxGroupByRowTemplateDirective
 } from './grid.common';
@@ -62,6 +63,7 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective,
     IgxGridFilterComponent,
     IgxGridPreGroupingPipe,
     IgxGridPostGroupingPipe,
@@ -89,7 +91,8 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
-    IgxColumnMovingDropDirective
+    IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective
   ],
   imports: [
     CommonModule,

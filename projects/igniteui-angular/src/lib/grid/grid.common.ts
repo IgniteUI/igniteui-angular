@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    HostListener,
     Inject,
     Injectable,
     Input,
@@ -20,6 +19,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 @Directive({
     selector: '[igxResizer]'
@@ -244,6 +244,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     get draggable(): boolean {
         return this.column && (this.column.movable || this.column.groupable);
+    }
+
+    public get icon(): HTMLElement {
+        return this.cms.icon;
     }
 
     private _column: IgxColumnComponent;
@@ -480,6 +484,36 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.isColumnMoving = false;
             this.column.grid.cdr.detectChanges();
+        }
+    }
+}
+
+@Directive({
+    selector: '[igxGroupAreaDrop]'
+})
+export class IgxGroupAreaDropDirective extends IgxDropDirective {
+
+    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
+        super(elementRef, renderer);
+    }
+
+    public onDragEnter(event) {
+        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+        const column: IgxColumnComponent = drag.column;
+        if (column.groupable) {
+            drag.icon.innerText = "group_work";
+        } else {
+            drag.icon.innerText = "block";
+        }
+    }
+
+    public onDragDrop(event) {
+        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+        if (drag instanceof IgxColumnMovingDragDirective) {
+            const column: IgxColumnComponent = drag.column;
+            if (column.groupable) {
+                column.grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
+            }
         }
     }
 }

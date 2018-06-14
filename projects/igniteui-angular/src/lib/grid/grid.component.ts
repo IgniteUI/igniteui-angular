@@ -1867,14 +1867,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public onGroupAreaDrop(event) {
-        if (event.drag instanceof IgxColumnMovingDragDirective) {
-            const column: IgxColumnComponent = event.drag.column;
-            this.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
-        }
-        event.cancel = true;
-    }
-
     public onChipRemoved(event) {
         this.clearGrouping(event.owner.id);
     }
