@@ -21,7 +21,8 @@
 
 <div igxGroupAreaDrop [style.width.px]='calcWidth' class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <div *ngIf="groupingExpressions.length === 0" class="igx-grid__grouparea-placeholder">
-        Drag a column header and drop it here to group by that column
+        <igx-icon fontSet="material" name="group_work" class="igx-grid__grouparea-placeholder-icon"></igx-icon>
+        <span class="igx-grid__grouparea-placeholder-text">Drag a column header and drop it here to group by that column</span>
     </div>
     <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsMoveEnd)="chipsMovingEnded()">
         <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [removable]="getColumnByName(expr.fieldName).groupable"
