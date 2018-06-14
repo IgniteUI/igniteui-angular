@@ -133,7 +133,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
                 this.expressionsList.toArray()[0].expression.condition = undefined;
                 if (this.expressionsList.toArray()[1]) {
                     this.expressionsList.toArray()[1].value = null;
-                this.expressionsList.toArray()[1].expression.condition = undefined;
+                    this.expressionsList.toArray()[1].expression.condition = undefined;
                 }
             }
         }
@@ -193,10 +193,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     public get disabled() {
-        const grid = this.gridAPI.get(this.gridID);
-
-        return !(grid.filteringExpressionsTree && grid.filteringExpressionsTree.filteringOperands &&
-                grid.filteringExpressionsTree.filteringOperands.length > 0);
+        return !this.isFilteringApplied();
     }
 
     public onMouseDown() {

@@ -230,4 +230,9 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     onDatePickerClick() {
         this.zone.run(() => {});
     }
+
+    public onDatePickerValueChanged(): void {
+        this.expression.condition = this.getCondition(this.select.nativeElement.value);
+        this.onExpressionChanged.emit(this.expression);
+    }
 }
