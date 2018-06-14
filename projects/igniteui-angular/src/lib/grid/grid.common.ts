@@ -501,9 +501,9 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         const column: IgxColumnComponent = drag.column;
         if (column.groupable) {
-            drag.icon.innerText = "group_work";
+            drag.icon.innerText = 'group_work';
         } else {
-            drag.icon.innerText = "block";
+            drag.icon.innerText = 'block';
         }
     }
 
