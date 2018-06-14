@@ -142,7 +142,7 @@ export class IgxListComponent {
 @Output()
     public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
 /**
- * Returns the role attribute.
+ * Gets the `role` attribute.
  * ```typescript
  * let listRole =  this.list.role;
  * ```
