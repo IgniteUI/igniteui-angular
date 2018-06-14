@@ -31,11 +31,11 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 })
 export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
 
+    @Input()
     get column() {
         return this._column;
     }
 
-    @Input()
     set column(val) {
         this._column = val;
         if (this.expression) {
@@ -43,6 +43,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         }
     }
 
+    @Input()
     get value() {
         return this._value;
     }
@@ -132,14 +133,14 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     }
 
     @autoWire()
-    public conditionChangedCallback() {
+    public conditionChangedCallback(): void {
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
             this.onExpressionChanged.emit(this.expression);
         }
     }
 
     @autoWire()
-    public unaryConditionChangedCallback() {
+    public unaryConditionChangedCallback(): void {
         this.onExpressionChanged.emit(this.expression);
     }
 

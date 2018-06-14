@@ -3,13 +3,11 @@ import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar, ICalendarDate } from '../calendar/calendar';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxFilteringOperand, IgxStringFilteringOperand } from '../../public_api';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
@@ -1165,30 +1163,49 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const secondExpr = fix.debugElement.queryAll(By.css('igx-grid-filter-expression'))[1];
-        expect(secondExpr.attributes["name"]).toEqual('secondExpr');
+        expect(secondExpr.attributes['name']).toEqual('secondExpr');
     });
-
-    it('After filling the first condition the grid is filtered, then after adding the second condition the grid is updated', async(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
-
-    }));
-
-    it('After edit/remove first or second condition the grid is updated', async(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
-
-    }));
 
     it('Unselecting And/Or hides second condition UI and removes the second filter expression', async(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[3];
 
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
+        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
+
+        expect(grid.rowList.length).toEqual(8);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            sendInput(input, 'I', fix);
+            return fix.whenStable();
+        }).then(() => {
+            andButton.nativeElement.click();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            const input1 = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
+            sendInput(input1, 'g', fix);
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            verifyFilterUIPosition(filterUIContainer, grid);
+
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(2);
+            andButton.nativeElement.click();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(3);
+        });
     }));
-
 
     it('Should emit onFilteringDone when clear the input of filteringUI', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
