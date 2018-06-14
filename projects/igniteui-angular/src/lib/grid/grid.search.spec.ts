@@ -738,7 +738,7 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         const component: UnsearchableColumnsGridComponent = fix.componentInstance;
-        let count = component.gridSearch.findNext('Software');
+        const count = component.gridSearch.findNext('Software');
         fix.detectChanges();
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(5);
