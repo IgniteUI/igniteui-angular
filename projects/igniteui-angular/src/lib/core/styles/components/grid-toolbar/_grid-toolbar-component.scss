@@ -1,0 +1,37 @@
+////
+/// @group components
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-grid-toolbar) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-grid-toolbar !optional;
+
+    @include e(title){
+        @extend %igx-grid-toolbar__title !optional;
+    }
+
+    @include e(actions){
+        @extend %igx-grid-toolbar__actions !optional;
+    }
+
+    @include e(dropdown){
+        @extend %igx-grid-toolbar__dropdown !optional;
+    }
+
+    @include e(dd-list-items){
+        @extend %igx-grid-toolbar__dd-list-items !optional;
+    }
+
+    @include e(button-space){
+        @extend %igx-grid-toolbar__button-space !optional;
+    }
+
+    @include e(dd-list){
+        @extend %igx-grid-toolbar__dd-list !optional;
+    }
+}
