@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
 import {
     IgxDropDownComponent,
     ConnectedPositioningStrategy,
@@ -7,7 +7,8 @@ import {
     PositionSettings,
     HorizontalAlignment,
     VerticalAlignment,
-    OverlaySettings
+    OverlaySettings,
+    ScrollStrategyFactory
 } from 'igniteui-angular';
 
 @Component({
@@ -114,7 +115,9 @@ export class DropDownSampleComponent implements OnInit {
         }
     }
 
-    constructor(private elementRef: ElementRef) {
+    constructor(
+        private elementRef: ElementRef,
+        @Inject(ScrollStrategyFactory) private ssf: ScrollStrategyFactory) {
     }
 
     public toggleDropDown() {
@@ -126,9 +129,14 @@ export class DropDownSampleComponent implements OnInit {
         positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
         positionSettings.horizontalDirection = HorizontalAlignment.Right;
         positionSettings.verticalDirection = VerticalAlignment.Bottom;
-        // const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-        // overlaySettings.positionStrategy = positionStrategy;
+        // const positionStrategy
         overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+        // tslint:disable-next-line:no-debugger
+        // const close = this.ssf.close(this.igxDropDown.id);
+        // overlaySettings.scrollStrategy = close;
+        const block = this.ssf.block();
+        overlaySettings.scrollStrategy = block;
+        overlaySettings.closeOnOutsideClick = false;
         this.igxDropDown.toggle(overlaySettings);
     }
 

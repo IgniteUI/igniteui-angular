@@ -35,7 +35,8 @@ export class OverlaySettings {
     constructor(
         public positionStrategy: IPositionStrategy = new GlobalPositionStrategy(),
         public scrollStrategy: IScrollStrategy = new NoOpScrollStrategy(),
-        public modal: boolean = true
+        public modal: boolean = true,
+        public closeOnOutsideClick: boolean = true
     ) { }
 }
 
