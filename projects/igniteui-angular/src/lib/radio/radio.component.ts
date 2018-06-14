@@ -83,7 +83,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
     @Input() public id = `igx-radio-${nextId++}`;
     /**
      * Sets/gets the id of the `label` element in the radio component.
-     * If not set, the id of the `label` in the first radio component will be `"igx-radio-0-label"`
+     * If not set, the id of the `label` in the first radio component will be `"igx-radio-0-label"`.
      * ```html
      * <igx-radio labelId = "Label1"></igx-radio>
      * ```
@@ -95,7 +95,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
     @Input() public labelId = `${this.id}-label`;
     /**
      * Sets/gets the position of the `label` in the radio component.
-     * If not set, `labelPosition` will have value `"after"`;
+     * If not set, `labelPosition` will have value `"after"`.
      * ```html
      * <igx-radio labelPosition = "before"></igx-radio>
      * ```
@@ -106,7 +106,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
      */
     @Input() public labelPosition: RadioLabelPosition | string = 'after';
     /**
-     * Sets/gets the `value`attribute.
+     * Sets/gets the `value` attribute.
      * ```html
      * <igx-radio [value] = "'radioButtonValue'"></igx-radio>
      * ```
@@ -188,7 +188,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
 @Input('aria-label')
     public ariaLabel: string | null = null;
 /**
- * An event that is emitted after the radio value is changed.
+ * An event that is emitted after the radio `value` is changed.
  * Provides references to the `IgxRadioComponent` and the `value` property as event arguments.
  * @memberof IgxRadioComponent
  */
@@ -235,7 +235,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
  * ```typescript
  * this.radio.focus = true;
  * ```
- * ```typescipt
+ * ```typescript
  * let isFocused =  this.radio.focused;
  * ```
  * @memberof IgxRadioComponent
@@ -342,7 +342,7 @@ public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
 public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
 /**
- *The IgxRadioModule proved the {@link IgxRadioComponent} inside your application.
+ *The IgxRadioModule provides the {@link IgxRadioComponent} inside your application.
  */
 @NgModule({
     declarations: [IgxRadioComponent],
