@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
+    HostBinding,
     Inject,
     Injectable,
     Input,
@@ -497,14 +498,24 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         super(elementRef, renderer);
     }
 
+    @HostBinding('class.igx-group-area--hover')
+    public hovered = false;
+
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         const column: IgxColumnComponent = drag.column;
         if (column.groupable) {
             drag.icon.innerText = 'group_work';
+            this.hovered = true;
         } else {
             drag.icon.innerText = 'block';
+            this.hovered = false;
         }
+    }
+
+    public onDragLeave(event) {
+        event.detail.owner.icon.innerText = "block";
+        this.hovered = false;
     }
 
     public onDragDrop(event) {
