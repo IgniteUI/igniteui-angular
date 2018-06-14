@@ -12,6 +12,16 @@ function dispatchEv(element: HTMLElement, eventType: string) {
 }
 
 describe("Carousel", () => {
+    const navigate = (carousel: IgxCarouselComponent, dir) => {
+        const keyboardEvent = new KeyboardEvent("keydown", {
+            code: dir,
+            key: dir
+        });
+        if (!carousel.nativeElement.focused) {
+            carousel.nativeElement.focus();
+        }
+        carousel.nativeElement.dispatchEvent(keyboardEvent);
+    };
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [CarouselTestComponent],
@@ -36,7 +46,7 @@ describe("Carousel", () => {
         expect(carousel.id).toBe("cusrtomCarousel");
         expect(domCarousel.id).toBe("cusrtomCarousel");
     });
-    it("should initialize a carousel with two slides and then destroy it", () => {
+    it("should initialize a carousel with four slides and then destroy it", () => {
         const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
@@ -53,7 +63,7 @@ describe("Carousel", () => {
         expect(instance.carousel.slides instanceof Array).toBe(true);
         expect(instance.carousel.loop).toBe(true);
         expect(instance.carousel.pause).toBe(true);
-        expect(instance.carousel.slides.length).toEqual(2);
+        expect(instance.carousel.slides.length).toEqual(4);
         expect(instance.carousel.interval).toEqual(2500);
 
         instance.carousel.ngOnDestroy();
@@ -70,16 +80,18 @@ describe("Carousel", () => {
 
         fixture.detectChanges();
 
-        const lastSlide = instance.carousel.get(1);
+        const lastSlide = instance.carousel.get(3);
         const firstSlide = instance.carousel.get(0);
 
         instance.carousel.loop = false;
         fixture.detectChanges();
         instance.carousel.next();
         instance.carousel.next();
+        instance.carousel.next();
         fixture.detectChanges();
         expect(instance.carousel.current).toBe(lastSlide.index);
 
+        instance.carousel.prev();
         instance.carousel.prev();
         instance.carousel.prev();
         fixture.detectChanges();
@@ -120,19 +132,19 @@ describe("Carousel", () => {
         instance.carousel.remove(currentSlide);
 
         fixture.detectChanges();
-        expect(instance.carousel.slides.length).toEqual(1);
+        expect(instance.carousel.slides.length).toEqual(3);
 
         currentSlide = instance.carousel.get(instance.carousel.current);
         instance.carousel.remove(currentSlide);
 
         fixture.detectChanges();
-        expect(instance.carousel.slides.length).toEqual(0);
+        expect(instance.carousel.slides.length).toEqual(2);
 
         instance.carousel.add(currentSlide);
         instance.carousel.add(currentSlide);
 
         fixture.detectChanges();
-        expect(instance.carousel.slides.length).toEqual(2);
+        expect(instance.carousel.slides.length).toEqual(4);
     });
 
     it("Carousel public methods", () => {
@@ -231,7 +243,7 @@ describe("Carousel", () => {
         expect(carousel.next).toHaveBeenCalled();
     });
 
-    it("Carousel keyboard handlers", () => {
+    it("Carousel UI navigation test", () => {
         const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
 
@@ -241,18 +253,31 @@ describe("Carousel", () => {
         carouselNative = fixture.debugElement.query(By.css(".igx-carousel"));
         carousel = fixture.componentInstance.carousel;
 
+        expect(carousel.current).toEqual(0);
         carousel.pause = true;
+        navigate(carousel, "ArrowRight");
         fixture.detectChanges();
+        expect(carousel.current).toEqual(1);
 
-        spyOn(carousel, "prev");
-        carouselNative.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowLeft"}));
+        navigate(carousel, "ArrowRight");
         fixture.detectChanges();
-        expect(carousel.prev).toHaveBeenCalled();
+        expect(carousel.current).toEqual(2);
 
-        spyOn(carousel, "next");
-        carouselNative.nativeElement.dispatchEvent(new KeyboardEvent("keydown", {key: "ArrowRight"}));
+        navigate(carousel, "ArrowRight");
         fixture.detectChanges();
-        expect(carousel.next).toHaveBeenCalled();
+        expect(carousel.current).toEqual(3);
+
+        navigate(carousel, "ArrowRight");
+        fixture.detectChanges();
+        expect(carousel.current).toEqual(0);
+
+        navigate(carousel, "ArrowLeft");
+        fixture.detectChanges();
+        expect(carousel.current).toEqual(3);
+
+        navigate(carousel, "ArrowLeft");
+        fixture.detectChanges();
+        expect(carousel.current).toEqual(2);
     });
 
     it("Carousel navigation changes visibility of arrows", () => {
@@ -285,6 +310,8 @@ describe("Carousel", () => {
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [pause]="pause" [interval]="interval">
+            <igx-slide></igx-slide>
+            <igx-slide></igx-slide>
             <igx-slide></igx-slide>
             <igx-slide></igx-slide>
         </igx-carousel>
