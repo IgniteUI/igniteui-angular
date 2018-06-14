@@ -1258,7 +1258,6 @@ export class LocalService {
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
                 [igxForItemSize]='"50px"'
-                [igxForRemote]='true'
                 (onChunkPreload)="dataLoading($event)">
                 <div [style.display]="'flex'" [style.height]="'50px'">
                     {{rowData}}

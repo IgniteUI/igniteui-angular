@@ -48,9 +48,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     };
     public totalItemCount: number = null;
 
-    @DeprecateProperty(`igxForRemote is deprecated, setting this property is no longer needed for remote virtualization`)
-    @Input() public igxForRemote = false;
-
     @Output()
     public onChunkLoad = new EventEmitter<IForOfState>();
 
