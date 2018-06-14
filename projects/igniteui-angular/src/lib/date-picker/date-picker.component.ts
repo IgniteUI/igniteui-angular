@@ -51,19 +51,24 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Input()
     public id = `igx-datePicker-${NEXT_ID++}`;
     // Custom formatter function
-    @Input() public formatter: (val: Date) => string;
+    @Input()
+    public formatter: (val: Date) => string;
 
-    @Input() public disabled: boolean;
+    @Input()
+    public disabled: boolean;
 
-    @Input() public value: Date;
+    @Input()
+    public value: Date;
 
+    @Input()
+    public label = 'Date';
+
+    @Input()
+    public labelVisibility = true;
 
     /**
      * Propagate calendar properties.
      */
-    @Input() public label = 'Date';
-    @Input() public isLabelVisible = true;
-
     @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
 
     @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
@@ -90,17 +95,22 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * Propagate dialog properties.
      */
-    @Input() public todayButtonLabel: string;
+    @Input()
+    public todayButtonLabel: string;
 
-    @Input() public cancelButtonLabel: string;
+    @Input()
+    public cancelButtonLabel: string;
 
-    @Output() public onOpen = new EventEmitter<IgxDatePickerComponent>();
+    @Output()
+    public onOpen = new EventEmitter<IgxDatePickerComponent>();
 
-    @Output() public onClose = new EventEmitter<IgxDatePickerComponent>();
+    @Output()
+    public onClose = new EventEmitter<IgxDatePickerComponent>();
     /**
      * Propagate clanedar events.
      */
-    @Output() public onSelection = new EventEmitter<Date>();
+    @Output()
+    public onSelection = new EventEmitter<Date>();
 
     public get displayData() {
         if (this.value) {
