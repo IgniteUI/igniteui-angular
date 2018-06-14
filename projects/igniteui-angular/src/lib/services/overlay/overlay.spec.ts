@@ -10,6 +10,10 @@ import { AnimationBuilder } from '@angular/animations';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { IgxOverlayService } from './overlay';
 import { IgxOverlayDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
+import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
+import { GlobalPositionStrategy } from './position/global-position-strategy';
+import { PositionSettings } from './utilities';
+
 
 describe('igxOverlay', () => {
     beforeEach(async () => {
@@ -20,7 +24,7 @@ describe('igxOverlay', () => {
         }).compileComponents();
     });
 
-    it('Unit - OverlayElement should return a div attached to Document\'s body', () => {
+    xit('Unit - OverlayElement should return a div attached to Document\'s body', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -34,7 +38,7 @@ describe('igxOverlay', () => {
         });
     });
 
-    it('Unit - Should show component passed to overlay', () => {
+    xit('Unit - Should show component passed to overlay', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -50,7 +54,7 @@ describe('igxOverlay', () => {
         });
     });
 
-    it('Unit - Hide() should hide component and overlay', () => {
+    xit('Unit - Hide() should hide component and overlay', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -87,7 +91,7 @@ describe('igxOverlay', () => {
 
     });
 
-    it('Unit - HideAll() should hide all components and overlay', () => {
+    xit('Unit - HideAll() should hide all components and overlay', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
@@ -138,7 +142,7 @@ describe('igxOverlay', () => {
     });
 
     // 1. Positioning Strategies
-    // 1.1 Center (show components in the window center).
+    // 1.1 Global (show components in the window center - default).
     xit('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
         // TO DO
     });
@@ -147,11 +151,24 @@ describe('igxOverlay', () => {
         // TO DO
     });
 
-    xit('The shown component is inside the igx-overlay as a last child.', () => {
-        // TO DO
+    fit('The shown component is inside the igx-overlay wrapper as a last child.', () => {
+        // in progress
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        const positionSettings = new PositionSettings();
+        const positionStrategy = new GlobalPositionStrategy(positionSettings);
+
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', positionStrategy);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+            const componentEl = wrapper.lastChild;
+            expect(componentEl.localName === 'ng-component').toBeTruthy();
+            expect(wrapper.localName).toEqual('div');
+        });
     });
 
-    xit('The shown component is in the center of igx-overlay (visible window).', () => {
+    xit('The shown component is in the center of igx-overlay (visible window) - default.', () => {
         // TO DO
     });
 
@@ -159,14 +176,42 @@ describe('igxOverlay', () => {
         // TO DO
     });
     // adding more than one component to show in igx-overlay:
-    xit('When adding a component near the window borders(left,right,up,down), it should be rendered in the igx-overlay center', () => {
+    xit('When adding a component near the window borders(left,right,up,down), it should be rendered in the igx-overlay center ' +
+    '- default', () => {
         // TO DO
     });
 
     xit('If the shown component is bigger than the visible window, than it should be centered and scrollbars should appear.', () => {
         // TO DO
     });
+    // 1.1.1 Global Css
+    fit('css class should be applied on igx-overlay component div wrapper.' +
+    'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+       fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+            expect(wrapper.classList.contains('global-show-center-middle')).toBeTruthy();
+            console.log(wrapper.classList.contains('global-show-center-middle'));
+            expect(wrapper.localName).toEqual('div');
+        });
+    });
 
+    it('css class should be applied on igx-overlay component div wrapper' +
+    'Test defaults: When positionStrategy is passed with default PositionSettings', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        const positionStrategy = new GlobalPositionStrategy();
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', positionStrategy);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+            expect(wrapper.classList.contains('global-show-center-middle')).toBeTruthy();
+            expect(wrapper.localName).toEqual('div');
+        });
+    });
     // 1.2 ConnectedPositioningStrategy(show components based on a specified position base point, horizontal and vertical alignment)
     xit('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
         // TO DO
@@ -176,8 +221,20 @@ describe('igxOverlay', () => {
         // TO DO
     });
 
-    xit('The shown component is inside the igx-overlay as a last child.', () => {
-        // TO DO
+    it('The shown component is inside the igx-overlay wrapper as a last child.', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        const positionSettings = new PositionSettings();
+        const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', positionStrategy);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+            const componentEl = wrapper.lastChild;
+            expect(componentEl.localName === 'ng-component').toBeTruthy();
+            expect(wrapper.localName).toEqual('div');
+        });
     });
 
     xit('The shown component is positioned according to the options passed (base point/Left, Center, Right/Top, Middle, Bottom).', () => {
@@ -217,7 +274,21 @@ describe('igxOverlay', () => {
         '(example: expanded DropDown remains expanded)', () => {
             // TO DO
         });
+    // 1.2.1 Connected Css
+        it('css class should be applied on igx-overlay component div wrapper', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+            const positionSettings = new PositionSettings();
+            const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
 
+            fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', positionStrategy);
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+                expect(wrapper.classList.contains('connected-show')).toBeTruthy();
+                expect(wrapper.localName).toEqual('div');
+            });
+        });
     // 1.3 AutoPosition (fit the shown component into the visible window.)
     xit('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
         // TO DO
@@ -365,6 +436,7 @@ describe('igxOverlay', () => {
     xit('Css should not leak: From shown components to igx-overlay.', () => {
         // TO DO
     });
+
 });
 
 @Component({
