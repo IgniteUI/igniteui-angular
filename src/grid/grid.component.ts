@@ -1,4 +1,4 @@
-import { DOCUMENT } from "@angular/common";
+﻿import { DOCUMENT } from "@angular/common";
 import {
     AfterContentInit,
     AfterViewInit,
@@ -386,6 +386,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcRowCheckboxWidth: number;
     public calcHeight: number;
     public tfootHeight: number;
+    public hScrollbarSize: number;
 
     public cellInEditMode: IgxGridCellComponent;
 
@@ -437,6 +438,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcWidth = this._width && this._width.indexOf("%") === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
+        this.hScrollbarSize = 18;
     }
 
     public ngAfterContentInit() {
@@ -841,6 +843,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridWidth();
     }
 
+    /**
+     * Calculate and update scrollbar size based on the browser how big would render the scrollbar
+     * This is needed in Chrome/Firefox because when zoomed their scrollbar remain the same visible size.
+     * Should be called after calculateGridWidth() and before calculateGridHeight() if needed.
+     */
+    protected calculateHScrollbarSize() {
+        if (this.calcWidth - this.totalWidth >= 0) {
+            this.hScrollbarSize = 0;
+            return;
+        }
+
+        // We get the how much height the browser autumatically assigned the horziontal scrollbar.
+        // Using 1px as buffer so when zooming it doesn't move out of view and get clipped.
+        this.hScrollbarSize = this.parentVirtDir.getHorizontalScroll().offsetHeight + 1;
+    }
+
     protected calculateGridHeight() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
 
@@ -867,7 +885,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.calcHeight = parseInt(computed.getPropertyValue("height"), 10) -
                 this.theadRow.nativeElement.clientHeight -
                 this.tfootHeight - pagingHeight -
-                this.scr.nativeElement.clientHeight;
+                this.hScrollbarSize;
         } else {
             let pagingHeight = 0;
             if (this.paging) {
@@ -881,7 +899,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
                 this.tfootHeight - pagingHeight -
-                this.scr.nativeElement.clientHeight;
+                this.hScrollbarSize;
         }
     }
 
@@ -934,6 +952,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected calculateGridSizes() {
         this.calculateGridWidth();
         this.cdr.detectChanges();
+        this.calculateHScrollbarSize();
         this.calculateGridHeight();
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;

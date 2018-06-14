@@ -1,4 +1,4 @@
-import { Component, DebugElement, OnInit, ViewChild } from "@angular/core";
+﻿import { Component, DebugElement, OnInit, ViewChild } from "@angular/core";
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
@@ -590,6 +590,7 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
 
+        const platform = window.navigator.platform;
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector("igx-display-container");
@@ -624,9 +625,17 @@ describe("IgxGrid - Deferred Column Resizing", () => {
         const hScroll = fixture.componentInstance.grid.parentVirtDir.getHorizontalScroll();
         const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
 
-        // Should 243 - 18, because the horizontal scrollbar has 18px height
-        expect(grid.calcHeight).toEqual(243 - 18);
-        expect(hScrollVisible).toBe(true);
+        if (/Linux/.test(platform)) {
+            expect(grid.hScrollbarSize).toEqual(17);
+            // Should be 243px - scrollbar area size
+            expect(grid.calcHeight).toEqual(243 - grid.hScrollbarSize);
+            expect(hScrollVisible).toBe(true);
+        } else {
+            expect(grid.hScrollbarSize).toEqual(19);
+            // Should be 243px - scrollbar area size
+            expect(grid.calcHeight).toEqual(243 - grid.hScrollbarSize);
+            expect(hScrollVisible).toBe(true);
+        }
 
         discardPeriodicTasks();
     }));
