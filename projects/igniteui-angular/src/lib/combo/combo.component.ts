@@ -163,8 +163,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    @ViewChild('empty', { read: TemplateRef })
-    protected emptyTemplate: TemplateRef<any>;
+    @ContentChild('emptyTemplate', { read: TemplateRef })
+    public emptyTemplate: TemplateRef<any>;
 
     /**
      * @hidden

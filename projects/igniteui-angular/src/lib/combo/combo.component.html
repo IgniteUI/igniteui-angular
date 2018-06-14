@@ -7,21 +7,21 @@
 <ng-template #empty>
     <span>The list is empty</span>
 </ng-template>
-<ng-template #addItem>
+<ng-template #addItemDefault let-control>
 
-    There are no items to be displayed.
-    <div (click)="addItemToCollection()">Add Item</div>
+    Add item to collection
+    <igx-icon fontSet="material" name="add_box" (click)="control.addItemToCollection()"></igx-icon>
 
 </ng-template>
 <ng-template #headerItemBase let-item let-key="valueKey" let-groupKey="groupKey">
     {{ item[key] }}
 </ng-template>
 
-<div class="igx-combo" [style.width]="width" role="combobox" [attr.aria-expanded]="!dropdown.collapsed" aria-haspopup="listbox" [attr.aria-owns]="dropdown.id">
+<div class="igx-combo" [style.width]="width" role="combobox" [attr.aria-expanded]="!dropdown.collapsed" aria-haspopup="listbox"
+    [attr.aria-owns]="dropdown.id">
     <igx-input-group type="box">
         <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%" readonly [placeholder]="placeholder"
-        [disabled]="disabled" (click)="onInputClick($event)"
-        />
+            [disabled]="disabled" (click)="onInputClick($event)" />
         <igx-suffix igxButton="icon" class="clearButton" igxRipple (click)="deselectAllItems(true)">
             <igx-icon *ngIf="value.length" fontSet="material" name="clear"></igx-icon>
         </igx-suffix>
@@ -35,15 +35,16 @@
     <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="width">
         <igx-input-group class="igx-combo__search">
             <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)"
-                (keyup)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy"/>
+                (keyup)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
+                [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
         </igx-input-group>
         <ng-container *ngTemplateOutlet="dropdownHeader; context: {$impicit: this}">
         </ng-container>
-        <div #dropdownItemContainer class="igx-combo__content" [style.height.px]="dropDownHeight" [style.width.px]="dropDownWidth" [igxDropDownItemNavigation]="dropdown"
-            [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
+        <div #dropdownItemContainer class="igx-combo__content" [style.height.px]="dropDownHeight" [style.width.px]="dropDownWidth"
+            [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
             <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
-                [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="dropDownHeight" [igxForItemSize]="dropDownItemHeight"
-                #virtualScrollContainer>
+                [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="dropDownHeight"
+                [igxForItemSize]="dropDownItemHeight" #virtualScrollContainer>
                 <igx-combo-item [itemData]="item" isHeader={{item.isHeader}} role="option">
                     <ng-container *ngIf="!item.isHeader">
                         <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true"></igx-checkbox>
@@ -57,13 +58,14 @@
                 </igx-combo-item>
             </ng-template>
         </div>
-        <igx-combo-item *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
-                        class="igx-combo__add" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false" [itemData]="'ADD ITEM'" role="button" aria-label="Add Item">
-            Add item to collection
-            <igx-icon fontSet="material" name="add_box" (click)="addItemToCollection()"></igx-icon>
-        </igx-combo-item>
-        <igx-combo-item *ngIf="filteredData.length === 0 && !customValueFlag">
-            <ng-container *ngTemplateOutlet="empty; context: {$impicit: this}">
+        <div *ngIf="filteredData.length === 0">
+            <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty; context: {$impicit: this}">
+            </ng-container>
+        </div>
+        <igx-combo-item *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add"
+            igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false" [itemData]="'ADD ITEM'" role="button"
+            aria-label="Add Item">
+            <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$impicit: this}">
             </ng-container>
         </igx-combo-item>
         <ng-container *ngTemplateOutlet="dropdownFooter; context: {$impicit: this}">
