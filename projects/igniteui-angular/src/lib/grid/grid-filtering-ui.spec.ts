@@ -1149,8 +1149,7 @@ describe('IgxGrid - Filtering actions', () => {
         reset.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
 
-        const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(columnName);
-        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(columnFilteringExpressionsTree);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
     });
 
     it('Clicking And/Or button shows second select and input for adding second condition', () => {
