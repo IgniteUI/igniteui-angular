@@ -210,10 +210,13 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     @HostBinding('class.igx-checkbox')
     public cssClass = 'igx-checkbox';
     /**
-     * Sets whether the checkbox component is on focus.
+     * Sets/gets whether the checkbox component is on focus.
      * Default value is `false`.
      * ```typescript
      * this.checkbox.focused =  true;
+     * ```
+     * ```typescript
+     * let isFocused =  this.checkbox.focused;
      * ```
      * @memberof IgxCheckboxComponent
      */
