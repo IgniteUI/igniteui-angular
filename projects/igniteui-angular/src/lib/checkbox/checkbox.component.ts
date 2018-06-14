@@ -102,7 +102,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
     /**
      * Sets/gets the `value` attribute.
      * ```html
-     * <igx-checkbox [value] = "1"></igx-checkbox>
+     * <igx-checkbox [value] = "'CheckboxValue'"></igx-checkbox>
      * ```
      * ```typescript
      * let value =  this.checkbox.value;
@@ -319,7 +319,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         this.toggle();
     }
     /**
-     *hidden
+     *@hidden
      */
     public onFocus(event) {
         this.focused = true;
@@ -375,7 +375,7 @@ export const IGX_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
 })
 export class IgxCheckboxRequiredDirective extends CheckboxRequiredValidator { }
 /**
- *The IgxCheckboxModule proved the {@link IgxCheckboxComponent} inside your application.
+ *The IgxCheckboxModule provides the {@link IgxCheckboxComponent} inside your application.
  */
 @NgModule({
     declarations: [IgxCheckboxComponent, IgxCheckboxRequiredDirective],
