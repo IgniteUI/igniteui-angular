@@ -38,6 +38,7 @@ import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
@@ -204,6 +205,10 @@ const appRoutes = [
     {
         path: 'gridSelection',
         component: GridSelectionComponent
+    },
+    {
+        path: 'gridToolbar',
+        component: GridToolbarSampleComponent
     },
     {
         path: 'gridRemoteVirtualization',
