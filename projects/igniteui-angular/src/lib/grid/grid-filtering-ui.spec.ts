@@ -1009,7 +1009,7 @@ describe('IgxGrid - Filtering actions', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(grid.rowList.length).toEqual(4);
+            expect(grid.rowList.length).toEqual(3);
         });
     }));
 
