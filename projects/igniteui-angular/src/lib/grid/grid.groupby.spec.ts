@@ -1331,7 +1331,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click close button
-        simulateMouseEvent('click', chips[0].querySelector('span[igxbutton]'), 0, 0);
+        simulateMouseEvent('click', chips[0].querySelector('igx-icon[igxbutton]'), 0, 0);
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(0);
@@ -1472,8 +1472,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(chips.length).toBe(2);
 
         // check correct chip is disabled
-        expect(chips[0].className).toEqual(DISABLED_CHIP);
-        expect(chips[1].className).not.toEqual(DISABLED_CHIP);
+        expect(chips[0].className).toContain(DISABLED_CHIP);
+        expect(chips[1].className).not.toContain(DISABLED_CHIP);
 
         // check no remove button on disabled chip
         expect(chips[0].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(0);

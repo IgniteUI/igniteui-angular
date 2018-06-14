@@ -26,6 +26,9 @@ import {
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
+    IgxColumnMovingDragDirective,
+    IgxColumnMovingDropDirective,
+    IgxColumnMovingService,
     IgxGroupByRowTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
@@ -40,6 +43,7 @@ import {
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
+import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 
 @NgModule({
   declarations: [
@@ -56,6 +60,8 @@ import { IgxChipsModule } from '../chips/chips.module';
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
+    IgxColumnMovingDragDirective,
+    IgxColumnMovingDropDirective,
     IgxGridFilterComponent,
     IgxGridPreGroupingPipe,
     IgxGridPostGroupingPipe,
@@ -81,7 +87,9 @@ import { IgxChipsModule } from '../chips/chips.module';
     IgxGroupByRowTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
-    IgxColumnResizerDirective
+    IgxColumnResizerDirective,
+    IgxColumnMovingDragDirective,
+    IgxColumnMovingDropDirective
   ],
   imports: [
     CommonModule,
@@ -98,15 +106,16 @@ import { IgxChipsModule } from '../chips/chips.module';
     IgxTextSelectionModule,
     IgxCheckboxModule,
     IgxBadgeModule,
-    IgxChipsModule
+    IgxChipsModule,
+    IgxDragDropModule
   ],
-  providers: [IgxGridAPIService, IgxSelectionAPIService]
+  providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })
 export class IgxGridModule {
     public static forRoot() {
         return {
             ngModule: IgxGridModule,
-            providers: [IgxGridAPIService, IgxSelectionAPIService]
+            providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
         };
     }
 }

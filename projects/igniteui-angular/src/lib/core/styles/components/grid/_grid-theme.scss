@@ -8,6 +8,9 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
+/// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
+/// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
+/// @param {Color} $ghost-header-background [null] - The dragged header background color.
 /// @param {Color} $content-background [null] - The table body background color.
 /// @param {Color} $content-text-color [null] - The table body text color.
 /// @param {Color} $row-selected-background [null] - The selected row background color.
@@ -47,6 +50,10 @@
     $content-background: null,
     $content-text-color: null,
 
+    $ghost-header-text-color: null,
+    $ghost-header-icon-color: null,
+    $ghost-header-background: null,
+
     $row-selected-background: null,
     $row-selected-text-color: null,
     $row-hover-background: null,
@@ -61,6 +68,7 @@
     $cell-editing-background: null,
 
     $resize-line-color: null,
+    $drop-indicator-color: null,
 
     $grouparea-background: null,
     $group-row-background: null,
@@ -82,6 +90,10 @@
         content-background: #fff,
         content-text-color: igx-color($palette, 'grays', 800),
 
+        ghost-header-text-color: igx-color($palette, 'grays', 600),
+        ghost-header-icon-color: igx-color($palette, 'grays'),
+        ghost-header-background: #fff,
+
         row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
         row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
         row-hover-background: hexrgba(igx-color($palette, 'grays', 100)),
@@ -97,6 +109,8 @@
 
         resize-line-color: igx-color($palette, 'secondary'),
 
+        drop-indicator-color: igx-color($palette, 'secondary'),
+
         grouparea-background: hexrgba(igx-color($palette, 'grays', 100)),
 
         group-label: igx-color($palette, 'primary', 500),
@@ -110,6 +124,14 @@
         grouparea-placeholder-color: igx-color($palette, 'grays', 600),
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
     );
+
+    @if not($ghost-header-icon-color) and $ghost-header-background {
+        $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
+    }
+
+    @if not($ghost-header-text-color) and $ghost-header-background {
+        $ghost-header-text-color: text-contrast($ghost-header-background);
+    }
 
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
@@ -157,6 +179,10 @@
         header-background: $header-background,
         header-text-color: $header-text-color,
 
+        ghost-header-text-color: $ghost-header-text-color,
+        ghost-header-icon-color: $ghost-header-icon-color,
+        ghost-header-background: $ghost-header-background,
+
         content-background: $content-background,
         content-text-color: $content-text-color,
 
@@ -174,6 +200,8 @@
         cell-selected-text-color: $cell-selected-text-color,
 
         resize-line-color: $resize-line-color,
+
+        drop-indicator-color: $drop-indicator-color,
 
         grouparea-background: $grouparea-background,
         group-label-icon: $group-label-icon,
@@ -544,10 +572,115 @@
         }
     }
 
-
     %grid-summaries {
         display: flex;
         background: inherit;
+    }
+
+
+    // Column moving
+
+    %igx-grid__th-drop-indicator-left {
+        position: absolute;
+        width: 1px;
+        top: 0;
+        left: -1px;
+        height: 100%;
+    }
+
+
+    %igx-grid__th-drop-indicator-right {
+        position: absolute;
+        width: 1px;
+        top: 0;
+        right: -1px;
+        height: 100%;
+    }
+
+    %igx-grid__th-drop-indicator--active {
+        &%igx-grid__th-drop-indicator-left,
+        &%igx-grid__th-drop-indicator-right {
+            border-right: 1px dotted --var($theme, 'drop-indicator-color');
+        }
+
+        &::after,
+        &::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            left: -4.5px;
+        }
+
+        &::before {
+            bottom: 0;
+            border-width: 0 5px 5px;
+            border-color: transparent transparent --var($theme, 'drop-indicator-color');
+        }
+
+        &::after {
+            top: 0;
+            border-width: 5px 5px 0;
+            border-color: --var($theme, 'drop-indicator-color') transparent transparent;
+        }
+    }
+
+    %grid__scroll-on-drag-left {
+        position: absolute;
+        width: 15px;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 25;
+    }
+
+    %grid__scroll-on-drag-right {
+        position: absolute;
+        width: 15px;
+        top: 0;
+        right: 0;
+        height: 100%;
+        z-index: 25;
+    }
+
+    %grid__scroll-on-drag-pinned {
+        position: absolute;
+        width: 15px;
+        height: 100%;
+        top: 0;
+        z-index: 25;
+    }
+
+    %grid__drag-ghost-image {
+        background-color: --var($theme, 'ghost-header-background');
+        color: --var($theme, 'ghost-header-text-color');
+        position: absolute;
+        z-index: 20;
+        height: auto;
+        top: -99999px;
+        left: -99999px;
+        overflow: visible;
+        box-shadow: igx-elevation($elevations, 5);
+
+        %grid-cell-header-title {
+            min-width: rem(24px);
+        }
+    }
+
+    %grid__drag-ghost-image-icon {
+        color: --var($theme, 'ghost-header-icon-color');
+        font-size: rem(24px);
+        margin-right: rem(8);
+    }
+
+    %igx-grid__drag-col-header {
+        background-color: lighten(--var($theme, 'header-background'), 10%);
+
+        %grid-cell-header-title,
+        %grid-cell-header-icons {
+            opacity: .4;
+        }
     }
 
     // Groupby section
@@ -556,7 +689,15 @@
         background-color: --var($theme, 'group-row-background');
         display: flex;
         outline-style: none;
-        height: 50px;
+        min-height: map-get($grid-header-height, 'comfortable');
+    }
+
+    %igx-grid__group-row--cosy {
+        min-height: map-get($grid-header-height, 'cosy');
+    }
+
+    %igx-grid__group-row--compact {
+        min-height: map-get($grid-header-height, 'compact');
     }
 
     %igx-group-label {
@@ -605,7 +746,15 @@
 
     [dir='rtl'] {
         %igx-grid__group-content {
-            padding-right: rem(34px);
+            padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
+        }
+
+        %igx-grid__group-content--cosy {
+            padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+        }
+
+        %igx-grid__group-content--compact{
+            padding-left: map-get($grid-grouping-indicator-padding, 'compact');
         }
 
         %igx-group-label {
@@ -632,6 +781,14 @@
         }
     }
 
+    %igx-grid__group-content--cosy {
+        padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+    }
+
+    %igx-grid__group-content--compact{
+        padding-left: map-get($grid-grouping-indicator-padding, 'compact');
+    }
+
     %igx-grid__row-indentation {
         background: --var($theme, 'header-background');
         z-index: 9999;
@@ -641,7 +798,6 @@
         position: relative;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: 12px;
-        min-width: rem(60px);
 
         &::after {
             content: '';
@@ -667,11 +823,19 @@
         }
     }
 
+    %igx-grid__row-indentation--cosy {
+        padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+    }
+
+    %igx-grid__row-indentation--compact {
+        padding-left: map-get($grid-grouping-indicator-padding, 'compact');
+    }
+
     %igx-grid__grouparea {
         grid-row: 1;
         border-bottom: 1px solid --var($theme, 'row-border-color');
         z-index: 2;
-        height: 70px;
+        height: calc(#{map-get($grid-header-height, 'comfortable')} + #{rem(16px)});
         background: --var($theme, 'grouparea-background');
         display: flex;
         align-items: center;
@@ -682,6 +846,16 @@
         &:focus {
             outline: transparent;
         }
+    }
+
+    %igx-grid__grouparea--cosy {
+        padding: map-get($grid-cell-padding, 'cosy');
+        height: calc(#{map-get($grid-header-height, 'cosy')} + #{rem(16px)});
+    }
+
+    %igx-grid__grouparea--compact {
+        padding: map-get($grid-cell-padding, 'compact');
+        height: calc(#{map-get($grid-header-height, 'compact')} + #{rem(16px)});
     }
 
     %igx-grid__grouparea-placeholder {
@@ -697,8 +871,6 @@
         cursor: pointer;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: rem(12px);
-        min-width: rem(60px);
-        flex-basis: rem(60px);
         position: relative;
 
         %igx-icon-display {
@@ -707,13 +879,21 @@
         }
 
         &:hover,
-        &:focus{
+        &:focus {
             outline: transparent;
 
             %igx-icon-display {
                 color: --var($theme, 'expand-icon-hover-color');
             }
         }
+    }
+
+    %igx-grid__grouping-indicator--cosy {
+        padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+    }
+
+    %igx-grid__grouping-indicator--compact {
+        padding-left: map-get($grid-grouping-indicator-padding, 'compact');
     }
 
     %igx-grid__header-indentation {
@@ -731,7 +911,16 @@
         left: calc(#{map-get($grid-grouping-indicator-padding, 'comfortable')} - 6px);
     }
 
+    %igx-grid__group-expand-btn--cosy {
+        left: calc(#{map-get($grid-grouping-indicator-padding, 'cosy')} - 6px);
+    }
+
+    %igx-grid__group-expand-btn--compact {
+        left: calc(#{map-get($grid-grouping-indicator-padding, 'compact')} - 6px);
+    }
+
     @for $i from 1 through 10 {
+        // COMFORTABLE
         %igx-grid__row-indentation--level-#{$i} {
             padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
         }
@@ -739,6 +928,23 @@
         %igx-grid__group-row--padding-level-#{$i} {
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
         }
+
+        // COSY
+        %igx-grid__row-indentation-cosy--level-#{$i} {
+            padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
+        }
+
+        %igx-grid__group-row-cosy--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
+        }
+
+        // COMPACT
+        %igx-grid__row-indentation-compact--level-#{$i} {
+            padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
+        }
+
+        %igx-grid__group-row-compact--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
+        }
     }
 }
-

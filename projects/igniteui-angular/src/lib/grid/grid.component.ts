@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -41,7 +41,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
-import { IgxGroupByRowTemplateDirective } from './grid.common';
+import { IgxGroupByRowTemplateDirective, IgxColumnMovingDragDirective } from './grid.common';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
@@ -95,6 +95,22 @@ export interface ISearchInfo {
     caseSensitive: boolean;
     activeMatchIndex: number;
     matchInfoCache: any[];
+}
+
+export interface IColumnMovingStartEventArgs {
+    source: IgxColumnComponent;
+}
+
+export interface IColumnMovingEventArgs {
+    source: IgxColumnComponent;
+    target: IgxColumnComponent;
+    cancel: boolean;
+}
+
+export interface IColumnMovingEndEventArgs {
+    source: IgxColumnComponent;
+    target: IgxColumnComponent;
+    cancel: boolean;
 }
 
 /**
@@ -386,6 +402,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
+    @Output()
+    public onColumnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
+
+    @Output()
+    public onColumnMoving = new EventEmitter<IColumnMovingEventArgs>();
+
+    @Output()
+    public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -502,6 +527,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public chipsGoupingExpressions = [];
 
     public cellInEditMode: IgxGridCellComponent;
+    public isColumnMoving: boolean;
+    public isColumnResizing: boolean;
 
     public eventBus = new Subject<boolean>();
 
@@ -755,6 +782,43 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             totalWidth += parseInt(cols[i].width, 10) || 0;
         }
         return totalWidth;
+    }
+
+    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+        if (column.pinned) {
+            const fromIndex = this._pinnedColumns.indexOf(column);
+
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+                this._unpinnedColumns.indexOf(dropTarget);
+
+            this._pinnedColumns.splice(fromIndex, 1);
+
+            if (dropTarget.pinned) {
+                column.pinned = true;
+                this._pinnedColumns.splice(toIndex, 0, column);
+            } else {
+                column.pinned = false;
+                this._unpinnedColumns.splice(toIndex + 1, 0, column);
+            }
+        } else {
+            const fromIndex = this._unpinnedColumns.indexOf(column);
+
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+                this._unpinnedColumns.indexOf(dropTarget);
+
+            this._unpinnedColumns.splice(fromIndex, 1);
+
+            if (dropTarget.pinned) {
+                column.pinned = true;
+                this._pinnedColumns.splice(toIndex, 0, column);
+            } else {
+                column.pinned = false;
+                this._unpinnedColumns.splice(toIndex, 0, column);
+            }
+        }
+
+        this.columnList.reset(this._pinnedColumns.concat(this._unpinnedColumns));
+        this.columnList.notifyOnChanges();
     }
 
     public nextPage(): void {
@@ -1071,6 +1135,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList.some((col) => col.hasSummary);
     }
 
+    get hasMovableColumns(): boolean {
+        return this.columnList.some((col) => col.movable);
+    }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
@@ -1223,7 +1291,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Gets calculated width of the start pinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
-    protected getPinnedWidth(takeHidden = false) {
+    public getPinnedWidth(takeHidden = false) {
         const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
         let sum = 0;
         for (const col of fc) {
@@ -1529,20 +1597,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const targetEndTopOffset = row.element.nativeElement.offsetTop + this.rowHeight + containerTopOffset;
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 const scrollAmount = targetEndTopOffset - containerHeight;
-                this.verticalScrollContainer.addScrollTop(scrollAmount);
-
-                this._focusNextCell(rowIndex, columnIndex);
+                this.performVerticalScroll(scrollAmount, rowIndex, columnIndex);
             } else {
                 target.nativeElement.focus();
             }
         } else {
-            const containerHeight = this.calcHeight;
             const contentHeight = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
             const scrollOffset = parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const lastRowOffset = contentHeight + scrollOffset - this.calcHeight;
             const scrollAmount = this.rowHeight + lastRowOffset;
-            this.verticalScrollContainer.addScrollTop(scrollAmount);
-            this._focusNextCell(rowIndex, columnIndex);
+            this.performVerticalScroll(scrollAmount, rowIndex, columnIndex);
         }
     }
 
@@ -1563,16 +1627,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
 
-                this.verticalScrollContainer.addScrollTop(-this.rowHeight);
-                this._focusNextCell(rowIndex, columnIndex);
+                this.performVerticalScroll(-this.rowHeight, rowIndex, columnIndex);
             }
             target.nativeElement.focus();
         } else {
             const scrollOffset =
                 -parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scrollAmount = this.rowHeight + scrollOffset;
-            this.verticalScrollContainer.addScrollTop(-scrollAmount);
-            this._focusNextCell(rowIndex, columnIndex);
+            this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex);
         }
     }
 
@@ -1608,6 +1670,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 callback(e);
             }
         });
+    }
+
+    private performVerticalScroll(amount: number, rowIndex: number, columnIndex: number) {
+        const scrolled = this.verticalScrollContainer.addScrollTop(amount);
+        if (scrolled) {
+            this._focusNextCell(rowIndex, columnIndex);
+        }
     }
 
     public trackColumnChanges(index, col) {
@@ -1792,6 +1861,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.lastSearchInfo.activeMatchIndex = 0;
             this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
         }
+    }
+
+    public onGroupAreaDrop(event) {
+        if (event.drag instanceof IgxColumnMovingDragDirective) {
+            const column: IgxColumnComponent = event.drag.column;
+            this.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
+        }
+        event.cancel = true;
     }
 
     public onChipRemoved(event) {

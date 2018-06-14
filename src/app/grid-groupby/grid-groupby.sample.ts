@@ -17,12 +17,12 @@ export class GridGroupBySampleComponent implements OnInit {
         this.columns = [
             { field: 'ID', width: 100, hidden: true },
             { field: 'CompanyName', width: 300, groupable: true },
-            { field: 'ContactName', width: 200, pinned: true },
+            { field: 'ContactName', width: 200, pinned: true, groupable: true },
             { field: 'ContactTitle', width: 200, pinned: true, groupable: false},
             { field: 'Address', width: 300 },
-            { field: 'City', width: 100 },
-            { field: 'Region', width: 100 },
-            { field: 'PostalCode', width: 100 },
+            { field: 'City', width: 150, groupable: true },
+            { field: 'Region', width: 150 },
+            { field: 'PostalCode', width: 150, groupable: true },
             { field: 'Phone', width: 150 },
             { field: 'Fax', width: 150 }
         ];
