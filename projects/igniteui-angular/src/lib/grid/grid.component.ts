@@ -1350,7 +1350,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
             this.calcHeight = parseInt(computed.getPropertyValue('height'), 10) -
                 this.theadRow.nativeElement.clientHeight -
-                this.tfootHeight - pagingHeight - groupAreaHeight - toolbarHeight
+                this.tfootHeight - pagingHeight - groupAreaHeight - toolbarHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
             let toolbarHeight = 0;
