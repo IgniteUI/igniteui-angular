@@ -256,6 +256,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._width !== value) {
             this._width = value;
             requestAnimationFrame(() => {
+                // Calling reflow(), because the width calculation
+                // might make the horizontal scrollbar appear/disappear.
+                // This will change the height, which should be recalculated.
                 this.reflow();
             });
         }
