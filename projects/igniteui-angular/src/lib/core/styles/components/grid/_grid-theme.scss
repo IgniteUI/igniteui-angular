@@ -28,7 +28,9 @@
 /// @param {Color} $grouparea-placeholder-color [null] - The grid group area placeholder text color.
 ///
 /// @param {Color} $group-row-background [null] - The grid group row background color.
-/// @param {Color} $group-label-icon [null] - The grid group area icon color.
+/// @param {Color} $group-label-column-name-text [null] - The grid group row column name text color.
+/// @param {Color} $group-label-icon [null] - The grid group row icon color.
+/// @param {Color} $group-label-text [null] - The grid group row text color.
 /// @param {Color} $expand-all-icon-color [null] - The grid header expand all group rows icon color.
 /// @param {Color} $expand-all-icon-hover-color [null] - The grid header expand all group rows icon hover color.
 /// @param {Color} $expand-icon-color [null] - The grid row expand icon color.
@@ -72,7 +74,10 @@
 
     $grouparea-background: null,
     $group-row-background: null,
+    $row-indentation-background: null,
+    $group-label-column-name-text: null,
     $group-label-icon: null,
+    $group-label-text: null,
     $expand-all-icon-color: null,
     $expand-all-icon-hover-color: null,
     $expand-icon-color: null,
@@ -96,7 +101,7 @@
 
         row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
         row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
-        row-hover-background: hexrgba(igx-color($palette, 'grays', 100)),
+        row-hover-background: darken(hexrgba(igx-color($palette, 'grays', 100)), 10%),
         row-border-color: igx-color($palette, 'grays', 300),
 
         pinned-border-width: 2px,
@@ -113,8 +118,9 @@
 
         grouparea-background: hexrgba(igx-color($palette, 'grays', 100)),
 
-        group-label: igx-color($palette, 'primary', 500),
+        group-label-column-name-text: igx-color($palette, 'primary', 500),
         group-label-icon: igx-color($palette, 'primary', 500),
+        group-label-text: igx-color($palette, 'grays', 800),
         expand-all-icon-color: igx-color($palette, 'grays', 600),
         expand-all-icon-hover-color: igx-color($palette, 'grays', 800),
         expand-icon-color: igx-color($palette, 'grays', 600),
@@ -123,6 +129,7 @@
         group-count-text-color: igx-color($palette, 'grays', 600),
         grouparea-placeholder-color: igx-color($palette, 'grays', 600),
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
+        row-indentation-background: hexrgba(igx-color($palette, 'grays', 100)),
     );
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
@@ -165,6 +172,18 @@
         $group-row-background: $header-background
     }
 
+    @if not($expand-icon-color) and $group-row-background {
+        $expand-icon-color: text-contrast($group-row-background)
+    }
+
+    @if not($group-label-text) and $group-row-background {
+        $group-label-text: text-contrast($group-row-background)
+    }
+
+    @if not($row-indentation-background) and $group-row-background {
+        $row-indentation-background: $group-row-background
+    }
+
     @if not($grouparea-background) and $header-background {
         $grouparea-background: $header-background
     }
@@ -204,7 +223,9 @@
         drop-indicator-color: $drop-indicator-color,
 
         grouparea-background: $grouparea-background,
+        group-label-column-name-text: $group-label-column-name-text,
         group-label-icon: $group-label-icon,
+        group-label-text: $group-label-text,
         expand-all-icon-color: $expand-all-icon-color,
         expand-all-icon-hover-color: $expand-all-icon-hover-color,
         expand-icon-color: $expand-icon-color,
@@ -213,6 +234,7 @@
         group-count-text-color: $group-count-text-color,
         grouparea-placeholder-color: $grouparea-placeholder-color,
         group-row-background: $group-row-background,
+        row-indentation-background: $row-indentation-background,
     ));
 }
 
@@ -664,7 +686,11 @@
         box-shadow: igx-elevation($elevations, 5);
 
         %grid-cell-header-title {
-            min-width: rem(24px);
+            min-width: calc(100% - 24px);
+        }
+
+        %grid-cell-header-icons {
+            display: none;
         }
     }
 
@@ -672,6 +698,7 @@
         color: --var($theme, 'ghost-header-icon-color');
         font-size: rem(24px);
         margin-right: rem(8);
+        min-width: rem(100px);
     }
 
     %igx-grid__drag-col-header {
@@ -727,7 +754,7 @@
     }
 
     %igx-group-label__column-name {
-        color: --var($theme, 'group-label');
+        color: --var($theme, 'group-label-column-name-text');
         font-weight: 600;
         font-size: 12px;
     }
@@ -742,6 +769,7 @@
 
     %igx-group-label__text {
         font-size: rem(13px);
+        color: --var($theme, 'group-label-text')
     }
 
     [dir='rtl'] {
@@ -790,7 +818,7 @@
     }
 
     %igx-grid__row-indentation {
-        background: --var($theme, 'header-background');
+        background: --var($theme, 'row-indentation-background');
         z-index: 9999;
         display: flex;
         justify-content: center;
@@ -806,7 +834,7 @@
             height: rem(1px);
             bottom: -1px;
             left: 0;
-            background: --var($theme, 'header-background');
+            background: --var($theme, 'row-indentation-background');
         }
 
         %igx-button--icon {
@@ -909,6 +937,14 @@
         position: absolute;
         top: calc(50% - 18px);
         left: calc(#{map-get($grid-grouping-indicator-padding, 'comfortable')} - 6px);
+
+        &%igx-button--icon {
+            color: --var($theme, 'expand-all-icon-color');
+
+            &:hover {
+                color: --var($theme, 'expand-all-icon-hover-color');
+            }
+        }
     }
 
     %igx-grid__group-expand-btn--cosy {
@@ -948,3 +984,4 @@
         }
     }
 }
+

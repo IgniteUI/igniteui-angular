@@ -17,7 +17,7 @@
         </select>
 </ng-template>
 
-<div igxDrop (onDrop)="onGroupAreaDrop($event)" class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
+<div igxDrop [style.width.px]='calcWidth' (onDrop)="onGroupAreaDrop($event)" class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <div *ngIf="groupingExpressions.length === 0" class="igx-grid__grouparea-placeholder">
         Drag a column header and drop it here to group by that column
     </div>
