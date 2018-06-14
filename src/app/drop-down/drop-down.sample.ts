@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {
     IgxDropDownComponent,
     ConnectedPositioningStrategy,
+    AutoPositionStrategy,
+    GlobalPositionStrategy,
     PositionSettings,
     HorizontalAlignment,
     VerticalAlignment,
@@ -118,14 +120,15 @@ export class DropDownSampleComponent implements OnInit {
     public toggleDropDown() {
         const overlaySettings = new OverlaySettings();
         // overlaySettings.modal = false;
-        // const positionSettings = new PositionSettings();
-        // positionSettings.element = this.button.nativeElement;
-        // positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
-        // positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
-        // positionSettings.horizontalDirection = HorizontalAlignment.Right;
-        // positionSettings.verticalDirection = VerticalAlignment.Bottom;
+        const positionSettings = new PositionSettings();
+        positionSettings.element = this.button.nativeElement;
+        positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
+        positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
+        positionSettings.horizontalDirection = HorizontalAlignment.Right;
+        positionSettings.verticalDirection = VerticalAlignment.Bottom;
         // const positionStrategy = new ConnectedPositioningStrategy(positionSettings);
         // overlaySettings.positionStrategy = positionStrategy;
+        overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
         this.igxDropDown.toggle(overlaySettings);
     }
 

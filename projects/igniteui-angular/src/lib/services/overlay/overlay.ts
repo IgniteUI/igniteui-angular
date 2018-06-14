@@ -68,7 +68,7 @@ export class IgxOverlayService {
         this.OverlayElement.appendChild(wrapperElement);
 
         const positionStrategy = this.getPositionStrategy(overlaySettings.positionStrategy);
-        positionStrategy.position(element, contentElement, this._elements.find(e => e.id === id).size);
+        positionStrategy.position(element, contentElement, this._elements.find(e => e.id === id).size, document);
 
         return this._elements[this._elements.length - 1].id;
     }
