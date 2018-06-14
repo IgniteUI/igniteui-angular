@@ -3,11 +3,11 @@ import { PositionSettings } from './../utilities';
 
 export class ConnectedPositioningStrategy implements IPositionStrategy {
   public _settings: PositionSettings;
-  public _wrapperClass: string;
+//   public _wrapperClass: string;
 
   constructor(positionSettings?: PositionSettings) {
     this._settings = positionSettings ? positionSettings : new PositionSettings();
-    this._wrapperClass = 'connected-show';
+    // this._wrapperClass = 'connected-show';
   }
   position(element, wrapper, rect): void {
     const componentWrapper = wrapper;
