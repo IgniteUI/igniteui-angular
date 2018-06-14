@@ -76,9 +76,19 @@ export class AppComponent implements OnInit {
             name: 'DropDown'
         },
         {
+            link: '/drag-drop',
+            icon: 'view_column',
+            name: 'Drag and Drop'
+        },
+        {
             link: '/grid',
             icon: 'view_column',
             name: 'Grid'
+        },
+        {
+            link: '/gridColumnMoving',
+            icon: 'view_column',
+            name: 'Grid Column Moving'
         },
         {
             link: '/gridColumnPinning',

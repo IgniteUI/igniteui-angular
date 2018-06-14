@@ -43,7 +43,7 @@ export enum Navigate {
  * Example:
  * ```html
  * <igx-drop-down>
- *   <igx-drop-down-item *ngFor='let item of items' isDisabled={{item.disabled}} isHeader={{item.header}}>
+ *   <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
  *     {{ item.value }}
  *   </igx-drop-down-item>
  * </igx-drop-down>
@@ -64,53 +64,99 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Emitted when item selection is changing, before the selection completes
+     *
+     * ```html
+     * <igx-drop-down (onSelection)='handleSelection()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onSelection = new EventEmitter<ISelectionEventArgs>();
 
     /**
      * Emitted before the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpening)='handleOpening()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onOpening = new EventEmitter();
 
     /**
      * Emitted after the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpened)='handleOpened()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onOpened = new EventEmitter();
 
     /**
      * Emitted before the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosing)='handleClosing()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onClosing = new EventEmitter();
 
     /**
      * Emitted after the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosed)='handleClosed()'></igx-drop-down>
+     * ```
      */
     @Output()
     public onClosed = new EventEmitter();
 
     /**
-     * Gets/sets the width of the drop down
+     *  Gets the width of the drop down
+     *
+     * ```typescript
+     * // get
+     * let myDropDownCurrentWidth = this.dropdown.width;
+     * ```
      */
     @Input()
     get width() {
         return this._width;
     }
+    /**
+     * Sets the width of the drop down
+     *
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [width]='160px'></igx-drop-down>
+     * ```
+     */
     set width(value) {
         this._width = value;
         this.toggleDirective.element.style.width = value;
     }
 
     /**
-     * Gets/sets the height of the drop down
+     * Gets the height of the drop down
+     *
+     * ```typescript
+     * // get
+     * let myDropDownCurrentHeight = this.dropdown.height;
+     * ```
      */
     @Input()
     get height() {
         return this._height;
     }
+    /**
+     * Sets the height of the drop down
+     *
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [height]='400px'></igx-drop-down>
+     * ```
+     */
     set height(value) {
         this._height = value;
         this.toggleDirective.element.style.height = value;
@@ -119,17 +165,40 @@ export class IgxDropDownBase implements IToggleView, OnInit {
     /**
      * Gets/sets whether items will be able to take focus. If set to true, default value,
      * user will be able to use keyboard navigation.
+     *
+     * ```typescript
+     * // get
+     * let dropDownAllowsItemFocus = this.dropdown.allowItemsFocus;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
+     * ```
      */
     @Input()
     public allowItemsFocus = true;
 
     /**
-     * Gets/sets the drop down's id
+     * Gets the drop down's id
+     *
+     * ```typescript
+     * // get
+     * let myDropDownCurrentId = this.dropdown.id;
+     * ```
      */
     @Input()
     get id(): string {
         return this._id;
     }
+    /**
+     * Sets the drop down's id
+     *
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [id]='newDropDownId'></igx-drop-down>
+     * ```
+     */
     set id(value: string) {
         this._id = value;
         this.toggleDirective.id = value;
@@ -137,6 +206,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Gets if the dropdown is collapsed
+     *
+     * ```typescript
+     * let isCollapsed = this.dropdown.collapsed;
+     * ```
      */
     public get collapsed(): boolean {
         return this.toggleDirective.collapsed;
@@ -144,6 +217,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Get currently selected item
+     *
+     * ```typescript
+     * let currentItem = this.dropdown.selectedItem;
+     * ```
      */
     public get selectedItem(): any {
         const selection = this.selectionAPI.get_selection(this.id);
@@ -152,6 +229,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Get all non-header items
+     *
+     * ```typescript
+     * let myDropDownItems = this.dropdown.items;
+     * ```
      */
     public get items(): IgxDropDownItemBase[] {
         const items: IgxDropDownItemBase[] = [];
@@ -168,6 +249,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Get all header items
+     *
+     * ```typescript
+     * let myDropDownHeaderItems = this.dropdown.headers;
+     * ```
      */
     public get headers(): IgxDropDownItemBase[] {
         const headers: IgxDropDownItemBase[] = [];
@@ -184,6 +269,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Get dropdown html element
+     *
+     * ```typescript
+     * let myDropDownElement = this.dropdown.element;
+     * ```
      */
     public get element() {
         return this.elementRef.nativeElement;
@@ -211,7 +300,7 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         }
 
         const newSelection = this.items.find((item) => item.index === index);
-        if (newSelection.isDisabled) {
+        if (newSelection.disabled) {
             return;
         }
 
@@ -220,6 +309,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Opens the dropdown
+     *
+     * ```typescript
+     * this.dropdown.open();
+     * ```
      */
     open() {
         this.toggleDirective.open(true);
@@ -227,6 +320,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Closes the dropdown
+     *
+     * ```typescript
+     * this.dropdown.close();
+     * ```
      */
     close() {
         this.toggleDirective.close(true);
@@ -234,6 +331,10 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     /**
      * Toggles the dropdown
+     *
+     * ```typescript
+     * this.dropdown.toggle();
+     * ```
      */
     toggle() {
         if (this.toggleDirective.collapsed) {
@@ -276,10 +377,17 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         this.navigate(Navigate.Up);
     }
 
+    /**
+     * @hidden
+     */
     ngOnInit() {
         this.toggleDirective.id = this.id;
     }
 
+
+    /**
+     * @hidden
+     */
     onToggleOpening() {
         this.toggleDirective.collapsed = false;
         this.cdr.detectChanges();
@@ -287,6 +395,9 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         this.onOpening.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleOpened() {
         this._initiallySelectedItem = this.selectedItem;
         this._focusedItem = this.selectedItem;
@@ -301,10 +412,16 @@ export class IgxDropDownBase implements IToggleView, OnInit {
         this.onOpened.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleClosing() {
         this.onClosing.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleClosed() {
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
@@ -368,7 +485,7 @@ export class IgxDropDownBase implements IToggleView, OnInit {
 
     private getNearestSiblingFocusableItemIndex(startIndex: number, direction: Navigate): number {
         let index = startIndex;
-        while (this.items[index + direction] && this.items[index + direction].isDisabled) {
+        while (this.items[index + direction] && this.items[index + direction].disabled) {
             index += direction;
         }
 

@@ -2,15 +2,14 @@ import {
     Component,
     ElementRef,
     forwardRef,
-    HostBinding,
     HostListener,
+    HostBinding,
     Inject,
     Input
 } from '@angular/core';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
-import { IgxComboDropDownComponent } from './combo.component';
+import { IgxComboDropDownComponent } from './combo-dropdown.component';
 
 @Component({
     selector: 'igx-combo-item',
@@ -20,6 +19,11 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
     /**
      * Gets if the item is the currently selected one in the dropdown
      */
+
+    @HostBinding('style.height.px')
+    get itemHeight() {
+        return this.parentElement.parentElement.dropDownItemHeight;
+    }
 
     @Input()
     public itemData;
@@ -42,14 +46,13 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
 
     @HostListener('click', ['$event'])
     clicked(event) {
-        if (this.isDisabled || this.isHeader) {
+        if (this.disabled || this.isHeader) {
             const focusedItem = this.parentElement.focusedItem;
             if (focusedItem) {
                 focusedItem.element.nativeElement.focus({ preventScroll: true });
             }
             return;
         }
-        // this.parentElement.parentElement.searchInput.nativeElement.focus();
         this.parentElement.selectItem(this);
     }
 }
