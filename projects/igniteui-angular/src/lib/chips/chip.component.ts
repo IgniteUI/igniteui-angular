@@ -132,8 +132,8 @@ export class IgxChipComponent {
             targetChip: this,
             dragChip: event.dragData.chip,
             detail: event
-        }
-        this.onDragEnter.emit(eventArgs)
+        };
+        this.onDragEnter.emit(eventArgs);
     }
 
     public onChipDrop(event) {
