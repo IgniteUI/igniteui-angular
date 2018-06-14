@@ -125,7 +125,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
                     if (expr.filteringOperands.length > 1) {
                         this.isSecondConditionVisible = true;
                         this.logicOperators.selectButton(expr.operator);
-                    } else {
+                    } else if (this.expressionsList.toArray()[1]) {
                         this.expressionsList.toArray()[1].value = null;
                         this.expressionsList.toArray()[1].expression.condition = undefined;
                     }
