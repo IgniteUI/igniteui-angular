@@ -157,24 +157,33 @@ export class IgxSnackbarComponent {
     /**
      * An event that will be emitted when the action is executed.
      * Provides reference to the `IgxSnackbarComponent` as an argument.
+     * ```html
+     * <igx-snackbar (onAction) = "onAction(snackbar: IgxSnackbarComponent)"></igx-snackbar>
+     * ```
      */
     @Output() public onAction = new EventEmitter<IgxSnackbarComponent>();
 
     /**
      * An event that will be emitted when the snackbar animation starts.
      * Provides reference to the `AnimationEvent` interface as an argument.
+     * ```html
+     * <igx-snackbar (animationStarted) = "animationStarted(event: AnimationEvent)"></igx-snackbar>
+     * ```
      */
     @Output() public animationStarted = new EventEmitter<AnimationEvent>();
 
     /**
      * An event that will be emitted when the snackbar animation ends.
      * Provides reference to the `AnimationEvent` interface as an argument.
+     * ```html
+     * <igx-snackbar (animationDone) = "animationDone(event: AnimationEvent)"></igx-snackbar>
+     * ```
      */
     @Output() public animationDone = new EventEmitter<AnimationEvent>();
-/**
- *@hidden
- */
-private timeoutId;
+    /**
+     *@hidden
+     */
+    private timeoutId;
 
     constructor(private zone: NgZone) { }
 
@@ -206,26 +215,26 @@ private timeoutId;
         this.isVisible = false;
         clearTimeout(this.timeoutId);
     }
-/**
- *@hidden
- */
-public triggerAction(): void {
+    /**
+     *@hidden
+     */
+    public triggerAction(): void {
         this.onAction.emit(this);
     }
-/**
- *@hidden
- * @memberof IgxSnackbarComponent
- */
-public snackbarAnimationStarted(evt: AnimationEvent): void {
+    /**
+     *@hidden
+     * @memberof IgxSnackbarComponent
+     */
+    public snackbarAnimationStarted(evt: AnimationEvent): void {
         if (evt.fromState === 'void') {
             this.animationStarted.emit(evt);
         }
     }
-/**
- *@hidden
- * @memberof IgxSnackbarComponent
- */
-public snackbarAnimationDone(evt: AnimationEvent): void {
+    /**
+     *@hidden
+     * @memberof IgxSnackbarComponent
+     */
+    public snackbarAnimationDone(evt: AnimationEvent): void {
         if (evt.fromState === 'show') {
             this.animationDone.emit(evt);
         }
