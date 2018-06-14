@@ -58,24 +58,24 @@ export class IgxListComponent {
 
     constructor(private element: ElementRef) {
     }
-/**
- * Returns a collection of all items and headers in the list.
- * ```typescript
- * let listChildren: QueryList = this.list.children;
- * ```
- * @memberof IgxListComponent
- */
-@ContentChildren(forwardRef(() => IgxListItemComponent))
+    /**
+     * Returns a collection of all items and headers in the list.
+     * ```typescript
+     * let listChildren: QueryList = this.list.children;
+     * ```
+     * @memberof IgxListComponent
+     */
+    @ContentChildren(forwardRef(() => IgxListItemComponent))
     public children: QueryList<IgxListItemComponent>;
-/**
- *@hidden
- */
-@ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
-/**
- *@hidden
- */
-@ViewChild('defaultEmptyList', { read: TemplateRef })
+    /**
+     *@hidden
+     */
+    @ViewChild('defaultEmptyList', { read: TemplateRef })
     protected defaultEmptyListTemplate: TemplateRef<any>;
     /**
      * Sets/gets the `id` of the list.
@@ -119,69 +119,85 @@ export class IgxListComponent {
     public allowRightPanning = false;
     /**
      * Emits an event with the current list when left pan gesture is executed on list item.
+     * Provides reference to the `IgxListItemComponent` as an event argument.
+     * ```html
+     * <igx-list (onLeftPan) = "onLeftPan(listItem: IgxListItemComponent)"></igx-list>
+     * ```
      * @memberof IgxListComponent
      */
     @Output()
     public onLeftPan = new EventEmitter<IgxListItemComponent>();
     /**
      * Emits an event with the current list when right pan gesture is executed on list item.
+     * Provides reference to the `IgxListItemComponent` as an event argument.
+     * ```html
+     * <igx-list (onRightPan) = "onRightPan(listItem: IgxListItemComponent)"></igx-list>
+     * ```
      * @memberof IgxListComponent
      */
     @Output()
     public onRightPan = new EventEmitter<IgxListItemComponent>();
+ /**
+ * Emits an event with the current list when pan gesture is executed on list item.
+ * Provides references to the `IgxListItemComponent` and `IgxListPanState` as event arguments.
+ * ```html
+ * <igx-list (onPanStateChange) = "onPanStateChange(oldState:IgxListPanState, newState, listItem: IgxListItemComponent)"></igx-list>
+ * ```
+ * @memberof IgxListComponent
+ */
+    @Output()
+    public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
     /**
-     * Emits an event with the current list when pan gesture is executed on list item
+     * Emits an event with the current list when a list item has been clicked.
+     * Provides references to the `IgxListItemComponent` and `Event` as event arguments.
+     *  ```html
+     * <igx-list (onItemClicked) = "onItemClicked(listItem: IgxListItemComponent, event:Event)"></igx-list>
+     * ```
      * @memberof IgxListComponent
      */
     @Output()
-    public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
-/**
- * Emits an event with the current list when a list item has been clicked.
- * @memberof IgxListComponent
- */
-@Output()
     public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
-/**
- * Gets the `role` attribute.
- * ```typescript
- * let listRole =  this.list.role;
- * ```
- * @memberof IgxListComponent
- */
-@HostBinding('attr.role')
+    /**
+     * Gets the `role` attribute.
+     * ```typescript
+     * let listRole =  this.list.role;
+     * ```
+     * @memberof IgxListComponent
+     */
+    @HostBinding('attr.role')
     public get role() {
         return 'list';
     }
-/**
- * Returns boolean indicating if the list is empty.
- * ```typescript
- * let isEmpty =  this.list.isListEmpty;
- * ```
- * @memberof IgxListComponent
- */
-@HostBinding('class.igx-list-empty')
+    /**
+     * Returns boolean indicating if the list is empty.
+     * ```typescript
+     * let isEmpty =  this.list.isListEmpty;
+     * ```
+     * @memberof IgxListComponent
+     */
+    @HostBinding('class.igx-list-empty')
     public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
     }
-/**
- * Returns boolean indicating if the list has a `cssClass` attribute.
- * ```typescript
- * let hasCssClass =  this.list.cssClass;
- * ```
- * @memberof IgxListComponent
- */
-@HostBinding('class.igx-list')
+    /**
+     * Returns boolean indicating if the list has a `cssClass` attribute.
+     * ```typescript
+     * let hasCssClass =  this.list.cssClass;
+     * ```
+     * @memberof IgxListComponent
+     */
+    @HostBinding('class.igx-list')
     public get cssClass(): boolean {
         return this.children && this.children.length > 0;
     }
-/**
- * Returns the `items` in the list excluding the headers.
- * ```typescript
- * let listItems: IgxListItemComponent[] = this.list.items;
- * ```
- * @memberof IgxListComponent
- */
-public get items(): IgxListItemComponent[] {
+    /**
+     * Returns the `items` in the list excluding the headers.
+     * ```typescript
+     * let listItems: IgxListItemComponent[] = this.list.items;
+     * ```
+     * @memberof IgxListComponent
+     */
+    public get items(): IgxListItemComponent[] {
         const items: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
@@ -193,14 +209,14 @@ public get items(): IgxListItemComponent[] {
 
         return items;
     }
-/**
- * Returns the headers in the list.
- * ```typescript
- * let listHeaders: IgxListItemComponent[] =  this.list.headers;
- * ```
- * @memberof IgxListComponent
- */
-public get headers(): IgxListItemComponent[] {
+    /**
+     * Returns the headers in the list.
+     * ```typescript
+     * let listHeaders: IgxListItemComponent[] =  this.list.headers;
+     * ```
+     * @memberof IgxListComponent
+     */
+    public get headers(): IgxListItemComponent[] {
         const headers: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
@@ -212,25 +228,25 @@ public get headers(): IgxListItemComponent[] {
 
         return headers;
     }
-/**
- * Returns a reference to `IgxListComponent` element in the DOM.
- * ```typescript
- * let listComponent =  this.list.context;
- * ```
- */
-public get context(): any {
+    /**
+     * Returns a reference to `IgxListComponent` element in the DOM.
+     * ```typescript
+     * let listComponent =  this.list.context;
+     * ```
+     */
+    public get context(): any {
         return {
             $implicit: this
         };
     }
-/**
- * Returns the `template` of an empty list.
- * ```typescript
- * let listTemplate = this.list.template;
- * ```
- * @memberof IgxListComponent
- */
-public get template(): TemplateRef<any> {
+    /**
+     * Returns the `template` of an empty list.
+     * ```typescript
+     * let listTemplate = this.list.template;
+     * ```
+     * @memberof IgxListComponent
+     */
+    public get template(): TemplateRef<any> {
         return this.emptyListTemplate ? this.emptyListTemplate.template : this.defaultEmptyListTemplate;
     }
 }
