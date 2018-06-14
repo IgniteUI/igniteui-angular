@@ -262,7 +262,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
 
 
     /**
-     *Returns value that indicates the completed `IgxLinearProgressBarComponent` position.
+     *Returns value that indicates the current `IgxLinearProgressBarComponent` position.
      *```typescript
      *@ViewChild("MyProgressBar")
      *public progressBar: IgxLinearProgressBarComponent;
@@ -278,7 +278,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     }
 
     /**
-     *Set value that indicates the completed `IgxLinearProgressBarComponent` position.
+     *Set value that indicates the current `IgxLinearProgressBarComponent` position.
      *```html
      *<igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
      *```
@@ -307,7 +307,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     }
 
     /**
-     *Exposed event, which could be handled to track progress changing.
+     *An event, which is triggered after a progress is changed.
      *```typescript
      *public progressChange(event) {
      *    alert("Progress made!");
@@ -335,7 +335,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     private readonly STROKE_OPACITY_ADDITION = .2;
 
     /**
-     *Exposed event, which could be handled to track progress changing.
+     *An event, which is triggered after a progress is changed.
      *```typescript
      *public progressChange(event) {
      *    alert("Progress made!");
@@ -360,7 +360,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     public id = `igx-circular-bar-${NEXT_CIRCULAR_ID++}`;
 
     /**
-     *Set the text to be visible. By default it is set to true.
+     *Sets the text visibility. By default it is set to true.
      *```html
      *<igx-circular-bar [textVisibility]="false"></igx-circular-bar>
      *```
@@ -425,7 +425,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     }
 
     /**
-     *Returns value that indicates the completed `IgxCircularProgressBarComponent` position.
+     *Returns value that indicates the current `IgxCircularProgressBarComponent` position.
      *```typescript
      *@ViewChild("MyProgressBar")
      *public progressBar: IgxCircularProgressBarComponent;
@@ -444,7 +444,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     }
 
     /**
-     *Set value that indicates the completed `IgxCircularProgressBarComponent` position.
+     *Set value that indicates the current `IgxCircularProgressBarComponent` position.
      *```html
      *<igx-circular-bar [value]="50"></igx-circular-bar>
      *```
