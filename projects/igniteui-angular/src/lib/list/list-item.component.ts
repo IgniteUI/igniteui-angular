@@ -76,7 +76,7 @@ export class IgxListItemComponent implements IListChild {
     @Input()
     public hidden = false;
     /**
-     * Returns the `role` attribute of the list item.
+     * Gets the `role` attribute of the list item.
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
@@ -217,7 +217,7 @@ export class IgxListItemComponent implements IListChild {
         return this.list.children.toArray().indexOf(this);
     }
     /**
-     * Returns a refence to the list item element in the DOM.
+     * Returns a reference to the list item element in the DOM.
      * ```typescript
      * let listItemElement =  this.listItem.element.
      * ```
@@ -251,7 +251,7 @@ export class IgxListItemComponent implements IListChild {
     /**
      * Gets the maximum right-hand side width of a list item.
      * ```typescript
-     * let maxLeft = this.listItem.maxLeft;
+     * let maxRight = this.listItem.maxRight;
      * ```
      * @memberof IgxListItemComponent
      */

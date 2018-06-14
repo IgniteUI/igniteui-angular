@@ -84,7 +84,7 @@ export class IgxListComponent {
      * <igx-list id = "my-first-list"></igx-list>
      * ```
      * ```typescript
-     * let listID =  this.list.id;
+     * let listId =  this.list.id;
      * ```
      * @memberof IgxListComponent
      */
@@ -93,7 +93,7 @@ export class IgxListComponent {
     public id = `igx-list-${NEXT_ID++}`;
     /**
      * Sets/gets whether the left panning of an item is allowed.
-     * Default value is `false`;
+     * Default value is `false`.
      * ```html
      *  <igx-list [allowLeftPanning] = "true"></igx-list>
      * ```
@@ -106,7 +106,7 @@ export class IgxListComponent {
     public allowLeftPanning = false;
     /**
      * Sets/gets whether the right panning of an item is allowed.
-     * Default value is `false`;
+     * Default value is `false`.
      * ```html
      *  <igx-list [allowRightPanning] = "true"></igx-list>
      * ```
@@ -176,7 +176,7 @@ export class IgxListComponent {
     }
 /**
  * Returns the `items` in the list excluding the headers.
- * ```
+ * ```typescript
  * let listItems: IgxListItemComponent[] = this.list.items;
  * ```
  * @memberof IgxListComponent
@@ -196,7 +196,7 @@ public get items(): IgxListItemComponent[] {
 /**
  * Returns the headers in the list.
  * ```typescript
- * let listHeaders: IgxListItemComponent[] =  this.list.headers
+ * let listHeaders: IgxListItemComponent[] =  this.list.headers;
  * ```
  * @memberof IgxListComponent
  */
@@ -213,7 +213,7 @@ public get headers(): IgxListItemComponent[] {
         return headers;
     }
 /**
- * Returns a reference to `IgxListComponent`.
+ * Returns a reference to `IgxListComponent` element in the DOM.
  * ```typescript
  * let listComponent =  this.list.context;
  * ```
