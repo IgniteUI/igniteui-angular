@@ -3,16 +3,16 @@ import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 @Component({
-    template: `<igx-prefix-connector>suffix</igx-prefix-connector>`
+    template: `<igx-connector>connector</igx-connector>`
 })
-class PrefixConnectorComponent {
+class ConnectorComponent {
 }
 
-describe('IgxPrefixConnector', () => {
+describe('IgxConnector', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                PrefixConnectorComponent
+                ConnectorComponent
             ],
             imports: [
             ]

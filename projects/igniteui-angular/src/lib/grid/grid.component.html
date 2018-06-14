@@ -23,9 +23,9 @@
     <div *ngIf="groupingExpressions.length === 0" class="igx-grid__grouparea-placeholder">
         Drag a column header and drop it here to group by that column
     </div>
-    <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
-        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable"
-                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="getColumnByName(expr.fieldName).groupable ? onChipInteractionEnd($event): null" [class.igx-chip--disabled]='!getColumnByName(expr.fieldName).groupable'>
+    <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsMoveEnd)="chipsMovingEnded()">
+        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [removable]="getColumnByName(expr.fieldName).groupable"
+                (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [class.igx-chip--disabled]='!getColumnByName(expr.fieldName).groupable'>
             <span class="igx-chip__label" igxLabel
                     [style.position]="'unset'"
                     [style.width]="'unset'"
@@ -36,7 +36,7 @@
                 <span class="igx-chip__text">{{expr.fieldName}}</span>
                 <igx-icon class="igx-chip__order-icon" fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'"></igx-icon>
             </span>
-            <igx-icon class="igx-chip__dir-icon" igxSuffixConnector fontSet="material" [name]="'forward'"></igx-icon>
+            <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
     </igx-chips-area>
 </div>

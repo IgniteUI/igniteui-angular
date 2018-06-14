@@ -2039,12 +2039,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.groupingExpressions = this.chipsGoupingExpressions;
     }
 
-    public onChipInteractionEnd(event) {
-        if (!event.moved) {
-            const column = this.getColumnByName(event.owner.id);
-            const exprIndex = this.groupingExpressions.findIndex((expr) => expr.fieldName === column.field);
-            const sortDirection = this.groupingExpressions[exprIndex].dir;
-            this.groupingExpressions[exprIndex].dir = 3 - sortDirection;
-        }
+    public onChipClicked(event) {
+        const groupExpr = this.groupingExpressions;
+        const column = this.getColumnByName(event.owner.id);
+        const exprIndex = groupExpr.findIndex((expr) => expr.fieldName === column.field);
+        const sortDirection = groupExpr[exprIndex].dir;
+        groupExpr[exprIndex].dir = 3 - sortDirection;
+        this.groupingExpressions = groupExpr;
     }
 }

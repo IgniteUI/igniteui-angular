@@ -1,4 +1,4 @@
-import {
+﻿import {
     Component,
     ChangeDetectorRef,
     Directive,
@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 
 @Component({
     selector: 'igx-chip',
@@ -40,22 +41,13 @@ export class IgxChipComponent {
     public id;
 
     @Input()
+    public draggable = true;
+
+    @Input()
     public removable = true;
 
     @HostBinding('class.igx-chip')
     public cssClass = 'igx-chip';
-
-    @HostBinding('style.top.px')
-    public top = 0;
-
-    @HostBinding('style.left.px')
-    public left = 0;
-
-    @HostBinding('style.transitionDuration')
-    public transitionTime = '0.5s';
-
-    @HostBinding('style.zIndex')
-    public zIndex = 1;
 
     @Input()
     public set color(newColor) {
@@ -67,10 +59,7 @@ export class IgxChipComponent {
     }
 
     @Output()
-    public onOutOfAreaLeft = new EventEmitter<any>();
-
-    @Output()
-    public onOutOfAreaRight = new EventEmitter<any>();
+    public onDragEnter = new EventEmitter<any>();
 
     @Output()
     public onMoveStart = new EventEmitter<any>();
@@ -79,130 +68,77 @@ export class IgxChipComponent {
     public onMoveEnd = new EventEmitter<any>();
 
     @Output()
-    public onInteractionStart = new EventEmitter<any>();
-
-    @Output()
-    public onInteractionEnd = new EventEmitter<any>();
-
-    @Output()
     public onRemove = new EventEmitter<any>();
+
+    @Output()
+    public onClick = new EventEmitter<any>();
 
     @ViewChild('chipArea', { read: ElementRef })
     public chipArea: ElementRef;
 
-    public defaultTransitionTime = '0.5s';
-    public areaMovingPerforming = false;
-
-    public get isFirstChip() {
-        return !this.elementRef.nativeElement.previousElementSibling;
-    }
+    @ViewChild('chipArea', { read: IgxDragDirective })
+    public dragDir: IgxDragDirective;
 
     public get isLastChip() {
         return !this.elementRef.nativeElement.nextElementSibling;
     }
 
-    private bInteracting = false;
-    private bInteracted = false;
-    private bMoved = false;
-    private oldMouseX = 0;
-    private oldMouseY = 0;
-    private initialOffsetX = 0;
-    private initialOffsetY = 0;
-    private outEventEmmited = false;
+    public areaMovingPerforming = false;
 
-    constructor(public cdr: ChangeDetectorRef,
-                private elementRef: ElementRef) {
-    }
-
-    @HostListener('pointerdown', ['$event'])
-    public onPointerDown(event) {
-        this.elementRef.nativeElement.setPointerCapture(event.pointerId);
-        this.bInteracting = true;
-        this.bInteracted = true;
-        this.oldMouseX = event.clientX;
-        this.oldMouseY = event.clientY;
-        this.initialOffsetX = event.offsetX;
-        this.initialOffsetY = event.offsetY;
-        this.transitionTime = '0s'; // transition time with 0s disables transition
-        this.zIndex = 10;
-        this.onInteractionStart.emit();
-    }
-
-    @HostListener('pointermove', ['$event'])
-    public onPointerMove(event) {
-        if (this.bInteracting) {
-            const emitObject = {
-                owner: this,
-                isValid: false
-            };
-            if (!this.bMoved) {
-                this.onMoveStart.emit();
-            }
-
-            const moveY = event.clientY - this.oldMouseY;
-            const moveX = event.clientX - this.oldMouseX;
-            if (moveX || moveY) {
-                this.bMoved = true;
-            }
-
-            this.top += moveY;
-            this.left += moveX;
-            this.oldMouseX = event.clientX;
-            this.oldMouseY = event.clientY;
-
-            const curWidth = this.elementRef.nativeElement.offsetWidth;
-            if (this.left >= curWidth / 2 && !this.outEventEmmited) {
-                this.onOutOfAreaRight.emit(emitObject);
-                this.outEventEmmited = true;
-                if (emitObject.isValid) {
-                    const nextElementWidth = this.elementRef.nativeElement.nextSibling.offsetWidth;
-                    this.left = -1 * (nextElementWidth - Math.abs(this.left));
-                }
-            } else if (this.left <= (-1 * curWidth / 2) && !this.outEventEmmited) {
-                this.onOutOfAreaLeft.emit(emitObject);
-                this.outEventEmmited = true;
-                if (emitObject.isValid) {
-                    const prevElementWidth = this.elementRef.nativeElement.previousSibling.offsetWidth;
-                    this.left = (prevElementWidth - Math.abs(this.left));
-                }
-            } else if (this.outEventEmmited && (-1 * curWidth / 2) < this.left && this.left <= curWidth / 2 ) {
-                this.outEventEmmited = false;
-            }
-        }
-    }
-
-    @HostListener('pointerup', ['$event'])
-    public onPointerUp(event) {
-        this.bInteracting = false;
-        this.transitionTime = this.defaultTransitionTime;
-        this.top = 0;
-        this.left = 0;
-
-        this.onInteractionEnd.emit({
-            owner: this,
-            moved: this.bMoved
-        });
-        if (!this.bMoved) {
-            this.zIndex = 1;
-            this.onMoveEnd.emit();
-        }
-        this.bMoved = false;
-    }
-
-    @HostListener('transitionend', ['$event'])
-    public onTransitionEnd(event) {
-        if (!this.bInteracting && this.bInteracted) {
-            // Fire once after the transition animation is complete when releasing the chip from dragging
-            this.zIndex = 1;
-            this.onMoveEnd.emit();
-            this.bInteracted = false;
-        }
+    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef) {
     }
 
     public onChipRemove() {
-        const eventData = {
+        this.onRemove.emit({
             owner: this
-        };
-        this.onRemove.emit(eventData);
+        });
     }
+
+    // -----------------------------
+    // Start chip igxDrag behaviour
+    public onChipDragStart(event) {
+        this.onMoveStart.emit({
+            owner: this
+        });
+        event.cancel = !this.draggable;
+    }
+
+    public onChipDragEnd(event) {
+        this.dragDir.dropFinished();
+    }
+
+    public onChipMoveEnd(event) {
+        // moveEnd is triggered after return animation has finished. This happen when we drag and release the chip.
+        this.onMoveEnd.emit({
+            owner: this
+        });
+    }
+
+    public onChipDragClicked() {
+        this.onClick.emit({
+            owner: this
+        });
+    }
+    // End chip igxDrag behaviour
+
+    // -----------------------------
+    // Start chip igxDrop behaviour
+    public onChipDragEnterHandler(event) {
+        if (this.dragDir === event.drag) {
+            return;
+        }
+
+        const eventArgs = {
+            targetChip: this,
+            dragChip: event.dragData.chip,
+            detail: event
+        }
+        this.onDragEnter.emit(eventArgs)
+    }
+
+    public onChipDrop(event) {
+        // Cancel the default drop logic
+        event.cancel = true;
+    }
+    // End chip igxDrop behaviour
 }
