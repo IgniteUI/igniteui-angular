@@ -1,20 +1,18 @@
 import { IScrollStrategy } from './IScrollStrategy';
 
 export class BlockScrollStrategy implements IScrollStrategy {
-    private initialScrollTop;
-    private initialScrollLeft;
+    private initialScrollTop: number;
+    private initialScrollLeft: number;
 
     constructor(private document: Document) { }
 
     public attach() {
-        this.initialScrollTop = this.document.documentElement.scrollTop;
-        this.initialScrollLeft = this.document.documentElement.scrollLeft;
-        // this.document.addEventListener('wheel', this.onWheel);
+        this.initialScrollTop = this.document.scrollingElement.scrollTop;
+        this.initialScrollLeft = this.document.scrollingElement.scrollLeft;
         this.document.addEventListener('scroll', this.onScroll);
     }
 
     public detach() {
-        // this.document.removeEventListener('wheel', this.onWheel);
         this.document.removeEventListener('scroll', this.onScroll);
     }
 

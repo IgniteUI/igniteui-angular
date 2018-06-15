@@ -3,4 +3,5 @@ export * from './BlockScrollStrategy';
 export * from './IScrollStrategy';
 export * from './NoOpScrollStrategy';
 export * from './ScrollStrategyFactory';
+export * from './CloseScrollStrategy';
 

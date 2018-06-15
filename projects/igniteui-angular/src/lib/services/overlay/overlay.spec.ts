@@ -12,9 +12,7 @@ import { IgxOverlayService } from './overlay';
 import { IgxOverlayDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment } from './utilities';
-import { OverlaySettings } from './utilities';
-
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings } from './utilities';
 
 describe('igxOverlay', () => {
     beforeEach(async () => {
@@ -321,7 +319,19 @@ describe('igxOverlay', () => {
         });
     // 1.3 AutoPosition (fit the shown component into the visible window.)
     xit('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
-        // TO DO
+        const fix = TestBed.createComponent(EmptyPageComponent);
+        fix.detectChanges();
+        // const overlaySettings = new OverlaySettings();
+        // const positionSettings = new PositionSettings();
+        // overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+        // fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        expect(1).toEqual(2);
+        // fix.whenStable().then(() => {
+        //     fix.detectChanges();
+        //     const wrapper = fix.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
+        //     expect(wrapper.clientHeight).toEqual(fix.debugElement.nativeElement.parentElement.parentElement.clientHeight);
+        //     expect(wrapper.clientWidth).toEqual(fix.debugElement.nativeElement.parentElement.parentElement.clientWidth);
+        // });
     });
 
     xit('igx-overlay covers the whole window 100% width and height', () => {

@@ -3,7 +3,7 @@ import { PositionSettings } from './../utilities';
 
 export class ConnectedPositioningStrategy implements IPositionStrategy {
   public _settings: PositionSettings;
-//   public _wrapperClass: string;
+  // public _wrapperClass: string;
 
   constructor(positionSettings?: PositionSettings) {
     this._settings = positionSettings ? positionSettings : new PositionSettings();
