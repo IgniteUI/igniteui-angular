@@ -16,6 +16,8 @@ import { IgxStringFilteringOperand } from '../data-operations/filtering-conditio
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
 import { IgxDropDownModule, IgxDropDownComponent } from '../drop-down/drop-down.component';
+import { IgxInputGroupComponent, IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxInputDirective } from '../directives/input/input.directive';
 
 export enum ColumnDisplayOrder {
     Alphabetical,
@@ -259,6 +261,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
         IgxButtonModule,
         IgxCheckboxModule,
         IgxDropDownModule,
+        IgxInputGroupModule,
         CommonModule,
         FormsModule,
     ]

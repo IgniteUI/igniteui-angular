@@ -3,9 +3,9 @@
 
 <ng-template #columnHidingUI>
     <h4>{{ title }}</h4>
-    <div>
-        <input type="text" [(ngModel)]="filterCriteria" [placeholder]="filterColumnsPrompt" autocomplete="off" />
-    </div>
+    <igx-input-group>
+        <input igxInput type="text" [(ngModel)]="filterCriteria" [placeholder]="filterColumnsPrompt" autocomplete="off" />
+    </igx-input-group>
     <div *ngFor="let columnItem of columnItems" (onColumnVisibilityChanged)="onVisibilityChanged($event)">
         <igx-checkbox igxColumnHidingItem [checked]="columnItem.value" (change)="columnItem.value = !columnItem.value"
             [disabled]="columnItem.disabled" [style.margin-left.px]="columnItem.calcIndent">{{ columnItem.name }}</igx-checkbox>
@@ -23,7 +23,5 @@
 </ng-template>
 
 <ng-template #columnChooserInline>
-    <div>
-        <ng-container *ngTemplateOutlet="columnHidingUI" ></ng-container>
-    </div>
+    <ng-container *ngTemplateOutlet="columnHidingUI" ></ng-container>
 </ng-template>

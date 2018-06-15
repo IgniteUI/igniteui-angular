@@ -638,6 +638,13 @@ describe('Column Hiding UI', () => {
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
             showButton = fix.debugElement.query(By.css('button')).nativeElement;
         });
+        afterEach(fakeAsync(() => {
+            if (!columnChooser.dropDown.collapsed) {
+                columnChooser.dropDown.close();
+                tick(10);
+            }
+        }));
+
         it('is not open by default.', () => {
             expect(getDropdownDiv()).toBeUndefined();
             expect(getDropdownDivHidden()).toBeDefined();
