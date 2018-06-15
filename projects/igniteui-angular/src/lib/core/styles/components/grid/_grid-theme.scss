@@ -216,7 +216,7 @@
 
     %grid-display {
         display: grid;
-        grid-template-rows: auto 1fr auto auto;
+        grid-template-rows: auto auto 1fr auto;
         grid-template-columns: 1fr;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
@@ -230,6 +230,7 @@
         font-size: $grid-caption-fs;
         line-height: $grid-caption-lh;
         padding: $grid-caption-padding;
+        grid-row: 1;
     }
 
     %grid-thead,
@@ -249,7 +250,7 @@
     }
 
     %grid-thead {
-        grid-row: 1;
+        grid-row: 2;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         z-index: 2;
     }
@@ -281,7 +282,7 @@
     }
 
     %grid-tfoot {
-        grid-row: 4;
+        grid-row: 5;
         border-top: 1px dotted igx-color($palette, 'grays', 400);
     }
 
@@ -297,7 +298,7 @@
 
     %grid-tbody {
         position: relative;
-        grid-row: 2;
+        grid-row: 3;
         background: --var($theme, 'content-background');
         color: --var($theme, 'content-text-color');
         overflow: hidden;
@@ -315,7 +316,7 @@
     %grid-scroll {
         display: flex;
         flex-flow: row nowrap;
-        grid-row: 5;
+        grid-row: 6;
         width: 100%;
         background: --var($theme, 'header-background');
     }
