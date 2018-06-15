@@ -151,9 +151,21 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     @HostBinding('class.igx-grid__td--fw')
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const isPercentageWidth = this.column.width && typeof this.column.width === 'string' && this.column.width.indexOf('%') !== -1;
-        return this.isLastUnpinned && hasVerticalScroll && !!this.column.width && !isPercentageWidth ?
-            (parseInt(this.column.width, 10) - 18) + 'px' : this.column.width;
+        const colWidth = this.column.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+
+        if (colWidth && !isPercentageWidth) {
+            let cellWidth = this.isLastUnpinned && hasVerticalScroll ?
+                            parseInt(colWidth, 10) - 18 + '' : colWidth;
+
+            if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
+                cellWidth += 'px';
+            }
+
+            return cellWidth;
+        } else {
+            return colWidth;
+        }
     }
 
     @HostBinding('class.igx-grid__td--editing')
@@ -331,6 +343,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             }
             target.nativeElement.focus();
         });
+    }
+
+    private performVerticalScroll(amout: number, rowIndex: number) {
+        const scrolled = this.grid.verticalScrollContainer.addScrollTop(amout);
+        if (scrolled) {
+            this._focusNextCell(rowIndex, this.visibleColumnIndex);
+        }
     }
 
     @HostListener('dblclick', ['$event'])
@@ -589,16 +608,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && target.row.element.nativeElement.offsetTop < this.grid.rowHeight) { // the target is in the first row
 
-                this.grid.verticalScrollContainer.addScrollTop(-this.grid.rowHeight);
-                this._focusNextCell(rowIndex, this.visibleColumnIndex);
+                this.performVerticalScroll(-this.grid.rowHeight, rowIndex);
             }
             target.nativeElement.focus();
         } else {
             const scrollOffset =
                 -parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scrollAmount = this.grid.rowHeight + scrollOffset;
-            this.grid.verticalScrollContainer.addScrollTop(-scrollAmount);
-            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
+            this.performVerticalScroll(-scrollAmount, this.rowIndex);
         }
     }
 
@@ -626,20 +643,17 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 const scrollAmount = targetEndTopOffset - containerHeight;
-                this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
-
-                this._focusNextCell(rowIndex, this.visibleColumnIndex);
+                this.performVerticalScroll(scrollAmount, rowIndex);
             } else {
                 target.nativeElement.focus();
             }
         } else {
-            const containerHeight = this.grid.calcHeight;
             const contentHeight = this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
             const scrollOffset = parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const lastRowOffset = contentHeight + scrollOffset - this.grid.calcHeight;
             const scrollAmount = this.grid.rowHeight + lastRowOffset;
-            this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
-            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
+
+            this.performVerticalScroll(scrollAmount, this.rowIndex);
         }
     }
 
