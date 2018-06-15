@@ -1,26 +1,7 @@
 <div class="sample-wrapper">
     <app-page-header title="Dropdown menu" description="description for dropdown menu"></app-page-header>
     <section class="sample-content">
-        <div #scrollContainer style="position: fixed; top: 500px; width: 200px; height: 200px; overflow-y: scroll">
-            test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <button #button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle</button>
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br /> test
-            <br />
-        </div>
+        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle</button>
         <igx-drop-down (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
             <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
                 <div class="igx-drop-down__item-template">

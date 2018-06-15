@@ -53,6 +53,7 @@ import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { OverlaySampleComponent } from './overlay/overlay.sample';
 
 const components = [
     AppComponent,
@@ -75,6 +76,7 @@ const components = [
     MaskSampleComponent,
     NavbarSampleComponent,
     NavdrawerSampleComponent,
+    OverlaySampleComponent,
     PageHeaderComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
