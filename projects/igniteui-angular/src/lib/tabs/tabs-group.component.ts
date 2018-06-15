@@ -40,6 +40,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
 
     /**
     * An @Input property that sets the value of the `icon`.
+    * The value should be valid icon name from {@link https://material.io/tools/icons/?style=baseline}.
     *```html
     *<igx-tabs-group label="Tab 1" icon="home">
     *```
@@ -50,7 +51,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     /**
     * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
     *```html
-    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [isDisabled]="true">
+    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [disabled]="true">
     *```
     */
     @Input()
@@ -63,14 +64,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     public role = 'tabpanel';
 
     /**
-     * An accessor that returns the class of the `IgxTabsGroupComponent`.
-     * ```typescript
-     * @ViewChild("MyTabsGroup")
-     * public tab: IgxTabsGroupComponent;
-     * ngAfterViewInIt(){
-     *    let tabStyleClass = this.tab.styleClass;
-     * }
-     * ```
+     * @hidden
      */
     @HostBinding('class')
     get styleClass(): string {
@@ -78,14 +72,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     }
 
     /**
-     * An accessor that returns the value of the `_itemStyle` property.
-     * ```typescript
-     * @ViewChild("MyTabsGroup")
-     * public tab: IgxTabsGroupComponent;
-     * ngAfterViewInIt(){
-     *    let tabStyle = this.tab.itemStyle;
-     * }
-     * ```
+     *@hidden
      */
     public get itemStyle(): string {
         return this._itemStyle;
