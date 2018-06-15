@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
+import { IgxLabelDirective } from '../directives/label/label.directive';
 
 describe('IgxDatePicker', () => {
     beforeEach(async(() => {
@@ -198,6 +199,55 @@ describe('IgxDatePicker', () => {
             expect(boundValue).toEqual(expectedRes);
         });
     }));
+
+    it('When labelVisability is set to false the label should not be visible', () => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        fix.detectChanges();
+
+        let label = fix.debugElement.query(By.directive(IgxLabelDirective));
+        const datePicker = fix.componentInstance.datePicker;
+
+        expect(label.nativeElement.innerText).toBe(datePicker.label);
+
+        fix.componentInstance.labelVisibility = false;
+        fix.detectChanges();
+
+        label = fix.debugElement.query(By.directive(IgxLabelDirective));
+        expect(label).toBeNull();
+    });
+
+    it('When update label property it should reflect on the label text of the datepicker', () => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        fix.detectChanges();
+
+        let label = fix.debugElement.query(By.directive(IgxLabelDirective));
+        const datePicker = fix.componentInstance.datePicker;
+        expect(label.nativeElement.innerText).toEqual(datePicker.label);
+
+        const expectedResult = 'new label';
+        datePicker.label = expectedResult;
+        fix.detectChanges();
+
+        label = fix.debugElement.query(By.directive(IgxLabelDirective));
+        expect(label.nativeElement.innerText).toEqual(expectedResult);
+    });
+
+    it('Visualize the label of the datepicker when initially is hidden', () => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        fix.detectChanges();
+
+        fix.componentInstance.labelVisibility = false;
+        fix.detectChanges();
+
+        let label = fix.debugElement.query(By.directive(IgxLabelDirective));
+        expect(label).toBeNull();
+
+        fix.componentInstance.labelVisibility = true;
+        fix.detectChanges();
+
+        label = fix.debugElement.query(By.directive(IgxLabelDirective));
+        expect(label).not.toBeNull();
+    });
 });
 
 @Component({
@@ -226,12 +276,13 @@ export class IgxDatePickerWithWeekStartComponent {
 
 @Component({
     template: `
-        <igx-datePicker></igx-datePicker>
+        <igx-datePicker [labelVisibility]="labelVisibility"></igx-datePicker>
     `
 })
 export class IgxDatePickerTestComponent {
-    public weekStart = 1;
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
+
+    public labelVisibility = true;
 }
 
 @Component({
