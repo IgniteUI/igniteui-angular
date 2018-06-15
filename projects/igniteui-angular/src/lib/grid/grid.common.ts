@@ -291,8 +291,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         }
         super.onPointerMove(event);
 
-        if (this._dragStarted && this._dragGhost && !this.column.grid.isColumnMoving) {
-            this.column.grid.isColumnMoving = true;
+        if (this._dragStarted && this._dragGhost && !this.column.grid.draggedColumn) {
+            this.column.grid.draggedColumn = this.column;
             this.column.grid.cdr.detectChanges();
         }
     }
@@ -303,10 +303,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             return;
         }
 
-        this.column.grid.isColumnMoving = false;
-        this.column.grid.cdr.detectChanges();
-
         super.onPointerUp(event);
+
+        this.column.grid.draggedColumn = null;
+        this.column.grid.cdr.detectChanges();
     }
 
     protected createDragGhost(event) {
@@ -483,7 +483,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.moveColumn(this.cms.column, this.column);
 
-            this.column.grid.isColumnMoving = false;
+            this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
         }
     }
@@ -514,7 +514,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     }
 
     public onDragLeave(event) {
-        event.detail.owner.icon.innerText = "block";
+        event.detail.owner.icon.innerText = 'block';
         this.hovered = false;
     }
 

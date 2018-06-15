@@ -30,7 +30,8 @@ import {
 import { of, Subject } from 'rxjs';
 import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity } from '../core/utils';
+import { cloneArray } from '../core/utils';
+import { IgxDensityEnabledComponent } from '../core/density';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -147,7 +148,8 @@ export interface IColumnMovingEndEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export class IgxGridComponent extends IgxDensityEnabledComponent
+    implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     @Input()
     public data = [];
@@ -273,25 +275,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public paginationTemplate: TemplateRef<any>;
 
     @Input()
-    public get displayDensity(): DisplayDensity | string {
-        return this._displayDensity;
-    }
-
-    public set displayDensity(val: DisplayDensity | string) {
-        switch (val) {
-            case 'compact':
-                this._displayDensity = DisplayDensity.compact;
-                break;
-            case 'cosy':
-                this._displayDensity = DisplayDensity.cosy;
-                break;
-            case 'comfortable':
-            default:
-                this._displayDensity = DisplayDensity.comfortable;
-        }
-    }
-
-    @Input()
     get rowSelectable(): boolean {
         return this._rowSelection;
     }
@@ -339,6 +322,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get headerWidth() {
         return parseInt(this._width, 10) - 17;
+    }
+
+    protected get hostClassPrefix() {
+        return 'igx-grid';
     }
 
     @Input()
@@ -479,18 +466,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
-
-    @HostBinding('attr.class')
-    get hostClass(): string {
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
-                return 'igx-grid--cosy';
-            case DisplayDensity.compact:
-                return 'igx-grid--compact';
-            default:
-                return 'igx-grid';
-        }
-    }
 
     @HostBinding('attr.role')
     public hostRole = 'grid';
@@ -665,7 +640,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public chipsGoupingExpressions = [];
 
     public cellInEditMode: IgxGridCellComponent;
-    public isColumnMoving: boolean;
+    public draggedColumn: IgxColumnComponent;
     public isColumnResizing: boolean;
 
     public eventBus = new Subject<boolean>();
@@ -701,7 +676,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private columnListDiffer;
     private _height = '100%';
     private _width = '100%';
-    private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
 
     constructor(
@@ -715,6 +689,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private differs: IterableDiffers,
         private viewRef: ViewContainerRef) {
 
+        super();
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
@@ -827,18 +802,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.tfoot.nativeElement.clientHeight;
         }
         return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
-    }
-
-    get defaultRowHeight(): number {
-        switch (this._displayDensity) {
-            case DisplayDensity.compact:
-                return 32;
-            case DisplayDensity.cosy:
-                return 40;
-            case DisplayDensity.comfortable:
-            default:
-                return 50;
-        }
     }
 
     get calcPinnedContainerMaxWidth(): number {
@@ -1067,6 +1030,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record.records && record.records.length;
+    }
+
+    public get dropAreaVisible(): boolean {
+        return (this.draggedColumn && this.draggedColumn.groupable) ||
+            !this.chipsGoupingExpressions.length;
     }
 
     public filter(...rest): void {

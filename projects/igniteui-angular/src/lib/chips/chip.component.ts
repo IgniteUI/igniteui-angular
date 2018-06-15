@@ -20,6 +20,7 @@
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { IgxDensityEnabledComponent } from '../core/density';
 
 @Component({
     selector: 'igx-chip',
@@ -35,7 +36,7 @@ import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
         `
     ]
 })
-export class IgxChipComponent {
+export class IgxChipComponent extends IgxDensityEnabledComponent {
 
     @Input()
     public id;
@@ -86,6 +87,11 @@ export class IgxChipComponent {
     public areaMovingPerforming = false;
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef) {
+        super();
+    }
+
+    protected get hostClassPrefix() {
+        return 'igx-chip';
     }
 
     public onChipRemove() {

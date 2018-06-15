@@ -2,12 +2,12 @@ import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
     Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit
 } from '@angular/core';
-import { DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
 import { autoWire, IGridBus } from './grid.common';
+import { IgxDensityEnabledComponent } from '../core/density';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +15,8 @@ import { autoWire, IGridBus } from './grid.common';
     selector: 'igx-grid-summary',
     templateUrl: './grid-summary.component.html'
 })
-export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, AfterContentInit {
+export class IgxGridSummaryComponent extends IgxDensityEnabledComponent
+     implements IGridBus, OnInit, DoCheck, AfterContentInit {
 
     fieldName: string;
 
@@ -27,19 +28,6 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, After
 
     get dataType(): DataType {
         return this.column.dataType;
-    }
-
-    @HostBinding('attr.class')
-    get defaultClass(): string {
-        switch (this.displayDensity) {
-            case DisplayDensity.compact:
-                return 'igx-grid-summary--compact';
-            case DisplayDensity.cosy:
-                return 'igx-grid-summary--cosy';
-            case DisplayDensity.comfortable:
-            default:
-                return 'igx-grid-summary';
-        }
     }
 
     @HostBinding('class.igx-grid-summary--fw')
@@ -78,9 +66,10 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, After
     private hiddenItemClass = 'igx-grid-summary__item--inactive';
     private summaryResultClass = 'igx-grid-summary-item__result--left-align';
     private numberSummaryResultClass = 'igx-grid-summary-item__result';
-    private displayDensity: DisplayDensity | string;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
+        super();
+    }
 
     @autoWire(true)
     public ngOnInit() {
@@ -92,7 +81,7 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, After
 
     ngAfterContentInit() {
         this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;
-        this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
+        this.summaryItemHeight = this.defaultRowHeight;
     }
 
     get resolveSummaries(): any[] {
@@ -109,5 +98,9 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, After
             this.gridAPI.set_summary_by_column_name(this.gridID, this.column.field);
             return this.gridAPI.get_summaries(this.gridID).get(this.column.field);
         }
+    }
+
+    protected get hostClassPrefix() {
+        return 'igx-grid-summary';
     }
 }
