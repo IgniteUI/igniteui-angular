@@ -578,11 +578,23 @@
         color: --var($theme, 'ghost-header-text-color');
         position: absolute;
         z-index: 20;
-        height: auto;
         top: -99999px;
         left: -99999px;
         overflow: visible;
+        display: table;
         box-shadow: igx-elevation($elevations, 5);
+
+        %grid-cell-header-title {
+            min-width: rem(24px);
+        }
+    }
+
+    %grid__drag-ghost-group-image {
+        background-color: --var($theme, 'ghost-header-background');
+        color: --var($theme, 'ghost-header-text-color');
+        box-shadow: igx-elevation($elevations, 5);
+        display: table;
+        padding: map-get($grid-cell-padding, 'comfortable');
 
         %grid-cell-header-title {
             min-width: rem(24px);
@@ -593,6 +605,8 @@
         color: --var($theme, 'ghost-header-icon-color');
         font-size: rem(24px);
         margin-right: rem(8);
+        justify-content: center;
+        align-items: center;
     }
 
     %igx-grid__drag-col-header {

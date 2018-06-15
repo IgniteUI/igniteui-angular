@@ -251,9 +251,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerDown(event) {
+        event.stopPropagation();
 
-        const resizeArea = document.elementFromPoint(event.pageX, event.pageY);
-        if (!this.draggable || this.element.nativeElement.children[3].isEqualNode(resizeArea)) {
+        const el = document.elementFromPoint(event.pageX, event.pageY);
+        if (!this.draggable || el.getAttribute("id") === "resizeHandler") {
             return;
         }
 
@@ -270,6 +271,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerMove(event) {
+        event.preventDefault();
 
         if (!this.draggable) {
             return;
@@ -296,7 +298,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     protected createDragGhost(event) {
         super.createDragGhost(event);
-        this._dragGhost.removeChild(this._dragGhost.children[2]);
+
+        this._dragGhost.style.minWidth = null;
+        this._dragGhost.style.flexBasis  = null;
 
         const icon = document.createElement('i');
         const text = document.createTextNode('swap_horiz');
@@ -305,25 +309,23 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         icon.classList.add('material-icons');
         this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
-        this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
-
         this.cms.icon = icon;
 
-        this._dragGhost.style.minWidth = null;
-        this._dragGhost.style.flexBasis  = null;
+        if (!this.column.columnGroup) {
+            this._dragGhost.removeChild(this._dragGhost.children[2]);
+            this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
 
-        const range = document.createRange();
-        range.selectNodeContents(this._dragGhost.children[2]);
+            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+        } else {
+            this._dragGhost.removeChild(this._dragGhost.children[2]);
+            this._dragGhost.removeChild(this._dragGhost.children[0]);
+            this._dragGhost.removeChild(this._dragGhost.children[this._dragGhost.children.length - 1]);
+            this.renderer.addClass(this._dragGhost.children[0], 'igx-grid__drag-ghost-group-image');
 
-        const s = document.defaultView.getComputedStyle(this.element.nativeElement);
-        this._dragGhost.style.width = Math.ceil(range.getBoundingClientRect().width +
-            parseFloat(s.borderRightWidth) + parseFloat(s.borderLeftWidth) + parseFloat(s.paddingLeft) +
-            parseFloat(s.paddingRight) + icon.getBoundingClientRect().width) +
-            parseFloat(document.defaultView.getComputedStyle(icon).marginRight) + 'px';
-
-        this.left = this._dragStartX = event.clientX -
-            (((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 3) * 2);
-        this.top = this._dragStartY = event.clientY - ((parseFloat(s.height) / 3) * 2);
+            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+        }
     }
 }
 
@@ -372,7 +374,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragEnter(event) {
-        if (this.isDropTarget && this.cms.column !== this.column) {
+        if (this.isDropTarget &&
+            this.cms.column !== this.column &&
+            this.cms.column.level === this.column.level &&
+            this.cms.column.parent === this.column.parent) {
             const args = {
                 source: this.cms.column,
                 target: this.column,
@@ -386,8 +391,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             }
 
             if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned)) {
-                this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.children[4] :
-                    this.elementRef.nativeElement.children[0];
+                this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.lastElementChild :
+                    this.elementRef.nativeElement.firstElementChild;
 
                 this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
 
@@ -398,16 +403,16 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
 
                 if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
-                    this._dropIndicator = this.elementRef.nativeElement.children[0];
-                    this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
-
                     this.cms.icon.innerText = 'lock';
+
+                    this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
+                    this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
                 } else {
                     this.cms.icon.innerText = 'block';
                 }
             }
         } else {
-            this.cms.icon.innerText = 'swap_horiz';
+            this.cms.icon.innerText = 'block';
         }
 
         if (this.horizontalScroll) {
@@ -462,8 +467,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
             }
 
-            if (args.cancel || (nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth)) {
-                return;
+            if (args.cancel || (nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth) ||
+                this.column.level !== this.cms.column.level ||
+                this.column.parent !== this.cms.column.parent) {
+                    return;
             }
 
             this.column.grid.moveColumn(this.cms.column, this.column);

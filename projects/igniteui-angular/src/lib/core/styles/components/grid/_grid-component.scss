@@ -193,6 +193,10 @@
         @extend %grid__drag-ghost-image !optional;
     }
 
+    @include e(drag-ghost-group-image) {
+        @extend %grid__drag-ghost-group-image !optional;
+    }
+
     @include e(drag-ghost-image-icon) {
         @extend %grid__drag-ghost-image-icon !optional;
     }
