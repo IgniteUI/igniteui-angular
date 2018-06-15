@@ -893,7 +893,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
         }
 
-        this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
     }
 
