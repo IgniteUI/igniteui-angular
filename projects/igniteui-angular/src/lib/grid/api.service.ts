@@ -148,6 +148,7 @@ export class IgxGridAPIService {
         }
 
         filteringTree.filteringOperands = [];
+        this.remove_summary(id);
 
         if (condition) {
             for (const column of grid.columns) {
@@ -173,8 +174,10 @@ export class IgxGridAPIService {
 
         if (index > -1) {
             filteringState.filteringOperands.splice(index, 1);
+            this.remove_summary(id, fieldName);
         } else {
             filteringState.filteringOperands = [];
+            this.remove_summary(id);
         }
 
         grid.filteringExpressionsTree = filteringState;
