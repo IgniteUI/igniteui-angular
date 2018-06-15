@@ -67,7 +67,8 @@ describe('IgxGrid - GroupBy', () => {
             declarations: [
                 DefaultGridComponent,
                 GroupableGridComponent,
-                CustomTemplateGridComponent
+                CustomTemplateGridComponent,
+                GroupByDataMoreColumnsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -1702,6 +1703,26 @@ describe('IgxGrid - GroupBy', () => {
             });
         });
     });
+
+    it('should remove expansion state when reordering chips', () => {
+        const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.testData = [
+            { 'A': '1', 'B': 'ALFKI', 'C': '2', 'D': '3', 'E': '4', 'F': '5', 'H': '6', 'G': '7', 'K': '8', 'L': '9', 'M': '10', 'N': '1' }
+        ];
+        fix.detectChanges();
+        let m = '';
+        const expr = fix.componentInstance.columns.map(val => {
+            return {fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
+        });
+        // not allowed to group by more than 10 columns
+        try {
+            grid.groupBy(expr);
+        } catch (e) {
+            m = e.message;
+        }
+        expect(m).toBe('Maximum amount of grouped columns is 10.');
+    });
 });
 
 export class DataParent {
@@ -1846,6 +1867,41 @@ export class GroupableGridComponent extends DataParent {
 export class CustomTemplateGridComponent extends DataParent {
     public width = '800px';
     public height = null;
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="testData">
+                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+                </igx-column>
+        </igx-grid>
+    `
+})
+export class GroupByDataMoreColumnsComponent extends DataParent {
+    public width = '800px';
+    public height = null;
+    public testData = [];
+
+    public columns = [
+        { field: 'A', width: 100 },
+        { field: 'B', width: 100 },
+        { field: 'C', width: 100 },
+        { field: 'D', width: 100 },
+        { field: 'E', width: 100 },
+        { field: 'F', width: 100 },
+        { field: 'H', width: 100 },
+        { field: 'G', width: 100 },
+        { field: 'K', width: 100 },
+        { field: 'L', width: 100 },
+        { field: 'M', width: 100 },
+        { field: 'N', width: 100 }
+    ];
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;

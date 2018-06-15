@@ -194,6 +194,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set groupingExpressions(value) {
+        if (value && value.length > 10) {
+            throw Error('Maximum amount of grouped columns is 10.');
+        }
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
         this.gridAPI.arrange_sorting_expressions(this.id);
