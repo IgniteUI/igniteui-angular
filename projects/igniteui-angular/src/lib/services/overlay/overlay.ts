@@ -156,7 +156,8 @@ export class IgxOverlayService {
 
         const dc: ComponentRef<{}> = dynamicFactory.create(this._injector);
 
-        element = dc.location.nativeElement;
+        // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
+        element = dc.location.nativeElement.lastElementChild;
         this._appRef.attachView(dc.hostView);
 
         this._elements.push({
