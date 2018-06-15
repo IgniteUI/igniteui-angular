@@ -67,13 +67,13 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     private MINIMUM_VIABLE_SIZE = 240;
     private _secondExpression = null;
 
-    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
+    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective })
     protected toggleDirective: IgxToggleDirective;
 
     @ViewChildren(IgxGridFilterExpressionComponent, { read: IgxGridFilterExpressionComponent })
     protected expressionsList: QueryList<IgxGridFilterExpressionComponent>;
 
-    @ViewChild('logicOperators', { read: IgxButtonGroupComponent})
+    @ViewChild('logicOperators', { read: IgxButtonGroupComponent })
     protected logicOperators: IgxButtonGroupComponent;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
@@ -82,13 +82,11 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             {
                 label: 'And',
                 togglable: true,
-                color: 'gray',
                 ripple: 'none'
             },
             {
                 label: 'Or',
                 togglable: true,
-                color: 'gray',
                 ripple: 'none'
             }
         ];

@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Input,
     NgZone,
     OnDestroy,
@@ -69,11 +70,14 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     @ViewChild('defaultDateUI', { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild('select', { read: ElementRef})
+    @ViewChild('select', { read: ElementRef })
     protected select: ElementRef;
 
-    @ViewChild('input', { read: ElementRef})
+    @ViewChild('input', { read: ElementRef })
     protected input: ElementRef;
+
+    @HostBinding('attr.class')
+    public cssClass = 'igx-filtering__expression';
 
     private _column: any;
     public booleanFilterAll = 'All';
@@ -229,7 +233,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
 
     // XXX - Temp fix for (#1183, #1177) (Should be deleted)
     onDatePickerClick() {
-        this.zone.run(() => {});
+        this.zone.run(() => { });
     }
 
     public onDatePickerValueChanged(): void {
