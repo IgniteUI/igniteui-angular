@@ -265,6 +265,7 @@
 
     $grid-head-fs: rem(12px);
     $grid-head-fw: 600;
+    $transition: all 120ms $ease-in-out-cubic;
 
     // Cell
     // $grid-cell-padding: 0 rem(24px);
@@ -897,7 +898,7 @@
         height: calc(#{map-get($grid-header-height, 'compact')} + #{rem(16px)});
     }
 
-    %igx-grid__drop-area {
+    %igx-drop-area {
         min-width: rem(160px);
         display: flex;
         align-items: center;
@@ -905,9 +906,10 @@
         height: map-get($drop-area-height, 'comfortable');
         border-radius: map-get($drop-area-height, 'comfortable') / 2;
         padding: map-get($grid-cell-padding, 'comfortable');
-        background: igx-color($palette, grays, 100);
         margin: rem(4px);
         flex: 1 0 0%;
+        transition: $transition;
+
 
         %igx-drop-area__icon {
             color: --var($theme, 'drop-area-icon-color');
@@ -918,13 +920,17 @@
         }
     }
 
-    %igx-grid__drop-area--cosy {
+    %igx-drop-area--hover {
+        background: igx-color($palette, grays, 100);
+    }
+
+    %igx-drop-area--cosy {
         height: map-get($drop-area-height, 'cosy');
         border-radius: map-get($drop-area-height, 'cosy') / 2;
         padding: map-get($grid-cell-padding, 'cosy');
     }
 
-    %igx-grid__drop-area--compact {
+    %igx-drop-area--compact {
         height: map-get($drop-area-height, 'compact');
         border-radius: map-get($drop-area-height, 'compact') / 2;
         padding: map-get($grid-cell-padding, 'compact');
@@ -934,6 +940,7 @@
     %igx-drop-area__text {
         @include ellipsis();
         color: --var($theme, 'drop-area-text-color');
+        font-size: rem(13px);
     }
 
     %igx-grid__grouping-indicator {

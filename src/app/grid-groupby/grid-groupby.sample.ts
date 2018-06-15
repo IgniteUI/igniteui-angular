@@ -16,16 +16,16 @@ export class GridGroupBySampleComponent implements OnInit {
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 100, hidden: true },
-            { field: 'CompanyName', width: 300 },
+            { field: 'CompanyName', width: 300, groupable: true  },
             { field: 'ContactName', width: 200, pinned: true },
             { field: 'ContactTitle', width: 200, pinned: true, groupable: true },
-            { field: 'Address', width: 300 },
+            { field: 'Address', width: 300, groupable: true  },
             { field: 'Country', width: 150, groupable: true },
             { field: 'City', width: 150, groupable: true },
-            { field: 'Region', width: 150 },
-            { field: 'PostalCode', width: 150 },
-            { field: 'Phone', width: 150 },
-            { field: 'Fax', width: 150 }
+            { field: 'Region', width: 150, groupable: true },
+            { field: 'PostalCode', width: 150, groupable: true  },
+            { field: 'Phone', width: 150, groupable: true  },
+            { field: 'Fax', width: 150, groupable: true  }
         ];
         /* tslint:disable */
         this.data = [

@@ -498,7 +498,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         super(elementRef, renderer);
     }
 
-    @HostBinding('class.igx-group-area--hover')
+    @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
 
     public onDragEnter(event) {

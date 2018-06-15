@@ -222,9 +222,9 @@
     @include m(cosy) {
         @extend %grid-display !optional;
 
-        //@include b(igx-drop-area) {
-        //    @extend %igx-grid__drop-area--cosy !optional;
-        //}
+        @include b(igx-drop-area) {
+            @extend %igx-drop-area--cosy !optional;
+        }
 
         @include e(th) {
             @extend %grid-cell-header--cosy !optional;
@@ -271,9 +271,9 @@
     @include m(compact) {
         @extend %grid-display !optional;
 
-        //@include b(igx-drop-area) {
-        //    @extend %igx-grid__drop-area--compact !optional;
-        //}
+        @include b(igx-drop-area) {
+            @extend %igx-drop-area--compact !optional;
+        }
 
         @include e(th) {
             @extend %grid-cell-header--compact !optional;
@@ -319,7 +319,11 @@
 }
 
 @include b(igx-drop-area) {
-    @extend %igx-grid__drop-area !optional;
+    @extend %igx-drop-area !optional;
+
+    @include m(hover) {
+        @extend %igx-drop-area--hover !optional;
+    }
 
     @include e(icon) {
         @extend %igx-drop-area__icon !optional;
@@ -332,7 +336,6 @@
 
 @include b(igx-group-label) {
     @extend %igx-group-label !optional;
-
 
     @include e(icon) {
         @extend %igx-group-label__icon !optional;
