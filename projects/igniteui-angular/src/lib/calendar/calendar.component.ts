@@ -94,44 +94,79 @@ export class CalendarHammerConfig extends HammerGestureConfig {
     templateUrl: 'calendar.component.html'
 })
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
-
-    @HostBinding('attr.id')
+/**
+ * Sets/gets the `id` of the calendar.
+ * If not set, the `id` will have value "'igx-calendar-0'".
+ * ```html
+ * <igx-calendar id = "my-first-calendar"></igx-calendar->
+ * ```
+ * ```typescript
+ * let calendarId =  this.calendar.id;
+ * ```
+ * @memberof IgxCalendarComponent
+ */
+@HostBinding('attr.id')
     @Input()
     public id = `igx-calendar-${NEXT_ID++}`;
     /**
-     * An `@Input` property indicating the start of the week.
+     * Gets the start of the week.
      * Defaults to Sunday.
+     * ```typescript
+     * let weekStart =  this.calendar.weekStart;
+     * ```
+     * @memberof IgxCalendarComponent
      */
     @Input()
     public get weekStart(): WEEKDAYS | number {
         return this.calendarModel.firstWeekDay;
     }
-
-    public set weekStart(value: WEEKDAYS | number) {
+/**
+ * Sets the start of the week.
+ * ```html
+ * <igx-calendar [weekStart] = "1"></igx-calendar>
+ * ```
+ * @memberof IgxCalendarComponent
+ */
+public set weekStart(value: WEEKDAYS | number) {
         this.calendarModel.firstWeekDay = value;
     }
 
     /**
-     * An `@Input` property indicating the locale of the calendar.
+     * Sets/gets the `locale` of the calendar.
      * Expects a valid BCP 47 language tag.
+     * Default value is `"en"`.
+     * ```html
+     * <igx-calendar [locale] = "de"></igx-calendar>
+     * ```
+     * ```typescript
+     * let locale =  this.calendar.locale;
+     * ```
+     * @memberof IgxCalendarComponent
      */
     @Input()
     public locale = 'en';
 
     /**
-     * An @Input property controlling the selection mechanism of the calendar.
-     * Allowed values are `single`, `multi` and `range`. Defaults to `single`.
-     * Providing and invalid value will throw an error.
      *
+     * Gets the selection type of the calendar.
+     * Default value is `"single"`.
      * Changing the type of selection in the calendar resets the currently
      * selected values if any.
+     * ```typescript
+     * let selectionType =  this.calendar.selection;
+     * ```
+     * @memberof IgxCalendarComponent
      */
     @Input()
     public get selection(): string {
         return this._selection;
     }
-
-    public set selection(value: string) {
+/**
+ * Sets the selection type of the calendar.
+ * <igx-calendar [selection] = "'multi'"></igx-calendar>
+ * @memberof IgxCalendarComponent
+ */
+public set selection(value: string) {
         switch (value) {
             case 'single':
                 this.selectedDates = null;
@@ -149,69 +184,123 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
-     * An @Input property controlling the the year/month that will be presented in the default view when the calendar renders.
-     * By default it is the current year/month.
+     * Gets the date that is presented in the calendar.
+     * By default it is the current date.
+     * ```typescript
+     * let date = this.calendar.viewDate;
+     * ```
+     * @memberof IgxCalendarComponent
      */
     @Input()
     public get viewDate(): Date {
         return this._viewDate;
     }
-
-    public set viewDate(value: Date) {
+/**
+ * Sets the date that will be presented in the default view when the calendar renders.
+ * ```html
+ * <igx-calendar viewDate = "15/06/2018"></igx-calendar>
+ * ```
+ * @memberof IgxCalendarComponent
+ */
+public set viewDate(value: Date) {
         this._viewDate = new Date(value);
     }
 
     /**
-     * Gets and sets the selected date(s) of the calendar.
+     * Gets the selected date(s) of the calendar.
      *
-     * When the calendar selection is set to `single`, it accepts/returns
+     * When the calendar selection is set to `single`, it returns
      * a single `Date` object.
      * Otherwise it is an array of `Date` objects.
+     * ```typescript
+     * let selectedDates =  this.calendar.value;
+     * ```
+     * @memberof IgxCalendarComponent
      */
     @Input()
     public get value(): Date | Date[] {
         return this.selectedDates;
     }
-
-    public set value(value: Date | Date[]) {
+/**
+ * Sets the selected date(s) of the calendar.
+ *
+ * When the calendar selection is set to `single`, it accepts
+ * a single `Date` object.
+ * Otherwise it is an array of `Date` objects.
+ * ```typescript
+ *  this.calendar.value =  new Date(`2016-06-12`);;
+ * ```
+ * @memberof IgxCalendarComponent
+ */
+public set value(value: Date | Date[]) {
         this.selectDate(value);
     }
 
     /**
-     * An @Input property which controls the formatting of the date components to use in
-     * formatted output.
+     * Gets the date format options of the calendar.
+     * ```typescript
+     * let dateFormatOptions = this.calendar.formatOptions.
+     * ```
      */
     @Input()
     public get formatOptions(): object {
         return this._formatOptions;
     }
+    /**
+     * Sets the date format options of the calendar.
+     * ```html
+     *<igx-calendar> [formatOptions] = "{ day: '2-digit', month: 'short', weekday: 'long', year: 'numeric' }"</igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
     public set formatOptions(formatOptions: object) {
         this._formatOptions = Object.assign(this._formatOptions, formatOptions);
     }
 
     /**
-     * An @Input property controlling whether the 'day', 'month' and 'year' should be rendered
+     * Gets whether the `day`, `month` and `year` should be rendered
      * according to the locale and formatOptions, if any.
-     * Affects rendering in the default view, month view and year view.
-     * Does not affect rendering in the header.
+     * ```typescript
+     * let formatViews = this.calendar.formatViews;
+     * ```
      */
     @Input()
     public get formatViews(): object {
         return this._formatViews;
     }
+    /**
+     * Gets whether the `day`, `month` and `year` should be rendered
+     * according to the locale and formatOptions, if any.
+     * ```html
+     * <igx-calendar [formatViews] = "{ day: true, month: false, year: true }"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
     public set formatViews(formatViews: object) {
         this._formatViews = Object.assign(this._formatViews, formatViews);
     }
 
     /**
-     * An @Input property controlling the layout of the calendar.
-     * When `vertical` is set to `true` the calendar header will be displayed on the side of
-     * the calendar body, otherwise it will be above (default).
+     * Sets/gets whether the calendar header will be in vertical position.
+     * Default value is `false`.
+     * ```html
+     * <igx-calendar [vertical] = "true"></igx-calendar>
+     * ```
+     * ```typescript
+     * let isVertical = this.calendar.vertical;
+     * ```
      */
     @Input()
     public vertical = false;
-
-    @Output()
+/**
+ * Emits an event when a selection is made in the calendar.
+ * Provides reference the `selectedDates` property in the `IgxCalendarComponent`.
+ * ```html
+ * <igx-calendar (onSelection) = "onSelection(calendar.selectedDates)"></igx-calendar>
+ * ```
+ * @memberof IgxCalendarComponent
+ */
+@Output()
     public onSelection = new EventEmitter<Date | Date[]>();
 
     /**
@@ -310,7 +399,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
-     * Returns the current active view of the calendar.
+     * Gets the current active view of the calendar.
+     * ```typescript
+     * let activeView =  this.calendar.activeView;
+     * ```
      */
     get activeView(): CalendarView {
         return this._activeView;
@@ -322,32 +414,57 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     get monthAction(): string {
         return this._monthAction;
     }
-
-    get headerTemplate(): any {
+/**
+ * Gets the header template.
+ * ```typescript
+ * let headerTemplate =  this.calendar.headerTeamplate;
+ * ```
+ * @memberof IgxCalendarComponent
+ */
+get headerTemplate(): any {
         if (this.headerTemplateDirective) {
             return this.headerTemplateDirective.template;
         }
         return null;
     }
-
-    set headerTemplate(directive: any) {
+/**
+ * Sets the header template.
+ * ```html
+ * <igx-calendar headerTemplateDirective = "igxCalendarHeader"></igx-calendar>
+ * ```
+ * @memberof IgxCalendarComponent
+ */
+set headerTemplate(directive: any) {
         this.headerTemplateDirective = directive;
     }
-
-    get subheaderTemplate(): any {
+/**
+ * Gets the subheader template.
+ * ```typescript
+ * let subheaderTemplate = this.calendar.subheaderTemplate;
+ * ```
+ */
+get subheaderTemplate(): any {
         if (this.subheaderTemplateDirective) {
             return this.subheaderTemplateDirective.template;
         }
         return null;
     }
-
-    set subheaderTemplate(directive: any) {
+/**
+ * Sets the subheader template.
+ * ```html
+ * <igx-calendar subheaderTemplate = "igxCalendarSubheader"></igx-calendar>
+ * ```
+ * @memberof IgxCalendarComponent
+ */
+set subheaderTemplate(directive: any) {
         this.subheaderTemplateDirective = directive;
     }
 
     /**
-     * Returns the context for the template marked with the `igxCalendarHeader` directive.
-     *
+     * Gets the context for the template marked with the `igxCalendarHeader` directive.
+     * ```typescripte
+     * let headerContext =  this.calendar.headerContext;
+     * ```
      */
     get headerContext() {
         const date: Date = this.headerDate;
@@ -355,8 +472,11 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
-     * Returns the context for the template marked with either `igxCalendarSubHeaderMonth`
+     * Gets the context for the template marked with either `igxCalendarSubHeaderMonth`
      * or `igxCalendarSubHeaderYear` directive.
+     * ```typescript
+     * let context =  this.calendar.context;
+     * ```
      */
     get context() {
         const date: Date = this._viewDate;
@@ -382,20 +502,46 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     // tslint:disable-next-line:max-line-length
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
-
-    private _viewDate: Date;
-    private calendarModel: Calendar;
-    private _activeView = CalendarView.DEFAULT;
-    private selectedDates;
-    private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
-    private _rangeStarted = false;
-    private _monthAction = '';
-    private _formatOptions = {
+/**
+ *@hidden
+ */
+private _viewDate: Date;
+/**
+ *@hidden
+ */
+private calendarModel: Calendar;
+/**
+ *@hidden
+ */
+private _activeView = CalendarView.DEFAULT;
+/**
+ *@hidden
+ */
+private selectedDates;
+/**
+ *@hidden
+ */
+private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
+/**
+ *@hidden
+ */
+private _rangeStarted = false;
+/**
+ *@hidden
+ */
+private _monthAction = '';
+/**
+ *@hidden
+ */
+private _formatOptions = {
         day: 'numeric',
         month: 'short',
         weekday: 'short',
         year: 'numeric'
     };
+    /**
+     *@hidden
+     */
     private _formatViews = {
         day: false,
         month: true,
@@ -563,8 +709,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
-     * Performs date selection through the API of the calendar component.
-     * Does not trigger `onSelection` event.
+     * Selects date(s) (based on the selection type).
+     *```typescript
+     * this.calendar.selectDate(new Date(`2018-06-12`));
+     *```
      */
     public selectDate(value: Date | Date[]) {
         switch (this.selection) {
@@ -781,6 +929,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
     /**
      * Performs a single selection.
+     * @hidden
      */
     private selectSingle(value: Date) {
         this.selectedDates = value;
@@ -789,6 +938,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
     /**
      * Performs a multiple selection
+     * @hidden
      */
     private selectMultiple(value: Date | Date[]) {
         if (Array.isArray(value)) {
@@ -805,8 +955,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
         this._onChangeCallback(this.selectedDates);
     }
-
-    private selectRange(value: Date | Date[]) {
+/**
+ *@hidden
+ */
+private selectRange(value: Date | Date[]) {
         let start: Date;
         let end: Date;
 
@@ -846,6 +998,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
      * Helper method building and returning the context object inside
      * the calendar templates.
+     * @hidden
      */
     private generateContext(value: Date) {
         const formatObject = {
@@ -856,8 +1009,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         };
         return { $implicit: formatObject };
     }
-
-    private generateDateRange(start: Date, end: Date): Date[] {
+/**
+ *@hidden
+ */
+private generateDateRange(start: Date, end: Date): Date[] {
         const result = [];
 
         while (start.toDateString() !== end.toDateString()) {
@@ -867,8 +1022,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
         return result;
     }
-
-    private generateYearRange(delta: number) {
+/**
+ *@hidden
+ */
+private generateYearRange(delta: number) {
         const currentYear = new Date().getFullYear();
 
         if ((delta > 0 && this._viewDate.getFullYear() - currentYear >= 95) ||
@@ -877,7 +1034,12 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         }
         this._viewDate = this.calendarModel.timedelta(this._viewDate, 'year', delta);
     }
-
-    private _onTouchedCallback: () => void = () => { };
-    private _onChangeCallback: (_: Date) => void = () => { };
+/**
+ *@hidden
+ */
+private _onTouchedCallback: () => void = () => { };
+/**
+ *@hidden
+ */
+private _onChangeCallback: (_: Date) => void = () => { };
 }
