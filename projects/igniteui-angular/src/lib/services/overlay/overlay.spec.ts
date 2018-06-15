@@ -10,11 +10,12 @@ import { AnimationBuilder } from '@angular/animations';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { IgxOverlayService } from './overlay';
 import { IgxOverlayDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
+import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings } from './utilities';
 
-describe('igxOverlay', () => {
+fdescribe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule],
@@ -167,7 +168,7 @@ describe('igxOverlay', () => {
         });
     });
 
-    fit('The overlay wrapper div element, have the corresponding inline css applied for each alignment ', () => {
+    it('The overlay wrapper div element, have the corresponding inline css applied for each alignment ', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -176,9 +177,9 @@ describe('igxOverlay', () => {
 
         const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
         const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-        const cssStyles: Array<string> = ['flex-start', 'center',  'flex-end'];
+        const cssStyles: Array<string> = ['flex-start', 'center', 'flex-end'];
 
-        for (let i = 0; i < horAl.length ; i++) {
+        for (let i = 0; i < horAl.length; i++) {
             positionSettings.horizontalDirection = HorizontalAlignment[horAl[i]];
             for (let j = 0; j < verAl.length; j++) {
                 positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
@@ -187,9 +188,9 @@ describe('igxOverlay', () => {
                 fixture.detectChanges();
 
                 const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.lastChild;
-                    fixture.detectChanges();
-                    expect(overlayWrapper.style.justifyContent).toBe(cssStyles[i]);
-                    expect(overlayWrapper.style.alignItems).toBe(cssStyles[j]);
+                fixture.detectChanges();
+                expect(overlayWrapper.style.justifyContent).toBe(cssStyles[i]);
+                expect(overlayWrapper.style.alignItems).toBe(cssStyles[j]);
             }
         }
     });
@@ -203,26 +204,26 @@ describe('igxOverlay', () => {
     });
     // adding more than one component to show in igx-overlay:
     xit('When adding a component near the window borders(left,right,up,down), it should be rendered in the igx-overlay center ' +
-    '- default', () => {
-        // TO DO
-    });
+        '- default', () => {
+            // TO DO
+        });
 
     xit('If the shown component is bigger than the visible window, than it should be centered and scrollbars should appear.', () => {
         // TO DO
     });
     // 1.1.1 Global Css
     xit('css class should be applied on igx-overlay component div wrapper.' +
-    'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class', () => {
-        const fixture = TestBed.createComponent(EmptyPageComponent);
-        fixture.detectChanges();
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
-        fixture.whenStable().then(() => {
+        'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
-            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-            expect(overlayWrapper.classList.contains('igx-overlay__wrapper')).toBeTruthy();
-            expect(overlayWrapper.localName).toEqual('div');
+            fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+                expect(overlayWrapper.classList.contains('igx-overlay__wrapper')).toBeTruthy();
+                expect(overlayWrapper.localName).toEqual('div');
+            });
         });
-    });
 
     xit('css class should be applied on igx-overlay component inner div wrapper', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -303,43 +304,95 @@ describe('igxOverlay', () => {
             // TO DO
         });
     // 1.2.1 Connected Css
-        xit('css class should be applied on igx-overlay component div wrapper', () => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            fixture.detectChanges();
-            const overlaySettings = new OverlaySettings();
-            overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
+    xit('css class should be applied on igx-overlay component div wrapper', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        const overlaySettings = new OverlaySettings();
+        overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
 
-            fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-                expect(overlayWrapper.classList.contains('igx-overlay__wrapper')).toBeTruthy();
-                expect(overlayWrapper.localName).toEqual('div');
-            });
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+            expect(overlayWrapper.classList.contains('igx-overlay__wrapper')).toBeTruthy();
+            expect(overlayWrapper.localName).toEqual('div');
         });
+    });
     // 1.3 AutoPosition (fit the shown component into the visible window.)
-    xit('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
+    it('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
         const fix = TestBed.createComponent(EmptyPageComponent);
         fix.detectChanges();
-        // const overlaySettings = new OverlaySettings();
-        // const positionSettings = new PositionSettings();
-        // overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-        // fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
-        expect(1).toEqual(2);
-        // fix.whenStable().then(() => {
-        //     fix.detectChanges();
-        //     const wrapper = fix.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
-        //     expect(wrapper.clientHeight).toEqual(fix.debugElement.nativeElement.parentElement.parentElement.clientHeight);
-        //     expect(wrapper.clientWidth).toEqual(fix.debugElement.nativeElement.parentElement.parentElement.clientWidth);
-        // });
+        const overlaySettings = new OverlaySettings();
+        const positionSettings = new PositionSettings();
+        overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+        fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const wrapper = fix.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
+            expect(wrapper.classList).toContain('igx-overlay');
+        });
     });
 
-    xit('igx-overlay covers the whole window 100% width and height', () => {
+    it('igx-overlay covers the whole window 100% width and height', () => {
         // TO DO
+        const fix = TestBed.createComponent(EmptyPageComponent);
+        fix.detectChanges();
+        const overlaySettings = new OverlaySettings();
+        const positionSettings = new PositionSettings();
+        overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+        fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const wrapper = fix.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
+            const body = fix.debugElement.query(By.css('body')).nativeElement;
+            expect(wrapper.clientHeight).toEqual(body.clientHeight);
+            expect(wrapper.clientWidth).toEqual(body.clientWidth);
+        });
     });
 
-    xit('The shown component is inside the igx-overlay as a last child.', () => {
-        // TO DO
+    it('The shown component is inside the igx-overlay as a last child.', () => {
+        const fix = TestBed.createComponent(EmptyPageComponent);
+        fix.detectChanges();
+        const overlaySettings = new OverlaySettings();
+        const positionSettings = new PositionSettings();
+        overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+        fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const wrapperContent = fix.debugElement.query(By.css('.igx-overlay__content')).nativeElement;
+            expect(wrapperContent.children.length).toEqual(1);
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style'))
+                .toEqual('position: absolute; width:100px; height: 100px; background-color: red');
+        });
+    });
+
+    xit('Should show the component inside of the viewport if it would normally be displayed outside of bounds', () => {
+        // WIP
+        const fix = TestBed.createComponent(EmptyPageComponent);
+        fix.detectChanges();
+        const buttonElement = fix.componentInstance.buttonElement.nativeElement;
+        buttonElement.style.top = '90%';
+        buttonElement.style.left = '90%';
+        buttonElement.style.position = 'absolute';
+        fix.detectChanges();
+        const positionSettings = new PositionSettings();
+        positionSettings.horizontalDirection = HorizontalAlignment.Right;
+        positionSettings.verticalDirection = VerticalAlignment.Bottom;
+        positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
+        positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
+        positionSettings.element = buttonElement;
+        const overlaySettings = new OverlaySettings();
+        overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+        debugger;
+        fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            debugger;
+            const wrapperContent = document.getElementsByClassName('igx-overlay__content')[0];
+            expect(wrapperContent.children.length).toEqual(1);
+            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+        });
     });
 
     xit('igx-overlay displays each shown component based on the options specified if the component fits into the visible window.', () => {

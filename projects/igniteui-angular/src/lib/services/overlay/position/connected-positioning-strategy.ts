@@ -9,7 +9,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this._settings = positionSettings ? positionSettings : new PositionSettings();
     // this._wrapperClass = 'connected-show';
   }
-  position(element, wrapper, rect): void {
+  position(element: HTMLElement, wrapper: HTMLElement, rect: { width: number, height: number}, document?: Document): void {
     const componentWrapper = wrapper;
     const eWidth = rect.width;
     const eHeight = rect.height;

@@ -3,25 +3,15 @@ import { IPositionStrategy } from './IPositionStrategy';
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
 import { Inject, forwardRef, Host } from '@angular/core';
 import { BrowserModule, _document } from '@angular/platform-browser/src/browser';
+import { Rectangle, GlobalPositionStrategy } from 'dist/igniteui-angular/public_api';
 
 enum Axis {
     X = 1,
     Y = 0
 }
-export class AutoPositionStrategy implements IPositionStrategy {
-    // public _wrapperClass: string;
-    public _settings: PositionSettings;
+export class AutoPositionStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
     public wrapperClass: string;
-    private _wrapper: HTMLElement;
-    private _offsetPadding = 16;
-    constructor(
-        private options?: any,
-        // @Inject(forwardRef(() => DOCUMENT)) private document?: Document
-    ) {
-        this._settings = options ? options : new PositionSettings();
-        // debugger;
-        // this.document = this.document ? this.document : DOCUMENT;
-    }
+    public offsetPadding = 16;
 
     getViewPort(document) { // Material Design implementation
         const clientRect = document.documentElement.getBoundingClientRect();
@@ -45,11 +35,10 @@ export class AutoPositionStrategy implements IPositionStrategy {
 
 
     // The position method should return a <div> container that will host the component
-    position(element, wrapper, rect, document?): void {
-        this.wrapperClass = 'auto-show';
-        const positioningStrat = new ConnectedPositioningStrategy(this._settings);
-        positioningStrat.position(element, wrapper, rect);
+    position(element: HTMLElement, wrapper: HTMLElement, rect: { width: number, height: number }, document?: Document): void {
         const viewPort = this.getViewPort(document);
+        super.position(element, wrapper, rect, document);
+        this.wrapperClass = 'auto-show';
         const checkIfMoveHorizontal = (elem: HTMLElement) => {
             const leftBound = elem.parentElement.offsetLeft;
             const rightBound = elem.parentElement.offsetLeft + elem.clientWidth;
@@ -57,13 +46,13 @@ export class AutoPositionStrategy implements IPositionStrategy {
             switch (this._settings.horizontalDirection) {
                 case (-1):
                     newPosition = leftBound < viewPort.left ?
-                        parseFloat(elem.parentElement.style.left) + viewPort.left - leftBound + this._offsetPadding :
+                        parseFloat(elem.parentElement.style.left) + viewPort.left - leftBound + this.offsetPadding :
                         parseFloat(elem.parentElement.style.left);
                     elem.parentElement.style.left = newPosition + 'px';
                     break;
                 case (0):
                     newPosition = rightBound > viewPort.right ?
-                        parseFloat(elem.parentElement.style.left) + viewPort.right - rightBound - this._offsetPadding :
+                        parseFloat(elem.parentElement.style.left) + viewPort.right - rightBound - this.offsetPadding :
                         parseFloat(elem.parentElement.style.left);
                     elem.parentElement.style.left = newPosition + 'px';
                     break;
@@ -78,13 +67,13 @@ export class AutoPositionStrategy implements IPositionStrategy {
             switch (this._settings.verticalDirection) {
                 case (-1):
                     newPosition = topBound < viewPort.top ?
-                        parseFloat(elem.parentElement.style.top) + viewPort.top - topBound + this._offsetPadding :
+                        parseFloat(elem.parentElement.style.top) + viewPort.top - topBound + this.offsetPadding :
                         parseFloat(elem.parentElement.style.top);
                     elem.parentElement.style.top = newPosition + 'px';
                     break;
                 case (0):
                     newPosition = bottomBound > viewPort.bottom ?
-                        parseFloat(elem.parentElement.style.top) + viewPort.bottom - bottomBound - this._offsetPadding :
+                        parseFloat(elem.parentElement.style.top) + viewPort.bottom - bottomBound - this.offsetPadding :
                         parseFloat(elem.parentElement.style.top);
                     elem.parentElement.style.top = newPosition + 'px';
                     break;
