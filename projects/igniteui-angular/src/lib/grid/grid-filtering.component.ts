@@ -138,6 +138,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
                 });
             }
         }
+        this._secondExpression = null;
         this.expressionsList.forEach(el => el.cdr.markForCheck());
         this.cdr.detectChanges();
     }
@@ -169,6 +170,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             }
             if ((expr as FilteringExpressionsTree).filteringOperands.length >= 2) {
                 grid.filter(this.column.field, null, (expr as FilteringExpressionsTree), this.column.filteringIgnoreCase);
+                grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
             }
         }
     }
@@ -178,8 +180,12 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         if (this.logicOperators.selectedIndexes.length === 0) {
             this.isSecondConditionVisible = false;
             this._secondExpression = this._createNewExpression(this.expressionsList.toArray()[1].expression);
-            this.expressionsList.toArray()[1].clearFiltering(false);
+            this.expressionsList.toArray()[1].clearFiltering(true);
             this._filter(this.expressionsList.toArray()[0].expression);
+            
+            const grid = this.gridAPI.get(this.gridID);
+            const expr = grid.filteringExpressionsTree.find(this.column.field);
+            grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
         }
     }
 
