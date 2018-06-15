@@ -65,7 +65,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
     /**
-    * An @Input property that sets the value of the `id` attribute.
+    * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
     *```html
     *<igx-dialog [id]="'igx-dialog-56'" #alert title="Notification" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
     *```
@@ -114,7 +114,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     @Input()
     public leftButtonType = 'flat';
     /**
-     * An @Input property to set the left button color.
+     * An @Input property to set the left button color. The property accepts all valid CSS color property values.
      *```html
      *<igx-dialog leftButtonColor="yellow" leftButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
      *```
@@ -123,7 +123,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public leftButtonColor = '';
 
     /**
-     * An @Input property to set the left button `background-color`.
+     * An @Input property to set the left button `background-color`. The property accepts all valid CSS color property values.
      *```html
      *<igx-dialog leftButtonBackgroundColor="black" leftButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
      *```
@@ -132,7 +132,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public leftButtonBackgroundColor = '';
 
     /**
-     * An @Input property to set the left button `ripple`.
+     * An @Input property to set the left button `ripple`. The `ripple` animates a click/tap to a component as a series of fading waves.
+     * The property accepts all valid CSS color property values.
      *```html
      *<igx-dialog leftButtonRipple="green" leftButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
      *```
@@ -163,7 +164,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public rightButtonType = 'flat';
 
     /**
-     * An @Input property to set the right button `color`.
+     * An @Input property to set the right button `color`. The property accepts all valid CSS color property values.
      *```html
      *<igx-dialog rightButtonColor="yellow" rightButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
      *```
@@ -172,7 +173,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public rightButtonColor = '';
 
     /**
-     * An @Input property to set the right button `background-color`.
+     * An @Input property to set the right button `background-color`. The property accepts all valid CSS color property values.
      *```html
      *<igx-dialog rightButtonBackgroundColor="black" rightButtonLabel="OKAY" #alert (onLeftButtonSelect)="alert.close()"></igx-dialog>
      *```
@@ -201,7 +202,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public closeOnOutsideSelect = false;
 
     /**
-     * An @Output property that triggers a function when the dialog is opened.
+     * An event that is emitted when the dialog is opened.
      *```html
      *<igx-dialog (onOpen)="onDialogOpenHandler($event)" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
      *</igx-dialog>
@@ -211,7 +212,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public onOpen = new EventEmitter<IDialogEventArgs>();
 
     /**
-     * An @Output property that triggers a function when the dialog is closed.
+     * An event that is emitted when the dialog is closed.
      *```html
      *<igx-dialog (onClose)="onDialogCloseHandler($event)" title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK">
      *</igx-dialog>
@@ -221,7 +222,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public onClose = new EventEmitter<IDialogEventArgs>();
 
     /**
-     * An @Output property that triggers a function when the left button is clicked.
+     * An event that is emitted when the left button is clicked.
      *```html
      *<igx-dialog (onLeftButtonSelect)="onDialogOKSelected($event)" #dialog leftButtonLabel="OK" rightButtonLabel="Cancel">
      *</igx-dialog>
@@ -231,7 +232,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     public onLeftButtonSelect = new EventEmitter<IDialogEventArgs>();
 
     /**
-     * An @Output property that triggers a function when the right button is clicked.
+     * An event that is emitted when the right button is clicked.
      * ```html
      *<igx-dialog (onRightButtonSelect)="onDialogOKSelected($event)"
      *#dialog title="Confirmation" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK"
@@ -263,7 +264,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     private _state: string;
 
     /**
-     * Returns the value of state.
+     * Returns the value of state. Possible state values are "open" or "close".
      *```typescript
      *@ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
@@ -316,7 +317,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     *Returns the value of the title.
+     *Returns the value of the title id.
      *```typescript
      *@ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
@@ -373,7 +374,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
 
 
     /**
-     * A method that opens/closes the dialog on click.
+     * A method that opens/closes the dialog.
      *@memberOf {@link IgxDialogComponent}
      *```html
      *<button (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
