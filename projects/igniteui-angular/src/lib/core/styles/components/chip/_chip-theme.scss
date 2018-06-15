@@ -151,16 +151,20 @@
     $transition: all 120ms $ease-in-out-cubic;
 
     $chip-height: (
-        comfortable: rem(40px),
-        cosy: rem(32px),
-        compact: rem(32px)
+        comfortable: rem(32px),
+        cosy: rem(24px),
+        compact: rem(24px)
     );
 
     %igx-chips-area {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        width: 100%;
+        flex-wrap: wrap;
+
+        &:empty {
+            display: none;
+        }
     }
 
     %igx-chip,
@@ -181,7 +185,8 @@
         user-select: none;
         cursor: pointer;
         border-radius: map-get($chip-height, 'comfortable') / 2;
-        padding: rem(4) rem(16);
+        padding: 0 rem(16);
+        margin: rem(4px);
         height: map-get($chip-height, 'comfortable');
         transition: $transition;
         background: --var($theme, 'chip-background');
@@ -271,7 +276,7 @@
             opacity: .4;
         }
     }
-        
+
     %igx-chip__ghost {
         width: fit-content;
         position: absolute;

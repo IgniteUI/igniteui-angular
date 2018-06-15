@@ -5,6 +5,7 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
+
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
@@ -161,10 +162,6 @@
         @extend %igx-grid__grouparea !optional;
     }
 
-    @include e(grouparea-placeholder) {
-        @extend %igx-grid__grouparea-placeholder !optional;
-    }
-
     @include e(grouping-indicator) {
         @extend %igx-grid__grouping-indicator !optional;
     }
@@ -225,6 +222,10 @@
     @include m(cosy) {
         @extend %grid-display !optional;
 
+        //@include b(igx-drop-area) {
+        //    @extend %igx-grid__drop-area--cosy !optional;
+        //}
+
         @include e(th) {
             @extend %grid-cell-header--cosy !optional;
         }
@@ -270,6 +271,10 @@
     @include m(compact) {
         @extend %grid-display !optional;
 
+        //@include b(igx-drop-area) {
+        //    @extend %igx-grid__drop-area--compact !optional;
+        //}
+
         @include e(th) {
             @extend %grid-cell-header--compact !optional;
         }
@@ -313,6 +318,17 @@
     }
 }
 
+@include b(igx-drop-area) {
+    @extend %igx-grid__drop-area !optional;
+
+    @include e(icon) {
+        @extend %igx-drop-area__icon !optional;
+    }
+
+    @include e(text) {
+        @extend %igx-drop-area__text !optional;
+    }
+}
 
 @include b(igx-group-label) {
     @extend %igx-group-label !optional;
@@ -334,5 +350,3 @@
         @extend %igx-group-label__count-badge !optional;
     }
 }
-
-
