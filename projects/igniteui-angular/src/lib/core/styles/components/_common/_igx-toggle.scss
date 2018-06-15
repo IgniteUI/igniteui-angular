@@ -27,7 +27,6 @@
         display: flex;
         position: fixed;
         pointer-events: none;
-        position: absolute;
     }
 
     @include e(content) {
@@ -37,6 +36,5 @@
     @include e(content, $m: no-modal) {
         position: fixed;
         pointer-events: all;
-        position: absolute;
     }
 }

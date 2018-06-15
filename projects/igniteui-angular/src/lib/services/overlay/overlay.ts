@@ -14,7 +14,6 @@ import {
     Injectable,
     Injector
 } from '@angular/core';
-import { ScrollStrategyFactory } from './scroll/ScrollStrategyFactory';
 
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
@@ -53,8 +52,7 @@ export class IgxOverlayService {
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
         private _injector: Injector,
-        @Inject(DOCUMENT) private _document: any,
-        @Inject(ScrollStrategyFactory) private scrollFactory: ScrollStrategyFactory) { }
+        @Inject(DOCUMENT) private _document: any) { }
 
     /**
      * Attaches provided component's native element to the OverlayElement
@@ -82,6 +80,7 @@ export class IgxOverlayService {
         positionStrategy.position(element, contentElement, this._elements.find(e => e.id === id).size, document);
 
         if (overlaySettings.scrollStrategy) {
+            overlaySettings.scrollStrategy.initialize(this._document, this, id);
             overlaySettings.scrollStrategy.attach();
         }
 
@@ -93,7 +92,7 @@ export class IgxOverlayService {
         // TODO: cleanup
         this.onClosing.emit();
 
-        const element = this._elements.find(e => e.id === id);
+        const element = this.getElementById(id);
         if (!element) {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
         }
@@ -117,6 +116,11 @@ export class IgxOverlayService {
         while (this._elements.length > 0) {
             this.hide(this._elements[this._elements.length - 1].id);
         }
+    }
+
+    getElementById(id: string) {
+        const element = this._elements.find(e => e.id === id);
+        return element;
     }
 
     private getId(id?: string) {
