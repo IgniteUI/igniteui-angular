@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
     selector: 'app-drag-drop-sample',
@@ -7,9 +7,9 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, ChangeDetectionStrateg
 })
 export class DragDropSampleComponent {
 
-    private draggingElem = false;
-    private dragEnteredArea = false;
-    private draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
+    draggingElem = false;
+    dragEnteredArea = false;
+    draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
 
     constructor(private cdr: ChangeDetectorRef) {
     }

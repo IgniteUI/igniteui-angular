@@ -109,15 +109,16 @@ export class IgxColumnComponent implements AfterContentInit {
 
     @Input()
     get index(): number {
-        return this._index;
+        return this.grid.columns.indexOf(this);
+        // return this._index;
     }
 
-    set index(value: number) {
-        if (this._index !== value) {
-            this._index = value;
-            this.check();
-        }
-    }
+    // set index(value: number) {
+    //     if (this._index !== value) {
+    //         this._index = value;
+    //         this.check();
+    //     }
+    // }
 
     @Input()
     public formatter: (value: any) => any;
@@ -226,6 +227,9 @@ export class IgxColumnComponent implements AfterContentInit {
     get visibleIndex(): number {
         const grid = this.gridAPI.get(this.gridID);
         let vIndex = -1;
+        if (this.columnGroup) {
+            return vIndex;
+        }
         if (!this.pinned) {
             const indexInCollection = grid.unpinnedColumns.indexOf(this);
             vIndex = indexInCollection === -1 ? -1 : grid.pinnedColumns.length + indexInCollection;
@@ -237,6 +241,10 @@ export class IgxColumnComponent implements AfterContentInit {
 
     get columnGroup() {
         return false;
+    }
+
+    get allChildren(): IgxColumnComponent[] {
+        return [];
     }
 
     get level() {
@@ -263,7 +271,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _hidden = false;
     protected _index: number;
 
-    private _defaultMinWidth = '88';
+    protected _defaultMinWidth = '88';
 
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
@@ -344,7 +352,7 @@ export class IgxColumnComponent implements AfterContentInit {
         // should be moved as a event parameter.
 
         if (this.parent && !this.parent.pinned) {
-            this.topLevelParent(this).pinned = true;
+            this.topLevelParent.pinned = true;
             return;
         }
 
@@ -380,7 +388,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     protected _unpinColumn() {
         if (this.parent && this.parent.pinned) {
-            this.topLevelParent(this).pinned = false;
+            this.topLevelParent.pinned = false;
             return;
         }
 
@@ -402,8 +410,8 @@ export class IgxColumnComponent implements AfterContentInit {
         this.updateHighlights(oldIndex, newIndex);
     }
 
-    public topLevelParent(column: IgxColumnComponent) {
-        let parent = column.parent;
+    get topLevelParent() {
+        let parent = this.parent;
         while (parent && parent.parent) {
             parent = parent.parent;
         }
@@ -430,6 +438,53 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     children = new QueryList<IgxColumnComponent>();
 
+    @Input()
+    public get summaries(): any {
+        return this._summaries;
+    }
+
+    public set summaries(classRef: any) {}
+
+    @Input()
+    public searchable = true;
+
+    @Input()
+    public get filters(): any {
+        return this._filters;
+    }
+    public set filters(classRef: any) {}
+
+    get defaultMinWidth(): string {
+        return this._defaultMinWidth;
+    }
+
+    get bodyTemplate(): TemplateRef<any> {
+        return this._bodyTemplate;
+    }
+
+    set bodyTemplate(template: TemplateRef<any>) {}
+
+    get headerTemplate(): TemplateRef<any> {
+        return this._headerTemplate;
+    }
+
+    set headerTemplate(template: TemplateRef<any>) {}
+
+    get footerTemplate(): TemplateRef<any> {
+        return this._headerTemplate;
+    }
+
+    set footerTemplate(template: TemplateRef<any>) {}
+
+    get inlineEditorTemplate(): TemplateRef<any> {
+        return this._inlineEditorTemplate;
+    }
+
+    set inlineEditorTemplate(template: TemplateRef<any>) {}
+
+    get cells(): IgxGridCellComponent[] {
+        return [];
+    }
 
     @Input()
     get hidden() {
@@ -452,6 +507,10 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         });
     }
 
+    get allChildren(): IgxColumnComponent[] {
+        return flatten(this.children.toArray());
+    }
+
     get columnGroup() {
         return true;
     }
@@ -461,4 +520,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
 
     set width(val) {}
+}
+
+
+function flatten(arr: any[]) {
+    return arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : arr.concat(val), []);
 }

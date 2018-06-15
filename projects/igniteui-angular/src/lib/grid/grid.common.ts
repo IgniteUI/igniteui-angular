@@ -191,6 +191,8 @@ export class IgxColumnMovingService {
     private _column: IgxColumnComponent;
     private _target: IgxColumnComponent;
 
+    public cancelDrop: boolean;
+
     get column(): IgxColumnComponent {
         return this._column;
     }
@@ -237,6 +239,12 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         return this.column && this.column.movable;
     }
 
+    @HostListener('document:keydown.escape', ['$event'])
+    public onEscape(event) {
+        this.cms.cancelDrop = true;
+        this.onPointerUp(event);
+    }
+
     private _column: IgxColumnComponent;
     private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
 
@@ -260,7 +268,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         this.cms.column = this.column;
         this.ghostImageClass = 'igx-grid__drag-ghost-image';
-        this.defaultReturnDuration = '0.1s';
 
         super.onPointerDown(event);
 
@@ -299,6 +306,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     protected createDragGhost(event) {
         super.createDragGhost(event);
 
+        this._dragGhost.style.height = null;
         this._dragGhost.style.minWidth = null;
         this._dragGhost.style.flexBasis  = null;
 
@@ -319,9 +327,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         } else {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
-            this._dragGhost.removeChild(this._dragGhost.children[0]);
-            this._dragGhost.removeChild(this._dragGhost.children[this._dragGhost.children.length - 1]);
-            this.renderer.addClass(this._dragGhost.children[0], 'igx-grid__drag-ghost-group-image');
+            this._dragGhost.removeChild(this._dragGhost.firstElementChild);
+            this._dragGhost.removeChild(this._dragGhost.lastElementChild);
 
             this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
@@ -374,6 +381,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragEnter(event) {
+
         if (this.isDropTarget &&
             this.cms.column !== this.column &&
             this.cms.column.level === this.column.level &&
@@ -386,6 +394,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.column.grid.onColumnMoving.emit(args);
 
             if (args.cancel) {
+                this.cms.cancelDrop = true;
                 this.cms.icon.innerText = 'block';
                 return;
             }
@@ -469,7 +478,9 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             if (args.cancel || (nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth) ||
                 this.column.level !== this.cms.column.level ||
-                this.column.parent !== this.cms.column.parent) {
+                this.column.parent !== this.cms.column.parent ||
+                this.cms.cancelDrop) {
+                    this.cms.cancelDrop = false;
                     return;
             }
 
