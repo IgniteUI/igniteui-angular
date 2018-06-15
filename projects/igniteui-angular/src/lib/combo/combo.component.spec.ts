@@ -1267,14 +1267,16 @@ describe('Combo', () => {
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const dropdownItemsContainer = fixture.debugElement.query(By.css('.igx-combo__content')).nativeElement;
             const dropDownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
             const listItems = dropDownContainer.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             expect(listItems.length).toEqual(0);
             expect(dropdownList.childElementCount).toEqual(3);
+            // Expect no items to be rendered in the virtual container
+            expect(dropdownItemsContainer.children[0].childElementCount).toEqual(0);
+            // Expect the list child (NOT COMBO ITEM) to be a container with "The list is empty";
             const dropdownItem = dropdownList.lastElementChild as HTMLElement;
-            expect(dropdownItem.className).toEqual(CSS_CLASS_DROPDOWNLISTITEM);
-            const spanElement = dropdownList.querySelector('.igx-drop-down__item > span:first-of-type');
-            expect(spanElement.textContent).toEqual('The list is empty');
+            expect(dropdownItem.firstElementChild.textContent).toEqual('The list is empty');
         });
     }));
     it('Combo data binding - change data source runtime', () => {
@@ -2066,7 +2068,7 @@ describe('Combo', () => {
         const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
-        combo.dropdown.toggle();
+        combo.toggle();
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
@@ -2090,9 +2092,7 @@ describe('Combo', () => {
             expect(listItems.length).toEqual(0);
             expect(dropdownList.childElementCount).toEqual(3);
             const dropdownItem = dropdownList.lastElementChild as HTMLElement;
-            expect(dropdownItem.className).toEqual(CSS_CLASS_DROPDOWNLISTITEM);
-            const spanElement = dropdownList.querySelector('.igx-drop-down__item > span:first-of-type');
-            expect(spanElement.textContent).toEqual('The list is empty');
+            expect(dropdownItem.firstElementChild.textContent).toEqual('The list is empty');
         });
     }));
     it('Typing in the textbox should fire onSearchInput event', fakeAsync(() => {
@@ -2102,7 +2102,7 @@ describe('Combo', () => {
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         spyOn(combo.onSearchInput, 'emit').and.callThrough();
-        combo.dropdown.toggle();
+        combo.toggle();
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
