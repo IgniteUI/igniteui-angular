@@ -36,6 +36,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(gridToolbar).toBe(null);
 
         testPage.grid1.showToolbar = true;
+        testPage.grid1.toolbarTitle = 'abc';
         testPage.grid1.cdr.detectChanges();
         fixture.detectChanges();
 
@@ -56,8 +57,10 @@ describe('IgxGrid - Grid Toolbar', () => {
         const testPage = fixture.componentInstance;
 
         const someTitle = 'Grid Toobar Title';
+        const someOtherTitle = 'Grid Other Toobar Title';
 
         testPage.grid1.showToolbar = true;
+        testPage.grid1.toolbarTitle = someTitle;
         testPage.grid1.cdr.detectChanges();
         fixture.detectChanges();
 
@@ -65,21 +68,14 @@ describe('IgxGrid - Grid Toolbar', () => {
         const gridToolbar = grid.query(By.css('igx-grid-toolbar'));
         let gridToolbarTitle = gridToolbar.query(By.css('.igx-grid-toolbar__title'));
 
-        expect(gridToolbarTitle.nativeElement.innerText).toBe('');
-
-        testPage.grid1.toolbarTitle = someTitle;
-        testPage.grid1.cdr.detectChanges();
-        fixture.detectChanges();
-
-        gridToolbarTitle = gridToolbar.query(By.css('.igx-grid-toolbar__title'));
         expect(gridToolbarTitle.nativeElement.innerText).toBe(someTitle);
 
-        testPage.grid1.toolbarTitle = '';
+        testPage.grid1.toolbarTitle = someOtherTitle;
         testPage.grid1.cdr.detectChanges();
         fixture.detectChanges();
 
         gridToolbarTitle = gridToolbar.query(By.css('.igx-grid-toolbar__title'));
-        expect(gridToolbarTitle.nativeElement.innerText).toBe('');
+        expect(gridToolbarTitle.nativeElement.innerText).toBe(someOtherTitle);
     });
 
     it('testing main export button visibility', () => {
@@ -88,6 +84,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         const testPage = fixture.componentInstance;
 
         testPage.grid1.showToolbar = true;
+        testPage.grid1.toolbarTitle = 'Grid Toobar Title';
         testPage.grid1.cdr.detectChanges();
         fixture.detectChanges();
 
@@ -132,6 +129,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         const testPage = fixture.componentInstance;
 
         testPage.grid1.showToolbar = true;
+        testPage.grid1.toolbarTitle = 'Grid Toobar Title';
         testPage.grid1.cdr.detectChanges();
         fixture.detectChanges();
 
@@ -159,6 +157,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         const testPage = fixture.componentInstance;
 
         testPage.grid1.showToolbar = true;
+        testPage.grid1.toolbarTitle = 'Grid Toobar Title';
         testPage.grid1.cdr.detectChanges();
         fixture.detectChanges();
 
@@ -215,6 +214,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         const testPage = fixture.componentInstance;
 
         testPage.grid1.showToolbar = true;
+        testPage.grid1.toolbarTitle = 'Grid Toobar Title';
         testPage.grid1.cdr.detectChanges();
         fixture.detectChanges();
 
