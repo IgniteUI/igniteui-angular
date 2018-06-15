@@ -143,7 +143,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
 
     @autoWire(true)
     public clearFiltering(): void {
-        this.expressionsList.forEach(el => el.clearFiltering(true));
+        this.expressionsList.forEach(el => {
+            el.clearFiltering(true);
+            el.cdr.markForCheck();
+        });
 
         const grid = this.gridAPI.get(this.gridID);
         grid.clearFilter(this.column.field);
@@ -180,7 +183,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             this._secondExpression = this._createNewExpression(this.expressionsList.toArray()[1].expression);
             this.expressionsList.toArray()[1].clearFiltering(true);
             this._filter(this.expressionsList.toArray()[0].expression);
-            
+
             const grid = this.gridAPI.get(this.gridID);
             const expr = grid.filteringExpressionsTree.find(this.column.field);
             grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
@@ -247,7 +250,9 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         let expr = grid.filteringExpressionsTree.find(this.column.field);
         if (!expr) {
             expr = new FilteringExpressionsTree(FilteringLogic.And, this.column.field);
-            expr.filteringOperands.push(expression);
+            if (expression.searchVal || expression.searchVal === 0 || this.expressionsList.toArray()[0].isUnaryCondition()) {
+                expr.filteringOperands.push(expression);
+            }
         } else {
             (expr as FilteringExpressionsTree).filteringOperands = [];
 
