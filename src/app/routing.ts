@@ -7,6 +7,7 @@ import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
+import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -30,11 +31,13 @@ import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
+import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
@@ -80,6 +83,10 @@ const appRoutes = [
     {
         path: 'dropDown',
         component: DropDownSampleComponent
+    },
+    {
+        path: 'drag-drop',
+        component: DragDropSampleComponent
     },
     {
         path: 'icon',
@@ -175,6 +182,10 @@ const appRoutes = [
         component: GridSampleComponent
     },
     {
+        path: 'gridColumnMoving',
+        component: GridColumnMovingSampleComponent
+    },
+    {
         path: 'gridColumnPinning',
         component: GridColumnPinningSampleComponent
     },
@@ -193,6 +204,10 @@ const appRoutes = [
     {
         path: 'gridSelection',
         component: GridSelectionComponent
+    },
+    {
+        path: 'gridToolbar',
+        component: GridToolbarSampleComponent
     },
     {
         path: 'gridRemoteVirtualization',
