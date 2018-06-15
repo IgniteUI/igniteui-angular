@@ -37,11 +37,13 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IForOfState } from '../directives/for-of/IForOfState';
 import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxBaseExporter } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
+import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation } from '../../public_api';
@@ -97,6 +99,13 @@ export interface ISearchInfo {
     matchInfoCache: any[];
 }
 
+export interface IGridToolbarExportEventArgs {
+    grid: IgxGridComponent;
+    exporter: IgxBaseExporter;
+    type: string;
+    cancel: boolean;
+}
+
 export interface IColumnMovingStartEventArgs {
     source: IgxColumnComponent;
 }
@@ -110,7 +119,6 @@ export interface IColumnMovingEventArgs {
 export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
-    cancel: boolean;
 }
 
 /**
@@ -478,6 +486,132 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
     }
 
+    /* Toolbar related definitions */
+
+    private _showToolbar = false;
+    private _exportExcel = false;
+    private _exportCsv = false;
+    private _toolbarTitle: string = null;
+    private _exportText: string = null;
+    private _exportExcelText: string = null;
+    private _exportCsvText: string = null;
+
+    @ViewChild('toolbar', { read: IgxGridToolbarComponent })
+    public toolbar: IgxGridToolbarComponent = null;
+
+    @ViewChild('toolbar', { read: ElementRef })
+    private toolbarHtml: ElementRef = null;
+
+    @Input()
+    public get showToolbar(): boolean {
+        return this._showToolbar;
+    }
+
+    public set showToolbar(newValue: boolean) {
+        if (this._showToolbar !== newValue) {
+            this._showToolbar = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get toolbarTitle(): string {
+        return this._toolbarTitle;
+    }
+
+    public set toolbarTitle(newValue: string) {
+        if (this._toolbarTitle !== newValue) {
+            this._toolbarTitle = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportExcel(): boolean {
+        return this._exportExcel;
+    }
+
+    public set exportExcel(newValue: boolean) {
+        if (this._exportExcel !== newValue) {
+            this._exportExcel = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportCsv(): boolean {
+        return this._exportCsv;
+    }
+
+    public set exportCsv(newValue: boolean) {
+        if (this._exportCsv !== newValue) {
+            this._exportCsv = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportText(): string {
+        return this._exportText;
+    }
+
+    public set exportText(newValue: string) {
+        if (this._exportText !== newValue) {
+            this._exportText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportExcelText(): string {
+        return this._exportExcelText;
+    }
+
+    public set exportExcelText(newValue: string) {
+        if (this._exportExcelText !== newValue) {
+            this._exportExcelText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportCsvText(): string {
+        return this._exportCsvText;
+    }
+
+    public set exportCsvText(newValue: string) {
+        if (this._exportCsvText !== newValue) {
+            this._exportCsvText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Output()
+    public onToolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
+
+    /* End of toolbar related definitions */
+
     public pagingState;
     public calcWidth: number;
     public calcRowCheckboxWidth: number;
@@ -518,6 +652,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _height = '100%';
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;
+    private _ngAfterViewInitPaassed = false;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -600,7 +735,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
         this._derivePossibleWidth();
         this.calculateGridSizes();
-
+        this._ngAfterViewInitPaassed = true;
     }
 
     public ngOnDestroy() {
@@ -1086,6 +1221,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return;
         }
 
+        let toolbarHeight = 0;
+            if (this.showToolbar && this.toolbarHtml != null) {
+                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                    this.toolbarHtml.nativeElement.offsetHeight : 0;
+        }
+
         let pagingHeight = 0;
         if (this.paging) {
             pagingHeight = this.paginator.nativeElement.firstElementChild ?
@@ -1100,18 +1241,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
             this.calcHeight = this._calculateGridBodyHeight(
-               parseInt(computed.getPropertyValue('height'), 10), pagingHeight);
+               parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight);
         } else {
             this.calcHeight = this._calculateGridBodyHeight(
-                parseInt(this._height, 10), pagingHeight);
+                parseInt(this._height, 10),toolbarHeight, pagingHeight);
         }
     }
 
-    protected _calculateGridBodyHeight(gridHeight: number, pagingHeight: number) {
+    protected _calculateGridBodyHeight(gridHeight: number,
+            toolbarHeight: number, pagingHeight: number) {
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
 
-        return gridHeight -
+        return gridHeight - toolbarHeight -
             this.theadRow.nativeElement.offsetHeight -
             this.summariesHeight - pagingHeight -
             footerBordersAndScrollbars -
