@@ -1,5 +1,6 @@
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import {IPositionStrategy } from './position/IPositionStrategy';
+import { IPositionStrategy } from './position/IPositionStrategy';
+
 import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
 
 export enum HorizontalAlignment {

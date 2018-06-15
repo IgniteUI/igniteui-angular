@@ -1,0 +1,11 @@
+.radio-group {
+    display: flex;
+    flex-flow: column nowrap;
+    margin-top: 16px;
+}
+
+.settings {
+    margin-left: 16px;
+    width: 100%;
+    justify-content: space-between;
+}

@@ -6,13 +6,18 @@ import {
     ViewChild
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { AnimationBuilder } from '@angular/animations';
+import { AnimationBuilder, style } from '@angular/animations';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { IgxOverlayService } from './overlay';
 import { IgxOverlayDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
+import { PositionSettings } from './utilities';
+import { HorizontalAlignment } from './utilities';
+import { VerticalAlignment } from './utilities';
+import { OverlaySettings } from './utilities';
+import { Point } from './utilities';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point } from './utilities';
 
 fdescribe('igxOverlay', () => {
@@ -412,6 +417,50 @@ fdescribe('igxOverlay', () => {
             expect(overlayWrapper.localName).toEqual('div');
         });
     });
+
+    // 1.2.3 Connected strategy position method
+        fit('Connected strategy position method. Position component based on Point only', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+            // for a Point(300,300);
+            const expectedTopForPoint: Array<string> = ['240px', '270px', '300px'];  // top/middle/bottom/
+            const expectedLeftForPoint: Array<string> = ['240px', '270px', '300px']; // left/center/right/
+
+            const overlaySettings = new OverlaySettings();
+            const positionSettings = new PositionSettings();
+            // use Point when positioning is based Point only and (no on element).
+            positionSettings.point = new Point(300, 300);
+
+            // const strategy = overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+            const size = {width: 60, height: 60};
+            const compElement = document.createElement('div');
+            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+            const contentWrapper = document.createElement('div');
+            contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
+            contentWrapper.classList.add('contentWrapper');
+            contentWrapper.appendChild(compElement);
+            document.body.appendChild(contentWrapper);
+
+            const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+            const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+
+            fixture.detectChanges();
+            // start Point is static Top/Left at 300/300
+            positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
+            positionSettings.verticalStartPoint = VerticalAlignment.Top;
+            for (let i = 0; i < horAl.length ; i++) {
+                positionSettings.horizontalDirection = HorizontalAlignment[horAl[i]];
+                 for (let j = 0; j < verAl.length; j++) {
+                    positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
+                    const strategy = overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+                    strategy.position(compElement, contentWrapper, size);
+                    fixture.detectChanges();
+                    expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
+                    expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
+                 }
+            }
+        });
+
     // 1.3 AutoPosition (fit the shown component into the visible window.)
     it('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
         const fix = TestBed.createComponent(EmptyPageComponent);
