@@ -473,6 +473,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
     }
 
+    get maxLevelHeaderDepth() {
+        if (this._maxLevelHeaderDepth === null) {
+            this._maxLevelHeaderDepth =  this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+        }
+        return this._maxLevelHeaderDepth;
+    }
+
     public pagingState;
     public calcWidth: number;
     public calcRowCheckboxWidth: number;
@@ -507,6 +514,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
+    protected _maxLevelHeaderDepth = null;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -662,7 +670,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get unpinnedColumns(): IgxColumnComponent[] {
-        return this._unpinnedColumns.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
+        return this._unpinnedColumns.filter((col) => !col.hidden); // .sort((col1, col2) => col1.index - col2.index);
     }
 
     public getColumnByName(name: string): IgxColumnComponent {
@@ -728,10 +736,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
             if (dropTarget.pinned) {
                 column.pinned = true;
-                this._pinnedColumns.splice(toIndex, 0, column);
+                // this._pinnedColumns.splice(toIndex, 0, column);
             } else {
                 column.pinned = false;
-                this._unpinnedColumns.splice(toIndex + 1, 0, column);
+                // this._unpinnedColumns.splice(toIndex + 1, 0, column);
             }
         } else {
             const fromIndex = this._unpinnedColumns.indexOf(column);
@@ -991,6 +999,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList.some((col) => col.movable);
     }
 
+    get hasColumnGroups(): boolean {
+        return this.columnList.some(col => col.columnGroup);
+    }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
@@ -1031,11 +1043,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected calculateGridHeight() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-        const maxHeadersDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
 
         // TODO: Calculate based on grid density
-        if (maxHeadersDepth) {
-            this.theadRow.nativeElement.style.height = `${(maxHeadersDepth + 1) * 50}px`;
+        if (this.maxLevelHeaderDepth) {
+            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight}px`;
         }
 
         if (!this._height) {
@@ -1243,7 +1254,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         collection.forEach((column: IgxColumnComponent, index: number) => {
             column.gridID = this.id;
-            column.index = index;
+            // column.index = index;
             if (!column.width) {
                 column.width = this.columnWidth;
             }

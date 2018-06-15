@@ -50,6 +50,14 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         return this.column.width;
     }
 
+    @HostBinding('style.height.px')
+    get height() {
+        if (this.grid.hasColumnGroups) {
+            return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight;
+        }
+        return null;
+    }
+
     @HostBinding('class.asc')
     get ascending() {
         return this.sortDirection === SortingDirection.Asc;
