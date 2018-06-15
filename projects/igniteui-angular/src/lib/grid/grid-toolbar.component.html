@@ -30,7 +30,7 @@
             </span>
         </button>
 
-        <div igxToggle #directive="toggle" class="igx-filtering__options--to-left">
+        <div igxOverlay #directive="overlay" class="igx-filtering__options--to-left">
             <ul class="igx-grid-toolbar__dd-list">
                 <li class="igx-grid-toolbar__dd-list-items" igxRipple *ngIf="shouldShowExportExcelButton" id="btnExportExcel"
                 (click)="exportToExcelClicked()">{{ getExportExcelText() }}</li>

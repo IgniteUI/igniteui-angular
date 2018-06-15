@@ -8,7 +8,9 @@ import {
     HorizontalAlignment,
     VerticalAlignment,
     OverlaySettings,
-    ScrollStrategyFactory
+    BlockScrollStrategy,
+    CloseScrollStrategy,
+    AbsoluteScrollStrategy
 } from 'igniteui-angular';
 
 @Component({
@@ -22,6 +24,7 @@ export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
 
     @ViewChild('button') public button: ElementRef;
+    @ViewChild('scrollContainer') public scrollContainer: ElementRef;
 
     items: any[] = [];
 
@@ -115,28 +118,27 @@ export class DropDownSampleComponent implements OnInit {
         }
     }
 
-    constructor(
-        private elementRef: ElementRef,
-        @Inject(ScrollStrategyFactory) private ssf: ScrollStrategyFactory) {
+    constructor(private elementRef: ElementRef) {
     }
 
     public toggleDropDown() {
         const overlaySettings = new OverlaySettings();
-        // overlaySettings.modal = false;
+        overlaySettings.modal = false;
         const positionSettings = new PositionSettings();
         positionSettings.element = this.button.nativeElement;
         positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
         positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
         positionSettings.horizontalDirection = HorizontalAlignment.Right;
         positionSettings.verticalDirection = VerticalAlignment.Bottom;
-        // const positionStrategy
-        overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-        // tslint:disable-next-line:no-debugger
-        // const close = this.ssf.close(this.igxDropDown.id);
+        // overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+        overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+        // const close = new CloseScrollStrategy(this.scrollContainer.nativeElement);
         // overlaySettings.scrollStrategy = close;
-        const block = this.ssf.block();
-        overlaySettings.scrollStrategy = block;
-        overlaySettings.closeOnOutsideClick = false;
+        // const block = new BlockScrollStrategy();
+        // overlaySettings.scrollStrategy = block;
+        // overlaySettings.closeOnOutsideClick = false;
+        const absolute = new AbsoluteScrollStrategy(this.scrollContainer.nativeElement);
+        overlaySettings.scrollStrategy = absolute;
         this.igxDropDown.toggle(overlaySettings);
     }
 

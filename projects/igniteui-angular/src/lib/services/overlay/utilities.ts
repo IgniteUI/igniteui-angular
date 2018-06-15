@@ -39,7 +39,3 @@ export class OverlaySettings {
         public closeOnOutsideClick: boolean = true
     ) { }
 }
-
-// TODO
-// Overlay settings contain PositionSettings, ScrollSettings and AnimationsSettings
-// (all will be optional)
