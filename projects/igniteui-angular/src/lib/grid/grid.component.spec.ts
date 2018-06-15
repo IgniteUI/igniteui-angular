@@ -23,7 +23,7 @@ describe('IgxGrid - input properties', () => {
         }).compileComponents();
     }));
 
-    it('height/width should be calculated depending on number of records', async(() => {
+    it('height/width should be calculated depending on number of records', (done) => {
         const fix = TestBed.createComponent(IgxGridTestComponent);
         fix.detectChanges();
 
@@ -95,10 +95,10 @@ describe('IgxGrid - input properties', () => {
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
                 expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
+                done();
              }, 250);
-            return fix.whenStable();
         });
-    }));
+    });
 
     it('should not have column misalignment when no vertical scrollbar is shown', () => {
         const fix = TestBed.createComponent(IgxGridTestComponent);
@@ -423,7 +423,7 @@ describe('IgxGrid - input properties', () => {
         });
     }));
 
-    it('should render correct columns if after scrolling right container size changes so that all columns become visible.', async(() => {
+    it('should render correct columns if after scrolling right container size changes so that all columns become visible.', (done) => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         const grid = fix.componentInstance.grid2;
         grid.width = '500px';
@@ -455,10 +455,10 @@ describe('IgxGrid - input properties', () => {
                     expect(headers[i].context.column.field).toEqual(fix.componentInstance.grid2.columns[i].field);
                 }
 
-                return fix.whenStable();
+                done();
             }, 100);
         });
-    }));
+    });
 });
 
 @Component({
