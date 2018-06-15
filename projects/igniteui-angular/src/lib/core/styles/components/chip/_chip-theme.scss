@@ -171,7 +171,13 @@
         align-items: center;
     }
 
+    %igx-chip__label {
+        justify-content: space-between;
+    }
+
     %igx-chip__item {
+        max-width: 160px;
+        min-width: 96px;
         user-select: none;
         cursor: pointer;
         border-radius: map-get($chip-height, 'comfortable') / 2;
@@ -199,6 +205,7 @@
         .igx-icon,
         .igx-button--icon {
             width: rem(16px);
+            min-width: rem(16px);
             height: rem(16px);
             font-size: rem(16px);
         }
@@ -222,6 +229,7 @@
         color: --var($theme, 'text-color');
         font-size: rem(12px);
         margin-right: rem(16px);
+        @include ellipsis();
     }
 
     .igx-icon {
@@ -262,5 +270,11 @@
         %igx-chip__label {
             opacity: .4;
         }
+    }
+        
+    %igx-chip__ghost {
+        width: fit-content;
+        position: absolute;
+        z-index: 10;
     }
 }

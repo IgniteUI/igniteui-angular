@@ -1,3 +1,5 @@
+<igx-grid-toolbar role="rowgroup" [style.width.px]="calcWidth" *ngIf="showToolbar" [gridID]="id" #toolbar></igx-grid-toolbar>
+
 <ng-template #defaultPager let-api>
         <button [disabled]="api.isFirstPage" (click)="api.paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
             <igx-icon fontSet="material" name="first_page"></igx-icon>
@@ -17,13 +19,14 @@
         </select>
 </ng-template>
 
-<div igxDrop (onDrop)="onGroupAreaDrop($event)" class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
+<div igxGroupAreaDrop [style.width.px]='calcWidth' class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <div *ngIf="groupingExpressions.length === 0" class="igx-grid__grouparea-placeholder">
-        Drag a column header and drop it here to group by that column
+        <igx-icon fontSet="material" name="group_work" class="igx-grid__grouparea-placeholder-icon"></igx-icon>
+        <span class="igx-grid__grouparea-placeholder-text">Drag a column header and drop it here to group by that column</span>
     </div>
-    <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsInteractionEnd)="chipsMovingEnded()">
-        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable"
-                (onRemove)="onChipRemoved($event)" (onInteractionEnd)="getColumnByName(expr.fieldName).groupable ? onChipInteractionEnd($event): null" [class.igx-chip--disabled]='!getColumnByName(expr.fieldName).groupable'>
+    <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsMoveEnd)="chipsMovingEnded()">
+        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [removable]="getColumnByName(expr.fieldName).groupable"
+                (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [class.igx-chip--disabled]='!getColumnByName(expr.fieldName).groupable'>
             <span class="igx-chip__label" igxLabel
                     [style.position]="'unset'"
                     [style.width]="'unset'"
@@ -34,7 +37,7 @@
                 <span class="igx-chip__text">{{expr.fieldName}}</span>
                 <igx-icon class="igx-chip__order-icon" fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'"></igx-icon>
             </span>
-            <igx-icon class="igx-chip__dir-icon" igxSuffixConnector fontSet="material" [name]="'forward'"></igx-icon>
+            <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
     </igx-chips-area>
 </div>
