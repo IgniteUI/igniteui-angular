@@ -96,9 +96,9 @@ export class CalendarHammerConfig extends HammerGestureConfig {
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 /**
  * Sets/gets the `id` of the calendar.
- * If not set, the `id` will have value "'igx-calendar-0'".
+ * If not set, the `id` will have value `"igx-calendar-0"`.
  * ```html
- * <igx-calendar id = "my-first-calendar"></igx-calendar->
+ * <igx-calendar id = "my-first-calendar"></igx-calendar>
  * ```
  * ```typescript
  * let calendarId =  this.calendar.id;
@@ -110,7 +110,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public id = `igx-calendar-${NEXT_ID++}`;
     /**
      * Gets the start of the week.
-     * Defaults to Sunday.
+     * Defaults to `Sunday`.
      * ```typescript
      * let weekStart =  this.calendar.weekStart;
      * ```
@@ -163,7 +163,9 @@ public set weekStart(value: WEEKDAYS | number) {
     }
 /**
  * Sets the selection type of the calendar.
+ * ```html
  * <igx-calendar [selection] = "'multi'"></igx-calendar>
+ * ```
  * @memberof IgxCalendarComponent
  */
 public set selection(value: string) {
@@ -228,7 +230,7 @@ public set viewDate(value: Date) {
  * a single `Date` object.
  * Otherwise it is an array of `Date` objects.
  * ```typescript
- *  this.calendar.value =  new Date(`2016-06-12`);;
+ *  this.calendar.value =  new Date(`2016-06-12`);
  * ```
  * @memberof IgxCalendarComponent
  */
@@ -249,7 +251,7 @@ public set value(value: Date | Date[]) {
     /**
      * Sets the date format options of the calendar.
      * ```html
-     *<igx-calendar> [formatOptions] = "{ day: '2-digit', month: 'short', weekday: 'long', year: 'numeric' }"</igx-calendar>
+     * <igx-calendar> [formatOptions] = "{ day: '2-digit', month: 'short', weekday: 'long', year: 'numeric' }"</igx-calendar>
      * ```
      * @memberof IgxCalendarComponent
      */
@@ -462,7 +464,7 @@ set subheaderTemplate(directive: any) {
 
     /**
      * Gets the context for the template marked with the `igxCalendarHeader` directive.
-     * ```typescripte
+     * ```typescript
      * let headerContext =  this.calendar.headerContext;
      * ```
      */
