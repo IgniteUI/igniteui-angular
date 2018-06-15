@@ -22,9 +22,7 @@ import {
 export class DropDownSampleComponent implements OnInit {
     private width = '160px';
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
-
     @ViewChild('button') public button: ElementRef;
-    @ViewChild('scrollContainer') public scrollContainer: ElementRef;
 
     items: any[] = [];
 
@@ -132,12 +130,12 @@ export class DropDownSampleComponent implements OnInit {
         positionSettings.verticalDirection = VerticalAlignment.Bottom;
         // overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
         overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-        // const close = new CloseScrollStrategy(this.scrollContainer.nativeElement);
+        // const close = new CloseScrollStrategy();
         // overlaySettings.scrollStrategy = close;
         // const block = new BlockScrollStrategy();
         // overlaySettings.scrollStrategy = block;
         // overlaySettings.closeOnOutsideClick = false;
-        const absolute = new AbsoluteScrollStrategy(this.scrollContainer.nativeElement);
+        const absolute = new AbsoluteScrollStrategy();
         overlaySettings.scrollStrategy = absolute;
         this.igxDropDown.toggle(overlaySettings);
     }

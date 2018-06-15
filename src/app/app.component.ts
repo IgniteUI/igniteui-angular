@@ -156,6 +156,11 @@ export class AppComponent implements OnInit {
             name: 'Navdrawer'
         },
         {
+            link: '/overlay',
+            icon: 'overlay',
+            name: 'Overlay'
+        },
+        {
             link: '/progressbar',
             icon: 'poll',
             name: 'Progress Indicators'
