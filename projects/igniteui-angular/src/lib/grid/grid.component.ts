@@ -501,7 +501,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.showToolbar &&
                (this.exportExcel ||
                 this.exportCsv ||
-                (this.toolbarTitle && this.toolbarTitle != null && this.toolbarTitle != ''));
+                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
     }
 
     @Input()
