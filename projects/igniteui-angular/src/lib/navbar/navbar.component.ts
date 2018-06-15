@@ -106,7 +106,7 @@ export class IgxNavbarComponent {
     @Output() public onAction = new EventEmitter<IgxNavbarComponent>();
 
     /**
-     *An @Input property that sets the titleId of the `IgxNavbarComponent`.
+     *An @Input property that sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
      *```html
      *<igx-navbar [titleId]="'igx-navbar-7'" title="Sample App" actionButtonIcon="menu">
      *```
@@ -115,14 +115,6 @@ export class IgxNavbarComponent {
     public titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;
 
     /**
-     *Method that triggers the `onAction` @Output.
-     *```typscript
-     *@ViewChild("MyChild")
-     *public child: IgxNavbarComponent;
-     *ngAfterViewInit(){
-     *    this.child._triggerAction;
-     *}
-     *```
      *@hidden
      */
     public _triggerAction() {
