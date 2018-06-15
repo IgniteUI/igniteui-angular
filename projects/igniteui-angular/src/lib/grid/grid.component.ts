@@ -1244,7 +1244,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight);
         } else {
             this.calcHeight = this._calculateGridBodyHeight(
-                parseInt(this._height, 10),toolbarHeight, pagingHeight);
+                parseInt(this._height, 10), toolbarHeight, pagingHeight);
         }
     }
 
