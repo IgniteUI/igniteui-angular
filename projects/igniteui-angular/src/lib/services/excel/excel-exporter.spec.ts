@@ -1,12 +1,8 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ExportUtilities } from '../exporter-common/export-utilities';
-import { ExcelFileTypes } from './excel-enums';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-import { ExcelStrings } from './excel-strings';
-import { JSZipFiles } from './jszip-helper';
-import { IFileContent, JSZipWrapper, ObjectComparer  } from './jszip-verification-wrapper.spec';
-import { ExportTestDataService, FileContentData, ValueData } from './test-data.service.spec';
+import { JSZipWrapper } from './jszip-verification-wrapper.spec';
+import { ExportTestDataService, FileContentData } from './test-data.service.spec';
 
 describe('Excel Exporter', () => {
     let sourceData: ExportTestDataService;
