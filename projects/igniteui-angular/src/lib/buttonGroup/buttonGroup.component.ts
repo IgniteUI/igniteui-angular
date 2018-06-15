@@ -48,7 +48,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
     @ViewChildren(IgxButtonDirective) public buttons: QueryList<IgxButtonGroupComponent>;
 
     /**
-     * An @Input property that sets the value of the `id` attribute.
+     * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
      * ```html
      *  <igx-buttongroup [id]="'igx-dialog-56'" [multiSelection]="!multi" [values]="alignOptions">
      * ```
@@ -59,6 +59,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
 
     /**
      * Allows you to set a style using the `itemContentCssClass` input.
+     * The value should be the CSS class name that will be applied to the button group.
      *```typescript
      *public style1 = "styleClass";
      * //..
@@ -72,7 +73,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
     }
 
     /**
-     * Returns the cssClass of the `igx-buttongroup`.
+     * Returns the CSS class of the item content of the `IgxButtonGroup`.
      *```typescript
      *@ViewChild("MyChild")
      *public buttonG: IgxButtonGroupComponent;
@@ -86,7 +87,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
     }
 
     /**
-     * An @Input property that enables selecting multiple buttons. By default, multiselection is false.
+     * An @Input property that enables selecting multiple buttons. By default, multi-selection is false.
      * ```html
      * <igx-buttongroup [multiSelection]="false" [alignment]="alignment"></igx-buttongroup>
      * ```
@@ -170,7 +171,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      *    this.toast.show();
      *}
      *public onSelect(buttongroup){
-     *      this.show(this.toast);
+     *    this.toast.show()
      *}
      * //...
      *```
@@ -190,7 +191,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      *    this.toast.show();
      *}
      *public onUnselect(buttongroup){
-     *      this.show(this.toast);
+     *    this.toast.show()
      *}
      * //...
      *```
