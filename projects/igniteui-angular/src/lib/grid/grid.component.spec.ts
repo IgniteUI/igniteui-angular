@@ -439,7 +439,7 @@ describe('IgxGrid - input properties', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-    <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate">
+    <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" minHeight="100px">
         <igx-column field="index" header="index" dataType="number"></igx-column>
         <igx-column field="value" header="value" dataType="number"></igx-column>
     </igx-grid></div>`
@@ -742,7 +742,7 @@ export class IgGridNullHeightComponent {
 @Component({
     template:
     `<div style="width: 800px; height: 600px;">
-        <igx-grid #grid [data]="data" [autoGenerate]="true" height="50%" width="50%">
+        <igx-grid #grid [data]="data" [autoGenerate]="true" height="50%" width="50%" minHeight="100px">
         </igx-grid>
     </div>`
 })

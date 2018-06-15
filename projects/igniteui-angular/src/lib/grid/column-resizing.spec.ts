@@ -651,7 +651,7 @@ function simulateMouseEvent(eventName: string, element, x, y) {
 
 @Component({
     template: `
-        <igx-grid [data]="data" width="500px" height="300px">
+        <igx-grid [data]="data" width="500px" height="300px" minHeight="100px">
             <igx-column [resizable]="true" field="ID" width="100px"></igx-column>
             <igx-column [resizable]="true" [minWidth]="'70px'" [maxWidth]="'250px'" field="Name" width="100px"></igx-column>
             <igx-column [resizable]="false" [sortable]="true" field="LastName" width="100px"></igx-column>
