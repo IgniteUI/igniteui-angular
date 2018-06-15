@@ -288,7 +288,7 @@ get relatedTab(): IgxTabComponent {
         }
     }
 /**
- * Gets the index of the panel in the panel collection.
+ * Gets the index of a panel in the panels collection.
  * ```typescript
  * let panelIndex =  this.tabPanel.index
  * ```
