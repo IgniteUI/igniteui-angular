@@ -1,5 +1,4 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
-import { IgxColumnHidingComponent } from './column-hiding.component';
 
 export interface IValueChangedEventArgs {
     oldValue: any;
@@ -58,6 +57,9 @@ export class ColumnItemBase extends ItemPropertyValueChanged {
     }
 
     @Input()
+    public indentation = 10;
+
+    @Input()
     public container: any;
 
     constructor(public prop: string) {
@@ -66,6 +68,14 @@ export class ColumnItemBase extends ItemPropertyValueChanged {
 
     get name() {
         return (this.column) ? ((this.column.header) ? this.column.header : this.column.field) : '';
+    }
+
+    get level() {
+        return this.column.level;
+    }
+
+    get calcIndent() {
+        return this.indentation * this.level;
     }
 }
 
@@ -83,7 +93,7 @@ export class IgxColumnHidingItemDirective extends ColumnItemBase {
         super('hidden');
     }
 
-    get disableHiding() {
+    get disabled() {
         return this.column.disableHiding;
     }
 }

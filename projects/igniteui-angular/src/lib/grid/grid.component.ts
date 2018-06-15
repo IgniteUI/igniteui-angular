@@ -654,17 +654,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.markForCheck();
     }
 
-    public showColumnHidingUI() {
-        if (this.columnHidingUI) {
-            this.columnHidingUI.toggle.open(true);
-            this.columnHidingUI.dialogShowing = true;
-        }
-    }
-
-    public hideColumnHidingUI() {
-        if (this.columnHidingUI) {
-            this.columnHidingUI.toggle.close(true);
-            this.columnHidingUI.dialogShowing = false;
+    public toggleColumnHidingUI() {
+        if (this.columnHidingUI && this.columnHidingUI.togglable) {
+            this.columnHidingUI.toggleDropDown();
         }
     }
 

@@ -2,31 +2,28 @@
 <ng-container *ngTemplateOutlet="template" ></ng-container>
 
 <ng-template #columnHidingUI>
-    <h4>{{ title }}</h4><br/>
+    <h4>{{ title }}</h4>
     <div>
         <input type="text" [(ngModel)]="filterCriteria" [placeholder]="filterColumnsPrompt" autocomplete="off" />
     </div>
-    <div *ngFor="let columnItem of columnItems">
+    <div *ngFor="let columnItem of columnItems" (onColumnVisibilityChanged)="onVisibilityChanged($event)">
         <igx-checkbox igxColumnHidingItem [checked]="columnItem.value" (change)="columnItem.value = !columnItem.value"
-            [disabled]="columnItem.disableHiding">{{ columnItem.name }}</igx-checkbox>
+            [disabled]="columnItem.disabled" [style.margin-left.px]="columnItem.calcIndent">{{ columnItem.name }}</igx-checkbox>
     </div>
     <div>
-        <button igxButton igxRipple (click)="showAllColumns()" [disabled]="disableShowAll" #buttonShowAll>{{ showAllText }}</button>
-        <button igxButton igxRipple (click)="hideAllColumns()" [disabled]="disableHideAll" #buttonHideAll>{{ hideAllText }}</button>
+        <button igxButton igxRipple (click)="showAllColumns()" [disabled]="disableShowAll">{{ showAllText }}</button>
+        <button igxButton igxRipple (click)="hideAllColumns()" [disabled]="disableHideAll">{{ hideAllText }}</button>
     </div>
 </ng-template>
 
 <ng-template #columnChooserToggle>
-    <span igxToggle (onOpen)="refresh()" (onClose)="refresh()" #toggle [attr.class]="dialogPosition"
-        (onColumnVisibilityChanged)="onVisibilityChanged($event)"
-        style="max-height: 500px; overflow-y: auto;">
+    <igx-drop-down>
         <ng-container *ngTemplateOutlet="columnHidingUI" ></ng-container>
-    </span>
+    </igx-drop-down>
 </ng-template>
 
 <ng-template #columnChooserInline>
-    <div (onColumnVisibilityChanged)="onVisibilityChanged($event)"
-        style="max-height: 500px; overflow-y: auto;">
+    <div>
         <ng-container *ngTemplateOutlet="columnHidingUI" ></ng-container>
     </div>
 </ng-template>

@@ -8,17 +8,14 @@ import {
     OnDestroy,
     Output,
     TemplateRef,
-    ViewChild,
-    OnInit} from '@angular/core';
+    ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { DataUtil } from '../data-operations/data-util';
-import { IFilteringOperation, IgxStringFilteringOperand } from '../data-operations/filtering-condition';
-import { filteringStateDefaults } from '../data-operations/filtering-state.interface';
+import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { IgxColumnComponent } from './column.component';
+import { IgxDropDownModule, IgxDropDownComponent } from '../drop-down/drop-down.component';
 
 export enum ColumnDisplayOrder {
     Alphabetical,
@@ -31,7 +28,6 @@ export enum ColumnDisplayOrder {
     templateUrl: './column-hiding.component.html'
 })
 export class IgxColumnHidingComponent implements OnDestroy {
-
     @Input()
     get columns() {
         return this._gridColumns;
@@ -142,14 +138,14 @@ export class IgxColumnHidingComponent implements OnDestroy {
     @Output()
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
 
-    @ViewChild(IgxToggleDirective)
-    public toggle: IgxToggleDirective;
-
     @ViewChild('columnChooserToggle', { read: TemplateRef })
     protected columnChooserToggle: TemplateRef<any>;
 
     @ViewChild('columnChooserInline', { read: TemplateRef })
     protected columnChooserInline: TemplateRef<any>;
+
+    @ViewChild(IgxDropDownComponent)
+    public dropDown: IgxDropDownComponent;
 
     private _currentColumns = [];
     private _gridColumns = [];
@@ -159,9 +155,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     private _filterCriteria = '';
     private _filterColumnsPrompt = '';
     private _title = '';
-
-    public dialogShowing = false;
-    public dialogPosition = 'igx-filtering__options--to-right';
 
     public get hiddenColumnsCount() {
         return (this._gridColumns) ? this._gridColumns.filter((col) => col.hidden).length : 0;
@@ -185,7 +178,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
     }
 
     private get hidableColumns() {
-        return this._currentColumns.filter((col) => !col.disableHiding);
+        return this._currentColumns.filter((col) => !col.disabled);
     }
 
     private createColumnItems() {
@@ -248,12 +241,14 @@ export class IgxColumnHidingComponent implements OnDestroy {
         }
     }
 
-    public refresh() {
-        this.dialogShowing = !this.dialogShowing;
-    }
-
     public onVisibilityChanged(args: IColumnVisibilityChangedEventArgs) {
         this.onColumnVisibilityChanged.emit(args);
+    }
+
+    public toggleDropDown() {
+        if (this.togglable) {
+            this.dropDown.toggle();
+        }
     }
 }
 
@@ -263,9 +258,9 @@ export class IgxColumnHidingComponent implements OnDestroy {
     imports: [
         IgxButtonModule,
         IgxCheckboxModule,
-        IgxToggleModule,
+        IgxDropDownModule,
         CommonModule,
-        FormsModule
+        FormsModule,
     ]
 })
 export class IgxColumnHidingModule {
