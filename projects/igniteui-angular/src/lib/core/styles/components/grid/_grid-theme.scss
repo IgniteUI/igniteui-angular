@@ -37,6 +37,10 @@
 /// @param {Color} $expand-icon-hover-color [null] - The grid row expand icon hover color.
 /// @param {Color} $group-count-background [null] - The grid group row cont badge background color.
 /// @param {Color} $group-count-text-color [null] - The grid group row cont badge text color.
+/// @param {Color} $drop-area-text-color [null] - The drop area text color.
+/// @param {Color} $drop-area-icon-color [null] - The drop area icon color.
+/// @param {Color} $drop-area-background [null] - The drop area background color.
+/// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -85,7 +89,9 @@
     $group-count-background: null,
     $group-count-text-color: null,
     $drop-area-text-color: null,
-    $drop-area-icon-color: null
+    $drop-area-icon-color: null,
+    $drop-area-background: null,
+    $drop-area-on-drop-background: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -132,6 +138,8 @@
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
         row-indentation-background: hexrgba(igx-color($palette, 'grays', 100)),
         drop-area-icon-color: igx-color($palette, 'grays'),
+        drop-area-background: transparen,
+        drop-area-on-drop-background: igx-color($palette, grays, 100),
     );
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
@@ -238,6 +246,8 @@
         group-row-background: $group-row-background,
         row-indentation-background: $row-indentation-background,
         drop-area-icon-color: $drop-area-icon-color,
+        drop-area-on-drop-background: $drop-area-on-drop-background,
+        drop-area-background: $drop-area-background,
     ));
 }
 
@@ -909,7 +919,7 @@
         margin: rem(4px);
         flex: 1 0 0%;
         transition: $transition;
-
+        background: --var($theme, 'drop-area-background');
 
         %igx-drop-area__icon {
             color: --var($theme, 'drop-area-icon-color');
@@ -921,7 +931,7 @@
     }
 
     %igx-drop-area--hover {
-        background: igx-color($palette, grays, 100);
+        background: --var($theme, 'drop-area-on-drop-background');
     }
 
     %igx-drop-area--cosy {
