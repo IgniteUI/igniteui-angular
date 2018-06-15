@@ -97,7 +97,6 @@ describe('IgxGrid - input properties', () => {
                 expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
                 done();
              }, 250);
-            return fix.whenStable();
         });
     });
 
@@ -457,7 +456,6 @@ describe('IgxGrid - input properties', () => {
                 }
 
                 done();
-                return fix.whenStable();
             }, 100);
         });
     });
