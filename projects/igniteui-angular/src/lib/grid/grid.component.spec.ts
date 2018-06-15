@@ -1,8 +1,7 @@
-import { asNativeElements, ChangeDetectorRef, Component, DebugElement, OnInit, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
@@ -17,7 +16,8 @@ describe('IgxGrid - input properties', () => {
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
                 IgGridTest30x1000Component, IgGridTest150x200Component,
                 IgxGridTestDefaultWidthHeightComponent,
-                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent
+                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent,
+                MinHeightGridComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -423,6 +423,18 @@ describe('IgxGrid - input properties', () => {
              });
         });
     });
+
+    it('should honor min height', () => {
+        const fix = TestBed.createComponent(MinHeightGridComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        expect(grid.nativeElement.offsetHeight).toBeGreaterThanOrEqual(400);
+        grid.minHeight = '800px';
+
+        fix.detectChanges();
+        expect(grid.nativeElement.offsetHeight).toBeGreaterThanOrEqual(800);
+    });
 });
 
 @Component({
@@ -744,6 +756,36 @@ export class IgxGridTestPercentWidthHeightComponent {
     constructor(private _cdr: ChangeDetectorRef) {
         this.data = this.generateData(3, 30);
     }
+    public generateData(columns, rows) {
+        const data = [];
+
+        for (let r = 0; r < rows; r++) {
+            const record = {};
+            for (let c = 0; c < columns; c++) {
+                record['col' + c] = c * r;
+            }
+            data.push(record);
+        }
+        return data;
+    }
+}
+
+@Component({
+    template:
+    `<div>
+        <igx-grid #grid [data]="data" [autoGenerate]="true"></igx-grid>
+    </div>`
+})
+export class MinHeightGridComponent {
+    public data;
+
+    @ViewChild('grid', { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
+    constructor() {
+        this.data = this.generateData(3, 30);
+    }
+
     public generateData(columns, rows) {
         const data = [];
 
