@@ -38,11 +38,13 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IForOfState } from '../directives/for-of/IForOfState';
 import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxBaseExporter } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
+import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation } from '../../public_api';
@@ -96,6 +98,28 @@ export interface ISearchInfo {
     caseSensitive: boolean;
     activeMatchIndex: number;
     matchInfoCache: any[];
+}
+
+export interface IGridToolbarExportEventArgs {
+    grid: IgxGridComponent;
+    exporter: IgxBaseExporter;
+    type: string;
+    cancel: boolean;
+}
+
+export interface IColumnMovingStartEventArgs {
+    source: IgxColumnComponent;
+}
+
+export interface IColumnMovingEventArgs {
+    source: IgxColumnComponent;
+    target: IgxColumnComponent;
+    cancel: boolean;
+}
+
+export interface IColumnMovingEndEventArgs {
+    source: IgxColumnComponent;
+    target: IgxColumnComponent;
 }
 
 /**
@@ -357,6 +381,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
+    @Output()
+    public onColumnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
+
+    @Output()
+    public onColumnMoving = new EventEmitter<IColumnMovingEventArgs>();
+
+    @Output()
+    public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -449,6 +482,132 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
     }
 
+    /* Toolbar related definitions */
+
+    private _showToolbar = false;
+    private _exportExcel = false;
+    private _exportCsv = false;
+    private _toolbarTitle: string = null;
+    private _exportText: string = null;
+    private _exportExcelText: string = null;
+    private _exportCsvText: string = null;
+
+    @ViewChild('toolbar', { read: IgxGridToolbarComponent })
+    public toolbar: IgxGridToolbarComponent = null;
+
+    @ViewChild('toolbar', { read: ElementRef })
+    private toolbarHtml: ElementRef = null;
+
+    @Input()
+    public get showToolbar(): boolean {
+        return this._showToolbar;
+    }
+
+    public set showToolbar(newValue: boolean) {
+        if (this._showToolbar !== newValue) {
+            this._showToolbar = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get toolbarTitle(): string {
+        return this._toolbarTitle;
+    }
+
+    public set toolbarTitle(newValue: string) {
+        if (this._toolbarTitle !== newValue) {
+            this._toolbarTitle = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportExcel(): boolean {
+        return this._exportExcel;
+    }
+
+    public set exportExcel(newValue: boolean) {
+        if (this._exportExcel !== newValue) {
+            this._exportExcel = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportCsv(): boolean {
+        return this._exportCsv;
+    }
+
+    public set exportCsv(newValue: boolean) {
+        if (this._exportCsv !== newValue) {
+            this._exportCsv = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportText(): string {
+        return this._exportText;
+    }
+
+    public set exportText(newValue: string) {
+        if (this._exportText !== newValue) {
+            this._exportText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportExcelText(): string {
+        return this._exportExcelText;
+    }
+
+    public set exportExcelText(newValue: string) {
+        if (this._exportExcelText !== newValue) {
+            this._exportExcelText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Input()
+    public get exportCsvText(): string {
+        return this._exportCsvText;
+    }
+
+    public set exportCsvText(newValue: string) {
+        if (this._exportCsvText !== newValue) {
+            this._exportCsvText = newValue;
+            this.cdr.markForCheck();
+            if (this._ngAfterViewInitPaassed) {
+                this.calculateGridSizes();
+            }
+        }
+    }
+
+    @Output()
+    public onToolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
+
+    /* End of toolbar related definitions */
+
     public pagingState;
     public calcWidth: number;
     public calcRowCheckboxWidth: number;
@@ -456,6 +615,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public tfootHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
+    public isColumnMoving: boolean;
+    public isColumnResizing: boolean;
 
     public eventBus = new Subject<boolean>();
 
@@ -487,6 +648,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _height = '100%';
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;
+    private _ngAfterViewInitPaassed = false;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -569,7 +731,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
         this._derivePossibleWidth();
         this.calculateGridSizes();
-
+        this._ngAfterViewInitPaassed = true;
     }
 
     public ngOnDestroy() {
@@ -686,6 +848,43 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             totalWidth += parseInt(cols[i].width, 10) || 0;
         }
         return totalWidth;
+    }
+
+    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+        if (column.pinned) {
+            const fromIndex = this._pinnedColumns.indexOf(column);
+
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+                this._unpinnedColumns.indexOf(dropTarget);
+
+            this._pinnedColumns.splice(fromIndex, 1);
+
+            if (dropTarget.pinned) {
+                column.pinned = true;
+                this._pinnedColumns.splice(toIndex, 0, column);
+            } else {
+                column.pinned = false;
+                this._unpinnedColumns.splice(toIndex + 1, 0, column);
+            }
+        } else {
+            const fromIndex = this._unpinnedColumns.indexOf(column);
+
+            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+                this._unpinnedColumns.indexOf(dropTarget);
+
+            this._unpinnedColumns.splice(fromIndex, 1);
+
+            if (dropTarget.pinned) {
+                column.pinned = true;
+                this._pinnedColumns.splice(toIndex, 0, column);
+            } else {
+                column.pinned = false;
+                this._unpinnedColumns.splice(toIndex, 0, column);
+            }
+        }
+
+        this.columnList.reset(this._pinnedColumns.concat(this._unpinnedColumns));
+        this.columnList.notifyOnChanges();
     }
 
     public nextPage(): void {
@@ -964,6 +1163,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList.some((col) => col.hasSummary);
     }
 
+    get hasMovableColumns(): boolean {
+        return this.columnList.some((col) => col.movable);
+    }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
             return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
@@ -1016,6 +1219,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
+            let toolbarHeight = 0;
+            if (this.showToolbar && this.toolbarHtml != null) {
+                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                    this.toolbarHtml.nativeElement.offsetHeight : 0;
+            }
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
@@ -1027,9 +1235,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
             this.calcHeight = parseInt(computed.getPropertyValue('height'), 10) -
                 this.theadRow.nativeElement.clientHeight -
-                this.tfootHeight - pagingHeight -
+                this.tfootHeight - pagingHeight - toolbarHeight -
                 this.scr.nativeElement.clientHeight;
         } else {
+            let toolbarHeight = 0;
+            if (this.showToolbar && this.toolbarHtml != null) {
+                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                    this.toolbarHtml.nativeElement.offsetHeight : 0;
+            }
             let pagingHeight = 0;
             if (this.paging) {
                 pagingHeight = this.paginator.nativeElement.firstElementChild ?
@@ -1041,7 +1254,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
             this.calcHeight = parseInt(this._height, 10) -
                 this.theadRow.nativeElement.getBoundingClientRect().height -
-                this.tfootHeight - pagingHeight -
+                this.tfootHeight - pagingHeight - toolbarHeight -
                 this.scr.nativeElement.clientHeight;
         }
     }
@@ -1108,7 +1321,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Gets calculated width of the start pinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area
      */
-    protected getPinnedWidth(takeHidden = false) {
+    public getPinnedWidth(takeHidden = false) {
         const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
         let sum = 0;
         for (const col of fc) {
@@ -1485,16 +1698,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
-                                        filter((c) => c.searchable).
-                                        map((c) => c.field);
+        const columnItems = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
+                                                map((c) => ({ columnName: c.field, columnSearchable: c.searchable }) );
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;
 
-            keys.forEach((key, j) => {
-                const value = dataRow[key];
-                if (value !== undefined && value !== null) {
+            columnItems.forEach((columnItem, j) => {
+                const value = dataRow[columnItem.columnName];
+                if (value !== undefined && value !== null && columnItem.columnSearchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
                     let occurenceIndex = 0;
                     let searchIndex = searchValue.indexOf(searchText);
