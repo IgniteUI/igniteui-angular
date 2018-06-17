@@ -1704,7 +1704,7 @@ describe('IgxGrid - GroupBy', () => {
         });
     });
 
-    it('should remove expansion state when reordering chips', () => {
+    it('should throw an error when grouping more than 10 colunms', () => {
         const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.testData = [
