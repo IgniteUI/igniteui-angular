@@ -68,32 +68,24 @@ export class IgxGridAPIService {
         if (!this.editCellState.has(gridId)) {
             this.editCellState.set(gridId, null);
         }
-        if (!this.get_cell_inEditMode_id(gridId) && editMode) {
+        if (!this.get_cell_inEditMode(gridId) && editMode) {
             this.editCellState.set(gridId, {cellID: cell.cellID, cell: Object.assign({}, cell)});
         }
     }
 
     public escape_editMode(gridId, cellId) {
-        const editableCell = this.get_cell_inEditMode_id(gridId);
-        if (editableCell && cellId.rowID === editableCell.rowID &&
-            cellId.columnID === editableCell.columnID) {
+        const editableCell = this.get_cell_inEditMode(gridId);
+        if (editableCell && cellId.rowID === editableCell.cellID.rowID &&
+            cellId.columnID === editableCell.cellID.columnID) {
             this.editCellState.delete(gridId);
         }
     }
 
-    public get_cell_inEditMode_id(gridId: string) {
-        const editCellId = this.editCellState.get(gridId);
-        if (editCellId) {
-            return editCellId.cellID;
-        } else {
-            return null;
-        }
-    }
 
     public get_cell_inEditMode(gridId) {
         const editCellId = this.editCellState.get(gridId);
         if (editCellId) {
-            return editCellId.cell;
+            return editCellId;
         } else {
             return null;
         }
@@ -139,19 +131,18 @@ export class IgxGridAPIService {
 
     public submit_value(gridId) {
         const editableCell = this.get_cell_inEditMode(gridId);
-        const editableCellId = this.get_cell_inEditMode_id(gridId);
         if (editableCell) {
-            if (!editableCell.column.inlineEditorTemplate && editableCell.column.dataType === 'number') {
-                if (!this.get_cell_inEditMode(gridId).editValue) {
-                    this.update_cell(gridId, editableCellId.rowIndex, editableCellId.columnID, 0);
+            if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
+                if (!this.get_cell_inEditMode(gridId).cell.editValue) {
+                    this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, 0);
                 } else {
-                    const val = parseFloat(this.get_cell_inEditMode(gridId).editValue);
+                    const val = parseFloat(this.get_cell_inEditMode(gridId).cell.editValue);
                     if (!isNaN(val) || isFinite(val)) {
-                        this.update_cell(gridId, editableCellId.rowIndex, editableCellId.columnID, val);
+                        this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, val);
                     }
                 }
             } else {
-                this.update_cell(gridId, editableCellId.rowIndex, editableCellId.columnID, editableCell.editValue);
+                this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, editableCell.cell.editValue);
             }
         }
     }
@@ -160,10 +151,13 @@ export class IgxGridAPIService {
         const row = this.get_row_by_key(id, rowSelector);
         if (row) {
             const rowIndex = row.index;
-            const cell = this.get(id).columnList.toArray()[columnID].cells[rowIndex] ?
-            this.get(id).columnList.toArray()[columnID].cells[rowIndex] :  this.get_cell_inEditMode(id);
-            if (cell) {
-                const args: IGridEditEventArgs = { row: cell.row, cell: cell, currentValue: cell.value, newValue: editValue };
+            let cellObj = this.get(id).columnList.toArray()[columnID].cells[rowIndex];
+            if (!cellObj && this.get_cell_inEditMode(id)) {
+                cellObj = this.get_cell_inEditMode(id).cell;
+            }
+            if (cellObj) {
+                const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
+                    currentValue: cellObj.value, newValue: editValue };
                 this.get(id).onEditDone.emit(args);
                 const column =  this.get(id).columnList.toArray()[columnID];
                 this.get(id).data[rowIndex][column.field] = args.newValue;

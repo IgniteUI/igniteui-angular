@@ -1016,9 +1016,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public sort(...rest): void {
-        const editableCellID = this.gridAPI.get_cell_inEditMode_id(this.id);
-        if (editableCellID) {
-            this.gridAPI.escape_editMode(this.id, editableCellID);
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
         }
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
@@ -1028,9 +1028,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public filter(...rest): void {
-        const editableCellID = this.gridAPI.get_cell_inEditMode_id(this.id);
-        if (editableCellID) {
-            this.gridAPI.escape_editMode(this.id, editableCellID);
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
         }
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._filterMultiple(rest[0]);
@@ -1656,12 +1656,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowList) {
             return 0;
         }
-
-        const editableCellID = this.gridAPI.get_cell_inEditMode_id(this.id);
-        if (editableCellID) {
-            this.gridAPI.escape_editMode(this.id, editableCellID);
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
         }
-
         if (!text) {
             this.clearSearch();
             return 0;

@@ -5,19 +5,19 @@
 <ng-template #inlineEditor  let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
         <igx-input-group>
-            <input igxInput [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).editValue" [igxFocus]="true">
+            <input igxInput [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [igxFocus]="true">
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
         <igx-input-group>
-            <input igxInput [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).editValue" [igxFocus]="true"  type="number">
+            <input igxInput [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [igxFocus]="true"  type="number">
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
-        <igx-checkbox [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).editValue" [checked]="gridAPI.get_cell_inEditMode(gridID).editValue"></igx-checkbox>
+        <igx-checkbox [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [checked]="gridAPI.get_cell_inEditMode(gridID).cell.editValue"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-datePicker [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).editValue" ></igx-datePicker>
+        <igx-datePicker [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [labelVisibility]="false"></igx-datePicker>
     </ng-container>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context">

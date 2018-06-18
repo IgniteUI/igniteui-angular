@@ -101,10 +101,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     get inEditMode(): boolean {
-        const editableCell = this.gridAPI.get_cell_inEditMode_id(this.gridID);
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell) {
-            return this.cellID.rowID === editableCell.rowID &&
-            this.cellID.columnID === editableCell.columnID;
+            return this.cellID.rowID === editableCell.cellID.rowID &&
+            this.cellID.columnID === editableCell.cellID.columnID;
         } else {
             return false;
         }
@@ -254,10 +254,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             cell.selected = false;
             cell.focused = false;
         }
-        const editCellID = this.gridAPI.get_cell_inEditMode_id(this.gridID);
-        if (editCellID) {
+        const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editCell) {
             this.gridAPI.submit_value(this.gridID);
-            this.gridAPI.escape_editMode(this.gridID, editCellID);
+            this.gridAPI.escape_editMode(this.gridID, editCell.cellID);
             this.previousCellEditMode = true;
         } else {
             this.previousCellEditMode = false;

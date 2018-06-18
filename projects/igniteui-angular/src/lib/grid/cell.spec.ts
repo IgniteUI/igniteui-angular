@@ -427,7 +427,7 @@ describe('IgxGrid - Cell component', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            const editCellID = cell.gridAPI.get_cell_inEditMode_id(cell.gridID);
+            const editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
             expect(editableCellId.columnID).toBe(editCellID.columnID);
             expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
             expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
@@ -439,7 +439,7 @@ describe('IgxGrid - Cell component', () => {
                 fixture.componentInstance.scrollLeft(400);
                 setTimeout(() => {
                     fixture.detectChanges();
-                    const editCellID = cell.gridAPI.get_cell_inEditMode_id(cell.gridID);
+                    const editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
                     expect(editableCellId.columnID).toBe(editCellID.columnID);
                     expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
                     expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
@@ -510,7 +510,7 @@ describe('IgxGrid - Cell component', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            expect(cell.gridAPI.get_cell_inEditMode_id(cell.gridID)).toBeNull();
+            expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
         });
     }));
 
