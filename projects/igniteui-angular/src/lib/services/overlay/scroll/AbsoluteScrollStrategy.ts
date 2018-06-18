@@ -1,8 +1,5 @@
 import { IScrollStrategy } from './IScrollStrategy';
 import { IgxOverlayService } from '../overlay';
-import { IPositionStrategy } from '../position';
-import { ElementRef, ComponentRef } from '@angular/core';
-import { OverlaySettings, PositionSettings, Point } from '../utilities';
 
 export class AbsoluteScrollStrategy implements IScrollStrategy {
     private _initialized = false;
@@ -10,13 +7,6 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
     private _overlayService: IgxOverlayService;
     private _id: string;
     private _scrollContainer: HTMLElement;
-    private _component: {
-        id: string,
-        elementRef: ElementRef,
-        componentRef: ComponentRef<{}>,
-        size: { width: number, height: number },
-        settings: OverlaySettings
-    };
 
     constructor(scrollContainer?: HTMLElement) {
         this._scrollContainer = scrollContainer;
@@ -29,7 +19,6 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
         this._overlayService = overlayService;
         this._id = id;
         this._document = document;
-        this._component = this._overlayService.getElementById(id);
         this._initialized = true;
     }
 
@@ -49,12 +38,7 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
         }
     }
 
-    private onScroll = (ev: Event) => {
-        this._component.settings.positionStrategy.position(
-            this._component.elementRef.nativeElement,
-            this._component.elementRef.nativeElement.parentElement,
-            this._component.size,
-            this._document
-        );
+    private onScroll = () => {
+        this._overlayService.reposition(this._id);
     }
 }

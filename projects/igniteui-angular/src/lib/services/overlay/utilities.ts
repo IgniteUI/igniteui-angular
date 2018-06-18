@@ -2,6 +2,7 @@ import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { IPositionStrategy } from './position/IPositionStrategy';
 
 import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
+import { AnimationMetadata } from '@angular/animations';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -29,6 +30,8 @@ export interface PositionSettings {
     verticalDirection?: VerticalAlignment;
     horizontalStartPoint?: HorizontalAlignment;
     verticalStartPoint?: VerticalAlignment;
+    openAnimation?: AnimationMetadata | AnimationMetadata[];
+    closeAnimation?: AnimationMetadata | AnimationMetadata[];
 }
 
 export interface OverlaySettings {
