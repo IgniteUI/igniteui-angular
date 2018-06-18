@@ -239,15 +239,15 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         return this.column && this.column.movable;
     }
 
+    private _column: IgxColumnComponent;
+    private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
+    private _dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
+
     @HostListener('document:keydown.escape', ['$event'])
     public onEscape(event) {
         this.cms.cancelDrop = true;
         this.onPointerUp(event);
     }
-
-    private _column: IgxColumnComponent;
-    private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
-    private _dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
 
     constructor(
         _element: ElementRef,
@@ -263,8 +263,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         event.stopPropagation();
 
         const el = document.elementFromPoint(event.pageX, event.pageY);
-        if (!this.draggable || el.getAttribute("id") === "resizeHandler" ||
-            el.getAttribute("id") === "filterIcon") {
+        if (!this.draggable || el.getAttribute('id') === 'resizeHandler' ||
+            el.getAttribute('id') === 'filterIcon') {
                 return;
         }
 
@@ -334,7 +334,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
 
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
-            this._dragGhost.children[1].style.paddingLeft = "0px";
+            this._dragGhost.children[1].style.paddingLeft = '0px';
 
             this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
