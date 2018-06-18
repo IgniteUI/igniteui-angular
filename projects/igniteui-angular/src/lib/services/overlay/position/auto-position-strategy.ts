@@ -40,7 +40,7 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
             const leftBound = elem.parentElement.offsetLeft;
             const rightBound = elem.parentElement.offsetLeft + elem.clientWidth;
             let newPosition;
-
+            switch (this.settings.horizontalDirection) {
                 case HorizontalAlignment.Left:
                     newPosition = leftBound < viewPort.left ?
                         parseFloat(elem.parentElement.style.left) + viewPort.left - leftBound + this.offsetPadding :
@@ -61,7 +61,7 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
             const topBound = elem.parentElement.offsetTop;
             const bottomBound = elem.parentElement.offsetTop + elem.clientHeight;
             let newPosition;
-
+            switch (this.settings.verticalDirection) {
                 case VerticalAlignment.Top:
                     newPosition = topBound < viewPort.top ?
                         parseFloat(elem.parentElement.style.top) + viewPort.top - topBound + this.offsetPadding :
