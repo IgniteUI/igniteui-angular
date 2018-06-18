@@ -26,13 +26,13 @@ import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component'
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 
-export interface FormatViewsInterface{
+export interface FormatViewsInterface {
     day?: boolean;
     month?: boolean;
     year?: boolean;
 }
 
-export interface FormatOptionsInterface{
+export interface FormatOptionsInterface {
     day?: string;
     month?: string;
     weekday?: string;
@@ -85,7 +85,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *<igx-datePicker [value]="date" [formatter]="formatter"></igx-datePicker>
      *```
      */
-    @Input() public formatter: (val: Date) => string;
+    @Input()
+    public formatter: (val: Date) => string;
 
     /**
      *An @Input property that disables the `IgxDatePickerComponent`.
@@ -93,7 +94,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *<igx-datePicker [disabled]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
      * ```
      */
-    @Input() public disabled: boolean;
+    @Input()
+    public disabled: boolean;
 
     /**
      *An @Input property that sets the selected date.
@@ -104,7 +106,26 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *<igx-datePicker [value]="date"></igx-datePicker>
      *```
      */
-    @Input() public value: Date;
+    @Input()
+    public value: Date;
+
+    /**
+     * An @Input property that sets the `IgxDatePickerComponent` label.
+     * The default label is 'Date'.
+     * ```html
+     * <igx-datePicker [label]="Calendar"></igx-datePicker>
+     * ```
+     */
+    @Input()
+    public label = 'Date';
+
+    /**
+     * An @Input property that sets the `IgxDatePickerComponent` label visibility.
+     * By default the visibility is set to true.
+     * <igx-datePicker [labelVisibility]="false"></igx-datePicker>
+     */
+    @Input()
+    public labelVisibility = true;
 
     /**
      *An @Input property that sets locales. Default locale is en.
@@ -203,7 +224,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *<igx-datePicker cancelButtonLabel="cancel" todayButtonLabel="Tomorrow"></igx-datePicker>
      *```
      */
-    @Input() public todayButtonLabel: string;
+    @Input()
+    public todayButtonLabel: string;
 
     /**
      *An @Input property that renders cancel button with custom label.
@@ -211,7 +233,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *<igx-datePicker cancelButtonLabel="Close" todayButtonLabel="Today"></igx-datePicker>
      *```
      */
-    @Input() public cancelButtonLabel: string;
+    @Input()
+    public cancelButtonLabel: string;
 
     /**
      *An event that is emitted when the `IgxDatePickerComponent` is opened.
@@ -224,7 +247,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *<igx-datePicker (onOpen)="open($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
      *```
      */
-    @Output() public onOpen = new EventEmitter<IgxDatePickerComponent>();
+    @Output()
+    public onOpen = new EventEmitter<IgxDatePickerComponent>();
 
     /**
      *"An event that is emitted when the `IgxDatePickerComponent` is closed.
@@ -237,7 +261,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *<igx-datePicker (onClose)="close($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
      *```
      */
-    @Output() public onClose = new EventEmitter<IgxDatePickerComponent>();
+    @Output()
+    public onClose = new EventEmitter<IgxDatePickerComponent>();
     /**
      *An @Output property that is fired when selection is made in the calendar.
      *```typescript
@@ -249,7 +274,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *<igx-datePicker (onSelection)="selection($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
      *```
      */
-    @Output() public onSelection = new EventEmitter<Date>();
+    @Output()
+    public onSelection = new EventEmitter<Date>();
 
     /**
      *Retruns the formatted date.
