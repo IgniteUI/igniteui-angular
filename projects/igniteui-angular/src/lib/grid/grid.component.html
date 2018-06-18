@@ -24,9 +24,10 @@
         <igx-icon fontSet="material" name="group_work" class="igx-grid__grouparea-placeholder-icon"></igx-icon>
         <span class="igx-grid__grouparea-placeholder-text">Drag a column header and drop it here to group by that column</span>
     </div>
-    <igx-chips-area class="igx-chips-area" (onChipsOrderChange)="chipsOrderChanged($event)" (onChipsMoveEnd)="chipsMovingEnded()">
-        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [removable]="getColumnByName(expr.fieldName).groupable"
-                (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [class.igx-chip--disabled]='!getColumnByName(expr.fieldName).groupable'>
+    <igx-chips-area class="igx-chips-area" (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
+        <igx-chip *ngFor="let expr of chipsGoupingExpressions" [class.igx-chip--disabled]='!getColumnByName(expr.fieldName).groupable'
+            [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [removable]="getColumnByName(expr.fieldName).groupable"
+            (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null">
             <span class="igx-chip__label" igxLabel
                     [style.position]="'unset'"
                     [style.width]="'unset'"

@@ -15,7 +15,8 @@
     ViewChild,
     OnInit,
     AfterContentInit,
-    AfterViewInit
+    AfterViewInit,
+    Renderer2
 } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
@@ -32,19 +33,25 @@ import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
             transition-property: top, left;
             touch-action: none;
         }
+        .item-selected {
+            background: lightblue;
+        }
         `
     ]
 })
-export class IgxChipComponent {
+export class IgxChipComponent implements AfterViewInit {
 
     @Input()
     public id;
 
     @Input()
-    public draggable = true;
+    public draggable = false;
 
     @Input()
-    public removable = true;
+    public removable = false;
+
+    @Input()
+    public selectable = false;
 
     @HostBinding('class.igx-chip')
     public cssClass = 'igx-chip';
@@ -59,9 +66,6 @@ export class IgxChipComponent {
     }
 
     @Output()
-    public onDragEnter = new EventEmitter<any>();
-
-    @Output()
     public onMoveStart = new EventEmitter<any>();
 
     @Output()
@@ -73,19 +77,116 @@ export class IgxChipComponent {
     @Output()
     public onClick = new EventEmitter<any>();
 
+    @Output()
+    public onSelection = new EventEmitter<any>();
+
+    @Output()
+    public onKeyDown = new EventEmitter<any>();
+
+    @Output()
+    public onDragEnter = new EventEmitter<any>();
+
     @ViewChild('chipArea', { read: ElementRef })
     public chipArea: ElementRef;
 
     @ViewChild('chipArea', { read: IgxDragDirective })
     public dragDir: IgxDragDirective;
 
+    @ViewChild('removeBtn', { read: ElementRef })
+    public removeBtn: ElementRef;
+
+    public get selected() {
+        return this._selected;
+    }
+
+    public set selected(newValue: boolean) {
+        const onSelectArgs = {
+            owner: this,
+            nextStatus: false,
+            cancel: false
+        };
+        if (newValue && this.selectable && !this._selected) {
+            onSelectArgs.nextStatus = true;
+            this.onSelection.emit(onSelectArgs);
+
+            if (!onSelectArgs.cancel) {
+                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
+                this._selected = newValue;
+            }
+        } else if (!newValue && this._selected) {
+            this.onSelection.emit(onSelectArgs);
+
+            if (!onSelectArgs.cancel) {
+                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
+                this._selected = newValue;
+            }
+        }
+    }
+
     public get isLastChip() {
         return !this.elementRef.nativeElement.nextElementSibling;
     }
 
+    public chipTabindex = 0;
+    public removeBtnTabindex = 0;
     public areaMovingPerforming = false;
 
-    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef) {
+    private _selected = false;
+    private _dragging = false;
+    private _selectedItemClass = 'item-selected';
+
+    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) {
+    }
+
+    ngAfterViewInit() {
+        this.chipArea.nativeElement.addEventListener('keydown', (args) => {
+            this.onChipKeyDown(args);
+        });
+        if (this.removable) {
+            this.removeBtn.nativeElement.addEventListener('keydown', (args) => {
+                this.onRemoveBtnKeyDown(args);
+            });
+        }
+    }
+
+    public onChipKeyDown(event) {
+        const keyDownArgs = {
+            owner: this,
+            altKey: event.altKey,
+            ctrlKey: event.ctrlKey,
+            shiftKey: event.shiftKey,
+            code: event.code,
+            cancel: false
+        };
+
+        this.onKeyDown.emit(keyDownArgs);
+        if (keyDownArgs.cancel) {
+            return;
+        }
+
+        if (event.code === 'Delete') {
+            this.onRemove.emit({
+                owner: this
+            });
+        }
+
+        if (event.code === 'Space' && this.selectable) {
+            this.selected = !this.selected;
+        }
+
+        if (event.code !== 'Tab') {
+            event.preventDefault();
+        }
+    }
+
+    public onRemoveBtnKeyDown(event) {
+        if (event.code === 'Space' || event.code === 'Enter') {
+            this.onRemove.emit({
+                owner: this
+            });
+
+            event.preventDefault();
+        }
     }
 
     public onChipRemove() {
@@ -101,10 +202,12 @@ export class IgxChipComponent {
             owner: this
         });
         event.cancel = !this.draggable;
+        this._dragging = true;
     }
 
     public onChipDragEnd(event) {
         this.dragDir.dropFinished();
+        this._dragging = false;
     }
 
     public onChipMoveEnd(event) {
@@ -112,12 +215,17 @@ export class IgxChipComponent {
         this.onMoveEnd.emit({
             owner: this
         });
+
+        if (this.selected) {
+            this.chipArea.nativeElement.focus();
+        }
     }
 
     public onChipDragClicked() {
-        this.onClick.emit({
+        const clickEventArgs = {
             owner: this
-        });
+        };
+        this.onClick.emit(clickEventArgs);
     }
     // End chip igxDrag behaviour
 
