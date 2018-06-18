@@ -26,6 +26,18 @@ import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component'
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 
+export interface FormatViewsInterface{
+    day?: boolean;
+    month?: boolean;
+    year?: boolean;
+}
+
+export interface FormatOptionsInterface{
+    day?: string;
+    month?: string;
+    weekday?: string;
+    year?: string;
+}
 let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Date Picker** -
@@ -60,7 +72,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      *An @Input property that applies custom formatter on the selected or passed date.
      *```typescript
-     *public date: Date = new Date(Date.now());
+     *public date: Date = new Date();
      *private dayFormatter = new Intl.DateTimeFormat("en", { weekday: "long" });
      *private monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
      *public formatter = (date: Date) => { return `You selected
@@ -86,7 +98,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      *An @Input property that sets the selected date.
      *```typescript
-     *public date: Date = new Date(Date.now());
+     *public date: Date = new Date();
      *```
      *```html
      *<igx-datePicker [value]="date"></igx-datePicker>
@@ -95,7 +107,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Input() public value: Date;
 
     /**
-     *An @Input property that sets locales.
+     *An @Input property that sets locales. Default locale is en.
      *```html
      *<igx-datePicker locale="ja-JP" [value]="date"></igx-datePicker>
      *```
@@ -104,9 +116,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      *An @Input property that sets on which day the week starts.
-     *For example if you put "5" the week would start from Friday.
      *```html
-     *<igx-datePicker [weekStart]="5" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
+     *<igx-datePicker [weekStart]="WEEKDAYS.FRIDAY" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
      *```
      */
     @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
@@ -122,7 +133,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *```
      */
     @Input()
-    public get formatOptions(): object {
+    public get formatOptions(): FormatOptionsInterface {
         return this._formatOptions;
     }
     /**
@@ -142,7 +153,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *}
      *```
      */
-    public set formatOptions(formatOptions: object) {
+    public set formatOptions(formatOptions: FormatOptionsInterface) {
         this._formatOptions = Object.assign(this._formatOptions, formatOptions);
     }
 
@@ -157,14 +168,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *```
      */
     @Input()
-    public get formatViews(): object {
+    public get formatViews(): FormatViewsInterface {
         return this._formatViews;
     }
 
     /**
      *Sets the format views of the `IgxDatePickerComponent`.
      *```typescript
-     *public allViews;
+     *public Views;
      *@ViewChild("MyDatePicker")
      *public datePicker: IgxDatePickerComponent;
      *ngAfterViewInit(){
@@ -173,7 +184,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *}
      *```
      */
-    public set formatViews(formatViews: object) {
+    public set formatViews(formatViews: FormatViewsInterface) {
         this._formatViews = Object.assign(this._formatViews, formatViews);
     }
 
@@ -187,7 +198,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     public vertical = false;
 
     /**
-     *An @Input property that renders today button with custom name.
+     *An @Input property that renders today button with custom label.
      *```html
      *<igx-datePicker cancelButtonLabel="cancel" todayButtonLabel="Tomorrow"></igx-datePicker>
      *```
@@ -195,7 +206,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Input() public todayButtonLabel: string;
 
     /**
-     *An @Input property that renders cancel button with custom name.
+     *An @Input property that renders cancel button with custom label.
      *```html
      *<igx-datePicker cancelButtonLabel="Close" todayButtonLabel="Today"></igx-datePicker>
      *```
@@ -203,27 +214,27 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Input() public cancelButtonLabel: string;
 
     /**
-     *An @Output property that triggers a function when the `IgxDatePickerComponent` is opened.
+     *An event that is emitted when the `IgxDatePickerComponent` is opened.
      *```typescript
      *public open(event){
      *    alert("The date-picker has been opened!");
      *}
      *```
      *```html
-     *<igx-datePicker (onOpen)="open()" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
+     *<igx-datePicker (onOpen)="open($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
      *```
      */
     @Output() public onOpen = new EventEmitter<IgxDatePickerComponent>();
 
     /**
-     *An @Output property that triggers a function when the `IgxDatePickerComponent` is closed.
+     *"An event that is emitted when the `IgxDatePickerComponent` is closed.
      *```typescript
      *public close(event){
      *    alert("The date-picker has been closed!");
      *}
      *```
      *```html
-     *<igx-datePicker (onClose)="close()" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
+     *<igx-datePicker (onClose)="close($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
      *```
      */
     @Output() public onClose = new EventEmitter<IgxDatePickerComponent>();
@@ -235,13 +246,13 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *}
      *```
      *```html
-     *<igx-datePicker (onSelection)="selection()" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
+     *<igx-datePicker (onSelection)="selection($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
      *```
      */
     @Output() public onSelection = new EventEmitter<Date>();
 
     /**
-     *Retruns the selected date.
+     *Retruns the formatted date.
      *```typescript
      *@ViewChild("MyDatePicker")
      *public datePicker: IgxDatePickerComponent;
@@ -315,7 +326,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      *Method that sets the selected date.
      *```typescript
-     *public date = new Date(Date.now());
+     *public date = new Date();
      *@ViewChild("MyDatePicker")
      *public datePicker: IgxDatePickerComponent;
      *ngAfterViewInit(){
