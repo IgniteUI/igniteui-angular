@@ -1129,6 +1129,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public clearGrouping(name?: string): void {
         this.gridAPI.clear_groupby(this.id, name);
+        this.calculateGridSizes();
     }
 
     public isExpandedGroup(group: IGroupByRecord): boolean {
