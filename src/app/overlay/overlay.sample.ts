@@ -158,7 +158,7 @@ export class OverlaySampleComponent {
     }
 
     public toggleDropDown() {
-        this._overlaySettings.positionStrategy.settings.element = this.button.nativeElement;
+        this._overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
         this.igxDropDown.toggle(this._overlaySettings);
     }
 

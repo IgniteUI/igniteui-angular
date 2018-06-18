@@ -3,10 +3,8 @@ import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment } from 
 
 export class GlobalPositionStrategy implements IPositionStrategy {
     private _defaultSettings: PositionSettings = {
-        point: new Point(0, 0),
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Middle,
-        element: null,
         horizontalStartPoint: HorizontalAlignment.Center,
         verticalStartPoint: VerticalAlignment.Middle
     };
