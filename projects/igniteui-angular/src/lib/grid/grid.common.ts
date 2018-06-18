@@ -247,6 +247,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     private _column: IgxColumnComponent;
     private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
+    private _dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
 
     constructor(
         _element: ElementRef,
@@ -315,11 +316,11 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         icon.appendChild(text);
 
         icon.classList.add('material-icons');
-        this.renderer.addClass(icon, this._dragGhostImgIconClass);
-
         this.cms.icon = icon;
 
         if (!this.column.columnGroup) {
+            this.renderer.addClass(icon, this._dragGhostImgIconClass);
+
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
 
@@ -329,6 +330,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.removeChild(this._dragGhost.firstElementChild);
             this._dragGhost.removeChild(this._dragGhost.lastElementChild);
+            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
+
+            this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
+            this._dragGhost.children[1].style.paddingLeft = "0px";
 
             this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
