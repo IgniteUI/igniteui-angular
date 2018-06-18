@@ -1,0 +1,86 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Column Hiding Theme
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $title-color [null]- The text color used for the title of the list.
+/// @param {Color} $background-color [null] - The background color of the panel.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires text-contrast
+///
+/// @example scss Change the title color
+///   $column-hiding-theme: igx-column-hiding-theme($title-color: black);
+///   // Pass the theme to the igx-column-hiding component mixin
+///   @include igx-column-hiding($column-hiding-theme);
+////
+@function igx-column-hiding-theme(
+    $palette: $default-palette,
+    $title-color: null,
+    $background-color: null
+) {
+    $name: 'igx-column-hiding';
+
+    $default-theme: (
+        name: $name,
+        title-color: igx-color($palette, 'primary'),
+        background-color: transparent
+    );
+
+    @if not($title-color) and $background-color {
+        $title-color: text-contrast($background-color);
+    }
+
+    @return extend($default-theme, (
+        palette: $palette
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-column-hiding($theme) {
+    @include igx-root-css-vars($theme);
+
+    %column-hiding-display {
+        display: flex;
+        flex-flow: column nowrap;
+        width: 100%;
+        flex: 1 1 auto;
+    }
+
+    %column-hiding-title {
+        font-size: rem(14px);
+        color: --var($theme, 'title-color');
+        margin: 0;
+        padding: rem(16px) rem(16px) rem(8px);
+    }
+
+    %column-hiding-input {
+        font-size: rem(16px) !important;
+        margin: 0 !important;
+        padding: rem(8px) rem(16px);
+    }
+
+    %column-hiding-columns {
+        display: flex;
+        flex-flow: column nowrap;
+    }
+
+    %column-hiding-item {
+        padding: rem(16px);
+        font-weight: 600;
+    }
+
+    %column-hiding-buttons {
+        display: flex;
+        justify-content: flex-end;
+        padding: rem(8px) rem(16px);
+    }
+}
