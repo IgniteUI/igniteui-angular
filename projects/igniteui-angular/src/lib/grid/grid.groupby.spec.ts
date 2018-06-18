@@ -1723,6 +1723,22 @@ describe('IgxGrid - GroupBy', () => {
         }
         expect(m).toBe('Maximum amount of grouped columns is 10.');
     });
+
+    it('should display column header text in the grouping chip.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.columnList.toArray()[0].header = 'Custom Header Text';
+        fix.detectChanges();
+
+        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false});
+        fix.detectChanges();
+
+        const chips = fix.nativeElement.querySelectorAll(CHIP);
+        expect(chips.length).toBe(1);
+        const chipText = chips[0].querySelector('span.igx-chip__text').innerText;
+        expect(chipText).toEqual('Custom Header Text');
+    });
 });
 
 export class DataParent {
