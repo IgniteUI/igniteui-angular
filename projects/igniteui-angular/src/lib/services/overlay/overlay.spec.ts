@@ -23,7 +23,7 @@ function clearOverlay() {
         overlay.remove();
     }
 }
-fdescribe('igxOverlay', () => {
+describe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule],
@@ -652,6 +652,104 @@ fdescribe('igxOverlay', () => {
             // Expecting the red div to be out of bound top and left and to be readjusted with padding accordingly.
             expect(wrapperTop).toEqual(16);
             expect(wrapperLeft).toEqual(16);
+        });
+    });
+
+    it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + RIGHT', () => {
+        const fix = TestBed.overrideComponent(DownRightButtonComponent, {
+            set: {
+                styles: [`button {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                width: 84px;
+                height: 84px;
+                padding: 0px;
+                margin: 0px;
+                border: 0px;
+            }`]
+            }
+        }).createComponent(DownRightButtonComponent);
+        clearOverlay();
+        fix.detectChanges();
+        const currentElement = fix.componentInstance;
+        const buttonElement = fix.componentInstance.buttonElement.nativeElement;
+        fix.detectChanges();
+        currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Right;
+        currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
+        currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
+        currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Right;
+        currentElement.ButtonPositioningSettings.target = buttonElement;
+        buttonElement.click();
+        fix.detectChanges();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const wrappers = document.getElementsByClassName('igx-overlay__content--no-modal');
+            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+            // expect(wrapperContent.children.length).toEqual(1);
+            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            debugger;
+            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            // const buttonLeft = buttonElement.offsetLeft;
+            // The top is always misaligned by 16px, not sure why, offsetPadding? Shouldn't be
+            // const buttonTop = buttonElement.offsetTop - 16;
+            // tslint:disable:radix
+            const wrapperLeft = wrapperContent.offsetLeft;
+            expect(wrapperContent.style.top).toBeDefined();
+            expect(typeof wrapperContent.style.top).toEqual('string');
+            const wrapperTop = wrapperContent.offsetTop;
+            const buttonLeft = buttonElement.offsetLeft;
+            expect(wrapperTop).toEqual(16);
+            const delta = 1;
+            expect(wrapperLeft === buttonLeft || wrapperLeft + delta === buttonLeft || wrapperLeft - delta === buttonLeft).toBeTruthy();
+        });
+    });
+
+    it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + LEFT', () => {
+        const fix = TestBed.overrideComponent(DownRightButtonComponent, {
+            set: {
+                styles: [`button {
+                position: absolute;
+                bottom: 16px;
+                left: 16px;
+                width: 84px;
+                height: 84px;
+                padding: 0px;
+                margin: 0px;
+                border: 0px;
+            }`]
+            }
+        }).createComponent(DownRightButtonComponent);
+        clearOverlay();
+        fix.detectChanges();
+        const currentElement = fix.componentInstance;
+        const buttonElement = fix.componentInstance.buttonElement.nativeElement;
+        fix.detectChanges();
+        currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Left;
+        currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Bottom;
+        currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Bottom;
+        currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
+        currentElement.ButtonPositioningSettings.target = buttonElement;
+        buttonElement.click();
+        fix.detectChanges();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            const wrappers = document.getElementsByClassName('igx-overlay__content--no-modal');
+            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+            // expect(wrapperContent.children.length).toEqual(1);
+            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            // const buttonLeft = buttonElement.offsetLeft;
+            // The top is always misaligned by 16px, not sure why, offsetPadding? Shouldn't be
+            // const buttonTop = buttonElement.offsetTop - 16;
+            // tslint:disable:radix
+            const wrapperLeft = parseInt(wrapperContent.style.left);
+            expect(wrapperContent.style.top).toBeDefined();
+            expect(typeof wrapperContent.style.top).toEqual('string');
+            const wrapperTop = wrapperContent.offsetTop;
+            // Expecting the red div to be out of bound top and left and to be readjusted with padding accordingly.
+            expect(wrapperLeft).toEqual(16);
+            expect(wrapperTop).toEqual(buttonElement.offsetTop - 16);
         });
     });
 
