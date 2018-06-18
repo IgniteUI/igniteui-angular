@@ -386,6 +386,11 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragEnter(event) {
+        const drag = event.detail.owner;
+        if (!(drag instanceof IgxColumnMovingDragDirective)) {
+            return;
+        }
+
         if (this.isDropTarget && this.cms.column !== this.column) {
             const args = {
                 source: this.cms.column,
@@ -435,6 +440,11 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragLeave(event) {
+        const drag = event.detail.owner;
+        if (!(drag instanceof IgxColumnMovingDragDirective)) {
+            return;
+        }
+
         this.cms.icon.innerText = 'block';
 
         if (this._dropIndicator && this.cms.column !== this.column) {
@@ -458,6 +468,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragDrop(event) {
+        const drag = event.detail.owner;
+        if (!(drag instanceof IgxColumnMovingDragDirective)) {
+            return;
+        }
 
         if (this.horizontalScroll) {
             this._dragLeave.next(true);
