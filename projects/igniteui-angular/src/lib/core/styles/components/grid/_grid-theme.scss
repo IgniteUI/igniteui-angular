@@ -25,7 +25,6 @@
 /// @param {Color} $resize-line-color [null] - The table header resize line color.
 ///
 /// @param {Color} $grouparea-background [null] - The grid group area background color.
-/// @param {Color} $drop-area-text-color [null] - The grid group area placeholder text color.
 ///
 /// @param {Color} $group-row-background [null] - The grid group row background color.
 /// @param {Color} $group-label-column-name-text [null] - The grid group row column name text color.
@@ -198,8 +197,8 @@
         $grouparea-background: $header-background
     }
 
-    @if not($drop-area-text-color) and $grouparea-background {
-        $drop-area-text-color: text-contrast($grouparea-background)
+    @if not($drop-area-text-color) and $drop-area-background {
+        $drop-area-text-color: text-contrast($drop-area-background)
     }
 
     @return extend($default-theme, (

@@ -51,6 +51,18 @@
     @include e(ghost) {
         @extend %igx-chip__ghost  !optional;
     }
+
+    @include m(cosy) {
+        @include e(item) {
+            @extend %igx-chip__item--cosy !optional;
+        }
+    }
+
+    @include m(compact) {
+        @include e(item) {
+            @extend %igx-chip__item--compact  !optional;
+        }
+    }
 }
 
 

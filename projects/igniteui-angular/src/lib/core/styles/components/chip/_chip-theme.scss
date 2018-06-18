@@ -225,20 +225,16 @@
         }
     }
 
-    .igx-grid--cosy {
-        %igx-chip__item {
-            border-radius: map-get($chip-height, 'cosy') / 2;
-            height: map-get($chip-height, 'cosy');
-            padding: map-get($chip-padding, 'cosy');
-        }
+    %igx-chip__item--cosy {
+        border-radius: map-get($chip-height, 'cosy') / 2;
+        height: map-get($chip-height, 'cosy');
+        padding: map-get($chip-padding, 'cosy');
     }
 
-    .igx-grid--compact {
-        %igx-chip__item {
-            border-radius: map-get($chip-height, 'compact') / 2;
-            height: map-get($chip-height, 'compact');
-            padding: map-get($chip-padding, 'compact');
-        }
+    %igx-chip__item--compact {
+        border-radius: map-get($chip-height, 'compact') / 2;
+        height: map-get($chip-height, 'compact');
+        padding: map-get($chip-padding, 'compact');
     }
 
     %igx-chip__text {
