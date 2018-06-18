@@ -108,14 +108,18 @@ export class WorksheetFile implements IExcelFile {
                             worksheetData.data[row - 1] :
                             worksheetData.data[row - 1][columnHeader];
 
-        const savedValue = dictionary.saveValue(cellValue, column, false);
-        const isSavedAsString = savedValue !== -1;
+        if (cellValue === undefined || cellValue === null) {
+            return `<c r="${columnName}" s="1"/>`;
+        } else {
+            const savedValue = dictionary.saveValue(cellValue, column, false);
+            const isSavedAsString = savedValue !== -1;
 
-        const value = isSavedAsString ? savedValue : (cellValue === undefined ? '' : cellValue);
-        const type = isSavedAsString ? ` t="s"` : '';
-        const format = isSavedAsString ? '' : ` s="1"`;
+            const value = isSavedAsString ? savedValue : cellValue;
+            const type = isSavedAsString ? ` t="s"` : '';
+            const format = isSavedAsString ? '' : ` s="1"`;
 
-        return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
+            return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
+        }
     }
     /* tslint:enable member-ordering */
 }
