@@ -7,7 +7,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
-describe('IgxGrid - Grid Paging', () => {
+fdescribe('IgxGrid - Grid Paging', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -246,6 +246,23 @@ describe('IgxGrid - Grid Paging', () => {
         expect(grid.page).toEqual(2, 'Invalid page index');
         expect(grid.getCellByColumn(0, 'ID').value).toMatch('9');
         expect(gridElement.querySelector('.igx-paginator > span').textContent).toMatch('3 of 3');
+    }));
+
+    fit('activate/deactivate paging', async(() => {
+        const fix = TestBed.createComponent(IgxGridMarkupEditingDeclarationComponent);
+        const grid = fix.componentInstance.grid1;
+        fix.detectChanges();
+
+        let paginator = grid.nativeElement.querySelector('.igx-paginator');
+        expect(paginator).toBeNull();
+
+        grid.paging = !grid.paging;
+        paginator = grid.nativeElement.querySelector('.igx-paginator');
+        expect(paginator !== null).toBeTruthy();
+
+        grid.paging = !grid.paging;
+        paginator = grid.nativeElement.querySelector('.igx-paginator');
+        expect(paginator).toBeNull();
     }));
 });
 

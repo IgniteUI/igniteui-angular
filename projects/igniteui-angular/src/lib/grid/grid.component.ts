@@ -193,7 +193,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set paging(value: boolean) {
         this._paging = value;
         this._pipeTrigger++;
-        this.cdr.markForCheck();
+
+        this.cdr.detectChanges();
+        this.calculateGridHeight();
+        this.cdr.detectChanges();
     }
 
     @Input()
