@@ -10,7 +10,9 @@ import {
     OverlaySettings,
     BlockScrollStrategy,
     CloseScrollStrategy,
-    AbsoluteScrollStrategy
+    AbsoluteScrollStrategy,
+    Point,
+    NoOpScrollStrategy
 } from 'igniteui-angular';
 
 @Component({
@@ -120,23 +122,14 @@ export class DropDownSampleComponent implements OnInit {
     }
 
     public toggleDropDown() {
-        const overlaySettings = new OverlaySettings();
-        overlaySettings.modal = false;
-        const positionSettings = new PositionSettings();
-        positionSettings.element = this.button.nativeElement;
-        positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
-        positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
-        positionSettings.horizontalDirection = HorizontalAlignment.Right;
-        positionSettings.verticalDirection = VerticalAlignment.Bottom;
-        // overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-        overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-        // const close = new CloseScrollStrategy();
-        // overlaySettings.scrollStrategy = close;
-        // const block = new BlockScrollStrategy();
-        // overlaySettings.scrollStrategy = block;
-        // overlaySettings.closeOnOutsideClick = false;
-        const absolute = new AbsoluteScrollStrategy();
-        overlaySettings.scrollStrategy = absolute;
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new ConnectedPositioningStrategy(),
+            scrollStrategy: new NoOpScrollStrategy(),
+            closeOnOutsideClick: true,
+            modal: false
+        };
+
+        overlaySettings.positionStrategy.settings.element = this.button.nativeElement;
         this.igxDropDown.toggle(overlaySettings);
     }
 

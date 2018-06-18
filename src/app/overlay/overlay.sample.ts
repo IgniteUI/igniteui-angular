@@ -19,7 +19,12 @@ import { templateJitUrl } from '@angular/compiler';
     templateUrl: './overlay.sample.html',
 })
 export class OverlaySampleComponent {
-    private _overlaySettings: OverlaySettings = new OverlaySettings();
+    private _overlaySettings: OverlaySettings = {
+        positionStrategy: new GlobalPositionStrategy(),
+        scrollStrategy: new NoOpScrollStrategy(),
+        modal: true,
+        closeOnOutsideClick: true
+    };
     items = [
         'Item 1',
         'Item 2',
@@ -57,52 +62,52 @@ export class OverlaySampleComponent {
             case 'hd':
                 switch (ev.value) {
                     case 'Left':
-                        this._overlaySettings.positionStrategy._settings.horizontalDirection = -1;
+                        this._overlaySettings.positionStrategy.settings.horizontalDirection = -1;
                         break;
                     case 'Center':
-                        this._overlaySettings.positionStrategy._settings.horizontalDirection = -0.5;
+                        this._overlaySettings.positionStrategy.settings.horizontalDirection = -0.5;
                         break;
                     case 'Right':
-                        this._overlaySettings.positionStrategy._settings.horizontalDirection = 0;
+                        this._overlaySettings.positionStrategy.settings.horizontalDirection = 0;
                         break;
                 }
                 break;
             case 'vd':
                 switch (ev.value) {
                     case 'Top':
-                        this._overlaySettings.positionStrategy._settings.verticalDirection = -1;
+                        this._overlaySettings.positionStrategy.settings.verticalDirection = -1;
                         break;
                     case 'Middle':
-                        this._overlaySettings.positionStrategy._settings.verticalDirection = -0.5;
+                        this._overlaySettings.positionStrategy.settings.verticalDirection = -0.5;
                         break;
                     case 'Bottom':
-                        this._overlaySettings.positionStrategy._settings.verticalDirection = 0;
+                        this._overlaySettings.positionStrategy.settings.verticalDirection = 0;
                         break;
                 }
                 break;
             case 'hsp':
                 switch (ev.value) {
                     case 'Left':
-                        this._overlaySettings.positionStrategy._settings.horizontalStartPoint = -1;
+                        this._overlaySettings.positionStrategy.settings.horizontalStartPoint = -1;
                         break;
                     case 'Center':
-                        this._overlaySettings.positionStrategy._settings.horizontalStartPoint = -0.5;
+                        this._overlaySettings.positionStrategy.settings.horizontalStartPoint = -0.5;
                         break;
                     case 'Right':
-                        this._overlaySettings.positionStrategy._settings.horizontalStartPoint = 0;
+                        this._overlaySettings.positionStrategy.settings.horizontalStartPoint = 0;
                         break;
                 }
                 break;
             case 'vsp':
                 switch (ev.value) {
                     case 'Top':
-                        this._overlaySettings.positionStrategy._settings.verticalStartPoint = -1;
+                        this._overlaySettings.positionStrategy.settings.verticalStartPoint = -1;
                         break;
                     case 'Middle':
-                        this._overlaySettings.positionStrategy._settings.verticalStartPoint = -0.5;
+                        this._overlaySettings.positionStrategy.settings.verticalStartPoint = -0.5;
                         break;
                     case 'Bottom':
-                        this._overlaySettings.positionStrategy._settings.verticalStartPoint = 0;
+                        this._overlaySettings.positionStrategy.settings.verticalStartPoint = 0;
                         break;
                 }
                 break;
@@ -153,7 +158,7 @@ export class OverlaySampleComponent {
     }
 
     public toggleDropDown() {
-        this._overlaySettings.positionStrategy._settings.element = this.button.nativeElement;
+        this._overlaySettings.positionStrategy.settings.element = this.button.nativeElement;
         this.igxDropDown.toggle(this._overlaySettings);
     }
 
