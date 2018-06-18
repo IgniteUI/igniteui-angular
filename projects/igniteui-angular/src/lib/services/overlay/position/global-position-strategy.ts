@@ -1,5 +1,5 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings } from './../utilities';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment } from './../utilities';
 
 export class GlobalPositionStrategy implements IPositionStrategy {
     public _settings: PositionSettings;
@@ -10,13 +10,13 @@ export class GlobalPositionStrategy implements IPositionStrategy {
 
     position(element: HTMLElement, wrapper: HTMLElement, size: {}): void {
         switch (this._settings.horizontalDirection) {
-            case -1:
+            case HorizontalAlignment.Left:
             wrapper.parentElement.style.justifyContent = 'flex-start';
                 break;
-            case -0.5:
+            case HorizontalAlignment.Center:
             wrapper.parentElement.style.justifyContent = 'center';
                 break;
-            case 0:
+            case HorizontalAlignment.Right:
             wrapper.parentElement.style.justifyContent = 'flex-end';
                 break;
             default:
@@ -24,13 +24,13 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         }
 
         switch (this._settings.verticalDirection) {
-            case -1:
+            case VerticalAlignment.Top:
             wrapper.parentElement.style.alignItems = 'flex-start';
                 break;
-            case -0.5:
+            case VerticalAlignment.Middle:
             wrapper.parentElement.style.alignItems = 'center';
                 break;
-            case 0:
+            case VerticalAlignment.Bottom:
             wrapper.parentElement.style.alignItems = 'flex-end';
                 break;
             default:
