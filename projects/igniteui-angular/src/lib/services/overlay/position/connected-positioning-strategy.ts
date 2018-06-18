@@ -1,12 +1,11 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment } from './../utilities';
+import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment, getPointFromPositionsSettings } from './../utilities';
 
 export class ConnectedPositioningStrategy implements IPositionStrategy {
   private _defaultSettings: PositionSettings = {
-    point: new Point(0, 0),
+    target: new Point(0, 0),
     horizontalDirection: HorizontalAlignment.Right,
     verticalDirection: VerticalAlignment.Bottom,
-    element: null,
     horizontalStartPoint: HorizontalAlignment.Left,
     verticalStartPoint: VerticalAlignment.Bottom
   };
@@ -22,8 +21,8 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     const eWidth = size.width;
     const eHeight = size.height;
 
-    componentWrapper.style.top = this.settings.point.y + this.settings.verticalDirection * size.height + 'px';
-    componentWrapper.style.left = this.settings.point.x + this.settings.horizontalDirection * size.width + 'px';
+    componentWrapper.style.top = getPointFromPositionsSettings(this.settings).y + this.settings.verticalDirection * size.height + 'px';
+    componentWrapper.style.left = getPointFromPositionsSettings(this.settings).x + this.settings.horizontalDirection * size.width + 'px';
   }
 }
 

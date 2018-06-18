@@ -24,17 +24,30 @@ export class Point {
 }
 
 export interface PositionSettings {
-        point: Point;
-        horizontalDirection: HorizontalAlignment;
-        verticalDirection: VerticalAlignment;
-        element: HTMLElement;
-        horizontalStartPoint: HorizontalAlignment;
-        verticalStartPoint: VerticalAlignment;
+    target?: Point | HTMLElement;
+    horizontalDirection?: HorizontalAlignment;
+    verticalDirection?: VerticalAlignment;
+    horizontalStartPoint?: HorizontalAlignment;
+    verticalStartPoint?: VerticalAlignment;
 }
 
 export interface OverlaySettings {
-    positionStrategy: IPositionStrategy;
-    scrollStrategy: IScrollStrategy;
-    modal: boolean;
-    closeOnOutsideClick: boolean;
+    positionStrategy?: IPositionStrategy;
+    scrollStrategy?: IScrollStrategy;
+    modal?: boolean;
+    closeOnOutsideClick?: boolean;
+}
+
+export function getPointFromPositionsSettings(settings: PositionSettings): Point {
+    let result: Point = new Point(0, 0);
+
+    if (settings.target instanceof HTMLElement) {
+        const rect = (<HTMLElement>settings.target).getBoundingClientRect();
+        result.x = rect.right + rect.width * settings.horizontalStartPoint;
+        result.y = rect.bottom + rect.height * settings.verticalStartPoint;
+    } else if (settings.target instanceof Point) {
+        result = settings.target;
+    }
+
+    return result;
 }

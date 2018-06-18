@@ -129,7 +129,7 @@ export class DropDownSampleComponent implements OnInit {
             modal: false
         };
 
-        overlaySettings.positionStrategy.settings.element = this.button.nativeElement;
+        overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
         this.igxDropDown.toggle(overlaySettings);
     }
 

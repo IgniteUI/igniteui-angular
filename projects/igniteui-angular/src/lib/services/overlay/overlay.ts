@@ -73,7 +73,6 @@ export class IgxOverlayService {
         this.onOpening.emit();
 
         id = this.getId(id);
-
         overlaySettings = Object.assign(this._defaultSettings, overlaySettings);
 
         // get the element for both static and dynamic components
@@ -84,13 +83,10 @@ export class IgxOverlayService {
         contentElement.appendChild(element);
         this.OverlayElement.appendChild(wrapperElement);
 
-        const positionStrategy = this.getPositionStrategy(overlaySettings.positionStrategy);
-        positionStrategy.position(element, contentElement, this._elements.find(e => e.id === id).size, document);
+        overlaySettings.positionStrategy.position(element, contentElement, this._elements.find(e => e.id === id).size, document);
 
-        if (overlaySettings.scrollStrategy) {
-            overlaySettings.scrollStrategy.initialize(this._document, this, id);
-            overlaySettings.scrollStrategy.attach();
-        }
+        overlaySettings.scrollStrategy.initialize(this._document, this, id);
+        overlaySettings.scrollStrategy.attach();
 
         this.onOpened.emit();
         return this._elements[this._elements.length - 1].id;
@@ -105,10 +101,7 @@ export class IgxOverlayService {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
         }
 
-        const scrollStrategy = element.settings.scrollStrategy;
-        if (scrollStrategy) {
-            scrollStrategy.detach();
-        }
+        element.settings.scrollStrategy.detach();
 
         const child: HTMLElement = element.elementRef.nativeElement;
         if (!this.OverlayElement.contains(child)) {
@@ -180,13 +173,6 @@ export class IgxOverlayService {
 
     private getPositionStrategy(positionStrategy?: IPositionStrategy): IPositionStrategy {
         positionStrategy = positionStrategy ? positionStrategy : new GlobalPositionStrategy();
-        if (positionStrategy.settings && positionStrategy.settings.element) {
-            const elementRect = positionStrategy.settings.element.getBoundingClientRect();
-            const x = elementRect.right + elementRect.width * positionStrategy.settings.horizontalStartPoint;
-            const y = elementRect.bottom + elementRect.height * positionStrategy.settings.verticalStartPoint;
-            positionStrategy.settings.point = new Point(x, y);
-        }
-
         return positionStrategy;
     }
 
