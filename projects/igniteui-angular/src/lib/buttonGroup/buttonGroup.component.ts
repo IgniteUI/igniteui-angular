@@ -167,9 +167,6 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      *```typescript
      *@ViewChild("toast")
      *private toast: IgxToastComponent;
-     *public show(toast){
-     *    this.toast.show();
-     *}
      *public onSelect(buttongroup){
      *    this.toast.show()
      *}
@@ -187,9 +184,6 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      *```typescript
      *@ViewChild("toast")
      *private toast: IgxToastComponent;
-     *public show(toast){
-     *    this.toast.show();
-     *}
      *public onUnselect(buttongroup){
      *    this.toast.show()
      *}
