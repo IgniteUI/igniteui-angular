@@ -393,6 +393,25 @@ import {
 |`grid`|IgxGridComponent|Yes|No|A reference to the grid containing the row.|
 |`nativeElement`|HTMLElement|Yes|No|The native DOM element representing the row. Could be `null` in certain environments.|
 
+## IgxGridGroupByRowComponent
+
+### Getters/Setters
+
+|Name|Type|Getter|Setter|Description|
+|--- |--- |--- |--- |--- |
+|`index` | number | Yes | No | The index of the row in the rows list. |
+|`grid`|IgxGridComponent|Yes|No|A reference to the grid containing the group row. |
+|`groupRow` | IGroupByRecord | Yes | No | The group row data. Contains the related group expression, level, sub-records and group value. |
+|`expanded` | boolean | Yes | No | Whether the row is expanded or not. |
+|`groupContent` | ElementRef | Yes | No | The container for the group row template. Holds the group row content. |
+|`focused` | boolean | Yes | No | Returns whether the group row is currently focused. | 
+
+### Methods
+
+|Name|Return Type|Description|
+|--- |--- |--- |
+|`toggle()`|void| Toggles the expand state of the group row. |
+
 ## IgxGridCellComponent
 
 ### Getters/Setters
