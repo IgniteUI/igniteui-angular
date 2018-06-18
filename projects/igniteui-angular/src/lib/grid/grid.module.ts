@@ -44,7 +44,6 @@ import {
     IgxGridSortingPipe
 } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridGroupByDropAreaComponent } from './groupby-drop-area.component';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
@@ -56,7 +55,6 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxGridComponent,
     IgxGridRowComponent,
     IgxGridGroupByRowComponent,
-    IgxGridGroupByDropAreaComponent,
     IgxGridHeaderComponent,
     IgxGridSummaryComponent,
     IgxGridToolbarComponent,
@@ -84,7 +82,6 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxGridComponent,
     IgxGridCellComponent,
     IgxGridGroupByRowComponent,
-    IgxGridGroupByDropAreaComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridHeaderComponent,

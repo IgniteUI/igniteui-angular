@@ -35,8 +35,10 @@
             </span>
             <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
-        <igx-grid-groupby-drop-area igxGroupAreaDrop *ngIf="dropAreaVisible" [displayDensity]="displayDensity">
-        </igx-grid-groupby-drop-area>
+        <div igxGroupAreaDrop *ngIf="dropAreaVisible" [class]="groupAreaHostClass">
+            <igx-icon fontSet="material" name="group_work" class="igx-drop-area__icon"></igx-icon>
+            <span class="igx-drop-area__text">Drag a column header and drop it here to group by that column</span>
+        </div>
     </igx-chips-area>
     <!--<igx-icon class="igx-chip__dir-icon" fontSet="material" *ngIf="chipsGoupingExpressions.length && dropAreaVisible">forward</igx-icon>-->
 </div>

@@ -30,8 +30,7 @@ import {
 import { of, Subject } from 'rxjs';
 import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray } from '../core/utils';
-import { IgxDensityEnabledComponent } from '../core/density';
+import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -150,8 +149,7 @@ export interface IColumnMovingEndEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxDensityEnabledComponent
-    implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     @Input()
     public data = [];
@@ -280,7 +278,25 @@ export class IgxGridComponent extends IgxDensityEnabledComponent
     public paginationTemplate: TemplateRef<any>;
 
     @Input()
+    public get displayDensity(): DisplayDensity | string {
+        return this._displayDensity;
+    }
 
+    public set displayDensity(val: DisplayDensity | string) {
+        switch (val) {
+            case 'compact':
+                this._displayDensity = DisplayDensity.compact;
+                break;
+            case 'cosy':
+                this._displayDensity = DisplayDensity.cosy;
+                break;
+            case 'comfortable':
+            default:
+                this._displayDensity = DisplayDensity.comfortable;
+        }
+    }
+
+    @Input()
     get columnHiding() {
         return this._columnHiding;
     }
@@ -496,9 +512,31 @@ export class IgxGridComponent extends IgxDensityEnabledComponent
     @ViewChild('summaries')
     public summaries: ElementRef;
 
-
     @HostBinding('attr.tabindex')
     public tabindex = 0;
+
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-grid--cosy';
+            case DisplayDensity.compact:
+                return 'igx-grid--compact';
+            default:
+                return 'igx-grid';
+        }
+    }
+
+    get groupAreaHostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-drop-area--cosy';
+            case DisplayDensity.compact:
+                return 'igx-drop-area--compact';
+            default:
+                return 'igx-drop-area';
+        }
+    }
 
     @HostBinding('attr.role')
     public hostRole = 'grid';
@@ -725,6 +763,7 @@ export class IgxGridComponent extends IgxDensityEnabledComponent
     private _hiddenColumnsText = '';
     private _height = '100%';
     private _width = '100%';
+    private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
 
     constructor(
@@ -738,7 +777,6 @@ export class IgxGridComponent extends IgxDensityEnabledComponent
         private differs: IterableDiffers,
         private viewRef: ViewContainerRef) {
 
-        super();
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
@@ -865,6 +903,18 @@ export class IgxGridComponent extends IgxDensityEnabledComponent
                 this.tfoot.nativeElement.clientHeight;
         }
         return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
+    }
+
+    get defaultRowHeight(): number {
+        switch (this._displayDensity) {
+            case DisplayDensity.compact:
+                return 32;
+            case DisplayDensity.cosy:
+                return 40;
+            case DisplayDensity.comfortable:
+            default:
+                return 50;
+        }
     }
 
     get calcPinnedContainerMaxWidth(): number {
