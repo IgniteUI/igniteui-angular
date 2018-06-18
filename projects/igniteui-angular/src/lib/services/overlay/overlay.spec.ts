@@ -162,10 +162,9 @@ describe('igxOverlay', () => {
         const mockItem = { parentElement: mockParent } as HTMLElement;
         spyOn<any>(mockItem, 'parentElement').and.returnValue(mockParent);
         const mockPositioningSettings1: PositionSettings = {
-            point: new Point(0, 0),
             horizontalDirection: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
-            element: mockItem,
+            target: mockItem,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
@@ -180,10 +179,9 @@ describe('igxOverlay', () => {
         expect(autoStrat1.getViewPort).toHaveBeenCalledTimes(1);
 
         const mockPositioningSettings2: PositionSettings = {
-            point: new Point(0, 0),
             horizontalDirection: HorizontalAlignment.Left,
             verticalDirection: VerticalAlignment.Top,
-            element: mockItem,
+            target: mockItem,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
@@ -196,10 +194,9 @@ describe('igxOverlay', () => {
         expect(autoStrat2.getViewPort).toHaveBeenCalledTimes(1);
 
         const mockPositioningSettings3: PositionSettings = {
-            point: new Point(0, 0),
             horizontalDirection: HorizontalAlignment.Center,
             verticalDirection: VerticalAlignment.Middle,
-            element: mockItem,
+            target: mockItem,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
@@ -286,10 +283,9 @@ describe('igxOverlay', () => {
             closeOnOutsideClick: false
         };
         const positionSettings: PositionSettings = {
-            point: new Point(0, 0),
+            target: new Point(0, 0),
             horizontalDirection: HorizontalAlignment.Left,
             verticalDirection: VerticalAlignment.Top,
-            element: null,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
@@ -459,42 +455,6 @@ describe('igxOverlay', () => {
         // for a Point(300,300);
         const expectedTopForPoint: Array<string> = ['240px', '270px', '300px'];  // top/middle/bottom/
         const expectedLeftForPoint: Array<string> = ['240px', '270px', '300px']; // left/center/right/
-
-            const size = {width: 60, height: 60};
-            const compElement = document.createElement('div');
-            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
-            const contentWrapper = document.createElement('div');
-            contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
-            contentWrapper.classList.add('contentWrapper');
-            contentWrapper.appendChild(compElement);
-            document.body.appendChild(contentWrapper);
-
-            const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-            const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-
-            fixture.detectChanges();
-            for (let i = 0; i < horAl.length ; i++) {
-                for (let j = 0; j < verAl.length; j++) {
-                    // start Point is static Top/Left at 300/300
-                    const positionSettings2 = {
-                        point: new Point(300, 300),
-                        horizontalDirection: HorizontalAlignment[horAl[i]],
-                        verticalDirection: VerticalAlignment[verAl[j]],
-                        element: null,
-                        horizontalStartPoint: HorizontalAlignment.Left,
-                        verticalStartPoint: VerticalAlignment.Top
-                    };
-
-                    const strategy = new ConnectedPositioningStrategy(positionSettings2);
-                    strategy.position(compElement, contentWrapper, size);
-                    fixture.detectChanges();
-                    expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
-                    expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
-                 }
-            }
-        });
-            const overlaySettings = new OverlaySettings();
-            const positionSettings = new PositionSettings();
         const overlaySettings: OverlaySettings = {
             positionStrategy: new GlobalPositionStrategy(),
             scrollStrategy: new NoOpScrollStrategy(),
@@ -502,10 +462,9 @@ describe('igxOverlay', () => {
             closeOnOutsideClick: false
         };
         const positionSettings: PositionSettings = {
-            point: new Point(300, 300),
+            target: new Point(300, 300),
             horizontalDirection: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
-            element: fixture.componentInstance.buttonElement.nativeElement,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
@@ -529,16 +488,17 @@ describe('igxOverlay', () => {
         positionSettings.verticalStartPoint = VerticalAlignment.Top;
         for (let i = 0; i < horAl.length; i++) {
             positionSettings.horizontalDirection = HorizontalAlignment[horAl[i]];
-                    for (let j = 0; j < verAl.length; j++) {
+            for (let j = 0; j < verAl.length; j++) {
                 positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
                 const strategy = overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
                 strategy.position(compElement, contentWrapper, size);
                 fixture.detectChanges();
                 expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
                 expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
-                    }
+            }
         }
     });
+
 
     // 1.3 AutoPosition (fit the shown component into the visible window.)
     it('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
@@ -551,10 +511,9 @@ describe('igxOverlay', () => {
             closeOnOutsideClick: false
         };
         const positionSettings: PositionSettings = {
-            point: new Point(0, 0),
             horizontalDirection: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
-            element: fix.componentInstance.buttonElement.nativeElement,
+            target: fix.componentInstance.buttonElement.nativeElement,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
@@ -578,10 +537,9 @@ describe('igxOverlay', () => {
             closeOnOutsideClick: false
         };
         const positionSettings: PositionSettings = {
-            point: new Point(0, 0),
             horizontalDirection: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
-            element: fix.componentInstance.buttonElement.nativeElement,
+            target: fix.componentInstance.buttonElement.nativeElement,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
@@ -606,10 +564,9 @@ describe('igxOverlay', () => {
             closeOnOutsideClick: false
         };
         const positionSettings: PositionSettings = {
-            point: new Point(0, 0),
             horizontalDirection: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
-            element: fix.componentInstance.buttonElement.nativeElement,
+            target: fix.componentInstance.buttonElement.nativeElement,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
@@ -636,7 +593,7 @@ describe('igxOverlay', () => {
         currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Bottom;
         currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Bottom;
         currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
-        currentElement.ButtonPositioningSettings.element = buttonElement;
+        currentElement.ButtonPositioningSettings.target = buttonElement;
         buttonElement.click();
         fix.detectChanges();
         fix.whenStable().then(() => {
@@ -683,7 +640,7 @@ describe('igxOverlay', () => {
         currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
         currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
         currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
-        currentElement.ButtonPositioningSettings.element = buttonElement;
+        currentElement.ButtonPositioningSettings.target = buttonElement;
         buttonElement.click();
         fix.detectChanges();
         fix.whenStable().then(() => {
@@ -903,10 +860,9 @@ export class DownRightButtonComponent {
     @ViewChild('button') buttonElement: ElementRef;
 
     public ButtonPositioningSettings: PositionSettings = {
-        point: new Point(0, 0),
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
-        element: null,
+        target: null,
         horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Top
     };
