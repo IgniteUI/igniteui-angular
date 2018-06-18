@@ -3,18 +3,14 @@
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ElementRef,
-    forwardRef,
     HostBinding,
     HostListener,
     Input,
     OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild,
-    ViewContainerRef,
-    NgZone
+    ViewChild
 } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
@@ -241,8 +237,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         public gridAPI: IgxGridAPIService,
         public selectionApi: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
-        private element: ElementRef,
-        private zone: NgZone) { }
+        private element: ElementRef) { }
 
     private _updateCellSelectionStatus() {
         this._clearCellSelection();
