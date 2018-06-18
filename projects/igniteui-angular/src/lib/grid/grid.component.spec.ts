@@ -423,6 +423,114 @@ describe('IgxGrid - input properties', () => {
              });
         });
     });
+    it('Keyboard navigation - should allow horizontal navigation when the grid is focused', (done) => {
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
+        const grid = fix.componentInstance.grid2;
+        const rightArrowKeyEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowRight',
+            key: 'ArrowRight'
+        });
+        const leftArrowKeyEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowLeft',
+            key: 'ArrowLeft'
+        });
+        let currentScrollLeft;
+        grid.width = '800px';
+        grid.height = '500px';
+        fix.componentInstance.generateColumns(15);
+        fix.componentInstance.generateData(15);
+        fix.detectChanges();
+        grid.nativeElement.dispatchEvent(new Event('focus'));
+
+        // testing the right key
+        grid.nativeElement.dispatchEvent(rightArrowKeyEvent);
+        grid.cdr.detectChanges();
+        setTimeout(() => {
+            currentScrollLeft = grid.parentVirtDir.getHorizontalScroll().scrollLeft;
+            expect(currentScrollLeft).toEqual(parseInt(MIN_COL_WIDTH, 10));
+
+            // testing the left key
+            grid.nativeElement.dispatchEvent(leftArrowKeyEvent);
+            grid.cdr.detectChanges();
+            setTimeout(() => {
+                currentScrollLeft = grid.parentVirtDir.getHorizontalScroll().scrollLeft;
+                expect(currentScrollLeft).toEqual(0);
+                done();
+            }, 100);
+        }, 0);
+    });
+    it('Keyboard navigation - should allow vertical navigation when the grid is focused', (done) => {
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
+        const grid = fix.componentInstance.grid2;
+        const downArrowKeyEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowDown',
+            key: 'ArrowDown'
+        });
+        const upArrowKeyEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowUp',
+            key: 'ArrowUp'
+        });
+        let currScrollTop;
+        grid.width = '800px';
+        grid.height = '500px';
+        fix.componentInstance.generateColumns(15);
+        fix.componentInstance.generateData(15);
+        fix.detectChanges();
+        grid.nativeElement.dispatchEvent(new Event('focus'));
+
+        // testing the down key
+        grid.nativeElement.dispatchEvent(downArrowKeyEvent);
+        grid.cdr.detectChanges();
+        setTimeout(() => {
+            currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForItemSize);
+
+            // testing the up key
+            grid.nativeElement.dispatchEvent(upArrowKeyEvent);
+            grid.cdr.detectChanges();
+            setTimeout(() => {
+                currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
+                expect(currScrollTop).toEqual(0);
+                done();
+            }, 100);
+        }, 0);
+    });
+    it('Keyboard navigation - should allow pageup/pagedown navigation when the grid is focused', (done) => {
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
+        const grid = fix.componentInstance.grid2;
+        const pageDownKeyEvent = new KeyboardEvent('keydown', {
+            code: 'PageDown',
+            key: 'PageDown'
+        });
+        const pageUpKeyEvent = new KeyboardEvent('keydown', {
+            code: 'PageUp',
+            key: 'PageUp'
+        });
+        let currScrollTop;
+        grid.width = '800px';
+        grid.height = '500px';
+        fix.componentInstance.generateColumns(25);
+        fix.componentInstance.generateData(25);
+        fix.detectChanges();
+        grid.nativeElement.dispatchEvent(new Event('focus'));
+
+        // testing the pagedown key
+        grid.nativeElement.dispatchEvent(pageDownKeyEvent);
+        grid.cdr.detectChanges();
+        setTimeout(() => {
+            currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
+
+            // testing the pageup key
+            grid.nativeElement.dispatchEvent(pageUpKeyEvent);
+            grid.cdr.detectChanges();
+            setTimeout(() => {
+                currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
+                expect(currScrollTop).toEqual(0);
+                done();
+            }, 100);
+        }, 0);
+    });
 });
 
 @Component({
