@@ -47,8 +47,8 @@ describe('Column Hiding UI', () => {
         });
 
         it ('title is initially empty.', () => {
-            const title = (columnChooserElement.query(By.css('h4')).nativeElement as HTMLHeadingElement).textContent;
-            expect(title).toBe('');
+            const title = columnChooserElement.query(By.css('h4'));
+            expect(title).toBe(null);
         });
 
         it ('title can be successfully changed.', () => {
@@ -56,17 +56,20 @@ describe('Column Hiding UI', () => {
             fix.detectChanges();
 
             const titleElement = (columnChooserElement.query(By.css('h4')).nativeElement as HTMLHeadingElement);
+            expect(columnChooser.title).toBe('Show/Hide Columns');
             expect(titleElement.textContent).toBe('Show/Hide Columns');
 
             columnChooser.title = undefined;
             fix.detectChanges();
 
-            expect(titleElement.textContent).toBe('');
+            expect(columnChooserElement.query(By.css('h4'))).toBe(null);
+            expect(columnChooser.title).toBe('');
 
             columnChooser.title = null;
             fix.detectChanges();
 
-            expect(titleElement.textContent).toBe('');
+            expect(columnChooserElement.query(By.css('h4'))).toBe(null);
+            expect(columnChooser.title).toBe('');
         });
 
         it('lists all 5 grid columns.', () => {
