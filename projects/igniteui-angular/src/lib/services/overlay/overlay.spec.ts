@@ -23,7 +23,7 @@ function clearOverlay() {
         overlay.remove();
     }
 }
-describe('igxOverlay', () => {
+fdescribe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule],
@@ -455,49 +455,40 @@ describe('igxOverlay', () => {
         // for a Point(300,300);
         const expectedTopForPoint: Array<string> = ['240px', '270px', '300px'];  // top/middle/bottom/
         const expectedLeftForPoint: Array<string> = ['240px', '270px', '300px']; // left/center/right/
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: new GlobalPositionStrategy(),
-            scrollStrategy: new NoOpScrollStrategy(),
-            modal: false,
-            closeOnOutsideClick: false
-        };
-        const positionSettings: PositionSettings = {
-            target: new Point(300, 300),
-            horizontalDirection: HorizontalAlignment.Right,
-            verticalDirection: VerticalAlignment.Bottom,
+
+            const size = {width: 60, height: 60};
+            const compElement = document.createElement('div');
+            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+            const contentWrapper = document.createElement('div');
+            contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
+            contentWrapper.classList.add('contentWrapper');
+            contentWrapper.appendChild(compElement);
+            document.body.appendChild(contentWrapper);
+
+            const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+            const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+
+            fixture.detectChanges();
+            for (let i = 0; i < horAl.length ; i++) {
+                for (let j = 0; j < verAl.length; j++) {
+                    // start Point is static Top/Left at 300/300
+                    const positionSettings2 = {
+                        target: new Point(300, 300),
+                        horizontalDirection: HorizontalAlignment[horAl[i]],
+                        verticalDirection: VerticalAlignment[verAl[j]],
+                        element: null,
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
-        // use Point when positioning is based Point only and (no on element).
-        // const strategy = overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-        const size = { width: 60, height: 60 };
-        const compElement = document.createElement('div');
-        compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
-        const contentWrapper = document.createElement('div');
-        contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
-        contentWrapper.classList.add('contentWrapper');
-        contentWrapper.appendChild(compElement);
-        document.body.appendChild(contentWrapper);
 
-        const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-        const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-
-        fixture.detectChanges();
-        // start Point is static Top/Left at 300/300
-        positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
-        positionSettings.verticalStartPoint = VerticalAlignment.Top;
-        for (let i = 0; i < horAl.length; i++) {
-            positionSettings.horizontalDirection = HorizontalAlignment[horAl[i]];
-            for (let j = 0; j < verAl.length; j++) {
-                positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
-                const strategy = overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-                strategy.position(compElement, contentWrapper, size);
-                fixture.detectChanges();
-                expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
-                expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
+                    const strategy = new ConnectedPositioningStrategy(positionSettings2);
+                    strategy.position(compElement, contentWrapper, size);
+                    fixture.detectChanges();
+                    expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
+                    expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
+                 }
             }
-        }
-    });
+        });
 
 
     // 1.3 AutoPosition (fit the shown component into the visible window.)
