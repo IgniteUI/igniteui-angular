@@ -1079,6 +1079,7 @@ export class IgxGridComponent extends IgxDensityEnabledComponent
 
     public clearGrouping(name?: string): void {
         this.gridAPI.clear_groupby(this.id, name);
+        this.calculateGridSizes();
     }
 
     public isExpandedGroup(group: IGroupByRecord): boolean {
