@@ -8,7 +8,8 @@ import {
     AbsoluteScrollStrategy,
     BlockScrollStrategy,
     CloseScrollStrategy,
-    NoOpScrollStrategy
+    NoOpScrollStrategy,
+    IgxInputGroupModule
 } from 'igniteui-angular';
 import { templateJitUrl } from '@angular/compiler';
 
@@ -32,6 +33,9 @@ export class OverlaySampleComponent {
         'Item 4',
         'Item 5'
     ];
+
+    buttonLeft = 90;
+    buttonTop = 35;
 
     horizontalDirections = ['Left', 'Center', 'Right'];
     horizontalDirection = 'Center';

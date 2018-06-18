@@ -1,9 +1,6 @@
 import { PositionSettings, VerticalAlignment, HorizontalAlignment } from './../utilities';
 import { IPositionStrategy } from './IPositionStrategy';
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { Inject, forwardRef, Host } from '@angular/core';
-import { BrowserModule, _document } from '@angular/platform-browser/src/browser';
-import { Rectangle, GlobalPositionStrategy } from 'dist/igniteui-angular/public_api';
 
 enum Axis {
     X = 1,

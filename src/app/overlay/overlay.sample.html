@@ -21,6 +21,28 @@
             </div>
         </div>
         <div>
+            <p>Button Position</p>
+            <div class="radio-group w80">
+                <igx-input-group>
+                    <label igxLabel>Top</label>
+                    <input igxInput type="number" [(ngModel)]="buttonTop">
+                    <igx-suffix>
+                        %
+                    </igx-suffix>
+                </igx-input-group>
+
+            </div>
+            <div class="radio-group w80">
+                <igx-input-group>
+                    <label igxLabel>Left</label>
+                    <input igxInput type="number" [(ngModel)]="buttonLeft">
+                    <igx-suffix>
+                        %
+                    </igx-suffix>
+                </igx-input-group>
+            </div>
+        </div>
+        <div>
             <p>Strategies</p>
             <div class="radio-group">
                 <p>Position Strategies</p>
@@ -33,10 +55,12 @@
         </div>
         <div>
             <p>Settings</p>
-            <igx-switch class="settings" labelPosition="after" [(ngModel)]="closeOnOutsideClick" name="close" [value]="closeOnOutsideClick" (change)="onSwitchChange($event)">Close On Outside Click</igx-switch>
+            <igx-switch class="settings" labelPosition="after" [(ngModel)]="closeOnOutsideClick" name="close" [value]="closeOnOutsideClick"
+                (change)="onSwitchChange($event)">Close On Outside Click</igx-switch>
             <igx-switch class="settings" labelPosition="after" [(ngModel)]="modal" name="modal" [value]="modal" (change)="onSwitchChange($event)">Modal</igx-switch>
         </div>
-        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle</button>
+        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()" [style.position]="'absolute'" [style.top]="buttonTop + '%'"
+            [style.left]="buttonLeft + '%'">Toggle</button>
         <igx-drop-down>
             <igx-drop-down-item *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
