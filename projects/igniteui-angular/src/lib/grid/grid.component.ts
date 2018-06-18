@@ -486,15 +486,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
     }
 
-    public get cellInEditMode() {
-        const editCellId = this.gridAPI.getCell_InEditMode_ID(this.id);
-        if (editCellId) {
-            return this.gridAPI.get_cell_by_index(this.id, editCellId.rowIndex, editCellId.columnID);
-        } else {
-            return null;
-        }
-    }
-
     /* Toolbar related definitions */
     private _showToolbar = false;
     private _exportExcel = false;
@@ -953,7 +944,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
         if (columnEdit.length > 0) {
             const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
-            this.gridAPI.updateCell(this.id, rowSelector, columnId, value);
+            this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
             this._pipeTrigger++;
             this.cdr.detectChanges();
         }
@@ -972,6 +963,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public sort(...rest): void {
+        const editableCellID = this.gridAPI.get_cell_inEditMode_id(this.id);
+        if (editableCellID) {
+            this.gridAPI.escape_editMode(this.id, editableCellID);
+        }
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
@@ -980,6 +975,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public filter(...rest): void {
+        const editableCellID = this.gridAPI.get_cell_inEditMode_id(this.id);
+        if (editableCellID) {
+            this.gridAPI.escape_editMode(this.id, editableCellID);
+        }
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._filterMultiple(rest[0]);
         } else {
@@ -1605,8 +1604,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return 0;
         }
 
-        if (this.cellInEditMode) {
-            this.cellInEditMode.inEditMode = false;
+        const editableCellID = this.gridAPI.get_cell_inEditMode_id(this.id);
+        if (editableCellID) {
+            this.gridAPI.escape_editMode(this.id, editableCellID);
         }
 
         if (!text) {

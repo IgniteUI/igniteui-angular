@@ -64,24 +64,24 @@ export class IgxGridAPIService {
         }
     }
 
-    public setCell_inEditMode(gridId: string, cell,  editMode: boolean) {
+    public set_cell_inEditMode(gridId: string, cell,  editMode: boolean) {
         if (!this.editCellState.has(gridId)) {
             this.editCellState.set(gridId, null);
         }
-        if (!this.getCell_InEditMode_ID(gridId) && editMode) {
+        if (!this.get_cell_inEditMode_id(gridId) && editMode) {
             this.editCellState.set(gridId, {cellID: cell.cellID, cell: Object.assign({}, cell)});
         }
     }
 
     public escape_editMode(gridId, cellId) {
-        const editableCell = this.getCell_InEditMode_ID(gridId);
+        const editableCell = this.get_cell_inEditMode_id(gridId);
         if (editableCell && cellId.rowID === editableCell.rowID &&
             cellId.columnID === editableCell.columnID) {
             this.editCellState.delete(gridId);
         }
     }
 
-    public getCell_InEditMode_ID(gridId: string) {
+    public get_cell_inEditMode_id(gridId: string) {
         const editCellId = this.editCellState.get(gridId);
         if (editCellId) {
             return editCellId.cellID;
@@ -90,7 +90,7 @@ export class IgxGridAPIService {
         }
     }
 
-    public getCell_InEditMode(gridId) {
+    public get_cell_inEditMode(gridId) {
         const editCellId = this.editCellState.get(gridId);
         if (editCellId) {
             return editCellId.cell;
@@ -137,31 +137,31 @@ export class IgxGridAPIService {
         }
     }
 
-    public submitValue(gridId) {
-        const editableCell = this.getCell_InEditMode(gridId);
-        const editableCellId = this.getCell_InEditMode_ID(gridId);
+    public submit_value(gridId) {
+        const editableCell = this.get_cell_inEditMode(gridId);
+        const editableCellId = this.get_cell_inEditMode_id(gridId);
         if (editableCell) {
             if (!editableCell.column.inlineEditorTemplate && editableCell.column.dataType === 'number') {
-                if (!this.getCell_InEditMode(gridId).editValue) {
-                    this.updateCell(gridId, editableCellId.rowIndex, editableCellId.columnID, 0);
+                if (!this.get_cell_inEditMode(gridId).editValue) {
+                    this.update_cell(gridId, editableCellId.rowIndex, editableCellId.columnID, 0);
                 } else {
-                    const val = parseFloat(this.getCell_InEditMode(gridId).editValue);
+                    const val = parseFloat(this.get_cell_inEditMode(gridId).editValue);
                     if (!isNaN(val) || isFinite(val)) {
-                        this.updateCell(gridId, editableCellId.rowIndex, editableCellId.columnID, val);
+                        this.update_cell(gridId, editableCellId.rowIndex, editableCellId.columnID, val);
                     }
                 }
             } else {
-                this.updateCell(gridId, editableCellId.rowIndex, editableCellId.columnID, editableCell.editValue);
+                this.update_cell(gridId, editableCellId.rowIndex, editableCellId.columnID, editableCell.editValue);
             }
         }
     }
 
-    public updateCell(id: string, rowSelector, columnID, editValue) {
+    public update_cell(id: string, rowSelector, columnID, editValue) {
         const row = this.get_row_by_key(id, rowSelector);
         if (row) {
             const rowIndex = row.index;
             const cell = this.get(id).columnList.toArray()[columnID].cells[rowIndex] ?
-            this.get(id).columnList.toArray()[columnID].cells[rowIndex] :  this.getCell_InEditMode(id);
+            this.get(id).columnList.toArray()[columnID].cells[rowIndex] :  this.get_cell_inEditMode(id);
             if (cell) {
                 const args: IGridEditEventArgs = { row: cell.row, cell: cell, currentValue: cell.value, newValue: editValue };
                 this.get(id).onEditDone.emit(args);

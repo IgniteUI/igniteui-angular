@@ -105,7 +105,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     get inEditMode(): boolean {
-        const editableCell = this.gridAPI.getCell_InEditMode_ID(this.gridID);
+        const editableCell = this.gridAPI.get_cell_inEditMode_id(this.gridID);
         if (editableCell) {
             return this.cellID.rowID === editableCell.rowID &&
             this.cellID.columnID === editableCell.columnID;
@@ -118,7 +118,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     set inEditMode(value: boolean) {
         if (this.column.editable && value) {
             this.editValue = this.value;
-            this.gridAPI.setCell_inEditMode(this.gridID, this, value);
+            this.gridAPI.set_cell_inEditMode(this.gridID, this, value);
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }
@@ -259,9 +259,9 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             cell.selected = false;
             cell.focused = false;
         }
-        const editCellID = this.gridAPI.getCell_InEditMode_ID(this.gridID);
+        const editCellID = this.gridAPI.get_cell_inEditMode_id(this.gridID);
         if (editCellID) {
-            this.gridAPI.submitValue(this.gridID);
+            this.gridAPI.submit_value(this.gridID);
             this.gridAPI.escape_editMode(this.gridID, editCellID);
             this.previousCellEditMode = true;
         } else {
@@ -309,7 +309,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @autoWire(true)
     public update(val: any) {
-        this.gridAPI.updateCell(this.gridID, this.cellID.rowIndex, this.cellID.columnID, val);
+        this.gridAPI.update_cell(this.gridID, this.cellID.rowIndex, this.cellID.columnID, val);
     }
 
     public ngOnDestroy() {
@@ -672,7 +672,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
             if (this.inEditMode) {
-                this.gridAPI.submitValue(this.gridID);
+                this.gridAPI.submit_value(this.gridID);
             }
             this.inEditMode = !this.inEditMode;
             this.nativeElement.focus();
