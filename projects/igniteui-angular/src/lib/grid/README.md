@@ -179,6 +179,9 @@ A list of the events emitted by the **igx-grid**:
 |_Event emitters_|_Notify for a change_|
 |`onEditDone`|Emitted when a cell value changes. Returns `{ currentValue: any, newValue: any }`|
 |`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
+|`onColumnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
+|`onColumnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|
+|`onColumnMovingStart`|Emitted when a column moving starts. Returns the moved column object.|
 |`onSelection`|Emitted when a cell is selected. Returns the cell object.|
 |`onRowSelectionChange`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
 |`onColumnInit`|Emitted when the grid columns are initialized. Returns the column object.|
@@ -257,7 +260,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`hasSummary`| boolean  |Sets whether or not the specific column has summaries enabled.|
 |`summaries`| IgxSummaryOperand |Set custom summary for the specific column|
 |`hidden`|boolean|Visibility of the column|
-|`movable`|boolean|Column moving|
+|`movable`|boolean|Set column to be movable|
 |`resizable`|boolean|Set column to be resizable|
 |`width`|string|Columns width|
 |`minWidth`|string|Columns minimal width|

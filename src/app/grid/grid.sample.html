@@ -53,6 +53,11 @@
                         </div>
                     </igx-card-actions>
                 </igx-card>
+
+                <igx-card>
+                    <igx-column-hiding [columns]="grid1.columns" [togglable]="false"
+                                        columnDisplayOrder="Alphabetical"></igx-column-hiding>
+                </igx-card>
             </div>
 
             <div class="toggles-container">
@@ -71,6 +76,9 @@
                         <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
                     </div>
                     <div class="switch-group">
+                        <igx-switch [(ngModel)]="col.disableHiding">Disable Hiding</igx-switch>
+                    </div>
+                    <div class="switch-group">
                         <igx-switch [(ngModel)]="col.movable">Movable</igx-switch>
                     </div>
                 </div>
@@ -84,22 +92,31 @@
         <article class="grid-sample">
             <h4 class="sample-title">Grid with templated column cells and local observable data source</h4>
             <div class="toggles-container">
-                <div class="toggle-group" *ngFor="let col of grid2.columns">
-                    <h4>{{ col.field }}</h4>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.filtering">Filtering</igx-switch>
+                <div class="cards-container">
+                    <div class="toggle-group" style="margin-right: 30px; min-width: 250px;">
+                        <igx-column-hiding [columns]="grid2.columns" [togglable]="false" title="Show/Hide Columns"
+                            columnDisplayOrder="Alphabetical"></igx-column-hiding>
                     </div>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
-                    </div>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
-                    </div>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
-                    </div>
-                    <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.movable">Movable</igx-switch>
+                    <div class="toggle-group" *ngFor="let col of grid2.columns">
+                        <h4>{{ col.field }}</h4>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.filtering">Filtering</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.editable">Editable</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.hidden">Hidden</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.disableHiding">Disable Hiding</igx-switch>
+                        </div>
+                        <div class="switch-group">
+                            <igx-switch [(ngModel)]="col.movable">Movable</igx-switch>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,6 +138,7 @@
                     </igx-input-group>
                 </div>
             </div>
+
             <igx-grid #grid2 [data]="data | async" [paging]="true" [perPage]="10" (onCellSelection)="onInlineEdit($event)">
                 <igx-column [sortable]="true" [field]="'ProductID'" [header]="'ID'"></igx-column>
                 <igx-column [sortable]="true" [field]="'ProductName'"></igx-column>
@@ -161,6 +179,12 @@
                 <button igxButton="flat" (click)="export()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Grid</button>
                 <button igxButton="flat" (click)="exportFilteredGrid()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Cheese Products Report</button>
                 <input class="igx-form-group__input--search" type="text" placeholder="Search Grid" (input)="onSearchChange($event.target.value)" (keydown)="onSearch($event)" />
+            </div>
+            <div class="cards-container" hidden>
+                <div class="toggle-group" style="min-width: 250px;">
+                    <igx-column-hiding [columns]="grid3.columns" [togglable]="false" title="Show/Hide Columns"
+                        columnDisplayOrder="Alphabetical"></igx-column-hiding>
+                </div>
             </div>
             <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)"
                 (onBeforeProcess)="onProcess($event)" [primaryKey]="'ProductID'" [rowSelectable]="true">
