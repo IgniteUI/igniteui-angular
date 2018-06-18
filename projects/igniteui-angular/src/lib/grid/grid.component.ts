@@ -305,7 +305,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._columnHiding = value;
         if (this.gridAPI.get(this.id)) {
             this.markForCheck();
-          }
+        }
     }
 
     @Input()
@@ -358,10 +358,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get headerWidth() {
         return parseInt(this._width, 10) - 17;
-    }
-
-    protected get hostClassPrefix() {
-        return 'igx-grid';
     }
 
     @Input()
