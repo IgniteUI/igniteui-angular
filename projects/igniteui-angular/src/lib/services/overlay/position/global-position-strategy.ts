@@ -14,7 +14,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
 
     public settings: PositionSettings;
     constructor(settings?: PositionSettings) {
-        this.settings = Object.assign(this._defaultSettings, settings);
+        this.settings = Object.assign({}, this._defaultSettings, settings);
     }
 
     position(element: HTMLElement, contentElement: HTMLElement, size: {}): void {
