@@ -101,7 +101,8 @@ describe('IgxGrid - Cell component', () => {
                 VirtualGridComponent,
                 GridWithEditableColumnComponent,
                 NoColumnWidthGridComponent,
-                CellEditingTestComponent
+                CellEditingTestComponent,
+                CellEditingScrollTestComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -306,6 +307,45 @@ describe('IgxGrid - Cell component', () => {
             expect(editTemplate.nativeElement.type).toBe('number');
         });
     }));
+    it('edit numeric column should validate input data', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'age');
+        const cellDomNumber = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        let editTemplate;
+        const expectedValue = 0;
+        let editValue = 'some696';
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editTemplate = cellDomNumber.query(By.css('input[type=\'number\']'));
+            sendInput(editTemplate, editValue, fixture);
+            cellDomNumber.triggerEventHandler('keydown.enter', null);
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(parseFloat(cell.value)).toBe(expectedValue);
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editValue = '';
+            sendInput(editTemplate, editValue, fixture);
+            cellDomNumber.triggerEventHandler('keydown.enter', null);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(parseFloat(cell.value)).toBe(expectedValue);
+        });
+
+    }));
     it('edit template should be accourding column data type --boolean', async(() => {
         const fixture = TestBed.createComponent(CellEditingTestComponent);
         fixture.detectChanges();
@@ -367,6 +407,42 @@ describe('IgxGrid - Cell component', () => {
             fixture.detectChanges();
             expect(cell.inEditMode).toBe(false);
             expect(cell.value).toBe(selectedDate);
+        });
+    }));
+
+    it('leaves cell in edit mode on scroll', async(() => {
+        const fixture = TestBed.createComponent(CellEditingScrollTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'firstName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        const editableCellId = cell.cellID;
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            const editCellID = cell.gridAPI.getCell_InEditMode_ID(cell.gridID);
+            expect(editableCellId.columnID).toBe(editCellID.columnID);
+            expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
+            expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
+            fixture.componentInstance.scrollTop(1000);
+            return fixture.whenStable();
+        }).then(() => {
+            setTimeout(() => {
+                fixture.detectChanges();
+                fixture.componentInstance.scrollLeft(400);
+                setTimeout(() => {
+                    fixture.detectChanges();
+                    const editCellID = cell.gridAPI.getCell_InEditMode_ID(cell.gridID);
+                    expect(editableCellId.columnID).toBe(editCellID.columnID);
+                    expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
+                    expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
+                }, 100);
+            }, 100);
         });
     }));
 
@@ -1141,4 +1217,40 @@ export class CellEditingTestComponent {
         { fullName: 'Ben Affleck', age: 30, isActive: false,  birthday: new Date('08/08/1991') },
         { fullName: 'Tom Riddle', age: 50, isActive: true,  birthday: new Date('08/08/1961') }
     ];
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" width="300px" height="250px">
+            <igx-column [editable]="true" field="firstName"></igx-column>
+            <igx-column [editable]="true" field="lastName"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+        </igx-grid>
+    `
+})
+export class CellEditingScrollTestComponent {
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public data = [
+        { firstName: 'John', lastName: 'Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { firstName: 'Ben', lastName: 'Hudson', age: 30, isActive: false,  birthday: new Date('08/08/1991') },
+        { firstName: 'Tom', lastName: 'Riddle', age: 50, isActive: true,  birthday: new Date('08/08/1967') },
+        { firstName: 'John', lastName: 'David', age: 27, isActive: true, birthday: new Date('08/08/1990') },
+        { firstName: 'David', lastName: 'Affleck', age: 36, isActive: false,  birthday: new Date('08/08/1982') },
+        { firstName: 'Jimmy', lastName: 'Johnson', age: 57, isActive: true,  birthday: new Date('08/08/1961') },
+        { firstName: 'Martin', lastName: 'Brown', age: 31, isActive: true, birthday: new Date('08/08/1987') },
+        { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false,  birthday: new Date('08/08/1931') },
+        { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true,  birthday: new Date('08/08/1970') }
+    ];
+
+    public scrollTop(newTop: number) {
+        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+    }
+
+    public scrollLeft(newLeft: number) {
+        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+    }
 }

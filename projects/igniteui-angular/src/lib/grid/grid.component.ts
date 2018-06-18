@@ -945,11 +945,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateCell(value: any, rowSelector: any, column: string): void {
-        const columnEdit = this.columnList.toArray().filter((col) => col.field === column)[0];
-        const columnId = this.columnList.toArray().indexOf(columnEdit);
-        this.gridAPI.updateCell(this.id, rowSelector, columnId, value);
-        this.cdr.detectChanges();
-        this._pipeTrigger++;
+        const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
+        if (columnEdit.length > 0) {
+            const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
+            this.gridAPI.updateCell(this.id, rowSelector, columnId, value);
+            this._pipeTrigger++;
+            this.cdr.detectChanges();
+        }
     }
 
     public updateRow(value: any, rowSelector: any): void {

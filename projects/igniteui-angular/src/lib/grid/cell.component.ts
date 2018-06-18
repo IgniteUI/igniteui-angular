@@ -401,9 +401,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         this.selected = true;
         this._updateCellSelectionStatus();
         this.row.focused = true;
-        if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
-            this.grid.cellInEditMode.inEditMode = false;
-        }
         this.grid.onSelection.emit({
             cell: this,
             event
