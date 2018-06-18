@@ -1,5 +1,6 @@
 import { IPositionStrategy } from './IPositionStrategy';
 import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment, getPointFromPositionsSettings } from './../utilities';
+import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
 export class ConnectedPositioningStrategy implements IPositionStrategy {
   private _defaultSettings: PositionSettings = {
@@ -7,7 +8,9 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     horizontalDirection: HorizontalAlignment.Right,
     verticalDirection: VerticalAlignment.Bottom,
     horizontalStartPoint: HorizontalAlignment.Left,
-    verticalStartPoint: VerticalAlignment.Bottom
+    verticalStartPoint: VerticalAlignment.Bottom,
+    openAnimation: scaleInVerTop,
+    closeAnimation: scaleOutVerTop
   };
 
   public settings: PositionSettings;
@@ -16,13 +19,13 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   }
 
   // we no longer use the element inside the position() as its dimensions are cached in rect
-  position(element, wrapper, size): void {
-    const componentWrapper = wrapper;
+  position(element, contentElement, size): void {
     const eWidth = size.width;
     const eHeight = size.height;
 
-    componentWrapper.style.top = getPointFromPositionsSettings(this.settings).y + this.settings.verticalDirection * size.height + 'px';
-    componentWrapper.style.left = getPointFromPositionsSettings(this.settings).x + this.settings.horizontalDirection * size.width + 'px';
+    contentElement.style.top = getPointFromPositionsSettings(this.settings).y + this.settings.verticalDirection * size.height + 'px';
+    contentElement.style.left = getPointFromPositionsSettings(this.settings).x + this.settings.horizontalDirection * size.width + 'px';
   }
+
 }
 

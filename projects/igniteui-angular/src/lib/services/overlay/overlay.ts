@@ -1,8 +1,7 @@
 import { DOCUMENT } from '@angular/common';
-import { IPositionStrategy } from './position/IPositionStrategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { PositionSettings, Point, OverlaySettings, HorizontalAlignment, VerticalAlignment } from './utilities';
+import { OverlaySettings } from './utilities';
 
 import {
     ApplicationRef,
@@ -15,6 +14,7 @@ import {
     Injectable,
     Injector
 } from '@angular/core';
+import { AnimationBuilder } from '@angular/animations';
 
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
@@ -60,6 +60,7 @@ export class IgxOverlayService {
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
         private _injector: Injector,
+        private builder: AnimationBuilder,
         @Inject(DOCUMENT) private _document: any) { }
 
     /**
@@ -79,16 +80,22 @@ export class IgxOverlayService {
         const element = this.getElement(component, id, overlaySettings);
 
         const wrapperElement = this.getWrapperElement(overlaySettings, id);
-        const contentElement = this.getContentElement(wrapperElement, overlaySettings, id);
+        const contentElement = this.getContentElement(wrapperElement, overlaySettings);
         contentElement.appendChild(element);
         this.OverlayElement.appendChild(wrapperElement);
 
         overlaySettings.positionStrategy.position(element, contentElement, this._elements.find(e => e.id === id).size, document);
+        const animation = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
+        const player = animation.create(element);
+        player.onDone(() => {
+            this.onOpened.emit();
+        });
+
+        player.play();
 
         overlaySettings.scrollStrategy.initialize(this._document, this, id);
         overlaySettings.scrollStrategy.attach();
 
-        this.onOpened.emit();
         return this._elements[this._elements.length - 1].id;
     }
 
@@ -109,8 +116,14 @@ export class IgxOverlayService {
             return;
         }
 
-        this.OverlayElement.removeChild(child.parentNode.parentNode);
-        this.onClosed.emit();
+        const animation = this.builder.build(element.settings.positionStrategy.settings.closeAnimation);
+        const player = animation.create(element.elementRef.nativeElement);
+        player.onDone(() => {
+            this.OverlayElement.removeChild(child.parentNode.parentNode);
+            this.onClosed.emit();
+        });
+
+        player.play();
     }
 
     hideAll() {
@@ -171,11 +184,6 @@ export class IgxOverlayService {
         return element;
     }
 
-    private getPositionStrategy(positionStrategy?: IPositionStrategy): IPositionStrategy {
-        positionStrategy = positionStrategy ? positionStrategy : new GlobalPositionStrategy();
-        return positionStrategy;
-    }
-
     private getWrapperElement(overlaySettings: OverlaySettings, id: string): HTMLElement {
         const wrapper: HTMLElement = this._document.createElement('div');
         if (overlaySettings.modal) {
@@ -185,12 +193,12 @@ export class IgxOverlayService {
         }
 
         if (overlaySettings.closeOnOutsideClick) {
-            wrapper.addEventListener('click', (ev) => this.hide(id), { once: true });
+            wrapper.addEventListener('click', () => this.hide(id), { once: true });
         }
         return wrapper;
     }
 
-    private getContentElement(wrapperElement: HTMLElement, overlaySettings: OverlaySettings, id: string): HTMLElement {
+    private getContentElement(wrapperElement: HTMLElement, overlaySettings: OverlaySettings): HTMLElement {
         const content: HTMLElement = this._document.createElement('div');
         if (overlaySettings.modal) {
             content.classList.add('igx-overlay__content');
