@@ -15,7 +15,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
 
   public settings: PositionSettings;
   constructor(settings?: PositionSettings) {
-    this.settings = Object.assign(this._defaultSettings, settings);
+    this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
   // we no longer use the element inside the position() as its dimensions are cached in rect
