@@ -438,7 +438,7 @@ fdescribe('igxOverlay', () => {
                 for (let j = 0; j < verAl.length; j++) {
                     // start Point is static Top/Left at 300/300
                     const positionSettings2 = {
-                        point: new Point(300, 300),
+                        target: new Point(300, 300),
                         horizontalDirection: HorizontalAlignment[horAl[i]],
                         verticalDirection: VerticalAlignment[verAl[j]],
                         element: null,
@@ -452,40 +452,6 @@ fdescribe('igxOverlay', () => {
                     expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
                     expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
                  }
-            }
-        });
-            const overlaySettings = new OverlaySettings();
-            const positionSettings = new PositionSettings();
-            // use Point when positioning is based Point only and (no on element).
-            positionSettings.point = new Point(300, 300);
-
-            // const strategy = overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-            const size = {width: 60, height: 60};
-            const compElement = document.createElement('div');
-            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
-            const contentWrapper = document.createElement('div');
-            contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
-            contentWrapper.classList.add('contentWrapper');
-            contentWrapper.appendChild(compElement);
-            document.body.appendChild(contentWrapper);
-
-            const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-            const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-
-            fixture.detectChanges();
-            // start Point is static Top/Left at 300/300
-            positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
-            positionSettings.verticalStartPoint = VerticalAlignment.Top;
-            for (let i = 0; i < horAl.length ; i++) {
-                positionSettings.horizontalDirection = HorizontalAlignment[horAl[i]];
-                    for (let j = 0; j < verAl.length; j++) {
-                    positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
-                    const strategy = overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-                    strategy.position(compElement, contentWrapper, size);
-                    fixture.detectChanges();
-                    expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
-                    expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
-                    }
             }
         });
 
