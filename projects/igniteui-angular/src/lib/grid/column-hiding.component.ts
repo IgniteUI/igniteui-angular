@@ -3,12 +3,14 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnDestroy,
     Output,
     TemplateRef,
-    ViewChild } from '@angular/core';
+    ViewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { DataUtil } from '../data-operations/data-util';
@@ -53,7 +55,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
 
     @Input()
     get filterColumnsPrompt() {
-        return  this._filterColumnsPrompt;
+        return this._filterColumnsPrompt;
     }
 
     set filterColumnsPrompt(value) {
@@ -88,10 +90,10 @@ export class IgxColumnHidingComponent implements OnDestroy {
     @Input()
     get disableHideAll(): boolean {
         if (!this._currentColumns || this._currentColumns.length < 1 ||
-                this.hiddenColumnsCount === this.columns.length) {
+            this.hiddenColumnsCount === this.columns.length) {
             return true;
         } else if (this.hidableColumns.length < 1 ||
-                this.hidableColumns.length === this.hidableColumns.filter((col) => col.value).length) {
+            this.hidableColumns.length === this.hidableColumns.filter((col) => col.value).length) {
             return true;
         } else {
             return false;
@@ -139,6 +141,9 @@ export class IgxColumnHidingComponent implements OnDestroy {
 
     @Output()
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
+
+    @HostBinding('attr.class')
+    public cssClass = 'igx-column-hiding';
 
     @ViewChild('columnChooserToggle', { read: TemplateRef })
     protected columnChooserToggle: TemplateRef<any>;
@@ -255,7 +260,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
 }
 
 @NgModule({
-    declarations: [ IgxColumnHidingComponent, IgxColumnHidingItemDirective ],
+    declarations: [IgxColumnHidingComponent, IgxColumnHidingItemDirective],
     exports: [IgxColumnHidingComponent],
     imports: [
         IgxButtonModule,

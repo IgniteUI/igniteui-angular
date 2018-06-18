@@ -1,19 +1,34 @@
-
-<ng-container *ngTemplateOutlet="template" ></ng-container>
+<ng-container *ngTemplateOutlet="template"></ng-container>
 
 <ng-template #columnHidingUI>
-    <h4>{{ title }}</h4>
-    <igx-input-group>
-        <input igxInput type="text" [(ngModel)]="filterCriteria" [placeholder]="filterColumnsPrompt" autocomplete="off" />
+    <h4 class="igx-column-hiding__title" *ngIf="title">{{ title }}</h4>
+
+    <igx-input-group class="igx-column-hiding__input">
+        <input igxInput
+            type="text"
+            [(ngModel)]="filterCriteria"
+            [placeholder]="filterColumnsPrompt"
+            autocomplete="off" />
     </igx-input-group>
-    <div *ngFor="let columnItem of columnItems" (onColumnVisibilityChanged)="onVisibilityChanged($event)">
-        <igx-checkbox igxColumnHidingItem [checked]="columnItem.value" (change)="columnItem.value = !columnItem.value"
-            [disabled]="columnItem.disabled" [style.margin-left.px]="columnItem.calcIndent">{{ columnItem.name }}</igx-checkbox>
+
+    <div class="igx-column-hiding__columns">
+        <igx-checkbox igxColumnHidingItem
+            *ngFor="let columnItem of columnItems"
+            class="igx-column-hiding__columns-item"
+            (onColumnVisibilityChanged)="onVisibilityChanged($event)"
+            (change)="columnItem.value = !columnItem.value"
+            [checked]="columnItem.value"
+            [disabled]="columnItem.disabled"
+            [style.margin-left.px]="columnItem.calcIndent">
+            {{ columnItem.name }}
+        </igx-checkbox>
     </div>
-    <div>
+
+    <div class="igx-column-hiding__buttons">
         <button igxButton igxRipple (click)="showAllColumns()" [disabled]="disableShowAll">{{ showAllText }}</button>
         <button igxButton igxRipple (click)="hideAllColumns()" [disabled]="disableHideAll">{{ hideAllText }}</button>
     </div>
+
 </ng-template>
 
 <ng-template #columnChooserToggle>
