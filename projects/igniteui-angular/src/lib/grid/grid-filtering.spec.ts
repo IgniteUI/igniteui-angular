@@ -519,11 +519,11 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
         const today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
-        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ReleaseDate');
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ReleaseDate');
         const expression = {
             fieldName: 'ReleaseDate',
             searchVal: null,
-            condition: IgxDateFilteringOperand.instance().condition('thisMonth')
+            condition: IgxDateFilteringOperand.instance().condition('yesterday')
         };
         const expression1 = {
             fieldName: 'ReleaseDate',
@@ -536,7 +536,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         fix.detectChanges();
 
-        expect(grid.rowList.length).toEqual(2);
+        expect(grid.rowList.length).toEqual(4);
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     });
 });
