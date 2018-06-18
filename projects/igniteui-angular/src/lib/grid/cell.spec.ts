@@ -7,6 +7,8 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxStringFilteringOperand } from '../../public_api';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 describe('IgxGrid - Cell component', () => {
 
@@ -425,7 +427,7 @@ describe('IgxGrid - Cell component', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            const editCellID = cell.gridAPI.getCell_InEditMode_ID(cell.gridID);
+            const editCellID = cell.gridAPI.get_cell_inEditMode_id(cell.gridID);
             expect(editableCellId.columnID).toBe(editCellID.columnID);
             expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
             expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
@@ -437,12 +439,78 @@ describe('IgxGrid - Cell component', () => {
                 fixture.componentInstance.scrollLeft(400);
                 setTimeout(() => {
                     fixture.detectChanges();
-                    const editCellID = cell.gridAPI.getCell_InEditMode_ID(cell.gridID);
+                    const editCellID = cell.gridAPI.get_cell_inEditMode_id(cell.gridID);
                     expect(editableCellId.columnID).toBe(editCellID.columnID);
                     expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
                     expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
                 }, 100);
             }, 100);
+        });
+    }));
+
+    it('exit edit mode on filtering', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'fullName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        const cellValue = cell.value;
+        let editTemplate;
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editTemplate = cellDom.query(By.css('input'));
+            expect(cell.inEditMode).toBe(true);
+            sendInput(editTemplate, 'Rick Gilmore', fixture);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            cell.gridAPI.clear_filter(cell.gridID, 'fullName');
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(cell.value).toBe(cellValue);
+        });
+    }));
+
+    it('exit edit mode on sorting', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'fullName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        let editTemplate;
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editTemplate = cellDom.query(By.css('input'));
+            expect(cell.inEditMode).toBe(true);
+            sendInput(editTemplate, 'Rick Gilmore', fixture);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            grid.sort('age', SortingDirection.Desc);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode_id(cell.gridID)).toBeNull();
         });
     }));
 
