@@ -33,6 +33,11 @@ export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
 
     /**
+     * An ElementRef property of the `IgxInputGroupComponent`.
+     */
+    public element: ElementRef;
+
+    /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-input-group [id]="'igx-input-group-55'"></igx-input-group>
@@ -194,7 +199,8 @@ export class IgxInputGroupComponent {
         return this._type.toString();
     }
 
-    constructor(private element: ElementRef) {
+    constructor(private _element: ElementRef) {
+        this.element = _element;
     }
 
     /**
