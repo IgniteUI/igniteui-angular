@@ -1,0 +1,27 @@
+
+<ng-container *ngTemplateOutlet="template" ></ng-container>
+
+<ng-template #columnHidingUI>
+    <h4>{{ title }}</h4>
+    <igx-input-group>
+        <input igxInput type="text" [(ngModel)]="filterCriteria" [placeholder]="filterColumnsPrompt" autocomplete="off" />
+    </igx-input-group>
+    <div *ngFor="let columnItem of columnItems" (onColumnVisibilityChanged)="onVisibilityChanged($event)">
+        <igx-checkbox igxColumnHidingItem [checked]="columnItem.value" (change)="columnItem.value = !columnItem.value"
+            [disabled]="columnItem.disabled" [style.margin-left.px]="columnItem.calcIndent">{{ columnItem.name }}</igx-checkbox>
+    </div>
+    <div>
+        <button igxButton igxRipple (click)="showAllColumns()" [disabled]="disableShowAll">{{ showAllText }}</button>
+        <button igxButton igxRipple (click)="hideAllColumns()" [disabled]="disableHideAll">{{ hideAllText }}</button>
+    </div>
+</ng-template>
+
+<ng-template #columnChooserToggle>
+    <igx-drop-down>
+        <ng-container *ngTemplateOutlet="columnHidingUI" ></ng-container>
+    </igx-drop-down>
+</ng-template>
+
+<ng-template #columnChooserInline>
+    <ng-container *ngTemplateOutlet="columnHidingUI" ></ng-container>
+</ng-template>
