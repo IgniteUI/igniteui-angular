@@ -50,21 +50,11 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
     }
 
     private onScroll = (ev: Event) => {
-        this.updatedPositionSettingsPoint(this._component.settings.positionStrategy.settings);
         this._component.settings.positionStrategy.position(
             this._component.elementRef.nativeElement,
             this._component.elementRef.nativeElement.parentElement,
             this._component.size,
             this._document
         );
-    }
-
-    private updatedPositionSettingsPoint(positionSettings: PositionSettings) {
-        if (positionSettings && positionSettings.element) {
-            const elementRect = positionSettings.element.getBoundingClientRect();
-            const x = elementRect.right + elementRect.width * positionSettings.horizontalStartPoint;
-            const y = elementRect.bottom + elementRect.height * positionSettings.verticalStartPoint;
-            positionSettings.point = new Point(x, y);
-        }
     }
 }
