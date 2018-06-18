@@ -298,8 +298,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._width !== value) {
             this._width = value;
             requestAnimationFrame(() => {
-                this.calculateGridWidth();
-                this.cdr.markForCheck();
+                // Calling reflow(), because the width calculation
+                // might make the horizontal scrollbar appear/disappear.
+                // This will change the height, which should be recalculated.
+                this.reflow();
             });
         }
     }
@@ -437,6 +439,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild('tfoot')
     public tfoot: ElementRef;
+
+    @ViewChild('summaries')
+    public summaries: ElementRef;
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -621,7 +626,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcWidth: number;
     public calcRowCheckboxWidth: number;
     public calcHeight: number;
-    public tfootHeight: number;
+    public summariesHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
     public isColumnMoving: boolean;
@@ -705,7 +710,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
-        this.tfootHeight = this.calcMaxSummaryHeight();
+        this.summariesHeight = this.calcMaxSummaryHeight();
         this._derivePossibleHeight();
         this.markForCheck();
 
@@ -999,7 +1004,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], true, rest[1]);
         }
-        this.tfootHeight = 0;
+        this.summariesHeight = 0;
         this.markForCheck();
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -1011,7 +1016,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], false);
         }
-        this.tfootHeight = 0;
+        this.summariesHeight = 0;
         this.markForCheck();
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -1224,53 +1229,50 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (!this._height) {
             this.calcHeight = null;
-            if (this.hasSummarizedColumns && !this.tfootHeight) {
-                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+            if (this.hasSummarizedColumns && !this.summariesHeight) {
+                this.summariesHeight = this.summaries ?
                     this.calcMaxSummaryHeight() : 0;
             }
             return;
         }
 
+        let toolbarHeight = 0;
+            if (this.showToolbar && this.toolbarHtml != null) {
+                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                    this.toolbarHtml.nativeElement.offsetHeight : 0;
+        }
+
+        let pagingHeight = 0;
+        if (this.paging) {
+            pagingHeight = this.paginator.nativeElement.firstElementChild ?
+                this.paginator.nativeElement.clientHeight : 0;
+        }
+
+        if (!this.summariesHeight) {
+            this.summariesHeight = this.summaries ?
+                this.calcMaxSummaryHeight() : 0;
+        }
+
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
-            let toolbarHeight = 0;
-            if (this.showToolbar && this.toolbarHtml != null) {
-                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                    this.toolbarHtml.nativeElement.offsetHeight : 0;
-            }
-            let pagingHeight = 0;
-            if (this.paging) {
-                pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                    this.paginator.nativeElement.clientHeight : 0;
-            }
-            if (!this.tfootHeight) {
-                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
-                    this.calcMaxSummaryHeight() : 0;
-            }
-            this.calcHeight = parseInt(computed.getPropertyValue('height'), 10) -
-                this.theadRow.nativeElement.clientHeight -
-                this.tfootHeight - pagingHeight - toolbarHeight -
-                this.scr.nativeElement.clientHeight;
+            this.calcHeight = this._calculateGridBodyHeight(
+               parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight);
         } else {
-            let toolbarHeight = 0;
-            if (this.showToolbar && this.toolbarHtml != null) {
-                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                    this.toolbarHtml.nativeElement.offsetHeight : 0;
-            }
-            let pagingHeight = 0;
-            if (this.paging) {
-                pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                    this.paginator.nativeElement.clientHeight : 0;
-            }
-            if (!this.tfootHeight) {
-                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
-                    this.calcMaxSummaryHeight() : 0;
-            }
-            this.calcHeight = parseInt(this._height, 10) -
-                this.theadRow.nativeElement.getBoundingClientRect().height -
-                this.tfootHeight - pagingHeight - toolbarHeight -
-                this.scr.nativeElement.clientHeight;
+            this.calcHeight = this._calculateGridBodyHeight(
+                parseInt(this._height, 10), toolbarHeight, pagingHeight);
         }
+    }
+
+    protected _calculateGridBodyHeight(gridHeight: number,
+            toolbarHeight: number, pagingHeight: number) {
+        const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
+            this.tfoot.nativeElement.clientHeight;
+
+        return gridHeight - toolbarHeight -
+            this.theadRow.nativeElement.offsetHeight -
+            this.summariesHeight - pagingHeight -
+            footerBordersAndScrollbars -
+            this.scr.nativeElement.clientHeight;
     }
 
     protected getPossibleColumnWidth() {
@@ -1318,7 +1320,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
         });
-        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : this.defaultRowHeight);
+
+        let summariesHeight = this.defaultRowHeight;
+        if (this.summaries && this.summaries.nativeElement.clientHeight) {
+            summariesHeight = this.summaries.nativeElement.clientHeight;
+        }
+
+        return maxSummaryLength * summariesHeight;
     }
 
     protected calculateGridSizes() {
@@ -1712,16 +1720,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
-                                        filter((c) => c.searchable).
-                                        map((c) => c.field);
+        const columnItems = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
+                                                map((c) => ({ columnName: c.field, columnSearchable: c.searchable }) );
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;
 
-            keys.forEach((key, j) => {
-                const value = dataRow[key];
-                if (value !== undefined && value !== null) {
+            columnItems.forEach((columnItem, j) => {
+                const value = dataRow[columnItem.columnName];
+                if (value !== undefined && value !== null && columnItem.columnSearchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
                     let occurenceIndex = 0;
                     let searchIndex = searchValue.indexOf(searchText);
