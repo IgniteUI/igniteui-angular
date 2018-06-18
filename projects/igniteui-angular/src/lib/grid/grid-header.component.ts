@@ -19,6 +19,7 @@ import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
+import { IgxColumnMovingService } from './grid.common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,6 +76,11 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return this.sortDirection !== SortingDirection.None;
     }
 
+    @HostBinding('class.igx-grid__drag-col-header')
+    get dragged() {
+        return this.column === this.cms.column && this.column.grid.isColumnMoving;
+    }
+
     @HostBinding('style.z-index')
     get zIndex() {
         if (!this.column.pinned) {
@@ -106,9 +112,14 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     protected sortDirection = SortingDirection.None;
     private _startResizePos;
     private _pinnedMaxWidth;
-    private _isResiznig = false;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone) { }
+    constructor(
+        public gridAPI: IgxGridAPIService,
+        public cdr: ChangeDetectorRef,
+        public elementRef: ElementRef,
+        public zone: NgZone,
+        private cms: IgxColumnMovingService
+    ) { }
 
     public ngOnInit() {
         this.cdr.markForCheck();
@@ -128,7 +139,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     @HostListener('click', ['$event'])
     public onClick(event) {
-        if (!this._isResiznig) {
+        if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.column.sortable) {
                 const grid = this.gridAPI.get(this.gridID);
@@ -211,7 +222,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
             this.showResizer = true;
-            this._isResiznig = true;
+            this.column.grid.isColumnResizing = true;
             this.resizerHeight = this.grid.calcResizerHeight;
             this._startResizePos = event.clientX;
         } else {
@@ -290,7 +301,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     }
 
     public onResize(event) {
-        this._isResiznig = false;
+        this.column.grid.isColumnResizing = false;
 
         this.showResizer = false;
         const diff = event.clientX - this._startResizePos;
