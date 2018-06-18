@@ -149,6 +149,50 @@ describe('igxOverlay', () => {
         });
     });
 
+    it('Unit - should properly emit events', () => {
+        const fix = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
+        fix.detectChanges();
+        spyOn(fix.componentInstance.overlay.onClosing, 'emit').and.callThrough();
+        spyOn(fix.componentInstance.overlay.onClosed, 'emit').and.callThrough();
+        spyOn(fix.componentInstance.overlay.onOpening, 'emit').and.callThrough();
+        spyOn(fix.componentInstance.overlay.onOpened, 'emit').and.callThrough();
+        fix.componentInstance.show();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(0);
+            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(0);
+
+            fix.componentInstance.hide();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(0);
+            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(0);
+
+            fix.componentInstance.overlay.open(true);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
+
+            fix.componentInstance.overlay.close(true);
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
+        });
+    });
+
     xit('Unit - Should properly call position method - GlobalPosition', () => {
 
     });
@@ -688,7 +732,6 @@ describe('igxOverlay', () => {
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
             // expect(wrapperContent.children.length).toEqual(1);
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            debugger;
             expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             // const buttonLeft = buttonElement.offsetLeft;
             // The top is always misaligned by 16px, not sure why, offsetPadding? Shouldn't be
@@ -905,7 +948,12 @@ export class SimpleDynamicWithDirectiveComponent {
     public visible = false;
 
     @ViewChild(IgxOverlayDirective)
-    private overlay: IgxOverlayDirective;
+    private _overlay: IgxOverlayDirective;
+
+    public get overlay(): IgxOverlayDirective {
+        return this._overlay;
+    }
+
     show() {
         this.overlay.open();
         this.visible = true;
