@@ -1,17 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {
     IgxDropDownComponent,
     ConnectedPositioningStrategy,
-    AutoPositionStrategy,
-    GlobalPositionStrategy,
-    PositionSettings,
-    HorizontalAlignment,
-    VerticalAlignment,
     OverlaySettings,
-    BlockScrollStrategy,
-    CloseScrollStrategy,
-    AbsoluteScrollStrategy,
-    Point,
     NoOpScrollStrategy
 } from 'igniteui-angular';
 
@@ -22,7 +13,6 @@ import {
     styleUrls: ['drop-down.sample.css']
 })
 export class DropDownSampleComponent implements OnInit {
-    private width = '160px';
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
     @ViewChild('button') public button: ElementRef;
 
@@ -118,7 +108,7 @@ export class DropDownSampleComponent implements OnInit {
         }
     }
 
-    constructor(private elementRef: ElementRef) {
+    constructor() {
     }
 
     public toggleDropDown() {
@@ -133,9 +123,9 @@ export class DropDownSampleComponent implements OnInit {
         this.igxDropDown.toggle(overlaySettings);
     }
 
-    onSelection(ev) {
+    onSelection() {
     }
 
-    onOpening(ev) {
+    onOpening() {
     }
 }

@@ -1,13 +1,5 @@
 import {
-    animate,
-    AnimationBuilder,
-    AnimationFactory,
-    AnimationPlayer,
-    style
-} from '@angular/animations';
-import {
     ChangeDetectorRef,
-    Component,
     Directive,
     ElementRef,
     EventEmitter,
@@ -23,7 +15,6 @@ import {
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { IPositionStrategy } from '../../services/overlay/position/IPositionStrategy';
 import { OverlaySettings } from '../../services';
 
 @Directive({
@@ -66,7 +57,6 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
 
     constructor(
         private elementRef: ElementRef,
-        private builder: AnimationBuilder,
         private cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private overlayService: IgxOverlayService,
         @Optional() private navigationService: IgxNavigationService) {
@@ -76,19 +66,11 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
     public open(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
         if (!this.collapsed) { return; }
 
-        // const player = this.animationActivation();
-        // player.onStart(() => {
-        // });
-        // player.onDone(() => {
-        //     player.destroy();
-        // });
-
         if (fireEvents) {
             this.onOpening.emit();
         }
 
         this.collapsed = false;
-        this.cdr.detectChanges();
 
         const id = this.overlayService.show(this.elementRef, this.id, overlaySettings);
 
@@ -99,36 +81,20 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
         if (fireEvents) {
             this.onOpened.emit();
         }
-        // TODO: crop all animations and pass animation options to the overlay
-        // player.play();
     }
 
     public close(fireEvents?: boolean) {
         if (this.collapsed) { return; }
-
-        // const player = this.animationActivation();
-        // player.onDone(() => {
-
-        //     // When using directive into component with OnPush it is necessary to
-        //     // trigger change detection again when close animation ends
-        //     // due to late updated @collapsed property.
-        //     this.cdr.markForCheck();
-        //     player.destroy();
-        // });
 
         if (fireEvents) {
             this.onClosing.emit();
         }
 
         this.overlayService.hide(this.id);
-        this.collapsed = true;
-        this.cdr.detectChanges();
 
         if (fireEvents) {
             this.onClosed.emit();
         }
-
-        // player.play();
     }
 
     public toggle(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
@@ -145,30 +111,6 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
         if (this.navigationService && this.id) {
             this.navigationService.remove(this.id);
         }
-    }
-
-    private animationActivation() {
-        let animation: AnimationFactory;
-
-        this.collapsed ?
-            animation = this.openingAnimation() :
-            animation = this.closingAnimation();
-
-        return animation.create(this.elementRef.nativeElement);
-    }
-
-    private openingAnimation() {
-        return this.builder.build([
-            style({ transform: 'scaleY(0) translateY(-48px)', transformOrigin: '100% 0%', opacity: 0 }),
-            animate('200ms ease-out', style({ transform: 'scaleY(1) translateY(0)', opacity: 1 }))
-        ]);
-    }
-
-    private closingAnimation() {
-        return this.builder.build([
-            style({ transform: 'translateY(0)', opacity: 1 }),
-            animate('120ms ease-in', style({ transform: 'translateY(-12px)', opacity: 0 }))
-        ]);
     }
 
     private overlayClosed = () => {
@@ -224,7 +166,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
 
     @HostListener('click')
     public onClick() {
-        this.target.toggle(true);
+        this.target.toggle(true, {});
 
         if (this._handler) {
             document.addEventListener('click', this._handler, true);
