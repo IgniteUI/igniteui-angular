@@ -26,13 +26,13 @@ import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component'
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 
-export interface FormatViewsInterface {
+export interface IFormatViews {
     day?: boolean;
     month?: boolean;
     year?: boolean;
 }
 
-export interface FormatOptionsInterface {
+export interface IFormatOptions {
     day?: string;
     month?: string;
     weekday?: string;
@@ -154,7 +154,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *```
      */
     @Input()
-    public get formatOptions(): FormatOptionsInterface {
+    public get formatOptions(): IFormatOptions {
         return this._formatOptions;
     }
     /**
@@ -174,7 +174,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *}
      *```
      */
-    public set formatOptions(formatOptions: FormatOptionsInterface) {
+    public set formatOptions(formatOptions: IFormatOptions) {
         this._formatOptions = Object.assign(this._formatOptions, formatOptions);
     }
 
@@ -189,7 +189,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *```
      */
     @Input()
-    public get formatViews(): FormatViewsInterface {
+    public get formatViews(): IFormatViews {
         return this._formatViews;
     }
 
@@ -205,7 +205,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *}
      *```
      */
-    public set formatViews(formatViews: FormatViewsInterface) {
+    public set formatViews(formatViews: IFormatViews) {
         this._formatViews = Object.assign(this._formatViews, formatViews);
     }
 
