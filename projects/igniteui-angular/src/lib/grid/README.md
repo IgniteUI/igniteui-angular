@@ -168,7 +168,9 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
 |`oddRowCSS`|string|Additional styling classses applied to all odd rows in the grid.|
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
-
+|`groupingExpressions`| Array | The group by state of the grid.
+|`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
+|`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  | 
 
 ### Outputs
 
@@ -191,6 +193,7 @@ A list of the events emitted by the **igx-grid**:
 |`onColumnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
 |`onContextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
 |`onDoubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
+|`onGroupingDone`| Emitted when a a new column is grouped or ungrouped. Returns the `ISortingExpression` related to the grouping operation.
 
 
 Defining handlers for these event emitters is done using declarative event binding:
@@ -216,7 +219,7 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`filter(expressions: Array)`|Filters the grid columns based on the provided array of filtering expressions.|
 |`filterGlobal(value: any, condition? ignoreCase?)`|Filters all the columns in the grid.|
 |`clearFilter(name?: string)`|If `name` is provided, clears the filtering state of the corresponding column, otherwise clears the filtering state of all columns.|
-|`sort(name: string, direction, ignorecase)`|Sorts a single column.|
+|`sort(expression: ISortingExpression)`|Sorts a single column.|
 |`sort(expressions: Array)`|Sorts the grid columns based on the provided array of sorting expressions.|
 |`clearSort(name?: string)`|If `name` is provided, clears the sorting state of the corresponding column, otherwise clears the sorting state of all columns.|
 |`enableSummaries(fieldName: string, customSummary?: any)`|Enable summaries for the specified column and apply your `customSummary`. If you do not provide the `customSummary`, then the default summary for the column data type will be applied.|
@@ -239,6 +242,12 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`findPrev(text: string, caseSensitive?: boolean)`|Highlights all occurrences of the specified text and marks the previous occurrence as active.|
 |`clearSearch(text: string, caseSensitive?: boolean)`|Removes all search highlights from the grid.|
 |`refreshSearch()`|Refreshes the current search.|
+|`groupBy(expression: ISortingExpression)`| Groups by a new column based on the provided expression or modifies an existing one.
+|`groupBy(expressions: Array)`| Groups columns based on the provided array of sorting expressions.
+|`clearGrouping()`| Clears all grouping in the grid.
+|`clearGrouping(fieldName: string)`| Clear grouping from a particular column.
+|`isExpandedGroup(group: IGroupByRecord )`| Returns if a group is expanded or not.
+|`toggleGroup(group: IGroupByRecord)`| Toggles the expansion state of a group.
 
 
 
@@ -273,6 +282,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`dataType`|DataType|One of string, number, boolean or Date. When filtering is enabled the filter UI conditions are based on the `dataType` of the column. Defaults to `string` if it is not provided. With `autoGenerate` enabled the grid will try to resolve the correct data type for each column based on the data source.|
 |`pinned`|boolean|Set column to be pinned or not|
 |`searchable`|boolean|Determines whether the column is included in the search. If set to false, the cell values for this column will not be included in the results of the search API of the grid (defaults to true)|
+|`groupable`|boolean| Determines whether the column may be grouped via the UI.|
 
 
 ### Methods
