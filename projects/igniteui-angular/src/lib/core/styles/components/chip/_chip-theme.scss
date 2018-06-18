@@ -156,11 +156,18 @@
         compact: rem(24px)
     );
 
+    $chip-padding: (
+        comfortable: 0 rem(16px),
+        cosy: 0 rem(8px),
+        compact: 0 rem(6px)
+    );
+
     %igx-chips-area {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         flex-wrap: wrap;
+        width: 100%;
 
         &:empty {
             display: none;
@@ -177,15 +184,17 @@
 
     %igx-chip__label {
         justify-content: space-between;
+        max-width: 170px;
+        min-width: 96px;
     }
 
     %igx-chip__item {
-        max-width: 160px;
+        max-width: 170px;
         min-width: 96px;
         user-select: none;
         cursor: pointer;
         border-radius: map-get($chip-height, 'comfortable') / 2;
-        padding: 0 rem(16);
+        padding: map-get($chip-padding, 'comfortable');
         margin: rem(4px);
         height: map-get($chip-height, 'comfortable');
         transition: $transition;
@@ -220,6 +229,7 @@
         %igx-chip__item {
             border-radius: map-get($chip-height, 'cosy') / 2;
             height: map-get($chip-height, 'cosy');
+            padding: map-get($chip-padding, 'cosy');
         }
     }
 
@@ -227,6 +237,7 @@
         %igx-chip__item {
             border-radius: map-get($chip-height, 'compact') / 2;
             height: map-get($chip-height, 'compact');
+            padding: map-get($chip-padding, 'compact');
         }
     }
 

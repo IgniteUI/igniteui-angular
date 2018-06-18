@@ -35,10 +35,10 @@
             </span>
             <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
+        <igx-grid-groupby-drop-area igxGroupAreaDrop *ngIf="dropAreaVisible" [displayDensity]="displayDensity">
+        </igx-grid-groupby-drop-area>
     </igx-chips-area>
-    <igx-icon class="igx-chip__dir-icon" fontSet="material" *ngIf="chipsGoupingExpressions.length && dropAreaVisible">forward</igx-icon>
-    <igx-grid-groupby-drop-area igxGroupAreaDrop *ngIf="dropAreaVisible" [displayDensity]="displayDensity">
-    </igx-grid-groupby-drop-area>
+    <!--<igx-icon class="igx-chip__dir-icon" fontSet="material" *ngIf="chipsGoupingExpressions.length && dropAreaVisible">forward</igx-icon>-->
 </div>
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>

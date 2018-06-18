@@ -309,10 +309,22 @@
         compact: rem(24px)
     );
 
+    $drop-area-padding: (
+        comfortable: 0 rem(16px),
+        cosy: 0 rem(8px),
+        compact: 0 rem(6px)
+    );
+
     $grid-cell-padding: (
         comfortable: 0 rem(24px),
         cosy: 0 rem(16px),
         compact: 0 rem(12px)
+    );
+
+    $grouparea-padding: (
+        comfortable: rem(16px) rem(24px),
+        cosy: rem(8px) rem(16px),
+        compact: rem(4px) rem(12px)
     );
 
     $grid-grouping-indicator-padding: (
@@ -884,13 +896,11 @@
         grid-row: 1;
         border-bottom: 1px solid --var($theme, 'row-border-color');
         z-index: 2;
-        min-height: calc(#{map-get($grid-header-height, 'comfortable')} + #{rem(16px)});
         background: --var($theme, 'grouparea-background');
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: map-get($grid-cell-padding, 'comfortable');
-        overflow: hidden;
+        padding: map-get($grouparea-padding, 'comfortable');
         flex-wrap: wrap;
 
         &:focus {
@@ -899,13 +909,11 @@
     }
 
     %igx-grid__grouparea--cosy {
-        padding: map-get($grid-cell-padding, 'cosy');
-        height: calc(#{map-get($grid-header-height, 'cosy')} + #{rem(16px)});
+        padding: map-get($grouparea-padding, 'cosy');
     }
 
     %igx-grid__grouparea--compact {
-        padding: map-get($grid-cell-padding, 'compact');
-        height: calc(#{map-get($grid-header-height, 'compact')} + #{rem(16px)});
+        padding: map-get($grouparea-padding, 'compact');
     }
 
     %igx-drop-area {
@@ -915,7 +923,7 @@
         justify-content: flex-start;
         height: map-get($drop-area-height, 'comfortable');
         border-radius: map-get($drop-area-height, 'comfortable') / 2;
-        padding: map-get($grid-cell-padding, 'comfortable');
+        padding: map-get($drop-area-padding, 'comfortable');
         margin: rem(4px);
         flex: 1 0 0%;
         transition: $transition;
@@ -937,13 +945,13 @@
     %igx-drop-area--cosy {
         height: map-get($drop-area-height, 'cosy');
         border-radius: map-get($drop-area-height, 'cosy') / 2;
-        padding: map-get($grid-cell-padding, 'cosy');
+        padding: map-get($drop-area-padding, 'cosy');
     }
 
     %igx-drop-area--compact {
         height: map-get($drop-area-height, 'compact');
         border-radius: map-get($drop-area-height, 'compact') / 2;
-        padding: map-get($grid-cell-padding, 'compact');
+        padding: map-get($drop-area-padding, 'compact');
     }
 
 
@@ -987,8 +995,6 @@
 
     %igx-grid__header-indentation {
         position: relative;
-        min-width: rem(60px);
-        flex-basis: rem(60px);
         padding-right: rem(12);
         background: --var($theme, 'header-background');
         z-index: 1;
@@ -1045,4 +1051,5 @@
         }
     }
 }
+
 
