@@ -360,8 +360,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             owner: this
         };
 
-        this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this.dispatchEvent(this._lastDropArea, 'igxDrop', eventArgs);
+        this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this._lastDropArea = null;
     }
 

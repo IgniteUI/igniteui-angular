@@ -278,18 +278,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public paginationTemplate: TemplateRef<any>;
 
     @Input()
-
-    get columnHiding() {
-        return this._columnHiding;
-    }
-
-    set columnHiding(value) {
-        this._columnHiding = value;
-        if (this.gridAPI.get(this.id)) {
-            this.markForCheck();
-          }
-    }
-
     public get displayDensity(): DisplayDensity | string {
         return this._displayDensity;
     }
@@ -305,6 +293,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             case 'comfortable':
             default:
                 this._displayDensity = DisplayDensity.comfortable;
+        }
+    }
+
+    @Input()
+    get columnHiding() {
+        return this._columnHiding;
+    }
+
+    set columnHiding(value) {
+        this._columnHiding = value;
+        if (this.gridAPI.get(this.id)) {
+            this.markForCheck();
         }
     }
 
@@ -508,7 +508,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('summaries')
     public summaries: ElementRef;
 
-
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
@@ -521,6 +520,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 return 'igx-grid--compact';
             default:
                 return 'igx-grid';
+        }
+    }
+
+    get groupAreaHostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-drop-area--cosy';
+            case DisplayDensity.compact:
+                return 'igx-drop-area--compact';
+            default:
+                return 'igx-drop-area';
         }
     }
 
@@ -711,7 +721,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public summariesHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
-    public isColumnMoving: boolean;
+    public draggedColumn: IgxColumnComponent;
     public isColumnResizing: boolean;
 
     public eventBus = new Subject<boolean>();
@@ -1115,6 +1125,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public clearGrouping(name?: string): void {
         this.gridAPI.clear_groupby(this.id, name);
+        this.calculateGridSizes();
     }
 
     public isExpandedGroup(group: IGroupByRecord): boolean {
@@ -1129,6 +1140,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record.records && record.records.length;
+    }
+
+    public get dropAreaVisible(): boolean {
+        return (this.draggedColumn && this.draggedColumn.groupable) ||
+            !this.chipsGoupingExpressions.length;
     }
 
     public filter(...rest): void {
