@@ -263,8 +263,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         event.stopPropagation();
 
         const el = document.elementFromPoint(event.pageX, event.pageY);
-        if (!this.draggable || el.getAttribute("id") === "resizeHandler") {
-            return;
+        if (!this.draggable || el.getAttribute("id") === "resizeHandler" ||
+            el.getAttribute("id") === "filterIcon") {
+                return;
         }
 
         this.cms.column = this.column;
@@ -312,7 +313,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this._dragGhost.style.flexBasis  = null;
 
         const icon = document.createElement('i');
-        const text = document.createTextNode('swap_horiz');
+        const text = document.createTextNode('block');
         icon.appendChild(text);
 
         icon.classList.add('material-icons');
