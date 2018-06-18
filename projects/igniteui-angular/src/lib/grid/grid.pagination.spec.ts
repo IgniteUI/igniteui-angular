@@ -7,7 +7,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
-fdescribe('IgxGrid - Grid Paging', () => {
+describe('IgxGrid - Grid Paging', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
