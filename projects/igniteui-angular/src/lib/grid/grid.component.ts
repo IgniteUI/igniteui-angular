@@ -196,6 +196,9 @@ export class IgxGridComponent extends IgxDensityEnabledComponent
     }
 
     set groupingExpressions(value) {
+        if (value && value.length > 10) {
+            throw Error('Maximum amount of grouped columns is 10.');
+        }
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
         this.gridAPI.arrange_sorting_expressions(this.id);
@@ -1910,16 +1913,15 @@ export class IgxGridComponent extends IgxDensityEnabledComponent
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const keys = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
-                                        filter((c) => c.searchable).
-                                        map((c) => c.field);
+        const columnItems = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
+                                                map((c) => ({ columnName: c.field, columnSearchable: c.searchable }) );
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;
 
-            keys.forEach((key, j) => {
-                const value = dataRow[key];
-                if (value !== undefined && value !== null) {
+            columnItems.forEach((columnItem, j) => {
+                const value = dataRow[columnItem.columnName];
+                if (value !== undefined && value !== null && columnItem.columnSearchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
                     let occurenceIndex = 0;
                     let searchIndex = searchValue.indexOf(searchText);
