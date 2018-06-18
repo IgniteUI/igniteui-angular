@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { PositionSettings, Point, OverlaySettings } from './utilities';
+import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
+import { PositionSettings, Point, OverlaySettings, HorizontalAlignment, VerticalAlignment } from './utilities';
 
 import {
     ApplicationRef,
@@ -26,6 +27,13 @@ export class IgxOverlayService {
         settings: OverlaySettings
     }[] = [];
     private _overlayElement: HTMLElement;
+
+    private _defaultSettings: OverlaySettings = {
+        positionStrategy: new GlobalPositionStrategy(),
+        scrollStrategy: new NoOpScrollStrategy(),
+        modal: true,
+        closeOnOutsideClick: true
+    };
 
     /**
      * Creates, sets up, and return a DIV HTMLElement attached to document's body
@@ -66,7 +74,7 @@ export class IgxOverlayService {
 
         id = this.getId(id);
 
-        overlaySettings = overlaySettings ? overlaySettings : new OverlaySettings();
+        overlaySettings = Object.assign(this._defaultSettings, overlaySettings);
 
         // get the element for both static and dynamic components
         const element = this.getElement(component, id, overlaySettings);
@@ -172,14 +180,13 @@ export class IgxOverlayService {
 
     private getPositionStrategy(positionStrategy?: IPositionStrategy): IPositionStrategy {
         positionStrategy = positionStrategy ? positionStrategy : new GlobalPositionStrategy();
-        if (positionStrategy._settings && positionStrategy._settings.element) {
-            const elementRect = positionStrategy._settings.element.getBoundingClientRect();
-            const x = elementRect.right + elementRect.width * positionStrategy._settings.horizontalStartPoint;
-            const y = elementRect.bottom + elementRect.height * positionStrategy._settings.verticalStartPoint;
-            positionStrategy._settings.point = new Point(x, y);
+        if (positionStrategy.settings && positionStrategy.settings.element) {
+            const elementRect = positionStrategy.settings.element.getBoundingClientRect();
+            const x = elementRect.right + elementRect.width * positionStrategy.settings.horizontalStartPoint;
+            const y = elementRect.bottom + elementRect.height * positionStrategy.settings.verticalStartPoint;
+            positionStrategy.settings.point = new Point(x, y);
         }
 
-        positionStrategy._settings = positionStrategy._settings ? positionStrategy._settings : new PositionSettings();
         return positionStrategy;
     }
 

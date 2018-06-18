@@ -37,7 +37,7 @@
             <igx-switch class="settings" labelPosition="after" [(ngModel)]="modal" name="modal" [value]="modal" (change)="onSwitchChange($event)">Modal</igx-switch>
         </div>
         <button #button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle</button>
-        <igx-drop-down (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+        <igx-drop-down>
             <igx-drop-down-item *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
                     {{ item }}

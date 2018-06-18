@@ -37,13 +37,13 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
     // The position method should return a <div> container that will host the component
     position(element: HTMLElement, wrapper: HTMLElement, rect: { width: number, height: number }, document?: Document): void {
         const viewPort = this.getViewPort(document);
-        super.position(element, wrapper, rect, document);
+        super.position(element, wrapper, rect);
         this.wrapperClass = 'auto-show';
         const checkIfMoveHorizontal = (elem: HTMLElement) => {
             const leftBound = elem.parentElement.offsetLeft;
             const rightBound = elem.parentElement.offsetLeft + elem.clientWidth;
             let newPosition;
-            switch (this._settings.horizontalDirection) {
+            switch (this.settings.horizontalDirection) {
                 case (-1):
                     newPosition = leftBound < viewPort.left ?
                         parseFloat(elem.parentElement.style.left) + viewPort.left - leftBound + this.offsetPadding :
@@ -64,7 +64,7 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
             const topBound = elem.parentElement.offsetTop;
             const bottomBound = elem.parentElement.offsetTop + elem.clientHeight;
             let newPosition;
-            switch (this._settings.verticalDirection) {
+            switch (this.settings.verticalDirection) {
                 case (-1):
                     newPosition = topBound < viewPort.top ?
                         parseFloat(elem.parentElement.style.top) + viewPort.top - topBound + this.offsetPadding :

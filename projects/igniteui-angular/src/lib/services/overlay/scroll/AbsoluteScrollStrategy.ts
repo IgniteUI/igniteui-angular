@@ -50,7 +50,7 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
     }
 
     private onScroll = (ev: Event) => {
-        this.updatedPositionSettingsPoint(this._component.settings.positionStrategy._settings);
+        this.updatedPositionSettingsPoint(this._component.settings.positionStrategy.settings);
         this._component.settings.positionStrategy.position(
             this._component.elementRef.nativeElement,
             this._component.elementRef.nativeElement.parentElement,
