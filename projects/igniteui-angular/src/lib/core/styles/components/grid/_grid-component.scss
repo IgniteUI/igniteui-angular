@@ -222,10 +222,6 @@
     @include m(cosy) {
         @extend %grid-display !optional;
 
-        @include b(igx-drop-area) {
-            @extend %igx-drop-area--cosy !optional;
-        }
-
         @include e(th) {
             @extend %grid-cell-header--cosy !optional;
         }
@@ -270,10 +266,6 @@
 
     @include m(compact) {
         @extend %grid-display !optional;
-
-        @include b(igx-drop-area) {
-            @extend %igx-drop-area--compact !optional;
-        }
 
         @include e(th) {
             @extend %grid-cell-header--compact !optional;
@@ -331,6 +323,16 @@
 
     @include e(text) {
         @extend %igx-drop-area__text !optional;
+    }
+
+    @include m(compact) {
+        @extend %igx-drop-area !optional;
+        @extend %igx-drop-area--cosy !optional;
+    }
+
+    @include m(cosy) {
+        @extend %igx-drop-area !optional;
+        @extend %igx-drop-area--compact !optional;
     }
 }
 
