@@ -1,6 +1,5 @@
-import { element } from 'protractor';
-import { Component, ContentChildren, DebugElement, Directive, ElementRef, Injectable, OnInit, ViewChild, QueryList } from '@angular/core';
-import { async, inject, TestBed, ComponentFixture, tick, fakeAsync, flushMicrotasks } from '@angular/core/testing';
+import { Component, Injectable, ViewChild } from '@angular/core';
+import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectionAPIService } from '../core/selection';
@@ -13,8 +12,11 @@ import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
+const CSS_CLASS_COMBO = 'igx-combo';
+const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
+const CSS_CLASS_DROPDOWN = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
 const CSS_CLASS_CONTAINER = 'igx-display-container';
@@ -28,12 +30,18 @@ const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_HEADERITEM = 'igx-drop-down__header';
 const CSS_CLASS_SCROLLBAR = 'igx-vhelper__placeholder-content';
+const CSS_CLASS_SCROLLBAR_VERTICAL = 'igx-vhelper--vertical';
 const CSS_CLASS_SEARCH = 'igx-combo__search';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
+const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
+const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
+const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
+const CSS_CLASS_INPUTGROUP_BUNDLESUFFIX = 'igx-input-group__bundle-suffix';
+const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-describe('Combo', () => {
+fdescribe('Combo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -1115,10 +1123,83 @@ describe('Combo', () => {
 
     // Rendering
     it('All appropriate classes should be applied on combo initialization', () => {
-        // TO DO
-    });
+        const defaultComboWidth = '250px';
+        const fix = TestBed.createComponent(IgxComboScrollTestComponent);
+        fix.detectChanges();
 
-    // Silently fails (cannot get 0 of undefined on line 846)
+        const comboWrapper = fix.nativeElement.querySelector(CSS_CLASS_COMBO);
+        expect(comboWrapper).not.toBeNull();
+        expect(comboWrapper.style.width).toEqual(defaultComboWidth);
+        expect(comboWrapper.attributes.getNamedItem('ng-reflect-placeholder').nodeValue).toEqual('Items');
+        expect(comboWrapper.attributes.getNamedItem('ng-reflect-data').nodeValue).toEqual('Item 1,Item 2,Item 3');
+        expect(comboWrapper.attributes.getNamedItem('ng-reflect-filterable')).toBeTruthy();
+        expect(comboWrapper.childElementCount).toEqual(1);
+
+        const comboElement = comboWrapper.children[0];
+        expect(comboElement.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
+        expect(comboElement.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
+        expect(comboElement.style.width).toEqual(defaultComboWidth);
+        expect(comboElement.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
+        expect(comboElement.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
+        expect(comboElement.attributes.getNamedItem('aria-owns').nodeValue).toEqual('DropDown_0');
+        expect(comboElement.childElementCount).toEqual(2);
+
+        const inputGroupElement = comboElement.children[0];
+        expect(inputGroupElement.attributes.getNamedItem('type').nodeValue).toEqual('box');
+        expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
+        expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
+        expect(inputGroupElement.classList.contains('igx-input-group--placeholder')).toBeTruthy();
+        expect(inputGroupElement.childElementCount).toEqual(1);
+
+        const inputGroupWrapper = inputGroupElement.children[0];
+        expect(inputGroupWrapper.classList.contains(CSS_CLASS_INPUTGROUP_WRAPPER)).toBeTruthy();
+        expect(inputGroupWrapper.childElementCount).toEqual(2);
+
+        const inputGroupBundle = inputGroupWrapper.children[0];
+        expect(inputGroupBundle.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLE)).toBeTruthy();
+        expect(inputGroupBundle.childElementCount).toEqual(3);
+
+        const mainInputGroupBundle = inputGroupBundle.children[0];
+        expect(mainInputGroupBundle.classList.contains(CSS_CLASS_INPUTGROUP_MAINBUNDLE)).toBeTruthy();
+        expect(mainInputGroupBundle.childElementCount).toEqual(1);
+
+        const inputElement = mainInputGroupBundle.children[0];
+        expect(inputElement.classList.contains('igx-input-group__input')).toBeTruthy();
+        expect(inputElement.classList.contains('ng-untouched')).toBeTruthy();
+        expect(inputElement.classList.contains('ng-pristine')).toBeTruthy();
+        expect(inputElement.classList.contains('ng-valid')).toBeTruthy();
+        expect(inputElement.attributes.getNamedItem('type').nodeValue).toEqual('text');
+        expect(inputElement.attributes.getNamedItem('width').nodeValue).toEqual('90%');
+
+        const clearButton = inputGroupBundle.children[1];
+        expect(clearButton.classList.contains(CSS_CLASS_CLEARBUTTON)).toBeTruthy();
+        expect(clearButton.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLESUFFIX)).toBeTruthy();
+        expect(clearButton.childElementCount).toEqual(0);
+
+        const dropDownButton = inputGroupBundle.children[2];
+        expect(dropDownButton.classList.contains(CSS_CLASS_DROPDOWNBUTTON)).toBeTruthy();
+        expect(dropDownButton.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLESUFFIX)).toBeTruthy();
+        expect(dropDownButton.childElementCount).toEqual(1);
+
+        const inputGroupBorder = inputGroupWrapper.children[1];
+        expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
+        expect(inputGroupBorder.childElementCount).toEqual(0);
+
+        const dropDownWrapper = comboElement.children[1];
+        expect(dropDownWrapper.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
+        expect(dropDownWrapper.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboWidth);
+        expect(dropDownWrapper.childElementCount).toEqual(1);
+
+        const dropDownElement = dropDownWrapper.children[0];
+        expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
+        expect(dropDownElement.childElementCount).toEqual(1);
+
+        const dropDownList = dropDownElement.children[0];
+        expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWNLIST)).toBeTruthy();
+        expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
+        expect(dropDownList.style.width).toEqual(defaultComboWidth);
+        expect(dropDownList.childElementCount).toEqual(0);
+    });
     it('Should properly render grouped items', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboInputTestComponent);
         fix.detectChanges();
@@ -1200,7 +1281,6 @@ describe('Combo', () => {
         expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
         expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
     }));
-
     it('Should properly render focused items when grouped', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
@@ -1319,7 +1399,6 @@ describe('Combo', () => {
             expect(dropdownList.children.length).toEqual(0);
         });
     });
-
     it('Search input should be focused when dropdown is opened', () => {
         let isFocused = false;
         const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -1336,7 +1415,6 @@ describe('Combo', () => {
             expect(isFocused).toEqual(true);
         });
     });
-
     it('Dropdown list open/close - key navigation', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboTestComponent);
         fix.detectChanges();
@@ -1385,7 +1463,6 @@ describe('Combo', () => {
             // expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
         });
     }));
-
     it('Dropdown button should fire dropdown opening/closing events', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
@@ -1418,55 +1495,129 @@ describe('Combo', () => {
             expect(combo.onClosing.emit).toHaveBeenCalledTimes(1);
         });
     }));
-    it('Item selection - key navigation', () => {
-        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+    it('Item selection - key navigation', fakeAsync(() => {
+        let focusedItems;
+        let selectedItems;
+        let selectedItemsCount = 0;
+        let dropdownList: HTMLElement;
+        let dropdownContent: HTMLElement;
+        let dropdownItems;
+        const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
-        const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
+        const arrowDownEvent = new KeyboardEvent('keydown', { key: 'ArrowDown'});
+        const arrowUpEvent = new KeyboardEvent('keydown', { key: 'ArrowUp'});
+        const spaceEvent = new KeyboardEvent('keydown', { key: 'Space'});
         const combo = fixture.componentInstance.combo;
-        const dropdown = combo.dropdown;
-        const comboButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNBUTTON)).nativeElement;
-        comboButton.click();
-        fixture.detectChanges();
+        combo.dropdown.toggle();
+        tick();
         fixture.whenStable().then(() => {
-            const items = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
-            const lastVisibleItem = items[items.length - 2];
-            lastVisibleItem.nativeElement.click();
             fixture.detectChanges();
-            return fixture.whenStable();
-        }).then(() => {
-            const items = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
-            const lastVisibleItem = items[items.length - 1];
-            lastVisibleItem.triggerEventHandler('keydown.ArrowDown', mockObj);
-            fixture.detectChanges();
-            // TO DO
+            dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+            focusedItems = dropdownList.querySelectorAll('.' + CSS_CLASS_FOCUSED);
+            expect(focusedItems.length).toEqual(0);
+            selectedItems = dropdownList.querySelectorAll('.' + CSS_CLASS_SELECTED);
+            expect(selectedItems.length).toEqual(0);
+
+            focusItem(arrowDownEvent, 0);
+            selectedItemsCount++;
+            selectItem(0);
+
+            for ( let index = 1; index < 7; index++) {
+                focusItem(arrowDownEvent, index);
+            }
+            selectedItemsCount++;
+            selectItem(6);
+
+            for ( let index = 5; index > 3; index--) {
+                focusItem(arrowUpEvent, index);
+            }
+            selectedItemsCount++;
+            selectItem(4);
         });
-    });
-    it('Home key should scroll up to the first item in the dropdown list', () => {
-        const fixture = TestBed.createComponent(IgxComboSampleComponent);
-        fixture.detectChanges();
-        const combo = fixture.componentInstance.combo;
-        const dropdown = combo.dropdown;
-    });
-    it('End key should scroll down to the last item in the dropdown list', fakeAsync(() => {
+
+        const focusItem = function (event: KeyboardEvent, itemIndex: number) {
+            dropdownContent.dispatchEvent(event);
+            fixture.detectChanges();
+            focusedItems = dropdownList.querySelectorAll('.' + CSS_CLASS_FOCUSED);
+            expect(focusedItems.length).toEqual(1);
+            expect(focusedItems[0]).toEqual(dropdownItems[itemIndex]);
+        };
+
+        const selectItem = function (itemIndex: number) {
+            dropdownContent.dispatchEvent(spaceEvent);
+            fixture.detectChanges();
+            selectedItems = dropdownList.querySelectorAll('.' + CSS_CLASS_SELECTED);
+            expect(selectedItems.length).toEqual(selectedItemsCount);
+            expect(selectedItems).toContain(dropdownItems[itemIndex]);
+        };
+    }));
+    xit('Home key should scroll up to the first item in the dropdown list', () => {
+        const endEvent = new KeyboardEvent('keydown', { key: 'End'});
+        const homeEvent = new KeyboardEvent('keydown', { key: 'Home'});
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         const dropdown = combo.dropdown;
         dropdown.toggle();
         tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+            const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
+            dropdownContent.dispatchEvent(endEvent);
+            fixture.detectChanges();
+            expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+            expect(combo.dropdown.focusedItem).toEqual(combo.data[combo.data.length - 1]);
+            dropdownContent.dispatchEvent(homeEvent);
+            fixture.detectChanges();
+            expect(scrollbar.scrollTop).toEqual(0);
+            expect(combo.dropdown.focusedItem).toEqual(combo.data[0]);
+            combo.dropdown.navigateItem(9);
+            fixture.detectChanges();
+            expect(combo.dropdown.focusedItem).toEqual(combo.data[9]);
+            dropdownContent.dispatchEvent(homeEvent);
+            fixture.detectChanges();
+            expect(scrollbar.scrollTop).toEqual(0);
+            expect(combo.dropdown.focusedItem).toEqual(combo.data[0]);
+        });
+    });
+    xit('End key should scroll down to the last item in the dropdown list', fakeAsync(() => {
+        const event = new KeyboardEvent('keydown', { key: 'End'});
+        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        const dropdown = combo.dropdown;
+        dropdown.toggle();
+        tick();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+            const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
+            expect(scrollbar.scrollTop).toEqual(0);
+            dropdownContent.dispatchEvent(event);
+            fixture.detectChanges();
+            expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+            expect(combo.dropdown.focusedItem).toEqual(combo.data[combo.data.length - 1]);
+            combo.dropdown.navigateItem(2);
+            fixture.detectChanges();
+            expect(combo.dropdown.focusedItem).toEqual(combo.data[2]);
+            dropdownContent.dispatchEvent(event);
+            fixture.detectChanges();
+            expect(combo.dropdown.focusedItem).toEqual(combo.data[combo.data.length - 1]);
+        });
     }));
     // Virtualization
     it('Vertical scrollbar should not be visible when the items fit inside the container', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboScrollTestComponent);
         fixture.detectChanges();
-        const combo = fixture.componentInstance.combo;
-        const dropdown = combo.dropdown;
+        const dropdown = fixture.componentInstance.combo.dropdown;
         dropdown.toggle();
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement as HTMLElement;
-            const scrollbarContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR)).parent.nativeElement as HTMLElement;
+            const scrollbarContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
             const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
             expect(hasScrollbar).toBeFalsy();
         });
@@ -1474,14 +1625,12 @@ describe('Combo', () => {
     it('Vertical scrollbar should be visible when the items does not fit inside the container', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
-        const combo = fixture.componentInstance.combo;
-        const dropdown = combo.dropdown;
+        const dropdown = fixture.componentInstance.combo.dropdown;
         dropdown.toggle();
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement as HTMLElement;
-            const scrollbarContainer = dropdownList.children[1]; // searchInput moved IN dropdown
+            const scrollbarContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
             const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
             expect(hasScrollbar).toBeTruthy();
         });
@@ -1563,7 +1712,6 @@ describe('Combo', () => {
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             const dropdownElement = fixture.debugElement.query(By.directive(IgxDropDownItemNavigationDirective));
-            console.log(dropdownElement);
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             const item_1 = dropdownItems[3];
@@ -1583,7 +1731,7 @@ describe('Combo', () => {
             dropdownElement.triggerEventHandler('keydown.End', mockObj);
             return fixture.whenStable();
         }).then(() => {
-
+            // TO DO
             // combo.dropdown.navigateNext();
             // fixture.detectChanges();
             // combo.dropdown.navigateNext();
@@ -1982,6 +2130,7 @@ describe('Combo', () => {
     }));
     // Filtering
     xit('The textbox input is placed correctly', fakeAsync(() => {
+        // This test does not make much sense
         const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
         const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
@@ -2004,6 +2153,7 @@ describe('Combo', () => {
         });
     }));
     it('Typing in the textbox input filters the dropdown items', fakeAsync(() => {
+        const event = new Event('input');
         const expectedValues = ['Paris', 'Prague', 'Padua', 'Palermo', 'Palma de Mallorca'];
         let searchInputElement;
         let dropdownList;
@@ -2017,7 +2167,7 @@ describe('Combo', () => {
             fixture.detectChanges();
             searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
             searchInputElement.value = 'P';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -2026,7 +2176,7 @@ describe('Combo', () => {
             expect(dropdownItems.length).toEqual(5);
             checkFilteredItems(dropdownItems);
             searchInputElement.value = 'Pa';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -2035,7 +2185,7 @@ describe('Combo', () => {
             expectedValues.splice(1, 1);
             checkFilteredItems(dropdownItems);
             searchInputElement.value = 'Pal';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -2045,7 +2195,7 @@ describe('Combo', () => {
             expectedValues.splice(0, 1);
             checkFilteredItems(dropdownItems);
             searchInputElement.value = 'Pala';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -2096,6 +2246,7 @@ describe('Combo', () => {
         });
     }));
     it('Typing in the textbox should fire onSearchInput event', fakeAsync(() => {
+        const event = new Event('input');
         let searchInputElement;
         let timesFired = 1;
         const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -2108,27 +2259,27 @@ describe('Combo', () => {
             fixture.detectChanges();
             searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
             searchInputElement.value = 'P';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(timesFired);
             searchInputElement.value = 'Pa';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             timesFired++;
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(timesFired);
             searchInputElement.value = 'Pal';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             timesFired++;
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(timesFired);
             searchInputElement.value = 'Pala';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             timesFired++;
             return fixture.whenStable();
         }).then(() => {
@@ -2137,6 +2288,7 @@ describe('Combo', () => {
         });
     }));
     it('Clearing the filter textbox should restore the initial combo dropdown list', fakeAsync(() => {
+        const event = new Event('input');
         let searchInputElement;
         let dropdownList;
         let dropdownItems;
@@ -2149,7 +2301,7 @@ describe('Combo', () => {
             fixture.detectChanges();
             searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
             searchInputElement.value = 'P';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -2158,7 +2310,7 @@ describe('Combo', () => {
             expect(dropdownItems.length).toEqual(5);
             expect(combo.filteredData.length).toEqual(5);
             searchInputElement.value = 'Pa';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -2166,7 +2318,7 @@ describe('Combo', () => {
             expect(dropdownItems.length).toEqual(4);
             expect(combo.filteredData.length).toEqual(4);
             searchInputElement.value = 'P';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -2174,7 +2326,7 @@ describe('Combo', () => {
             expect(dropdownItems.length).toEqual(5);
             expect(combo.filteredData.length).toEqual(5);
             searchInputElement.value = '';
-            searchInputElement.dispatchEvent(new Event('input'));
+            searchInputElement.dispatchEvent(event);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -2221,9 +2373,6 @@ describe('Combo', () => {
         const fixture = TestBed.createComponent(IgxComboInputTestComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
-        // const nonFilteredItems = combo.data.filter(function (item) {
-        //     return item.field.toLowerCase().trim().includes('mi');
-        // });
         const filteredItems: { [index: string]: any; } = combo.data.reduce(function (filteredArray, item) {
             if (item.field.toLowerCase().trim().includes('mi')) {
                 (filteredArray[item['region']] = filteredArray[item['region']] || []).push(item);
@@ -2598,8 +2747,8 @@ class IgxComboTestComponent {
     template: `
     <igx-combo #combo
         [data]='data'
-        [placeholder]="'Location'"
-        [filterable]='true' [width]="'100px'"
+        [placeholder]="'Items'"
+        [filterable]='true'
     >
     </igx-combo>
 `
