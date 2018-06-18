@@ -13,11 +13,6 @@ import { IgxOverlayDirective, IgxToggleModule } from './../../directives/toggle/
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { PositionSettings } from './utilities';
-import { HorizontalAlignment } from './utilities';
-import { VerticalAlignment } from './utilities';
-import { OverlaySettings } from './utilities';
-import { Point } from './utilities';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point } from './utilities';
 
 fdescribe('igxOverlay', () => {
@@ -267,7 +262,7 @@ fdescribe('igxOverlay', () => {
         });
     });
 
-    it('The overlay wrapper div element, have the corresponding inline css applied for each alignment ', () => {
+    xit('The overlay wrapper div element, have the corresponding inline css applied for each alignment ', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -418,7 +413,7 @@ fdescribe('igxOverlay', () => {
         });
     });
 
-    // 1.2.3 Connected strategy position method
+    // 1.2.2 Connected strategy position method
         fit('Connected strategy position method. Position component based on Point only', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
@@ -426,6 +421,39 @@ fdescribe('igxOverlay', () => {
             const expectedTopForPoint: Array<string> = ['240px', '270px', '300px'];  // top/middle/bottom/
             const expectedLeftForPoint: Array<string> = ['240px', '270px', '300px']; // left/center/right/
 
+            const size = {width: 60, height: 60};
+            const compElement = document.createElement('div');
+            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+            const contentWrapper = document.createElement('div');
+            contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
+            contentWrapper.classList.add('contentWrapper');
+            contentWrapper.appendChild(compElement);
+            document.body.appendChild(contentWrapper);
+
+            const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+            const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+
+            fixture.detectChanges();
+            for (let i = 0; i < horAl.length ; i++) {
+                for (let j = 0; j < verAl.length; j++) {
+                    // start Point is static Top/Left at 300/300
+                    const positionSettings2 = {
+                        point: new Point(300, 300),
+                        horizontalDirection: HorizontalAlignment[horAl[i]],
+                        verticalDirection: VerticalAlignment[verAl[j]],
+                        element: null,
+                        horizontalStartPoint: HorizontalAlignment.Left,
+                        verticalStartPoint: VerticalAlignment.Top
+                    };
+
+                    const strategy = new ConnectedPositioningStrategy(positionSettings2);
+                    strategy.position(compElement, contentWrapper, size);
+                    fixture.detectChanges();
+                    expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
+                    expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
+                 }
+            }
+        });
             const overlaySettings = new OverlaySettings();
             const positionSettings = new PositionSettings();
             // use Point when positioning is based Point only and (no on element).
@@ -450,14 +478,14 @@ fdescribe('igxOverlay', () => {
             positionSettings.verticalStartPoint = VerticalAlignment.Top;
             for (let i = 0; i < horAl.length ; i++) {
                 positionSettings.horizontalDirection = HorizontalAlignment[horAl[i]];
-                 for (let j = 0; j < verAl.length; j++) {
+                    for (let j = 0; j < verAl.length; j++) {
                     positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
                     const strategy = overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
                     strategy.position(compElement, contentWrapper, size);
                     fixture.detectChanges();
                     expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
                     expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
-                 }
+                    }
             }
         });
 
