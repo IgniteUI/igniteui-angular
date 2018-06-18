@@ -646,9 +646,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             sum = arr.reduce(reducer,  parseInt(item.width, 10));
             if (sum <= availableSize) {
                  arr.push(item);
+                 length = arr.length;
              } else {
-                 length = arr.length + 1;
                  arr.push(item);
+                 length = arr.length;
                  arr.splice(0, 1);
              }
              if (length > maxLength) {
