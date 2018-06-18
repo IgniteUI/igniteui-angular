@@ -7,7 +7,7 @@
             <h4 class="sample-title">Toolbar</h4>
 
             <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="600px" (onColumnInit)="initColumns($event)"
-            
+
                 [showToolbar]="true"
                 toolbarTitle="Grid Toolbar"
 
@@ -16,6 +16,12 @@
                 exportText="Export"
                 exportExcelText="Export to Excel"
                 exportCsvText="Export to CSV"
+
+                [columnHiding] = "true"
+                hiddenColumnsText = "Hidden"
+                columnHidingTitle = "Column Hiding"
+
+
             >
             </igx-grid>
 
@@ -23,7 +29,7 @@
                 [columnHiding]="true"
                 columnHidingText="Hidden"
                 columnHidingTitle="Column Hiding"
-                
+
                 (onToolbarExporting)="toolbarExportClicked($event)"
             -->
 
