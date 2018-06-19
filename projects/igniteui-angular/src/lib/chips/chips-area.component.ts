@@ -109,20 +109,20 @@ export class IgxChipsAreaComponent implements DoCheck {
         const dragChipIndex = chipsArray.findIndex((el) => el === event.owner);
 
         if (event.shiftKey === true) {
-            if (event.code === 'ArrowLeft') {
+            if (event.key === 'ArrowLeft' || event.key === 'Left') {
                 orderChanged = this.positionChipAtIndex(dragChipIndex, dragChipIndex - 1, false);
                 if (orderChanged) {
                     setTimeout(() => {
                         this.modifiedChipsArray[dragChipIndex - 1].chipArea.nativeElement.focus();
                     }, 0);
                 }
-            } else if (event.code === 'ArrowRight') {
+            } else if (event.key === 'ArrowRight' || event.key === 'Right') {
                 orderChanged = this.positionChipAtIndex(dragChipIndex, dragChipIndex + 1, true);
             }
         } else {
-            if (event.code === 'ArrowLeft' && dragChipIndex > 0) {
+            if ((event.key === 'ArrowLeft' || event.key === 'Left') && dragChipIndex > 0) {
                 chipsArray[dragChipIndex - 1].chipArea.nativeElement.focus();
-            } else if (event.code === 'ArrowRight' && dragChipIndex < chipsArray.length - 1) {
+            } else if ((event.key === 'ArrowRight' || event.key === 'Right') && dragChipIndex < chipsArray.length - 1) {
                 chipsArray[dragChipIndex + 1].chipArea.nativeElement.focus();
             }
         }
