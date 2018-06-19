@@ -16,6 +16,7 @@ import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point } from './utilities';
 import { IScrollStrategy } from './scroll/IScrollStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
+import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
 
 function clearOverlay() {
     const overlay = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
@@ -279,7 +280,6 @@ describe('igxOverlay', () => {
         });
     });
 
-
     xit('Unit - Should properly call position method - DEFAULT', () => {
 
     });
@@ -364,14 +364,14 @@ describe('igxOverlay', () => {
     // adding more than one component to show in igx-overlay:
     xit('When adding a component near the window borders(left,right,up,down), it should be rendered in the igx-overlay center ' +
         '- default', () => {
-            // TO DO
+            // TO DO --> Relevant no more.
         });
 
     xit('If the shown component is bigger than the visible window, than it should be centered and scrollbars should appear.', () => {
         // TO DO
     });
     // 1.1.1 Global Css
-    xit('css class should be applied on igx-overlay component div wrapper.' +
+    it('css class should be applied on igx-overlay component div wrapper.' +
         'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
@@ -384,7 +384,7 @@ describe('igxOverlay', () => {
             });
         });
 
-    xit('css class should be applied on igx-overlay component inner div wrapper', () => {
+    it('css class should be applied on igx-overlay component inner div wrapper', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         const overlaySettings: OverlaySettings = {
@@ -436,16 +436,65 @@ describe('igxOverlay', () => {
     });
 
     xit('The shown component is positioned according to the options passed (base point/Left, Center, Right/Top, Middle, Bottom).', () => {
-        // TO DO
+        // TO DO --> covered with position method tests.
     });
 
-    xit('If using a ConnectedPositioningStrategy without passing options, the omitted ones default to ' +
-        '(Window center point, Center, Middle).', () => {
-            // TO DO
-        });
+    it('If using a ConnectedPositioningStrategy without passing other but target element options, the omitted options default to:' +
+    'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
+        const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+
+        const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
+        const positionSettings2 = {
+            target: targetEl
+        };
+
+        const strategy = new ConnectedPositioningStrategy(positionSettings2);
+
+        const expectedDefaults = {
+            target: targetEl,
+            horizontalDirection: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Bottom,
+            openAnimation: scaleInVerTop,
+            closeAnimation: scaleOutVerTop
+        };
+
+        expect(strategy.settings).toEqual(expectedDefaults);
+    });
+
+    it('If using a ConnectedPositioningStrategy without passing options, the omitted options default to: target: new Point(0, 0),' +
+    'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
+        const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+        const strategy = new ConnectedPositioningStrategy();
+
+        const expectedDefaults = {
+            target: new Point(0, 0),
+            horizontalDirection: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Bottom,
+            openAnimation: scaleInVerTop,
+            closeAnimation: scaleOutVerTop
+        };
+
+        expect(strategy.settings).toEqual(expectedDefaults);
+    });
+
+    // In Progress
+    xit('If using a ConnectedPositioningStrategy passing only target element the component is rendered based on defaults' +
+    '(StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop)' , () => {
+
+    });
+
+    // In Progress
+    xit('If using a ConnectedPositioningStrategy without passing options, the component is rendered based on defaults:' +
+    'target: new Point(0, 0), StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, ' +
+    'closeAnimation: scaleOutVerTop', () => {
+    });
 
     xit('When adding a new component it should be rendered where expected based on the options passed.', () => {
-        // TO DO
+        // TO DO --> covered with position method tests.
     });
 
     // adding more than one component to show in igx-overlay:
@@ -473,7 +522,7 @@ describe('igxOverlay', () => {
             // TO DO
         });
     // 1.2.1 Connected Css
-    xit('css class should be applied on igx-overlay component div wrapper', () => {
+    it('css class should be applied on igx-overlay component div wrapper', () => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         const overlaySettings: OverlaySettings = {
@@ -526,7 +575,7 @@ describe('igxOverlay', () => {
         };
 
                 const strategy = new ConnectedPositioningStrategy(positionSettings2);
-                strategy.position(compElement, contentWrapper, size);
+                strategy.position(contentWrapper, size);
                 fixture.detectChanges();
                 expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
                 expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
@@ -534,7 +583,7 @@ describe('igxOverlay', () => {
         }
     });
 
-    fit('Connected strategy position method. Position component based on Element', () => {
+    it('Connected strategy position method. Position component based on Element', () => {
         const fixture = TestBed.createComponent(TopLeftOffsetComponent);
         fixture.detectChanges();
         // for a Point(300,300);
@@ -572,7 +621,7 @@ describe('igxOverlay', () => {
                             verticalStartPoint: VerticalAlignment[verAl[tsp]],
                         };
                         const strategy = new ConnectedPositioningStrategy(positionSettings2);
-                        strategy.position(compElement, contentWrapper, size);
+                        strategy.position(contentWrapper, size);
                         fixture.detectChanges();
                         expect(contentWrapper.style.top).toBe((expectedTopForPoint[j] + 30 * tsp) + 'px');
                         expect(contentWrapper.style.left).toBe((expectedLeftForPoint[i] + 50 * lsp) + 'px');
