@@ -158,7 +158,7 @@ export class IgxSnackbarComponent {
      * An event that will be emitted when the action is executed.
      * Provides reference to the `IgxSnackbarComponent` as an argument.
      * ```html
-     * <igx-snackbar (onAction) = "onAction(snackbar: IgxSnackbarComponent)"></igx-snackbar>
+     * <igx-snackbar (onAction) = "onAction($event)"></igx-snackbar>
      * ```
      */
     @Output() public onAction = new EventEmitter<IgxSnackbarComponent>();
@@ -167,7 +167,7 @@ export class IgxSnackbarComponent {
      * An event that will be emitted when the snackbar animation starts.
      * Provides reference to the `AnimationEvent` interface as an argument.
      * ```html
-     * <igx-snackbar (animationStarted) = "animationStarted(event: AnimationEvent)"></igx-snackbar>
+     * <igx-snackbar (animationStarted) = "animationStarted($event)"></igx-snackbar>
      * ```
      */
     @Output() public animationStarted = new EventEmitter<AnimationEvent>();
@@ -176,7 +176,7 @@ export class IgxSnackbarComponent {
      * An event that will be emitted when the snackbar animation ends.
      * Provides reference to the `AnimationEvent` interface as an argument.
      * ```html
-     * <igx-snackbar (animationDone) = "animationDone(event: AnimationEvent)"></igx-snackbar>
+     * <igx-snackbar (animationDone) = "animationDone($event)"></igx-snackbar>
      * ```
      */
     @Output() public animationDone = new EventEmitter<AnimationEvent>();
