@@ -18,10 +18,10 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings } from '../../services';
 
 @Directive({
-    exportAs: 'overlay',
-    selector: '[igxOverlay]'
+    exportAs: 'toggle',
+    selector: '[igxToggle]'
 })
-export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
+export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     @Output()
     public onOpened = new EventEmitter();
@@ -111,6 +111,9 @@ export class IgxOverlayDirective implements IToggleView, OnInit, OnDestroy {
         if (this.navigationService && this.id) {
             this.navigationService.remove(this.id);
         }
+        if (!this.collapsed) {
+            this.overlayService.hide(this.id);
+        }
     }
 
     private overlayClosed = () => {
@@ -174,8 +177,8 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     }
 }
 @NgModule({
-    declarations: [IgxOverlayDirective, IgxToggleActionDirective],
-    exports: [IgxOverlayDirective, IgxToggleActionDirective],
+    declarations: [IgxToggleDirective, IgxToggleActionDirective],
+    exports: [IgxToggleDirective, IgxToggleActionDirective],
     providers: [IgxNavigationService]
 })
 export class IgxToggleModule { }

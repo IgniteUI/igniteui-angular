@@ -36,7 +36,7 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
         super.position(contentElement, size);
         const checkIfMoveHorizontal = (elem: HTMLElement) => {
             const leftBound = elem.offsetLeft;
-            const rightBound = elem.offsetLeft + elem.clientWidth;
+            const rightBound = elem.offsetLeft + elem.lastElementChild.clientWidth;
             let newPosition;
             switch (this.settings.horizontalDirection) {
                 case HorizontalAlignment.Left:
@@ -57,7 +57,7 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
         };
         const checkIfMoveVertical = (elem: HTMLElement) => {
             const topBound = elem.offsetTop;
-            const bottomBound = elem.offsetTop + elem.clientHeight;
+            const bottomBound = elem.offsetTop + elem.lastElementChild.clientHeight;
             let newPosition;
             switch (this.settings.verticalDirection) {
                 case VerticalAlignment.Top:
