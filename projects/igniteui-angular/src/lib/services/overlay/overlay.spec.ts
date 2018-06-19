@@ -500,17 +500,17 @@ describe('igxOverlay', () => {
         const expectedTopForPoint: Array<string> = ['240px', '270px', '300px'];  // top/middle/bottom/
         const expectedLeftForPoint: Array<string> = ['240px', '270px', '300px']; // left/center/right/
 
-            const size = {width: 60, height: 60};
-            const compElement = document.createElement('div');
-            compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
-            const contentWrapper = document.createElement('div');
-            contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
-            contentWrapper.classList.add('contentWrapper');
-            contentWrapper.appendChild(compElement);
-            document.body.appendChild(contentWrapper);
+        const size = {width: 60, height: 60};
+        const compElement = document.createElement('div');
+        compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+        const contentWrapper = document.createElement('div');
+        contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
+        contentWrapper.classList.add('contentWrapper');
+        contentWrapper.appendChild(compElement);
+        document.body.appendChild(contentWrapper);
 
-            const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-            const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+        const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+        const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
             fixture.detectChanges();
             for (let i = 0; i < horAl.length ; i++) {
@@ -525,14 +525,62 @@ describe('igxOverlay', () => {
             verticalStartPoint: VerticalAlignment.Top
         };
 
-                    const strategy = new ConnectedPositioningStrategy(positionSettings2);
-                    strategy.position(compElement, contentWrapper, size);
-                    fixture.detectChanges();
-                    expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
-                    expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
-                 }
+                const strategy = new ConnectedPositioningStrategy(positionSettings2);
+                strategy.position(compElement, contentWrapper, size);
+                fixture.detectChanges();
+                expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
+                expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
+                }
+        }
+    });
+
+    fit('Connected strategy position method. Position component based on Element', () => {
+        const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+        fixture.detectChanges();
+        // for a Point(300,300);
+        const expectedTopForPoint: Array<number> = [240, 270, 300];  // top/middle/bottom/
+        const expectedLeftForPoint: Array<number> = [240, 270, 300]; // left/center/right/
+        const expectedTopStartingPoint: Array<number> = [300, 330, 360]; // top/middle/bottom/
+        const expectedLeftStartingPoint: Array<number> = [300, 350, 400]; // left/center/right/
+
+        const size = {width: 60, height: 60};
+        const compElement = document.createElement('div');
+        compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
+        const contentWrapper = document.createElement('div');
+        contentWrapper.setAttribute('style', 'width:80px; height:80px; color:gray;');
+        contentWrapper.classList.add('contentWrapper');
+        contentWrapper.appendChild(compElement);
+        document.body.appendChild(contentWrapper);
+
+        const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+        const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+        const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
+
+        fixture.detectChanges();
+        // loop trough and test all possible combinations (count 81) for StartPoint and Direction.
+        for (let lsp = 0; lsp < horAl.length; lsp++) {
+            for (let tsp = 0; tsp < verAl.length; tsp++) {
+                for (let i = 0; i < horAl.length ; i++) {
+                    for (let j = 0; j < verAl.length; j++) {
+                        // start Point is static Top/Left at 300/300
+                        const positionSettings2 = {
+                            target: targetEl,
+                            horizontalDirection: HorizontalAlignment[horAl[i]],
+                            verticalDirection: VerticalAlignment[verAl[j]],
+                            element: null,
+                            horizontalStartPoint: HorizontalAlignment[horAl[lsp]],
+                            verticalStartPoint: VerticalAlignment[verAl[tsp]],
+                        };
+                        const strategy = new ConnectedPositioningStrategy(positionSettings2);
+                        strategy.position(compElement, contentWrapper, size);
+                        fixture.detectChanges();
+                        expect(contentWrapper.style.top).toBe((expectedTopForPoint[j] + 30 * tsp) + 'px');
+                        expect(contentWrapper.style.left).toBe((expectedLeftForPoint[i] + 50 * lsp) + 'px');
+                    }
+                }
             }
-        });
+        }
+    });
 
 
     // 1.3 AutoPosition (fit the shown component into the visible window.)
@@ -649,7 +697,7 @@ describe('igxOverlay', () => {
             expect(wrapperTop).toEqual(buttonTop);
             expect(wrapperLeft).toEqual(buttonLeft);
         });
-    });
+        });
 
     it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + LEFT', () => {
         const fix = TestBed.overrideComponent(DownRightButtonComponent, {
@@ -1013,11 +1061,33 @@ export class DownRightButtonComponent {
         });
     }
 }
+@Component({
+    template: `<button class='300_button' #button (click)=\'click($event)\'>Show Overlay</button>`,
+    styles: [`button {
+        position: absolute;
+        top: 300px;
+        left: 300px;
+        width: 100px;
+        height: 60px;
+        border: 0px;
+    }`]
+})
+export class TopLeftOffsetComponent {
+
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+
+    @ViewChild('button') buttonElement: ElementRef;
+    click(event) {
+        const positionStrategy = new ConnectedPositioningStrategy();
+        this.overlay.show(SimpleDynamicComponent);
+    }
+}
 
 const DYNAMIC_COMPONENTS = [
     EmptyPageComponent,
     SimpleDynamicComponent,
-    DownRightButtonComponent
+    DownRightButtonComponent,
+    TopLeftOffsetComponent
 ];
 
 const DIRECTIVE_COMPONENTS = [
