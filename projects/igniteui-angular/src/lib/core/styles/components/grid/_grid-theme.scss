@@ -329,6 +329,10 @@
         igx-display-container {
             height: 0;
         }
+
+        igx-horizontal-virtual-helper {
+            height: 100%;
+        }
     }
 
     %grid-row {
