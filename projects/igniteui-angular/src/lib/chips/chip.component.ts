@@ -66,6 +66,10 @@ export class IgxChipComponent implements AfterViewInit {
         }
     }
 
+    @HostBinding('class.igx-chip--disabled')
+    @Input()
+    public disabled = false;
+
     @Input()
     public get displayDensity(): DisplayDensity | string {
         return this._displayDensity;
