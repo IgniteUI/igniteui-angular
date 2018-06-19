@@ -401,8 +401,31 @@ describe('igxOverlay', () => {
         // TO DO
     });
 
-    xit('igx-overlay covers the whole window 100% width and height.', () => {
-        // TO DO
+    it('igx-overlay covers the whole window 100% width and height', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new GlobalPositionStrategy(),
+            scrollStrategy: new NoOpScrollStrategy(),
+            modal: false,
+            closeOnOutsideClick: false
+        };
+        const positionSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            target: fixture.componentInstance.buttonElement.nativeElement,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Top
+        };
+        overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
+            const body = document.getElementsByTagName('body')[0];
+            expect(wrapper.clientHeight).toEqual(body.clientHeight);
+            expect(wrapper.clientWidth).toEqual(body.clientWidth);
+        });
     });
 
     it('The shown component is inside the igx-overlay wrapper as a content last child.', fakeAsync(() => {
