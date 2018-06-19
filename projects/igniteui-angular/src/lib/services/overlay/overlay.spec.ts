@@ -5,16 +5,15 @@ import {
     NgModule,
     ViewChild
 } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { AnimationBuilder, style } from '@angular/animations';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
 import { IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point } from './utilities';
-import { IScrollStrategy } from './scroll/IScrollStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 
 function clearOverlay() {
@@ -26,9 +25,8 @@ function clearOverlay() {
 describe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
-            imports: [IgxToggleModule, DynamicModule],
-            declarations: DIRECTIVE_COMPONENTS,
-            providers: [IgxOverlayService, AnimationBuilder],
+            imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
+            declarations: DIRECTIVE_COMPONENTS
         }).compileComponents();
     });
 
@@ -125,8 +123,6 @@ describe('igxOverlay', () => {
     });
 
     xit('Unit - Should show and hide component via directive', () => {
-        // tslint:disable-next-line:no-debugger
-        debugger;
         const fixture = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
         fixture.detectChanges();
         fixture.componentInstance.show();
@@ -149,7 +145,28 @@ describe('igxOverlay', () => {
         });
     });
 
-    it('Unit - should properly emit events', () => {
+    it('Unit - OVERLAY SERVICE should properly emit events', fakeAsync(() => {
+        const fix = TestBed.createComponent(EmptyPageComponent);
+        fix.detectChanges();
+        const overlayInstance = fix.componentInstance.overlay;
+        spyOn(overlayInstance.onClosed, 'emit').and.callThrough();
+        spyOn(overlayInstance.onClosing, 'emit').and.callThrough();
+        spyOn(overlayInstance.onOpened, 'emit').and.callThrough();
+        spyOn(overlayInstance.onOpening, 'emit').and.callThrough();
+
+        overlayInstance.show(SimpleDynamicComponent, 'id_1');
+        expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
+
+        tick();
+        expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
+        overlayInstance.hide('id_1');
+        expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
+
+        tick();
+        expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
+    }));
+
+    it('Unit - should properly emit events', fakeAsync(() => {
         const fix = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
         fix.detectChanges();
         spyOn(fix.componentInstance.overlay.onClosing, 'emit').and.callThrough();
@@ -157,41 +174,25 @@ describe('igxOverlay', () => {
         spyOn(fix.componentInstance.overlay.onOpening, 'emit').and.callThrough();
         spyOn(fix.componentInstance.overlay.onOpened, 'emit').and.callThrough();
         fix.componentInstance.show();
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(0);
-            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(0);
-            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(0);
-            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(0);
+        expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(0);
+        tick();
+        expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(0);
 
-            fix.componentInstance.hide();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(0);
-            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(0);
-            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(0);
-            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(0);
+        fix.componentInstance.hide();
+        expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(0);
+        tick();
+        expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(0);
 
-            fix.componentInstance.overlay.open(true);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(0);
-            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(0);
-            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
+        fix.componentInstance.overlay.open(true);
+        expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
+        tick();
+        expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
 
-            fix.componentInstance.overlay.close(true);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
-        });
-    });
+        fix.componentInstance.overlay.close(true);
+        expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+        tick();
+        expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(1);
+    }));
 
     xit('Unit - Should properly call position method - GlobalPosition', () => {
 
@@ -216,9 +217,9 @@ describe('igxOverlay', () => {
         spyOn(autoStrat1, 'getViewPort').and.returnValue(jasmine.createSpyObj('obj', ['left', 'top', 'right', 'bottom']));
         spyOn(ConnectedPositioningStrategy.prototype, 'position');
 
-        autoStrat1.position(mockItem, mockItem, null, null);
+        autoStrat1.position(mockItem.parentElement, null, null);
         expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(1);
-        expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(mockItem, mockItem, null);
+        expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledWith(mockItem.parentElement, null);
         expect(autoStrat1.getViewPort).toHaveBeenCalledWith(null);
         expect(autoStrat1.getViewPort).toHaveBeenCalledTimes(1);
 
@@ -232,7 +233,7 @@ describe('igxOverlay', () => {
         const autoStrat2 = new AutoPositionStrategy(mockPositioningSettings2);
         spyOn(autoStrat2, 'getViewPort').and.returnValue(jasmine.createSpyObj('obj', ['left', 'top', 'right', 'bottom']));
 
-        autoStrat2.position(mockItem, mockItem, null, null);
+        autoStrat2.position(mockItem.parentElement, null, null);
         expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
         expect(autoStrat2.getViewPort).toHaveBeenCalledWith(null);
         expect(autoStrat2.getViewPort).toHaveBeenCalledTimes(1);
@@ -247,7 +248,7 @@ describe('igxOverlay', () => {
         const autoStrat3 = new AutoPositionStrategy(mockPositioningSettings3);
         spyOn(autoStrat3, 'getViewPort').and.returnValue(jasmine.createSpyObj('obj', ['left', 'top', 'right', 'bottom']));
 
-        autoStrat3.position(mockItem, mockItem, null, null);
+        autoStrat3.position(mockItem.parentElement, null, null);
         expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(3);
         expect(autoStrat3.getViewPort).toHaveBeenCalledWith(null);
         expect(autoStrat3.getViewPort).toHaveBeenCalledTimes(1);
@@ -500,7 +501,7 @@ describe('igxOverlay', () => {
         const expectedTopForPoint: Array<string> = ['240px', '270px', '300px'];  // top/middle/bottom/
         const expectedLeftForPoint: Array<string> = ['240px', '270px', '300px']; // left/center/right/
 
-        const size = {width: 60, height: 60};
+        const size = { width: 60, height: 60 };
         const compElement = document.createElement('div');
         compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
         const contentWrapper = document.createElement('div');
@@ -512,29 +513,29 @@ describe('igxOverlay', () => {
         const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
         const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
-            fixture.detectChanges();
-            for (let i = 0; i < horAl.length ; i++) {
-                for (let j = 0; j < verAl.length; j++) {
-                    // start Point is static Top/Left at 300/300
-                    const positionSettings2 = {
-                        target: new Point(300, 300),
-                        horizontalDirection: HorizontalAlignment[horAl[i]],
-                        verticalDirection: VerticalAlignment[verAl[j]],
-                        element: null,
-            horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Top
-        };
+        fixture.detectChanges();
+        for (let i = 0; i < horAl.length; i++) {
+            for (let j = 0; j < verAl.length; j++) {
+                // start Point is static Top/Left at 300/300
+                const positionSettings2 = {
+                    target: new Point(300, 300),
+                    horizontalDirection: HorizontalAlignment[horAl[i]],
+                    verticalDirection: VerticalAlignment[verAl[j]],
+                    element: null,
+                    horizontalStartPoint: HorizontalAlignment.Left,
+                    verticalStartPoint: VerticalAlignment.Top
+                };
 
                 const strategy = new ConnectedPositioningStrategy(positionSettings2);
-                strategy.position(compElement, contentWrapper, size);
+                strategy.position(compElement, size);
                 fixture.detectChanges();
                 expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
                 expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
-                }
+            }
         }
     });
 
-    fit('Connected strategy position method. Position component based on Element', () => {
+    it('Connected strategy position method. Position component based on Element', () => {
         const fixture = TestBed.createComponent(TopLeftOffsetComponent);
         fixture.detectChanges();
         // for a Point(300,300);
@@ -543,7 +544,7 @@ describe('igxOverlay', () => {
         const expectedTopStartingPoint: Array<number> = [300, 330, 360]; // top/middle/bottom/
         const expectedLeftStartingPoint: Array<number> = [300, 350, 400]; // left/center/right/
 
-        const size = {width: 60, height: 60};
+        const size = { width: 60, height: 60 };
         const compElement = document.createElement('div');
         compElement.setAttribute('style', 'width:60px; height:60px; color:green; border: 1px solid blue;');
         const contentWrapper = document.createElement('div');
@@ -560,7 +561,7 @@ describe('igxOverlay', () => {
         // loop trough and test all possible combinations (count 81) for StartPoint and Direction.
         for (let lsp = 0; lsp < horAl.length; lsp++) {
             for (let tsp = 0; tsp < verAl.length; tsp++) {
-                for (let i = 0; i < horAl.length ; i++) {
+                for (let i = 0; i < horAl.length; i++) {
                     for (let j = 0; j < verAl.length; j++) {
                         // start Point is static Top/Left at 300/300
                         const positionSettings2 = {
@@ -572,7 +573,7 @@ describe('igxOverlay', () => {
                             verticalStartPoint: VerticalAlignment[verAl[tsp]],
                         };
                         const strategy = new ConnectedPositioningStrategy(positionSettings2);
-                        strategy.position(compElement, contentWrapper, size);
+                        strategy.position(compElement, size);
                         fixture.detectChanges();
                         expect(contentWrapper.style.top).toBe((expectedTopForPoint[j] + 30 * tsp) + 'px');
                         expect(contentWrapper.style.left).toBe((expectedLeftForPoint[i] + 50 * lsp) + 'px');
@@ -697,7 +698,7 @@ describe('igxOverlay', () => {
             expect(wrapperTop).toEqual(buttonTop);
             expect(wrapperLeft).toEqual(buttonLeft);
         });
-        });
+    });
 
     it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + LEFT', () => {
         const fix = TestBed.overrideComponent(DownRightButtonComponent, {
