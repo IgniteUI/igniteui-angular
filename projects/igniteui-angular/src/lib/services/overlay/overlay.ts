@@ -105,17 +105,17 @@ export class IgxOverlayService {
         const overlay = this.getOverlayById(id);
         if (!overlay) {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
+            return;
         }
 
         overlay.settings.scrollStrategy.detach();
-
         const animationBuilder = this.builder.build(overlay.settings.positionStrategy.settings.closeAnimation);
         const animationPlayer = animationBuilder.create(overlay.elementRef.nativeElement);
         animationPlayer.onDone(() => {
             animationPlayer.reset();
             const child: HTMLElement = overlay.elementRef.nativeElement;
             if (!this.OverlayElement.contains(child)) {
-                console.error('Component with id:' + id + 'is already removed!');
+                console.error('Component with id:' + id + ' is already removed!');
                 return;
             }
 
@@ -147,6 +147,7 @@ export class IgxOverlayService {
         const overlay = this.getOverlayById(id);
         if (!overlay) {
             console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
+            return;
         }
 
         overlay.settings.positionStrategy.position(
@@ -189,7 +190,7 @@ export class IgxOverlayService {
 
         this._overlays.push({
             id: id,
-            elementRef: dynamicComponent.location,
+            elementRef: <ElementRef>{nativeElement: element},
             componentRef: dynamicComponent,
             settings: overlaySettings
         });

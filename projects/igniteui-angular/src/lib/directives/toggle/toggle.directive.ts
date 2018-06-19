@@ -86,7 +86,11 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             this.onClosing.emit();
         }
 
-        this.overlayService.hide(this._overlayId);
+        if (this.id !== undefined) {
+            this.overlayService.hide(this._overlayId);
+        } else {
+            this.collapsed = true;
+        }
 
         if (fireEvents) {
             this.onClosed.emit();
@@ -106,6 +110,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public ngOnDestroy() {
         if (this.navigationService && this.id) {
             this.navigationService.remove(this.id);
+        }
+        if (!this.collapsed) {
+            this.overlayService.hide(this.id);
         }
     }
 
