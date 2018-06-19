@@ -12,11 +12,15 @@
 
     @extend %column-hiding-display !optional;
 
-    @include e(title) {
+    @include e(header) {
+        @extend %column-hiding-header !optional;
+    }
+
+    @include e(header-title) {
         @extend %column-hiding-title !optional;
     }
 
-    @include e(input) {
+    @include e(header-input) {
         @extend %column-hiding-input !optional;
     }
 

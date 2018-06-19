@@ -1,13 +1,14 @@
+<div class="igx-column-hiding__header">
+    <h4 class="igx-column-hiding__header-title" *ngIf="title">{{ title }}</h4>
 
-<h4 class="igx-column-hiding__title" *ngIf="title">{{ title }}</h4>
-
-<igx-input-group class="igx-column-hiding__input">
-    <input igxInput
-        type="text"
-        [(ngModel)]="filterCriteria"
-        [placeholder]="filterColumnsPrompt"
-        autocomplete="off" />
-</igx-input-group>
+    <igx-input-group class="igx-column-hiding__header-input">
+        <input igxInput
+            type="text"
+            [(ngModel)]="filterCriteria"
+            [placeholder]="filterColumnsPrompt"
+            autocomplete="off" />
+    </igx-input-group>
+</div>
 
 <div class="igx-column-hiding__columns"
     [style.max-height]="columnsAreaMaxHeight">

@@ -129,7 +129,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
     public hideAllText = 'Hide All';
 
     @Input()
-    public columnsAreaMaxHeight = '500px';
+    public columnsAreaMaxHeight = '100%';
 
     @Output()
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();

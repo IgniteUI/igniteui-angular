@@ -71,11 +71,13 @@
     %column-hiding-columns {
         display: flex;
         flex-flow: column nowrap;
+        overflow-y: auto;
     }
 
     %column-hiding-item {
         padding: rem(16px);
         font-weight: 600;
+        min-height: rem(52px);
     }
 
     %column-hiding-buttons {
