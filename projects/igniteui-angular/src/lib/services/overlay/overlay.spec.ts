@@ -74,10 +74,10 @@ describe('igxOverlay', () => {
         fixture.detectChanges();
         let overlayDiv: HTMLElement;
 
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent);
         tick();
 
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_2');
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent);
         tick();
         overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
         expect(overlayDiv).toBeDefined();
@@ -86,29 +86,31 @@ describe('igxOverlay', () => {
         expect(overlayDiv.children[0].localName).toEqual('div');
         expect(overlayDiv.children[1].localName).toEqual('div');
 
-        fixture.componentInstance.overlay.hide('id_1');
+        fixture.componentInstance.overlay.hide('0');
         tick();
         overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
         expect(overlayDiv).toBeDefined();
+        expect(Array.from(overlayDiv.classList).indexOf(CLASS_OVERLAY_MAIN) > -1).toBeTruthy();
         // expect(overlayDiv.style.visibility).toEqual('visible');
         expect(overlayDiv.children.length).toEqual(1);
         expect(overlayDiv.children[0].localName).toEqual('div');
 
-        fixture.componentInstance.overlay.hide('id_2');
+        fixture.componentInstance.overlay.hide('1');
         tick();
         overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
         expect(overlayDiv).toBeDefined();
+        // Removing the last element in the overlay container also removes the container;
+        expect(Array.from(overlayDiv.classList).indexOf(CLASS_OVERLAY_MAIN) > -1).toBeFalsy();
         // Does not set visibility:hidden, just empties the container
         // expect(overlayDiv.style.visibility).toEqual('hidden');
-        expect(overlayDiv.children.length).toEqual(0);
     }));
 
     xit('Unit - HideAll() should hide all components and overlay', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         let overlayDiv: HTMLElement;
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_2');
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent);
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent);
         tick();
         fixture.detectChanges();
         overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
@@ -155,12 +157,12 @@ describe('igxOverlay', () => {
         spyOn(overlayInstance.onOpened, 'emit').and.callThrough();
         spyOn(overlayInstance.onOpening, 'emit').and.callThrough();
 
-        overlayInstance.show(SimpleDynamicComponent, 'id_1');
+        overlayInstance.show(SimpleDynamicComponent);
         expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
 
         tick();
         expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
-        overlayInstance.hide('id_1');
+        overlayInstance.hide('0');
         expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
 
         tick();
@@ -301,7 +303,7 @@ describe('igxOverlay', () => {
             modal: false,
             closeOnOutsideClick: false
         };
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
         tick();
         const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
         const content = overlayWrapper.firstChild;
@@ -339,7 +341,7 @@ describe('igxOverlay', () => {
             for (let j = 0; j < verAl.length; j++) {
                 positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
                 overlaySettings.positionStrategy = new GlobalPositionStrategy(positionSettings);
-                fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+                fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
                 tick();
 
                 const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.lastChild;
@@ -371,7 +373,7 @@ describe('igxOverlay', () => {
         fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
-            fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
+            fixture.componentInstance.overlay.show(SimpleDynamicComponent);
             tick();
             fixture.detectChanges();
             // overlay container IS NOT a child of the debugElement (attached to body, not app-root)
@@ -389,7 +391,7 @@ describe('igxOverlay', () => {
             modal: false,
             closeOnOutsideClick: false
         };
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
         tick();
         fixture.detectChanges();
         const content = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
@@ -418,7 +420,7 @@ describe('igxOverlay', () => {
             verticalStartPoint: VerticalAlignment.Top
         };
         overlaySettings.positionStrategy = new ConnectedPositioningStrategy(positionSettings);
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
         fixture.whenStable().then(() => {
             fixture.detectChanges();
             const wrapper = fixture.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
@@ -439,7 +441,7 @@ describe('igxOverlay', () => {
         };
         overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
 
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
         tick();
         const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
         const content = overlayWrapper.firstChild;
@@ -546,7 +548,7 @@ describe('igxOverlay', () => {
             closeOnOutsideClick: false
         };
 
-        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
         tick();
         // overlay container IS NOT a child of the debugElement (attached to body, not app-root)
         const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
@@ -663,7 +665,7 @@ describe('igxOverlay', () => {
             verticalStartPoint: VerticalAlignment.Top
         };
         overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-        fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
         fix.whenStable().then(() => {
             fix.detectChanges();
             const wrapper = fix.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
@@ -689,7 +691,7 @@ describe('igxOverlay', () => {
             verticalStartPoint: VerticalAlignment.Top
         };
         overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-        fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
         fix.whenStable().then(() => {
             fix.detectChanges();
             const wrapper = fix.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
@@ -716,7 +718,7 @@ describe('igxOverlay', () => {
             verticalStartPoint: VerticalAlignment.Top
         };
         overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-        fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
+        fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
         fix.whenStable().then(() => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
@@ -1084,7 +1086,7 @@ export class EmptyPageComponent {
     @ViewChild('button') buttonElement: ElementRef;
 
     click(event) {
-        this.overlay.show(SimpleDynamicComponent, 'id_1');
+        this.overlay.show(SimpleDynamicComponent);
     }
 }
 
@@ -1115,7 +1117,7 @@ export class DownRightButtonComponent {
     };
     click(event) {
         const positionStrategy = new AutoPositionStrategy(this.ButtonPositioningSettings);
-        this.overlay.show(SimpleDynamicComponent, 'id_1', {
+        this.overlay.show(SimpleDynamicComponent, {
             positionStrategy: positionStrategy,
             scrollStrategy: new NoOpScrollStrategy(),
             modal: false,
