@@ -38,120 +38,113 @@ describe('igxOverlay', () => {
         clearOverlay();
     });
 
-    xit('Unit - OverlayElement should return a div attached to Document\'s body', () => {
+    afterAll(async () => {
+        clearOverlay();
+    });
+
+    it('Unit - OverlayElement should return a div attached to Document\'s body', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
         fixture.componentInstance.buttonElement.nativeElement.click();
-        fixture.whenStable().then(() => {
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('visible');
-            expect(overlayDiv.classList.contains('overlay')).toBeTruthy();
-            fixture.componentInstance.overlay.hideAll();
-        });
-    });
+        tick();
+        const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        // Does not have visibility property (currently)
+        // expect(overlayDiv.style.visibility).toEqual('visible');
+        expect(overlayDiv.classList.contains('igx-overlay')).toBeTruthy();
+    }));
 
-    xit('Unit - Should show component passed to overlay', () => {
+    it('Unit - Should show component passed to overlay', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
         fixture.componentInstance.buttonElement.nativeElement.click();
-        fixture.whenStable().then(() => {
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('visible');
-            expect(overlayDiv.children.length).toEqual(1);
-            expect(overlayDiv.children[0].localName).toEqual('div');
+        tick();
+        const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        // Does not have visibility property (currently)
+        // expect(overlayDiv.style.visibility).toEqual('visible');
+        expect(overlayDiv.children.length).toEqual(1);
+        expect(overlayDiv.children[0].localName).toEqual('div');
+    }));
 
-            fixture.componentInstance.overlay.hideAll();
-        });
-    });
-
-    xit('Unit - Hide() should hide component and overlay', () => {
+    it('Unit - Hide() should hide component and overlay', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
+        let overlayDiv: HTMLElement;
 
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
+        tick();
+
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_2');
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('visible');
-            expect(overlayDiv.children.length).toEqual(2);
-            expect(overlayDiv.children[0].localName).toEqual('div');
-            expect(overlayDiv.children[1].localName).toEqual('div');
+        tick();
+        overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        // expect(overlayDiv.style.visibility).toEqual('visible');
+        expect(overlayDiv.children.length).toEqual(2);
+        expect(overlayDiv.children[0].localName).toEqual('div');
+        expect(overlayDiv.children[1].localName).toEqual('div');
 
-            fixture.componentInstance.overlay.hide('id_1');
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('visible');
-            expect(overlayDiv.children.length).toEqual(1);
-            expect(overlayDiv.children[0].localName).toEqual('div');
+        fixture.componentInstance.overlay.hide('id_1');
+        tick();
+        overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        // expect(overlayDiv.style.visibility).toEqual('visible');
+        expect(overlayDiv.children.length).toEqual(1);
+        expect(overlayDiv.children[0].localName).toEqual('div');
 
-            fixture.componentInstance.overlay.hide('id_2');
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('hidden');
-            expect(overlayDiv.children.length).toEqual(0);
-        });
+        fixture.componentInstance.overlay.hide('id_2');
+        tick();
+        overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        // Does not set visibility:hidden, just empties the container
+        // expect(overlayDiv.style.visibility).toEqual('hidden');
+        expect(overlayDiv.children.length).toEqual(0);
+    }));
 
-    });
-
-    xit('Unit - HideAll() should hide all components and overlay', () => {
+    xit('Unit - HideAll() should hide all components and overlay', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
+        let overlayDiv: HTMLElement;
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_2');
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('visible');
-            expect(overlayDiv.children.length).toEqual(2);
-            expect(overlayDiv.children[0].localName).toEqual('div');
-            expect(overlayDiv.children[1].localName).toEqual('div');
+        tick();
+        fixture.detectChanges();
+        overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        expect(overlayDiv.style.visibility).toEqual('visible');
+        expect(overlayDiv.children.length).toEqual(2);
+        expect(overlayDiv.children[0].localName).toEqual('div');
+        expect(overlayDiv.children[1].localName).toEqual('div');
 
-            fixture.componentInstance.overlay.hideAll();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('hidden');
-            expect(overlayDiv.children.length).toEqual(0);
-        });
-    });
+        fixture.componentInstance.overlay.hideAll();
+        tick();
+        overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        expect(overlayDiv.style.visibility).toEqual('hidden');
+        expect(overlayDiv.children.length).toEqual(0);
+    }));
 
-    xit('Unit - Should show and hide component via directive', () => {
+    it('Unit - Should show and hide component via directive', fakeAsync(() => {
         const fixture = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
         fixture.detectChanges();
+        let overlayDiv: HTMLElement;
         fixture.componentInstance.show();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('visible');
-            expect(overlayDiv.children.length).toEqual(1);
-            expect(overlayDiv.children[0].localName).toEqual('div');
+        tick();
+        overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        // expect(overlayDiv.style.visibility).toEqual('visible');
+        expect(overlayDiv.children.length).toEqual(1);
+        expect(overlayDiv.children[0].localName).toEqual('div');
 
-            fixture.componentInstance.hide();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
-            expect(overlayDiv).toBeDefined();
-            expect(overlayDiv.style.visibility).toEqual('hidden');
-            expect(overlayDiv.children.length).toEqual(0);
-        });
-    });
+        fixture.componentInstance.hide();
+        tick();
+        overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
+        expect(overlayDiv).toBeDefined();
+        // expect(overlayDiv.style.visibility).toEqual('hidden');
+        expect(overlayDiv.children.length).toEqual(0);
+    }));
 
     it('Unit - OVERLAY SERVICE should properly emit events', fakeAsync(() => {
         const fix = TestBed.createComponent(EmptyPageComponent);
@@ -275,16 +268,13 @@ describe('igxOverlay', () => {
             }
         };
         spyOn(document, 'documentElement').and.returnValue(1);
-        spyOnProperty<any>(window, 'innerWidth').and.returnValue(1);
-        spyOnProperty<any>(window, 'innerHeight').and.returnValue(1);
-        // autoStrat1.getViewPort(docSpy);
         expect(autoStrat1.getViewPort(docSpy)).toEqual({
             top: -1920,
             left: -768,
-            bottom: -1919,
-            right: -767,
-            height: 1,
-            width: 1
+            bottom: -1920 + window.innerHeight,
+            right: -768 + + window.innerWidth,
+            height: window.innerHeight,
+            width: window.innerWidth
         });
     });
 
@@ -302,7 +292,7 @@ describe('igxOverlay', () => {
         // TO DO
     });
 
-    it('The shown component is inside the igx-overlay wrapper as a content last child.', () => {
+    it('The shown component is inside the igx-overlay wrapper as a content last child.', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         const overlaySettings: OverlaySettings = {
@@ -312,19 +302,17 @@ describe('igxOverlay', () => {
             closeOnOutsideClick: false
         };
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-            const content = overlayWrapper.firstChild;
-            const componentEl = content.lastChild;
+        tick();
+        const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+        const content = overlayWrapper.firstChild;
+        const componentEl = content.lastChild;
 
-            expect(overlayWrapper.localName).toEqual('div');
-            expect(overlayWrapper.firstChild.localName).toEqual('div');
-            expect(componentEl.localName === 'div').toBeTruthy();
-        });
-    });
+        expect(overlayWrapper.localName).toEqual('div');
+        expect(overlayWrapper.firstChild.localName).toEqual('div');
+        expect(componentEl.localName === 'div').toBeTruthy();
+    }));
 
-    xit('The overlay wrapper div element, have the corresponding inline css applied for each alignment ', () => {
+    it('The overlay wrapper div element, have the corresponding inline css applied for each alignment ', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
 
@@ -352,15 +340,14 @@ describe('igxOverlay', () => {
                 positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
                 overlaySettings.positionStrategy = new GlobalPositionStrategy(positionSettings);
                 fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
-                fixture.detectChanges();
+                tick();
 
                 const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.lastChild;
-                fixture.detectChanges();
                 expect(overlayWrapper.style.justifyContent).toBe(cssStyles[i]);
                 expect(overlayWrapper.style.alignItems).toBe(cssStyles[j]);
             }
         }
-    });
+    }));
 
     xit('The shown component is in the center of igx-overlay (visible window) - default.', () => {
         // TO DO
@@ -418,7 +405,7 @@ describe('igxOverlay', () => {
         // TO DO
     });
 
-    xit('The shown component is inside the igx-overlay wrapper as a content last child.', () => {
+    it('The shown component is inside the igx-overlay wrapper as a content last child.', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         const overlaySettings: OverlaySettings = {
@@ -430,16 +417,14 @@ describe('igxOverlay', () => {
         overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
 
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-            const content = overlayWrapper.firstChild;
-            const componentEl = content.lastChild;
-            expect(overlayWrapper.localName).toEqual('div');
-            expect(overlayWrapper.firstChild.localName).toEqual('div');
-            expect(componentEl.localName === 'ng-component').toBeTruthy();
-        });
-    });
+        tick();
+        const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+        const content = overlayWrapper.firstChild;
+        const componentEl = content.lastChild;
+        expect(overlayWrapper.localName).toEqual('div');
+        expect(overlayWrapper.firstChild.localName).toEqual('div');
+        expect(componentEl.localName === 'div').toBeTruthy();
+    }));
 
     xit('The shown component is positioned according to the options passed (base point/Left, Center, Right/Top, Middle, Bottom).', () => {
         // TO DO --> covered with position method tests.
