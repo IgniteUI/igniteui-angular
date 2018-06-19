@@ -30,7 +30,7 @@ export default function(): Rule {
                 ext = proj.schematics['@schematics/angular:component'].styleext || ext;
             }
             dir.visit((path, entry) => {
-                if (path.endsWith('.' + ext) && entry.content.indexOf(themeImport) !== -1) {
+                if (path.endsWith('.' + ext)) {
                     let content = entry.content.toString();
                     if (content.indexOf(themeImport) !== -1) {
                         content = content.replace(themeImport, newThemeImport);
