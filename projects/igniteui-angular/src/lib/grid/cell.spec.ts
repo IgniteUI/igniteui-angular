@@ -72,8 +72,9 @@ describe('IgxGrid - Cell component', () => {
             const currIndex = cell.visibleColumnIndex;
             const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
             const nextIndex = dir === 'ArrowRight' ? currIndex + 1 : currIndex - 1;
-            const nextCol = grid.visibleColumns[nextIndex];
-            const nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+            const visibleColumns = grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+            const nextCol = visibleColumns[nextIndex];
+            let nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
             const keyboardEvent = new KeyboardEvent('keydown', {
                 code: dir,
                 key: dir
@@ -85,22 +86,27 @@ describe('IgxGrid - Cell component', () => {
             // if index reached return
             if (currIndex === index) { if (cb) { cb(); } return; }
             // else call arrow up/down
-            cell.nativeElement.dispatchEvent(keyboardEvent);
+            // cell.nativeElement.dispatchEvent(keyboardEvent);
+            if (dir === 'ArrowRight') {
+                cell.onKeydownArrowRight(keyboardEvent);
+            } else {
+                cell.onKeydownArrowLeft(keyboardEvent);
+            }
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
             if (nextCell) {
+                nextCell.cdr.detectChanges();
                 setTimeout(() => {
-                    cell = grid.selectedCells[0];
-                    navigateHorizontallyToIndex(grid, cell, index, cb);
-                });
+                    navigateHorizontallyToIndex(grid, nextCell, index, cb);
+                }, 100);
             } else {
                 // else wait for chunk to load.
                 cell.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
                     next: () => {
                         grid.cdr.detectChanges();
-                        cell = grid.selectedCells[0];
-                        navigateHorizontallyToIndex(grid, cell, index, cb);
+                        nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+                        navigateHorizontallyToIndex(grid, nextCell, index, cb);
                     }
                 });
             }
@@ -595,6 +601,7 @@ describe('IgxGrid - Cell component', () => {
 
         grid.pinColumn('col1');
         grid.pinColumn('col3');
+        fix.detectChanges();
         const cell = grid.getCellByColumn(0, 'col1');
         const cbFunc = () => {
             expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(9);
@@ -616,16 +623,11 @@ describe('IgxGrid - Cell component', () => {
         const cell = grid.getCellByColumn(4, 'index');
         const cbFunc = () => {
             // verify first cell 100th row is selected.
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
             fix.detectChanges();
-            const cbFunc2 = () => {
-                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+            setTimeout(() => {
+                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
                 done();
-            };
-
-            // navigate back up to 0
-            navigateVerticallyToIndex(grid, fix.componentInstance.selectedCell, 0, cbFunc2);
-
+            }, 10);
         };
         // navigate down to 100th row.
         navigateVerticallyToIndex(grid, cell, 100, cbFunc);
@@ -772,7 +774,6 @@ describe('IgxGrid - Cell component', () => {
     it('When cell in edit mode and try to navigate the caret around the cell text the focus should remain.', async(() => {
         const fix = TestBed.createComponent(GridWithEditableColumnComponent);
         fix.detectChanges();
-
         // const firstCellOfColumn: DebugElement = fix.componentInstance.grid.columnList.first.cells[0];
         const CELL_CLASS_IN_EDIT_MODE = 'igx_grid__cell--edit';
         const firstCell: DebugElement = fix.debugElement.query(By.css(CELL_CSS_CLASS));
@@ -787,65 +788,59 @@ describe('IgxGrid - Cell component', () => {
         fix.whenStable().then(() => {
             fix.detectChanges();
             cellElem.dispatchEvent(new MouseEvent('dblclick'));
+            fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             fix.detectChanges();
-
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('ArrowRight', inputElem);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('ArrowLeft', inputElem);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
 
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
         }).then(() => {
             fix.detectChanges();
-
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('control.ArrowLeft', inputElem);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('control.ArrowRight', inputElem);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('ArrowUp', inputElem);
 
             return fix.whenStable();
