@@ -54,7 +54,8 @@
     $selected-chip-icon-hover-color: null,
     $selected-remove-icon-color: null,
     $selected-remove-icon-hover-color: null,
-    $chip-focus-border-color: null
+    $chip-focus-border-color: null,
+    $selected-chip-focus-border-color: null
 ) {
     $default-theme: (
         name: 'igx-chip',
@@ -73,12 +74,13 @@
         selected-chip-background: igx-color($palette, secondary),
         selected-chip-text-color: #fff,
         selected-chip-icon-color: #fff,
-        selected-chip-hover-background: igx-color($palette, secondary, 400),
+        selected-chip-hover-background: igx-color($palette, secondary, 300),
         selected-chip-text-hover-color: #fff,
         selected-chip-icon-hover-color: #fff,
         selected-remove-icon-color: #fff,
         selected-remove-icon-hover-color: #fff,
-        chip-focus-border-color: igx-color($palette, primary)
+        chip-focus-border-color: igx-color($palette, primary),
+        selected-chip-focus-border-color: igx-color($palette, secondary, 600)
     );
 
     @if not($text-color) and $chip-background{
@@ -206,7 +208,8 @@
         selected-chip-icon-hover-color: $selected-chip-icon-hover-color,
         selected-remove-icon-color: $selected-remove-icon-color,
         selected-remove-icon-hover-color: $selected-remove-icon-hover-color,
-        chip-focus-border-color: $chip-focus-border-color
+        chip-focus-border-color: $chip-focus-border-color,
+        selected-chip-focus-border-color: $selected-chip-focus-border-color,
     ));
 }
 
@@ -377,7 +380,7 @@
         }
 
         &:hover,
-        &:focus{
+        &:focus {
             background: --var($theme, 'selected-chip-hover-background');
 
             %igx-chip__text {
@@ -388,6 +391,10 @@
             %igx-button--icon {
                 color: --var($theme, 'selected-chip-icon-hover-color')
             }
+        }
+
+        &:focus {
+            border-color: --var($theme, 'selected-chip-focus-border-color');
         }
 
         %igx-icon-display,
