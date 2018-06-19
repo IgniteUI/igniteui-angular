@@ -45,6 +45,13 @@ let NEXT_ID = 0;
     templateUrl: 'toast.component.html'
 })
 export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
+    /**
+     * Gets the class name of the toast.
+     * ```typescript
+     * let className =  this.toast.CSS_CLASSES.IGX_TOAST_MIDDLE;
+     * ```
+     * @memberof IgxToastComponent
+     */
     public readonly CSS_CLASSES = {
         IGX_TOAST_BOTTOM: 'igx-toast--bottom',
         IGX_TOAST_MIDDLE: 'igx-toast--middle',
@@ -52,79 +59,158 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     };
 
     /**
-     * Identifier of the component
+     * Sets/gets the `id` of the toast.
+     * If not set, the `id` will have value `"igx-toast-0"`.
+     * ```html
+     * <igx-toast id = "my-first-toast"></igx-toast>
+     * ```
+     * ```typescript
+     * let toastId = this.toast.id;
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-toast-${NEXT_ID++}`;
 
     /**
-     * Event is thrown prior toast is shown
+     * Emits an event prior the toast is shown.
+     * Provides reference to the `IgxToastComponent` as event argument.
+     * ```html
+     * <igx-toast (onShowing) = "onShowing(toast: IgxToastComponent)"></igx-toast>
+     * ```
+     * @memberof IgxToastComponent
      */
     @Output()
     public onShowing = new EventEmitter<IgxToastComponent>();
 
     /**
-     * Event is shown when toast is shown
+     * Emits an event when the toast is shown.
+     * Provides reference to the `IgxToastComponent` as event argument.
+     * ```html
+     * <igx-toast (onShown) = "onShown(toast: IgxToastComponent)"></igx-toast>
+     * ```
+     * @memberof IgxToastComponent
      */
     @Output()
     public onShown = new EventEmitter<IgxToastComponent>();
 
     /**
-     * Event is thrown prior toast hidden
+     * Emits an event prior the toast is hidden.
+     * Provides reference to the `IgxToastComponent` as event argument.
+     * ```html
+     * <igx-toast (onHiding) = "onHiding(toast: IgxToastComponent)"></igx-toast>
+     * ```
+     * @memberof IgxToastComponent
      */
     @Output()
     public onHiding = new EventEmitter<IgxToastComponent>();
 
     /**
-     * Event is thrown when toast hidden
+     *  Emits an event when the toast is hidden.
+     *  Provides reference to the `IgxToastComponent` as event argument.
+     * ```html
+     * <igx-toast (onHidden) = "onHidden(toast: IgxToastComponent)"></igx-toast>
+     * ```
+     * @memberof IgxToastComponent
      */
     @Output()
     public onHidden = new EventEmitter<IgxToastComponent>();
-
+    /**
+     * Sets/gets the `role` attribute.
+     * If not set, `role` will have value `"alert"`.
+     * ```html
+     * <igx-toast [role] = "'notify'"></igx-toast>
+     * ```
+     * ```typescript
+     * let toastRole = this.toast.role;
+     * ```
+     * @memberof IgxToastComponent
+     */
     @Input()
     public role = 'alert';
     /**
-     * Sets if the IgxToast component will be hidden after shown
-     * Default value is true
+     * Sets/gets whether the toast will be hidden after the `displayTime` is over.
+     * Default value is `true`.
+     * ```html
+     * <igx-toast [autoHide] = "false"></igx-toast>
+     * ```
+     * ```typescript
+     * let autoHide = this.toast.autoHide;
+     * ```
+     * @memberof IgxToastComponent
      */
     @Input()
     public autoHide = true;
 
     /**
-     * The duration of time span in ms which the IgxToast component will be visible
+     * Sets/gets the duration of time span(in milliseconds) which the toast will be visible
      * after it is being shown.
-     * Default value is 4000
+     * Default value is `4000`.
+     * ```html
+     * <igx-toast [displayTime] = "2500"></igx-toast>
+     * ```
+     * ```typescript
+     * let displayTime = this.toast.displayTime;
+     * ```
+     * @memberof IgxToastComponent
      */
     @Input()
     public displayTime = 4000;
 
     /**
-     * The IgxToast component visual state state
+     * Enables/Disables the visibility of the toast.
+     * If not set, the `isVisible` attribute will have value `false`.
+     * ```html
+     * <igx-toast [isVisible] = "true"></igx-toast>
+     * ```
+     * ```typescript
+     * let isVisible = this.toast.isVisible;
+     * ```
+     * @memberof IgxToastComponent
      */
     @Input()
     public isVisible = false;
 
     /**
-     * The message that will be shown message by the IgxToast component
+     * Sets/gets the message that will be shown by the toast.
+     * ```html
+     * <igx-toast [message] = "Notification"></igx-toast>
+     * ```
+     * ```typescript
+     * let toastMessage = this.toast.message;
+     * ```
+     * @memberof IgxToastComponent
      */
     @Input()
     public message: string;
 
     /**
-     * Specifies the position of the IgxToast component. Possible options are IgxToastPosition.Top,
-     * IgxToastPosition.Middle, IgxToastPosition.Bottom
+     * Sets/gets the position of the toast.
+     * If not set, the `position` attribute will have value `IgxToastPosition.Bottom`.
+     * ```html
+     * <igx-toast [position] = "top"></igx-toast>
+     * ```
+     * ```typescript
+     * let toastPosition = this.toast.position;
+     * ```
+     * @memberof IgxToastComponent
      */
     @Input()
     public position: IgxToastPosition = IgxToastPosition.Bottom;
 
     /**
-     * Return the nativeElement of the component
+     * Gets the nativeElement of the toast.
+     * ```typescript
+     * let nativeElement = this.toast.element;
+     * ```
+     * @memberof IgxToastComponent
      */
     public get element() {
         return this.elementRef.nativeElement;
     }
-
+    /**
+     *@hidden
+     */
     private timeoutId;
 
     constructor(
@@ -132,8 +218,12 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         @Optional() private navService: IgxNavigationService) { }
 
     /**
-     * Shows the IgxToast component and hides it after some time span
-     * if autoHide is enabled
+     * Shows the toast and hides it after the `displayTime` is over
+     * if `autoHide` is enabled.
+     * ```typescript
+     * this.toast.show();
+     * ```
+     * @memberof IgxToastComponent
      */
     public show(): void {
         clearInterval(this.timeoutId);
@@ -150,7 +240,11 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * Hides the IgxToast component
+     * Hides the toast.
+     * ```typescript
+     * this.toast.hide();
+     * ```
+     * @memberof IgxToastComponent
      */
     public hide(): void {
         this.onHiding.emit(this);
@@ -162,6 +256,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Wraps @show() method due @IToggleView interface implementation.
+     * @hidden
      */
     public open() {
         this.show();
@@ -169,18 +264,29 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
 
     /**
      * Wraps @hide() method due @IToggleView interface implementation.
+     * @hidden
      */
     public close() {
         this.hide();
     }
 
     /**
-     * Invoke @close() or @open() method depending on the state of the component.
+     * Toggles the visible state of the toast.
+     * ```typescript
+     * this.toast.toggle();
+     * ```
+     * @memberof IgxToastComponent
      */
     public toggle() {
         this.isVisible ? this.close() : this.open();
     }
-
+    /**
+     * Sets/gets the class name of the toast based on the `position` value.
+     * ```typescript
+     * let className =  this.toast.mapPositionToClassName();
+     * ```
+     * @memberof IgxToastComponent
+     */
     public mapPositionToClassName(): any {
         if (this.position === IgxToastPosition.Top) {
             return this.CSS_CLASSES.IGX_TOAST_TOP;
@@ -194,13 +300,17 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
             return this.CSS_CLASSES.IGX_TOAST_BOTTOM;
         }
     }
-
+    /**
+     *@hidden
+     */
     public ngOnInit() {
         if (this.navService && this.id) {
             this.navService.add(this.id, this);
         }
     }
-
+    /**
+     *@hidden
+     */
     public ngOnDestroy() {
         if (this.navService && this.id) {
             this.navService.remove(this.id);
@@ -220,7 +330,9 @@ export enum IgxToastPosition {
     Middle,
     Top
 }
-
+/**
+ * The IgxToastModule provides the {@link IgxToastComponent} inside your application.
+ */
 @NgModule({
     declarations: [IgxToastComponent],
     exports: [IgxToastComponent],
