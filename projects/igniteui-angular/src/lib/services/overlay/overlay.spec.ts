@@ -5,7 +5,7 @@ import {
     NgModule,
     ViewChild
 } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
@@ -291,8 +291,20 @@ describe('igxOverlay', () => {
         // TO DO
     });
 
-    xit('igx-overlay covers the whole window 100% width and height', () => {
-        // TO DO
+    it('igx-overlay covers the whole window 100% width and height', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.buttonElement.nativeElement.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild as HTMLElement;
+            const overlayRect = overlayWrapper.getBoundingClientRect();
+            const windowRect = document.body.getBoundingClientRect();
+            expect(overlayRect.width).toEqual(windowRect.width);
+            expect(overlayRect.height).toEqual(windowRect.height);
+            expect(overlayRect.left).toEqual(windowRect.left);
+            expect(overlayRect.top).toEqual(windowRect.top);
+        });
     });
 
     it('The shown component is inside the igx-overlay wrapper as a content last child.', () => {
@@ -355,12 +367,41 @@ describe('igxOverlay', () => {
         }
     });
 
-    xit('The shown component is in the center of igx-overlay (visible window) - default.', () => {
-        // TO DO
+    it('The shown component is in the center of igx-overlay (visible window) - default.', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+            const componentEl = overlayWrapper.firstChild.lastChild;
+            const wrapperRect = overlayWrapper.getBoundingClientRect();
+            const componentRect = componentEl.getBoundingClientRect();
+            expect(wrapperRect.width / 2).toEqual(componentRect.left);
+            expect(wrapperRect.height / 2).toEqual(componentRect.top);
+            expect(componentRect.left).toEqual(componentRect.right - componentRect.width);
+            expect(componentRect.top).toEqual(componentRect.bottom - componentRect.height);
+        });
     });
 
-    xit('When adding a new instance of a component with the same options, it is rendered exactly on top of the previous one.', () => {
-        // TO DO
+    it('When adding a new instance of a component with the same options, it is rendered exactly on top of the previous one.', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
+        fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_2');
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const overlayWrapper_1 = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+            const componentEl_1 = overlayWrapper_1.firstChild.lastChild;
+            const overlayWrapper_2 = fixture.debugElement.nativeElement.parentElement.lastChild.lastChild;
+            const componentEl_2 = overlayWrapper_2.firstChild.lastChild;
+            const componentRect_1 = componentEl_1.getBoundingClientRect();
+            const componentRect_2 = componentEl_2.getBoundingClientRect();
+            expect(componentRect_1.left).toEqual(componentRect_2.left);
+            expect(componentRect_1.top).toEqual(componentRect_2.top);
+            expect(componentRect_1.width).toEqual(componentRect_2.width);
+            expect(componentRect_1.height).toEqual(componentRect_2.height);
+        });
     });
     // adding more than one component to show in igx-overlay:
     xit('When adding a component near the window borders(left,right,up,down), it should be rendered in the igx-overlay center ' +
@@ -368,8 +409,23 @@ describe('igxOverlay', () => {
             // TO DO --> Relevant no more.
         });
 
-    xit('If the shown component is bigger than the visible window, than it should be centered and scrollbars should appear.', () => {
-        // TO DO
+    it('If the shown component is bigger than the visible window, than it should be centered and scrollbars should appear.', () => {
+        const fixture = TestBed.createComponent(EmptyPageComponent);
+        fixture.detectChanges();
+        let hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
+        expect(hasScrollbar).toBeFalsy();
+        fixture.componentInstance.overlay.show(SimpleBigSizeComponent, 'id_1');
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+            const componentEl = overlayWrapper.firstChild.lastChild;
+            const wrapperRect = overlayWrapper.getBoundingClientRect();
+            const componentRect = componentEl.getBoundingClientRect();
+            expect(wrapperRect.width / 2).toEqual(componentRect.left);
+            expect(wrapperRect.height / 2).toEqual(componentRect.top);
+            hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
+            expect(hasScrollbar).toBeTruthy();
+        });
     });
     // 1.1.1 Global Css
     it('css class should be applied on igx-overlay component div wrapper.' +
@@ -1037,6 +1093,11 @@ describe('igxOverlay', () => {
 export class SimpleDynamicComponent { }
 
 @Component({
+    template: '<div style=\'position: absolute; width:3000px; height: 1000px; background-color: red\'></div>'
+})
+export class SimpleBigSizeComponent { }
+
+@Component({
     template: `
         <div igxToggle>
             <div *ngIf='visible' style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>
@@ -1136,6 +1197,7 @@ export class TopLeftOffsetComponent {
 const DYNAMIC_COMPONENTS = [
     EmptyPageComponent,
     SimpleDynamicComponent,
+    SimpleBigSizeComponent,
     DownRightButtonComponent,
     TopLeftOffsetComponent
 ];
