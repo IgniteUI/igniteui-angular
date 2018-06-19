@@ -9,7 +9,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+
 
 export interface IChangeRadioEventArgs {
     value: any;
@@ -341,12 +341,4 @@ public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
  */
 public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
-/**
- *The IgxRadioModule provides the {@link IgxRadioComponent} inside your application.
- */
-@NgModule({
-    declarations: [IgxRadioComponent],
-    exports: [IgxRadioComponent],
-    imports: [IgxRippleModule]
-})
-export class IgxRadioModule { }
+

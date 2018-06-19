@@ -161,6 +161,11 @@ export class AppComponent implements OnInit {
             name: 'Progress Indicators'
         },
         {
+            link: '/radio',
+            icon: 'pol',
+            name: 'Radio Group'
+        },
+        {
             link: '/slider',
             icon: 'linear_scale',
             name: 'Slider'
