@@ -42,34 +42,175 @@ let NEXT_ID = 0;
 })
 
 export class IgxButtonGroupComponent implements AfterViewInit {
+    /**
+     * @hidden
+     */
     @ViewChildren(IgxButtonDirective) public buttons: QueryList<IgxButtonGroupComponent>;
 
+    /**
+     * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
+     * ```html
+     *  <igx-buttongroup [id]="'igx-dialog-56'" [multiSelection]="!multi" [values]="alignOptions">
+     * ```
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-buttongroup-${NEXT_ID++}`;
 
+    /**
+     * Allows you to set a style using the `itemContentCssClass` input.
+     * The value should be the CSS class name that will be applied to the button group.
+     *```typescript
+     *public style1 = "styleClass";
+     * //..
+     *```
+     * ```html
+     *<igx-buttongroup [itemContentCssClass]="style1" [multiSelection]="!multi" [values]="alignOptions">
+     *```
+     */
     @Input() set itemContentCssClass(value: string) {
         this._itemContentCssClass = value || this._itemContentCssClass;
     }
+
+    /**
+     * Returns the CSS class of the item content of the `IgxButtonGroup`.
+     *```typescript
+     *@ViewChild("MyChild")
+     *public buttonG: IgxButtonGroupComponent;
+     *ngAfterViewInit(){
+     *   let buttonSelect = this.buttonG.itemContentCssClass;
+     *}
+     *```
+     */
     get itemContentCssClass(): string {
         return this._itemContentCssClass;
     }
+
+    /**
+     * An @Input property that enables selecting multiple buttons. By default, multi-selection is false.
+     * ```html
+     * <igx-buttongroup [multiSelection]="false" [alignment]="alignment"></igx-buttongroup>
+     * ```
+     */
     @Input() public multiSelection = false;
+    /**
+     * An @Input property that allows setting the buttons in the button group.
+     * ```typescript
+     *  public ngOnInit() {
+     *      this.cities = [
+     *        new Button({
+     *          label: "Sofia"
+     *      }),
+     *        new Button({
+     *          label: "London"
+     *      }),
+     *        new Button({
+     *          label: "New York",
+     *          selected: true
+     *      }),
+     *        new Button({
+     *          label: "Tokyo"
+     *      })
+     *  ];
+     *  }
+     *  //..
+     * ```
+     * ```html
+     *  <igx-buttongroup [multiSelection]="false" [values]="cities"></igx-buttongroup>
+     * ```
+     */
     @Input() public values: any;
+    /**
+     * An @Input property that allows you to disable the `igx-buttongroup` component. By default it's false.
+     * ```html
+     * <igx-buttongroup [disabled]="true" [multiSelection]="multi" [values]="fontOptions"></igx-buttongroup>
+     * ```
+     */
     @Input() public disabled = false;
 
+
+    /**
+     * @hidden
+     */
     public selectedIndexes: number[] = [];
 
+    /**
+     * Allows you to set the button group alignment.
+     * Available options are `ButtonGroupAlignment.horizontal` (default) and `ButtonGroupAlignment.vertical`.
+     * ```typescript
+     *public alignment = ButtonGroupAlignment.vertical;
+     * //..
+     * ```
+     * ```html
+     *<igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment"></igx-buttongroup>
+     * ```
+     */
     @Input() set alignment(value: ButtonGroupAlignment) {
         this._isVertical = value === ButtonGroupAlignment.vertical;
     }
+    /**
+     * Returns the alignment of the `igx-buttongroup`.
+     *```typescript
+     *@ViewChild("MyChild")
+     *public buttonG: IgxButtonGroupComponent;
+     *ngAfterViewInit(){
+     *    let buttonAlignment = this.buttonG.alignment;
+     *}
+     *```
+     */
     get alignment(): ButtonGroupAlignment {
         return this._isVertical ? ButtonGroupAlignment.vertical : ButtonGroupAlignment.horizontal;
     }
 
+    /**
+     * An @Ouput property that emits an event when a button is selected.
+     *```typescript
+     *@ViewChild("toast")
+     *private toast: IgxToastComponent;
+     *public onSelect(buttongroup){
+     *    this.toast.show()
+     *}
+     * //...
+     *```
+     *```html
+     * <igx-buttongroup #MyChild [multiSelection]="!multi" (onSelect)="onSelect($event)"></igx-buttongroup>
+     *<igx-toast #toast message="You have made a selection!"></igx-toast>
+     *```
+     */
     @Output() public onSelect = new EventEmitter<IButtonGroupEventArgs>();
+
+    /**
+     * An @Ouput property that emits an event when a button is deselected.
+     *```typescript
+     *@ViewChild("toast")
+     *private toast: IgxToastComponent;
+     *public onUnselect(buttongroup){
+     *    this.toast.show()
+     *}
+     * //...
+     *```
+     *```html
+     * igx-buttongroup #MyChild [multiSelection]="multi" (onUnselect)="onUnselect($event)"></igx-buttongroup>
+     *<igx-toast #toast message="You have deselected a button!"></igx-toast>
+     *```
+     */
     @Output() public onUnselect = new EventEmitter<IButtonGroupEventArgs>();
 
+    /**
+     * Returns true if the `igx-buttongroup` alignment is vertical.
+     * Note that in order for the accessor to work correctly the property should be set explicitly.
+     * ```html
+     * <igx-buttongroup #MyChild [alignment]="alignment" [values]="alignOptions">
+     * ```
+     * ```typescript
+     * //...
+     *@ViewChild("MyChild")
+     *private buttonG: IgxButtonGroupComponent;
+     *ngAfterViewInit(){
+     *    let orientation = this.buttonG.isVertical;
+     *}
+     *```
+     */
     public get isVertical(): boolean {
         return this._isVertical;
     }
@@ -79,6 +220,16 @@ export class IgxButtonGroupComponent implements AfterViewInit {
     constructor(private _el: ElementRef, private _renderer: Renderer2, cdr: ChangeDetectorRef) {
     }
 
+    /**
+     * Gets the selected button/buttons.
+     *```typescript
+     *@ViewChild("MyChild")
+     *private buttonG: IgxButtonGroupComponent;
+     *ngAfterViewInit(){
+     *    let selectedButton = this.buttonG.selectedButtons;
+     *}
+     *```
+     */
     get selectedButtons(): IgxButtonGroupComponent[] {
         return this.buttons.filter((b, i) => {
             return this.selectedIndexes.indexOf(i) !== -1;
@@ -86,6 +237,18 @@ export class IgxButtonGroupComponent implements AfterViewInit {
 
     }
 
+    /**
+     * Selects a button by its index.
+     * @memberOf {@link IgxButtonGroupComponent}
+     *```typescript
+     *@ViewChild("MyChild")
+     *private buttonG: IgxButtonGroupComponent;
+     *ngAfterViewInit(){
+     *    this.buttonG.selectButton(2);
+     *    this.cdr.detectChanges();
+     *}
+     *```
+     */
     public selectButton(index: number) {
         if (this.buttons.toArray()[index]._el.nativeElement.getAttribute('data-togglable') === 'false'
             || this.buttons.toArray()[index]._el.nativeElement.classList.contains('igx-button--disabled')) {
@@ -107,6 +270,18 @@ export class IgxButtonGroupComponent implements AfterViewInit {
         }
     }
 
+    /**
+     * Deselects a button by its index.
+     * @memberOf {@link IgxButtonGroupComponent}
+     * ```typescript
+     *@ViewChild("MyChild")
+     *private buttonG: IgxButtonGroupComponent;
+     *ngAfterViewInit(){
+     *    this.buttonG.deselectButton(2);
+     *    this.cdr.detectChanges();
+     *}
+     * ```
+     */
     public deselectButton(index: number) {
         if (this.buttons.toArray()[index]._el.nativeElement.getAttribute('data-togglable') === 'false'
             || this.buttons.toArray()[index]._el.nativeElement.classList.contains('igx-button--disabled')) {
@@ -119,6 +294,9 @@ export class IgxButtonGroupComponent implements AfterViewInit {
         this.values[index].selected = false;
     }
 
+    /**
+     * @hidden
+     */
     public ngAfterViewInit() {
         // initial selection
         setTimeout(() => {
@@ -130,6 +308,9 @@ export class IgxButtonGroupComponent implements AfterViewInit {
         }, 0);
     }
 
+    /**
+     *@hidden
+     */
     public _clickHandler(event, i) {
         if (this.selectedIndexes.indexOf(i) !== -1) {
             this.deselectButton(i);
@@ -144,6 +325,9 @@ export interface IButtonGroupEventArgs {
     index: number;
 }
 
+/**
+ * The IgxButtonGroupModule provides the {@link IgxButtonGroupComponent} inside your application.
+ */
 @NgModule({
     declarations: [IgxButtonGroupComponent],
     exports: [IgxButtonGroupComponent],
