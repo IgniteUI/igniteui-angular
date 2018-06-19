@@ -118,20 +118,20 @@ export class IgxListComponent {
     @Input()
     public allowRightPanning = false;
     /**
-     * Emits an event with the current list when left pan gesture is executed on list item.
+     * Emits an event within the current list when left pan gesture is executed on list item.
      * Provides reference to the `IgxListItemComponent` as an event argument.
      * ```html
-     * <igx-list (onLeftPan) = "onLeftPan(listItem: IgxListItemComponent)"></igx-list>
+     * <igx-list [allowLeftPanning]="true" (onLeftPan) = "onLeftPan($event)"></igx-list>
      * ```
      * @memberof IgxListComponent
      */
     @Output()
     public onLeftPan = new EventEmitter<IgxListItemComponent>();
     /**
-     * Emits an event with the current list when right pan gesture is executed on list item.
+     * Emits an event within the current list when right pan gesture is executed on list item.
      * Provides reference to the `IgxListItemComponent` as an event argument.
      * ```html
-     * <igx-list (onRightPan) = "onRightPan(listItem: IgxListItemComponent)"></igx-list>
+     * <igx-list [allowRightPanning]="true" (onRightPan) = "onRightPan($event)"></igx-list>
      * ```
      * @memberof IgxListComponent
      */
@@ -141,9 +141,7 @@ export class IgxListComponent {
     * Emits an event with the current list when pan gesture is executed on list item.
     * Provides references to the `IgxListItemComponent` and `IgxListPanState` as event arguments.
     * ```html
-    * <igx-list (onPanStateChange) = "onPanStateChange(oldState: IgxListPanState,
-    *  newState: IgxListItemComponent,
-    *  listItem: IgxListItemComponent)"></igx-list>
+    * <igx-list (onPanStateChange) = "onPanStateChange($event)"></igx-list>
     * ```
     * @memberof IgxListComponent
     */
@@ -153,7 +151,7 @@ export class IgxListComponent {
      * Emits an event with the current list when a list item has been clicked.
      * Provides references to the `IgxListItemComponent` and `Event` as event arguments.
      *  ```html
-     * <igx-list (onItemClicked) = "onItemClicked(listItem: IgxListItemComponent, event:Event)"></igx-list>
+     * <igx-list (onItemClicked) = "onItemClicked($event)"></igx-list>
      * ```
      * @memberof IgxListComponent
      */
@@ -231,7 +229,8 @@ export class IgxListComponent {
         return headers;
     }
     /**
-     * Returns a reference to `IgxListComponent` element in the DOM.
+     * Returns the `context` object which represents the `template context` binding into the `list container`
+     * by providing the `$implicit` declaration which is the `IgxListComponent` itself.
      * ```typescript
      * let listComponent =  this.list.context;
      * ```

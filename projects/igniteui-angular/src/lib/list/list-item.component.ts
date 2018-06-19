@@ -51,7 +51,7 @@ export class IgxListItemComponent implements IListChild {
         private _renderer: Renderer2) {
     }
     /**
-     * Sets/gets whether the list item is a header.
+     * Sets/gets whether the `list item` is a header.
      * ```html
      * <igx-list-item [isHeader] = "true">Header</igx-list-item>
      * ```
@@ -63,7 +63,7 @@ export class IgxListItemComponent implements IListChild {
     @Input()
     public isHeader: boolean;
     /**
-     * Sets/gets whether the list item is hidden.
+     * Sets/gets whether the `list item` is hidden.
      * By default the `hidden` value is `false`.
      * ```html
      * <igx-list-item [hidden] = "true">Hidden Item</igx-list-item>
@@ -76,7 +76,7 @@ export class IgxListItemComponent implements IListChild {
     @Input()
     public hidden = false;
     /**
-     * Gets the `role` attribute of the list item.
+     * Gets the `role` attribute of the `list item`.
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
@@ -87,7 +87,7 @@ export class IgxListItemComponent implements IListChild {
         return this.isHeader ? 'separator' : 'listitem';
     }
     /**
-     * Sets/gets the `aria-label` attribute of the list item.
+     * Sets/gets the `aria-label` attribute of the `list item`.
      * ```typescript
      * this.listItem.ariaLabel = "Item1";
      * ```
@@ -99,7 +99,7 @@ export class IgxListItemComponent implements IListChild {
     @HostBinding('attr.aria-label')
     public ariaLabel: string;
     /**
-     * Gets the `touch-action` style of the list item.
+     * Gets the `touch-action` style of the `list item`.
      * ```typescript
      * let touchAction = this.listItem.touchAction;
      * ```
@@ -107,7 +107,7 @@ export class IgxListItemComponent implements IListChild {
     @HostBinding('style.touch-action')
     public touchAction = 'pan-y';
     /**
-     * Indicates if a list item will have header style.
+     * Indicates whether `list item` should have header style.
      * ```typescript
      * let headerStyle =  this.listItem.headerStyle;
      * ```
@@ -118,7 +118,7 @@ export class IgxListItemComponent implements IListChild {
         return this.isHeader;
     }
     /**
-     * Indicates if a list item will have inner style.
+     * Applies the inner style of the `list item` if the item is not counted as header.
      * ```typescript
      * let innerStyle =  this.listItem.innerStyle;
      * ```
@@ -129,7 +129,7 @@ export class IgxListItemComponent implements IListChild {
         return !this.isHeader;
     }
     /**
-     * Returns a string indicating whether a list item is hidden.
+     * Returns string value which describes the display mode of the `list item`.
      * ```typescript
      * let isHidden = this.listItem.display;
      * ```
@@ -197,7 +197,7 @@ export class IgxListItemComponent implements IListChild {
         }
     }
     /**
-     * Gets the `panState` of a list item.
+     * Gets the `panState` of a `list item`.
      * ```typescript
      * let itemPanState =  this.listItem.panState;
      * ```
@@ -207,7 +207,7 @@ export class IgxListItemComponent implements IListChild {
         return this._panState;
     }
     /**
-     * Gets the `index` of a list item.
+     * Gets the `index` of a `list item`.
      * ```typescript
      * let itemIndex =  this.listItem.index;
      * ```
@@ -217,7 +217,7 @@ export class IgxListItemComponent implements IListChild {
         return this.list.children.toArray().indexOf(this);
     }
     /**
-     * Returns a reference to the list item element in the DOM.
+     * Returns an element reference to the list item.
      * ```typescript
      * let listItemElement =  this.listItem.element.
      * ```
@@ -227,7 +227,7 @@ export class IgxListItemComponent implements IListChild {
         return this.elementRef.nativeElement;
     }
     /**
-     * Gets the width of a list item.
+     * Gets the width of a `list item`.
      * ```typescript
      * let itemWidth = this.listItem.width;
      * ```
@@ -239,7 +239,7 @@ export class IgxListItemComponent implements IListChild {
         }
     }
     /**
-     * Gets the maximum left-hand side width of a list item.
+     * Gets the maximum left position of the `list item`.
      * ```typescript
      * let maxLeft = this.listItem.maxLeft;
      * ```
@@ -249,7 +249,7 @@ export class IgxListItemComponent implements IListChild {
         return -this.width;
     }
     /**
-     * Gets the maximum right-hand side width of a list item.
+     * Gets the maximum right position of the `list item`.
      * ```typescript
      * let maxRight = this.listItem.maxRight;
      * ```
