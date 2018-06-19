@@ -1,5 +1,4 @@
 import {
-    chain,
     Rule,
     SchematicContext,
     SchematicsException,
