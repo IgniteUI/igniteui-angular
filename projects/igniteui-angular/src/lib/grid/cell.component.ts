@@ -20,7 +20,6 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
-import { IGridCellEventArgs, IGridEditEventArgs } from './grid.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -118,7 +117,11 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }
-        this.cdr.detectChanges();
+        if (this.column.dataType === DataType.Date) {
+            requestAnimationFrame(() => this.cdr.markForCheck());
+        } else {
+            this.cdr.detectChanges();
+        }
     }
 
     @HostBinding('attr.tabindex')
@@ -329,6 +332,10 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                 callback(e);
             }
         });
+    }
+
+    focusCell() {
+        this.nativeElement.focus();
     }
 
     private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {
