@@ -33,9 +33,6 @@ import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
             transition-property: top, left;
             touch-action: none;
         }
-        .item-selected {
-            background: lightblue;
-        }
         `
     ]
 })
@@ -133,7 +130,7 @@ export class IgxChipComponent implements AfterViewInit {
 
     private _selected = false;
     private _dragging = false;
-    private _selectedItemClass = 'item-selected';
+    private _selectedItemClass = 'igx-chip__item--selected';
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) {
     }
