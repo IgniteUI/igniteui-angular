@@ -1,16 +1,9 @@
-igx-icon {
-    height: 1.5rem;
-}
+.sample-holder {
+    padding: 30px;
+    border: 1px dotted #ddd;
 
-igx-chips-area {
-    border: 1px #bfbfbf solid;
-}
-
-label {
-    position: unset;
-    width: unset;
-    -webkit-transform: unset;
-    transform: unset;
-    line-height: unset;
-    height: unset;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }

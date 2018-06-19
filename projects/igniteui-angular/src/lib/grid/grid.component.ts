@@ -2117,11 +2117,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public onChipClicked(event) {
-        const groupExpr = this.groupingExpressions;
-        const column = this.getColumnByName(event.owner.id);
-        const exprIndex = groupExpr.findIndex((expr) => expr.fieldName === column.field);
-        const sortDirection = groupExpr[exprIndex].dir;
-        groupExpr[exprIndex].dir = 3 - sortDirection;
-        this.groupingExpressions = groupExpr;
+        const sortingExpr = this.sortingExpressions;
+        const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
+        columnExpr.dir = 3 - columnExpr.dir;
+        this.sort(columnExpr);
+    }
+
+    public onChipKeyDown(event) {
+        if (event.code === 'Space' || event.code === 'Enter') {
+            const sortingExpr = this.sortingExpressions;
+            const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
+            columnExpr.dir = 3 - columnExpr.dir;
+            this.sort(columnExpr);
+        }
     }
 }

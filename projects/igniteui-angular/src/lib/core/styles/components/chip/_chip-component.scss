@@ -24,6 +24,10 @@
         @extend %igx-chip__item !optional;
     }
 
+    @include e(item, $m: selected) {
+        @extend %igx-chip__item--selected !optional;
+    }
+
     @include e(label) {
         @extend %igx-chip__label !optional;
     }

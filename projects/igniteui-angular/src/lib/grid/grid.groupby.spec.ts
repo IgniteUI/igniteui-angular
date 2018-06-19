@@ -1668,7 +1668,7 @@ describe('IgxGrid - GroupBy', () => {
             expect(groupRows[1].expanded).toEqual(true);
 
             // There is animation after the mouse is released. The chip returns to the new position and we have to wait for it.
-            chipComponents[0].componentInstance.onMoveEnd.subscribe(() => {
+            chipComponents[0].componentInstance.onMoveEnd.pipe(take(1)).subscribe(() => {
                 let chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
                 expect(chipsElems[0].querySelector('span.igx-chip__label>span').textContent).toEqual('ProductName');
                 expect(chipsElems[1].querySelector('span.igx-chip__label>span').textContent).toEqual('Released');
@@ -1698,7 +1698,10 @@ describe('IgxGrid - GroupBy', () => {
                     groupRows = grid.groupedRowList.toArray();
                     expect(groupRows[0].expanded).toEqual(true);
                     expect(groupRows[1].expanded).toEqual(true);
-                    done();
+
+                    chipComponents[0].componentInstance.onMoveEnd.pipe(take(1)).subscribe(() => {
+                        done();
+                    });
                 });
             });
         });
