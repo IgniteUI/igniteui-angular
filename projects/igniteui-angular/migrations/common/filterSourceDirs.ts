@@ -2,7 +2,10 @@ import { experimental } from '@angular-devkit/core';
 import { filter, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace, getWorkspacePath, getProjectPaths } from './util';
 
-/** Filter tree to project source dirs */
+/**
+ * Filter tree to project source dirs
+ * @deprecated Temporary
+ */
 export function filterSourceDirs(host: Tree, context: SchematicContext): Rule {
     // tslint:disable:arrow-parens
     let config: experimental.workspace.WorkspaceSchema;
