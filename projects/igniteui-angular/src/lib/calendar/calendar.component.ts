@@ -80,37 +80,38 @@ export class CalendarHammerConfig extends HammerGestureConfig {
         ])
     ],
     providers: [
-            {
-                multi: true,
-                provide: NG_VALUE_ACCESSOR,
-                useExisting: IgxCalendarComponent
-            },
-            {
-                provide: HAMMER_GESTURE_CONFIG,
-                useClass: CalendarHammerConfig
-            }
-        ],
+        {
+            multi: true,
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxCalendarComponent
+        },
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: CalendarHammerConfig
+        }
+    ],
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html'
 })
 export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
-/**
- * Sets/gets the `id` of the calendar.
- * If not set, the `id` will have value `"igx-calendar-0"`.
- * ```html
- * <igx-calendar id = "my-first-calendar"></igx-calendar>
- * ```
- * ```typescript
- * let calendarId =  this.calendar.id;
- * ```
- * @memberof IgxCalendarComponent
- */
-@HostBinding('attr.id')
+    /**
+     * Sets/gets the `id` of the calendar.
+     * If not set, the `id` will have value `"igx-calendar-0"`.
+     * ```html
+     * <igx-calendar id = "my-first-calendar"></igx-calendar>
+     * ```
+     * ```typescript
+     * let calendarId =  this.calendar.id;
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    @HostBinding('attr.id')
     @Input()
     public id = `igx-calendar-${NEXT_ID++}`;
     /**
-     * Gets the start of the week.
-     * Defaults to `Sunday`.
+     * Gets the start day of the week.
+     * Can return a numeric or an enum representation of the week day.
+     * Defaults to `Sunday` / `0`.
      * ```typescript
      * let weekStart =  this.calendar.weekStart;
      * ```
@@ -120,14 +121,15 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public get weekStart(): WEEKDAYS | number {
         return this.calendarModel.firstWeekDay;
     }
-/**
- * Sets the start of the week.
- * ```html
- * <igx-calendar [weekStart] = "1"></igx-calendar>
- * ```
- * @memberof IgxCalendarComponent
- */
-public set weekStart(value: WEEKDAYS | number) {
+    /**
+     * Sets the start day of the week.
+     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
+     * ```html
+     * <igx-calendar [weekStart] = "1"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public set weekStart(value: WEEKDAYS | number) {
         this.calendarModel.firstWeekDay = value;
     }
 
@@ -161,14 +163,14 @@ public set weekStart(value: WEEKDAYS | number) {
     public get selection(): string {
         return this._selection;
     }
-/**
- * Sets the selection type of the calendar.
- * ```html
- * <igx-calendar [selection] = "'multi'"></igx-calendar>
- * ```
- * @memberof IgxCalendarComponent
- */
-public set selection(value: string) {
+    /**
+     * Sets the selection type of the calendar.
+     * ```html
+     * <igx-calendar [selection] = "'multi'"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public set selection(value: string) {
         switch (value) {
             case 'single':
                 this.selectedDates = null;
@@ -197,14 +199,14 @@ public set selection(value: string) {
     public get viewDate(): Date {
         return this._viewDate;
     }
-/**
- * Sets the date that will be presented in the default view when the calendar renders.
- * ```html
- * <igx-calendar viewDate = "15/06/2018"></igx-calendar>
- * ```
- * @memberof IgxCalendarComponent
- */
-public set viewDate(value: Date) {
+    /**
+     * Sets the date that will be presented in the default view when the calendar renders.
+     * ```html
+     * <igx-calendar viewDate = "15/06/2018"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public set viewDate(value: Date) {
         this._viewDate = new Date(value);
     }
 
@@ -223,18 +225,18 @@ public set viewDate(value: Date) {
     public get value(): Date | Date[] {
         return this.selectedDates;
     }
-/**
- * Sets the selected date(s) of the calendar.
- *
- * When the calendar selection is set to `single`, it accepts
- * a single `Date` object.
- * Otherwise it is an array of `Date` objects.
- * ```typescript
- *  this.calendar.value =  new Date(`2016-06-12`);
- * ```
- * @memberof IgxCalendarComponent
- */
-public set value(value: Date | Date[]) {
+    /**
+     * Sets the selected date(s) of the calendar.
+     *
+     * When the calendar selection is set to `single`, it accepts
+     * a single `Date` object.
+     * Otherwise it is an array of `Date` objects.
+     * ```typescript
+     *  this.calendar.value =  new Date(`2016-06-12`);
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public set value(value: Date | Date[]) {
         this.selectDate(value);
     }
 
@@ -294,15 +296,15 @@ public set value(value: Date | Date[]) {
      */
     @Input()
     public vertical = false;
-/**
- * Emits an event when a selection is made in the calendar.
- * Provides reference the `selectedDates` property in the `IgxCalendarComponent`.
- * ```html
- * <igx-calendar (onSelection) = "onSelection(calendar.selectedDates)"></igx-calendar>
- * ```
- * @memberof IgxCalendarComponent
- */
-@Output()
+    /**
+     * Emits an event when a selection is made in the calendar.
+     * Provides reference the `selectedDates` property in the `IgxCalendarComponent`.
+     * ```html
+     * <igx-calendar (onSelection) = "onSelection(calendar.selectedDates)"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    @Output()
     public onSelection = new EventEmitter<Date | Date[]>();
 
     /**
@@ -416,49 +418,49 @@ public set value(value: Date | Date[]) {
     get monthAction(): string {
         return this._monthAction;
     }
-/**
- * Gets the header template.
- * ```typescript
- * let headerTemplate =  this.calendar.headerTeamplate;
- * ```
- * @memberof IgxCalendarComponent
- */
-get headerTemplate(): any {
+    /**
+     * Gets the header template.
+     * ```typescript
+     * let headerTemplate =  this.calendar.headerTeamplate;
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    get headerTemplate(): any {
         if (this.headerTemplateDirective) {
             return this.headerTemplateDirective.template;
         }
         return null;
     }
-/**
- * Sets the header template.
- * ```html
- * <igx-calendar headerTemplateDirective = "igxCalendarHeader"></igx-calendar>
- * ```
- * @memberof IgxCalendarComponent
- */
-set headerTemplate(directive: any) {
+    /**
+     * Sets the header template.
+     * ```html
+     * <igx-calendar headerTemplateDirective = "igxCalendarHeader"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    set headerTemplate(directive: any) {
         this.headerTemplateDirective = directive;
     }
-/**
- * Gets the subheader template.
- * ```typescript
- * let subheaderTemplate = this.calendar.subheaderTemplate;
- * ```
- */
-get subheaderTemplate(): any {
+    /**
+     * Gets the subheader template.
+     * ```typescript
+     * let subheaderTemplate = this.calendar.subheaderTemplate;
+     * ```
+     */
+    get subheaderTemplate(): any {
         if (this.subheaderTemplateDirective) {
             return this.subheaderTemplateDirective.template;
         }
         return null;
     }
-/**
- * Sets the subheader template.
- * ```html
- * <igx-calendar subheaderTemplate = "igxCalendarSubheader"></igx-calendar>
- * ```
- * @memberof IgxCalendarComponent
- */
-set subheaderTemplate(directive: any) {
+    /**
+     * Sets the subheader template.
+     * ```html
+     * <igx-calendar subheaderTemplate = "igxCalendarSubheader"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    set subheaderTemplate(directive: any) {
         this.subheaderTemplateDirective = directive;
     }
 
@@ -504,38 +506,38 @@ set subheaderTemplate(directive: any) {
     // tslint:disable-next-line:max-line-length
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
-/**
- *@hidden
- */
-private _viewDate: Date;
-/**
- *@hidden
- */
-private calendarModel: Calendar;
-/**
- *@hidden
- */
-private _activeView = CalendarView.DEFAULT;
-/**
- *@hidden
- */
-private selectedDates;
-/**
- *@hidden
- */
-private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
-/**
- *@hidden
- */
-private _rangeStarted = false;
-/**
- *@hidden
- */
-private _monthAction = '';
-/**
- *@hidden
- */
-private _formatOptions = {
+    /**
+     *@hidden
+     */
+    private _viewDate: Date;
+    /**
+     *@hidden
+     */
+    private calendarModel: Calendar;
+    /**
+     *@hidden
+     */
+    private _activeView = CalendarView.DEFAULT;
+    /**
+     *@hidden
+     */
+    private selectedDates;
+    /**
+     *@hidden
+     */
+    private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
+    /**
+     *@hidden
+     */
+    private _rangeStarted = false;
+    /**
+     *@hidden
+     */
+    private _monthAction = '';
+    /**
+     *@hidden
+     */
+    private _formatOptions = {
         day: 'numeric',
         month: 'short',
         weekday: 'short',
@@ -957,10 +959,10 @@ private _formatOptions = {
 
         this._onChangeCallback(this.selectedDates);
     }
-/**
- *@hidden
- */
-private selectRange(value: Date | Date[]) {
+    /**
+     *@hidden
+     */
+    private selectRange(value: Date | Date[]) {
         let start: Date;
         let end: Date;
 
@@ -1007,14 +1009,14 @@ private selectRange(value: Date | Date[]) {
             monthView: () => this.activeViewYear(),
             yearView: () => this.activeViewDecade(),
             ...this.calendarModel.formatToParts(value, this.locale, this._formatOptions,
-                                                    ['era', 'year', 'month', 'day', 'weekday'])
+                ['era', 'year', 'month', 'day', 'weekday'])
         };
         return { $implicit: formatObject };
     }
-/**
- *@hidden
- */
-private generateDateRange(start: Date, end: Date): Date[] {
+    /**
+     *@hidden
+     */
+    private generateDateRange(start: Date, end: Date): Date[] {
         const result = [];
 
         while (start.toDateString() !== end.toDateString()) {
@@ -1024,10 +1026,10 @@ private generateDateRange(start: Date, end: Date): Date[] {
 
         return result;
     }
-/**
- *@hidden
- */
-private generateYearRange(delta: number) {
+    /**
+     *@hidden
+     */
+    private generateYearRange(delta: number) {
         const currentYear = new Date().getFullYear();
 
         if ((delta > 0 && this._viewDate.getFullYear() - currentYear >= 95) ||
@@ -1036,12 +1038,12 @@ private generateYearRange(delta: number) {
         }
         this._viewDate = this.calendarModel.timedelta(this._viewDate, 'year', delta);
     }
-/**
- *@hidden
- */
-private _onTouchedCallback: () => void = () => { };
-/**
- *@hidden
- */
-private _onChangeCallback: (_: Date) => void = () => { };
+    /**
+     *@hidden
+     */
+    private _onTouchedCallback: () => void = () => { };
+    /**
+     *@hidden
+     */
+    private _onChangeCallback: (_: Date) => void = () => { };
 }
