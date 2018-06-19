@@ -524,7 +524,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /* Toolbar related definitions */
-
     private _showToolbar = false;
     private _exportExcel = false;
     private _exportCsv = false;
@@ -654,8 +653,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcRowCheckboxWidth: number;
     public calcHeight: number;
     public summariesHeight: number;
-
-    public cellInEditMode: IgxGridCellComponent;
     public isColumnMoving: boolean;
     public isColumnResizing: boolean;
 
@@ -723,7 +720,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
-        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { this.clearSummaryCache(editCell); });
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
     }
 
     public ngAfterContentInit() {
@@ -781,6 +778,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
         this.destroy$.next(true);
         this.destroy$.complete();
+        this.gridAPI.unset(this.id);
     }
 
     public dataLoading(event) {
@@ -996,11 +994,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateCell(value: any, rowSelector: any, column: string): void {
-        const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
-        if (cell) {
-            cell.update(value);
-            this.cdr.detectChanges();
+        const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
+        if (columnEdit.length > 0) {
+            const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
+            this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
             this._pipeTrigger++;
+            this.cdr.detectChanges();
         }
     }
 
@@ -1017,6 +1016,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public sort(...rest): void {
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+        }
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
@@ -1025,6 +1028,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public filter(...rest): void {
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+        }
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._filterMultiple(rest[0]);
         } else {
@@ -1508,9 +1515,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             delay(DEBOUNCE_TIME),
             repeat()
         ).subscribe(() => {
-            if (this.cellInEditMode) {
-                this.cellInEditMode.inEditMode = false;
-            }
             this.eventBus.next();
         });
     }
@@ -1652,11 +1656,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowList) {
             return 0;
         }
-
-        if (this.cellInEditMode) {
-            this.cellInEditMode.inEditMode = false;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
         }
-
         if (!text) {
             this.clearSearch();
             return 0;

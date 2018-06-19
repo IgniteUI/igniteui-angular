@@ -176,6 +176,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @autoWire(true)
     public filter(): void {
         const grid = this.gridAPI.get(this.gridID);
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+        }
         this.column.filteringCondition = this.getCondition(this.select.nativeElement.value);
         this.gridAPI.filter(
             this.column.gridID, this.column.field,
