@@ -341,6 +341,7 @@
     );
 
     $indicator-icon-width: rem(24px);
+    $grouping-padding-right: rem(12px);
 
     %grid-display {
         display: grid;
@@ -876,7 +877,7 @@
         align-items: center;
         position: relative;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
-        padding-right: 12px;
+        padding-right: $grouping-padding-right;
 
         &::after {
             content: '';
@@ -985,7 +986,7 @@
         align-items: center;
         cursor: pointer;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
-        padding-right: rem(12px);
+        padding-right: $grouping-padding-right;
         position: relative;
         min-height: map-get($grid-header-height, 'comfortable');
         background-color: --var($theme, 'group-row-background');
@@ -1025,7 +1026,7 @@
 
     %igx-grid__header-indentation {
         position: relative;
-        padding-right: rem(12);
+        padding-right: $grouping-padding-right;
         background: --var($theme, 'header-background');
         z-index: 1;
     }
