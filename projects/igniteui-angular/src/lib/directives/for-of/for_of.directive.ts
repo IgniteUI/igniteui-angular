@@ -260,8 +260,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this._bScrollInternal = true;
         this._virtScrollTop += addTop;
         this._virtScrollTop = this._virtScrollTop > 0 ?
-                                (this._virtScrollTop < maxVirtScrollTop ? this._virtScrollTop : maxVirtScrollTop) :
-                                0;
+            (this._virtScrollTop < maxVirtScrollTop ? this._virtScrollTop : maxVirtScrollTop) :
+            0;
 
         this.vh.instance.elementRef.nativeElement.scrollTop += addTop / this._virtHeightRatio;
         if (Math.abs(addTop / this._virtHeightRatio) < 1) {
@@ -274,7 +274,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop;
         const maxRealScrollTop = this.vh.instance.elementRef.nativeElement.scrollHeight - containerSize;
         if ((this._virtScrollTop > 0 && curScrollTop === 0) ||
-            (this._virtScrollTop < maxVirtScrollTop && curScrollTop === maxRealScrollTop))  {
+            (this._virtScrollTop < maxVirtScrollTop && curScrollTop === maxRealScrollTop)) {
             // Actual scroll position is at the top or bottom, but virtual one is not at the top or bottom (there's more to scroll)
             // Recalculate actual scroll position based on the virtual scroll.
             this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop / this._virtHeightRatio;
@@ -443,10 +443,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /** Function that is called when scrolling with the mouse wheel or using touchpad */
     protected onWheel(event) {
-        if (this.igxForScrollOrientation === 'horizontal') {
+        if (this.igxForScrollOrientation === 'horizontal' && Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
             const scrollStepX = 10;
             this.hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
-        } else if (this.igxForScrollOrientation === 'vertical') {
+
+            const curScrollLeft = this.hScroll.scrollLeft;
+            const maxScrollLeft = parseInt(this.hScroll.children[0].style.width, 10);
+            if (0 < curScrollLeft && curScrollLeft < maxScrollLeft) {
+                // Prevent navigating through pages when scrolling on Mac
+                event.preventDefault();
+            }
+        } else if (this.igxForScrollOrientation === 'vertical' && Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
             const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
             this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY / this._virtHeightRatio;
 
@@ -621,7 +628,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
                 if (chunkSize !== 0 && !this._isScrolledToBottom && !this._isAtBottomIndex) {
-                    chunkSize ++;
+                    chunkSize++;
                     this.extraRowApplied = true;
                 } else {
                     this.extraRowApplied = false;
