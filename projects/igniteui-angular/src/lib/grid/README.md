@@ -248,7 +248,7 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`clearGrouping(fieldName: string)`| Clear grouping from a particular column.
 |`isExpandedGroup(group: IGroupByRecord )`| Returns if a group is expanded or not.
 |`toggleGroup(group: IGroupByRecord)`| Toggles the expansion state of a group.
-|`toggleAllGroupRows`| Toggles the expansion state of all group rows recursively.
+|`toggleAllGroupRows()`| Toggles the expansion state of all group rows recursively.
 
 
 
