@@ -15,6 +15,9 @@ import { ConnectedPositioningStrategy } from './position/connected-positioning-s
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point } from './utilities';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
+import { BlockScrollStrategy } from './scroll/BlockScrollStrategy';
+import { AbsoluteScrollStrategy } from './scroll/AbsoluteScrollStrategy';
+import { CloseScrollStrategy } from './scroll/CloseScrollStrategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content--no-modal';
@@ -201,8 +204,109 @@ describe('igxOverlay', () => {
 
     });
 
-    xit('Unit - Should properly call position method - ConnectedPosition', () => {
+    it('Unit - Should properly call position method - ConnectedPosition', () => {
+        const mockParent = jasmine.createSpyObj('parentElement', ['style', 'lastElementChild']);
+        const mockItem = document.createElement('div');
+        let width = 200;
+        let height = 0;
+        let right = 0;
+        let bottom = 0;
+        spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => {
+            return {
+                width, height, right, bottom
+            };
+        });
+        spyOn<any>(mockItem, 'parentElement').and.returnValue(mockParent);
+        const mockPositioningSettings1: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            target: mockItem,
+            horizontalStartPoint: HorizontalAlignment.Left,
+            verticalStartPoint: VerticalAlignment.Top
+        };
+        const autoStrat1 = new ConnectedPositioningStrategy(mockPositioningSettings1);
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('-200px');
 
+        autoStrat1.settings.horizontalStartPoint = HorizontalAlignment.Center;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('-100px');
+
+        autoStrat1.settings.horizontalStartPoint = HorizontalAlignment.Right;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        right = 0;
+        bottom = 0;
+        width = 0;
+        height = 200;
+        autoStrat1.settings.verticalStartPoint = VerticalAlignment.Top;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('-200px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        autoStrat1.settings.verticalStartPoint = VerticalAlignment.Middle;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('-100px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        autoStrat1.settings.verticalStartPoint = VerticalAlignment.Bottom;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        right = 0;
+        bottom = 0;
+        width = 0;
+        height = 0;
+        autoStrat1.settings.verticalDirection = VerticalAlignment.Top;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('-200px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        autoStrat1.settings.verticalDirection = VerticalAlignment.Middle;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('-100px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        autoStrat1.settings.verticalDirection = VerticalAlignment.Bottom;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        right = 0;
+        bottom = 0;
+        width = 0;
+        height = 0;
+        autoStrat1.settings.horizontalDirection = HorizontalAlignment.Left;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('-200px');
+
+        autoStrat1.settings.horizontalDirection = HorizontalAlignment.Center;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('-100px');
+
+        autoStrat1.settings.horizontalDirection = HorizontalAlignment.Right;
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        // If target is Point
+        autoStrat1.settings.target = new Point(0, 0);
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('0px');
+
+        // If target is not point or html element, should fallback to new Point(0,0)
+        autoStrat1.settings.target = <any>'g';
+        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        expect(mockItem.style.top).toEqual('0px');
+        expect(mockItem.style.left).toEqual('0px');
     });
 
     it('Unit - Should properly call position method - AutoPosition', () => {
@@ -519,19 +623,53 @@ describe('igxOverlay', () => {
     });
 
     // If adding a component near the visible window borders(left,right,up,down) it should be partially hidden and based on scroll strategy:
-    xit('Scroll Strategy None: no scrolling possible.', () => {
+    it('Scroll Strategy None: no scrolling possible.', fakeAsync(() => {
         // TO DO
-    });
+    }));
 
     xit('closingScrollStrategy: no scrolling possible. The component changes ' +
         'state to closed when reaching the threshold (example: expanded DropDown collapses).', () => {
             // TO DO
         });
 
-    xit('Scroll Strategy Fixed: it should be partially hidden. When scrolling, the component stays static. ' +
-        'Component state remains the same (example: expanded DropDown remains expanded).', () => {
-            // TO DO
-        });
+    it('Scroll Strategy Fixed: it should be partially hidden. When scrolling, the component stays static. ' +
+        'Component state remains the same (example: expanded DropDown remains expanded).', fakeAsync(() => {
+            // Block scroll strategy?
+            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+                }
+            }).createComponent(EmptyPageComponent);
+            const scrollStrat = new BlockScrollStrategy();
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrat,
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            spyOn(scrollStrat, 'initialize').and.callThrough();
+            spyOn(scrollStrat, 'attach').and.callThrough();
+            spyOn(scrollStrat, 'detach').and.callThrough();
+            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+
+            const wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
+            wrapper.dispatchEvent(new Event('scroll'));
+
+            expect(scrollSpy).toHaveBeenCalledTimes(1);
+            overlay.hide('0');
+            tick();
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
+        }));
 
     xit('Scroll Strategy Absolute: can scroll it into view. Component persist state. ' +
         '(example: expanded DropDown remains expanded)', () => {
