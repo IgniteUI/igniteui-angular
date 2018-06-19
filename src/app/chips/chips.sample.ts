@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { IgxChipsAreaComponent } from 'igniteui-angular';
+import { Component, ViewChild, ViewChildren } from '@angular/core';
+import { IgxChipsAreaComponent, IgxChipComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-chips-sample',
@@ -37,5 +37,16 @@ export class ChipsSampleComponent {
             return item.id !== event.owner.id;
         });
         this.chipsArea.cdr.detectChanges();
+    }
+
+    selectChip(chipId) {
+        const chipToSelect = this.chipsArea.chipsList.toArray().find((chip) => {
+            return chip.id === chipId;
+        });
+        chipToSelect.selected = true;
+    }
+
+    onChipsSelected(event) {
+        console.log(event.newSelection);
     }
 }

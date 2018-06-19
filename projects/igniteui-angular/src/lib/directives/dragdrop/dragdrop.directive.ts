@@ -201,7 +201,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
         // Set pointer capture so we detect pointermove even if mouse is out of bounds until dragGhost is created.
         this.element.nativeElement.setPointerCapture(this._pointerDownId);
-        event.preventDefault();
     }
 
     /**
@@ -237,7 +236,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             this.top = this._dragStartY + totalMovedY;
 
             this.dispatchDragEvents(event.pageX, event.pageY);
-            event.preventDefault();
         }
     }
 
@@ -360,8 +358,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             owner: this
         };
 
-        this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this.dispatchEvent(this._lastDropArea, 'igxDrop', eventArgs);
+        this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this._lastDropArea = null;
     }
 
