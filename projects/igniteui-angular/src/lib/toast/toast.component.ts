@@ -76,7 +76,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * Emits an event prior the toast is shown.
      * Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onShowing) = "onShowing(toast: IgxToastComponent)"></igx-toast>
+     * <igx-toast (onShowing) = "onShowing($event)"></igx-toast>
      * ```
      * @memberof IgxToastComponent
      */
@@ -87,7 +87,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * Emits an event when the toast is shown.
      * Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onShown) = "onShown(toast: IgxToastComponent)"></igx-toast>
+     * <igx-toast (onShown) = "onShown($event)"></igx-toast>
      * ```
      * @memberof IgxToastComponent
      */
@@ -98,7 +98,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * Emits an event prior the toast is hidden.
      * Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onHiding) = "onHiding(toast: IgxToastComponent)"></igx-toast>
+     * <igx-toast (onHiding) = "onHiding($event)"></igx-toast>
      * ```
      * @memberof IgxToastComponent
      */
@@ -109,7 +109,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      *  Emits an event when the toast is hidden.
      *  Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onHidden) = "onHidden(toast: IgxToastComponent)"></igx-toast>
+     * <igx-toast (onHidden) = "onHidden($event)"></igx-toast>
      * ```
      * @memberof IgxToastComponent
      */
