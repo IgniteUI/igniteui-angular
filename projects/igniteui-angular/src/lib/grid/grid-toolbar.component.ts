@@ -22,6 +22,7 @@ import { CsvFileTypes,
 import { IgxGridAPIService } from './api.service';
 import { autoWire, IGridBus } from './grid.common';
 import { IgxGridComponent } from './grid.component';
+import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 
 @Component({
     selector: 'igx-grid-toolbar',
@@ -35,6 +36,9 @@ export class IgxGridToolbarComponent implements IGridBus {
 
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective })
     protected toggleDirective: IgxToggleDirective;
+
+    @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
+    public columnHidingDropdown: IgxDropDownComponent;
 
     public get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);

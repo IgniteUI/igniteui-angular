@@ -11,6 +11,7 @@ import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxDropDownComponent, IgxDropDownModule } from '../../public_api';
 
 describe('Column Hiding UI', () => {
     let fix;
@@ -31,6 +32,7 @@ describe('Column Hiding UI', () => {
                 NoopAnimationsModule,
                 IgxGridModule.forRoot(),
                 IgxColumnHidingModule,
+                IgxDropDownModule,
                 IgxButtonModule
             ]
         })
@@ -638,6 +640,7 @@ describe('Column Hiding UI', () => {
 
     describe('dropdown', () => {
         let showButton;
+        let dropDown;
         beforeEach(async(() => {
             fix = TestBed.createComponent(ColumnHidingToggleComponent);
             fix.detectChanges();
@@ -645,6 +648,7 @@ describe('Column Hiding UI', () => {
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
             showButton = fix.debugElement.query(By.css('button')).nativeElement;
+            dropDown = fix.componentInstance.dropDown;
         }));
 
         it('is not open by default.', () => {
@@ -652,9 +656,9 @@ describe('Column Hiding UI', () => {
             expect(getDropdownDivHidden()).toBeDefined();
         });
 
-        it('is opened and closed by executing toggleDropDown() method.', fakeAsync(() => {
+        it('is opened and closed by executing dropdown\'s toggle() method.', fakeAsync(() => {
             fix.whenStable().then(() => {
-                columnChooser.toggleDropDown();
+                dropDown.toggle();
                 tick(100);
                 fix.whenStable().then(() => {
                     fix.detectChanges();
@@ -663,21 +667,21 @@ describe('Column Hiding UI', () => {
                     const items = getColumnHidingItems();
                     expect(items.length).toBe(5);
 
-                    columnChooser.toggleDropDown();
+                    dropDown.toggle();
                     tick(100);
                     fix.whenStable().then(() => {
                         fix.detectChanges();
                         expect(getDropdownDiv()).toBeUndefined();
                         expect(getDropdownDivHidden()).toBeDefined();
 
-                        columnChooser.toggleDropDown();
+                        dropDown.toggle();
                         tick(100);
                         fix.whenStable().then(() => {
                             fix.detectChanges();
                             expect(getDropdownDiv()).toBeDefined();
                             expect(getDropdownDivHidden()).toBeUndefined();
 
-                            columnChooser.toggleDropDown();
+                            dropDown.toggle();
                             tick(100);
                             fix.whenStable().then(() => {
                                 fix.detectChanges();
@@ -694,28 +698,28 @@ describe('Column Hiding UI', () => {
             fix.whenStable().then(() => {
                 let opening = 0;
                 let opened = 0;
-                columnChooser.dropDown.onOpening.subscribe(() => {
+                dropDown.onOpening.subscribe(() => {
                     opening++;
                 });
-                columnChooser.dropDown.onOpened.subscribe(() => {
+                dropDown.onOpened.subscribe(() => {
                     opened++;
                 });
 
-                columnChooser.toggleDropDown();
+                dropDown.toggle();
                 tick(100);
                 fix.whenStable().then(() => {
                     fix.detectChanges();
                     expect(opening).toBe(1);
                     expect(opened).toBe(1);
 
-                    columnChooser.toggleDropDown();
+                    dropDown.toggle();
                     tick(100);
                     fix.whenStable().then(() => {
                         fix.detectChanges();
                         expect(opening).toBe(1);
                         expect(opened).toBe(1);
 
-                        columnChooser.toggleDropDown();
+                        dropDown.toggle();
                         tick(100);
                         fix.whenStable().then(() => {
                             fix.detectChanges();
@@ -731,34 +735,34 @@ describe('Column Hiding UI', () => {
             fix.whenStable().then(() => {
                 let closing = 0;
                 let closed = 0;
-                columnChooser.dropDown.onClosing.subscribe(() => {
+                dropDown.onClosing.subscribe(() => {
                     closing++;
                 });
-                columnChooser.dropDown.onClosed.subscribe(() => {
+                dropDown.onClosed.subscribe(() => {
                     closed++;
                 });
-                columnChooser.toggleDropDown();
+                dropDown.toggle();
                 tick(100);
                 fix.whenStable().then(() => {
                     fix.detectChanges();
                     expect(closing).toBe(0);
                     expect(closed).toBe(0);
 
-                    columnChooser.toggleDropDown();
+                    dropDown.toggle();
                     tick(100);
                     fix.whenStable().then(() => {
                         fix.detectChanges();
                         expect(closing).toBe(1);
                         expect(closed).toBe(1);
 
-                        columnChooser.toggleDropDown();
+                        dropDown.toggle();
                         tick(100);
                         fix.whenStable().then(() => {
                             fix.detectChanges();
                             expect(closing).toBe(1);
                             expect(closed).toBe(1);
 
-                            columnChooser.toggleDropDown();
+                            dropDown.toggle();
                             tick(100);
                             fix.whenStable().then(() => {
                             // TODO: Click outside and verify the drop down is closed (after Overlay)
@@ -825,7 +829,7 @@ describe('Column Hiding UI', () => {
         });
 
         xit('shows the number of hidden columns.', fakeAsync(() => {
-            grid.columnHidingUI.togglable = true;
+            // grid.columnHidingUI.togglable = true;
             tick(100);
             fix.detectChanges();
 
@@ -835,7 +839,7 @@ describe('Column Hiding UI', () => {
         }));
 
         xit('shows the proper icon when no columns are hidden.', fakeAsync(() => {
-            grid.columnHidingUI.togglable = true;
+            // grid.columnHidingUI.togglable = true;
             grid.columns[2].hidden = false;
             tick(100);
             fix.detectChanges();
@@ -857,6 +861,9 @@ describe('Column Hiding UI', () => {
     }
 
     function getColumnHidingItems() {
+        if (!columnChooserElement) {
+            columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
+        }
         const checkboxElements = columnChooserElement.queryAll(By.css('igx-checkbox'));
         const items = [];
         checkboxElements.forEach((el) => {
@@ -1020,7 +1027,7 @@ export class GridData {
 }
 @Component({
     template: `<div>
-    <igx-column-hiding [columns]="grid1.columns" [togglable]="false"></igx-column-hiding>
+    <igx-column-hiding [columns]="grid1.columns"></igx-column-hiding>
     <igx-grid #grid1 [data]="data" width="500px" height="500px">
         <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
@@ -1052,11 +1059,14 @@ export class ColumnHidingInlineComponent extends GridData implements AfterViewIn
         <igx-column [field]="'Released'" dataType="boolean"></igx-column>
         <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
     </igx-grid>
-    <button igxButton (click)="hidingUI.toggleDropDown()">Show Column Hiding UI</button>
-    <igx-column-hiding #hidingUI [columns]="grid1.columns" [togglable]="true"></igx-column-hiding>
+    <button igxButton (click)="hidingUI.toggle()">Show Column Hiding UI</button>
+    <igx-drop-down #hidingUI>
+        <igx-column-hiding [columns]="grid1.columns"></igx-column-hiding>
+    </igx-drop-down>
     </div>`
 })
 export class ColumnHidingToggleComponent extends ColumnHidingInlineComponent {
+    @ViewChild(IgxDropDownComponent) public dropDown: IgxColumnHidingComponent;
 }
 
 @Component({
@@ -1072,6 +1082,7 @@ export class GridWithColumnChooserComponent extends GridData {
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
     @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
+    @ViewChild(IgxDropDownComponent) public dropDown: IgxColumnHidingComponent;
 }
 
 @Component({

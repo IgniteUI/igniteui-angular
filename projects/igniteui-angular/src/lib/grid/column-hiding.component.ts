@@ -17,7 +17,6 @@ import { DataUtil } from '../data-operations/data-util';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { IgxDropDownModule, IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxInputDirective } from '../directives/input/input.directive';
 
@@ -50,7 +49,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
     }
 
     set title(value) {
-        this._title = (value && value !== null) ? value : '';
+        this._title = (value) ? value : '';
     }
 
     @Input()
@@ -113,16 +112,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     }
 
     @Input()
-    get togglable() {
-        return this._togglable;
-    }
-
-    set togglable(value) {
-        this._togglable = value;
-        this.cdr.markForCheck();
-    }
-
-    @Input()
     get columnDisplayOrder() {
         return this._columnDisplayOrder;
     }
@@ -139,6 +128,9 @@ export class IgxColumnHidingComponent implements OnDestroy {
     @Input()
     public hideAllText = 'Hide All';
 
+    @Input()
+    public columnsAreaMaxHeight = '500px';
+
     @Output()
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
 
@@ -150,9 +142,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
 
     @ViewChild('columnChooserInline', { read: TemplateRef })
     protected columnChooserInline: TemplateRef<any>;
-
-    @ViewChild(IgxDropDownComponent)
-    public dropDown: IgxDropDownComponent;
 
     private _currentColumns = [];
     private _gridColumns = [];
@@ -167,13 +156,13 @@ export class IgxColumnHidingComponent implements OnDestroy {
         return (this._gridColumns) ? this._gridColumns.filter((col) => col.hidden).length : 0;
     }
 
-    public get template(): TemplateRef<any> {
-        if (this.togglable) {
-            return this.columnChooserToggle;
-        } else {
-            return this.columnChooserInline;
-        }
-    }
+    // public get template(): TemplateRef<any> {
+    //     if (this.togglable) {
+    //         return this.columnChooserToggle;
+    //     } else {
+    //         return this.columnChooserInline;
+    //     }
+    // }
 
     constructor(public cdr: ChangeDetectorRef) {
     }
@@ -252,11 +241,11 @@ export class IgxColumnHidingComponent implements OnDestroy {
         this.onColumnVisibilityChanged.emit(args);
     }
 
-    public toggleDropDown() {
-        if (this.togglable) {
-            this.dropDown.toggle();
-        }
-    }
+    // public toggleDropDown() {
+    //     if (this.togglable) {
+    //         this.dropDown.toggle();
+    //     }
+    // }
 }
 
 @NgModule({
@@ -265,7 +254,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
     imports: [
         IgxButtonModule,
         IgxCheckboxModule,
-        IgxDropDownModule,
+        // IgxDropDownModule,
         IgxInputGroupModule,
         CommonModule,
         FormsModule,

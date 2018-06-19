@@ -796,8 +796,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public toggleColumnHidingUI() {
-        if (this.columnHidingUI && this.columnHidingUI.togglable) {
-            this.columnHidingUI.toggleDropDown();
+        if (this.columnHidingUI) {
+            this.toolbar.columnHidingDropdown.toggle();
         }
     }
 
