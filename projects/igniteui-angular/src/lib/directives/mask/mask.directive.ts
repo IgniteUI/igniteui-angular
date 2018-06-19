@@ -60,7 +60,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
  * ```
  */
 @Output()
-    public onValueChange = new EventEmitter<{ rawValue: string, formattedValue: string }>();
+    public onValueChange = new EventEmitter<IMaskEventArgs>();
     /**
      *@hidden
      */
@@ -271,6 +271,11 @@ public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 /**
  * The IgxMaskModule provides the {@link IgxMaskDirective} inside your application.
  */
+
+export interface IMaskEventArgs {
+    rawValue: string;
+    formattedValue: string;
+}
 @NgModule({
     declarations: [IgxMaskDirective],
     exports: [IgxMaskDirective],
