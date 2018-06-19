@@ -222,6 +222,10 @@
     @include m(cosy) {
         @extend %grid-display !optional;
 
+        @include e(cbx-selection) {
+            @extend %grid__cbx-selection--cosy !optional;
+        }
+
         @include e(th) {
             @extend %grid-cell-header--cosy !optional;
         }
@@ -266,6 +270,10 @@
 
     @include m(compact) {
         @extend %grid-display !optional;
+
+        @include e(cbx-selection) {
+            @extend %grid__cbx-selection--compact !optional;
+        }
 
         @include e(th) {
             @extend %grid-cell-header--compact !optional;
