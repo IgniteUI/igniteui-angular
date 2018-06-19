@@ -2110,10 +2110,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.groupingExpansionState = [];
         this.chipsGoupingExpressions = newGrouping;
         event.isValid = true;
+        this.markForCheck();
     }
 
     public chipsMovingEnded() {
         this.groupingExpressions = this.chipsGoupingExpressions;
+        this.markForCheck();
     }
 
     public onChipClicked(event) {
