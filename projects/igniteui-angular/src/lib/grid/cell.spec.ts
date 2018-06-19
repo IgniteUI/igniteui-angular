@@ -530,6 +530,7 @@ describe('IgxGrid - Cell component', () => {
             // verify first cell 100th row is selected.
             setTimeout( () => {
                 expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
+                done();
             }, 10);
 
         };
@@ -550,6 +551,7 @@ describe('IgxGrid - Cell component', () => {
                 // verify first cell 0 row is selected.
                 setTimeout( () => {
                     expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+                    done();
                 }, 10);
             };
             // navigate to 0.
