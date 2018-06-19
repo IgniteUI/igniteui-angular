@@ -7,7 +7,6 @@ enum Axis {
     Y = 0
 }
 export class AutoPositionStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
-    public wrapperClass: string;
     public offsetPadding = 16;
 
     getViewPort(document) { // Material Design implementation
@@ -32,53 +31,52 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
 
 
     // The position method should return a <div> container that will host the component
-    position(element: HTMLElement, wrapper: HTMLElement, rect: { width: number, height: number }, document?: Document): void {
+    position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document): void {
         const viewPort = this.getViewPort(document);
-        super.position(element, wrapper, rect);
-        this.wrapperClass = 'auto-show';
+        super.position(contentElement, size);
         const checkIfMoveHorizontal = (elem: HTMLElement) => {
-            const leftBound = elem.parentElement.offsetLeft;
-            const rightBound = elem.parentElement.offsetLeft + elem.clientWidth;
+            const leftBound = elem.offsetLeft;
+            const rightBound = elem.offsetLeft + elem.clientWidth;
             let newPosition;
             switch (this.settings.horizontalDirection) {
                 case HorizontalAlignment.Left:
                     newPosition = leftBound < viewPort.left ?
-                        parseFloat(elem.parentElement.style.left) + viewPort.left - leftBound + this.offsetPadding :
-                        parseFloat(elem.parentElement.style.left);
-                    elem.parentElement.style.left = newPosition + 'px';
+                        parseFloat(elem.style.left) + viewPort.left - leftBound + this.offsetPadding :
+                        parseFloat(elem.style.left);
+                    elem.style.left = newPosition + 'px';
                     break;
                 case HorizontalAlignment.Right:
                     newPosition = rightBound > viewPort.right ?
-                        parseFloat(elem.parentElement.style.left) + viewPort.right - rightBound - this.offsetPadding :
-                        parseFloat(elem.parentElement.style.left);
-                    elem.parentElement.style.left = newPosition + 'px';
+                        parseFloat(elem.style.left) + viewPort.right - rightBound - this.offsetPadding :
+                        parseFloat(elem.style.left);
+                    elem.style.left = newPosition + 'px';
                     break;
                 default:
                     return;
             }
         };
         const checkIfMoveVertical = (elem: HTMLElement) => {
-            const topBound = elem.parentElement.offsetTop;
-            const bottomBound = elem.parentElement.offsetTop + elem.clientHeight;
+            const topBound = elem.offsetTop;
+            const bottomBound = elem.offsetTop + elem.clientHeight;
             let newPosition;
             switch (this.settings.verticalDirection) {
                 case VerticalAlignment.Top:
                     newPosition = topBound < viewPort.top ?
-                        parseFloat(elem.parentElement.style.top) + viewPort.top - topBound + this.offsetPadding :
-                        parseFloat(elem.parentElement.style.top);
-                    elem.parentElement.style.top = newPosition + 'px';
+                        parseFloat(elem.style.top) + viewPort.top - topBound + this.offsetPadding :
+                        parseFloat(elem.style.top);
+                    elem.style.top = newPosition + 'px';
                     break;
                 case VerticalAlignment.Bottom:
                     newPosition = bottomBound > viewPort.bottom ?
-                        parseFloat(elem.parentElement.style.top) + viewPort.bottom - bottomBound - this.offsetPadding :
-                        parseFloat(elem.parentElement.style.top);
-                    elem.parentElement.style.top = newPosition + 'px';
+                        parseFloat(elem.style.top) + viewPort.bottom - bottomBound - this.offsetPadding :
+                        parseFloat(elem.style.top);
+                    elem.style.top = newPosition + 'px';
                     break;
                 default:
                     return;
             }
         };
-        checkIfMoveVertical(element);
-        checkIfMoveHorizontal(element);
+        checkIfMoveVertical(contentElement);
+        checkIfMoveHorizontal(contentElement);
     }
 }

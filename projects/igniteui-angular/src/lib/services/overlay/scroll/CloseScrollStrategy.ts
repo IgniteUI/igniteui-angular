@@ -52,8 +52,8 @@ export class CloseScrollStrategy implements IScrollStrategy {
 
         if (Math.abs(this.cumulativeScrollTop - this.initialScrollTop) > this._threshold ||
             Math.abs(this.cumulativeScrollLeft - this.initialScrollLeft) > this._threshold) {
-            this._overlayService.hide(this._id);
             this._scrollContainer.removeEventListener('scroll', this.onScroll, true);
+            this._overlayService.hide(this._id);
         }
     }
 }

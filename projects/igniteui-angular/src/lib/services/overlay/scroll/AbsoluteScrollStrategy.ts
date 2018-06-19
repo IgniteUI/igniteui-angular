@@ -32,9 +32,9 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
 
     detach(): void {
         if (this._scrollContainer) {
-            this._scrollContainer.addEventListener('scroll', this.onScroll, true);
+            this._scrollContainer.removeEventListener('scroll', this.onScroll, true);
         } else {
-            this._document.addEventListener('scroll', this.onScroll, true);
+            this._document.removeEventListener('scroll', this.onScroll, true);
         }
     }
 
