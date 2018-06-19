@@ -9,7 +9,7 @@ import { TestBed } from '@angular/core/testing';
 import { AnimationBuilder, style } from '@angular/animations';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { IgxOverlayService } from './overlay';
-import { IgxOverlayDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
@@ -988,17 +988,17 @@ export class SimpleDynamicComponent { }
 
 @Component({
     template: `
-        <div igxOverlay>
+        <div igxToggle>
             <div *ngIf='visible' style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>
         </div>`
 })
 export class SimpleDynamicWithDirectiveComponent {
     public visible = false;
 
-    @ViewChild(IgxOverlayDirective)
-    private _overlay: IgxOverlayDirective;
+    @ViewChild(IgxToggleDirective)
+    private _overlay: IgxToggleDirective;
 
-    public get overlay(): IgxOverlayDirective {
+    public get overlay(): IgxToggleDirective {
         return this._overlay;
     }
 

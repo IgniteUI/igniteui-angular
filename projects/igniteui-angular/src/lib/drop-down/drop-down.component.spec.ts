@@ -2,7 +2,7 @@ import { Component, ContentChildren, DebugElement, ViewChild } from '@angular/co
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleActionDirective, IgxOverlayDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './drop-down.component';
 import { IgxOverlayService } from 'dist/igniteui-angular';

@@ -16,7 +16,7 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
-import { IgxOverlayDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus } from './grid.common';
@@ -109,8 +109,8 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     @ViewChild('defaultDateUI', { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild(IgxOverlayDirective, { read: IgxOverlayDirective})
-    protected toggleDirective: IgxOverlayDirective;
+    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective})
+    protected toggleDirective: IgxToggleDirective;
 
     @ViewChild('select', { read: ElementRef})
     protected select: ElementRef;

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxOverlayDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { CsvFileTypes,
          IgxBaseExporter,
          IgxCsvExporterOptions,
@@ -33,8 +33,8 @@ export class IgxGridToolbarComponent implements IGridBus {
     @Input()
     public gridID: string;
 
-    @ViewChild(IgxOverlayDirective, { read: IgxOverlayDirective })
-    protected overlayDirective: IgxOverlayDirective;
+    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective })
+    protected toggleDirective: IgxToggleDirective;
 
     public get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
@@ -75,7 +75,7 @@ export class IgxGridToolbarComponent implements IGridBus {
     }
 
     public exportClicked() {
-        this.overlayDirective.collapsed = !this.overlayDirective.collapsed;
+        this.toggleDirective.collapsed = !this.toggleDirective.collapsed;
     }
 
     public exportToExcelClicked() {

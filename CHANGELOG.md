@@ -44,7 +44,6 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
     - `igxToggle` changes:
-        - `igxToggle` is renamed to `igxOverlay`.
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
