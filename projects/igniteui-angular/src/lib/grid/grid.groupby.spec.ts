@@ -120,8 +120,8 @@ describe('IgxGrid - GroupBy', () => {
             pointerId: 1
         };
         const pointerEvent = new PointerEvent(eventName, options);
-        Object.defineProperty(pointerEvent, 'pageX', {value: x, enumerable: true});
-        Object.defineProperty(pointerEvent, 'pageY', {value: y, enumerable: true});
+        Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
+        Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
         return new Promise((resolve, reject) => {
             element.dispatchEvent(pointerEvent);
             resolve();
@@ -130,8 +130,8 @@ describe('IgxGrid - GroupBy', () => {
 
     function checkChips(chips, grExpr, sortExpr) {
         for (let i = 0; i < chips.length; i++) {
-            const chip = chips[i].querySelector('span[igxLabel]>span').innerText;
-            const chipDirection = chips[i].querySelector('span[igxLabel]>igx-icon').innerText;
+            const chip = chips[i].querySelector('span.igx-chip__label>span').innerText;
+            const chipDirection = chips[i].querySelector('span.igx-chip__label>igx-icon').innerText;
             const grp = grExpr[i];
             const s = sortExpr[i];
             expect(chip).toBe(grp.fieldName);
@@ -1350,7 +1350,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        simulateMouseEvent('click', chips[0].querySelector('span[igxlabel]'), 0, 0);
+        simulateMouseEvent('click', chips[0].querySelector('span.igx-chip__label'), 0, 0);
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
@@ -1499,8 +1499,8 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         grid.cdr.detectChanges();
 
-        const fChipDirection = chips[0].querySelector('span[igxLabel]>igx-icon').innerText;
-        const sChipDirection = chips[1].querySelector('span[igxLabel]>igx-icon').innerText;
+        const fChipDirection = chips[0].querySelector('span.igx-chip__label>igx-icon').innerText;
+        const sChipDirection = chips[1].querySelector('span.igx-chip__label>igx-icon').innerText;
 
         expect(fChipDirection).toEqual('arrow_upward');
         expect(sChipDirection).toEqual('arrow_downward');
@@ -1510,7 +1510,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.data = [
-           {
+            {
                 Downloads: 0,
                 ID: 1,
                 ProductName: 'JavaScript',
@@ -1527,26 +1527,26 @@ describe('IgxGrid - GroupBy', () => {
         ];
         fix.detectChanges();
 
-        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
+        grid.groupBy([{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+        { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
         const groupRows = grid.groupedRowList.toArray();
         groupRows[1].toggle();
         fix.detectChanges();
-        expect( groupRows[0].expanded).toEqual(true);
-        expect( groupRows[1].expanded).toEqual(false);
+        expect(groupRows[0].expanded).toEqual(true);
+        expect(groupRows[1].expanded).toEqual(false);
 
         grid.clearGrouping('ProductName');
         fix.detectChanges();
 
-        grid.groupBy([{fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
+        grid.groupBy([{ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
-        expect( groupRows[0].expanded).toEqual(true);
-        expect( groupRows[1].expanded).toEqual(true);
-        expect( groupRows[2].expanded).toEqual(true);
-        expect( groupRows[3].expanded).toEqual(true);
+        expect(groupRows[0].expanded).toEqual(true);
+        expect(groupRows[1].expanded).toEqual(true);
+        expect(groupRows[2].expanded).toEqual(true);
+        expect(groupRows[3].expanded).toEqual(true);
 
         groupRows[1].toggle();
         fix.detectChanges();
@@ -1554,21 +1554,21 @@ describe('IgxGrid - GroupBy', () => {
         grid.clearGrouping();
         fix.detectChanges();
 
-        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
+        grid.groupBy([{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+        { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
-        expect( groupRows[0].expanded).toEqual(true);
-        expect( groupRows[1].expanded).toEqual(true);
-        expect( groupRows[2].expanded).toEqual(true);
-        expect( groupRows[3].expanded).toEqual(true);
+        expect(groupRows[0].expanded).toEqual(true);
+        expect(groupRows[1].expanded).toEqual(true);
+        expect(groupRows[2].expanded).toEqual(true);
+        expect(groupRows[3].expanded).toEqual(true);
     });
 
     it('should remove expansion state of groups with higher group hierarchy', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.data = [
-           {
+            {
                 Downloads: 0,
                 ID: 1,
                 ProductName: 'JavaScript',
@@ -1585,20 +1585,20 @@ describe('IgxGrid - GroupBy', () => {
         ];
         fix.detectChanges();
 
-        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
+        grid.groupBy([{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+        { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
         groupRows[1].toggle();
         fix.detectChanges();
-        expect( groupRows[0].expanded).toEqual(true);
-        expect( groupRows[1].expanded).toEqual(false);
+        expect(groupRows[0].expanded).toEqual(true);
+        expect(groupRows[1].expanded).toEqual(false);
 
         grid.clearGrouping('Released');
         fix.detectChanges();
 
-        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false}]);
+        grid.groupBy([{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
         // reorder chips by simulating events
@@ -1609,15 +1609,15 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         groupRows = grid.groupedRowList.toArray();
-        expect( groupRows[0].expanded).toEqual(true);
-        expect( groupRows[1].expanded).toEqual(true);
+        expect(groupRows[0].expanded).toEqual(true);
+        expect(groupRows[1].expanded).toEqual(true);
     });
 
     it('should remove expansion state when reordering chips', (done) => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.data = [
-           {
+            {
                 Downloads: 0,
                 ID: 1,
                 ProductName: 'JavaScript',
@@ -1634,15 +1634,15 @@ describe('IgxGrid - GroupBy', () => {
         ];
         fix.detectChanges();
 
-        grid.groupBy([{fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false}]);
+        grid.groupBy([{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+        { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
         let groupRows = grid.groupedRowList.toArray();
         groupRows[1].toggle();
         fix.detectChanges();
-        expect( groupRows[0].expanded).toEqual(true);
-        expect( groupRows[1].expanded).toEqual(false);
+        expect(groupRows[0].expanded).toEqual(true);
+        expect(groupRows[1].expanded).toEqual(false);
 
         groupRows = grid.groupedRowList.toArray();
         // reorder chips by simulating events
@@ -1664,14 +1664,14 @@ describe('IgxGrid - GroupBy', () => {
         }).then(() => {
             fix.detectChanges();
 
-            expect( groupRows[0].expanded).toEqual(true);
-            expect( groupRows[1].expanded).toEqual(true);
+            expect(groupRows[0].expanded).toEqual(true);
+            expect(groupRows[1].expanded).toEqual(true);
 
             // There is animation after the mouse is released. The chip returns to the new position and we have to wait for it.
             chipComponents[0].componentInstance.onMoveEnd.subscribe(() => {
                 let chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
-                expect(chipsElems[0].querySelector('span[igxLabel]>span').textContent).toEqual('ProductName');
-                expect(chipsElems[1].querySelector('span[igxLabel]>span').textContent).toEqual('Released');
+                expect(chipsElems[0].querySelector('span.igx-chip__label>span').textContent).toEqual('ProductName');
+                expect(chipsElems[1].querySelector('span.igx-chip__label>span').textContent).toEqual('Released');
 
                 // reorder chips again to revert them in original state
                 chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -1692,12 +1692,12 @@ describe('IgxGrid - GroupBy', () => {
                 }).then(() => {
                     fix.detectChanges();
                     chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
-                    expect(chipsElems[0].querySelector('span[igxLabel]>span').textContent).toEqual('Released');
-                    expect(chipsElems[1].querySelector('span[igxLabel]>span').textContent).toEqual('ProductName');
+                    expect(chipsElems[0].querySelector('span.igx-chip__label>span').textContent).toEqual('Released');
+                    expect(chipsElems[1].querySelector('span.igx-chip__label>span').textContent).toEqual('ProductName');
 
                     groupRows = grid.groupedRowList.toArray();
-                    expect( groupRows[0].expanded).toEqual(true);
-                    expect( groupRows[1].expanded).toEqual(true);
+                    expect(groupRows[0].expanded).toEqual(true);
+                    expect(groupRows[1].expanded).toEqual(true);
                     done();
                 });
             });
@@ -1713,7 +1713,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         let m = '';
         const expr = fix.componentInstance.columns.map(val => {
-            return {fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
+            return { fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
         });
         // not allowed to group by more than 10 columns
         try {
@@ -1731,7 +1731,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.columnList.toArray()[0].header = 'Custom Header Text';
         fix.detectChanges();
 
-        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
 
         const chips = fix.nativeElement.querySelectorAll(CHIP);
@@ -1752,25 +1752,25 @@ describe('IgxGrid - GroupBy', () => {
         const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
 
         let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+            - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
         expect(grid.calcHeight).toEqual(expectedHeight);
 
         // verify height is recalculated.
-        grid.groupBy({fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false});
-        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false});
-        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false});
-        grid.groupBy({fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
 
         expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+            - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
         expect(grid.calcHeight).toEqual(expectedHeight);
         // veirify width is recalculated
@@ -1783,10 +1783,10 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+            - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
         expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.pinnedWidth).toEqual(0);
