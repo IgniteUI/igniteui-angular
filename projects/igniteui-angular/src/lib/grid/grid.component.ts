@@ -2124,7 +2124,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public onChipKeyDown(event) {
-        if (event.code === 'Space' || event.code === 'Enter') {
+        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') {
             const sortingExpr = this.sortingExpressions;
             const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
             columnExpr.dir = 3 - columnExpr.dir;

@@ -188,7 +188,7 @@ export class IgxChipComponent implements AfterViewInit {
             altKey: event.altKey,
             ctrlKey: event.ctrlKey,
             shiftKey: event.shiftKey,
-            code: event.code,
+            key: event.key,
             cancel: false
         };
 
@@ -197,23 +197,23 @@ export class IgxChipComponent implements AfterViewInit {
             return;
         }
 
-        if (event.code === 'Delete') {
+        if (event.key === 'Delete') {
             this.onRemove.emit({
                 owner: this
             });
         }
 
-        if (event.code === 'Space' && this.selectable) {
+        if ((event.key === ' ' || event.key === 'Spacebar') && this.selectable) {
             this.selected = !this.selected;
         }
 
-        if (event.code !== 'Tab') {
+        if (event.key !== 'Tab') {
             event.preventDefault();
         }
     }
 
     public onRemoveBtnKeyDown(event) {
-        if (event.code === 'Space' || event.code === 'Enter') {
+        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') {
             this.onRemove.emit({
                 owner: this
             });
