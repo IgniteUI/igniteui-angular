@@ -62,12 +62,13 @@ describe('Update 6.0.2', () => {
     });
 
     it('should update theme import in sass files', done => {
-        configJson.projects.testProj['schematics'] = {
+        const config = JSON.parse(JSON.stringify(configJson));
+        config.projects.testProj['schematics'] = {
             '@schematics/angular:component': {
                 styleext: 'sass'
             }
         };
-        appTree.overwrite('/angular.json', JSON.stringify(configJson));
+        appTree.overwrite('/angular.json', JSON.stringify(config));
         appTree.create(
             '/testSrc/appPrefix/component/test.component.sass',
             `@import "~igniteui-angular/core/styles/themes/index";`
