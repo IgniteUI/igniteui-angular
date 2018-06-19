@@ -16,6 +16,7 @@ import { IgxIconModule } from '../icon';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
+import { IgxColumnHidingModule } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -113,7 +114,8 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxCheckboxModule,
     IgxBadgeModule,
     IgxChipsModule,
-    IgxDragDropModule
+    IgxDragDropModule,
+    IgxColumnHidingModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })

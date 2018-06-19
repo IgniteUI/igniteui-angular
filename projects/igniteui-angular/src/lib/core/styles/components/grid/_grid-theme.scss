@@ -25,7 +25,6 @@
 /// @param {Color} $resize-line-color [null] - The table header resize line color.
 ///
 /// @param {Color} $grouparea-background [null] - The grid group area background color.
-/// @param {Color} $grouparea-placeholder-color [null] - The grid group area placeholder text color.
 ///
 /// @param {Color} $group-row-background [null] - The grid group row background color.
 /// @param {Color} $group-label-column-name-text [null] - The grid group row column name text color.
@@ -37,6 +36,10 @@
 /// @param {Color} $expand-icon-hover-color [null] - The grid row expand icon hover color.
 /// @param {Color} $group-count-background [null] - The grid group row cont badge background color.
 /// @param {Color} $group-count-text-color [null] - The grid group row cont badge text color.
+/// @param {Color} $drop-area-text-color [null] - The drop area text color.
+/// @param {Color} $drop-area-icon-color [null] - The drop area icon color.
+/// @param {Color} $drop-area-background [null] - The drop area background color.
+/// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -84,7 +87,10 @@
     $expand-icon-hover-color: null,
     $group-count-background: null,
     $group-count-text-color: null,
-    $grouparea-placeholder-color: null
+    $drop-area-text-color: null,
+    $drop-area-icon-color: null,
+    $drop-area-background: null,
+    $drop-area-on-drop-background: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -127,9 +133,12 @@
         expand-icon-hover-color: igx-color($palette, 'grays', 800),
         group-count-background: igx-color($palette, 'grays', 200),
         group-count-text-color: igx-color($palette, 'grays', 600),
-        grouparea-placeholder-color: igx-color($palette, 'grays', 600),
+        drop-area-text-color: igx-color($palette, 'grays', 600),
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
         row-indentation-background: hexrgba(igx-color($palette, 'grays', 100)),
+        drop-area-icon-color: igx-color($palette, 'grays'),
+        drop-area-background: transparen,
+        drop-area-on-drop-background: igx-color($palette, grays, 100),
     );
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
@@ -188,8 +197,8 @@
         $grouparea-background: $header-background
     }
 
-    @if not($grouparea-placeholder-color) and $grouparea-background {
-        $grouparea-placeholder-color: text-contrast($grouparea-background)
+    @if not($drop-area-text-color) and $drop-area-background {
+        $drop-area-text-color: text-contrast($drop-area-background)
     }
 
     @return extend($default-theme, (
@@ -232,9 +241,12 @@
         expand-icon-hover-color: $expand-icon-hover-color,
         group-count-background: $group-count-background,
         group-count-text-color: $group-count-text-color,
-        grouparea-placeholder-color: $grouparea-placeholder-color,
+        drop-area-text-color: $drop-area-text-color,
         group-row-background: $group-row-background,
         row-indentation-background: $row-indentation-background,
+        drop-area-icon-color: $drop-area-icon-color,
+        drop-area-on-drop-background: $drop-area-on-drop-background,
+        drop-area-background: $drop-area-background,
     ));
 }
 
@@ -262,6 +274,7 @@
 
     $grid-head-fs: rem(12px);
     $grid-head-fw: 600;
+    $transition: all 120ms $ease-in-out-cubic;
 
     // Cell
     // $grid-cell-padding: 0 rem(24px);
@@ -289,10 +302,28 @@
         compact: rem(32px)
     );
 
+    $drop-area-height: (
+        comfortable: rem(32px),
+        cosy: rem(24px),
+        compact: rem(24px)
+    );
+
+    $drop-area-padding: (
+        comfortable: 0 rem(16px),
+        cosy: 0 rem(8px),
+        compact: 0 rem(6px)
+    );
+
     $grid-cell-padding: (
         comfortable: 0 rem(24px),
         cosy: 0 rem(16px),
         compact: 0 rem(12px)
+    );
+
+    $grouparea-padding: (
+        comfortable: rem(16px) rem(24px),
+        cosy: rem(8px) rem(16px),
+        compact: rem(4px) rem(12px)
     );
 
     $grid-grouping-indicator-padding: (
@@ -699,7 +730,7 @@
         color: --var($theme, 'ghost-header-icon-color');
         font-size: rem(24px);
         margin-right: rem(8);
-        min-width: rem(100px);
+        width: rem(24px);
     }
 
     %igx-grid__drag-col-header {
@@ -864,13 +895,11 @@
         grid-row: 1;
         border-bottom: 1px solid --var($theme, 'row-border-color');
         z-index: 2;
-        height: calc(#{map-get($grid-header-height, 'comfortable')} + #{rem(16px)});
         background: --var($theme, 'grouparea-background');
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: map-get($grid-cell-padding, 'comfortable');
-        overflow: hidden;
+        padding: map-get($grouparea-padding, 'comfortable');
         flex-wrap: wrap;
 
         &:focus {
@@ -879,33 +908,56 @@
     }
 
     %igx-grid__grouparea--cosy {
-        padding: map-get($grid-cell-padding, 'cosy');
-        height: calc(#{map-get($grid-header-height, 'cosy')} + #{rem(16px)});
+        padding: map-get($grouparea-padding, 'cosy');
     }
 
     %igx-grid__grouparea--compact {
-        padding: map-get($grid-cell-padding, 'compact');
-        height: calc(#{map-get($grid-header-height, 'compact')} + #{rem(16px)});
+        padding: map-get($grouparea-padding, 'compact');
     }
 
-    %igx-grid__grouparea-placeholder {
-        color: --var($theme, 'grouparea-placeholder-color');
-        width: 100%;
+    %igx-drop-area {
+        min-width: rem(80px);
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        height: rem(32px);
-        border-radius: rem(32) / 2;
-        padding: map-get($grid-cell-padding, 'cosy');
-        background: igx-color($palette, grays, 100);
+        height: map-get($drop-area-height, 'comfortable');
+        border-radius: map-get($drop-area-height, 'comfortable') / 2;
+        padding: map-get($drop-area-padding, 'comfortable');
+        margin: rem(4px);
+        flex: 1 0 0%;
+        transition: $transition;
+        background: --var($theme, 'drop-area-background');
 
-        %igx-icon-display {
-            color: --var($theme, 'group-label-icon');
+        %igx-drop-area__icon {
+            color: --var($theme, 'drop-area-icon-color');
             width: rem(16px);
             height: rem(16px);
             font-size: rem(16px);
             margin-right: rem(8px);
         }
+    }
+
+    %igx-drop-area--hover {
+        background: --var($theme, 'drop-area-on-drop-background');
+    }
+
+    %igx-drop-area--cosy {
+        height: map-get($drop-area-height, 'cosy');
+        border-radius: map-get($drop-area-height, 'cosy') / 2;
+        padding: map-get($drop-area-padding, 'cosy');
+    }
+
+    %igx-drop-area--compact {
+        height: map-get($drop-area-height, 'compact');
+        border-radius: map-get($drop-area-height, 'compact') / 2;
+        padding: map-get($drop-area-padding, 'compact');
+    }
+
+
+    %igx-drop-area__text {
+        @include ellipsis();
+        color: --var($theme, 'drop-area-text-color');
+        font-size: rem(13px);
     }
 
     %igx-grid__grouping-indicator {
@@ -942,8 +994,6 @@
 
     %igx-grid__header-indentation {
         position: relative;
-        min-width: rem(60px);
-        flex-basis: rem(60px);
         padding-right: rem(12);
         background: --var($theme, 'header-background');
         z-index: 1;
@@ -1000,4 +1050,5 @@
         }
     }
 }
+
 

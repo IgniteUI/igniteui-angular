@@ -67,7 +67,8 @@ describe('IgxGrid - GroupBy', () => {
             declarations: [
                 DefaultGridComponent,
                 GroupableGridComponent,
-                CustomTemplateGridComponent
+                CustomTemplateGridComponent,
+                GroupByDataMoreColumnsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -1667,7 +1668,7 @@ describe('IgxGrid - GroupBy', () => {
             expect( groupRows[1].expanded).toEqual(true);
 
             // There is animation after the mouse is released. The chip returns to the new position and we have to wait for it.
-            chipComponents[0].componentInstance.onMoveEnd.subscribe(() => {
+            chipComponents[0].componentInstance.onMoveEnd.pipe(take(1)).subscribe(() => {
                 let chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
                 expect(chipsElems[0].querySelector('span[igxLabel]>span').textContent).toEqual('ProductName');
                 expect(chipsElems[1].querySelector('span[igxLabel]>span').textContent).toEqual('Released');
@@ -1697,10 +1698,102 @@ describe('IgxGrid - GroupBy', () => {
                     groupRows = grid.groupedRowList.toArray();
                     expect( groupRows[0].expanded).toEqual(true);
                     expect( groupRows[1].expanded).toEqual(true);
-                    done();
+
+                    chipComponents[0].componentInstance.onMoveEnd.pipe(take(1)).subscribe(() => {
+                        done();
+                    });
                 });
             });
         });
+    });
+
+    it('should throw an error when grouping more than 10 colunms', () => {
+        const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.testData = [
+            { 'A': '1', 'B': 'ALFKI', 'C': '2', 'D': '3', 'E': '4', 'F': '5', 'H': '6', 'G': '7', 'K': '8', 'L': '9', 'M': '10', 'N': '1' }
+        ];
+        fix.detectChanges();
+        let m = '';
+        const expr = fix.componentInstance.columns.map(val => {
+            return {fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
+        });
+        // not allowed to group by more than 10 columns
+        try {
+            grid.groupBy(expr);
+        } catch (e) {
+            m = e.message;
+        }
+        expect(m).toBe('Maximum amount of grouped columns is 10.');
+    });
+
+    it('should display column header text in the grouping chip.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.columnList.toArray()[0].header = 'Custom Header Text';
+        fix.detectChanges();
+
+        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false});
+        fix.detectChanges();
+
+        const chips = fix.nativeElement.querySelectorAll(CHIP);
+        expect(chips.length).toBe(1);
+        const chipText = chips[0].querySelector('span.igx-chip__text').innerText;
+        expect(chipText).toEqual('Custom Header Text');
+    });
+
+    it('should update grid sizes when columns are grouped/ungrouped.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.componentInstance.width = '400px';
+        fix.componentInstance.height = '500px';
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const groupArea = fix.debugElement.query(By.css('.igx-grid__grouparea'));
+        const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+        const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
+        const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+
+        let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+        expect(grid.calcHeight).toEqual(expectedHeight);
+
+        // verify height is recalculated.
+        grid.groupBy({fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false});
+        fix.detectChanges();
+
+        expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+        expect(grid.calcHeight).toEqual(expectedHeight);
+        // veirify width is recalculated
+        const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
+
+        expect(grid.pinnedWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
+        expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
+
+        grid.clearGrouping();
+        fix.detectChanges();
+
+        expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+        expect(grid.calcHeight).toEqual(expectedHeight);
+        expect(grid.pinnedWidth).toEqual(0);
+        expect(grid.unpinnedWidth).toEqual(400);
     });
 });
 
@@ -1846,6 +1939,41 @@ export class GroupableGridComponent extends DataParent {
 export class CustomTemplateGridComponent extends DataParent {
     public width = '800px';
     public height = null;
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="testData">
+                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width">
+                </igx-column>
+        </igx-grid>
+    `
+})
+export class GroupByDataMoreColumnsComponent extends DataParent {
+    public width = '800px';
+    public height = null;
+    public testData = [];
+
+    public columns = [
+        { field: 'A', width: 100 },
+        { field: 'B', width: 100 },
+        { field: 'C', width: 100 },
+        { field: 'D', width: 100 },
+        { field: 'E', width: 100 },
+        { field: 'F', width: 100 },
+        { field: 'H', width: 100 },
+        { field: 'G', width: 100 },
+        { field: 'K', width: 100 },
+        { field: 'L', width: 100 },
+        { field: 'M', width: 100 },
+        { field: 'N', width: 100 }
+    ];
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;

@@ -1,19 +1,16 @@
 <div class="sample-wrapper">
     <app-page-header title="Chips" description="Hello chips"></app-page-header>
     <section class="sample-content">
-
         <div class="sample-holder">
             <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
                 <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
                     <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
-                    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+                    <label #label igxLabel [class]="''">{{chip.text}}</label>
                     <span igxConnector> -> </span>
                 </igx-chip>
             </igx-chips-area>
             <br>
-            <button igxButton="flat" (click)="selectChip('City')">Select 'City'</button>
+            <button igxButton="raised" (click)="selectChip('City')">Select 'City'</button>
         </div>
-
-
     </section>
 </div>
