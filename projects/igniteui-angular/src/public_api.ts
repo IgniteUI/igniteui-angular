@@ -17,6 +17,7 @@ export * from './lib/directives/dragdrop/dragdrop.directive';
 export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';
 export * from './lib/directives/for-of/for_of.directive';
+export * from './lib/directives/for-of/IForOfState';
 export * from './lib/directives/layout/layout.directive';
 export * from './lib/directives/mask/mask.directive';
 export * from './lib/directives/ripple/ripple.directive';
