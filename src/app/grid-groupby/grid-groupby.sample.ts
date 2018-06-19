@@ -1,6 +1,7 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 
 import {DataType, IgxButtonDirective, IgxColumnComponent, IgxGridComponent,  SortingDirection, ISortingExpression } from 'igniteui-angular';
+import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/utils';
 
 @Component({
     providers: [],
@@ -16,16 +17,16 @@ export class GridGroupBySampleComponent implements OnInit {
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 100, hidden: true },
-            { field: 'CompanyName', width: 300 },
+            { field: 'CompanyName', width: 300, groupable: true  },
             { field: 'ContactName', width: 200, pinned: true },
             { field: 'ContactTitle', width: 200, pinned: true, groupable: true },
-            { field: 'Address', width: 300 },
+            { field: 'Address', width: 300, groupable: true  },
             { field: 'Country', width: 150, groupable: true },
             { field: 'City', width: 150, groupable: true },
-            { field: 'Region', width: 150 },
-            { field: 'PostalCode', width: 150 },
-            { field: 'Phone', width: 150 },
-            { field: 'Fax', width: 150 }
+            { field: 'Region', width: 150, groupable: true },
+            { field: 'PostalCode', width: 150, groupable: true  },
+            { field: 'Phone', width: 150, groupable: true  },
+            { field: 'Fax', width: 150, groupable: true  }
         ];
         /* tslint:disable */
         this.data = [
@@ -58,6 +59,14 @@ export class GridGroupBySampleComponent implements OnInit {
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
     }
+    private _density = DisplayDensity.cosy;
+    public get density(): DisplayDensity {
+        return this._density;
+    }
+    public set density(value) {
+        this._density = value;
+        this.grid1.cdr.detectChanges();
+    }
     groupBy(name: string) {
         const expressions = this.grid1.groupingExpressions;
         for (let i = 0; i < expressions.length; i++) {
@@ -68,5 +77,12 @@ export class GridGroupBySampleComponent implements OnInit {
             }
         }
         this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+    }
+    toggleDensity() {
+        switch (this._density) {
+            case DisplayDensity.comfortable: this.density = DisplayDensity.cosy; break;
+            case DisplayDensity.cosy: this.density = DisplayDensity.compact; break;
+            case DisplayDensity.compact: this.density = DisplayDensity.comfortable; break;
+        }
     }
 }

@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
+    HostBinding,
     Inject,
     Injectable,
     Input,
@@ -290,8 +291,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         }
         super.onPointerMove(event);
 
-        if (this._dragStarted && this._dragGhost && !this.column.grid.isColumnMoving) {
-            this.column.grid.isColumnMoving = true;
+        if (this._dragStarted && this._dragGhost && !this.column.grid.draggedColumn) {
+            this.column.grid.draggedColumn = this.column;
             this.column.grid.cdr.detectChanges();
         }
     }
@@ -302,10 +303,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             return;
         }
 
-        this.column.grid.isColumnMoving = false;
-        this.column.grid.cdr.detectChanges();
-
         super.onPointerUp(event);
+
+        this.column.grid.draggedColumn = null;
+        this.column.grid.cdr.detectChanges();
     }
 
     protected createDragGhost(event) {
@@ -496,7 +497,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.moveColumn(this.cms.column, this.column);
 
-            this.column.grid.isColumnMoving = false;
+            this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
         }
     }
@@ -511,14 +512,24 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         super(elementRef, renderer);
     }
 
+    @HostBinding('class.igx-drop-area--hover')
+    public hovered = false;
+
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         const column: IgxColumnComponent = drag.column;
         if (column.groupable) {
             drag.icon.innerText = 'group_work';
+            this.hovered = true;
         } else {
             drag.icon.innerText = 'block';
+            this.hovered = false;
         }
+    }
+
+    public onDragLeave(event) {
+        event.detail.owner.icon.innerText = 'block';
+        this.hovered = false;
     }
 
     public onDragDrop(event) {

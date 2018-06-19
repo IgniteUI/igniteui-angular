@@ -21,6 +21,7 @@
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { DisplayDensity } from '../core/utils';
 
 @Component({
     selector: 'igx-chip',
@@ -53,8 +54,36 @@ export class IgxChipComponent implements AfterViewInit {
     @Input()
     public selectable = false;
 
-    @HostBinding('class.igx-chip')
-    public cssClass = 'igx-chip';
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-chip--cosy';
+            case DisplayDensity.compact:
+                return 'igx-chip--compact';
+            default:
+                return 'igx-chip';
+        }
+    }
+
+    @Input()
+    public get displayDensity(): DisplayDensity | string {
+        return this._displayDensity;
+    }
+
+    public set displayDensity(val: DisplayDensity | string) {
+        switch (val) {
+            case 'compact':
+                this._displayDensity = DisplayDensity.compact;
+                break;
+            case 'cosy':
+                this._displayDensity = DisplayDensity.cosy;
+                break;
+            case 'comfortable':
+            default:
+                this._displayDensity = DisplayDensity.comfortable;
+        }
+    }
 
     @Input()
     public set color(newColor) {
@@ -131,12 +160,12 @@ export class IgxChipComponent implements AfterViewInit {
     public removeBtnTabindex = 0;
     public areaMovingPerforming = false;
 
+    private _displayDensity = DisplayDensity.comfortable;
     private _selected = false;
     private _dragging = false;
     private _selectedItemClass = 'item-selected';
 
-    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) {
-    }
+    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
 
     ngAfterViewInit() {
         this.chipArea.nativeElement.addEventListener('keydown', (args) => {

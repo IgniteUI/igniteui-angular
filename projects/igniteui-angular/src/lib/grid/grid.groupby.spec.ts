@@ -1742,6 +1742,59 @@ describe('IgxGrid - GroupBy', () => {
         const chipText = chips[0].querySelector('span.igx-chip__text').innerText;
         expect(chipText).toEqual('Custom Header Text');
     });
+
+    it('should update grid sizes when columns are grouped/ungrouped.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.componentInstance.width = '400px';
+        fix.componentInstance.height = '500px';
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        const groupArea = fix.debugElement.query(By.css('.igx-grid__grouparea'));
+        const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+        const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
+        const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+
+        let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+        expect(grid.calcHeight).toEqual(expectedHeight);
+
+        // verify height is recalculated.
+        grid.groupBy({fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false});
+        grid.groupBy({fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false});
+        fix.detectChanges();
+
+        expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+        expect(grid.calcHeight).toEqual(expectedHeight);
+        // veirify width is recalculated
+        const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
+
+        expect(grid.pinnedWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
+        expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
+
+        grid.clearGrouping();
+        fix.detectChanges();
+
+        expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+        expect(grid.calcHeight).toEqual(expectedHeight);
+        expect(grid.pinnedWidth).toEqual(0);
+        expect(grid.unpinnedWidth).toEqual(400);
+    });
 });
 
 export class DataParent {
