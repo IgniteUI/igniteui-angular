@@ -38,22 +38,22 @@ export class OverlaySampleComponent {
     buttonTop = 35;
 
     horizontalDirections = ['Left', 'Center', 'Right'];
-    horizontalDirection = 'Center';
+    horizontalDirection = '';
 
     verticalDirections = ['Top', 'Middle', 'Bottom'];
-    verticalDirection = 'Middle';
+    verticalDirection = '';
 
     horizontalStartPoints = ['Left', 'Center', 'Right'];
-    horizontalStartPoint = 'Center';
+    horizontalStartPoint = '';
 
     verticalStartPoints = ['Top', 'Middle', 'Bottom'];
-    verticalStartPoint = 'Middle';
+    verticalStartPoint = '';
 
     positionStrategies = ['Auto', 'Connected', 'Global'];
-    positionStrategy = 'Global';
+    positionStrategy = '';
 
     scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
-    scrollStrategy = 'NoOp';
+    scrollStrategy = '';
 
     closeOnOutsideClick = true;
     modal = true;
@@ -118,15 +118,42 @@ export class OverlaySampleComponent {
             case 'ps':
                 switch (ev.value) {
                     case 'Auto':
-                        this._overlaySettings.positionStrategy = new AutoPositionStrategy();
+                        this._overlaySettings = {
+                            positionStrategy: new AutoPositionStrategy(),
+                            scrollStrategy: new NoOpScrollStrategy(),
+                            modal: true,
+                            closeOnOutsideClick: true
+                        };
+                        this.horizontalDirection = 'Right';
+                        this.verticalDirection = 'Bottom';
+                        this.horizontalStartPoint = 'Left';
+                        this.verticalStartPoint = 'Bottom';
+                        this.closeOnOutsideClick = true;
+                        this.modal = true;
                         break;
                     case 'Connected':
-                        this._overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
+                        this._overlaySettings = {
+                            positionStrategy: new ConnectedPositioningStrategy(),
+                            scrollStrategy: new NoOpScrollStrategy(),
+                            modal: true,
+                            closeOnOutsideClick: true
+                        };
+                        this.horizontalDirection = 'Right';
+                        this.verticalDirection = 'Bottom';
+                        this.horizontalStartPoint = 'Left';
+                        this.verticalStartPoint = 'Bottom';
+                        this.closeOnOutsideClick = true;
+                        this.modal = true;
                         break;
                     case 'Global':
                         this._overlaySettings.positionStrategy = new GlobalPositionStrategy();
+                        this.horizontalDirection = 'Center';
+                        this.verticalDirection = 'Middle';
+                        this.horizontalStartPoint = 'Center';
+                        this.verticalStartPoint = 'Middle';
+                        this.closeOnOutsideClick = true;
+                        this.modal = true;
                         break;
-
                     default:
                         break;
                 }

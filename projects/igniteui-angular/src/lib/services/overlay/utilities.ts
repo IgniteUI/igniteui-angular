@@ -2,7 +2,8 @@ import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { IPositionStrategy } from './position/IPositionStrategy';
 
 import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
-import { AnimationMetadata } from '@angular/animations';
+import { AnimationMetadata, AnimationReferenceMetadata } from '@angular/animations';
+import { ComponentRef } from '@angular/core';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -30,8 +31,8 @@ export interface PositionSettings {
     verticalDirection?: VerticalAlignment;
     horizontalStartPoint?: HorizontalAlignment;
     verticalStartPoint?: VerticalAlignment;
-    openAnimation?: AnimationMetadata | AnimationMetadata[];
-    closeAnimation?: AnimationMetadata | AnimationMetadata[];
+    openAnimation?: AnimationReferenceMetadata;
+    closeAnimation?: AnimationReferenceMetadata;
 }
 
 export interface OverlaySettings {
@@ -39,6 +40,10 @@ export interface OverlaySettings {
     scrollStrategy?: IScrollStrategy;
     modal?: boolean;
     closeOnOutsideClick?: boolean;
+}
+
+export interface OpeningEventArgs {
+    componentRef?: ComponentRef<{}>;
 }
 
 export function getPointFromPositionsSettings(settings: PositionSettings): Point {

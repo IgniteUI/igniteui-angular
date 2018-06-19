@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { OverlaySettings } from './utilities';
+import { OverlaySettings, OpeningEventArgs } from './utilities';
 
 import {
     ApplicationRef,
@@ -16,15 +16,16 @@ import {
     OnDestroy
 } from '@angular/core';
 import { AnimationBuilder } from '@angular/animations';
+import { fromEvent } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class IgxOverlayService implements OnDestroy {
+export class IgxOverlayService {
     private _componentId = 0;
     private _overlays: {
         id: string,
         elementRef: ElementRef,
         componentRef: ComponentRef<{}>,
-        size: { width: number, height: number },
         settings: OverlaySettings
     }[] = [];
     private _overlayElement: HTMLElement;
@@ -46,10 +47,10 @@ export class IgxOverlayService implements OnDestroy {
         return this._overlayElement;
     }
 
+    public onOpening = new EventEmitter<OpeningEventArgs>();
     public onOpened = new EventEmitter();
-    public onOpening = new EventEmitter();
-    public onClosed = new EventEmitter();
     public onClosing = new EventEmitter();
+    public onClosed = new EventEmitter();
 
     constructor(
         private _factoryResolver: ComponentFactoryResolver,
@@ -58,28 +59,36 @@ export class IgxOverlayService implements OnDestroy {
         private builder: AnimationBuilder,
         @Inject(DOCUMENT) private _document: any) { }
 
-    show(component, id?: string, overlaySettings?: OverlaySettings): string {
-        this.onOpening.emit();
-
-        id = this.getId(id);
+    show(component, overlaySettings?: OverlaySettings): string {
+        const id: string = (this._componentId++).toString();
         overlaySettings = Object.assign({}, this._defaultSettings, overlaySettings);
 
         // get the element for both static and dynamic components
         const element = this.getElement(component, id, overlaySettings);
 
+        this.onOpening.emit({
+            componentRef: this._overlays.find(c => c.id === id).componentRef
+        });
+
         const wrapperElement = this.getWrapperElement(overlaySettings, id);
         const contentElement = this.getContentElement(wrapperElement, overlaySettings);
-        if (overlaySettings.closeOnOutsideClick) {
-            this.addBackDropElement(wrapperElement, id);
-        }
         contentElement.appendChild(element);
         this.OverlayElement.appendChild(wrapperElement);
 
-        overlaySettings.positionStrategy.position(contentElement, this._overlays.find(e => e.id === id).size, document);
+        const size = element.getBoundingClientRect();
+        overlaySettings.positionStrategy.position(contentElement, size, document);
         const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
         const animationPlayer = animationBuilder.create(element);
         animationPlayer.onDone(() => {
             this.onOpened.emit();
+            if (overlaySettings.closeOnOutsideClick) {
+                if (overlaySettings.modal) {
+                    fromEvent(wrapperElement, 'click').pipe(take(1)).subscribe(() => this.hide(id));
+                } else {
+                    fromEvent(this._document, 'click').pipe(take(1)).subscribe(() => this.hide(id));
+                }
+            }
+            animationPlayer.reset();
         });
 
         animationPlayer.play();
@@ -103,6 +112,7 @@ export class IgxOverlayService implements OnDestroy {
         const animationBuilder = this.builder.build(overlay.settings.positionStrategy.settings.closeAnimation);
         const animationPlayer = animationBuilder.create(overlay.elementRef.nativeElement);
         animationPlayer.onDone(() => {
+            animationPlayer.reset();
             const child: HTMLElement = overlay.elementRef.nativeElement;
             if (!this.OverlayElement.contains(child)) {
                 console.error('Component with id:' + id + ' is already removed!');
@@ -110,6 +120,17 @@ export class IgxOverlayService implements OnDestroy {
             }
 
             this.OverlayElement.removeChild(child.parentNode.parentNode);
+            if (overlay.componentRef) {
+                this._appRef.detachView(overlay.componentRef.hostView);
+                overlay.componentRef.destroy();
+            }
+
+            const index = this._overlays.indexOf(overlay);
+            this._overlays.splice(index, 1);
+            if (this._overlays.length === 0) {
+                this._overlayElement.parentElement.removeChild(this._overlayElement);
+                this._overlayElement = null;
+            }
             this.onClosed.emit();
         });
 
@@ -131,21 +152,8 @@ export class IgxOverlayService implements OnDestroy {
 
         overlay.settings.positionStrategy.position(
             overlay.elementRef.nativeElement.parentElement,
-            overlay.size,
+            overlay.elementRef.nativeElement.parentElement.getBoundingClientRect(),
             this._document);
-    }
-
-    ngOnDestroy(): void {
-        this._componentId = 0;
-        this._overlays = [];
-        if (this._overlayElement) {
-            this._overlayElement.parentElement.removeChild(this._overlayElement);
-            this._overlayElement = null;
-        }
-    }
-
-    private getId(id?: string) {
-        return id ? id : (this._componentId++).toString();
     }
 
     private getElement(component: any, id: string, overlaySettings: OverlaySettings): HTMLElement {
@@ -161,7 +169,6 @@ export class IgxOverlayService implements OnDestroy {
                 id: id,
                 elementRef: <ElementRef>component,
                 componentRef: null,
-                size: element.getBoundingClientRect(),
                 settings: overlaySettings
             });
             return element;
@@ -175,17 +182,16 @@ export class IgxOverlayService implements OnDestroy {
             return null;
         }
 
-        const dc: ComponentRef<{}> = dynamicFactory.create(this._injector);
+        const dynamicComponent: ComponentRef<{}> = dynamicFactory.create(this._injector);
 
         // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
-        element = dc.location.nativeElement.lastElementChild;
-        this._appRef.attachView(dc.hostView);
+        element = dynamicComponent.location.nativeElement.lastElementChild;
+        this._appRef.attachView(dynamicComponent.hostView);
 
         this._overlays.push({
             id: id,
             elementRef: <ElementRef>{nativeElement: element},
-            componentRef: dc,
-            size: element.getBoundingClientRect(),
+            componentRef: dynamicComponent,
             settings: overlaySettings
         });
         return element;
@@ -219,12 +225,5 @@ export class IgxOverlayService implements OnDestroy {
         }
         wrapperElement.appendChild(content);
         return content;
-    }
-
-    private addBackDropElement(wrapperElement: HTMLElement, id: string) {
-        const backDrop: HTMLElement = this._document.createElement('div');
-        backDrop.classList.add('igx-overlay__back-drop');
-        backDrop.addEventListener('click', () => this.hide(id), { once: true });
-        wrapperElement.appendChild(backDrop);
     }
 }

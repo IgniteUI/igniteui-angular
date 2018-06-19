@@ -22,6 +22,7 @@ import { OverlaySettings } from '../../services';
     selector: '[igxToggle]'
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
+    private _overlayId: string;
 
     @Output()
     public onOpened = new EventEmitter();
@@ -72,12 +73,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
         this.collapsed = false;
 
-        const id = this.overlayService.show(this.elementRef, this.id, overlaySettings);
-
-        if (!this.id) {
-            this.id = id;
-        }
-
+        this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
         if (fireEvents) {
             this.onOpened.emit();
         }
@@ -90,7 +86,11 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             this.onClosing.emit();
         }
 
-        this.overlayService.hide(this.id);
+        if (this._overlayId !== undefined) {
+            this.overlayService.hide(this._overlayId);
+        } else {
+            this.collapsed = true;
+        }
 
         if (fireEvents) {
             this.onClosed.emit();
@@ -112,7 +112,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             this.navigationService.remove(this.id);
         }
         if (!this.collapsed) {
-            this.overlayService.hide(this.id);
+            this.overlayService.hide(this._overlayId);
         }
     }
 
