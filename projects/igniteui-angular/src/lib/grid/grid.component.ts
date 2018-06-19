@@ -38,8 +38,8 @@ import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-recor
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IForOfState } from '../directives/for-of/IForOfState';
-import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter } from '../services/index';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -108,7 +108,7 @@ export interface ISearchInfo {
 export interface IGridToolbarExportEventArgs {
     grid: IgxGridComponent;
     exporter: IgxBaseExporter;
-    type: string;
+    options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
