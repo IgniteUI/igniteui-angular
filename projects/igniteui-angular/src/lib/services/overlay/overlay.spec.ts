@@ -17,11 +17,17 @@ import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettin
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
 
+const CLASS_OVERLAY_CONTENT = 'igx-overlay__content--no-modal';
+const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content';
+const CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper--no-modal';
+const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper';
+const CLASS_OVERLAY_MAIN = 'igx-overlay';
+
 function clearOverlay() {
-    const overlay = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
-    if (overlay) {
-        overlay.remove();
-    }
+    const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+    Array.from(overlays).forEach(element => {
+        element.parentElement.removeChild(element);
+    });
 }
 describe('igxOverlay', () => {
     beforeEach(async () => {
@@ -29,6 +35,7 @@ describe('igxOverlay', () => {
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
             declarations: DIRECTIVE_COMPONENTS
         }).compileComponents();
+        clearOverlay();
     });
 
     xit('Unit - OverlayElement should return a div attached to Document\'s body', () => {
@@ -204,8 +211,8 @@ describe('igxOverlay', () => {
     });
 
     it('Unit - Should properly call position method - AutoPosition', () => {
-        const mockParent = jasmine.createSpyObj('parentElement', ['style']);
-        const mockItem = { parentElement: mockParent } as HTMLElement;
+        const mockParent = jasmine.createSpyObj('parentElement', ['style', 'lastElementChild']);
+        const mockItem = { parentElement: mockParent, clientHeight: 0, clientWidth: 0 } as HTMLElement;
         spyOn<any>(mockItem, 'parentElement').and.returnValue(mockParent);
         const mockPositioningSettings1: PositionSettings = {
             horizontalDirection: HorizontalAlignment.Right,
@@ -268,8 +275,8 @@ describe('igxOverlay', () => {
             }
         };
         spyOn(document, 'documentElement').and.returnValue(1);
-        spyOnProperty(window, 'innerWidth', 'get').and.returnValue(1);
-        spyOnProperty(window, 'innerHeight', 'get').and.returnValue(1);
+        spyOnProperty<any>(window, 'innerWidth').and.returnValue(1);
+        spyOnProperty<any>(window, 'innerHeight').and.returnValue(1);
         // autoStrat1.getViewPort(docSpy);
         expect(autoStrat1.getViewPort(docSpy)).toEqual({
             top: -1920,
@@ -373,19 +380,20 @@ describe('igxOverlay', () => {
     });
     // 1.1.1 Global Css
     it('css class should be applied on igx-overlay component div wrapper.' +
-        'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class', () => {
+        'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class',
+        fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1');
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-                expect(overlayWrapper.classList.contains('igx-overlay__wrapper')).toBeTruthy();
-                expect(overlayWrapper.localName).toEqual('div');
-            });
-        });
+            tick();
+            fixture.detectChanges();
+            // overlay container IS NOT a child of the debugElement (attached to body, not app-root)
+            const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            expect(overlayWrapper).toBeTruthy();
+            expect(overlayWrapper.localName).toEqual('div');
+        }));
 
-    it('css class should be applied on igx-overlay component inner div wrapper', () => {
+    it('css class should be applied on igx-overlay component inner div wrapper', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         const overlaySettings: OverlaySettings = {
@@ -395,15 +403,12 @@ describe('igxOverlay', () => {
             closeOnOutsideClick: false
         };
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-            const content = overlayWrapper.firstChild;
-            const componentEl = content.lastChild;
-            expect(content.classList.contains('igx-overlay__content')).toBeTruthy();
-            expect(content.localName).toEqual('div');
-        });
-    });
+        tick();
+        fixture.detectChanges();
+        const content = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+        expect(content).toBeTruthy();
+        expect(content.localName).toEqual('div');
+    }));
     // 1.2 ConnectedPositioningStrategy(show components based on a specified position base point, horizontal and vertical alignment)
     xit('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', () => {
         // TO DO
@@ -441,58 +446,58 @@ describe('igxOverlay', () => {
     });
 
     it('If using a ConnectedPositioningStrategy without passing other but target element options, the omitted options default to:' +
-    'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
-        const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+        'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
+            const fixture = TestBed.createComponent(TopLeftOffsetComponent);
 
-        const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
-        const positionSettings2 = {
-            target: targetEl
-        };
+            const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
+            const positionSettings2 = {
+                target: targetEl
+            };
 
-        const strategy = new ConnectedPositioningStrategy(positionSettings2);
+            const strategy = new ConnectedPositioningStrategy(positionSettings2);
 
-        const expectedDefaults = {
-            target: targetEl,
-            horizontalDirection: HorizontalAlignment.Right,
-            verticalDirection: VerticalAlignment.Bottom,
-            horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: scaleInVerTop,
-            closeAnimation: scaleOutVerTop
-        };
+            const expectedDefaults = {
+                target: targetEl,
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Bottom,
+                openAnimation: scaleInVerTop,
+                closeAnimation: scaleOutVerTop
+            };
 
-        expect(strategy.settings).toEqual(expectedDefaults);
-    });
+            expect(strategy.settings).toEqual(expectedDefaults);
+        });
 
     it('If using a ConnectedPositioningStrategy without passing options, the omitted options default to: target: new Point(0, 0),' +
-    'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
-        const fixture = TestBed.createComponent(TopLeftOffsetComponent);
-        const strategy = new ConnectedPositioningStrategy();
+        'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
+            const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+            const strategy = new ConnectedPositioningStrategy();
 
-        const expectedDefaults = {
-            target: new Point(0, 0),
-            horizontalDirection: HorizontalAlignment.Right,
-            verticalDirection: VerticalAlignment.Bottom,
-            horizontalStartPoint: HorizontalAlignment.Left,
-            verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: scaleInVerTop,
-            closeAnimation: scaleOutVerTop
-        };
+            const expectedDefaults = {
+                target: new Point(0, 0),
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Bottom,
+                openAnimation: scaleInVerTop,
+                closeAnimation: scaleOutVerTop
+            };
 
-        expect(strategy.settings).toEqual(expectedDefaults);
-    });
+            expect(strategy.settings).toEqual(expectedDefaults);
+        });
 
     // In Progress
     xit('If using a ConnectedPositioningStrategy passing only target element the component is rendered based on defaults' +
-    '(StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop)' , () => {
+        '(StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop)', () => {
 
-    });
+        });
 
     // In Progress
     xit('If using a ConnectedPositioningStrategy without passing options, the component is rendered based on defaults:' +
-    'target: new Point(0, 0), StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, ' +
-    'closeAnimation: scaleOutVerTop', () => {
-    });
+        'target: new Point(0, 0), StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, ' +
+        'closeAnimation: scaleOutVerTop', () => {
+        });
 
     xit('When adding a new component it should be rendered where expected based on the options passed.', () => {
         // TO DO --> covered with position method tests.
@@ -523,7 +528,7 @@ describe('igxOverlay', () => {
             // TO DO
         });
     // 1.2.1 Connected Css
-    it('css class should be applied on igx-overlay component div wrapper', () => {
+    it('css class should be applied on igx-overlay component div wrapper', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
         fixture.detectChanges();
         const overlaySettings: OverlaySettings = {
@@ -534,13 +539,12 @@ describe('igxOverlay', () => {
         };
 
         fixture.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
-            expect(overlayWrapper.classList.contains('igx-overlay__wrapper')).toBeTruthy();
-            expect(overlayWrapper.localName).toEqual('div');
-        });
-    });
+        tick();
+        // overlay container IS NOT a child of the debugElement (attached to body, not app-root)
+        const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+        expect(overlayWrapper).toBeTruthy();
+        expect(overlayWrapper.localName).toEqual('div');
+    }));
 
     // 1.2.2 Connected strategy position method
     it('Connected strategy position method. Position component based on Point only', () => {
@@ -655,7 +659,7 @@ describe('igxOverlay', () => {
         fix.whenStable().then(() => {
             fix.detectChanges();
             const wrapper = fix.debugElement.nativeElement.parentElement.lastChild as HTMLElement;
-            expect(wrapper.classList).toContain('igx-overlay');
+            expect(wrapper.classList).toContain(CLASS_OVERLAY_MAIN);
         });
     });
 
@@ -707,7 +711,7 @@ describe('igxOverlay', () => {
         fix.componentInstance.overlay.show(SimpleDynamicComponent, 'id_1', overlaySettings);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            const wrappers = document.getElementsByClassName('igx-overlay__content--no-modal');
+            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1];
             expect(wrapperContent.children.length).toEqual(1);
             expect(wrapperContent.lastElementChild.getAttribute('style'))
@@ -731,7 +735,7 @@ describe('igxOverlay', () => {
         fix.detectChanges();
         fix.whenStable().then(() => {
             fix.detectChanges();
-            const wrappers = document.getElementsByClassName('igx-overlay__content--no-modal');
+            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
             // expect(wrapperContent.children.length).toEqual(1);
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
@@ -778,7 +782,7 @@ describe('igxOverlay', () => {
         fix.detectChanges();
         fix.whenStable().then(() => {
             fix.detectChanges();
-            const wrappers = document.getElementsByClassName('igx-overlay__content--no-modal');
+            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
             // expect(wrapperContent.children.length).toEqual(1);
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
@@ -826,7 +830,7 @@ describe('igxOverlay', () => {
         fix.detectChanges();
         fix.whenStable().then(() => {
             fix.detectChanges();
-            const wrappers = document.getElementsByClassName('igx-overlay__content--no-modal');
+            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
             // expect(wrapperContent.children.length).toEqual(1);
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
@@ -875,7 +879,7 @@ describe('igxOverlay', () => {
         fix.detectChanges();
         fix.whenStable().then(() => {
             fix.detectChanges();
-            const wrappers = document.getElementsByClassName('igx-overlay__content--no-modal');
+            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
             // expect(wrapperContent.children.length).toEqual(1);
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
