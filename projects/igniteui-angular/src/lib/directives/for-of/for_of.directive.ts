@@ -1,4 +1,4 @@
-﻿import { CommonModule, NgForOf, NgForOfContext } from '@angular/common';
+﻿import { CommonModule, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentFactory,
@@ -8,13 +8,10 @@ import {
     DoCheck,
     EmbeddedViewRef,
     EventEmitter,
-    HostListener,
     Input,
-    IterableChangeRecord,
     IterableChanges,
     IterableDiffer,
     IterableDiffers,
-    NgIterable,
     NgModule,
     NgZone,
     OnChanges,
@@ -31,7 +28,6 @@ import {
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
-import { IForOfState } from './IForOfState';
 import { VirtualHelperComponent } from './virtual.helper.component';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
@@ -759,6 +755,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 export function getTypeNameForDebugging(type: any): string {
     const name = 'name';
     return type[name] || typeof type;
+}
+
+export declare interface IForOfState {
+    startIndex?: number;
+    chunkSize?: number;
 }
 
 @NgModule({
