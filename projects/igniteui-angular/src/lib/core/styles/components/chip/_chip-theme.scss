@@ -79,7 +79,7 @@
         selected-chip-icon-hover-color: #fff,
         selected-remove-icon-color: #fff,
         selected-remove-icon-hover-color: #fff,
-        chip-focus-border-color: igx-color($palette, primary),
+        chip-focus-border-color: igx-color($palette, primary, 300),
         selected-chip-focus-border-color: igx-color($palette, secondary, 600)
     );
 

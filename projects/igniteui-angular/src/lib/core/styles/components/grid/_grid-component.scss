@@ -226,6 +226,10 @@
             @extend %grid__cbx-selection--cosy !optional;
         }
 
+        @include e(drag-ghost-image) {
+            @extend %grid__drag-ghost-image--cosy !optional;
+        }
+
         @include e(th) {
             @extend %grid-cell-header--cosy !optional;
         }
@@ -273,6 +277,10 @@
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--compact !optional;
+        }
+
+        @include e(drag-ghost-image) {
+            @extend %grid__drag-ghost-image--compact !optional;
         }
 
         @include e(th) {

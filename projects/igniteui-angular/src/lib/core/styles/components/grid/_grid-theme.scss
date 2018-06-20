@@ -733,6 +733,7 @@
         position: absolute;
         z-index: 20;
         height: auto;
+        min-height: map-get($grid-header-height, 'comfortable');
         top: -99999px;
         left: -99999px;
         overflow: visible;
@@ -745,6 +746,14 @@
         %grid-cell-header-icons {
             display: none;
         }
+    }
+
+    %grid__drag-ghost-image--cosy {
+        min-height: map-get($grid-header-height, 'cosy');
+    }
+
+    %grid__drag-ghost-image--compact {
+        min-height: map-get($grid-header-height, 'compact');
     }
 
     %grid__drag-ghost-image-icon {
