@@ -19,12 +19,12 @@ export class BlockScrollStrategy implements IScrollStrategy {
         this._initialized = true;
     }
 
-    public attach() {
+    public attach(): void {
         this._document.addEventListener('scroll', this.onScroll, true);
         this._document.addEventListener('wheel', this.onWheel, true);
     }
 
-    public detach() {
+    public detach(): void {
         this._document.removeEventListener('scroll', this.onScroll, true);
         this._document.removeEventListener('wheel', this.onWheel, true);
         this._sourceElement = null;

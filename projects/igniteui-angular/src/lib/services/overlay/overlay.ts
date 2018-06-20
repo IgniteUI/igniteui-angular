@@ -12,8 +12,7 @@ import {
     EventEmitter,
     Inject,
     Injectable,
-    Injector,
-    OnDestroy
+    Injector
 } from '@angular/core';
 import { AnimationBuilder } from '@angular/animations';
 import { fromEvent } from 'rxjs';
@@ -84,6 +83,11 @@ export class IgxOverlayService {
             if (overlaySettings.closeOnOutsideClick) {
                 if (overlaySettings.modal) {
                     fromEvent(wrapperElement, 'click').pipe(take(1)).subscribe(() => this.hide(id));
+                    wrapperElement.addEventListener('keydown', (ev: KeyboardEvent) => {
+                        if (ev.key === 'Escape') {
+                            this.hide(id);
+                        }
+                    });
                 } else {
                     fromEvent(this._document, 'click').pipe(take(1)).subscribe(() => this.hide(id));
                 }
@@ -115,7 +119,7 @@ export class IgxOverlayService {
             animationPlayer.reset();
             const child: HTMLElement = overlay.elementRef.nativeElement;
             if (!this.OverlayElement.contains(child)) {
-                console.error('Component with id:' + id + ' is already removed!');
+                console.warn('Component with id:' + id + ' is already removed!');
                 return;
             }
 
@@ -190,7 +194,7 @@ export class IgxOverlayService {
 
         this._overlays.push({
             id: id,
-            elementRef: <ElementRef>{nativeElement: element},
+            elementRef: <ElementRef>{ nativeElement: element },
             componentRef: dynamicComponent,
             settings: overlaySettings
         });
