@@ -60,7 +60,7 @@
             </ng-container>
         </div>
         <igx-combo-item *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add"
-            igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false" [itemData]="'ADD ITEM'" role="button"
+            igxRipple (click)="addItemToCollection()" (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false" [itemData]="'ADD ITEM'" role="button"
             aria-label="Add Item">
             <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$impicit: this}">
             </ng-container>
