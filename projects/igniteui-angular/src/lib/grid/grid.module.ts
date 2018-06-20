@@ -35,6 +35,8 @@ import {
 import { IgxGridComponent } from './grid.component';
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridRowComponent } from './row.component';
+import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
+import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,8 @@ import { IgxGridRowComponent } from './row.component';
     IgxGridSortingPipe,
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
-    IgxGridFilterConditionPipe
+    IgxGridFilterConditionPipe,
+    IgxGridFilterExpressionComponent
   ],
   entryComponents: [
     IgxColumnComponent
@@ -93,7 +96,8 @@ import { IgxGridRowComponent } from './row.component';
     IgxTextSelectionModule,
     IgxCheckboxModule,
     IgxColumnHidingModule,
-    IgxDropDownModule
+    IgxDropDownModule,
+    IgxButtonGroupModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })
