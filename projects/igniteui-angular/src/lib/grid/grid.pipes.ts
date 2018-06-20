@@ -113,7 +113,7 @@ export class IgxGridPagingPipe implements PipeTransform {
         const result: IGroupByResult = {
             data: DataUtil.page(cloneArray(collection.data), state),
             metadata: DataUtil.page(cloneArray(collection.metadata), state)
-        }
+        };
         this.gridAPI.get(id).pagingState = state;
         return result;
     }

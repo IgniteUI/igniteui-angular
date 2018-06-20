@@ -23,7 +23,7 @@ export class SortingStrategy implements ISortingStrategy {
         return {
             data: grouping,
             metadata: metadata
-        }
+        };
     }
     public compareValues(a: any, b: any) {
         const an = (a === null || a === undefined);
@@ -115,7 +115,8 @@ export class SortingStrategy implements ISortingStrategy {
         }
         return data;
     }
-    private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number, parent: IGroupByRecord, metadata: IGroupByRecord[]): T[] {
+    private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
+        parent: IGroupByRecord, metadata: IGroupByRecord[]): T[] {
         let i = 0;
         let result = [];
         while (i < data.length) {

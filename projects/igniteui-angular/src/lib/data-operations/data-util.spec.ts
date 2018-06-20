@@ -103,7 +103,7 @@ function testGroupBy() {
             // sort
             let res = DataUtil.sort(data, { expressions: [expr] });
             // first group pipe
-            let gres = DataUtil.group(res, state);
+            const gres = DataUtil.group(res, state);
             // second group pipe
             res = DataUtil.restoreGroups(gres, state);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
@@ -133,7 +133,7 @@ function testGroupBy() {
             // first group pipe
             const gres = DataUtil.group(sorted, state);
             // second group pipe
-            let res = DataUtil.restoreGroups(gres, state);
+            const res = DataUtil.restoreGroups(gres, state);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                 .toEqual([undefined, undefined]);
             const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
@@ -157,7 +157,7 @@ function testGroupBy() {
             // first group pipe
             const gres = DataUtil.group(sorted, state);
             // second group pipe
-            let res = DataUtil.restoreGroups(gres, state);
+            const res = DataUtil.restoreGroups(gres, state);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                 .toEqual([undefined, undefined, true, true]);
             const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
@@ -182,7 +182,7 @@ function testGroupBy() {
             // first group pipe
             const gres = DataUtil.group(sorted, state);
             // second group pipe
-            let res = DataUtil.restoreGroups(gres, state);
+            const res = DataUtil.restoreGroups(gres, state);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                 .toEqual([undefined, undefined, false, undefined, false,
                     undefined, false, undefined, undefined, true, undefined, true]);

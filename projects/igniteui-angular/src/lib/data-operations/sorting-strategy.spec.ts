@@ -61,8 +61,8 @@ describe('Unit testing SortingStrategy', () => {
             dir: SortingDirection.Asc,
             fieldName: 'boolean'
         }];
-        let res = strategy.sort(data, expr);
-        let gres = strategy.groupBy(res, expr);
+        const res = strategy.sort(data, expr);
+        const gres = strategy.groupBy(res, expr);
         expect(dataGenerator.getValuesForColumn(gres.data, 'boolean'))
                     .toEqual([false, false, false, true, true]);
         const group1: IGroupByRecord = gres.metadata[0];
