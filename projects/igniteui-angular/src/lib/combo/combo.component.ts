@@ -14,6 +14,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxForOfModule } from '../directives/for-of/for_of.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
 import { IgxIconModule } from '../icon/index';
@@ -1008,7 +1009,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent],
     exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxIconModule],
+        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: [IgxSelectionAPIService]
 })
 export class IgxComboModule { }

@@ -26,4 +26,13 @@
     @include e(add) {
         @extend %igx-combo__add !optional;
     }
+
+    @include e(empty) {
+        @extend %igx-combo__empty !optional;
+    }
+
+    @include e(add-item) {
+        @extend %igx-combo__add-item !optional;
+    }
 }
+
