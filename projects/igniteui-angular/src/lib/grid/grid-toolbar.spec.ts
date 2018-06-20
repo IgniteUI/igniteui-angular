@@ -1,9 +1,8 @@
 import { AnimationBuilder } from '@angular/animations';
-import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxCsvExporterService, IgxExcelExporterService } from '../services/index';
-import { IgxGridToolbarComponent } from './grid-toolbar.component';
+import { IgxCsvExporterService, IgxExcelExporterService, IgxExcelExporterOptions, IgxCsvExporterOptions } from '../services/index';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
@@ -317,7 +316,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('excel');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxExcelExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
             args.cancel = true;
             done();
@@ -344,7 +344,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('excel');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxExcelExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
 
             // Spy the 'export' and 'exportData' methods so the files are not really created
@@ -375,7 +376,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('csv');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxCsvExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
             args.cancel = true;
             done();
@@ -402,7 +404,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('csv');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxCsvExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
 
             // Spy the 'export' and 'exportData' methods so the files are not really created
