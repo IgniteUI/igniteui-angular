@@ -18,6 +18,13 @@ describe('UpdateChanges', () => {
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
+        appTree.create('/angular.json', JSON.stringify({
+            projects: {
+                testProj: {
+                    sourceRoot: '/'
+                }
+            }
+          }));
     });
 
     // tslint:disable:arrow-parens
