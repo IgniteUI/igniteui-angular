@@ -14,9 +14,10 @@ import {
     Injectable,
     Injector
 } from '@angular/core';
-import { AnimationBuilder } from '@angular/animations';
+import { AnimationBuilder, AnimationReferenceMetadata } from '@angular/animations';
 import { fromEvent } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { IAnimationParams } from '../../animations/main';
 
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
@@ -77,6 +78,13 @@ export class IgxOverlayService {
         overlaySettings.positionStrategy.position(contentElement, size, document, true);
         const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
         const animationPlayer = animationBuilder.create(element);
+
+        if (overlaySettings.modal) {
+            wrapperElement.classList.remove('igx-overlay__wrapper');
+            this.applyAnimationParams(wrapperElement, overlaySettings.positionStrategy.settings.openAnimation);
+            wrapperElement.classList.add('igx-overlay__wrapper--modal');
+        }
+
         animationPlayer.onDone(() => {
             this.onOpened.emit({ id, componentRef });
             if (overlaySettings.closeOnOutsideClick) {
@@ -102,6 +110,19 @@ export class IgxOverlayService {
         return this._overlays[this._overlays.length - 1].id;
     }
 
+    private applyAnimationParams(wrapperElement: HTMLElement, animationOptions: AnimationReferenceMetadata) {
+        if (!animationOptions || !animationOptions.options || !animationOptions.options.params) {
+            return;
+        }
+        const params = animationOptions.options.params as IAnimationParams;
+        if (params.duration) {
+            wrapperElement.style.transitionDuration = params.duration;
+        }
+        if (params.easing) {
+            wrapperElement.style.transitionTimingFunction = params.easing;
+        }
+    }
+
     hide(id: string) {
         const componentRef = this._overlays.find(c => c.id === id).componentRef;
         this.onClosing.emit({ id, componentRef });
@@ -115,9 +136,15 @@ export class IgxOverlayService {
         overlay.settings.scrollStrategy.detach();
         const animationBuilder = this.builder.build(overlay.settings.positionStrategy.settings.closeAnimation);
         const animationPlayer = animationBuilder.create(overlay.elementRef.nativeElement);
+        const child: HTMLElement = overlay.elementRef.nativeElement;
+
+        if (overlay.settings.modal) {
+            const parent =  child.parentNode.parentNode as HTMLElement;
+            parent.classList.remove('igx-overlay__wrapper--modal');
+            parent.classList.add('igx-overlay__wrapper');
+        }
         animationPlayer.onDone(() => {
             animationPlayer.reset();
-            const child: HTMLElement = overlay.elementRef.nativeElement;
             if (!this.OverlayElement.contains(child)) {
                 console.warn('Component with id:' + id + ' is already removed!');
                 return;
@@ -208,11 +235,7 @@ export class IgxOverlayService {
 
     private getWrapperElement(overlaySettings: OverlaySettings, id: string): HTMLElement {
         const wrapper: HTMLElement = this._document.createElement('div');
-        if (overlaySettings.modal) {
-            wrapper.classList.add('igx-overlay__wrapper');
-        } else {
-            wrapper.classList.add('igx-overlay__wrapper--no-modal');
-        }
+        wrapper.classList.add('igx-overlay__wrapper');
         return wrapper;
     }
 
