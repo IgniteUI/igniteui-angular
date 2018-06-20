@@ -4,7 +4,8 @@ import {
     Inject,
     NgModule,
     ViewChild,
-    DebugElement
+    DebugElement,
+    ComponentRef
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -14,7 +15,7 @@ import { IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/t
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point } from './utilities';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point, OverlayEventArgs } from './utilities';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
@@ -153,24 +154,40 @@ describe('igxOverlay', () => {
     }));
 
     it('Unit - OVERLAY SERVICE should properly emit events', fakeAsync(() => {
-        const fix = TestBed.createComponent(EmptyPageComponent);
+        const fix = TestBed.createComponent(SimpleRefComponent);
         fix.detectChanges();
         const overlayInstance = fix.componentInstance.overlay;
-        spyOn(overlayInstance.onClosed, 'emit').and.callThrough();
-        spyOn(overlayInstance.onClosing, 'emit').and.callThrough();
-        spyOn(overlayInstance.onOpened, 'emit').and.callThrough();
-        spyOn(overlayInstance.onOpening, 'emit').and.callThrough();
+        spyOn(overlayInstance.onClosed, 'emit');
+        spyOn(overlayInstance.onClosing, 'emit');
+        spyOn(overlayInstance.onOpened, 'emit');
+        spyOn(overlayInstance.onOpening, 'emit');
 
-        overlayInstance.show(SimpleDynamicComponent);
+        let id = overlayInstance.show(SimpleDynamicComponent);
         expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
+        expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
+        const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
+        expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
 
         tick();
         expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
-        overlayInstance.hide('0');
+        expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
+        overlayInstance.hide(id);
         expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
+        expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
 
         tick();
         expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
+
+
+        id = overlayInstance.show(fix.componentInstance.item);
+        expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ id, componentRef: null });
+        tick();
+        expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id, componentRef: null });
+        overlayInstance.hide(id);
+        expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id, componentRef: null });
+        tick();
+        expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id, componentRef: null });
     }));
 
     it('Unit - should properly emit events', fakeAsync(() => {
@@ -1434,6 +1451,16 @@ describe('igxOverlay', () => {
 export class SimpleDynamicComponent { }
 
 @Component({
+    template: '<div #item style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
+})
+export class SimpleRefComponent {
+    @ViewChild('item')
+    public item: ElementRef;
+
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+}
+
+@Component({
     template: '<div style=\'position: absolute; width:3000px; height: 1000px; background-color: red\'></div>'
 })
 export class SimpleBigSizeComponent { }
@@ -1537,6 +1564,7 @@ export class TopLeftOffsetComponent {
 
 const DYNAMIC_COMPONENTS = [
     EmptyPageComponent,
+    SimpleRefComponent,
     SimpleDynamicComponent,
     SimpleBigSizeComponent,
     DownRightButtonComponent,
