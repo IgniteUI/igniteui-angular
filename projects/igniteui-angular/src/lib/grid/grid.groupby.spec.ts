@@ -1840,7 +1840,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
         // verify groups and data rows count
         expect(groupRows.length).toEqual(3);
@@ -1851,7 +1851,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.toggleGroup(grid.groupsRecords[0]);
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(false);
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(4);
@@ -1865,7 +1865,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.toggleGroup(grid.groupsRecords[0]);
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
