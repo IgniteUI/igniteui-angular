@@ -1244,7 +1244,7 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT', () => {
+        xit('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT', () => {
             // WIP
             const fix = TestBed.createComponent(DownRightButtonComponent);
             fix.detectChanges();
@@ -1278,7 +1278,7 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + LEFT', () => {
+        xit('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + LEFT', () => {
             const fix = TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -1326,7 +1326,7 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + RIGHT', () => {
+        xit('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + RIGHT', () => {
             const fix = TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -1375,7 +1375,7 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + LEFT', () => {
+        xit('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + LEFT', () => {
             const fix = TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
