@@ -1805,28 +1805,28 @@ describe('IgxGrid - GroupBy', () => {
             { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
 
         // there should be 3 groups at top level
-        const groupRows = grid.groupRows;
-        expect(groupRows.length).toBe(3);
-        expect(groupRows[0].value).toBeNull();
-        expect(groupRows[0].expression.fieldName).toBe('Released');
+        const groupsRecords = grid.groupsRecords;
+        expect(groupsRecords.length).toBe(3);
+        expect(groupsRecords[0].value).toBeNull();
+        expect(groupsRecords[0].expression.fieldName).toBe('Released');
         // the first group should have 1 sub group which has 1 subgroup too
-        const fsubGroups = groupRows[0].groups;
+        const fsubGroups = groupsRecords[0].groups;
         expect(fsubGroups.length).toBe(1);
         expect(fsubGroups[0].value).toBe(1000);
         expect(fsubGroups[0].expression.fieldName).toBe('Downloads');
-        const fsubsubGroups = groupRows[0].groups[0].groups;
+        const fsubsubGroups = groupsRecords[0].groups[0].groups;
         expect(fsubsubGroups.length).toBe(1);
         expect(fsubsubGroups[0].value).toBe('Ignite UI for Angular');
         expect(fsubsubGroups[0].expression.fieldName).toBe('ProductName');
 
-        expect(groupRows[2].value).toBe(true);
-        expect(groupRows[2].expression.fieldName).toBe('Released');
+        expect(groupsRecords[2].value).toBe(true);
+        expect(groupsRecords[2].expression.fieldName).toBe('Released');
         // the last group should have 4 sub group which has 1 subgroup
-        const lsubGroups = groupRows[2].groups;
+        const lsubGroups = groupsRecords[2].groups;
         expect(lsubGroups.length).toBe(4);
         expect(lsubGroups[0].value).toBeNull();
         expect(lsubGroups[0].expression.fieldName).toBe('Downloads');
-        const lsubsubGroups = groupRows[2].groups[0].groups;
+        const lsubsubGroups = groupsRecords[2].groups[0].groups;
         expect(lsubsubGroups.length).toBe(1);
         expect(lsubsubGroups[0].value).toBe('Ignite UI for JavaScript');
         expect(lsubsubGroups[0].expression.fieldName).toBe('ProductName');
@@ -1848,7 +1848,7 @@ describe('IgxGrid - GroupBy', () => {
 
         // toggle grouprow - collapse
         expect(groupRows[0].expanded).toEqual(true);
-        grid.toggleGroup(grid.groupRows[0]);
+        grid.toggleGroup(grid.groupsRecords[0]);
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(false);
         groupRows = grid.groupedRowList.toArray();
@@ -1862,7 +1862,7 @@ describe('IgxGrid - GroupBy', () => {
         }
 
         // toggle grouprow - expand
-        grid.toggleGroup(grid.groupRows[0]);
+        grid.toggleGroup(grid.groupsRecords[0]);
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
         groupRows = grid.groupedRowList.toArray();
