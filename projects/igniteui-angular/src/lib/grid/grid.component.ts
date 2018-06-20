@@ -7,6 +7,7 @@ import {
     Component,
     ComponentFactoryResolver,
     ContentChildren,
+    ContentChild,
     ElementRef,
     EventEmitter,
     HostBinding,
