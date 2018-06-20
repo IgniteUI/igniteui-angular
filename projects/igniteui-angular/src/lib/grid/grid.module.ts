@@ -12,7 +12,8 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxTextHighlightModule } from '../directives/text-highlight/text-highlight.directive';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxIconModule } from '../icon';
+import { IgxDropDownModule } from '../drop-down/drop-down.component';
+import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -119,6 +120,7 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
     IgxChipsModule,
     IgxDragDropModule,
     IgxColumnHidingModule,
+    IgxDropDownModule,
     IgxButtonGroupModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
