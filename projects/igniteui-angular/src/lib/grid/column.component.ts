@@ -537,5 +537,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
 
 function flatten(arr: any[]) {
-    return arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : arr.concat(val), []);
+
+    let result = [];
+
+    arr.forEach(el => {
+        result.push(el);
+        if (el.children) {
+            result = result.concat(flatten(el.children.toArray()));
+        }
+    });
+    return result;
 }
