@@ -1,7 +1,5 @@
-import { CommonModule } from '@angular/common';
 import {
     Component,
-    ContentChild,
     ElementRef,
     forwardRef,
     HostBinding,
