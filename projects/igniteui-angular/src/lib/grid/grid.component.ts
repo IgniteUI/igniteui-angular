@@ -288,6 +288,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
+    @Input()
     public get displayDensity(): DisplayDensity | string {
         return this._displayDensity;
     }
@@ -471,7 +472,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public dataRowList: QueryList<any>;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
-    public groupedRowList: QueryList<IgxGridGroupByRowComponent>;
+    public groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
     @ViewChild('emptyGrid', { read: TemplateRef })
     public emptyGridTemplate: TemplateRef<any>;
