@@ -1,9 +1,10 @@
 # Ignite UI for Angular Change Log
 
-All notable changes for each version of this project will be documented in this file. [#1582](https://github.com/IgniteUI/igniteui-angular/issues/1582)
+All notable changes for each version of this project will be documented in this file. 
 
 ## 6.0.2
-- The `ng update igniteui-angular` migration schematics now also update the theme import path in SASS files.
+- Improve scrolling on mac [#1563](https://github.com/IgniteUI/igniteui-angular/pull/1563)
+- The `ng update igniteui-angular` migration schematics now also update the theme import path in SASS files. [#1582](https://github.com/IgniteUI/igniteui-angular/issues/1582)
 
 ## 6.0.1
 - Introduced migration schematics to integrate with the Angular CLI update command. You can now run
