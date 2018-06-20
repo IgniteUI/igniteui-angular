@@ -163,7 +163,7 @@ export class OverlaySampleComponent {
                 switch (ev.value) {
                     case 'Absolute':
                         this._overlaySettings.scrollStrategy =
-                            new AbsoluteScrollStrategy(this.container.nativeElement.parentElement.parentElement);
+                            new AbsoluteScrollStrategy();
                         break;
                     case 'Block':
                         this._overlaySettings.scrollStrategy = new BlockScrollStrategy();
