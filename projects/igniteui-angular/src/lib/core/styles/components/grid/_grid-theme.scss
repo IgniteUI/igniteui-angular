@@ -732,7 +732,9 @@
         color: --var($theme, 'ghost-header-text-color');
         position: absolute;
         z-index: 20;
-        height: auto;
+        align-items: center;
+        height: map-get($grid-header-height, 'comfortable');
+        min-height: map-get($grid-header-height, 'comfortable');
         top: -99999px;
         left: -99999px;
         overflow: visible;
@@ -745,6 +747,16 @@
         %grid-cell-header-icons {
             display: none;
         }
+    }
+
+    %grid__drag-ghost-image--cosy {
+        height: map-get($grid-header-height, 'cosy');
+        min-height: map-get($grid-header-height, 'cosy');
+    }
+
+    %grid__drag-ghost-image--compact {
+        height: map-get($grid-header-height, 'compact');
+        min-height: map-get($grid-header-height, 'compact');
     }
 
     %grid__drag-ghost-image-icon {

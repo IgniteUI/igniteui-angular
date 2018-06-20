@@ -6,8 +6,8 @@ import {
     ChangeDetectorRef,
     Component,
     ComponentFactoryResolver,
-    ContentChild,
     ContentChildren,
+    ContentChild,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -32,10 +32,9 @@ import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IForOfState } from '../directives/for-of/IForOfState';
+import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
