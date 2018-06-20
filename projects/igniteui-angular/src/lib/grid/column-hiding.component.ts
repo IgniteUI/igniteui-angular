@@ -10,6 +10,8 @@ import {
     TemplateRef,
     ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { DataUtil } from '../data-operations/data-util';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
@@ -216,15 +218,15 @@ export class IgxColumnHidingComponent implements OnDestroy {
     }
 
     protected filter() {
-        this._currentColumns = DataUtil.filter(this._currentColumns, {
-            expressions: [
-                {
-                    condition: IgxStringFilteringOperand.instance().condition('contains'),
-                    fieldName: 'name',
-                    ignoreCase: true,
-                    searchVal: this._filterCriteria
-                }]
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        filteringExpressionsTree.filteringOperands.push({
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'name',
+                ignoreCase: true,
+                searchVal: this._filterCriteria
         });
+
+        this._currentColumns = DataUtil.filter(this._currentColumns, { expressionsTree: filteringExpressionsTree });
     }
 
     protected clearFiltering() {
