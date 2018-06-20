@@ -101,6 +101,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
     protected chunkLoaded = new Subscription();
+    protected columnMoving = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
 
     @ViewChild('defaultFilterUI', { read: TemplateRef })
@@ -126,11 +127,19 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     }
 
     public ngOnInit() {
-        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
+        const collapse = () => {
             if (!this.toggleDirective.collapsed) {
                 this.toggleDirective.collapsed = true;
                 this.refresh();
             }
+        };
+
+        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
+            collapse();
+        });
+
+        this.columnMoving = this.gridAPI.get(this.gridID).onColumnMovingStart.subscribe(() => {
+            collapse();
         });
     }
 
@@ -143,6 +152,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         this.conditionChanged.unsubscribe();
         this.unaryConditionChanged.unsubscribe();
         this.chunkLoaded.unsubscribe();
+        this.columnMoving.unsubscribe();
     }
 
     @autoWire()

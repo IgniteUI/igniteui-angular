@@ -16,6 +16,7 @@ import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxColumnHidingModule } from './column-hiding.component';
 import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridSummaryComponent } from './grid-summary.component';
@@ -92,7 +93,8 @@ import { IgxGridRowComponent } from './row.component';
     IgxFocusModule,
     IgxTextHighlightModule,
     IgxTextSelectionModule,
-    IgxCheckboxModule
+    IgxCheckboxModule,
+    IgxColumnHidingModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })

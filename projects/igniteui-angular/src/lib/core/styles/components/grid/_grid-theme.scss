@@ -329,6 +329,10 @@
         igx-display-container {
             height: 0;
         }
+
+        igx-horizontal-virtual-helper {
+            height: 100%;
+        }
     }
 
     %grid-row {
@@ -623,7 +627,7 @@
         top: -99999px;
         left: -99999px;
         overflow: visible;
-        display: table;
+        display: inline-flex;
         box-shadow: igx-elevation($elevations, 5);
 
         %grid-cell-header-title {
@@ -634,7 +638,16 @@
     %grid__drag-ghost-image-icon {
         color: --var($theme, 'ghost-header-icon-color');
         font-size: rem(24px);
-        margin-right: rem(8);
+        margin-right: rem(12px);
+        padding-bottom: rem(12px);
+    }
+
+    %grid__drag-ghost-image-icon-group {
+        color: --var($theme, 'ghost-header-icon-color');
+        font-size: rem(24px);
+        margin-right: rem(12px);
+        padding-top: rem(12px);
+        padding-left: rem(12px);
     }
 
     %igx-grid__drag-col-header {
