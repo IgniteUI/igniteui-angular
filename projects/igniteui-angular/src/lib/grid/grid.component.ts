@@ -1,14 +1,11 @@
-import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactory,
     ComponentFactoryResolver,
-    ComponentRef,
-    ContentChild,
     ContentChildren,
     ElementRef,
     EventEmitter,
@@ -34,8 +31,7 @@ import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IForOfState } from '../directives/for-of/IForOfState';
+import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
@@ -51,7 +47,6 @@ import { IFilteringOperation } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
-const DEFAULT_SUMMARY_HEIGHT = 36.36;
 const MINIMUM_COLUMN_WIDTH = 136;
 
 export interface IGridCellEventArgs {
