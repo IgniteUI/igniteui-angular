@@ -46,9 +46,9 @@ let NEXT_ID = 0;
 })
 export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     /**
-     * Gets the class name of the toast.
+     * Returns a list of available CSS classes.
      * ```typescript
-     * let className =  this.toast.CSS_CLASSES.IGX_TOAST_MIDDLE;
+     * let toastClasses =  this.toast.CSS_CLASSES;
      * ```
      * @memberof IgxToastComponent
      */
@@ -218,8 +218,8 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         @Optional() private navService: IgxNavigationService) { }
 
     /**
-     * Shows the toast and hides it after the `displayTime` is over
-     * if `autoHide` is enabled.
+     * Shows the toast.
+     * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
      * ```typescript
      * this.toast.show();
      * ```
