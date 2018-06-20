@@ -22,7 +22,7 @@ import {
     IgxCellTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
-import { IFilteringOperation, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+import { IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../../public_api';
 /**
  * **Ignite UI for Angular Column** -
@@ -134,9 +134,6 @@ export class IgxColumnComponent implements AfterContentInit {
 
     @Input()
     public formatter: (value: any) => any;
-
-    @Input()
-    public filteringCondition: IFilteringOperation;
 
     @Input()
     public filteringIgnoreCase = true;

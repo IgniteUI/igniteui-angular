@@ -47,6 +47,8 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
+import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
+import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +75,8 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxGridSortingPipe,
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
-    IgxGridFilterConditionPipe
+    IgxGridFilterConditionPipe,
+    IgxGridFilterExpressionComponent
   ],
   entryComponents: [
     IgxColumnComponent
@@ -115,7 +118,8 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxBadgeModule,
     IgxChipsModule,
     IgxDragDropModule,
-    IgxColumnHidingModule
+    IgxColumnHidingModule,
+    IgxButtonGroupModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })
