@@ -6,6 +6,7 @@ import { ISortingExpression } from '../data-operations/sorting-expression.interf
 import { IgxComboComponent } from './combo.component';
 import { IFilteringState } from '../data-operations/filtering-state.interface';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
+import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 
 
 @Pipe({
@@ -18,12 +19,14 @@ export class IgxComboFilteringPipe implements PipeTransform {
         public combo: IgxComboComponent
     ) { }
 
-    public transform(collection: any[], expressions: IFilteringExpression | IFilteringExpression[],
+    public transform(collection: any[], expressions: IFilteringExpression[],
                      logic: FilteringLogic) {
-        const state: IFilteringState = { expressions: [], logic, strategy: new SimpleFilteringStrategy()};
-        state.expressions = this.combo.filteringExpressions;
+        const filteringExpressionsTree =  new FilteringExpressionsTree(logic);
+        filteringExpressionsTree.filteringOperands = expressions;
+        const state: IFilteringState = { expressionsTree: filteringExpressionsTree, strategy: new SimpleFilteringStrategy()};
+        state.expressionsTree.filteringOperands = this.combo.filteringExpressions;
 
-        if (!state.expressions.length) {
+        if (!state.expressionsTree.filteringOperands.length) {
             return collection;
         }
 
@@ -33,7 +36,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
 }
 
 export class SimpleFilteringStrategy extends FilteringStrategy {
-    public findMatch(rec: object, expr: IFilteringExpression, index: number): boolean {
+    public findMatchByExpression(rec: object, expr: IFilteringExpression): boolean {
         const cond = expr.condition;
         const val = expr.fieldName === undefined ? rec : rec[expr.fieldName];
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
