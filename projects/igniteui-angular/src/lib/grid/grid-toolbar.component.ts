@@ -17,6 +17,8 @@ import { CsvFileTypes,
 import { IgxGridAPIService } from './api.service';
 import { IGridBus } from './grid.common';
 import { IgxGridComponent } from './grid.component';
+import { IgxDropDownComponent } from '../drop-down/drop-down.component';
+import { IgxColumnHidingComponent } from './column-hiding.component';
 
 @Component({
     selector: 'igx-grid-toolbar',
@@ -30,6 +32,12 @@ export class IgxGridToolbarComponent implements IGridBus {
 
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective })
     protected toggleDirective: IgxToggleDirective;
+
+    @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
+    public columnHidingDropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxColumnHidingComponent)
+    public columnHidingUI: IgxColumnHidingComponent;
 
     public get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
@@ -98,4 +106,7 @@ export class IgxGridToolbarComponent implements IGridBus {
         exp.export(this.grid, options);
     }
 
+    public toggleColumnHidingUI() {
+        this.columnHidingDropdown.toggle();
+    }
 }
