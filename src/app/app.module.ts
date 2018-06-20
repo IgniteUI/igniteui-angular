@@ -44,6 +44,7 @@ import { ToastSampleComponent } from './toast/toast.sample';
 import { RemoteService } from './shared/remote.service';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { LocalService } from './shared/local.service';
+import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
@@ -90,6 +91,7 @@ const components = [
     ToastSampleComponent,
     VirtualForSampleComponent,
     ButtonGroupSampleComponent,
+    GridCellEditingComponent,
     GridSampleComponent,
     GridColumnMovingSampleComponent,
     GridColumnPinningSampleComponent,
