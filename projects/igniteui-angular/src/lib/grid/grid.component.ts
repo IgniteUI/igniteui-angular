@@ -253,7 +253,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._columnHiding = value;
         if (this.gridAPI.get(this.id)) {
             this.markForCheck();
-          }
+        }
     }
 
     public get displayDensity(): DisplayDensity | string {
@@ -327,10 +327,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
-    public evenRowCSS = '';
+    public evenRowCSS = 'igx-grid__tr--even';
 
     @Input()
-    public oddRowCSS = '';
+    public oddRowCSS = 'igx-grid__tr--odd';
 
     @Input()
     public rowHeight: number;
@@ -1275,9 +1275,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         let toolbarHeight = 0;
-            if (this.showToolbar && this.toolbarHtml != null) {
-                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                    this.toolbarHtml.nativeElement.offsetHeight : 0;
+        if (this.showToolbar && this.toolbarHtml != null) {
+            toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                this.toolbarHtml.nativeElement.offsetHeight : 0;
         }
 
         let pagingHeight = 0;
@@ -1294,7 +1294,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
             this.calcHeight = this._calculateGridBodyHeight(
-               parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight);
+                parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight);
         } else {
             this.calcHeight = this._calculateGridBodyHeight(
                 parseInt(this._height, 10), toolbarHeight, pagingHeight);
@@ -1302,7 +1302,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     protected _calculateGridBodyHeight(gridHeight: number,
-            toolbarHeight: number, pagingHeight: number) {
+        toolbarHeight: number, pagingHeight: number) {
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
 
@@ -1759,7 +1759,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
-                                                map((c) => ({ columnName: c.field, columnSearchable: c.searchable }) );
+            map((c) => ({ columnName: c.field, columnSearchable: c.searchable }));
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;
