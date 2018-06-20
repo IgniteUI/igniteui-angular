@@ -6,3 +6,4 @@ export * from './grid.component';
 export * from './grid.common';
 export * from './grid-summary';
 export * from './grid.module';
+export * from './column-hiding.component';

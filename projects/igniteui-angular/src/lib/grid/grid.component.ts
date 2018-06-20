@@ -36,11 +36,13 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IForOfState } from '../directives/for-of/IForOfState';
-import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter } from '../services/index';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
+import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
+import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -102,7 +104,7 @@ export interface ISearchInfo {
 export interface IGridToolbarExportEventArgs {
     grid: IgxGridComponent;
     exporter: IgxBaseExporter;
-    type: string;
+    options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
@@ -245,6 +247,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public paginationTemplate: TemplateRef<any>;
 
     @Input()
+
+    get columnHiding() {
+        return this._columnHiding;
+    }
+
+    set columnHiding(value) {
+        this._columnHiding = value;
+        if (this.gridAPI.get(this.id)) {
+            this.markForCheck();
+          }
+    }
+
     public get displayDensity(): DisplayDensity | string {
         return this._displayDensity;
     }
@@ -333,6 +347,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public emptyGridMessage = 'No records found.';
 
+    @Input()
+    public columnHidingTitle = '';
+
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
 
@@ -386,6 +403,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
     @Output()
+    public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
+
+    @Output()
     public onColumnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
 
     @Output()
@@ -433,8 +453,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('tfoot')
     public tfoot: ElementRef;
 
+    @ViewChild('columnHidingUI')
+    public columnHidingUI: IgxColumnHidingComponent;
+
     @ViewChild('summaries')
     public summaries: ElementRef;
+
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -487,6 +511,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
+    }
+
+    get hiddenColumnsCount() {
+        return this.columnList.filter((col) => col.hidden === true).length;
+    }
+
+    @Input()
+    get hiddenColumnsText() {
+        return this._hiddenColumnsText;
+    }
+
+    set hiddenColumnsText(value) {
+        this._hiddenColumnsText = value;
     }
 
     /* Toolbar related definitions */
@@ -649,9 +686,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _filteringLogic = FilteringLogic.And;
     protected _filteringExpressions = [];
     protected _sortingExpressions = [];
+    protected _columnHiding = false;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
+    private _hiddenColumnsText = '';
     private _height = '100%';
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;
@@ -749,6 +788,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public dataLoading(event) {
         this.onDataPreLoad.emit(event);
+    }
+
+    public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
+        const col = this.getColumnByName(args.column.field);
+        col.hidden = args.newValue;
+        this.onColumnVisibilityChanged.emit(args);
+
+        this.markForCheck();
+    }
+
+    public toggleColumnHidingUI() {
+        if (this.columnHidingUI && this.columnHidingUI.togglable) {
+            this.columnHidingUI.toggleDropDown();
+        }
     }
 
     get nativeElement() {
