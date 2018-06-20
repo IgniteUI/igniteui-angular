@@ -7,9 +7,9 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, ChangeDetectionStrateg
 })
 export class DragDropSampleComponent {
 
-    private draggingElem = false;
-    private dragEnteredArea = false;
-    private draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
+    public draggingElem = false;
+    public dragEnteredArea = false;
+    public draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
 
     constructor(private cdr: ChangeDetectorRef) {
     }
