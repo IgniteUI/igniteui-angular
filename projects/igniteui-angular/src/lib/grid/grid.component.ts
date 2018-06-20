@@ -36,8 +36,8 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IForOfState } from '../directives/for-of/IForOfState';
-import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter } from '../services/index';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -105,7 +105,7 @@ export interface ISearchInfo {
 export interface IGridToolbarExportEventArgs {
     grid: IgxGridComponent;
     exporter: IgxBaseExporter;
-    type: string;
+    options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
@@ -2107,10 +2107,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.groupingExpansionState = [];
         this.chipsGoupingExpressions = newGrouping;
         event.isValid = true;
+        this.markForCheck();
     }
 
     public chipsMovingEnded() {
         this.groupingExpressions = this.chipsGoupingExpressions;
+        this.markForCheck();
     }
 
     public onChipClicked(event) {

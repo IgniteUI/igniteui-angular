@@ -163,16 +163,18 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        fromEvent(this.element.nativeElement, 'pointerdown').pipe(takeUntil(this._destroy))
-            .subscribe((res) => this.onPointerDown(res));
+        this.zone.runOutsideAngular(() => {
+            fromEvent(this.element.nativeElement, 'pointerdown').pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onPointerDown(res));
 
-        fromEvent(this.element.nativeElement, 'pointermove').pipe(
-            takeUntil(this._destroy),
-            throttle(() => interval(0, animationFrameScheduler))
-        ).subscribe((res) => this.onPointerMove(res));
+            fromEvent(this.element.nativeElement, 'pointermove').pipe(
+                takeUntil(this._destroy),
+                throttle(() => interval(0, animationFrameScheduler))
+            ).subscribe((res) => this.onPointerMove(res));
 
-        fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
-            .subscribe((res) => this.onPointerUp(res));
+            fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onPointerUp(res));
+        });
     }
 
     ngOnDestroy() {
