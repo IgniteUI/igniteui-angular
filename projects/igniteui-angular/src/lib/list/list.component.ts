@@ -138,7 +138,7 @@ export class IgxListComponent {
     @Output()
     public onRightPan = new EventEmitter<IgxListItemComponent>();
     /**
-    * Emits an event with the current list when pan gesture is executed on list item.
+    * Emits an event within the current list when pan gesture is executed on list item.
     * Provides references to the `IgxListItemComponent` and `IgxListPanState` as event arguments.
     * ```html
     * <igx-list (onPanStateChange) = "onPanStateChange($event)"></igx-list>
@@ -148,7 +148,7 @@ export class IgxListComponent {
     @Output()
     public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
     /**
-     * Emits an event with the current list when a list item has been clicked.
+     * Emits an event within the current list when a list item has been clicked.
      * Provides references to the `IgxListItemComponent` and `Event` as event arguments.
      *  ```html
      * <igx-list (onItemClicked) = "onItemClicked($event)"></igx-list>
