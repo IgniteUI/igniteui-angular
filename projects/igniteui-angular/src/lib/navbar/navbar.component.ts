@@ -5,7 +5,6 @@ import {
     HostBinding,
     Input,
     NgModule,
-    OnInit,
     Output
 } from '@angular/core';
 import { IgxButtonModule } from '../directives/button/button.directive';
