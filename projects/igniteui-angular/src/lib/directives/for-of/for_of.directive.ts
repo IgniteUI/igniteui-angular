@@ -764,7 +764,7 @@ export function getTypeNameForDebugging(type: any): string {
     return type[name] || typeof type;
 }
 
-export declare interface IForOfState {
+export interface IForOfState {
     startIndex?: number;
     chunkSize?: number;
 }

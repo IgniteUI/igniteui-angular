@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -33,7 +33,7 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter } from '../services/index';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -99,7 +99,7 @@ export interface ISearchInfo {
 export interface IGridToolbarExportEventArgs {
     grid: IgxGridComponent;
     exporter: IgxBaseExporter;
-    type: string;
+    options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
