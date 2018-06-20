@@ -62,19 +62,18 @@ describe('Unit testing SortingStrategy', () => {
             fieldName: 'boolean'
         }];
         let res = strategy.sort(data, expr);
-        res = strategy.groupBy(res, expr);
-        expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+        let gres = strategy.groupBy(res, expr);
+        expect(dataGenerator.getValuesForColumn(gres.data, 'boolean'))
                     .toEqual([false, false, false, true, true]);
-        const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
-        const group1: IGroupByRecord = groups[0];
-        const group2: IGroupByRecord = groups[3];
-        expect(groups[1]).toEqual(group1);
-        expect(groups[2]).toEqual(group1);
-        expect(groups[4]).toEqual(group2);
+        const group1: IGroupByRecord = gres.metadata[0];
+        const group2: IGroupByRecord = gres.metadata[3];
+        expect(gres.metadata[1]).toEqual(group1);
+        expect(gres.metadata[2]).toEqual(group1);
+        expect(gres.metadata[4]).toEqual(group2);
         expect(group1.level).toEqual(0);
         expect(group2.level).toEqual(0);
-        expect(group1.records).toEqual(res.slice(0, 3));
-        expect(group2.records).toEqual(res.slice(3, 5));
+        expect(group1.records).toEqual(gres.data.slice(0, 3));
+        expect(group2.records).toEqual(gres.data.slice(3, 5));
         expect(group1.value).toEqual(false);
         expect(group2.value).toEqual(true);
     });
