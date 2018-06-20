@@ -5,10 +5,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactory,
     ComponentFactoryResolver,
-    ComponentRef,
-    ContentChild,
     ContentChildren,
     ElementRef,
     EventEmitter,
@@ -34,9 +31,8 @@ import { cloneArray } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IForOfState } from '../directives/for-of/IForOfState';
-import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
