@@ -1,17 +1,12 @@
 import {
     ChangeDetectorRef,
     Component,
-    ContentChild,
-    Directive,
-    ElementRef,
     HostBinding,
     Input,
     Optional,
-    TemplateRef,
     ViewChild
 } from '@angular/core';
 
-import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { CsvFileTypes,
          IgxBaseExporter,
@@ -20,7 +15,7 @@ import { CsvFileTypes,
          IgxExcelExporterOptions,
          IgxExcelExporterService } from '../services/index';
 import { IgxGridAPIService } from './api.service';
-import { autoWire, IGridBus } from './grid.common';
+import { IGridBus } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 
 @Component({
@@ -88,15 +83,18 @@ export class IgxGridToolbarComponent implements IGridBus {
 
     private performExport(exp: IgxBaseExporter, exportType: string) {
         this.exportClicked();
-        const args = { grid: this.grid, exporter: exp, type: exportType, cancel: false };
+
+        const fileName = 'ExportedData';
+        const options = exportType === 'excel' ?
+                        new IgxExcelExporterOptions(fileName) :
+                        new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
+
+        const args = { grid: this.grid, exporter: exp, options: options, cancel: false };
+
         this.grid.onToolbarExporting.emit(args);
         if (args.cancel) {
             return;
         }
-        const fileName = 'ExportedData';
-        const options = exportType === 'excel' ?
-            new IgxExcelExporterOptions(fileName) :
-            new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
         exp.export(this.grid, options);
     }
 
