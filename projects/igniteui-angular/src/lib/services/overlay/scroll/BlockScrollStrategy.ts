@@ -4,9 +4,10 @@ import { IgxOverlayService } from '../overlay';
 export class BlockScrollStrategy implements IScrollStrategy {
     private _initialized = false;
     private _document: Document;
-    private _scrollContainer: HTMLElement;
-    private initialScrollTop: number;
-    private initialScrollLeft: number;
+    private _initialScrollTop: number;
+    private _initialScrollLeft: number;
+    private _sourceElement: Element;
+
     constructor(scrollContainer?: HTMLElement) { }
 
     initialize(document: Document, overlayService: IgxOverlayService, id: string) {
@@ -19,21 +20,33 @@ export class BlockScrollStrategy implements IScrollStrategy {
     }
 
     public attach() {
-        this._scrollContainer = this._document.documentElement.scrollHeight > this._document.body.scrollHeight ?
-            this._document.documentElement :
-            this._document.body;
-
-        this.initialScrollTop = this._scrollContainer.scrollTop;
-        this.initialScrollLeft = this._scrollContainer.scrollLeft;
-        this._document.addEventListener('scroll', this.onScroll);
+        this._document.addEventListener('scroll', this.onScroll, true);
+        this._document.addEventListener('wheel', this.onWheel, true);
     }
 
     public detach() {
-        this._document.removeEventListener('scroll', this.onScroll);
+        this._document.removeEventListener('scroll', this.onScroll, true);
+        this._document.removeEventListener('wheel', this.onWheel, true);
+        this._sourceElement = null;
+        this._initialScrollTop = 0;
+        this._initialScrollLeft = 0;
+        this._initialized = false;
     }
 
-    private onScroll = (ev) => {
-        this._scrollContainer.scrollTop = this.initialScrollTop;
-        this._scrollContainer.scrollLeft = this.initialScrollLeft;
+    private onScroll = (ev: Event) => {
+        ev.preventDefault();
+        if (!this._sourceElement || this._sourceElement !== ev.srcElement) {
+            this._sourceElement = ev.srcElement;
+            this._initialScrollTop = this._sourceElement.scrollTop;
+            this._initialScrollLeft = this._sourceElement.scrollLeft;
+        }
+
+        this._sourceElement.scrollTop = this._initialScrollTop;
+        this._sourceElement.scrollLeft = this._initialScrollLeft;
+    }
+
+    private onWheel(ev: WheelEvent) {
+        ev.stopImmediatePropagation();
+        ev.preventDefault();
     }
 }

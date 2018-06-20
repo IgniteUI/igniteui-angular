@@ -60,6 +60,7 @@ export class OverlaySampleComponent {
 
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
     @ViewChild('button') public button: ElementRef;
+    @ViewChild('container') public container: ElementRef;
 
     onChange(ev) {
         switch (ev.radio.name) {
@@ -161,7 +162,8 @@ export class OverlaySampleComponent {
             case 'ss':
                 switch (ev.value) {
                     case 'Absolute':
-                        this._overlaySettings.scrollStrategy = new AbsoluteScrollStrategy();
+                        this._overlaySettings.scrollStrategy =
+                            new AbsoluteScrollStrategy(this.container.nativeElement.parentElement.parentElement);
                         break;
                     case 'Block':
                         this._overlaySettings.scrollStrategy = new BlockScrollStrategy();
