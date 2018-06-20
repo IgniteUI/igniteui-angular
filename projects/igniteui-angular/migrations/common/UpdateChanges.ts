@@ -1,13 +1,15 @@
 // tslint:disable-next-line:no-implicit-dependencies
-import { FileEntry, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { FileEntry, SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
 
 import * as fs from 'fs';
 import * as path from 'path';
 import { ClassChanges, OutputChanges, SelectorChange, SelectorChanges } from './schema';
 import { getIdentifierPositions } from './tsUtils';
+import { getProjectPaths, getWorkspace } from './util';
 
 // tslint:disable:arrow-parens
 export class UpdateChanges {
+    protected sourcePaths: string[];
     protected classChanges: ClassChanges;
     protected outputChanges: OutputChanges;
     protected selectorChanges: SelectorChanges;
@@ -16,7 +18,7 @@ export class UpdateChanges {
     public get templateFiles(): FileEntry[] {
         if (!this._templateFiles.length) {
             // https://github.com/angular/devkit/blob/master/packages/angular_devkit/schematics/src/tree/filesystem.ts
-            this.host.visit((fulPath, entry) => {
+            this.sourceDirsVisitor((fulPath, entry) => {
                 if (fulPath.endsWith('component.html')) {
                     this._templateFiles.push(entry);
                 }
@@ -28,7 +30,7 @@ export class UpdateChanges {
     private _tsFiles: FileEntry[] = [];
     public get tsFiles(): FileEntry[] {
         if (!this._tsFiles.length) {
-            this.host.visit((fulPath, entry) => {
+            this.sourceDirsVisitor((fulPath, entry) => {
                 if (fulPath.endsWith('.ts')) {
                     this._tsFiles.push(entry);
                 }
@@ -42,6 +44,8 @@ export class UpdateChanges {
      * @param rootPath Root folder for the schematic to read configs, pass __dirname
      */
     constructor(private rootPath: string, private host: Tree, private context?: SchematicContext) {
+        this.sourcePaths = getProjectPaths(getWorkspace(host));
+
         const selectorJson = path.join(this.rootPath, 'changes', 'selectors.json');
         if (fs.existsSync(selectorJson)) {
             this.selectorChanges = JSON.parse(fs.readFileSync(selectorJson, 'utf-8'));
@@ -178,6 +182,13 @@ export class UpdateChanges {
         }
         if (overwrite) {
             this.host.overwrite(entry.path, fileContent);
+        }
+    }
+
+    private sourceDirsVisitor(visitor: FileVisitor) {
+        for (const sourcePath of this.sourcePaths) {
+            const srcDir = this.host.getDir(sourcePath);
+            srcDir.visit(visitor);
         }
     }
 }

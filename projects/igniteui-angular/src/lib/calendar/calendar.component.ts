@@ -300,7 +300,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * Emits an event when a selection is made in the calendar.
      * Provides reference the `selectedDates` property in the `IgxCalendarComponent`.
      * ```html
-     * <igx-calendar (onSelection) = "onSelection(calendar.selectedDates)"></igx-calendar>
+     * <igx-calendar (onSelection) = "onSelection($event)"></igx-calendar>
      * ```
      * @memberof IgxCalendarComponent
      */
@@ -789,7 +789,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const delta = event.deltaY < 0 ? 1 : -1;
+        const delta = event.deltaY < 0 ? -1 : 1;
         this.generateYearRange(delta);
     }
 

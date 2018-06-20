@@ -1,4 +1,4 @@
-﻿import { CommonModule, NgForOf, NgForOfContext } from '@angular/common';
+﻿import { NgForOfContext } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -11,17 +11,15 @@ import {
     NgZone,
     OnInit,
     QueryList,
-    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IgxForOfDirective, IgxForOfModule} from './for_of.directive';
-import { IForOfState} from './IForOfState';
+import { IForOfState, IgxForOfDirective, IgxForOfModule} from './for_of.directive';
 
 describe('IgxVirtual directive - simple template', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';

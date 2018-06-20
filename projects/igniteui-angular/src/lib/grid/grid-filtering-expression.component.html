@@ -1,0 +1,41 @@
+<ng-template #defaultFilterUI>
+    <igx-input-group type="box" *ngIf="!unaryCondition">
+        <input #input igxInput
+        type="text"
+        placeholder="Value"
+        autocomplete="off"
+        [value]="value"
+        (input)="onInputChanged($event.target.value)"
+        [igxFocus]="true"/>
+
+        <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
+            <igx-icon>clear</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+</ng-template>
+
+<ng-template #defaultDateUI>
+    <igx-datePicker
+        (click)="onDatePickerClick()"
+        *ngIf="!unaryCondition"
+        [(ngModel)]="value"
+        (onSelection)="onDatePickerValueChanged()">
+    </igx-datePicker>
+</ng-template>
+
+<select #select (change)="selectionChanged($event.target.value)">
+    <option
+        *ngIf="column.dataType === 'boolean'"
+        [value]="booleanFilterAll">
+        {{ booleanFilterAll | filterCondition | titlecase }}
+    </option>
+
+    <option
+        [selected]="isActive(each)"
+        *ngFor="let each of conditions"
+        [value]="each">
+        {{ each | filterCondition | titlecase }}
+    </option>
+</select>
+
+<ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
