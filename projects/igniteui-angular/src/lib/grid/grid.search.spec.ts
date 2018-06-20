@@ -180,7 +180,7 @@ describe('IgxGrid - search API', () => {
         });
     }));
 
-    it('findPrev scrolls to cells out of view', async(() => {
+    it('findPrev scrolls to cells out of view', (done) => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
         fix.detectChanges();
 
@@ -192,9 +192,10 @@ describe('IgxGrid - search API', () => {
 
             findPrev(component.gridSearch, '1887').then(() => {
                 expect(isInView(3, component.gridSearch.rowList.first.virtDirRow.state)).toBeTruthy();
+                done();
             });
         });
-    }));
+    });
 
     it('should keep the active highlight when active cell enters and exits edit mode', async(() => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
