@@ -1,0 +1,38 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-column-hiding) {
+    $block: bem--selector-to-string(&);
+    @include register-component('igx-column-hiding');
+
+    @extend %column-hiding-display !optional;
+
+    @include e(header) {
+        @extend %column-hiding-header !optional;
+    }
+
+    @include e(header-title) {
+        @extend %column-hiding-title !optional;
+    }
+
+    @include e(header-input) {
+        @extend %column-hiding-input !optional;
+    }
+
+    @include e(columns) {
+        @extend %column-hiding-columns !optional;
+    }
+
+    @include e(columns-item) {
+        @extend %column-hiding-item !optional;
+    }
+
+    @include e(buttons) {
+        @extend %column-hiding-buttons !optional;
+    }
+}

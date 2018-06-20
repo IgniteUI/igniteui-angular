@@ -38,7 +38,6 @@ import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
-import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -200,7 +199,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set paging(value: boolean) {
         this._paging = value;
         this._pipeTrigger++;
-        this.cdr.markForCheck();
+
+        if (this._ngAfterViewInitPaassed) {
+            this.cdr.detectChanges();
+            this.calculateGridHeight();
+            this.cdr.detectChanges();
+        }
     }
 
     @Input()
@@ -249,7 +253,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public paginationTemplate: TemplateRef<any>;
 
     @Input()
-
     get columnHiding() {
         return this._columnHiding;
     }
@@ -455,12 +458,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('tfoot')
     public tfoot: ElementRef;
 
-    @ViewChild('columnHidingUI')
-    public columnHidingUI: IgxColumnHidingComponent;
-
     @ViewChild('summaries')
     public summaries: ElementRef;
-
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -797,12 +796,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onColumnVisibilityChanged.emit(args);
 
         this.markForCheck();
-    }
-
-    public toggleColumnHidingUI() {
-        if (this.columnHidingUI && this.columnHidingUI.togglable) {
-            this.columnHidingUI.toggleDropDown();
-        }
     }
 
     get nativeElement() {
@@ -1230,7 +1223,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get hasMovableColumns(): boolean {
-        return this.columnList.some((col) => col.movable);
+        return this.columnList && this.columnList.some((col) => col.movable);
     }
 
     get selectedCells(): IgxGridCellComponent[] | any[] {
