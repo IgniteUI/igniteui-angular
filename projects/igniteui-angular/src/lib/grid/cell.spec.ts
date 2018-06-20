@@ -549,7 +549,7 @@ describe('IgxGrid - Cell component', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            grid.sort('age', SortingDirection.Desc);
+            grid.sort({ fieldName: 'age', dir: SortingDirection.Desc });
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -1325,8 +1325,8 @@ export class CellEditingTestComponent {
 
     public data = [
         { fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
-        { fullName: 'Ben Affleck', age: 30, isActive: false,  birthday: new Date('08/08/1991') },
-        { fullName: 'Tom Riddle', age: 50, isActive: true,  birthday: new Date('08/08/1961') }
+        { fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
     ];
 }
 
@@ -1347,14 +1347,14 @@ export class CellEditingScrollTestComponent {
 
     public data = [
         { firstName: 'John', lastName: 'Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
-        { firstName: 'Ben', lastName: 'Hudson', age: 30, isActive: false,  birthday: new Date('08/08/1991') },
-        { firstName: 'Tom', lastName: 'Riddle', age: 50, isActive: true,  birthday: new Date('08/08/1967') },
+        { firstName: 'Ben', lastName: 'Hudson', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { firstName: 'Tom', lastName: 'Riddle', age: 50, isActive: true, birthday: new Date('08/08/1967') },
         { firstName: 'John', lastName: 'David', age: 27, isActive: true, birthday: new Date('08/08/1990') },
-        { firstName: 'David', lastName: 'Affleck', age: 36, isActive: false,  birthday: new Date('08/08/1982') },
-        { firstName: 'Jimmy', lastName: 'Johnson', age: 57, isActive: true,  birthday: new Date('08/08/1961') },
+        { firstName: 'David', lastName: 'Affleck', age: 36, isActive: false, birthday: new Date('08/08/1982') },
+        { firstName: 'Jimmy', lastName: 'Johnson', age: 57, isActive: true, birthday: new Date('08/08/1961') },
         { firstName: 'Martin', lastName: 'Brown', age: 31, isActive: true, birthday: new Date('08/08/1987') },
-        { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false,  birthday: new Date('08/08/1931') },
-        { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true,  birthday: new Date('08/08/1970') }
+        { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false, birthday: new Date('08/08/1931') },
+        { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true, birthday: new Date('08/08/1970') }
     ];
 
     public scrollTop(newTop: number) {

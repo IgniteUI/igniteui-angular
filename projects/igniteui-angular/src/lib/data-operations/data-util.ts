@@ -57,21 +57,23 @@ export class DataUtil {
         // apply default settings for each grouping expression(if not set)
         return state.strategy.groupBy(data, state.expressions);
     }
-    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState): any[] {
+    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState, groupsRecords: any[] = []): any[] {
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         if (state.expressions.length === 0) {
             return groupData.data;
         }
-        return this.restoreGroupsRecursive(groupData, 1, state.expressions.length, state.expansion, state.defaultExpanded);
+        return this.restoreGroupsRecursive(groupData, 1, state.expressions.length, state.expansion, state.defaultExpanded, groupsRecords);
     }
     private static restoreGroupsRecursive(
         groupData: IGroupByResult, level: number, depth: number,
-        expansion: IGroupByExpandState[], defaultExpanded: boolean): any[] {
+        expansion: IGroupByExpandState[], defaultExpanded: boolean, groupsRecords): any[] {
         let i = 0;
         let j: number;
         let result = [];
+        // empty the array without changing reference
+        groupsRecords.splice(0, groupsRecords.length);
         if (level !== depth) {
-            groupData.data = this.restoreGroupsRecursive(groupData, level + 1, depth, expansion, defaultExpanded);
+            groupData.data = this.restoreGroupsRecursive(groupData, level + 1, depth, expansion, defaultExpanded, groupsRecords);
         }
         while (i < groupData.data.length) {
             const g = level === depth ? groupData.metadata[i] :
@@ -88,6 +90,17 @@ export class DataUtil {
                 this.isHierarchyMatch(state.hierarchy || [{ fieldName: g.expression.fieldName, value: g.value }], hierarchy));
             const expanded = expandState ? expandState.expanded : defaultExpanded;
             result.push(g);
+            groupsRecords.push(g);
+
+            g['groups'] = groupData.data.slice(i, j).filter((e) =>
+                e.records && e.records.length && e.level === g.level + 1);
+            while (groupsRecords.length) {
+                if (groupsRecords[0].level + 1 > level) {
+                    groupsRecords.shift();
+                } else {
+                    break;
+                }
+            }
             if (expanded) {
                 result = result.concat(groupData.data.slice(i, j));
             }

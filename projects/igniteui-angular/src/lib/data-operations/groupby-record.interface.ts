@@ -8,4 +8,5 @@ export interface IGroupByRecord {
     records: GroupedRecords;
     value: any;
     groupParent: IGroupByRecord;
+    groups?: IGroupByRecord[];
  }

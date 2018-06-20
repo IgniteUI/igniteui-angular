@@ -71,7 +71,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
 
     public transform(collection: IGroupByResult, expression: ISortingExpression | ISortingExpression[],
                      expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-                     id: string, pipeTrigger: number): any[] {
+                     id: string, groupsRecords: any[], pipeTrigger: number): any[] {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.get(id);
@@ -87,7 +87,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
         return DataUtil.restoreGroups({
             data: cloneArray(collection.data),
             metadata: cloneArray(collection.metadata)
-        }, state);
+        }, state, groupsRecords);
     }
 }
 

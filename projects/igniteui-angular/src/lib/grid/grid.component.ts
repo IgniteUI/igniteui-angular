@@ -227,6 +227,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public groupsExpanded = true;
 
+    public groupsRecords: IGroupByRecord[] = [];
+
     @Input()
     get paging(): boolean {
         return this._paging;
