@@ -3,7 +3,8 @@ import {
     ElementRef,
     Inject,
     NgModule,
-    ViewChild
+    ViewChild,
+    DebugElement
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -384,6 +385,118 @@ describe('igxOverlay', () => {
         });
     });
 
+    it('Unit - Should properly initialize Scroll Strategy - Block', fakeAsync(() => {
+        // Block scroll strategy?
+        const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+            set: {
+                styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+            }
+        }).createComponent(EmptyPageComponent);
+        const scrollStrat = new BlockScrollStrategy();
+        fixture.detectChanges();
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new GlobalPositionStrategy(),
+            scrollStrategy: scrollStrat,
+            modal: false,
+            closeOnOutsideClick: false
+        };
+        const overlay = fixture.componentInstance.overlay;
+        spyOn(scrollStrat, 'initialize').and.callThrough();
+        spyOn(scrollStrat, 'attach').and.callThrough();
+        spyOn(scrollStrat, 'detach').and.callThrough();
+        const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+        const wheelSpy = spyOn<any>(scrollStrat, 'onWheel').and.callThrough();
+        overlay.show(SimpleDynamicComponent, overlaySettings);
+        tick();
+
+        expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
+        expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
+        expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
+        document.dispatchEvent(new Event('scroll'));
+
+        expect(scrollSpy).toHaveBeenCalledTimes(1);
+
+        document.dispatchEvent(new Event('wheel'));
+        expect(wheelSpy).toHaveBeenCalledTimes(1);
+        overlay.hide('0');
+        tick();
+        expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
+    }));
+
+    it('Unit - Should properly initialize Scroll Strategy - Absolute', fakeAsync(() => {
+        const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+            set: {
+                styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+            }
+        }).createComponent(EmptyPageComponent);
+        const scrollStrat = new AbsoluteScrollStrategy();
+        fixture.detectChanges();
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new GlobalPositionStrategy(),
+            scrollStrategy: scrollStrat,
+            modal: false,
+            closeOnOutsideClick: false
+        };
+        const overlay = fixture.componentInstance.overlay;
+        spyOn(scrollStrat, 'initialize').and.callThrough();
+        spyOn(scrollStrat, 'attach').and.callThrough();
+        spyOn(scrollStrat, 'detach').and.callThrough();
+        const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+        overlay.show(SimpleDynamicComponent, overlaySettings);
+        tick();
+
+        expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
+        expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
+        expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
+        document.dispatchEvent(new Event('scroll'));
+        expect(scrollSpy).toHaveBeenCalledTimes(1);
+        overlay.hide('0');
+        tick();
+        expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
+    }));
+
+    it('Unit - Should properly initialize Scroll Strategy - Close', fakeAsync(() => {
+        const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+            set: {
+                styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+            }
+        }).createComponent(EmptyPageComponent);
+        const scrollStrat = new CloseScrollStrategy();
+        fixture.detectChanges();
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new GlobalPositionStrategy(),
+            scrollStrategy: scrollStrat,
+            modal: false,
+            closeOnOutsideClick: false
+        };
+        const overlay = fixture.componentInstance.overlay;
+        spyOn(scrollStrat, 'initialize').and.callThrough();
+        spyOn(scrollStrat, 'attach').and.callThrough();
+        spyOn(scrollStrat, 'detach').and.callThrough();
+        const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+        overlay.show(SimpleDynamicComponent, overlaySettings);
+        tick();
+
+        expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
+        expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
+        expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
+        document.dispatchEvent(new Event('scroll'));
+
+        expect(scrollSpy).toHaveBeenCalledTimes(1);
+        overlay.hide('0');
+        tick();
+        expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
+    }));
+
     xit('Unit - Should properly call position method - DEFAULT', () => {
 
     });
@@ -730,9 +843,9 @@ describe('igxOverlay', () => {
             // TO DO
         });
 
-    it('Scroll Strategy Fixed: it should be partially hidden. When scrolling, the component stays static. ' +
+    xit('Scroll Strategy Block: it should be partially hidden. When scrolling, the component stays static. ' +
         'Component state remains the same (example: expanded DropDown remains expanded).', fakeAsync(() => {
-            // Block scroll strategy?
+            // TO DO
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -772,6 +885,40 @@ describe('igxOverlay', () => {
     xit('Scroll Strategy Absolute: can scroll it into view. Component persist state. ' +
         '(example: expanded DropDown remains expanded)', () => {
             // TO DO
+            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+                }
+            }).createComponent(EmptyPageComponent);
+            const scrollStrat = new AbsoluteScrollStrategy();
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrat,
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            spyOn(scrollStrat, 'initialize').and.callThrough();
+            spyOn(scrollStrat, 'attach').and.callThrough();
+            spyOn(scrollStrat, 'detach').and.callThrough();
+            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+
+            const wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
+            wrapper.dispatchEvent(new Event('scroll'));
+
+            expect(scrollSpy).toHaveBeenCalledTimes(1);
+            overlay.hide('0');
+            tick();
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
         });
     // 1.2.1 Connected Css
     it('css class should be applied on igx-overlay component div wrapper', fakeAsync(() => {
