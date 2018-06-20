@@ -173,6 +173,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
                 this._rawColumns.push(this.createColumnHidingItem(this, column));
             });
             this._currentColumns = this._rawColumns.slice(0);
+            this.orderColumns(this._columnDisplayOrder);
         }
     }
 
