@@ -301,7 +301,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
             this._bScrollInternal = true;
             this._virtScrollTop = nextScrollTop;
-            this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop * this._virtHeightRatio;
+            this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop / this._virtHeightRatio;
         }
     }
 
