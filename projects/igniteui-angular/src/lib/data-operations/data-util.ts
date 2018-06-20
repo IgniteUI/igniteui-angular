@@ -132,7 +132,7 @@ export class DataUtil {
         if (!state.strategy) {
             return data;
         }
-        return state.strategy.filter(data, state.expressions, state.logic);
+        return state.strategy.filter(data, state.expressionsTree);
     }
     public static process<T>(data: T[], state: IDataState): T[] {
         if (!state) {

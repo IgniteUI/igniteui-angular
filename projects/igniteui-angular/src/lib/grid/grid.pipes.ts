@@ -4,6 +4,7 @@ import { DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByResult } from '../data-operations/sorting-strategy';
+import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
@@ -126,17 +127,19 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
-    public transform(collection: any[], expressions: IFilteringExpression | IFilteringExpression[],
-                     logic: FilteringLogic, id: string, pipeTrigger: number) {
-        const state = { expressions: [], logic };
-        state.expressions = this.gridAPI.get(id).filteringExpressions;
+    public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
+                     id: string, pipeTrigger: number) {
+        const grid = this.gridAPI.get(id);
+        const state = { expressionsTree: expressionsTree };
 
-        if (!state.expressions.length) {
+        if (!state.expressionsTree ||
+            !state.expressionsTree.filteringOperands ||
+            state.expressionsTree.filteringOperands.length === 0) {
             return collection;
         }
 
         const result = DataUtil.filter(cloneArray(collection), state);
-        this.gridAPI.get(id).filteredData = result;
+        grid.filteredData = result;
         return result;
     }
 }
