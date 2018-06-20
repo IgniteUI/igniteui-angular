@@ -15,16 +15,9 @@ import { UpdateChanges } from '../common/UpdateChanges';
 
 export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {
-
         context.logger.info('Applying migration for Ignite UI for Angular to version 6.0.1');
-        return chain([
-            filterSourceDirs(host, context),
-            // tslint:disable-next-line:no-shadowed-variable
-            (host: Tree, context: SchematicContext) => {
-                const update = new UpdateChanges(__dirname, host, context);
-                update.applyChanges();
-            }
-        ])(host, context);
 
+        const update = new UpdateChanges(__dirname, host, context);
+        update.applyChanges();
     };
 }

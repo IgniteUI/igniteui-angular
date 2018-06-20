@@ -55,7 +55,7 @@
                 </igx-card>
 
                 <igx-card>
-                    <igx-column-hiding [columns]="grid1.columns" [togglable]="false"
+                    <igx-column-hiding [columns]="grid1.columns"
                                         columnDisplayOrder="Alphabetical"></igx-column-hiding>
                 </igx-card>
             </div>
@@ -94,7 +94,7 @@
             <div class="toggles-container">
                 <div class="cards-container">
                     <div class="toggle-group" style="margin-right: 30px; min-width: 250px;">
-                        <igx-column-hiding [columns]="grid2.columns" [togglable]="false" title="Show/Hide Columns"
+                        <igx-column-hiding [columns]="grid2.columns" title="Show/Hide Columns"
                             columnDisplayOrder="Alphabetical"></igx-column-hiding>
                     </div>
                     <div class="toggle-group" *ngFor="let col of grid2.columns">
@@ -182,12 +182,11 @@
             </div>
             <div class="cards-container" hidden>
                 <div class="toggle-group" style="min-width: 250px;">
-                    <igx-column-hiding [columns]="grid3.columns" [togglable]="false" title="Show/Hide Columns"
+                    <igx-column-hiding [columns]="grid3.columns" title="Show/Hide Columns"
                         columnDisplayOrder="Alphabetical"></igx-column-hiding>
                 </div>
             </div>
-            <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)"
-                (onBeforeProcess)="onProcess($event)" [primaryKey]="'ProductID'" [rowSelectable]="true">
+            <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)" [primaryKey]="'ProductID'" [rowSelectable]="true">
                 <igx-column [sortable]="true" [field]="'ProductID'" ></igx-column>
                 <igx-column [editable]="true" [field]="'ProductName'" ></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
