@@ -20,7 +20,6 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
 import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
 
 @Component({
@@ -29,7 +28,7 @@ import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
     selector: 'igx-grid-row',
     templateUrl: './row.component.html'
 })
-export class IgxGridRowComponent implements IGridBus, DoCheck {
+export class IgxGridRowComponent implements DoCheck {
 
     @Input()
     public rowData: any;
