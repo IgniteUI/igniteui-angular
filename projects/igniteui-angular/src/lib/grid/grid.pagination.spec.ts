@@ -248,7 +248,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelector('.igx-paginator > span').textContent).toMatch('3 of 3');
     }));
 
-    fit('activate/deactivate paging', async(() => {
+    it('activate/deactivate paging', async(() => {
         const fix = TestBed.createComponent(IgxGridMarkupEditingDeclarationComponent);
         const grid = fix.componentInstance.grid1;
         fix.detectChanges();
