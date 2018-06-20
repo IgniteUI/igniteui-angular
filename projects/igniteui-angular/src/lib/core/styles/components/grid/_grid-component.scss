@@ -5,6 +5,7 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
+
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
@@ -161,10 +162,6 @@
         @extend %igx-grid__grouparea !optional;
     }
 
-    @include e(grouparea-placeholder) {
-        @extend %igx-grid__grouparea-placeholder !optional;
-    }
-
     @include e(grouping-indicator) {
         @extend %igx-grid__grouping-indicator !optional;
     }
@@ -225,6 +222,14 @@
     @include m(cosy) {
         @extend %grid-display !optional;
 
+        @include e(cbx-selection) {
+            @extend %grid__cbx-selection--cosy !optional;
+        }
+
+        @include e(drag-ghost-image) {
+            @extend %grid__drag-ghost-image--cosy !optional;
+        }
+
         @include e(th) {
             @extend %grid-cell-header--cosy !optional;
         }
@@ -270,6 +275,14 @@
     @include m(compact) {
         @extend %grid-display !optional;
 
+        @include e(cbx-selection) {
+            @extend %grid__cbx-selection--compact !optional;
+        }
+
+        @include e(drag-ghost-image) {
+            @extend %grid__drag-ghost-image--compact !optional;
+        }
+
         @include e(th) {
             @extend %grid-cell-header--compact !optional;
         }
@@ -313,10 +326,34 @@
     }
 }
 
+@include b(igx-drop-area) {
+    @extend %igx-drop-area !optional;
+
+    @include m(hover) {
+        @extend %igx-drop-area--hover !optional;
+    }
+
+    @include e(icon) {
+        @extend %igx-drop-area__icon !optional;
+    }
+
+    @include e(text) {
+        @extend %igx-drop-area__text !optional;
+    }
+
+    @include m(compact) {
+        @extend %igx-drop-area !optional;
+        @extend %igx-drop-area--cosy !optional;
+    }
+
+    @include m(cosy) {
+        @extend %igx-drop-area !optional;
+        @extend %igx-drop-area--compact !optional;
+    }
+}
 
 @include b(igx-group-label) {
     @extend %igx-group-label !optional;
-
 
     @include e(icon) {
         @extend %igx-group-label__icon !optional;
@@ -334,5 +371,3 @@
         @extend %igx-group-label__count-badge !optional;
     }
 }
-
-

@@ -78,7 +78,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
     @HostBinding('class.igx-grid__drag-col-header')
     get dragged() {
-        return this.column === this.cms.column && this.column.grid.isColumnMoving;
+        return this.column === this.column.grid.draggedColumn;
     }
 
     @HostBinding('style.z-index')

@@ -15,6 +15,12 @@
 /// @param {Color} $dir-icon-color [null] - The chip direction icon color.
 /// @param {Color} $remove-icon-color [null] - The chip remove icon color.
 /// @param {Color} $remove-icon-hover-color [null] - The chip remove icon hover color.
+/// @param {color} $selected-chip-background: The selected chip background colopr.
+/// @param {color} $selected-chip-text-color: The selected chip text color.
+/// @param {color} $selected-chip-icon-color: The selected chip icon color.
+/// @param {color} $selected-chip-hover-background: The selected chip hover background color.
+/// @param {color} $selected-chip-text-hover-color: The selected chip hover text color.
+/// @param {color} $selected-chip-icon-hover-color: The selected chip hover icon color.
 ///
 /// @requires extend
 /// @requires text-contrast
@@ -38,7 +44,18 @@
 
     $dir-icon-color: null,
     $remove-icon-color: null,
-    $remove-icon-hover-color: null
+    $remove-icon-hover-color: null,
+
+    $selected-chip-background: null,
+    $selected-chip-text-color: null,
+    $selected-chip-icon-color: null,
+    $selected-chip-hover-background: null,
+    $selected-chip-text-hover-color: null,
+    $selected-chip-icon-hover-color: null,
+    $selected-remove-icon-color: null,
+    $selected-remove-icon-hover-color: null,
+    $chip-focus-border-color: null,
+    $selected-chip-focus-border-color: null
 ) {
     $default-theme: (
         name: 'igx-chip',
@@ -53,6 +70,17 @@
         dir-icon-color: igx-color($palette, grays, 300),
         remove-icon-color: igx-color($palette, grays, 300),
         remove-icon-hover-color: igx-color($palette, grays, 600),
+
+        selected-chip-background: igx-color($palette, secondary),
+        selected-chip-text-color: #fff,
+        selected-chip-icon-color: #fff,
+        selected-chip-hover-background: igx-color($palette, secondary, 300),
+        selected-chip-text-hover-color: #fff,
+        selected-chip-icon-hover-color: #fff,
+        selected-remove-icon-color: #fff,
+        selected-remove-icon-hover-color: #fff,
+        chip-focus-border-color: igx-color($palette, primary, 300),
+        selected-chip-focus-border-color: igx-color($palette, secondary, 600)
     );
 
     @if not($text-color) and $chip-background{
@@ -67,46 +95,67 @@
         $order-icon-color: text-contrast($chip-background);
     }
 
-    @if not($chip-hover-background) and $chip-background{
-        $chip-hover-background: text-contrast($chip-background);
-
-        @if (lightness($chip-hover-background) > 50) {
-            $chip-hover-background: lighten($chip-background, 16%);
-            @if not($text-color) and $chip-hover-background{
-                $text-color: text-contrast($chip-hover-background);
-            }
-
-            @if not($order-icon-color) and $chip-hover-background{
-                $order-icon-color: text-contrast($chip-hover-background);
-            }
-
-            @if not($remove-icon-color) and $chip-hover-background{
-                $remove-icon-color: rgba(text-contrast($chip-hover-background), .4);
-            }
-
-            @if not($remove-icon-hover-color) and $chip-hover-background{
-                $remove-icon-hover-color: rgba(text-contrast($chip-hover-background), 1);
-            }
-        } @else {
-            $chip-hover-background: darken($chip-background, 12%);
-
-            @if not($text-color) and $chip-hover-background{
-                $text-color: text-contrast($chip-hover-background);
-            }
-
-            @if not($order-icon-color) and $chip-hover-background{
-                $order-icon-color: text-contrast($chip-hover-background);
-            }
-
-            @if not($remove-icon-color) and $chip-hover-background{
-                $remove-icon-color: rgba(text-contrast($chip-hover-background), .4);
-            }
-
-            @if not($remove-icon-hover-color) and $chip-hover-background{
-                $remove-icon-hover-color: rgba(text-contrast($chip-hover-background), 1);
-            }
-        }
+    @if not($selected-chip-text-color) and $selected-chip-background{
+        $selected-chip-text-color: text-contrast($selected-chip-background);
     }
+
+    @if not($selected-chip-icon-color) and $selected-chip-background{
+        $selected-chip-icon-color: text-contrast($selected-chip-background);
+    }
+
+    @if not($selected-chip-text-hover-color) and $selected-chip-hover-background{
+        $selected-chip-text-hover-color: text-contrast($selected-chip-hover-background);
+    }
+
+    @if not($selected-chip-icon-hover-color) and $selected-chip-hover-background{
+        $selected-chip-icon-hover-color: text-contrast($selected-chip-hover-background);
+    }
+
+    @if not($selected-remove-icon-hover-color) and $selected-chip-hover-background{
+        $selected-remove-icon-hover-color: text-contrast($selected-chip-hover-background);
+    }
+
+
+    //@if not($chip-hover-background) and $chip-background{
+    //    $chip-hover-background: text-contrast($chip-background);
+    //
+    //    @if (lightness($chip-hover-background) > 50) {
+    //        $chip-hover-background: lighten($chip-background, 16%);
+    //        @if not($text-color) and $chip-hover-background{
+    //            $text-color: text-contrast($chip-hover-background);
+    //        }
+    //
+    //        @if not($order-icon-color) and $chip-hover-background{
+    //            $order-icon-color: text-contrast($chip-hover-background);
+    //        }
+    //
+    //        @if not($remove-icon-color) and $chip-hover-background{
+    //            $remove-icon-color: rgba(text-contrast($chip-hover-background), .4);
+    //        }
+    //
+    //        @if not($remove-icon-hover-color) and $chip-hover-background{
+    //            $remove-icon-hover-color: rgba(text-contrast($chip-hover-background), 1);
+    //        }
+    //    } @else {
+    //        $chip-hover-background: darken($chip-background, 12%);
+    //
+    //        @if not($text-color) and $chip-hover-background{
+    //            $text-color: text-contrast($chip-hover-background);
+    //        }
+    //
+    //        @if not($order-icon-color) and $chip-hover-background{
+    //            $order-icon-color: text-contrast($chip-hover-background);
+    //        }
+    //
+    //        @if not($remove-icon-color) and $chip-hover-background{
+    //            $remove-icon-color: rgba(text-contrast($chip-hover-background), .4);
+    //        }
+    //
+    //        @if not($remove-icon-hover-color) and $chip-hover-background{
+    //            $remove-icon-hover-color: rgba(text-contrast($chip-hover-background), 1);
+    //        }
+    //    }
+    //}
 
     @if not($text-hover-color) and $chip-hover-background{
         $text-hover-color: text-contrast($chip-hover-background);
@@ -118,6 +167,18 @@
 
     @if not($remove-icon-color) and $chip-hover-background{
         $remove-icon-color: rgba(text-contrast($chip-hover-background), .4);
+    }
+
+    @if not($selected-remove-icon-color) and $selected-chip-background{
+        $selected-remove-icon-color: rgba(text-contrast($selected-chip-background), .4);
+    }
+
+    @if not($text-color) and $selected-chip-background{
+        $text-color: text-contrast($selected-chip-background);
+    }
+
+    @if not($text-hover-color) and $selected-chip-hover-background{
+        $text-hover-color: text-contrast($selected-chip-hover-background);
     }
 
     @if not($order-icon-hover-color) and $chip-hover-background{
@@ -138,6 +199,17 @@
         dir-icon-color: $dir-icon-color,
         remove-icon-color: $remove-icon-color,
         remove-icon-hover-color: $remove-icon-hover-color,
+
+        selected-chip-background: $selected-chip-background,
+        selected-chip-text-color: $selected-chip-text-color,
+        selected-chip-icon-color: $selected-chip-icon-color,
+        selected-chip-hover-background: $selected-chip-hover-background,
+        selected-chip-text-hover-color: $selected-chip-text-hover-color,
+        selected-chip-icon-hover-color: $selected-chip-icon-hover-color,
+        selected-remove-icon-color: $selected-remove-icon-color,
+        selected-remove-icon-hover-color: $selected-remove-icon-hover-color,
+        chip-focus-border-color: $chip-focus-border-color,
+        selected-chip-focus-border-color: $selected-chip-focus-border-color,
     ));
 }
 
@@ -149,18 +221,31 @@
     @include igx-root-css-vars($theme);
 
     $transition: all 120ms $ease-in-out-cubic;
+    $chip-max-width: rem(170px);
+    $chip-min-width: rem(96px);
 
     $chip-height: (
-        comfortable: rem(40px),
-        cosy: rem(32px),
-        compact: rem(32px)
+        comfortable: rem(32px),
+        cosy: rem(24px),
+        compact: rem(24px)
+    );
+
+    $chip-padding: (
+        comfortable: 0 rem(16px),
+        cosy: 0 rem(8px),
+        compact: 0 rem(6px)
     );
 
     %igx-chips-area {
         display: flex;
         align-items: center;
         justify-content: flex-start;
+        flex-wrap: wrap;
         width: 100%;
+
+        &:empty {
+            display: none;
+        }
     }
 
     %igx-chip,
@@ -171,24 +256,41 @@
         align-items: center;
     }
 
+    %igx-chip {
+        &:focus {
+            outline: transparent;
+
+            %igx-chip__item {
+                outline: transparent;
+                border-color: #0b3c49;
+            }
+        }
+    }
+
     %igx-chip__label {
         justify-content: space-between;
+        max-width: $chip-max-width;
+        min-width: $chip-min-width;
     }
 
     %igx-chip__item {
-        max-width: 160px;
-        min-width: 96px;
+        max-width: $chip-max-width;
+        min-width: $chip-min-width;
         user-select: none;
         cursor: pointer;
         border-radius: map-get($chip-height, 'comfortable') / 2;
-        padding: rem(4) rem(16);
+        padding: map-get($chip-padding, 'comfortable');
+        margin: rem(4px);
         height: map-get($chip-height, 'comfortable');
         transition: $transition;
         background: --var($theme, 'chip-background');
+        border: 1px solid transparent;
 
         &:hover,
         &:focus{
+            outline: transparent;
             background: --var($theme, 'chip-hover-background');
+
 
             %igx-chip__text {
                 color: --var($theme, 'text-hover-color');
@@ -202,27 +304,35 @@
             }
         }
 
-        .igx-icon,
-        .igx-button--icon {
+        &:focus{
+            border-color: --var($theme, 'chip-focus-border-color');
+        }
+
+        %igx-icon-display,
+        %igx-button--icon {
             width: rem(16px);
             min-width: rem(16px);
             height: rem(16px);
             font-size: rem(16px);
         }
-    }
 
-    .igx-grid--cosy {
-        %igx-chip__item {
-            border-radius: map-get($chip-height, 'cosy') / 2;
-            height: map-get($chip-height, 'cosy');
+        %igx-button--icon {
+            &:focus {
+                background: transparent;
+            }
         }
     }
 
-    .igx-grid--compact {
-        %igx-chip__item {
-            border-radius: map-get($chip-height, 'compact') / 2;
-            height: map-get($chip-height, 'compact');
-        }
+    %igx-chip__item--cosy {
+        border-radius: map-get($chip-height, 'cosy') / 2;
+        height: map-get($chip-height, 'cosy');
+        padding: map-get($chip-padding, 'cosy');
+    }
+
+    %igx-chip__item--compact {
+        border-radius: map-get($chip-height, 'compact') / 2;
+        height: map-get($chip-height, 'compact');
+        padding: map-get($chip-padding, 'compact');
     }
 
     %igx-chip__text {
@@ -232,7 +342,7 @@
         @include ellipsis();
     }
 
-    .igx-icon {
+    %igx-icon-display {
         &%igx-chip__dir-icon {
             width: rem(16px);
             height: rem(16px);
@@ -250,7 +360,8 @@
             color: --var($theme, 'remove-icon-color');
             transition: color 120ms ease-in-out;
 
-            &:hover {
+            &:hover,
+            &:focus {
                 color: --var($theme, 'remove-icon-hover-color');
                 opacity: 1;
             }
@@ -259,6 +370,63 @@
 
     %igx-chip__connector {
         user-select: none;
+    }
+
+    %igx-chip__item--selected {
+        background: --var($theme, 'selected-chip-background');
+
+        %igx-chip__text {
+            color: --var($theme, 'selected-chip-text-color');
+        }
+
+        &:hover,
+        &:focus {
+            background: --var($theme, 'selected-chip-hover-background');
+
+            %igx-chip__text {
+                color: --var($theme, 'selected-chip-text-hover-color');
+            }
+
+            %igx-icon-display,
+            %igx-button--icon {
+                color: --var($theme, 'selected-chip-icon-hover-color')
+            }
+        }
+
+        &:focus {
+            border-color: --var($theme, 'selected-chip-focus-border-color');
+        }
+
+        %igx-icon-display,
+        %igx-button--icon {
+            color: --var($theme, 'selected-chip-icon-color');
+
+            &%igx-chip__remove-icon {
+                color: --var($theme, 'selected-remove-icon-color');
+                opacity: .7;
+                transition: color 120ms ease-in-out;
+
+                &:hover,
+                &:focus{
+                    color: --var($theme, 'selected-remove-icon-hover-color');
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .igx-grid--cosy {
+        %igx-chip__item {
+            border-radius: map-get($chip-height, 'cosy') / 2;
+            height: map-get($chip-height, 'cosy');
+        }
+    }
+
+    .igx-grid--compact {
+        %igx-chip__item {
+            border-radius: map-get($chip-height, 'compact') / 2;
+            height: map-get($chip-height, 'compact');
+        }
     }
 
     %igx-chip--disabled {
@@ -271,7 +439,7 @@
             opacity: .4;
         }
     }
-        
+
     %igx-chip__ghost {
         width: fit-content;
         position: absolute;

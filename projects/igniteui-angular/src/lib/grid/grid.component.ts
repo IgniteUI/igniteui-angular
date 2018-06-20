@@ -5,10 +5,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactory,
     ComponentFactoryResolver,
-    ComponentRef,
-    ContentChild,
     ContentChildren,
     ElementRef,
     EventEmitter,
@@ -36,13 +33,14 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IForOfState } from '../directives/for-of/IForOfState';
-import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter } from '../services/index';
+import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
+import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
+import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGroupByRowTemplateDirective, IgxColumnMovingDragDirective } from './grid.common';
@@ -54,7 +52,6 @@ import { IFilteringOperation } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
-const DEFAULT_SUMMARY_HEIGHT = 36.36;
 const MINIMUM_COLUMN_WIDTH = 136;
 
 export interface IGridCellEventArgs {
@@ -106,7 +103,7 @@ export interface ISearchInfo {
 export interface IGridToolbarExportEventArgs {
     grid: IgxGridComponent;
     exporter: IgxBaseExporter;
-    type: string;
+    options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
@@ -297,6 +294,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
+    get columnHiding() {
+        return this._columnHiding;
+    }
+
+    set columnHiding(value) {
+        this._columnHiding = value;
+        if (this.gridAPI.get(this.id)) {
+            this.markForCheck();
+        }
+    }
+
+    @Input()
     get rowSelectable(): boolean {
         return this._rowSelection;
     }
@@ -336,8 +345,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._width !== value) {
             this._width = value;
             requestAnimationFrame(() => {
-                this.calculateGridWidth();
-                this.cdr.markForCheck();
+                // Calling reflow(), because the width calculation
+                // might make the horizontal scrollbar appear/disappear.
+                // This will change the height, which should be recalculated.
+                this.reflow();
             });
         }
     }
@@ -363,6 +374,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Input()
     public emptyGridMessage = 'No records found.';
+
+    @Input()
+    public columnHidingTitle = '';
 
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
@@ -418,6 +432,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Output()
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
+
+    @Output()
+    public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
 
     @Output()
     public onColumnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
@@ -482,6 +499,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('tfoot')
     public tfoot: ElementRef;
 
+    @ViewChild('columnHidingUI')
+    public columnHidingUI: IgxColumnHidingComponent;
+
+    @ViewChild('summaries')
+    public summaries: ElementRef;
+
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
@@ -494,6 +517,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 return 'igx-grid--compact';
             default:
                 return 'igx-grid';
+        }
+    }
+
+    get groupAreaHostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-drop-area--cosy';
+            case DisplayDensity.compact:
+                return 'igx-drop-area--compact';
+            default:
+                return 'igx-drop-area';
         }
     }
 
@@ -534,6 +568,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
+    }
+
+    get hiddenColumnsCount() {
+        return this.columnList.filter((col) => col.hidden === true).length;
+    }
+
+    @Input()
+    get hiddenColumnsText() {
+        return this._hiddenColumnsText;
+    }
+
+    set hiddenColumnsText(value) {
+        this._hiddenColumnsText = value;
     }
 
     /* Toolbar related definitions */
@@ -668,9 +715,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcHeight: number;
     public tfootHeight: number;
     public chipsGoupingExpressions = [];
+    public summariesHeight: number;
 
     public cellInEditMode: IgxGridCellComponent;
-    public isColumnMoving: boolean;
+    public draggedColumn: IgxColumnComponent;
     public isColumnResizing: boolean;
 
     public eventBus = new Subject<boolean>();
@@ -701,9 +749,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _groupingExpandState: IGroupByExpandState[] = [];
     protected _groupRowTemplate: TemplateRef<any>;
     protected _groupAreaTemplate: TemplateRef<any>;
+    protected _columnHiding = false;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
+    private _hiddenColumnsText = '';
     private _height = '100%';
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;
@@ -753,7 +803,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
-        this.tfootHeight = this.calcMaxSummaryHeight();
+        this.summariesHeight = this.calcMaxSummaryHeight();
         this._derivePossibleHeight();
         this.markForCheck();
 
@@ -804,6 +854,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public dataLoading(event) {
         this.onDataPreLoad.emit(event);
+    }
+
+    public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
+        const col = this.getColumnByName(args.column.field);
+        col.hidden = args.newValue;
+        this.onColumnVisibilityChanged.emit(args);
+
+        this.markForCheck();
+    }
+
+    public toggleColumnHidingUI() {
+        if (this.columnHidingUI && this.columnHidingUI.togglable) {
+            this.columnHidingUI.toggleDropDown();
+        }
     }
 
     get nativeElement() {
@@ -1058,6 +1122,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public clearGrouping(name?: string): void {
         this.gridAPI.clear_groupby(this.id, name);
+        this.calculateGridSizes();
     }
 
     public isExpandedGroup(group: IGroupByRecord): boolean {
@@ -1072,6 +1137,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record.records && record.records.length;
+    }
+
+    public get dropAreaVisible(): boolean {
+        return (this.draggedColumn && this.draggedColumn.groupable) ||
+            !this.chipsGoupingExpressions.length;
     }
 
     public filter(...rest): void {
@@ -1092,7 +1162,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], true, rest[1]);
         }
-        this.tfootHeight = 0;
+        this.summariesHeight = 0;
         this.markForCheck();
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -1104,7 +1174,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._summaries(rest[0], false);
         }
-        this.tfootHeight = 0;
+        this.summariesHeight = 0;
         this.markForCheck();
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -1326,61 +1396,55 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (!this._height) {
             this.calcHeight = null;
-            if (this.hasSummarizedColumns && !this.tfootHeight) {
-                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
+            if (this.hasSummarizedColumns && !this.summariesHeight) {
+                this.summariesHeight = this.summaries ?
                     this.calcMaxSummaryHeight() : 0;
             }
             return;
         }
 
+        let toolbarHeight = 0;
+        if (this.showToolbar && this.toolbarHtml != null) {
+            toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                this.toolbarHtml.nativeElement.offsetHeight : 0;
+        }
+
+        let pagingHeight = 0;
+        let groupAreaHeight = 0;
+        if (this.paging) {
+            pagingHeight = this.paginator.nativeElement.firstElementChild ?
+                this.paginator.nativeElement.clientHeight : 0;
+        }
+
+        if (!this.summariesHeight) {
+            this.summariesHeight = this.summaries ?
+                this.calcMaxSummaryHeight() : 0;
+        }
+
+        if (this.groupArea) {
+            groupAreaHeight = this.groupArea.nativeElement.offsetHeight;
+        }
+
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
-            let toolbarHeight = 0;
-            if (this.showToolbar && this.toolbarHtml != null) {
-                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                    this.toolbarHtml.nativeElement.offsetHeight : 0;
-            }
-            let pagingHeight = 0;
-            let groupAreaHeight = 0;
-            if (this.paging) {
-                pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                    this.paginator.nativeElement.clientHeight : 0;
-            }
-            if (!this.tfootHeight) {
-                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
-                    this.calcMaxSummaryHeight() : 0;
-            }
-            if (this.groupArea) {
-                groupAreaHeight = this.groupArea.nativeElement.offsetHeight;
-            }
-            this.calcHeight = parseInt(computed.getPropertyValue('height'), 10) -
-                this.theadRow.nativeElement.clientHeight -
-                this.tfootHeight - pagingHeight - groupAreaHeight - toolbarHeight -
-                this.scr.nativeElement.clientHeight;
+            this.calcHeight = this._calculateGridBodyHeight(
+                parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight, groupAreaHeight);
         } else {
-            let toolbarHeight = 0;
-            if (this.showToolbar && this.toolbarHtml != null) {
-                toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                    this.toolbarHtml.nativeElement.offsetHeight : 0;
-            }
-            let pagingHeight = 0;
-            let groupAreaHeight = 0;
-            if (this.paging) {
-                pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                    this.paginator.nativeElement.clientHeight : 0;
-            }
-            if (!this.tfootHeight) {
-                this.tfootHeight = this.tfoot.nativeElement.firstElementChild ?
-                    this.calcMaxSummaryHeight() : 0;
-            }
-            if (this.groupArea) {
-                groupAreaHeight = this.groupArea.nativeElement.offsetHeight;
-            }
-            this.calcHeight = parseInt(this._height, 10) -
-                this.theadRow.nativeElement.getBoundingClientRect().height -
-                this.tfootHeight - pagingHeight - groupAreaHeight - toolbarHeight -
-                this.scr.nativeElement.clientHeight;
+            this.calcHeight = this._calculateGridBodyHeight(
+                parseInt(this._height, 10), toolbarHeight, pagingHeight, groupAreaHeight);
         }
+    }
+
+    protected _calculateGridBodyHeight(gridHeight: number,
+        toolbarHeight: number, pagingHeight: number, groupAreaHeight: number) {
+        const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
+            this.tfoot.nativeElement.clientHeight;
+
+        return gridHeight - toolbarHeight -
+            this.theadRow.nativeElement.offsetHeight -
+            this.summariesHeight - pagingHeight - groupAreaHeight -
+            footerBordersAndScrollbars -
+            this.scr.nativeElement.clientHeight;
     }
 
     protected getPossibleColumnWidth() {
@@ -1428,7 +1492,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
         });
-        return maxSummaryLength * (this.tfoot.nativeElement.clientHeight ? this.tfoot.nativeElement.clientHeight : this.defaultRowHeight);
+
+        let summariesHeight = this.defaultRowHeight;
+        if (this.summaries && this.summaries.nativeElement.clientHeight) {
+            summariesHeight = this.summaries.nativeElement.clientHeight;
+        }
+
+        return maxSummaryLength * summariesHeight;
     }
 
     protected calculateGridSizes() {
@@ -1735,8 +1805,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public navigateDown(rowIndex: number, columnIndex: number) {
         const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const target = row instanceof IgxGridGroupByRowComponent ?
-        row.groupContent :
-        this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
+            row.groupContent :
+            this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
         const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
         if (!verticalScroll && !target) {
             return;
@@ -1766,9 +1836,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public navigateUp(rowIndex: number, columnIndex: number) {
         const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-        const target =  row instanceof IgxGridGroupByRowComponent ?
-         row.groupContent :
-         this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
+        const target = row instanceof IgxGridGroupByRowComponent ?
+            row.groupContent :
+            this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
         const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
 
         if (!verticalScroll && !target) {
@@ -1796,25 +1866,25 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
         this.subscribeNext(virtualDir, () => {
-             this.cdr.detectChanges();
-             let target;
-             row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-             target = this.gridAPI.get_cell_by_visible_index(
+            this.cdr.detectChanges();
+            let target;
+            row = this.gridAPI.get_row_by_index(this.id, rowIndex);
+            target = this.gridAPI.get_cell_by_visible_index(
                 this.id,
                 rowIndex,
                 columnIndex);
-             if (!target) {
+            if (!target) {
                 if (dir) {
                     target = dir === 'left' ? row.cells.first : row.cells.last;
                 } else if (row instanceof IgxGridGroupByRowComponent) {
                     target = row.groupContent;
                 } else if (row) {
-                     target = row.cells.first;
+                    target = row.cells.first;
                 } else {
                     return;
                 }
             }
-             target.nativeElement.focus();
+            target.nativeElement.focus();
         });
     }
 
@@ -1948,7 +2018,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
-                                                map((c) => ({ columnName: c.field, columnSearchable: c.searchable }) );
+            map((c) => ({ columnName: c.field, columnSearchable: c.searchable }));
 
         data.forEach((dataRow, i) => {
             const rowIndex = this.paging ? i % this.perPage : i;
@@ -2037,18 +2107,27 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.groupingExpansionState = [];
         this.chipsGoupingExpressions = newGrouping;
         event.isValid = true;
+        this.markForCheck();
     }
 
     public chipsMovingEnded() {
         this.groupingExpressions = this.chipsGoupingExpressions;
+        this.markForCheck();
     }
 
     public onChipClicked(event) {
-        const groupExpr = this.groupingExpressions;
-        const column = this.getColumnByName(event.owner.id);
-        const exprIndex = groupExpr.findIndex((expr) => expr.fieldName === column.field);
-        const sortDirection = groupExpr[exprIndex].dir;
-        groupExpr[exprIndex].dir = 3 - sortDirection;
-        this.groupingExpressions = groupExpr;
+        const sortingExpr = this.sortingExpressions;
+        const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
+        columnExpr.dir = 3 - columnExpr.dir;
+        this.sort(columnExpr);
+    }
+
+    public onChipKeyDown(event) {
+        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') {
+            const sortingExpr = this.sortingExpressions;
+            const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
+            columnExpr.dir = 3 - columnExpr.dir;
+            this.sort(columnExpr);
+        }
     }
 }

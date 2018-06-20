@@ -24,6 +24,10 @@
         @extend %igx-chip__item !optional;
     }
 
+    @include e(item, $m: selected) {
+        @extend %igx-chip__item--selected !optional;
+    }
+
     @include e(label) {
         @extend %igx-chip__label !optional;
     }
@@ -50,6 +54,18 @@
 
     @include e(ghost) {
         @extend %igx-chip__ghost  !optional;
+    }
+
+    @include m(cosy) {
+        @include e(item) {
+            @extend %igx-chip__item--cosy !optional;
+        }
+    }
+
+    @include m(compact) {
+        @include e(item) {
+            @extend %igx-chip__item--compact  !optional;
+        }
     }
 }
 
