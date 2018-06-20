@@ -50,6 +50,29 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
+- `igxCombo` component added
+
+    ```html
+    <igx-combo #combo [data]="towns" [displayKey]="'townName'" [valueKey]="'postCode'" [groupKey]="'province'"
+        [allowCustomValues]="true" placeholder="Town(s)" searchPlaceholder="Search town..." [width]="'100%'"></igx-combo>
+    ```
+
+    igxCombo features:
+
+        - Data Binding
+        - Value Binding
+        - Virtualized list
+        - Multiple Selection
+        - Filtering
+        - Grouping
+        - Custom values
+        - Templates
+        - Integration with Template Driven and Reactive Forms
+        - Keayboard Navigation
+        - Accessibility compliance
+
+    For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
+
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
