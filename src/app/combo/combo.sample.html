@@ -31,14 +31,14 @@
                            [allowCustomValues]="true"
                            [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
                            [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
-                    <ng-template *ngIf="currentDataType !== 'primitive'" #dropdownItemTemplate let-display let-key="valueKey">
+                    <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
                             <!--<span class="small-red-circle"></span>-->
                             <div class="display-value--main">{{display[key]}}</div>
                             <div class="display-value--sub">{{display.region}}</div>
                         </div>
                     </ng-template>
-                    <ng-template *ngIf="currentDataType === 'primitive'" #dropdownItemTemplate let-display let-key="valueKey">
+                    <ng-template *ngIf="currentDataType === 'primitive'" #itemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
                             <!--<span class="small-red-circle"></span>-->
                             <div class="display-value--main">{{display}}</div>

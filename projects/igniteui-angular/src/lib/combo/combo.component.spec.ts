@@ -92,9 +92,9 @@ describe('Combo', () => {
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         expect(combo).toBeDefined();
-        expect(combo.dropdownFooterTemplate).toBeDefined();
-        expect(combo.dropdownHeaderTemplate).toBeDefined();
-        expect(combo.dropdownItemTemplate).toBeDefined();
+        expect(combo.footerTemplate).toBeDefined();
+        expect(combo.headerTemplate).toBeDefined();
+        expect(combo.itemTemplate).toBeDefined();
         expect(combo.addItemTemplate).toBeUndefined();
         expect(combo.headerItemTemplate).toBeUndefined();
     });
@@ -2411,7 +2411,7 @@ describe('Combo', () => {
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(combo.dropdownHeaderTemplate).toBeDefined();
+            expect(combo.headerTemplate).toBeDefined();
             const dropdownList: HTMLElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             headerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOOTER));
             expect(headerElement).not.toBeNull();
@@ -2430,7 +2430,7 @@ describe('Combo', () => {
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(combo.dropdownFooterTemplate).toBeDefined();
+            expect(combo.footerTemplate).toBeDefined();
             const dropdownList: HTMLElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             footerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOOTER));
             expect(footerElement).not.toBeNull();
@@ -2768,17 +2768,17 @@ class IgxComboScrollTestComponent {
     template: `
         <igx-combo #combo [placeholder]="'Location'" [data]='items'
         [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" [allowCustomValues]="true">
-            <ng-template #dropdownItemTemplate let-display let-key="valueKey">
+            <ng-template #itemTemplate let-display let-key="valueKey">
                 <div class="state-card--simple">
                     <span class="small-red-circle"></span>
                     <div class="display-value--main">State: {{display[key]}}</div>
                     <div class="display-value--sub">Region: {{display.region}}</div>
                 </div>
             </ng-template>
-            <ng-template #dropdownHeaderTemplate>
+            <ng-template #headerTemplate>
                 <div class="header-class">This is a header</div>
             </ng-template>
-            <ng-template #dropdownFooterTemplate>
+            <ng-template #footerTemplate>
                 <div class="footer-class">This is a footer</div>
             </ng-template>
         </igx-combo>

@@ -167,20 +167,20 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    @ContentChild('dropdownHeaderTemplate', { read: TemplateRef })
-    public dropdownHeaderTemplate: TemplateRef<any>;
+    @ContentChild('headerTemplate', { read: TemplateRef })
+    public headerTemplate: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ContentChild('dropdownFooterTemplate', { read: TemplateRef })
-    public dropdownFooterTemplate: TemplateRef<any>;
+    @ContentChild('footerTemplate', { read: TemplateRef })
+    public footerTemplate: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ContentChild('dropdownItemTemplate', { read: TemplateRef })
-    public dropdownItemTemplate: TemplateRef<any>;
+    @ContentChild('itemTemplate', { read: TemplateRef })
+    public itemTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -936,8 +936,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         if (!this.filteredData || !this.filteredData.length) {
             return this.emptyTemplate;
         }
-        if (this.dropdownItemTemplate) {
-            return this.dropdownItemTemplate;
+        if (this.itemTemplate) {
+            return this.itemTemplate;
         }
         if (this._dataType === DataTypes.COMPLEX) {
             return this.complexTemplate;

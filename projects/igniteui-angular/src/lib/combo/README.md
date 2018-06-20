@@ -11,14 +11,170 @@ Drop Down items are virtualized, which guarantees smooth work, even combo is bou
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html)
 
 # Usage
-Basic usage of `igx-combo`
+Basic usage of `igx-combo` bound to a local data source, defining `valueKey` and `displayKey`:
 
 ```html
-<igx-combo [data]="items" [valueKey]="'field'" [groupKey]="'region'"
-    [allowCustomValues]="customValues" (onAddition)="handleAddition($event)"
-    placeholder="Location(s)" searchPlaceholder="Search...">
+<igx-combo [data]="localData" [valueKey]="'ProductID'" [displayKey]="'ProductName'">
 </igx-combo>
 ```
+
+Remote binding:
+
+```html
+<igx-combo [data]="remoteData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'">
+</igx-combo>
+```
+
+## Features
+
+### Value Binding
+
+If we want to use a two-way data-binding, we could just use `ngModule` like this:
+
+```html
+<igx-combo #combo [(ngModel)]="values"></igx-combo>
+```
+
+```typescript
+@ViewChild('combo', { read: IgxComboComponent }) public combo: IgxComboComponent;
+get values() {
+    return this.combo.selectedItems();
+}
+set values(newValues: Array<any>) {
+    this.combo.selectItems(newValues);
+}
+```
+
+<div class="divider--half"></div>
+
+### Filtering
+By default filtering in the combo is enabled. However you can disable it using the following code:
+
+```html
+<igx-combo [filaterable]="false"></igx-combo>
+```
+
+<div class="divider--half"></div>
+
+<div class="divider--half"></div>
+
+### Custom Values
+Enabling the custom values will add missing from the list, using the combo's interface.
+
+```html
+<igx-combo [allowCustomValues]="true"></igx-combo>
+```
+
+<div class="divider--half"></div>
+
+### Disabled
+You can disable combo using the following code:
+
+```html
+<igx-combo [disabled]="true"></igx-combo>
+```
+
+<div class="divider--half"></div>
+
+### Grouping
+Defining a combo's groupKey option will group the items, according to that key.
+
+```html
+<igx-combo [groupKey]="'primaryKey'"></igx-combo>
+```
+
+<div class="divider--half"></div>
+
+### Templates
+Templates for different parts of the control can be defined, including items, header and footer, etc.
+When defining one of the them, you need to reference list of predifined names, as follows:
+
+#### Defining item template:
+```html
+<igx-combo>
+	<ng-template #itemTemplate let-display let-key="valueKey">
+		<div class="item">
+			<span class="state">State: {{ display[key] }}</span>
+			<span class="region">Region: {{ display.region }}</span>
+		</div>
+	</ng-template>
+</igx-combo>
+```
+
+#### Defining header template:
+
+```html
+<igx-combo>
+    <ng-template #headerTemplate>
+        <div class="header-class">Custom header</div>
+        <img src=""/>
+    </ng-template>
+</igx-combo>
+```
+
+#### Defining footer template:
+
+```html
+<igx-combo>
+    <ng-template #footerTemplate>
+        <div class="footer-class">Custom footer</div>
+        <img src=""/>
+    </ng-template>
+</igx-combo>
+```
+
+#### Defining empty template:
+
+```html
+<igx-combo>
+    <ng-template #emptyTemplate>
+        <span>List is empty</div>
+    </ng-template>
+</igx-combo>
+```
+
+#### Defining add template:
+
+```html
+<igx-combo>
+    <ng-template #addItemTemplate>
+        <span>Add town</span>
+    </ng-template>
+</igx-combo>
+```
+<div class="divider--half"></div>
+
+## Keyboard Navigation
+
+When igxCombo is closed and focused:
+- `ArrowDown` or `Alt` + `ArrowDown` will open the combo drop down and will move focus to the search input.
+
+When igxCombo is opened and search input is focused:
+- `ArrowUp` or `Alt` + `ArrowUp` will close the combo drop down and will move focus to the closed combo.
+- `ArrowDown` will move focus from the search input to the first list item.If list is empty and custom values are enabled will move it to the Add new item button.
+  > Note: Any other key stroke will be handled by the input.
+
+When igxCombo is opened and list item is focued:
+- `ArrowDown` will move to next list item. If the active item is the last one in hte list and custom values are enabled then focus will be moved to the Add item button.
+
+- `ArrowUp` will move to previous list item. If the active item is the first one in the list then focus will be moved back to the search input.
+
+- `End` will move to last list item.
+
+- `Home` will move to first list item.
+
+- `Space` will select/deselect active list item.
+
+- `Enter` will confirm the already selected items and will close the list.
+
+- `Esc` will close the list.
+
+When igxCombo is opened allow custom values are enabled and add item button is focused:
+
+- `Space` and `Enter` will add new item with valueKey and displayKey equal to the text in the search input and will select the new item.
+
+- `ArrowUp` focus will be moved back to the last list item or if list is empty will be moved to the search input.
+
 
 ## API
 
