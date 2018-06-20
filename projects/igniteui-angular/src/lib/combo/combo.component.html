@@ -8,8 +8,7 @@
     <span>The list is empty</span>
 </ng-template>
 <ng-template #addItemDefault let-control>
-    Add item to collection
-    <igx-icon fontSet="material" name="add_box" (click)="control.addItemToCollection()"></igx-icon>
+    <button igxButton="flat" igxRipple>Add item</button>
 </ng-template>
 <ng-template #headerItemBase let-item let-key="valueKey" let-groupKey="groupKey">
     {{ item[key] }}
