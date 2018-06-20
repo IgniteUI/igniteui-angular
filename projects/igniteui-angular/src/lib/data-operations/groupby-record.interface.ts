@@ -7,6 +7,7 @@ export interface IGroupByRecord {
     level: number;
     records: GroupedRecords;
     value: any;
+    groups?: IGroupByRecord[];
     __groupParent: IGroupByRecord;
     // TODO: add groupby summaries here
  }
