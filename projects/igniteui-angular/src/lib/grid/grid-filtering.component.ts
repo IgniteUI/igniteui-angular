@@ -138,7 +138,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             collapse();
         });
 
-        this.columnMoving = this.gridAPI.get(this.gridID).onColumnMovingStart.subscribe(() => {
+        this.columnMoving = this.gridAPI.get(this.gridID).onColumnMoving.subscribe(() => {
             collapse();
         });
     }

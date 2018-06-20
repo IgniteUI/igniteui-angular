@@ -17,14 +17,14 @@
 <div class="igx-filtering">
     <div [attr.class]="filterCSS">
         <span class="toggle-icon" [igxToggleAction]="directive">
-            <igx-icon id="filterIcon" (mousedown)="onMouseDown()">filter_list</igx-icon>
+            <igx-icon [attr.draggable]="false" (mousedown)="onMouseDown()">filter_list</igx-icon>
         </span>
     </div>
 </div>
 
 <span igxToggle (onOpened)="refresh()" (onClosed)="refresh()" #directive="toggle" [attr.class]="dialogPosition">
     <div>
-        <select (change)="selectionChanged($event.target.value)" #select>
+        <select [attr.draggable]="false" (change)="selectionChanged($event.target.value)" #select>
             <option *ngIf="dataType === 'boolean'" [value]="booleanFilterAll">{{ booleanFilterAll | filterCondition | titlecase }}</option>
             <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
         </select>

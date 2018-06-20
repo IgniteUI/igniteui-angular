@@ -114,13 +114,13 @@ export interface IColumnMovingStartEventArgs {
 
 export interface IColumnMovingEventArgs {
     source: IgxColumnComponent;
-    target: IgxColumnComponent;
     cancel: boolean;
 }
 
 export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
+    cancel: boolean;
 }
 
 /**

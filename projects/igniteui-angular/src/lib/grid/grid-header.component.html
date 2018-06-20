@@ -27,7 +27,7 @@
         <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
     </div>
 
-    <span *ngIf="!column.columnGroup" id="resizeHandler" [style.cursor]="resizeCursor" #resizeArea
+    <span *ngIf="!column.columnGroup" [attr.draggable]="false" [style.cursor]="resizeCursor" #resizeArea
         class="igx-grid__th-resize-handle"
         (dblclick)="onResizeAreaDblClick()">
 

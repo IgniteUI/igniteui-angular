@@ -20,6 +20,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IColumnMovingEventArgs } from './grid.component';
 
 @Directive({
     selector: '[igxResizer]'
@@ -240,6 +241,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     private _column: IgxColumnComponent;
+    private _ghostImageClass = 'igx-grid__drag-ghost-image';
     private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
     private _dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
 
@@ -262,14 +264,12 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     public onPointerDown(event) {
         event.stopPropagation();
 
-        const el = document.elementFromPoint(event.pageX, event.pageY);
-        if (!this.draggable || el.getAttribute('id') === 'resizeHandler' ||
-            el.getAttribute('id') === 'filterIcon') {
-                return;
+        if (!this.draggable || event.target.getAttribute('draggable') === 'false') {
+            return;
         }
 
         this.cms.column = this.column;
-        this.ghostImageClass = 'igx-grid__drag-ghost-image';
+        this.ghostImageClass = this._ghostImageClass;
 
         super.onPointerDown(event);
 
@@ -290,6 +290,18 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         if (this._dragStarted && this._dragGhost && !this.column.grid.isColumnMoving) {
             this.column.grid.isColumnMoving = true;
             this.column.grid.cdr.detectChanges();
+        }
+
+        if (this.column.grid.isColumnMoving) {
+            const args = {
+                source: this.column,
+                cancel: false
+            };
+            this.column.grid.onColumnMoving.emit(args);
+
+            if (args.cancel) {
+                this.onEscape(event);
+            }
         }
     }
 
@@ -392,52 +404,40 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.cms.column !== this.column &&
             this.cms.column.level === this.column.level &&
             this.cms.column.parent === this.column.parent) {
-            const args = {
-                source: this.cms.column,
-                target: this.column,
-                cancel: false
-            };
-            this.column.grid.onColumnMoving.emit(args);
 
-            if (args.cancel) {
-                this.cms.cancelDrop = true;
-                this.cms.icon.innerText = 'block';
-                return;
-            }
+                if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned)) {
+                    this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.lastElementChild :
+                        this.elementRef.nativeElement.firstElementChild;
 
-            if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned)) {
-                this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.lastElementChild :
-                    this.elementRef.nativeElement.firstElementChild;
-
-                this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
-
-                this.cms.icon.innerText = 'swap_horiz';
-            }
-
-            if (!this.cms.column.pinned && this.column.pinned) {
-                const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
-
-                if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
-                    this.cms.icon.innerText = 'lock';
-
-                    this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
                     this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
-                } else {
-                    this.cms.icon.innerText = 'block';
+
+                    this.cms.icon.innerText = 'swap_horiz';
                 }
+
+                if (!this.cms.column.pinned && this.column.pinned) {
+                    const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
+
+                    if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
+                        this.cms.icon.innerText = 'lock';
+
+                        this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
+                        this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+                    } else {
+                        this.cms.icon.innerText = 'block';
+                    }
+                }
+            } else {
+                this.cms.icon.innerText = 'block';
             }
-        } else {
-            this.cms.icon.innerText = 'block';
-        }
 
-        if (this.horizontalScroll) {
-            this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
+            if (this.horizontalScroll) {
+                this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
 
-            interval(100).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
-                event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
-                    this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
-            });
-        }
+                interval(100).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
+                    event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
+                        this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
+                });
+            }
     }
 
     public onDragLeave(event) {
@@ -445,17 +445,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
         if (this._dropIndicator && this.cms.column !== this.column) {
             this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
-
-            const args = {
-                source: this.cms.column,
-                target: this.column,
-                cancel: false
-            };
-            this.column.grid.onColumnMoving.emit(args);
-
-            if (args.cancel) {
-                return;
-            }
         }
 
         if (this.horizontalScroll) {
@@ -464,6 +453,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragDrop(event) {
+        event.preventDefault();
 
         if (this.horizontalScroll) {
             this._dragLeave.next(true);
@@ -482,18 +472,28 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
             }
 
-            if (args.cancel || (nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth) ||
+            if ((nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth) ||
                 this.column.level !== this.cms.column.level ||
                 this.column.parent !== this.cms.column.parent ||
-                this.cms.cancelDrop) {
+                this.cms.cancelDrop || args.cancel) {
                     this.cms.cancelDrop = false;
                     return;
+            }
+
+            let col;
+            const selectedCells = this.cms.column.grid.selectedCells;
+            if (selectedCells && this.cms.column.grid.selectedCells.length > 0) {
+                col = selectedCells[0].column;
             }
 
             this.column.grid.moveColumn(this.cms.column, this.column);
 
             this.column.grid.isColumnMoving = false;
             this.column.grid.cdr.detectChanges();
+
+            if (col && selectedCells && selectedCells.length > 0) {
+                col.cells[selectedCells[0].rowIndex]._updateCellSelectionStatus();
+            }
         }
     }
 }

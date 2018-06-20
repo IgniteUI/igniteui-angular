@@ -237,7 +237,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
-    private _updateCellSelectionStatus() {
+    public _updateCellSelectionStatus() {
         this._clearCellSelection();
         this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
     }
