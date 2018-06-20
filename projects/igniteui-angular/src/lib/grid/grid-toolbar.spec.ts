@@ -318,7 +318,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('excel');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxExcelExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
             args.cancel = true;
             done();
@@ -345,7 +346,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('excel');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxExcelExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
 
             // Spy the 'export' and 'exportData' methods so the files are not really created
@@ -376,7 +378,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('csv');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxCsvExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
             args.cancel = true;
             done();
@@ -403,7 +406,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('csv');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxCsvExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
 
             // Spy the 'export' and 'exportData' methods so the files are not really created

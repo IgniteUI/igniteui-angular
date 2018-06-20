@@ -33,7 +33,7 @@ describe('Update 6.1.0', () => {
             '/testSrc/appPrefix/component/test.component.html',
             `<elem igxToggle (onOpen)="handler" (onClose)="handler"></elem>`
         );
-        const tree = schematicRunner.runSchematic('migration-03', {}, appTree);
+        const tree = schematicRunner.runSchematic('migration-04', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`<elem igxToggle (onOpened)="handler" (onClosed)="handler"></elem>`);
         done();
