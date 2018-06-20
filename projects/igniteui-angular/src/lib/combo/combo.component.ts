@@ -29,14 +29,6 @@ export enum DataTypes {
     PRIMARYKEY = 'valueKey'
 }
 
-export interface IComboDropDownOpenEventArgs {
-    event?: Event;
-}
-
-export interface IComboDropDownClosedEventArgs {
-    event?: Event;
-}
-
 export interface IComboSelectionChangeEventArgs {
     oldSelection: any[];
     newSelection: any[];
@@ -48,6 +40,7 @@ export interface IComboItemAdditionEvent {
     addedItem: any;
     newCollection: any[];
 }
+
 let currentItem = 0;
 const noop = () => { };
 
@@ -62,6 +55,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public customValueFlag = true;
+    /**
+     * @hidden
+     */
+    public defaultFallbackGroup = 'Other';
     /**
      * @hidden
      */
@@ -89,7 +86,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    protected _textKey: string | number = '';
+    protected _displayKey: string | number = '';
     private _dataType = '';
     private _filteredData = [];
     private _children: QueryList<IgxDropDownItemBase>;
@@ -169,14 +166,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    @ContentChild('dropdownHeader', { read: TemplateRef })
-    public dropdownHeader: TemplateRef<any>;
+    @ContentChild('dropdownHeaderTemplate', { read: TemplateRef })
+    public dropdownHeaderTemplate: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ContentChild('dropdownFooter', { read: TemplateRef })
-    public dropdownFooter: TemplateRef<any>;
+    @ContentChild('dropdownFooterTemplate', { read: TemplateRef })
+    public dropdownFooterTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -230,11 +227,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * Emitted when item selection is changing, before the selection completes
      *
      * ```html
-     * <igx-combo (onSelection)='handleSelection()'></igx-combo>
+     * <igx-combo (onSelectionChange)='handleSelection()'></igx-combo>
      * ```
      */
     @Output()
-    public onSelection = new EventEmitter<IComboSelectionChangeEventArgs>();
+    public onSelectionChange = new EventEmitter<IComboSelectionChangeEventArgs>();
 
     /**
      * Emitted before the dropdown is opened
@@ -284,7 +281,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Output()
-    public onAddition = new EventEmitter();
+    public onAddition = new EventEmitter<IComboItemAdditionEvent>();
 
     /**
      * Emitted when an the search input's input event is triggered
@@ -350,74 +347,53 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *
      * ```typescript
      * // get
-     * let myComboDropDownHeight = this.combo.dropDownHeight;
+     * let myComboItemsMaxHeight = this.combo.itemsMaxHeight;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-combo [dropDownHeight]='320'></igx-combo>
+     * <igx-combo [itemsMaxHeight]='320'></igx-combo>
      * ```
     */
     @Input()
-    public dropDownHeight = 320;
+    public itemsMaxHeight = 320;
 
     /**
      * Configures the drop down list width
      *
      * ```typescript
      * // get
-     * let myComboDropDownWidth = this.combo.dropDownWidth;
+     * let myComboItemsMaxWidth = this.combo.itemsMaxWidth;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-combo [dropDownWidth] = '80'></igx-combo>
+     * <igx-combo [itemsMaxWidth] = '80'></igx-combo>
      * ```
      */
     @Input()
-    public dropDownWidth = this.width;
+    public itemsMaxWidth = this.width;
 
     /**
      * Configures the drop down list item height
      *
      * ```typescript
      * // get
-     * let myComboDropDownItemHeight = this.combo.dropDownItemHeight;
+     * let myComboItemHeight = this.combo.itemHeight;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-combo [dropDownItemHeight]='32'></igx-combo>
+     * <igx-combo [itemHeight]='32'></igx-combo>
      * ```
      */
     @Input()
-    public dropDownItemHeight = 32;
+    public itemHeight = 32;
 
     /**
-     * Combo item group
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [groupKey]='newGroupKey'></igx-combo>
-     * ```
+     * @hidden
      */
-    @Input()
-    public set groupKey(val: string | number) {
-        this.clearSorting(this._groupKey);
-        this._groupKey = val;
-        this.sort(this._groupKey);
-    }
-    /**
-     * Combo item group
-     *
-     * ```typescript
-     * // get
-     * let currentGroupKey = this.combo.groupKey;
-     * ```
-     */
-    public get groupKey(): string | number {
-        return this._groupKey;
-    }
+    public filteringLogic = FilteringLogic.Or;
 
     /**
      * Defines the placeholder value for the combo value field
@@ -452,10 +428,15 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public searchPlaceholder = 'Enter a Search Term';
 
     /**
-     * @hidden
+     * Combo data source.
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [data]='items'></igx-combo>
+     * ```
      */
     @Input()
-    public defaultFallbackGroup = 'Other';
+    public data = [];
 
     /**
      * Combo value data source propery.
@@ -473,55 +454,59 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @Input()
     public valueKey: string | number = '';
 
-    /**
-     * Combo data source.
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [data]='items'></igx-combo>
-     * ```
-     */
     @Input()
-    public data = [];
-
-    /**
-     * @hidden
-     */
-    @Input()
-    public filteringLogic = FilteringLogic.Or;
+    set displayKey(val: string | number) {
+        this._displayKey = val;
+    }
 
     /**
      * Combo text data source propery.
      *
      * ```typescript
      * // get
-     * let myComboTextKey = this.combo.textKey;
+     * let myComboDisplayKey = this.combo.displayKey;
      *
      * // set
-     * this.combo.textKey = 'val';
+     * this.combo.displayKey = 'val';
      *
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-combo [textKey]='myTextKey'></igx-combo>
+     * <igx-combo [displayKey]='mydisplayKey'></igx-combo>
+     * ```
+     */
+    get displayKey() {
+        return this._displayKey ? this._displayKey : this.valueKey;
+    }
+
+    /**
+     * Combo item group
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [groupKey]='newGroupKey'></igx-combo>
      * ```
      */
     @Input()
-    set textKey(val: string | number) {
-        this._textKey = val;
+    public set groupKey(val: string | number) {
+        this.clearSorting(this._groupKey);
+        this._groupKey = val;
+        this.sort(this._groupKey);
     }
 
     /**
-     * @hidden
+     * Combo item group
+     *
+     * ```typescript
+     * // get
+     * let currentGroupKey = this.combo.groupKey;
+     * ```
      */
-    get textKey() {
-        return this._textKey ? this._textKey : this.valueKey;
+    public get groupKey(): string | number {
+        return this._groupKey;
     }
 
-    /**
-     * @hidden
-     */
     @Input()
     public filterable = true;
 
@@ -682,9 +667,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     private checkMatch() {
-        this.customValueFlag = this.textKey || this.textKey === 0 ?
+        this.customValueFlag = this.displayKey || this.displayKey === 0 ?
             !this.filteredData
-                .some((e) => (e[this.textKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) &&
+                .some((e) => (e[this.displayKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) &&
             this.allowCustomValues :
             !this.filteredData
                 .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
@@ -696,7 +681,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public handleInputChange(event?) {
         if (this.filterable) {
             this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
-                true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.textKey);
+                true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
             // this.isHeaderChecked();
         }
         if (event) {
@@ -800,48 +785,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return this.selectionAPI.is_item_selected(this.id, item);
     }
 
-    // private isHeaderChecked() {
-    //     if (!this.selectAllCheckbox) {
-    //         return false;
-    //     }
-    //     const selectedItems = this.dropdown.selectedItem;
-    //     if (this.filteredData.length > 0 && selectedItems.length > 0) {
-    //         const compareData = this.filteredData;
-    //         if (selectedItems.length >= this.filteredData.length) {
-    //             let areAllSelected = true;
-    //             let indeterminateFlag = false;
-    //             for (const item of compareData) {
-    //                 if (areAllSelected && !indeterminateFlag) {
-    //                     indeterminateFlag = selectedItems.indexOf(item) > -1;
-    //                 }
-    //                 if (areAllSelected && indeterminateFlag) {
-    //                     if (selectedItems.indexOf(item) < 0) {
-    //                         areAllSelected = false;
-    //                         this.selectAllCheckbox.indeterminate = indeterminateFlag;
-    //                         this.selectAllCheckbox.checked = false;
-    //                         return;
-    //                     }
-    //                 }
-    //             }
-    //             this.selectAllCheckbox.indeterminate = false;
-    //             this.selectAllCheckbox.checked = true;
-    //             return;
-    //         } else if (selectedItems.length < this.filteredData.length) {
-    //             for (const item of selectedItems) {
-    //                 if (compareData.indexOf(item) > -1) {
-    //                     this.selectAllCheckbox.indeterminate = true;
-    //                     return;
-    //                 }
-    //             }
-    //             this.selectAllCheckbox.checked = false;
-    //             this.selectAllCheckbox.indeterminate = false;
-    //             return;
-    //         }
-    //     }
-    //     this.selectAllCheckbox.indeterminate = false;
-    //     this.selectAllCheckbox.checked = false;
-    // }
-
     /**
      * @hidden
      */
@@ -849,10 +792,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         const oldSelection = this.dropdown.selectedItem;
         if (oldSelection !== newSelection) {
             const args: IComboSelectionChangeEventArgs = { oldSelection, newSelection };
-            this.onSelection.emit(args);
+            this.onSelectionChange.emit(args);
             this.selectionAPI.set_selection(this.id, newSelection);
             this.value = this._dataType !== DataTypes.PRIMITIVE ?
-                newSelection.map((e) => e[this.textKey]).join(', ') :
+                newSelection.map((e) => e[this.displayKey]).join(', ') :
                 newSelection.join(', ');
             // this.isHeaderChecked();
             this._onChangeCallback(newSelection);
@@ -866,6 +809,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.cdr.detectChanges();
     }
 
+    /**
+     * @hidden
+     */
     public isAddButtonVisible(): boolean {
         return this.searchValue && this.customValueFlag;
     }
@@ -889,9 +835,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             return false;
         }
         const newValue = this.searchValue.trim();
-        const addedItem = this.textKey ? {
+        const addedItem = this.displayKey ? {
             [this.valueKey]: newValue,
-            [this.textKey]: newValue
+            [this.displayKey]: newValue
         } : newValue;
         const oldCollection = this.data;
         const newCollection = [...this.data];
@@ -943,11 +889,17 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.prepare_filtering_expression(term, condition, ignoreCase, valueKey);
     }
 
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         this.id += currentItem++;
         this.selectionAPI.set_selection(this.id, []);
     }
 
+    /**
+     * @hidden
+     */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
     }
@@ -971,13 +923,13 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public registerOnTouched(fn: any): void { }
 
-    /**
-     * @hidden
-     */
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
 
+    /**
+     * @hidden
+     */
     public get template(): TemplateRef<any> {
         this._dataType = this.dataType;
         if (!this.filteredData || !this.filteredData.length) {
@@ -1001,46 +953,28 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         };
     }
 
-    /**
-     * @hidden
-     */
     public toggle() {
         this.searchValue = '';
         this.dropdown.toggle();
     }
 
-    /**
-     * @hidden
-     */
     public open() {
         this.searchValue = '';
         this.dropdown.open();
     }
 
-    /**
-     * @hidden
-     */
     public close() {
         this.dropdown.close();
     }
 
-    /**
-     * @hidden
-     */
     public get collapsed() {
         return this.dropdown.collapsed;
     }
 
-    /**
-     * @hidden
-     */
     public selectedItems() {
         return this.dropdown.selectedItem;
     }
 
-    /**
-     * @hidden
-     */
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
             const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
@@ -1048,9 +982,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
-    /**
-     * @hidden
-     */
     public deselectItems(newItems: Array<any>) {
         if (newItems) {
             const newSelection = this.selectionAPI.deselect_items(this.id, newItems);
@@ -1058,18 +989,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
-    /**
-     * @hidden
-     */
     public selectAllItems(ignoreFilter?: boolean) {
         const allVisible = this.selectionAPI.get_all_ids(ignoreFilter ? this.data : this.filteredData);
         const newSelection = this.selectionAPI.select_items(this.id, allVisible);
         this.triggerSelectionChange(newSelection);
     }
 
-    /**
-     * @hidden
-     */
     public deselectAllItems(ignoreFilter?: boolean) {
         const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
             [] :

@@ -22,7 +22,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
 
     @HostBinding('style.height.px')
     get itemHeight() {
-        return this.parentElement.parentElement.dropDownItemHeight;
+        return this.parentElement.parentElement.itemHeight;
     }
 
     @Input()

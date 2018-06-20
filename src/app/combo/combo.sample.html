@@ -29,7 +29,7 @@
                            (onAddition)="handleAddition($event)"
                            [data]="items"
                            [allowCustomValues]="true"
-                           [filterable]="true" [textKey]="valueKeyVar" [valueKey]="valueKeyVar"
+                           [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
                            [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                     <ng-template *ngIf="currentDataType !== 'primitive'" #dropdownItemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
@@ -68,7 +68,7 @@
         <p>
             <igx-combo #comboTemplate [(ngModel)]="valuesTemplate" name="comboTemplatche"
                 class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
-                [data]="items" [textKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
+                [data]="items" [disaplyKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
         </p>
         <p>
             <button type="submit" [disabled]="!templateBased.valid">Submit</button>
@@ -88,7 +88,7 @@
             <p>
                 <igx-combo #comboReactive formControlName="townCombo"
                     class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
-                    [data]="items" [textKey]="valueKeyVar" [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''"></igx-combo>
+                    [data]="items" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''"></igx-combo>
             </p>
             <p>
                 <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>

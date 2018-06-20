@@ -106,8 +106,6 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             expect(list.collapsed).toEqual(false);
             fixture.detectChanges();
-            // tslint:disable-next-line:no-debugger
-            debugger;
             list.items[1].element.nativeElement.click(mockObj);
             tick();
             return fixture.whenStable();

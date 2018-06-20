@@ -8,10 +8,8 @@
     <span>The list is empty</span>
 </ng-template>
 <ng-template #addItemDefault let-control>
-
     Add item to collection
     <igx-icon fontSet="material" name="add_box" (click)="control.addItemToCollection()"></igx-icon>
-
 </ng-template>
 <ng-template #headerItemBase let-item let-key="valueKey" let-groupKey="groupKey">
     {{ item[key] }}
@@ -38,22 +36,22 @@
                 (keyup)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
                 [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
         </igx-input-group>
-        <ng-container *ngTemplateOutlet="dropdownHeader; context: {$impicit: this}">
+        <ng-container *ngTemplateOutlet="dropdownHeaderTemplate; context: {$impicit: this}">
         </ng-container>
-        <div #dropdownItemContainer class="igx-combo__content" [style.width.px]="dropDownWidth" [style.overflow]="'hidden'" [style.maxHeight.px]="dropDownHeight"
+        <div #dropdownItemContainer class="igx-combo__content" [style.width.px]="itemsMaxWidth" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
             [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
             <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
-                [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="dropDownHeight"
-                [igxForItemSize]="dropDownItemHeight" #virtualScrollContainer>
+                [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight"
+                [igxForItemSize]="itemHeight" #virtualScrollContainer>
                 <igx-combo-item [itemData]="item" isHeader={{item.isHeader}} role="option">
                     <ng-container *ngIf="!item.isHeader">
                         <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true"></igx-checkbox>
                     </ng-container>
                     <ng-container *ngIf="item.isHeader">
-                        <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, textKey: textKey}"></ng-container>
+                        <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}"></ng-container>
                     </ng-container>
                     <ng-container *ngIf="!item.isHeader">
-                        <ng-container #listItem *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, textKey: textKey};"></ng-container>
+                        <ng-container #listItem *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};"></ng-container>
                     </ng-container>
                 </igx-combo-item>
             </ng-template>
@@ -68,7 +66,7 @@
             <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$impicit: this}">
             </ng-container>
         </igx-combo-item>
-        <ng-container *ngTemplateOutlet="dropdownFooter; context: {$impicit: this}">
+        <ng-container *ngTemplateOutlet="dropdownFooterTemplate; context: {$impicit: this}">
         </ng-container>
     </igx-combo-drop-down>
 </div>

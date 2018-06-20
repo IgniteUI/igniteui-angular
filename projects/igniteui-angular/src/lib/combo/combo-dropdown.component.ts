@@ -110,6 +110,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
     }
 
+    /**
+     * @hidden
+     */
     navigateFirst() {
         const vContainer = this.verticalScrollContainer;
         vContainer.scrollTo(0);
@@ -118,6 +121,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         });
     }
 
+    /**
+     * @hidden
+     */
     navigateLast() {
         const vContainer = this.verticalScrollContainer;
         vContainer.scrollTo(vContainer.igxForOf.length - 1);
@@ -126,6 +132,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         });
     }
 
+    /**
+     * @hidden
+     */
     setSelectedItem(itemID: any, select = true) {
         this.parentElement.setSelectedItem(itemID, select);
     }
@@ -142,6 +151,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
     }
 
+    /**
+     * @hidden
+     */
     navigateItem(newIndex: number, direction?: number) {
         // Virtual scrolling holds one hidden loaded element at the bottom of the drop down list.
         // At the top there isn't such a hidden element.
@@ -258,6 +270,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this._focusedItem = newItem;
     }
 
+    /**
+     * @hidden
+     */
     onToggleOpening() {
         this.parentElement.handleInputChange();
         this.onOpening.emit();

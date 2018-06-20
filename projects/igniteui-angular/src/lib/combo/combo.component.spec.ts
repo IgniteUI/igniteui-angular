@@ -41,7 +41,7 @@ const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-fdescribe('Combo', () => {
+describe('Combo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -92,8 +92,8 @@ fdescribe('Combo', () => {
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         expect(combo).toBeDefined();
-        expect(combo.dropdownFooter).toBeDefined();
-        expect(combo.dropdownHeader).toBeDefined();
+        expect(combo.dropdownFooterTemplate).toBeDefined();
+        expect(combo.dropdownHeaderTemplate).toBeDefined();
         expect(combo.dropdownItemTemplate).toBeDefined();
         expect(combo.addItemTemplate).toBeUndefined();
         expect(combo.headerItemTemplate).toBeUndefined();
@@ -294,8 +294,8 @@ fdescribe('Combo', () => {
         expect(combo.searchPlaceholder).toEqual('Enter a Search Term'); // Default;
         expect(combo.filterable).toEqual(true);
         expect(combo.height).toEqual('400px');
-        expect(combo.dropDownHeight).toEqual(400);
-        expect(combo.dropDownItemHeight).toEqual(40);
+        expect(combo.itemsMaxHeight).toEqual(400);
+        expect(combo.itemHeight).toEqual(40);
         expect(combo.groupKey).toEqual('region');
         expect(combo.valueKey).toEqual('field');
         expect(combo.data).toBeDefined();
@@ -309,10 +309,10 @@ fdescribe('Combo', () => {
         expect(combo.filterable).toEqual(false);
         combo.height = '500px';
         expect(combo.height).toEqual('500px');
-        combo.dropDownHeight = 500;
-        expect(combo.dropDownHeight).toEqual(500);
-        combo.dropDownItemHeight = 50;
-        expect(combo.dropDownItemHeight).toEqual(50);
+        combo.itemsMaxHeight = 500;
+        expect(combo.itemsMaxHeight).toEqual(500);
+        combo.itemHeight = 50;
+        expect(combo.itemHeight).toEqual(50);
         combo.groupKey = 'field';
         expect(combo.groupKey).toEqual('field');
         combo.valueKey = 'region';
@@ -378,61 +378,61 @@ fdescribe('Combo', () => {
         fix.detectChanges();
         fix.whenStable().then(() => {
             expect(combo.collapsed).toBeFalsy();
-            // NOTE: Minimum dropDownItemHeight is 2 rem, per Material Design Guidelines
-            expect(combo.dropDownItemHeight).toEqual(32); // Default value for dropdownItemHeight
-            expect(combo.dropDownHeight).toEqual(320); // Default value for dropdownHeight
+            // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines
+            expect(combo.itemHeight).toEqual(32); // Default value for itemHeight
+            expect(combo.itemsMaxHeight).toEqual(320); // Default value for itemsMaxHeight
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
             expect(dropdownList.nativeElement.clientHeight).toEqual(320);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(32);
 
-            combo.dropDownItemHeight = 47;
+            combo.itemHeight = 47;
             tick();
             fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(combo.dropDownItemHeight).toEqual(47);
-            expect(combo.dropDownHeight).toEqual(320);
+            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemsMaxHeight).toEqual(320);
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
             expect(dropdownList.nativeElement.clientHeight).toEqual(320);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
 
-            combo.dropDownHeight = 438;
+            combo.itemsMaxHeight = 438;
             tick();
             fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(combo.dropDownItemHeight).toEqual(47);
-            expect(combo.dropDownHeight).toEqual(438);
+            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemsMaxHeight).toEqual(438);
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
             expect(dropdownList.nativeElement.clientHeight).toEqual(438);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
 
-            combo.dropDownHeight = 1171;
+            combo.itemsMaxHeight = 1171;
             tick();
             fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(combo.dropDownItemHeight).toEqual(47);
-            expect(combo.dropDownHeight).toEqual(1171);
+            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemsMaxHeight).toEqual(1171);
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
             expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
 
-            combo.dropDownItemHeight = 83;
+            combo.itemHeight = 83;
             tick();
             fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            expect(combo.dropDownItemHeight).toEqual(83);
-            expect(combo.dropDownHeight).toEqual(1171);
+            expect(combo.itemHeight).toEqual(83);
+            expect(combo.itemsMaxHeight).toEqual(1171);
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
             expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
@@ -486,7 +486,7 @@ fdescribe('Combo', () => {
         spyOn(combo.dropdown, 'navigateItem').and.callThrough();
         spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
         spyOn(combo.dropdown, 'selectedItem').and.callThrough();
-        spyOn(combo.onSelection, 'emit');
+        spyOn(combo.onSelectionChange, 'emit');
         combo.dropdown.toggle();
         tick();
         fix.whenStable().then(() => {
@@ -502,15 +502,15 @@ fdescribe('Combo', () => {
             expect(combo.dropdown.selectedItem).toEqual([targetItem.itemID]);
             expect(combo.setSelectedItem).toHaveBeenCalledTimes(1);
             expect(combo.setSelectedItem).toHaveBeenCalledWith(targetItem.itemID, true);
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: [], newSelection: [targetItem.itemID] });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [], newSelection: [targetItem.itemID] });
 
             combo.dropdown.selectItem(targetItem);
             expect(combo.dropdown.selectedItem).toEqual([]);
             expect(combo.setSelectedItem).toHaveBeenCalledTimes(2);
             expect(combo.setSelectedItem).toHaveBeenCalledWith(targetItem.itemID, true);
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: [targetItem.itemID], newSelection: [] });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [targetItem.itemID], newSelection: [] });
 
             spyOn(combo, 'addItemToCollection');
             combo.dropdown.selectItem({ itemData: 'ADD ITEM' } as IgxComboItemComponent);
@@ -523,7 +523,7 @@ fdescribe('Combo', () => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
-        spyOn(combo.onSelection, 'emit');
+        spyOn(combo.onSelectionChange, 'emit');
         combo.dropdown.toggle();
         let oldSelection = [];
         let newSelection = [combo.data[1], combo.data[5], combo.data[6]];
@@ -534,8 +534,8 @@ fdescribe('Combo', () => {
             combo.selectItems(newSelection);
             fix.detectChanges();
             expect(combo.selectedItems().length).toEqual(newSelection.length);
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
 
             let newItem = combo.data[3];
             combo.selectItems([newItem]);
@@ -543,16 +543,16 @@ fdescribe('Combo', () => {
             newSelection.push(newItem);
             fix.detectChanges();
             expect(combo.selectedItems().length).toEqual(newSelection.length);
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
 
             oldSelection = [...newSelection];
             newSelection = [combo.data[0]];
             combo.selectItems(newSelection, true);
             fix.detectChanges();
             expect(combo.selectedItems().length).toEqual(newSelection.length);
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(3);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
 
             oldSelection = [...newSelection];
             newSelection = [];
@@ -561,8 +561,8 @@ fdescribe('Combo', () => {
             fix.detectChanges();
             expect(combo.selectedItems().length).toEqual(newSelection.length);
             expect(combo.selectedItems().length).toEqual(0);
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(4);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(4);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
         });
     }));
 
@@ -577,7 +577,7 @@ fdescribe('Combo', () => {
         spyOn(combo, 'deselectAllItems').and.callThrough();
         spyOn(combo, 'handleSelectAll').and.callThrough();
         spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
-        spyOn(combo.onSelection, 'emit');
+        spyOn(combo.onSelectionChange, 'emit');
         const selectionService = new IgxSelectionAPIService();
         combo.dropdown.toggle();
         tick();
@@ -590,14 +590,14 @@ fdescribe('Combo', () => {
             fix.detectChanges();
             expect(combo.selectAllItems).toHaveBeenCalledTimes(1);
             expect(combo.deselectAllItems).toHaveBeenCalledTimes(0);
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
 
             combo.handleSelectAll({ checked: false });
 
             fix.detectChanges();
             expect(combo.selectAllItems).toHaveBeenCalledTimes(1);
             expect(combo.deselectAllItems).toHaveBeenCalledTimes(1);
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
         });
     }));
 
@@ -710,7 +710,7 @@ fdescribe('Combo', () => {
         const dropdown = combo.dropdown;
         spyOn(dropdown, 'setSelectedItem').and.callThrough();
         spyOn(combo, 'getItemDataByValueKey').and.callThrough();
-        spyOn(combo.onSelection, 'emit').and.callThrough();
+        spyOn(combo.onSelectionChange, 'emit').and.callThrough();
         combo.setSelectedItem(null);
         expect(combo.selectedItems()).toEqual([]);
         dropdown.setSelectedItem(null);
@@ -751,7 +751,7 @@ fdescribe('Combo', () => {
         combo.setSelectedItem('Connecticut', false);
         expect(combo.selectedItems()).toEqual([]);
         expect(combo.getItemDataByValueKey).toHaveBeenCalledTimes(5);
-        expect(combo.onSelection.emit).toHaveBeenCalledTimes(13);
+        expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(13);
     });
 
     it('Should properly return the selected item(s)', () => {
@@ -806,14 +806,14 @@ fdescribe('Combo', () => {
         expect(mockFunc).toBeDefined();
     });
 
-    it('Should properly get/set textKey', () => {
+    it('Should properly get/set displayKey', () => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
-        expect(combo.textKey).toEqual(combo.valueKey);
-        combo.textKey = 'region';
-        expect(combo.textKey).toEqual('region');
-        expect(combo.textKey === combo.valueKey).toBeFalsy();
+        expect(combo.displayKey).toEqual(combo.valueKey);
+        combo.displayKey = 'region';
+        expect(combo.displayKey).toEqual('region');
+        expect(combo.displayKey === combo.valueKey).toBeFalsy();
     });
 
     it('Should properly handle click events on Disabled / Header items', fakeAsync(() => {
@@ -1706,7 +1706,7 @@ fdescribe('Combo', () => {
         // spyOn(combo.dropdown, 'focusItem').and.callThrough();
         // spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
         // spyOn(combo.dropdown, 'selectedItem').and.callThrough();
-        // spyOn(combo.onSelection, 'emit');
+        // spyOn(combo.onSelectionChange, 'emit');
         combo.dropdown.toggle();
         tick();
         fixture.whenStable().then(() => {
@@ -1932,14 +1932,14 @@ fdescribe('Combo', () => {
         });
     }));
 
-    it('Item selection/deselection should trigger onSelectionChange event ', fakeAsync(() => {
+    it('Item selection/deselection should trigger onSelectionChangeChange event ', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         let selectedItem: HTMLElement;
         let itemCheckbox: HTMLElement;
         let result = 1;
-        spyOn(combo.onSelection, 'emit').and.callThrough();
+        spyOn(combo.onSelectionChange, 'emit').and.callThrough();
         combo.dropdown.toggle();
         tick();
         fixture.whenStable().then(() => {
@@ -1950,24 +1950,24 @@ fdescribe('Combo', () => {
             itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
             itemCheckbox.click();
             fixture.detectChanges();
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: [], newSelection: ['Paris'] });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [], newSelection: ['Paris'] });
             result++;
 
             selectedItem = dropdownItems[7];
             itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
             itemCheckbox.click();
             fixture.detectChanges();
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: ['Paris'], newSelection: ['Paris', 'Oslo'] });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: ['Paris'], newSelection: ['Paris', 'Oslo'] });
             result++;
 
             selectedItem = dropdownItems[1];
             itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
             itemCheckbox.click();
             fixture.detectChanges();
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: ['Paris', 'Oslo'],
                 newSelection: ['Paris', 'Oslo', 'Sofia']
             });
@@ -1978,8 +1978,8 @@ fdescribe('Combo', () => {
             itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
             itemCheckbox.click();
             fixture.detectChanges();
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: ['Paris', 'Oslo', 'Sofia'],
                 newSelection: ['Paris', 'Sofia']
             });
@@ -1989,8 +1989,8 @@ fdescribe('Combo', () => {
             itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
             itemCheckbox.click();
             fixture.detectChanges();
-            expect(combo.onSelection.emit).toHaveBeenCalledTimes(result);
-            expect(combo.onSelection.emit).toHaveBeenCalledWith({ oldSelection: ['Paris', 'Sofia'], newSelection: ['Paris'] });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: ['Paris', 'Sofia'], newSelection: ['Paris'] });
         });
     }));
 
@@ -2411,7 +2411,7 @@ fdescribe('Combo', () => {
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(combo.dropdownHeader).toBeDefined();
+            expect(combo.dropdownHeaderTemplate).toBeDefined();
             const dropdownList: HTMLElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             headerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOOTER));
             expect(headerElement).not.toBeNull();
@@ -2430,7 +2430,7 @@ fdescribe('Combo', () => {
         tick();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(combo.dropdownFooter).toBeDefined();
+            expect(combo.dropdownFooterTemplate).toBeDefined();
             const dropdownList: HTMLElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             footerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOOTER));
             expect(footerElement).not.toBeNull();
@@ -2775,10 +2775,10 @@ class IgxComboScrollTestComponent {
                     <div class="display-value--sub">Region: {{display.region}}</div>
                 </div>
             </ng-template>
-            <ng-template #dropdownHeader>
+            <ng-template #dropdownHeaderTemplate>
                 <div class="header-class">This is a header</div>
             </ng-template>
-            <ng-template #dropdownFooter>
+            <ng-template #dropdownFooterTemplate>
                 <div class="footer-class">This is a footer</div>
             </ng-template>
         </igx-combo>
@@ -2825,7 +2825,7 @@ class IgxComboSampleComponent {
         this.initData = this.items;
     }
 
-    onSelection(ev) {
+    onSelectionChange(ev) {
     }
 }
 
@@ -2833,8 +2833,8 @@ class IgxComboSampleComponent {
     template: `
         <p>Change data to:</p>
         <label id="mockID">Combo Label</label>
-        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [dropDownHeight]='400'
-        [dropDownItemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
+        [itemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
         [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `
@@ -2894,7 +2894,7 @@ class IgxComboInputTestComponent {
             <p>
                 <igx-combo #comboReactive formControlName="townCombo"
                     class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
-                    [data]="items" [textKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
+                    [data]="items" [displayKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
             </p>
             <p>
                 <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
@@ -2989,8 +2989,8 @@ export class LocalService {
 @Component({
     template: `
         <label id="mockID">Combo Label</label>
-        <igx-combo #combo [placeholder]="'Products'" [data]='items' [height]="'400px'" [dropDownHeight]='400'
-        [dropDownItemHeight]='40' [valueKey]="'product'" [width]="'400px'"
+        <igx-combo #combo [placeholder]="'Products'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
+        [itemHeight]='40' [valueKey]="'product'" [width]="'400px'"
         [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `,
@@ -3014,8 +3014,8 @@ export class IgxComboBindingTestComponent {
 @Component({
     template: `
         <label id="mockID">Combo Label</label>
-        <igx-combo #combo [height]="'400px'" [dropDownHeight]='400'
-        [dropDownItemHeight]='40' [width]="'400px'">
+        <igx-combo #combo [height]="'400px'" [itemsMaxHeight]='400'
+        [itemHeight]='40' [width]="'400px'">
         </igx-combo>
 `
 })
