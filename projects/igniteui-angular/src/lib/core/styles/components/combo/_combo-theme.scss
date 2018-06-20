@@ -7,6 +7,8 @@
 /// @param {Color} $add-icon-color [null] - The combo add new item icon color.
 /// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
 /// @param {Color} $search-background [null] - The combo search box background color.
+/// @param {Color} $search-background [null] - The combo search box background color.
+/// @param {Color} $search-background [null] - The combo search box background color.
 ///
 /// @requires text-contrast
 /// @requires igx-color
@@ -15,13 +17,17 @@
 
     $background-color: null,
     $add-icon-color: null,
-    $search-separator-border-color: null
+    $search-separator-border-color: null,
+    $empty-list-placeholder-color: null,
+    $empty-list-background: null
 ) {
 
     $default-theme: (
         name: 'igx-combo',
         add-icon-color: igx-color($palette, 'primary', 500),
         search-separator-border-color: igx-color($palette, 'grays', 300),
+        empty-list-placeholder-color: igx-color($palette, 'grays', 400),
+        empty-list-background: #fff
     );
 
 
@@ -31,6 +37,8 @@
         background-color: $background-color,
         add-icon-color: $add-icon-color,
         search-separator-border-color: $search-separator-border-color,
+        empty-list-placeholder-color: $empty-list-placeholder-color,
+        empty-list-background: $empty-list-background
     ));
 }
 
@@ -43,6 +51,11 @@
 
     %igx-combo {
         position: relative;
+
+        %igx-button--icon {
+            width: rem(24px);
+            height: rem(24px);
+        }
     }
 
     %igx-combo__drop-down {
@@ -70,15 +83,40 @@
         }
     }
 
-    .igx-drop-down__item {
-        &%igx-combo__add {
-            position: relative;
-            bottom: 0;
-            justify-content: center !important;
+    %igx-combo__add {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: rem(16px);
+    }
 
-            igx-icon {
-                color: --var($theme, 'add-icon-color');
+    %igx-combo__empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        color: --var($theme, 'empty-list-placeholder-color');
+        background-color: --var($theme, 'empty-list-background');
+        padding: 0 rem(24px);
+        font-size: rem(13px);
+    }
+
+
+    // TODO: make this part better
+    %igx-combo__add-item {
+        &%igx-drop-down__item {
+            width: auto !important;
+            padding: 0 !important;
+
+            &:hover {
+                background: transparent!important;
             }
+        }
+
+        &%igx-drop-down__item--focused {
+            @extend %igx-button--flat !optional;
         }
     }
 }

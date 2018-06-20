@@ -136,7 +136,7 @@ describe('Combo', () => {
         fix.detectChanges();
         expect(mockObj.focus).toHaveBeenCalledTimes(1);
         expect(combo.collapsed).toBeFalsy();
-        combo.handleKeyDown({ key: 'ArrowDown' });
+        combo.handleKeyUp({ key: 'ArrowDown' });
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(dropdown.focusedItem).toBeTruthy();
@@ -149,7 +149,7 @@ describe('Combo', () => {
         }).then(() => {
             fix.detectChanges();
             expect(mockObj.focus).toHaveBeenCalledTimes(2);
-            combo.handleKeyDown({ key: 'ArrowDown' });
+            combo.handleKeyUp({ key: 'ArrowDown' });
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -774,19 +774,19 @@ describe('Combo', () => {
         spyOn(combo, 'selectAllItems');
         spyOn(combo, 'toggle');
         spyOn(combo.dropdown, 'onFocus').and.callThrough();
-        combo.handleKeyDown({ key: 'A' });
-        combo.handleKeyDown({});
+        combo.handleKeyUp({ key: 'A' });
+        combo.handleKeyUp({});
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
         expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(0);
-        combo.handleKeyDown({ key: 'Enter' });
+        combo.handleKeyUp({ key: 'Enter' });
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
         spyOnProperty(combo, 'filteredData', 'get').and.returnValue([1]);
-        combo.handleKeyDown({ key: 'Enter' });
+        combo.handleKeyUp({ key: 'Enter' });
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
-        combo.handleKeyDown({ key: 'ArrowDown' });
+        combo.handleKeyUp({ key: 'ArrowDown' });
         expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
         expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(1);
-        combo.handleKeyDown({ key: 'Escape' });
+        combo.handleKeyUp({ key: 'Escape' });
         expect(combo.toggle).toHaveBeenCalledTimes(1);
     });
 
@@ -2554,7 +2554,7 @@ describe('Combo', () => {
             return fix.whenStable();
         }).then(() => {
             expect(combo.isAddButtonVisible()).toEqual(true);
-            const addItemButton = fix.debugElement.query(By.css('.igx-combo__add'));
+            const addItemButton = fix.debugElement.query(By.css('.igx-combo__add-item'));
             expect(addItemButton.nativeElement).toBeDefined();
             addItemButton.nativeElement.click(mockEvent);
             return fix.whenStable();
