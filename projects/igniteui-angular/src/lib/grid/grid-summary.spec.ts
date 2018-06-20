@@ -254,7 +254,7 @@ describe('IgxGrid - Summaries', () => {
         expect(productNameCell.value).toBe('Spearmint');
         expect(unitsInStockCell.value).toBe(1);
     });
-    it('should recalculate summary functions on cell update', () => {
+    it('should recalculate summary functions on cell update', async(() => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -267,11 +267,13 @@ describe('IgxGrid - Summaries', () => {
         let maxValue = summariesUnitOfStock.query(By.css('[title=\'Max\']')).nativeElement.nextSibling.innerText;
         expect(+maxValue).toBe(oldMaxValue);
         unitsInStockCell.update(newMaxValue);
-        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
 
-        maxValue = summariesUnitOfStock.query(By.css('[title=\'Max\']')).nativeElement.nextSibling.innerText;
-        expect(+maxValue).toBe(newMaxValue);
-    });
+            maxValue = summariesUnitOfStock.query(By.css('[title=\'Max\']')).nativeElement.nextSibling.innerText;
+            expect(+maxValue).toBe(newMaxValue);
+        });
+    }));
     it('should display all active summaries after column pinning', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();

@@ -111,6 +111,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Summary'
         },
         {
+            link: '/gridCellEditing',
+            icon: 'view_column',
+            name: 'Grid Cell Editing'
+        },
+        {
             link: '/gridSelection',
             icon: 'view_column',
             name: 'Grid Selection'
