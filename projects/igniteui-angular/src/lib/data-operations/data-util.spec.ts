@@ -16,8 +16,8 @@ import {
     IgxStringFilteringOperand, IgxNumberFilteringOperand,
     IgxDateFilteringOperand, IgxBooleanFilteringOperand, FilteringExpressionsTree
 } from '../../public_api';
-import { IGroupByResult } from 'dist/igniteui-angular/public_api';
-import { cloneArray } from 'dist/core/utils';
+import { IGroupByResult } from './sorting-strategy';
+import { cloneArray } from '../core/utils';
 /* Test sorting */
 function testSort() {
     let data: any[] = [];
