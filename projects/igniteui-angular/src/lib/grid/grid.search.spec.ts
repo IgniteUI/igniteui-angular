@@ -164,7 +164,7 @@ describe('IgxGrid - search API', () => {
         expect(spans.length).toBe(0);
     });
 
-    it('findNext scrolls to cells out of view', async(() => {
+    it('findNext scrolls to cells out of view', (done) => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
         fix.detectChanges();
 
@@ -176,9 +176,10 @@ describe('IgxGrid - search API', () => {
 
             findNext(component.gridSearch, '1887').then(() => {
                 expect(isInView(3, component.gridSearch.rowList.first.virtDirRow.state)).toBeTruthy();
+                done();
             });
         });
-    }));
+    });
 
     it('findPrev scrolls to cells out of view', (done) => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
