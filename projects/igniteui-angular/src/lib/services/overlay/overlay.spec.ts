@@ -4,7 +4,8 @@ import {
     Inject,
     NgModule,
     ViewChild,
-    DebugElement
+    DebugElement,
+    ComponentRef
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -14,7 +15,7 @@ import { IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/t
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point } from './utilities';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point, OverlayEventArgs } from './utilities';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
@@ -153,24 +154,40 @@ describe('igxOverlay', () => {
     }));
 
     it('Unit - OVERLAY SERVICE should properly emit events', fakeAsync(() => {
-        const fix = TestBed.createComponent(EmptyPageComponent);
+        const fix = TestBed.createComponent(SimpleRefComponent);
         fix.detectChanges();
         const overlayInstance = fix.componentInstance.overlay;
-        spyOn(overlayInstance.onClosed, 'emit').and.callThrough();
-        spyOn(overlayInstance.onClosing, 'emit').and.callThrough();
-        spyOn(overlayInstance.onOpened, 'emit').and.callThrough();
-        spyOn(overlayInstance.onOpening, 'emit').and.callThrough();
+        spyOn(overlayInstance.onClosed, 'emit');
+        spyOn(overlayInstance.onClosing, 'emit');
+        spyOn(overlayInstance.onOpened, 'emit');
+        spyOn(overlayInstance.onOpening, 'emit');
 
-        overlayInstance.show(SimpleDynamicComponent);
+        let id = overlayInstance.show(SimpleDynamicComponent);
         expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
+        expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
+        const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
+        expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
 
         tick();
         expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
-        overlayInstance.hide('0');
+        expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
+        overlayInstance.hide(id);
         expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
+        expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
 
         tick();
         expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
+
+
+        id = overlayInstance.show(fix.componentInstance.item);
+        expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ id, componentRef: null });
+        tick();
+        expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id, componentRef: null });
+        overlayInstance.hide(id);
+        expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id, componentRef: null });
+        tick();
+        expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id, componentRef: null });
     }));
 
     it('Unit - should properly emit events', fakeAsync(() => {
@@ -201,8 +218,33 @@ describe('igxOverlay', () => {
         expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(1);
     }));
 
-    xit('Unit - Should properly call position method - GlobalPosition', () => {
+    it('Unit - Should properly call position method - GlobalPosition', () => {
+        const mockParent = document.createElement('div');
+        const mockItem = document.createElement('div');
+        mockParent.appendChild(mockItem);
 
+        const mockPositioningSettings1: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            target: mockItem
+        };
+
+        const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+        const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+
+        const mockHorDirection: string[] = ['flex-start', 'center', 'flex-end'];
+        const mockVerDirection: string[] = ['flex-start', 'center', 'flex-end'];
+
+        for (let i = 0; i < mockHorDirection.length; i++) {
+            for (let j = 0; j < mockVerDirection.length; j++) {
+                mockPositioningSettings1.horizontalDirection = HorizontalAlignment[horAl[i]];
+                mockPositioningSettings1.verticalDirection = VerticalAlignment[verAl[j]];
+                const globalStrat1 = new GlobalPositionStrategy(mockPositioningSettings1);
+                globalStrat1.position(mockItem);
+                expect(mockParent.style.justifyContent).toEqual(mockHorDirection[i]);
+                expect(mockParent.style.alignItems).toEqual(mockVerDirection[j]);
+            }
+        }
     });
 
     it('Unit - Should properly call position method - ConnectedPosition', () => {
@@ -225,18 +267,18 @@ describe('igxOverlay', () => {
             horizontalStartPoint: HorizontalAlignment.Left,
             verticalStartPoint: VerticalAlignment.Top
         };
-        const autoStrat1 = new ConnectedPositioningStrategy(mockPositioningSettings1);
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        const connectedStrat1 = new ConnectedPositioningStrategy(mockPositioningSettings1);
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('-200px');
 
-        autoStrat1.settings.horizontalStartPoint = HorizontalAlignment.Center;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.horizontalStartPoint = HorizontalAlignment.Center;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('-100px');
 
-        autoStrat1.settings.horizontalStartPoint = HorizontalAlignment.Right;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.horizontalStartPoint = HorizontalAlignment.Right;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('0px');
 
@@ -244,18 +286,18 @@ describe('igxOverlay', () => {
         bottom = 0;
         width = 0;
         height = 200;
-        autoStrat1.settings.verticalStartPoint = VerticalAlignment.Top;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Top;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('-200px');
         expect(mockItem.style.left).toEqual('0px');
 
-        autoStrat1.settings.verticalStartPoint = VerticalAlignment.Middle;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Middle;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('-100px');
         expect(mockItem.style.left).toEqual('0px');
 
-        autoStrat1.settings.verticalStartPoint = VerticalAlignment.Bottom;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Bottom;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('0px');
 
@@ -263,18 +305,18 @@ describe('igxOverlay', () => {
         bottom = 0;
         width = 0;
         height = 0;
-        autoStrat1.settings.verticalDirection = VerticalAlignment.Top;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.verticalDirection = VerticalAlignment.Top;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('-200px');
         expect(mockItem.style.left).toEqual('0px');
 
-        autoStrat1.settings.verticalDirection = VerticalAlignment.Middle;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.verticalDirection = VerticalAlignment.Middle;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('-100px');
         expect(mockItem.style.left).toEqual('0px');
 
-        autoStrat1.settings.verticalDirection = VerticalAlignment.Bottom;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.verticalDirection = VerticalAlignment.Bottom;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('0px');
 
@@ -282,30 +324,30 @@ describe('igxOverlay', () => {
         bottom = 0;
         width = 0;
         height = 0;
-        autoStrat1.settings.horizontalDirection = HorizontalAlignment.Left;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Left;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('-200px');
 
-        autoStrat1.settings.horizontalDirection = HorizontalAlignment.Center;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Center;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('-100px');
 
-        autoStrat1.settings.horizontalDirection = HorizontalAlignment.Right;
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Right;
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('0px');
 
         // If target is Point
-        autoStrat1.settings.target = new Point(0, 0);
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.target = new Point(0, 0);
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('0px');
 
         // If target is not point or html element, should fallback to new Point(0,0)
-        autoStrat1.settings.target = <any>'g';
-        autoStrat1.position(mockItem, { width: 200, height: 200 });
+        connectedStrat1.settings.target = <any>'g';
+        connectedStrat1.position(mockItem, { width: 200, height: 200 });
         expect(mockItem.style.top).toEqual('0px');
         expect(mockItem.style.left).toEqual('0px');
     });
@@ -674,7 +716,8 @@ describe('igxOverlay', () => {
             const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
             expect(overlayWrapper).toBeTruthy();
             expect(overlayWrapper.localName).toEqual('div');
-        }));
+        })
+    );
 
     it('css class should be applied on igx-overlay component inner div wrapper', fakeAsync(() => {
         const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -834,7 +877,7 @@ describe('igxOverlay', () => {
     });
 
     // If adding a component near the visible window borders(left,right,up,down) it should be partially hidden and based on scroll strategy:
-    it('Scroll Strategy None: no scrolling possible.', fakeAsync(() => {
+    xit('Scroll Strategy None: no scrolling possible.', fakeAsync(() => {
         // TO DO
     }));
 
@@ -1434,6 +1477,16 @@ describe('igxOverlay', () => {
 export class SimpleDynamicComponent { }
 
 @Component({
+    template: '<div #item style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
+})
+export class SimpleRefComponent {
+    @ViewChild('item')
+    public item: ElementRef;
+
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+}
+
+@Component({
     template: '<div style=\'position: absolute; width:3000px; height: 1000px; background-color: red\'></div>'
 })
 export class SimpleBigSizeComponent { }
@@ -1537,6 +1590,7 @@ export class TopLeftOffsetComponent {
 
 const DYNAMIC_COMPONENTS = [
     EmptyPageComponent,
+    SimpleRefComponent,
     SimpleDynamicComponent,
     SimpleBigSizeComponent,
     DownRightButtonComponent,

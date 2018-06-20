@@ -5,7 +5,6 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './drop-down.component';
-import { IgxOverlayService } from 'dist/igniteui-angular';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
