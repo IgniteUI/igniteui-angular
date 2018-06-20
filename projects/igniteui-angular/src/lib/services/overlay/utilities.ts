@@ -42,7 +42,10 @@ export interface OverlaySettings {
     closeOnOutsideClick?: boolean;
 }
 
-export interface OpeningEventArgs {
+export interface OverlayEventArgs {
+    /** Id of the overlay as returned by the `show()` method */
+    id: string;
+    /** Available when `Type<T>` is provided to the `show()` method and allows access to the created Component instance */
     componentRef?: ComponentRef<{}>;
 }
 

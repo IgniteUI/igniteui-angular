@@ -36,6 +36,8 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
         } else {
             this._document.removeEventListener('scroll', this.onScroll, true);
         }
+
+        this._initialized = false;
     }
 
     private onScroll = () => {

@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { OverlaySettings, OpeningEventArgs } from './utilities';
+import { OverlaySettings, OverlayEventArgs } from './utilities';
 
 import {
     ApplicationRef,
@@ -12,8 +12,7 @@ import {
     EventEmitter,
     Inject,
     Injectable,
-    Injector,
-    OnDestroy
+    Injector
 } from '@angular/core';
 import { AnimationBuilder } from '@angular/animations';
 import { fromEvent } from 'rxjs';
@@ -47,10 +46,10 @@ export class IgxOverlayService {
         return this._overlayElement;
     }
 
-    public onOpening = new EventEmitter<OpeningEventArgs>();
-    public onOpened = new EventEmitter();
-    public onClosing = new EventEmitter();
-    public onClosed = new EventEmitter();
+    public onOpening = new EventEmitter<OverlayEventArgs>();
+    public onOpened = new EventEmitter<OverlayEventArgs>();
+    public onClosing = new EventEmitter<OverlayEventArgs>();
+    public onClosed = new EventEmitter<OverlayEventArgs>();
 
     constructor(
         private _factoryResolver: ComponentFactoryResolver,
@@ -65,10 +64,9 @@ export class IgxOverlayService {
 
         // get the element for both static and dynamic components
         const element = this.getElement(component, id, overlaySettings);
+        const componentRef = this._overlays.find(c => c.id === id).componentRef;
 
-        this.onOpening.emit({
-            componentRef: this._overlays.find(c => c.id === id).componentRef
-        });
+        this.onOpening.emit({ id, componentRef });
 
         const wrapperElement = this.getWrapperElement(overlaySettings, id);
         const contentElement = this.getContentElement(wrapperElement, overlaySettings);
@@ -80,10 +78,15 @@ export class IgxOverlayService {
         const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
         const animationPlayer = animationBuilder.create(element);
         animationPlayer.onDone(() => {
-            this.onOpened.emit();
+            this.onOpened.emit({ id, componentRef });
             if (overlaySettings.closeOnOutsideClick) {
                 if (overlaySettings.modal) {
                     fromEvent(wrapperElement, 'click').pipe(take(1)).subscribe(() => this.hide(id));
+                    wrapperElement.addEventListener('keydown', (ev: KeyboardEvent) => {
+                        if (ev.key === 'Escape') {
+                            this.hide(id);
+                        }
+                    });
                 } else {
                     fromEvent(this._document, 'click').pipe(take(1)).subscribe(() => this.hide(id));
                 }
@@ -100,7 +103,8 @@ export class IgxOverlayService {
     }
 
     hide(id: string) {
-        this.onClosing.emit();
+        const componentRef = this._overlays.find(c => c.id === id).componentRef;
+        this.onClosing.emit({ id, componentRef });
 
         const overlay = this.getOverlayById(id);
         if (!overlay) {
@@ -115,7 +119,7 @@ export class IgxOverlayService {
             animationPlayer.reset();
             const child: HTMLElement = overlay.elementRef.nativeElement;
             if (!this.OverlayElement.contains(child)) {
-                console.error('Component with id:' + id + ' is already removed!');
+                console.warn('Component with id:' + id + ' is already removed!');
                 return;
             }
 
@@ -131,7 +135,7 @@ export class IgxOverlayService {
                 this._overlayElement.parentElement.removeChild(this._overlayElement);
                 this._overlayElement = null;
             }
-            this.onClosed.emit();
+            this.onClosed.emit({ id, componentRef });
         });
 
         animationPlayer.play();
@@ -190,7 +194,7 @@ export class IgxOverlayService {
 
         this._overlays.push({
             id: id,
-            elementRef: <ElementRef>{nativeElement: element},
+            elementRef: <ElementRef>{ nativeElement: element },
             componentRef: dynamicComponent,
             settings: overlaySettings
         });
