@@ -27,6 +27,7 @@ export * from './lib/directives/toggle/toggle.directive';
  * Data operations
  */
 export * from './lib/data-operations/filtering-expression.interface';
+export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';
 export * from './lib/data-operations/filtering-state.interface';
 export * from './lib/data-operations/filtering-strategy';
