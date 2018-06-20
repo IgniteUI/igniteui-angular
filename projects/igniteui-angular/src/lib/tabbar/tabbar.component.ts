@@ -95,7 +95,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
      * Emits an event when a new tab is selected.
      * Provides references to the `IgxTabComponent` and `IgxTabPanelComponent` as event arguments.
      * ```html
-     * <igx-bottom-nav (onTableSelected) = "onTabSelected(tab: IgxTabComponent, panel: IgxTabPanelComponent)"><igx-bottom-nav>
+     * <igx-bottom-nav (onTableSelected) = "onTabSelected($event)"><igx-bottom-nav>
      * ```
      * @memberof IgxBottomNavComponent
      */
@@ -104,7 +104,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
      * Emits an event when a tab is deselected.
      * Provides references to the `IgxTabComponent` and `IgxTabPanelComponent` as event arguments.
      * ```html
-     * <igx-bottom-nav (onTabDeselected) = "onTabDeselected(tab: IgxTabComponent, panel: IgxTabPanelComponent)"><igx-bottom-nav>
+     * <igx-bottom-nav (onTabDeselected) = "onTabDeselected($event)"><igx-bottom-nav>
      * ```
      * @memberof IgxBottomNavComponent
      */
