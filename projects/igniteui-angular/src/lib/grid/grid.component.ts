@@ -201,9 +201,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._paging = value;
         this._pipeTrigger++;
 
-        this.cdr.detectChanges();
-        this.calculateGridHeight();
-        this.cdr.detectChanges();
+        if (this._ngAfterViewInitPaassed) {
+            this.cdr.detectChanges();
+            this.calculateGridHeight();
+            this.cdr.detectChanges();
+        }
     }
 
     @Input()
@@ -1233,7 +1235,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get hasMovableColumns(): boolean {
-        return this.columnList.some((col) => col.movable);
+        return this.columnList && this.columnList.some((col) => col.movable);
     }
 
     get selectedCells(): IgxGridCellComponent[] | any[] {
