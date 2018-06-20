@@ -18,7 +18,6 @@ describe('Column Hiding UI', () => {
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;
     let columnChooserElement: DebugElement;
-    const componentTitle = 'Column Hiding UI';
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -636,6 +635,24 @@ describe('Column Hiding UI', () => {
             });
         });
 
+        it('styles are applied.', () => {
+            columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
+            expect(columnChooserElement.query(By.css('div.igx-column-hiding__columns'))).not.toBe(null);
+            expect(columnChooserElement.query(By.css('div.igx-column-hiding__header'))).not.toBe(null);
+            expect(columnChooserElement.query(By.css('div.igx-column-hiding__buttons'))).not.toBe(null);
+        });
+
+        it('height can be controlled via columnsAreaMaxHeight input.', () => {
+            columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
+            expect(columnChooser.columnsAreaMaxHeight).toBe('100%');
+            expect(columnChooserElement.nativeElement.offsetHeight).toBe(360);
+
+            columnChooser.columnsAreaMaxHeight = '150px';
+            fix.detectChanges();
+            const columnsAreaDiv = columnChooserElement.query(By.css('div.igx-column-hiding__columns'));
+            expect(JSON.stringify(columnsAreaDiv.styles)).toBe('{"max-height":"150px"}');
+            expect(columnChooserElement.nativeElement.offsetHeight).toBe(250);
+        });
     });
 
     describe('dropdown', () => {
@@ -791,7 +808,7 @@ describe('Column Hiding UI', () => {
 
     describe('toolbar button', () => {
         beforeEach(async(() => {
-            fix = TestBed.createComponent(GridWithoutColumnChooserComponent);
+            fix = TestBed.createComponent(GridWithColumnChooserComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             fix.detectChanges();
@@ -800,54 +817,40 @@ describe('Column Hiding UI', () => {
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
         }));
 
-        xit('is not shown by default.', () => {
-            columnChooser = grid.columnHidingUI;
-            expect(columnChooser).toBeUndefined();
-            expect(columnChooserElement).toBe(null);
-        });
 
-        xit('is shown when columnHiding is true and hidden - when false.', () => {
-            grid.columnHiding = true;
-            fix.detectChanges();
-
-            expect(grid.columnHidingUI).toBeDefined();
+        it('is shown when columnHiding is true and hidden - when false.', () => {
+            expect(grid.toolbar.columnHidingUI).toBeDefined();
             expect(columnChooserElement).toBeDefined();
             expect(getColumnChooserButton()).not.toBe(null);
 
             grid.columnHiding = false;
             fix.detectChanges();
 
-            expect(grid.columnHidingUI).toBeUndefined();
+            expect(grid.toolbar.columnHidingUI).toBeUndefined();
             expect(columnChooserElement).toBe(null);
-            expect(getColumnChooserButton()).toBe(null);
+            expect(getColumnChooserButton()).toBeUndefined();
 
             grid.columnHiding = undefined;
             fix.detectChanges();
 
-            expect(grid.columnHidingUI).toBeUndefined();
+            expect(grid.toolbar.columnHidingUI).toBeUndefined();
             expect(columnChooserElement).toBe(null);
         });
 
-        xit('shows the number of hidden columns.', fakeAsync(() => {
-            // grid.columnHidingUI.togglable = true;
-            tick(100);
-            fix.detectChanges();
+        it('shows the number of hidden columns.', () => {
+            const btnText = getColumnChooserButton().innerText;
+            expect(btnText.includes('1') && btnText.includes('HIDDEN')).toBe(true);
+            expect(getColumnChooserButtonIcon().innerText).toBe('VISIBILITY_OFF');
+        });
 
-            const button = getColumnChooserButton();
-            expect(button.innerText.includes('1 HIDDEN')).toBe(true);
-            expect(getColumnChooserButtonIcon().innerText).toBe('VISIBILITY_OFF ');
-        }));
-
-        xit('shows the proper icon when no columns are hidden.', fakeAsync(() => {
-            // grid.columnHidingUI.togglable = true;
+        it('shows the proper icon when no columns are hidden.', () => {
             grid.columns[2].hidden = false;
-            tick(100);
             fix.detectChanges();
 
-            const button = getColumnChooserButton();
-            expect(button.innerText.includes('0 HIDDEN')).toBe(true);
-            expect(getColumnChooserButtonIcon().innerText).toBe('VISIBILITY ');
-        }));
+            const btnText = getColumnChooserButton().innerText;
+            expect(btnText.includes('0') && btnText.includes('HIDDEN')).toBe(true);
+            expect(getColumnChooserButtonIcon().innerText).toBe('VISIBILITY');
+        });
     });
 
     function getColumnChooserButton() {
@@ -1070,7 +1073,8 @@ export class ColumnHidingToggleComponent extends ColumnHidingInlineComponent {
 }
 
 @Component({
-    template: `<igx-grid [data]="data" width="500px" height="500px" [columnHiding]="true">
+    template: `<igx-grid [data]="data" width="500px" height="500px"
+        [showToolbar]="true" [columnHiding]="true" hiddenColumnsText="Hidden">
         <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="false"></igx-column>
         <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>

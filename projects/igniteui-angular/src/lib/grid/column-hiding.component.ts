@@ -119,6 +119,9 @@ export class IgxColumnHidingComponent implements OnDestroy {
     set columnDisplayOrder(value: ColumnDisplayOrder) {
         if (value !== undefined) {
             this.orderColumns(value);
+            if (this._filterCriteria.length > 0) {
+                this.filter();
+            }
         }
     }
 
@@ -137,12 +140,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     @HostBinding('attr.class')
     public cssClass = 'igx-column-hiding';
 
-    @ViewChild('columnChooserToggle', { read: TemplateRef })
-    protected columnChooserToggle: TemplateRef<any>;
-
-    @ViewChild('columnChooserInline', { read: TemplateRef })
-    protected columnChooserInline: TemplateRef<any>;
-
     private _currentColumns = [];
     private _gridColumns = [];
     private _rawColumns = [];
@@ -155,14 +152,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     public get hiddenColumnsCount() {
         return (this._gridColumns) ? this._gridColumns.filter((col) => col.hidden).length : 0;
     }
-
-    // public get template(): TemplateRef<any> {
-    //     if (this.togglable) {
-    //         return this.columnChooserToggle;
-    //     } else {
-    //         return this.columnChooserInline;
-    //     }
-    // }
 
     constructor(public cdr: ChangeDetectorRef) {
     }
@@ -240,12 +229,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     public onVisibilityChanged(args: IColumnVisibilityChangedEventArgs) {
         this.onColumnVisibilityChanged.emit(args);
     }
-
-    // public toggleDropDown() {
-    //     if (this.togglable) {
-    //         this.dropDown.toggle();
-    //     }
-    // }
 }
 
 @NgModule({
@@ -254,7 +237,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     imports: [
         IgxButtonModule,
         IgxCheckboxModule,
-        // IgxDropDownModule,
         IgxInputGroupModule,
         CommonModule,
         FormsModule,

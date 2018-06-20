@@ -42,7 +42,6 @@ import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
-import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -244,7 +243,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public paginationTemplate: TemplateRef<any>;
 
     @Input()
-
     get columnHiding() {
         return this._columnHiding;
     }
@@ -450,12 +448,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('tfoot')
     public tfoot: ElementRef;
 
-    @ViewChild('columnHidingUI')
-    public columnHidingUI: IgxColumnHidingComponent;
-
     @ViewChild('summaries')
     public summaries: ElementRef;
-
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -793,12 +787,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onColumnVisibilityChanged.emit(args);
 
         this.markForCheck();
-    }
-
-    public toggleColumnHidingUI() {
-        if (this.columnHidingUI) {
-            this.toolbar.columnHidingDropdown.toggle();
-        }
     }
 
     get nativeElement() {
