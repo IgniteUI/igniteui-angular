@@ -826,6 +826,27 @@ describe('IgxVirtual directive - simple template', () => {
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
         }, 0);
     }));
+
+    it('should correctly scroll to the last element when using the scrollTo method', async(() => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector('igx-display-container');
+
+        /**  Scroll to the last 49999 row. */
+        fix.componentInstance.parentVirtDir.scrollTo(49999);
+        fix.detectChanges();
+
+        /** Timeout for scroll event to trigger during test */
+        setTimeout(() => {
+            const rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            for (let i = 0; i < 8; i++) {
+                expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[49992 + i][1].toString());
+            }
+        }, 0);
+    }));
 });
 
 /** igxFor for testing */
