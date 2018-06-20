@@ -247,6 +247,23 @@ describe('IgxGrid - Grid Paging', () => {
         expect(grid.getCellByColumn(0, 'ID').value).toMatch('9');
         expect(gridElement.querySelector('.igx-paginator > span').textContent).toMatch('3 of 3');
     }));
+
+    it('activate/deactivate paging', async(() => {
+        const fix = TestBed.createComponent(IgxGridMarkupEditingDeclarationComponent);
+        const grid = fix.componentInstance.grid1;
+        fix.detectChanges();
+
+        let paginator = grid.nativeElement.querySelector('.igx-paginator');
+        expect(paginator).toBeNull();
+
+        grid.paging = !grid.paging;
+        paginator = grid.nativeElement.querySelector('.igx-paginator');
+        expect(paginator !== null).toBeTruthy();
+
+        grid.paging = !grid.paging;
+        paginator = grid.nativeElement.querySelector('.igx-paginator');
+        expect(paginator).toBeNull();
+    }));
 });
 
 const data = [

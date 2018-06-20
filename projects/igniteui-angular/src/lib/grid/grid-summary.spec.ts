@@ -361,7 +361,7 @@ describe('IgxGrid - Summaries', () => {
         const filterUIContainer = fixture.debugElement.query(By.css('igx-grid-filter'));
         const filterIcon = filterUIContainer.query(By.css('igx-icon'));
         const input = filterUIContainer.query(By.directive(IgxInputDirective));
-        const select = filterUIContainer.query(By.css('div > select'));
+        const select = filterUIContainer.query(By.css('select'));
         const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
 
         filterIcon.nativeElement.click();
