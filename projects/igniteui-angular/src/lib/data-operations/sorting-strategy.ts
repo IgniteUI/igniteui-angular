@@ -1,21 +1,29 @@
-import { expand } from 'rxjs/operators';
 import { cloneArray } from '../core/utils';
-import { IGroupByExpandState } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 
 export interface ISortingStrategy {
     sort: (data: any[], expressions: ISortingExpression[]) => any[];
-    groupBy: (data: any[], expressions: ISortingExpression[]) => any[];
+    groupBy: (data: any[], expressions: ISortingExpression[]) => IGroupByResult;
     compareValues: (a: any, b: any) => number;
+}
+
+export interface IGroupByResult {
+    data: any[];
+    metadata: IGroupByRecord[];
 }
 
 export class SortingStrategy implements ISortingStrategy {
     public sort(data: any[], expressions: ISortingExpression[]): any[] {
         return this.sortDataRecursive(data, expressions);
     }
-    public groupBy(data: any[], expressions: ISortingExpression[]): any[] {
-        return this.groupDataRecursive(data, expressions, 0, null);
+    public groupBy(data: any[], expressions: ISortingExpression[]): IGroupByResult {
+        const metadata: IGroupByRecord[] = [];
+        const grouping = this.groupDataRecursive(data, expressions, 0, null, metadata);
+        return {
+            data: grouping,
+            metadata: metadata
+        };
     }
     public compareValues(a: any, b: any) {
         const an = (a === null || a === undefined);
@@ -107,7 +115,8 @@ export class SortingStrategy implements ISortingStrategy {
         }
         return data;
     }
-    private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number, parent: IGroupByRecord): T[] {
+    private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
+        parent: IGroupByRecord, metadata: IGroupByRecord[]): T[] {
         let i = 0;
         let result = [];
         while (i < data.length) {
@@ -117,13 +126,13 @@ export class SortingStrategy implements ISortingStrategy {
                 level,
                 records: cloneArray(group),
                 value: group[0][expressions[level].fieldName],
-                __groupParent: parent
+                groupParent: parent
             };
             if (level < expressions.length - 1) {
-                result = result.concat(this.groupDataRecursive(group, expressions, level + 1, groupRow));
+                result = result.concat(this.groupDataRecursive(group, expressions, level + 1, groupRow, metadata));
             } else {
                 for (const groupItem of group) {
-                    groupItem['__groupParent'] = groupRow;
+                    metadata.push(groupRow);
                     result.push(groupItem);
                 }
             }

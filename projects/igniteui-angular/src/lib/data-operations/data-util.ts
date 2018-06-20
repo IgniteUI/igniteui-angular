@@ -11,7 +11,7 @@ import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
 
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { ISortingState, SortingStateDefaults } from './sorting-state.interface';
-import { ISortingStrategy, SortingStrategy } from './sorting-strategy';
+import { ISortingStrategy, SortingStrategy, IGroupByResult } from './sorting-strategy';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
@@ -51,21 +51,21 @@ export class DataUtil {
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
-    public static group<T>(data: T[], state: IGroupingState): T[] {
+    public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         // apply default settings for each grouping expression(if not set)
         return state.strategy.groupBy(data, state.expressions);
     }
-    public static restoreGroups<T>(data: T[], state: IGroupingState, groupsRecords: any[] = []): T[] {
+    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState, groupsRecords: any[] = []): any[] {
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         if (state.expressions.length === 0) {
-            return data;
+            return groupData.data;
         }
-        return this.restoreGroupsRecursive(data, 1, state.expressions.length, state.expansion, state.defaultExpanded, groupsRecords);
+        return this.restoreGroupsRecursive(groupData, 1, state.expressions.length, state.expansion, state.defaultExpanded, groupsRecords);
     }
     private static restoreGroupsRecursive(
-        data: any[], level: number, depth: number,
+        groupData: IGroupByResult, level: number, depth: number,
         expansion: IGroupByExpandState[], defaultExpanded: boolean, groupsRecords): any[] {
         let i = 0;
         let j: number;
@@ -73,13 +73,15 @@ export class DataUtil {
         // empty the array without changing reference
         groupsRecords.splice(0, groupsRecords.length);
         if (level !== depth) {
-            data = this.restoreGroupsRecursive(data, level + 1, depth, expansion, defaultExpanded, groupsRecords);
+            groupData.data = this.restoreGroupsRecursive(groupData, level + 1, depth, expansion, defaultExpanded, groupsRecords);
         }
-        while (i < data.length) {
-            const g = data[i]['__groupParent'];
-            for (j = i + 1; j < data.length; j++) {
-                const h = data[j]['__groupParent'];
-                if (g !== h && g.level === h.level) {
+        while (i < groupData.data.length) {
+            const g = level === depth ? groupData.metadata[i] :
+                groupData.data[i].groupParent;
+            for (j = i + 1; j < groupData.data.length; j++) {
+                const h = level === depth ? groupData.metadata[j] :
+                    groupData.data[j].groupParent;
+                if (h && g !== h && g.level === h.level) {
                     break;
                 }
             }
@@ -90,18 +92,17 @@ export class DataUtil {
             result.push(g);
             groupsRecords.push(g);
 
-            g['groups'] = data.slice(i, j).filter((e) =>
+            g['groups'] = groupData.data.slice(i, j).filter((e) =>
                 e.records && e.records.length && e.level === g.level + 1);
-            let gr;
             while (groupsRecords.length) {
                 if (groupsRecords[0].level + 1 > level) {
-                    gr = groupsRecords.shift();
+                    groupsRecords.shift();
                 } else {
                     break;
                 }
             }
             if (expanded) {
-                result = result.concat(data.slice(i, j));
+                result = result.concat(groupData.data.slice(i, j));
             }
             i = j;
         }
@@ -165,8 +166,8 @@ export class DataUtil {
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
         const hierarchy: Array<IGroupByKey> = [];
         hierarchy.push({ fieldName: gRow.expression.fieldName, value: gRow.value });
-        while (gRow.__groupParent) {
-            gRow = gRow.__groupParent;
+        while (gRow.groupParent) {
+            gRow = gRow.groupParent;
             hierarchy.unshift({ fieldName: gRow.expression.fieldName, value: gRow.value });
         }
         return hierarchy;
