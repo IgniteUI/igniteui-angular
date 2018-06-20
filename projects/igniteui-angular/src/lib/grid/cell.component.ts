@@ -235,6 +235,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     protected chunkLoadedVer;
     private cellSelectionID: string;
     private previousCellEditMode = false;
+    private updateCell = true;
 
     constructor(
         public gridAPI: IgxGridAPIService,
@@ -258,7 +259,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             cell.focused = false;
         }
         const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editCell) {
+        if (editCell && this.updateCell) {
             this.gridAPI.submit_value(this.gridID);
             this.gridAPI.escape_editMode(this.gridID, editCell.cellID);
             this.previousCellEditMode = true;
@@ -401,6 +402,20 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
+        if (this.gridAPI.get_cell_inEditMode(this.gridID) && event.path.length > 0 && event.relatedTarget) {
+            const targetEditMode = event.path[0].classList.value.indexOf('igx-grid__td--editing') !== -1;
+            if (targetEditMode) {
+                if (event.path[0].classList.length > 0 && event.relatedTarget.classList.length > 0) {
+                    if ((event.relatedTarget.classList.value.indexOf('igx-checkbox__input') !== -1 ||
+                    event.relatedTarget.classList.value.indexOf('igx-calendar') !== -1)
+                    && event.path[0].classList[0] === 'igx-grid__td') {
+                        this.updateCell = false;
+                    }
+                }
+            } else {
+                this.updateCell = true;
+            }
+        }
         this._updateCellSelectionStatus();
         this.row.focused = true;
         this.grid.onSelection.emit({

@@ -412,7 +412,7 @@ describe('IgxGrid - Cell component', () => {
         });
     }));
 
-    it('leaves cell in edit mode on scroll', async(() => {
+    it('edit mode - leaves cell in edit mode on scroll', async(() => {
         const fixture = TestBed.createComponent(CellEditingScrollTestComponent);
         fixture.detectChanges();
 
@@ -448,7 +448,42 @@ describe('IgxGrid - Cell component', () => {
         });
     }));
 
-    it('exit edit mode on filtering', async(() => {
+    it('edit mode - leaves cell in edit mode on pinning', async(() => {
+        const fixture = TestBed.createComponent(CellEditingScrollTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'firstName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
+            grid.pinColumn('firstName');
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
+            expect(grid.pinnedColumns.length).toBe(1);
+            grid.unpinColumn('firstName');
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
+            expect(grid.pinnedColumns.length).toBe(0);
+            cellDom.triggerEventHandler('keydown.enter', null);
+            fixture.detectChanges();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+        });
+    }));
+
+    it('edit mode - exit on filtering', async(() => {
         const fixture = TestBed.createComponent(CellEditingTestComponent);
         fixture.detectChanges();
 
@@ -484,7 +519,7 @@ describe('IgxGrid - Cell component', () => {
         });
     }));
 
-    it('exit edit mode on sorting', async(() => {
+    it('edit mode - exit on sorting', async(() => {
         const fixture = TestBed.createComponent(CellEditingTestComponent);
         fixture.detectChanges();
 

@@ -148,21 +148,24 @@ export class IgxGridAPIService {
     }
 
     public update_cell(id: string, rowSelector, columnID, editValue) {
+        let cellObj;
+        let rowIndex;
         const row = this.get_row_by_key(id, rowSelector);
-        if (row) {
-            const rowIndex = row.index;
-            let cellObj = this.get(id).columnList.toArray()[columnID].cells[rowIndex];
-            if (!cellObj && this.get_cell_inEditMode(id)) {
-                cellObj = this.get_cell_inEditMode(id).cell;
-            }
-            if (cellObj) {
-                const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
-                    currentValue: cellObj.value, newValue: editValue };
-                this.get(id).onEditDone.emit(args);
-                const column =  this.get(id).columnList.toArray()[columnID];
-                this.get(id).data[rowIndex][column.field] = args.newValue;
-                this.get(id).refreshSearch();
-            }
+        const editableCell = this.get_cell_inEditMode(id);
+        if (editableCell) {
+            cellObj = editableCell.cell;
+            rowIndex = rowSelector;
+        } else if (row) {
+            rowIndex = row.index;
+            cellObj = this.get(id).columnList.toArray()[columnID].cells[rowIndex];
+        }
+        if (cellObj) {
+            const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
+                currentValue: cellObj.value, newValue: editValue };
+            this.get(id).onEditDone.emit(args);
+            const column =  this.get(id).columnList.toArray()[columnID];
+            this.get(id).data[rowIndex][column.field] = args.newValue;
+            this.get(id).refreshSearch();
         }
     }
 
