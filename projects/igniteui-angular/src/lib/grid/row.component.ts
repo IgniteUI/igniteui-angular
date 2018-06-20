@@ -9,8 +9,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnDestroy,
-    OnInit,
     QueryList,
     ViewChild,
     ViewChildren
@@ -22,6 +20,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
+import { autoWire, IGridBus } from './grid.common';
 import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
 
 @Component({
@@ -30,7 +29,7 @@ import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
     selector: 'igx-grid-row',
     templateUrl: './row.component.html'
 })
-export class IgxGridRowComponent implements OnInit, OnDestroy, DoCheck {
+export class IgxGridRowComponent implements IGridBus, DoCheck {
 
     @Input()
     public rowData: any;
@@ -118,11 +117,6 @@ export class IgxGridRowComponent implements OnInit, OnDestroy, DoCheck {
                 private element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
-    public ngOnInit() {
-    }
-
-    public ngOnDestroy() {
-    }
 
     @HostListener('focus', ['$event'])
     public onFocus(event) {

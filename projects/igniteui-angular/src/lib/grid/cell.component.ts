@@ -3,17 +3,14 @@
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ElementRef,
-    forwardRef,
     HostBinding,
     HostListener,
     Input,
     OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild,
-    ViewContainerRef
+    ViewChild
 } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
@@ -22,7 +19,7 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { IGridCellEventArgs, IGridEditEventArgs } from './grid.component';
+import { autoWire, IGridBus } from './grid.common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +27,7 @@ import { IGridCellEventArgs, IGridEditEventArgs } from './grid.component';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
+export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
     @Input()
     public column: IgxColumnComponent;
 
@@ -103,18 +100,27 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     get inEditMode(): boolean {
-        return this._inEditMode;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editableCell) {
+            return this.cellID.rowID === editableCell.cellID.rowID &&
+            this.cellID.columnID === editableCell.cellID.columnID;
+        } else {
+            return false;
+        }
     }
 
+    @autoWire(true)
     set inEditMode(value: boolean) {
-        const originalValue = this._inEditMode;
-
-        this._inEditMode = value;
-
-        if (this._inEditMode) {
-            this.grid.cellInEditMode = this;
-        } else if (!originalValue) {
-            this.grid.cellInEditMode = null;
+        if (this.column.editable && value) {
+            this.editValue = this.value;
+            this.gridAPI.set_cell_inEditMode(this.gridID, this, value);
+        } else {
+            this.gridAPI.escape_editMode(this.gridID, this.cellID);
+        }
+        if (this.column.dataType === DataType.Date) {
+            requestAnimationFrame(() => this.cdr.markForCheck());
+        } else {
+            this.cdr.detectChanges();
         }
     }
 
@@ -168,9 +174,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostBinding('class.igx-grid__td--editing')
     get editModeCSS() {
-        return this._inEditMode;
+        return this.inEditMode;
     }
 
+    @autoWire(true)
     get focused(): boolean {
         return this.isFocused;
     }
@@ -206,6 +213,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-grid__td--selected')
+    @autoWire(true)
     set selected(val: boolean) {
         this.isSelected = val;
     }
@@ -219,13 +227,15 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
     private highlight: IgxTextHighlightDirective;
 
+    public editValue;
     protected defaultCssClass = 'igx-grid__td';
     protected isFocused = false;
     protected isSelected = false;
-    protected _inEditMode = false;
     protected chunkLoadedHor;
     protected chunkLoadedVer;
     private cellSelectionID: string;
+    private previousCellEditMode = false;
+    private updateCell = true;
 
     constructor(
         public gridAPI: IgxGridAPIService,
@@ -236,6 +246,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     private _updateCellSelectionStatus() {
         this._clearCellSelection();
         this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+        if (this.column.editable && this.previousCellEditMode) {
+            this.inEditMode = true;
+        }
+        this.cdr.detectChanges();
     }
 
     private _clearCellSelection() {
@@ -243,6 +257,14 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         if (cell) {
             cell.selected = false;
             cell.focused = false;
+        }
+        const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editCell && this.updateCell) {
+            this.gridAPI.submit_value(this.gridID);
+            this.gridAPI.escape_editMode(this.gridID, editCell.cellID);
+            this.previousCellEditMode = true;
+        } else {
+            this.previousCellEditMode = false;
         }
         this.selectionApi.set_selection(this.cellSelectionID, []);
     }
@@ -265,31 +287,37 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
     }
 
+    @autoWire(true)
     public ngOnInit() {
         this.cellSelectionID = this.gridID + '-cells';
-        // this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
-        //     () => {
-        //         if (!this.selected) {
-        //             this.nativeElement.blur();
-        //         }
-        //         this.cdr.markForCheck();
-        //     });
-        // this.chunkLoadedVer = this.grid.verticalScrollContainer.onChunkLoad.subscribe(
-        //     () => {
-        //         if (!this.selected) {
-        //             this.nativeElement.blur();
-        //         }
-        //         this.cdr.markForCheck();
-        //     });
+        this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
+            () => {
+                if (!this.selected) {
+                    this.nativeElement.blur();
+                }
+                this.cdr.markForCheck();
+            });
+        this.chunkLoadedVer = this.grid.verticalScrollContainer.onChunkLoad.subscribe(
+            () => {
+                if (!this.selected) {
+                    this.nativeElement.blur();
+                }
+                this.cdr.markForCheck();
+            });
+    }
+
+    @autoWire(true)
+    public update(val: any) {
+        this.gridAPI.update_cell(this.gridID, this.cellID.rowIndex, this.cellID.columnID, val);
     }
 
     public ngOnDestroy() {
-        // if (this.chunkLoadedHor) {
-        //     this.chunkLoadedHor.unsubscribe();
-        // }
-        // if (this.chunkLoadedVer) {
-        //     this.chunkLoadedVer.unsubscribe();
-        // }
+        if (this.chunkLoadedHor) {
+            this.chunkLoadedHor.unsubscribe();
+        }
+        if (this.chunkLoadedVer) {
+            this.chunkLoadedVer.unsubscribe();
+        }
     }
 
     public ngAfterViewInit() {
@@ -299,21 +327,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    public update(val: any) {
-        const args: IGridEditEventArgs = { row: this.row, cell: this, currentValue: this.value, newValue: val };
-        this.grid.onEditDone.emit(args);
-        this.value = args.newValue;
-        this.gridAPI.update(this.gridID, this);
-
-        this.grid.refreshSearch();
-    }
-
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
         virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
             next: (e: any) => {
                 callback(e);
             }
         });
+    }
+
+    focusCell() {
+        this.nativeElement.focus();
     }
 
     private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {
@@ -375,15 +398,26 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostListener('focus', ['$event'])
+    @autoWire()
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
+        if (this.gridAPI.get_cell_inEditMode(this.gridID) && event.path.length > 0 && event.relatedTarget) {
+            const targetEditMode = event.path[0].classList.value.indexOf('igx-grid__td--editing') !== -1;
+            if (targetEditMode) {
+                if (event.path[0].classList.length > 0 && event.relatedTarget.classList.length > 0) {
+                    if ((event.relatedTarget.classList.value.indexOf('igx-checkbox__input') !== -1 ||
+                    event.relatedTarget.classList.value.indexOf('igx-calendar') !== -1)
+                    && event.path[0].classList[0] === 'igx-grid__td') {
+                        this.updateCell = false;
+                    }
+                }
+            } else {
+                this.updateCell = true;
+            }
+        }
         this._updateCellSelectionStatus();
         this.row.focused = true;
-        if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
-            this.grid.cellInEditMode.inEditMode = false;
-        }
-
         this.grid.onSelection.emit({
             cell: this,
             event
@@ -391,6 +425,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostListener('blur', ['$event'])
+    @autoWire()
     public onBlur(event) {
         this.isFocused = false;
         this.row.focused = false;
@@ -653,6 +688,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('keydown.f2')
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
+            if (this.inEditMode) {
+                this.gridAPI.submit_value(this.gridID);
+            }
             this.inEditMode = !this.inEditMode;
             this.nativeElement.focus();
         }

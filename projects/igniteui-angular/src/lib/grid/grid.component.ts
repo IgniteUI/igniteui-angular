@@ -307,7 +307,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
-                this.reflow();
+                this.calculateGridHeight();
+                this.cdr.markForCheck();
             });
         }
     }
@@ -527,7 +528,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /* Toolbar related definitions */
-
     private _showToolbar = false;
     private _exportExcel = false;
     private _exportCsv = false;
@@ -657,8 +657,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcRowCheckboxWidth: number;
     public calcHeight: number;
     public summariesHeight: number;
-
-    public cellInEditMode: IgxGridCellComponent;
     public isColumnMoving: boolean;
     public isColumnResizing: boolean;
 
@@ -714,6 +712,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.setEventBusSubscription();
+        this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -723,7 +723,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
-        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { this.clearSummaryCache(editCell); });
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
     }
 
     public ngAfterContentInit() {
@@ -781,6 +781,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
         this.destroy$.next(true);
         this.destroy$.complete();
+        this.gridAPI.unset(this.id);
     }
 
     public dataLoading(event) {
@@ -990,11 +991,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateCell(value: any, rowSelector: any, column: string): void {
-        const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
-        if (cell) {
-            cell.update(value);
-            this.cdr.detectChanges();
+        const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
+        if (columnEdit.length > 0) {
+            const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
+            this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
             this._pipeTrigger++;
+            this.cdr.detectChanges();
         }
     }
 
@@ -1011,6 +1013,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public sort(...rest): void {
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+        }
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
@@ -1020,6 +1026,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+        }
         const col = this.gridAPI.get_column_by_name(this.id, name);
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
@@ -1471,6 +1481,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
+    protected setEventBusSubscription() {
+        this.eventBus.pipe(
+            debounceTime(DEBOUNCE_TIME),
+            takeUntil(this.destroy$)
+        ).subscribe(() => this.cdr.detectChanges());
+    }
+
+    protected setVerticalScrollSubscription() {
+        /*
+            Until the grid component is destroyed,
+            Take the first event and unsubscribe
+            then merge with an empty observable after DEBOUNCE_TIME,
+            re-subscribe and repeat the process
+        */
+        this.verticalScrollContainer.onChunkLoad.pipe(
+            takeUntil(this.destroy$),
+            take(1),
+            merge(of({})),
+            delay(DEBOUNCE_TIME),
+            repeat()
+        ).subscribe(() => {
+            this.eventBus.next();
+        });
+    }
+
     public onHeaderCheckboxClick(event) {
         this.allRowsSelected = event.checked;
         const newSelection =
@@ -1608,11 +1643,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowList) {
             return 0;
         }
-
-        if (this.cellInEditMode) {
-            this.cellInEditMode.inEditMode = false;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
         }
-
         if (!text) {
             this.clearSearch();
             return 0;
