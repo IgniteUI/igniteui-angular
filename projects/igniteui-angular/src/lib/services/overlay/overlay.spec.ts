@@ -16,9 +16,9 @@ import { ConnectedPositioningStrategy } from './position/connected-positioning-s
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point } from './utilities';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { BlockScrollStrategy } from './scroll/BlockScrollStrategy';
-import { AbsoluteScrollStrategy } from './scroll/AbsoluteScrollStrategy';
-import { CloseScrollStrategy } from './scroll/CloseScrollStrategy';
+import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
+import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
+import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content--no-modal';
