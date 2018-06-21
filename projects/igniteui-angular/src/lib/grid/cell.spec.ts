@@ -562,7 +562,7 @@ describe('IgxGrid - Cell component', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
-        grid.sort('age', SortingDirection.Desc);
+        grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc});
         fixture.detectChanges();
         const cell = grid.getCellByColumn(0, 'fullName');
         const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
