@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Directive, Component, EventEmitter, Output, NgModule, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
-import { IgxColumnChooser } from './column-chooser-base';
-import { ColumnItemBase } from './column-chooser-item-base';
+import { ColumnChooserBase } from './column-chooser-base';
+import { ColumnChooserItemBase } from './column-chooser-item-base';
 import { IPinColumnEventArgs } from './grid.component';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxColumnComponent } from '../../public_api';
@@ -17,7 +17,7 @@ export interface IColumnPinnedChangedEventArgs {
 @Directive({
     selector: '[igxColumnPinningItem]'
 })
-export class IgxColumnPinningItemDirective extends ColumnItemBase {
+export class IgxColumnPinningItemDirective extends ColumnChooserItemBase {
 
     constructor() {
         super('pinned');
@@ -36,7 +36,7 @@ export class IgxColumnPinningItemDirective extends ColumnItemBase {
     selector: 'igx-column-pinning',
     templateUrl: './column-pinning.component.html'
 })
-export class IgxColumnPinningComponent extends IgxColumnChooser {
+export class IgxColumnPinningComponent extends ColumnChooserBase {
 
     constructor(public cdr: ChangeDetectorRef) {
         super(cdr);

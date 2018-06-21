@@ -12,14 +12,14 @@ import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
-import { IgxColumnChooser } from './column-chooser-base';
+import { ColumnChooserBase } from './column-chooser-base';
 
 @Component({
     preserveWhitespaces: false,
     selector: 'igx-column-hiding',
     templateUrl: './column-hiding.component.html'
 })
-export class IgxColumnHidingComponent extends IgxColumnChooser {
+export class IgxColumnHidingComponent extends ColumnChooserBase {
 
     @Input()
     get disableHideAll(): boolean {

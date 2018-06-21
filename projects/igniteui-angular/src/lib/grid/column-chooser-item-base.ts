@@ -44,7 +44,7 @@ export abstract class ItemPropertyValueChanged {
     }
 }
 
-export class ColumnItemBase extends ItemPropertyValueChanged {
+export class ColumnChooserItemBase extends ItemPropertyValueChanged {
     @Input()
     get column() {
         return this.object;

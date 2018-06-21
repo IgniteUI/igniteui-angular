@@ -9,7 +9,7 @@ export enum ColumnDisplayOrder {
     DisplayOrder
 }
 
-export abstract class IgxColumnChooser implements OnDestroy {
+export abstract class ColumnChooserBase implements OnDestroy {
     @Input()
     get columns() {
         return this._gridColumns;

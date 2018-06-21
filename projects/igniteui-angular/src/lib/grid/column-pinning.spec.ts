@@ -12,7 +12,7 @@ import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
 import { ColumnDisplayOrder } from './column-chooser-base';
-import { ColumnItemBase } from './column-chooser-item-base';
+import { ColumnChooserItemBase } from './column-chooser-item-base';
 
 describe('Column Pinning UI', () => {
     let fix;
