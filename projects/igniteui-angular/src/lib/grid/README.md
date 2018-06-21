@@ -168,7 +168,9 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
 |`oddRowCSS`|string|Additional styling classses applied to all odd rows in the grid.|
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
-
+|`groupingExpressions`| Array | The group by state of the grid.
+|`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
+|`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  | 
 
 ### Outputs
 
@@ -194,6 +196,7 @@ A list of the events emitted by the **igx-grid**:
 |`onColumnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
 |`onContextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
 |`onDoubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
+|`onGroupingDone`| Emitted when a a new column is grouped or ungrouped. Returns the `ISortingExpression` related to the grouping operation.
 
 
 Defining handlers for these event emitters is done using declarative event binding:
@@ -218,7 +221,7 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean)`|Filters a single column. A filtering condition or filtering expressions tree could be used. Check the available [filtering conditions](#filtering-conditions)|
 |`filterGlobal(value: any, condition?, ignoreCase?)`|Filters all the columns in the grid with the same condition.|
 |`clearFilter(name?: string)`|If `name` is provided, clears the filtering state of the corresponding column, otherwise clears the filtering state of all columns.|
-|`sort(name: string, direction, ignorecase)`|Sorts a single column.|
+|`sort(expression: ISortingExpression)`|Sorts a single column.|
 |`sort(expressions: Array)`|Sorts the grid columns based on the provided array of sorting expressions.|
 |`clearSort(name?: string)`|If `name` is provided, clears the sorting state of the corresponding column, otherwise clears the sorting state of all columns.|
 |`enableSummaries(fieldName: string, customSummary?: any)`|Enable summaries for the specified column and apply your `customSummary`. If you do not provide the `customSummary`, then the default summary for the column data type will be applied.|
@@ -241,6 +244,13 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`findPrev(text: string, caseSensitive?: boolean)`|Highlights all occurrences of the specified text and marks the previous occurrence as active.|
 |`clearSearch(text: string, caseSensitive?: boolean)`|Removes all search highlights from the grid.|
 |`refreshSearch()`|Refreshes the current search.|
+|`groupBy(expression: ISortingExpression)`| Groups by a new column based on the provided expression or modifies an existing one.
+|`groupBy(expressions: Array)`| Groups columns based on the provided array of sorting expressions.
+|`clearGrouping()`| Clears all grouping in the grid.
+|`clearGrouping(fieldName: string)`| Clear grouping from a particular column.
+|`isExpandedGroup(group: IGroupByRecord )`| Returns if a group is expanded or not.
+|`toggleGroup(group: IGroupByRecord)`| Toggles the expansion state of a group.
+|`toggleAllGroupRows()`| Toggles the expansion state of all group rows recursively.
 
 
 
@@ -274,6 +284,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`dataType`|DataType|One of string, number, boolean or Date. When filtering is enabled the filter UI conditions are based on the `dataType` of the column. Defaults to `string` if it is not provided. With `autoGenerate` enabled the grid will try to resolve the correct data type for each column based on the data source.|
 |`pinned`|boolean|Set column to be pinned or not|
 |`searchable`|boolean|Determines whether the column is included in the search. If set to false, the cell values for this column will not be included in the results of the search API of the grid (defaults to true)|
+|`groupable`|boolean| Determines whether the column may be grouped via the UI.|
 
 
 ### Methods
@@ -383,6 +394,25 @@ import {
 |`cells`|QueryList|Yes|No|The rendered cells in the row component.|
 |`grid`|IgxGridComponent|Yes|No|A reference to the grid containing the row.|
 |`nativeElement`|HTMLElement|Yes|No|The native DOM element representing the row. Could be `null` in certain environments.|
+
+## IgxGridGroupByRowComponent
+
+### Getters/Setters
+
+|Name|Type|Getter|Setter|Description|
+|--- |--- |--- |--- |--- |
+|`index` | number | Yes | No | The index of the row in the rows list. |
+|`grid`|IgxGridComponent|Yes|No|A reference to the grid containing the group row. |
+|`groupRow` | IGroupByRecord | Yes | No | The group row data. Contains the related group expression, level, sub-records and group value. |
+|`expanded` | boolean | Yes | No | Whether the row is expanded or not. |
+|`groupContent` | ElementRef | Yes | No | The container for the group row template. Holds the group row content. |
+|`focused` | boolean | Yes | No | Returns whether the group row is currently focused. | 
+
+### Methods
+
+|Name|Return Type|Description|
+|--- |--- |--- |
+|`toggle()`|void| Toggles the expand state of the group row. |
 
 ## IgxGridCellComponent
 
