@@ -1,15 +1,12 @@
 import {
     Component,
     EventEmitter,
-    forwardRef,
     HostBinding,
     Input,
-    NgModule,
     Output,
     ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
 
 export interface IChangeRadioEventArgs {
     value: any;
@@ -341,4 +338,3 @@ public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
  */
 public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
-
