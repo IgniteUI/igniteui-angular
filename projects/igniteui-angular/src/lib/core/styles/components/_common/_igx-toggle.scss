@@ -7,37 +7,3 @@
         @extend %igx-toggle--hidden !optional;
     }
 }
-
-@include b(igx-overlay) {
-    @include e(wrapper) {
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        position: fixed;
-        pointer-events: none;
-        background-color: transparent;
-        transition: background-color 1s ease;
-    }
-
-    @include e(wrapper, $m: modal) {
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        position: fixed;
-        pointer-events: all;
-        background-color: rgba(50, 50, 50, .3);
-    }
-
-    @include e(content) {
-        position: fixed;
-    }
-
-    @include e(content, $m: no-modal) {
-        position: fixed;
-        pointer-events: all;
-    }
-}
