@@ -1888,7 +1888,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.sortingExpressions.length).toEqual(2);
         expect(grid.groupingExpressions.length).toEqual(1);
 
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
 
         expect(groupRows.length).toEqual(3);
 
