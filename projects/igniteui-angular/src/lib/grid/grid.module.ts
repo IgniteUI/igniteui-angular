@@ -11,6 +11,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxTextHighlightModule } from '../directives/text-highlight/text-highlight.directive';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxDropDownModule } from '../drop-down/drop-down.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridAPIService } from './api.service';
@@ -34,6 +35,8 @@ import {
 import { IgxGridComponent } from './grid.component';
 import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridRowComponent } from './row.component';
+import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
+import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,8 @@ import { IgxGridRowComponent } from './row.component';
     IgxGridSortingPipe,
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
-    IgxGridFilterConditionPipe
+    IgxGridFilterConditionPipe,
+    IgxGridFilterExpressionComponent
   ],
   entryComponents: [
     IgxColumnComponent
@@ -91,7 +95,9 @@ import { IgxGridRowComponent } from './row.component';
     IgxTextHighlightModule,
     IgxTextSelectionModule,
     IgxCheckboxModule,
-    IgxColumnHidingModule
+    IgxColumnHidingModule,
+    IgxDropDownModule,
+    IgxButtonGroupModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })

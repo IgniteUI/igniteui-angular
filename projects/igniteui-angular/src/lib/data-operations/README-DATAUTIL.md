@@ -54,9 +54,8 @@ items: Array<Object> = [
     * `expressions` - array of objects of type **SortingExpression**. It defines which column(s) should be sorted, order of sorted columns and sorting direction.
     * `strategy` - object of type **SortingStrategy**. It represents sorting algorithm. (optional)
 * **FilteringState** - interface, which defines how filtering should be applied. Its properties are:
-    * `expressions` - array of objects of type  **FilteringExpression**. It defines which column(s) should be filtered, filtering conditions and (if any)search value on which filtering should be applied. 
+    * `expressionsTree` - object of type  **IFilteringExpressionsTree**. It defines which column(s) should be filtered, filtering conditions, filtering logic and (if any)search value on which filtering should be applied. 
     * `strategy` - object of type **FilteringStrategy**. It represents filtering algorithm. (optional)
-    * `logic` - it defines how to apply multiple filtering expressions - "AND", "OR". It is of type **FilteringLogic**(enum) and possible values are **FilteringLogic.And**, **FilteringLogic.Or**. (optional)
 * **PagingState** - interface, which defines how paging should be applied. Its properties are:
     * `index` - identifies current page index(0 based positive number)
     * `recordsPerPage` - identifies count of records per page.
@@ -77,9 +76,16 @@ items: Array<Object> = [
         * `searchVal` - search value. There are filtering conditions which do not require searchVal. Example - FilteringCondition.Boolean.True.(optional)
         * `ignoreCase` - boolean variable which specifies case-sensitivity for string columns(optional) 
     * `searchVal` - specifies value to search for.(optional)
-    * `ignoreCase` - boolean variable which specifies case-sensitivity for string columns(optional) 
+    * `ignoreCase` - boolean variable which specifies case-sensitivity for string columns(optional)
+* **FilteringExpressionsTree** - class which implements **IFilteringExpressionsTree** interface. Describes the filtering state of a grid/column. Its properties and methods are:
+    * `filteringOperands` - an array of **IFilteringExpressionsTree** or **IFilteringExpression** objects which has the same filtering logic. If applied to a grid each object describes the filtering state of a grid's column. If applied to a column each object describes one filtering expression or a branch with filtering expressions with complex filtering logic.
+    * `operator` - object of type **FilteringLogic**. Defines the filtering logic for all objects in `filteringOperands` property.
+    * `fieldName` - (optional). Should not be set on a grid's level. It should be set for each **FilteringExpressionsTree** in the grid's `filterOperands`. That's how the filtering state for each column is defined.
+    * `find(fieldName: string)` - Returns the filtering state for a given column. Return type could be **IFilteringExpressionsTree** or **IFilteringExpression**.
+    * `findIndex(fieldName: string)` - Returns the index of the filtering state for a given column.
 * **SortingStrategy** - class which implements **ISortingStrategy** interface. It specifies sorting algorithm.
 * **FilteringStrategy** - class which implements **IFilteringStrategy** interface. It specifies filtering algorithm.
+* **FilteringLogic** - class which describes the filtering logic between the different filtering expressions. Its values are **FilteringLogic.And**, **FilteringLogic.Or**.
 * **DataType** - enumeration which represent basic data types. Its values are:
     * **DataType.Boolean**
     * **DataType.Date**
