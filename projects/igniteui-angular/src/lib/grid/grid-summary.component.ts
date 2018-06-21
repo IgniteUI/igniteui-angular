@@ -110,4 +110,8 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, After
             return this.gridAPI.get_summaries(this.gridID).get(this.column.field);
         }
     }
+
+    protected get hostClassPrefix() {
+        return 'igx-grid-summary';
+    }
 }
