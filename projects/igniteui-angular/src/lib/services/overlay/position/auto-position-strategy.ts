@@ -32,7 +32,6 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
 
     // The position method should return a <div> container that will host the component
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
-        console.log(this.settings.target);
         if (!initialCall) {
             super.position(contentElement, size);
             return;
@@ -46,19 +45,15 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
             const rightBound = elem.offsetLeft + elem.lastElementChild.clientWidth;
             switch (this.settings.horizontalDirection) {
                 case HorizontalAlignment.Left:
-                    if (leftBound <= viewPort.left) {
+                    if (leftBound < viewPort.left) {
                         this.settings.horizontalDirection = HorizontalAlignment.Right;
-                        if (viewPort.left - leftBound < elem.lastElementChild.clientWidth) {
-                            this.settings.horizontalStartPoint = HorizontalAlignment.Right;
-                        }
+                        this.settings.horizontalStartPoint = HorizontalAlignment.Right;
                     }
                     break;
                 case HorizontalAlignment.Right:
-                    if (rightBound >= viewPort.right) {
+                    if (rightBound > viewPort.right) {
                         this.settings.horizontalDirection = HorizontalAlignment.Left;
-                        if (viewPort.right - rightBound < elem.lastElementChild.clientWidth) {
-                            this.settings.horizontalStartPoint = HorizontalAlignment.Left;
-                        }
+                        this.settings.horizontalStartPoint = HorizontalAlignment.Left;
                     }
                     break;
                 default:
@@ -70,19 +65,15 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
             const bottomBound = elem.offsetTop + elem.lastElementChild.clientHeight;
             switch (this.settings.verticalDirection) {
                 case VerticalAlignment.Top:
-                    if (topBound <= viewPort.top) {
+                    if (topBound < viewPort.top) {
                         this.settings.verticalDirection = VerticalAlignment.Bottom;
-                        if (viewPort.top - topBound < elem.lastElementChild.clientHeight) {
-                            this.settings.verticalStartPoint = VerticalAlignment.Bottom;
-                        }
+                        this.settings.verticalStartPoint = VerticalAlignment.Bottom;
                     }
                     break;
                 case VerticalAlignment.Bottom:
-                    if (bottomBound >= viewPort.bottom) {
+                    if (bottomBound > viewPort.bottom) {
                         this.settings.verticalDirection = VerticalAlignment.Top;
-                        if (bottomBound - viewPort.bottom < elem.lastElementChild.clientHeight) {
-                            this.settings.verticalStartPoint = VerticalAlignment.Top;
-                        }
+                        this.settings.verticalStartPoint = VerticalAlignment.Top;
                     }
                     break;
                 default:

@@ -23,6 +23,9 @@ export class DataGenerator {
     public getValuesForColumn(data, fieldName) {
         return data.map((x) => x[fieldName]);
     }
+    public getGroupRecords(data) {
+        return data.map((x) => x['groupParent']);
+    }
     public isSuperset(haystack, arr) {
         return arr.every((val) => haystack.indexOf(val) >= 0);
     }

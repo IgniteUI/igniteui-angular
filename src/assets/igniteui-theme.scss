@@ -48,6 +48,12 @@ $my-tabs-theme: igx-tabs-theme(
     $button-hover-color: #fff
 );
 
+
+$overlay-theme: igx-overlay-theme($background-color: red);
+
+
+@include igx-overlay($overlay-theme);
+
 .items-wrapper__item--blue {
     @include igx-tabs($my-tabs-theme);
 }

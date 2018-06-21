@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {  IgxBadgeModule } from '../badge/badge.component';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDatePickerModule } from '../date-picker/date-picker.component';
@@ -11,6 +12,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxTextHighlightModule } from '../directives/text-highlight/text-highlight.directive';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxDropDownModule } from '../drop-down/drop-down.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridAPIService } from './api.service';
@@ -29,11 +31,25 @@ import {
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
-    IgxColumnMovingService
+    IgxGroupAreaDropDirective,
+    IgxColumnMovingService,
+    IgxGroupByRowTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from './grid.pipes';
+import {
+    IgxGridFilterConditionPipe,
+    IgxGridFilteringPipe,
+    IgxGridPagingPipe,
+    IgxGridPostGroupingPipe,
+    IgxGridPreGroupingPipe,
+    IgxGridSortingPipe
+} from './grid.pipes';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
+import { IgxChipsModule } from '../chips/chips.module';
+import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
+import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
+import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 
 @NgModule({
   declarations: [
@@ -41,21 +57,27 @@ import { IgxGridRowComponent } from './row.component';
     IgxColumnComponent,
     IgxGridComponent,
     IgxGridRowComponent,
+    IgxGridGroupByRowComponent,
     IgxGridHeaderComponent,
     IgxGridSummaryComponent,
     IgxGridToolbarComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
+    IgxGroupByRowTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective,
     IgxGridFilterComponent,
+    IgxGridPreGroupingPipe,
+    IgxGridPostGroupingPipe,
     IgxGridSortingPipe,
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
-    IgxGridFilterConditionPipe
+    IgxGridFilterConditionPipe,
+    IgxGridFilterExpressionComponent
   ],
   entryComponents: [
     IgxColumnComponent
@@ -63,6 +85,7 @@ import { IgxGridRowComponent } from './row.component';
   exports: [
     IgxGridComponent,
     IgxGridCellComponent,
+    IgxGridGroupByRowComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridHeaderComponent,
@@ -71,11 +94,13 @@ import { IgxGridRowComponent } from './row.component';
     IgxGridToolbarComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
+    IgxGroupByRowTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
-    IgxColumnMovingDropDirective
+    IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective
   ],
   imports: [
     CommonModule,
@@ -91,7 +116,12 @@ import { IgxGridRowComponent } from './row.component';
     IgxTextHighlightModule,
     IgxTextSelectionModule,
     IgxCheckboxModule,
-    IgxColumnHidingModule
+    IgxBadgeModule,
+    IgxChipsModule,
+    IgxDragDropModule,
+    IgxColumnHidingModule,
+    IgxDropDownModule,
+    IgxButtonGroupModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })
