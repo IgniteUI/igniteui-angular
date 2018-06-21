@@ -34,7 +34,7 @@ function clearOverlay() {
         element.parentElement.removeChild(element);
     });
 }
-describe('igxOverlay', () => {
+fdescribe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -978,7 +978,7 @@ describe('igxOverlay', () => {
             expect(document.documentElement.scrollLeft).toEqual(50);
     }));
 
-        it('closingScrollStrategy: no scrolling possible. The component changes ' +
+        xit('closingScrollStrategy: no scrolling possible. The component changes ' +
             'state to closed when reaching the threshold (example: expanded DropDown collapses).', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
@@ -1029,7 +1029,7 @@ describe('igxOverlay', () => {
                 expect(overlay.hide).toHaveBeenCalledTimes(1);
             }));
 
-        it('Scroll Strategy Block: it should be partially hidden. When scrolling, the component stays static. ' +
+        xit('Scroll Strategy Block: it should be partially hidden. When scrolling, the component stays static. ' +
             'Component state remains the same (example: expanded DropDown remains expanded).', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
@@ -1080,7 +1080,7 @@ describe('igxOverlay', () => {
                 scrollStrat.detach();
             }));
 
-        it('Scroll Strategy Absolute: can scroll it into view. Component persist state. ' +
+        xit('Scroll Strategy Absolute: can scroll it into view. Component persist state. ' +
             '(example: expanded DropDown remains expanded)', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
@@ -1164,7 +1164,7 @@ describe('igxOverlay', () => {
         }));
 
         // 1.2.2 Connected strategy position method
-        it('Connected strategy position method. Position component based on Point only', () => {
+        xit('Connected strategy position method. Position component based on Point only', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             // for a Point(300,300);
@@ -1205,7 +1205,7 @@ describe('igxOverlay', () => {
             }
         });
 
-        it('Connected strategy position method. Position component based on Element', () => {
+        xit('Connected strategy position method. Position component based on Element', () => {
             const fixture = TestBed.createComponent(TopLeftOffsetComponent);
             fixture.detectChanges();
             // for a Point(300,300);
@@ -1335,7 +1335,7 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT', () => {
+        xit('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT', () => {
             // WIP
             const fix = TestBed.createComponent(DownRightButtonComponent);
             fix.detectChanges();
@@ -1366,7 +1366,7 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + LEFT', () => {
+        xit('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + LEFT', () => {
             const fix = TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -1411,7 +1411,7 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + RIGHT', () => {
+        xit('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + RIGHT', () => {
             const fix = TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -1455,7 +1455,7 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + LEFT', () => {
+        xit('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + LEFT', () => {
             const fix = TestBed.overrideComponent(DownRightButtonComponent, {
                 set: {
                     styles: [`button {
@@ -1558,7 +1558,7 @@ describe('igxOverlay', () => {
 
         // When adding more than one component to show in igx-overlay and the options used will not fit the component in the
         // window, so AutoPosition is used.
-        it('adding a new instance of the component with the same options, will render it on top of the previous one.', () => {
+        xit('adding a new instance of the component with the same options, will render it on top of the previous one.', () => {
             const fix = TestBed.createComponent(EmptyPageComponent);
             fix.detectChanges();
             const offset = 16;
@@ -1604,7 +1604,7 @@ describe('igxOverlay', () => {
 
         // 2. Scroll Strategy
         // 2.1. Scroll Strategy - None
-        fit('The component do not scroll with the window. No scrolling happens.', fakeAsync(() => {
+        it('The component do not scroll with the window. No scrolling happens.', fakeAsync(() => {
             // In progress
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
