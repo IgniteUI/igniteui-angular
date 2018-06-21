@@ -164,7 +164,12 @@ export class IgxGridAPIService {
                 currentValue: cellObj.value, newValue: editValue };
             this.get(id).onEditDone.emit(args);
             const column =  this.get(id).columnList.toArray()[columnID];
-            this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
+            if (this.get(id).primaryKey) {
+                const index =  this.get(id).data.map((record) => record[this.get(id).primaryKey]).indexOf(rowSelector);
+                this.get(id).data[index][column.field] = args.newValue;
+            } else {
+                this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
+            }
             this.get(id).refreshSearch();
         }
     }
