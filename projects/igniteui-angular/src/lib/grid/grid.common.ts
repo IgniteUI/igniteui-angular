@@ -448,7 +448,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
         this.cms.icon.innerText = 'block';
 
-        if (this._dropIndicator && this.cms.column !== this.column) {
+        if (this._dropIndicator) {
             this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
 
             const args = {
