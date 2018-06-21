@@ -2120,6 +2120,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
         columnExpr.dir = 3 - columnExpr.dir;
         this.sort(columnExpr);
+        this.markForCheck();
     }
 
     public onChipKeyDown(event) {
@@ -2128,6 +2129,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
             columnExpr.dir = 3 - columnExpr.dir;
             this.sort(columnExpr);
+            this.markForCheck();
         }
     }
 }

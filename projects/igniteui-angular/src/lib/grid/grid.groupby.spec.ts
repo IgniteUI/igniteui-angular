@@ -1351,11 +1351,12 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        simulateMouseEvent('click', chips[0].querySelector('span.igx-chip__label'), 0, 0);
-        fix.detectChanges();
+        const event = {owner: {id: "ProductName"}};
+        grid.onChipClicked(event);
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe("arrow_upward");
     });
 
     it('should change grouping direction when sorting changes direction', () => {
