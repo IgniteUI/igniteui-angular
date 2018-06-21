@@ -74,11 +74,24 @@ export class IgxCardFooterDirective {
     templateUrl: 'card.component.html'
 })
 export class IgxCardComponent {
+    /**
+     * Sets/gets the `id` of the card.
+     * If not set, `id` will have value `"igx-card-0"`;
+     * ```html
+     * <igx-card id = "my-first-card"></igx-card>
+     * ```
+     * ```typescript
+     * let cardId =  this.card.id;
+     * ```
+     * @memberof IgxCardComponent
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-card-${NEXT_ID++}`;
 }
-
+/**
+ * The `IgxCardModule` provides the {@link IgxCardComponent} inside your application.
+ */
 @NgModule({
     declarations: [IgxCardComponent, IgxCardHeaderDirective,
         IgxCardContentDirective, IgxCardActionsDirective, IgxCardFooterDirective],
