@@ -17,6 +17,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChipsSampleComponent} from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
@@ -54,6 +55,7 @@ import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 
@@ -65,6 +67,7 @@ const components = [
     CalendarSampleComponent,
     CardSampleComponent,
     CarouselSampleComponent,
+    ChipsSampleComponent,
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
@@ -95,6 +98,7 @@ const components = [
     GridColumnMovingSampleComponent,
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
+    GridGroupBySampleComponent,
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
