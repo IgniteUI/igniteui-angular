@@ -48,7 +48,7 @@ export class GridColumnGroupsSampleComponent {
         const missing = this.grid.getColumnByName('Missing');
         missing.pinned = !missing.pinned;
         // this.grid.columnList.filter(c => c.columnGroup).forEach(g => console.log(g, g.allChildren));
-        console.log(this.grid.pinnedColumns);
+        // console.log(this.grid.pinnedColumns);
     }
 
     hideGroup() {

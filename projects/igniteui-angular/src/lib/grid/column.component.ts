@@ -24,7 +24,7 @@ import {
     IgxCellTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
-import { IFilteringOperation, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+import { IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../../public_api';
 /**
  * **Ignite UI for Angular Column** -
@@ -134,9 +134,6 @@ export class IgxColumnComponent implements AfterContentInit {
 
     @Input()
     public formatter: (value: any) => any;
-
-    @Input()
-    public filteringCondition: IFilteringOperation;
 
     @Input()
     public filteringIgnoreCase = true;
@@ -537,5 +534,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
 
 function flatten(arr: any[]) {
-    return arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : arr.concat(val), []);
+
+    let result = [];
+
+    arr.forEach(el => {
+        result.push(el);
+        if (el.children) {
+            result = result.concat(flatten(el.children.toArray()));
+        }
+    });
+    return result;
 }

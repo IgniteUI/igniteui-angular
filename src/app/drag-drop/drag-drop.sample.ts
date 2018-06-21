@@ -7,9 +7,9 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 })
 export class DragDropSampleComponent {
 
-    draggingElem = false;
-    dragEnteredArea = false;
-    draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
+    public draggingElem = false;
+    public dragEnteredArea = false;
+    public draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
 
     constructor(private cdr: ChangeDetectorRef) {
     }

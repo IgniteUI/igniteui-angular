@@ -1,14 +1,11 @@
-import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentFactory,
     ComponentFactoryResolver,
-    ComponentRef,
-    ContentChild,
     ContentChildren,
     ElementRef,
     EventEmitter,
@@ -34,25 +31,22 @@ import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IForOfState } from '../directives/for-of/IForOfState';
-import { IActiveHighlightInfo, IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter } from '../services/index';
+import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
-import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridRowComponent } from './row.component';
-import { IFilteringOperation } from '../../public_api';
+import { IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
-const DEFAULT_SUMMARY_HEIGHT = 36.36;
 const MINIMUM_COLUMN_WIDTH = 136;
 
 export interface IGridCellEventArgs {
@@ -104,7 +98,7 @@ export interface ISearchInfo {
 export interface IGridToolbarExportEventArgs {
     grid: IgxGridComponent;
     exporter: IgxBaseExporter;
-    type: string;
+    options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
@@ -158,16 +152,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public id = `igx-grid-${NEXT_ID++}`;
 
     @Input()
-    public filteringLogic = FilteringLogic.And;
-
-    @Input()
-    get filteringExpressions() {
-        return this._filteringExpressions;
+    public get filteringLogic() {
+        return this._filteringExpressionsTree.operator;
     }
 
-    set filteringExpressions(value) {
-        this._filteringExpressions = cloneArray(value);
-        this.cdr.markForCheck();
+    public set filteringLogic(value: FilteringLogic) {
+        this._filteringExpressionsTree.operator = value;
+    }
+
+    @Input()
+    get filteringExpressionsTree() {
+        return this._filteringExpressionsTree;
+    }
+
+    set filteringExpressionsTree(value) {
+        if (value) {
+            this._filteringExpressionsTree = value;
+            this.clearSummaryCache();
+            this._pipeTrigger++;
+            this.cdr.markForCheck();
+        }
     }
 
     get filteredData() {
@@ -195,7 +199,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set paging(value: boolean) {
         this._paging = value;
         this._pipeTrigger++;
-        this.cdr.markForCheck();
+
+        if (this._ngAfterViewInitPaassed) {
+            this.cdr.detectChanges();
+            this.calculateGridHeight();
+            this.cdr.detectChanges();
+        }
     }
 
     @Input()
@@ -244,7 +253,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public paginationTemplate: TemplateRef<any>;
 
     @Input()
-
     get columnHiding() {
         return this._columnHiding;
     }
@@ -376,7 +384,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onSortingDone = new EventEmitter<ISortingExpression>();
 
     @Output()
-    public onFilteringDone = new EventEmitter<IFilteringExpression>();
+    public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
 
     @Output()
     public onPagingDone = new EventEmitter<IPageEventArgs>();
@@ -450,12 +458,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('tfoot')
     public tfoot: ElementRef;
 
-    @ViewChild('columnHidingUI')
-    public columnHidingUI: IgxColumnHidingComponent;
-
     @ViewChild('summaries')
     public summaries: ElementRef;
-
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -532,7 +536,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /* Toolbar related definitions */
-
     private _showToolbar = false;
     private _exportExcel = false;
     private _exportCsv = false;
@@ -662,8 +665,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calcRowCheckboxWidth: number;
     public calcHeight: number;
     public summariesHeight: number;
-
-    public cellInEditMode: IgxGridCellComponent;
     public isColumnMoving: boolean;
     public isColumnResizing: boolean;
 
@@ -688,8 +689,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _columns: IgxColumnComponent[] = [];
     protected _pinnedColumns: IgxColumnComponent[] = [];
     protected _unpinnedColumns: IgxColumnComponent[] = [];
-    protected _filteringLogic = FilteringLogic.And;
-    protected _filteringExpressions = [];
+    protected _filteringExpressionsTree: IFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
     protected _sortingExpressions = [];
     protected _maxLevelHeaderDepth = null;
     protected _columnHiding = false;
@@ -732,7 +732,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
-        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => { this.clearSummaryCache(editCell); });
+        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
     }
 
     public ngAfterContentInit() {
@@ -791,7 +791,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
         this.destroy$.next(true);
         this.destroy$.complete();
-        this.gridAPI.unsubscribe(this);
+        this.gridAPI.unset(this.id);
     }
 
     public dataLoading(event) {
@@ -804,12 +804,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onColumnVisibilityChanged.emit(args);
 
         this.markForCheck();
-    }
-
-    public toggleColumnHidingUI() {
-        if (this.columnHidingUI && this.columnHidingUI.togglable) {
-            this.columnHidingUI.toggleDropDown();
-        }
     }
 
     get nativeElement() {
@@ -919,41 +913,79 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return totalWidth;
     }
 
-    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
-        if (column.pinned) {
-            const fromIndex = this._pinnedColumns.indexOf(column);
-
-            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
-                this._unpinnedColumns.indexOf(dropTarget);
-
-            this._pinnedColumns.splice(fromIndex, 1);
-
-            if (dropTarget.pinned) {
-                column.pinned = true;
-                // this._pinnedColumns.splice(toIndex, 0, column);
-            } else {
-                column.pinned = false;
-                // this._unpinnedColumns.splice(toIndex + 1, 0, column);
-            }
-        } else {
-            const fromIndex = this._unpinnedColumns.indexOf(column);
-
-            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
-                this._unpinnedColumns.indexOf(dropTarget);
-
-            this._unpinnedColumns.splice(fromIndex, 1);
-
-            if (dropTarget.pinned) {
-                column.pinned = true;
-                this._pinnedColumns.splice(toIndex, 0, column);
-            } else {
-                column.pinned = false;
-                this._unpinnedColumns.splice(toIndex, 0, column);
-            }
-        }
-
-        this.columnList.reset(this._pinnedColumns.concat(this._unpinnedColumns));
+    protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent) {
+        const list = this.columnList.toArray();
+        const fi = list.indexOf(from);
+        const ti = list.indexOf(to);
+        list.splice(ti, 0, ...list.splice(fi, 1));
+        const newList = this._regenerateColumns(list);
+        this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
+    }
+
+    protected _regenerateColumns(list?) {
+        if (!list) {
+            list = this.columnList.toArray();
+        }
+        let newList = [];
+        list.filter(c => c.level === 0).forEach(p => {
+            newList.push(p);
+            if (p.columnGroup) {
+                newList = newList.concat(p.allChildren);
+            }
+        });
+        return newList;
+    }
+
+    protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent) {
+        const buffer = parent.children.toArray();
+        const fi = buffer.indexOf(from);
+        const ti = buffer.indexOf(to);
+        buffer.splice(ti, 0, ...buffer.splice(fi, 1));
+        parent.children.reset(buffer);
+    }
+
+    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+
+        if (column.level) {
+            this._moveChildColumns(column.parent, column, dropTarget);
+        }
+        this._moveColumns(column, dropTarget);
+
+        // if (column.pinned) {
+        //     const fromIndex = this._pinnedColumns.indexOf(column);
+
+        //     const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+        //         this._unpinnedColumns.indexOf(dropTarget);
+
+        //     this._pinnedColumns.splice(fromIndex, 1);
+
+        //     if (dropTarget.pinned) {
+        //         column.pinned = true;
+        //         // this._pinnedColumns.splice(toIndex, 0, column);
+        //     } else {
+        //         column.pinned = false;
+        //         // this._unpinnedColumns.splice(toIndex + 1, 0, column);
+        //     }
+        // } else {
+        //     const fromIndex = this._unpinnedColumns.indexOf(column);
+
+        //     const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
+        //         this._unpinnedColumns.indexOf(dropTarget);
+
+        //     this._unpinnedColumns.splice(fromIndex, 1);
+
+        //     if (dropTarget.pinned) {
+        //         column.pinned = true;
+        //         this._pinnedColumns.splice(toIndex, 0, column);
+        //     } else {
+        //         column.pinned = false;
+        //         this._unpinnedColumns.splice(toIndex, 0, column);
+        //     }
+        // }
+
+        // this.columnList.reset(this._pinnedColumns.concat(this._unpinnedColumns));
+        // this.columnList.notifyOnChanges();
     }
 
     public nextPage(): void {
@@ -1008,11 +1040,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateCell(value: any, rowSelector: any, column: string): void {
-        const cell = this.gridAPI.get_cell_by_field(this.id, rowSelector, column);
-        if (cell) {
-            cell.update(value);
-            this.cdr.detectChanges();
+        const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
+        if (columnEdit.length > 0) {
+            const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
+            this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
             this._pipeTrigger++;
+            this.cdr.detectChanges();
         }
     }
 
@@ -1029,6 +1062,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public sort(...rest): void {
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+        }
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
@@ -1036,11 +1073,25 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public filter(...rest): void {
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._filterMultiple(rest[0]);
+    public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase?: boolean) {
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+        }
+        const col = this.gridAPI.get_column_by_name(this.id, name);
+        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+
+        if (conditionOrExpressionTree) {
+            this.gridAPI.filter(this.id, name, value, conditionOrExpressionTree, filteringIgnoreCase);
         } else {
-            this._filter(rest[0], rest[1], rest[2], rest[3]);
+            const expressionsTreeForColumn = this._filteringExpressionsTree.find(name);
+            if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
+                this.gridAPI.filter(this.id, name, value, expressionsTreeForColumn, filteringIgnoreCase);
+            } else {
+                const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
+                this.gridAPI.filter(this.id, name, value, expressionForColumn.condition, filteringIgnoreCase);
+            }
         }
     }
 
@@ -1073,18 +1124,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public clearFilter(name?: string) {
-
-        if (!name) {
-            this.filteringExpressions = [];
-            this.filteredData = null;
-            return;
+        if (name) {
+            const column = this.gridAPI.get_column_by_name(this.id, name);
+            if (!column) {
+                return;
+            }
         }
 
-        const column = this.gridAPI.get_column_by_name(this.id, name);
-        if (!column) {
-            return;
-        }
-        this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
     }
 
@@ -1190,7 +1236,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get hasMovableColumns(): boolean {
-        return this.columnList.some((col) => col.movable);
+        return this.columnList && this.columnList.some((col) => col.movable);
     }
 
     get hasColumnGroups(): boolean {
@@ -1392,21 +1438,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.sort_multiple(this.id, expressions);
     }
 
-    protected _filter(name: string, value: any, condition?: IFilteringOperation, ignoreCase?: boolean) {
-        const col = this.gridAPI.get_column_by_name(this.id, name);
-        if (col) {
-            this.gridAPI
-                .filter(this.id, name, value,
-                    condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
-        } else {
-            this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
-        }
-    }
-
-    protected _filterMultiple(expressions: IFilteringExpression[]) {
-        this.gridAPI.filter_multiple(this.id, expressions);
-    }
-
     protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
         const column = this.gridAPI.get_column_by_name(this.id, fieldName);
         column.hasSummary = hasSummary;
@@ -1459,9 +1490,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         // XXX: Deprecate index
 
-        collection.forEach((column: IgxColumnComponent, index: number) => {
+        collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
-            // column.index = index;
             if (!column.width) {
                 column.width = this.columnWidth;
             }
@@ -1495,9 +1525,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             delay(DEBOUNCE_TIME),
             repeat()
         ).subscribe(() => {
-            if (this.cellInEditMode) {
-                this.cellInEditMode.inEditMode = false;
-            }
             this.eventBus.next();
         });
     }
@@ -1517,7 +1544,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get headerCheckboxAriaLabel() {
-        return this._filteringExpressions.length > 0 ?
+        return this._filteringExpressionsTree.filteringOperands.length > 0 ?
             this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all filtered' : 'Select all filtered' :
             this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all' : 'Select all';
     }
@@ -1639,11 +1666,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowList) {
             return 0;
         }
-
-        if (this.cellInEditMode) {
-            this.cellInEditMode.inEditMode = false;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editableCell) {
+            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
         }
-
         if (!text) {
             this.clearSearch();
             return 0;

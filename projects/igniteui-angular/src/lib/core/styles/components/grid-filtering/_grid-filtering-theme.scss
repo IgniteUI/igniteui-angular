@@ -124,7 +124,7 @@
     $filtering-menu-distance-to-toggle: 24px;
 
     %igx-filtering-display {
-        position: static;
+        position: relative;
     }
 
     %igx-filtering-icon {
@@ -191,22 +191,8 @@
         padding: $grid-filtering-options-padding;
         z-index: 10;
 
-        @include igx-button(igx-button-theme(
-            $flat-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-hover-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-hover-background: --var($theme, 'menu-button-text-color'),
-            $flat-focus-text-color: --var($theme, 'menu-button-text-color'),
-            $flat-focus-background: --var($theme, 'menu-button-text-color'),
-            $disabled-color: --var($theme, 'menu-button-disabled-text-color'),
-            $disabled-background: transparent
-        ));
-
-        // TODO: remove after SELECT theme is created
-        select {
-            width: 100%;
-            color: igx-color($palette, 'grays', 900);
-            outline-style: none;
-            border-radius: 4px;
+        .igx-button-group {
+            margin: 24px 0;
         }
     }
 
@@ -221,6 +207,15 @@
     %igx-filtering-menu-buttons {
         display: flex;
         justify-content: flex-end;
+        margin-top: 12px;
+
+        [igxButton] {
+            color: --var($theme, 'menu-button-text-color');
+
+            &:disabled {
+                color: --var($theme, 'menu-button-text-color');
+            }
+        }
 
         [igxbutton] + [igxbutton] {
             margin-left: 8px;
@@ -233,7 +228,20 @@
         }
     }
 
-    %igx-filtering-op {
-        margin: 24px 0 12px;
+    %igx-filtering-expression {
+        igx-input-group {
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            color: igx-color($palette, 'grays', 900);
+            outline-style: none;
+            border-radius: 4px;
+        }
+
+        select + igx-input-group {
+            margin-top: 12px;
+        }
     }
 }
