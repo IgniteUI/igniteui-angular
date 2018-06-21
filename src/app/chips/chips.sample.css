@@ -1,0 +1,9 @@
+.sample-holder {
+    padding: 30px;
+    border: 1px dotted #ddd;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
