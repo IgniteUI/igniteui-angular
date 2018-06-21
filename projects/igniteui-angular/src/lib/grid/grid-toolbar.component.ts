@@ -19,6 +19,7 @@ import { IGridBus } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
+import { IgxColumnPinningComponent } from './column-pinning.component';
 
 @Component({
     selector: 'igx-grid-toolbar',
@@ -39,6 +40,12 @@ export class IgxGridToolbarComponent implements IGridBus {
     @ViewChild(IgxColumnHidingComponent)
     public columnHidingUI: IgxColumnHidingComponent;
 
+    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent })
+    public columnPinningDropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxColumnPinningComponent)
+    public columnPinningUI: IgxColumnPinningComponent;
+
     public get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
@@ -53,6 +60,10 @@ export class IgxGridToolbarComponent implements IGridBus {
 
     public get shouldShowExportCsvButton(): boolean {
         return (this.grid != null && this.grid.exportCsv);
+    }
+
+    public get pinnedColumnsCount() {
+        return this.grid.pinnedColumns.length;
     }
 
     constructor(public gridAPI: IgxGridAPIService,
@@ -108,5 +119,9 @@ export class IgxGridToolbarComponent implements IGridBus {
 
     public toggleColumnHidingUI() {
         this.columnHidingDropdown.toggle();
+    }
+
+    public toggleColumnPinningUI() {
+        this.columnPinningDropdown.toggle();
     }
 }

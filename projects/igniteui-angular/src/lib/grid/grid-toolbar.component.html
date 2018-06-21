@@ -3,9 +3,8 @@
 </span>
 
 <div class="igx-grid-toolbar__actions">
-
     <div *ngIf="grid.columnHiding">
-        <button igxButton="flat" name="btnColumnChooser" igxButton igxRipple
+        <button igxButton="flat" name="btnColumnHidingUI" igxButton igxRipple
             (click)="columnHidingDropdown.toggle()">
             <div  class="igx-grid-toolbar__button-space">
                 <igx-icon *ngIf="grid.hiddenColumnsCount > 0">visibility_off</igx-icon>
@@ -18,6 +17,21 @@
             <igx-column-hiding [columns]="grid.columnList" [title]="grid.columnHidingTitle"
                 (onColumnVisibilityChanged)="grid.toggleColumnVisibility($event)">
             </igx-column-hiding>
+        </igx-drop-down>
+    </div>
+    <div>
+        <button igxButton="flat" name="btnColumnPinningUI" igxButton igxRipple
+            (click)="columnPinningDropdown.toggle()">
+            <div  class="igx-grid-toolbar__button-space">
+                <!-- <igx-icon fontSet="fas" iconName="fa-thumbtack"></igx-icon> -->
+                <igx-icon *ngIf="pinnedColumnsCount > 0">lock</igx-icon>
+                <igx-icon *ngIf="pinnedColumnsCount === 0">lock_open</igx-icon>
+                <span>{{ pinnedColumnsCount }}</span>
+                <span></span>
+            </div>
+        </button>
+        <igx-drop-down #columnPinningDropdown>
+            <igx-column-pinning [columns]="grid.columnList" title="Column Pinning"></igx-column-pinning>
         </igx-drop-down>
     </div>
 

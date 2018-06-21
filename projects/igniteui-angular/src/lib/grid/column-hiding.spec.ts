@@ -6,12 +6,13 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { Calendar } from '../calendar';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { ColumnDisplayOrder, IgxColumnHidingComponent, IgxColumnHidingModule } from './column-hiding.component';
+import { IgxColumnHidingComponent, IgxColumnHidingModule } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownComponent, IgxDropDownModule } from '../../public_api';
+import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
+import { ColumnDisplayOrder } from './column-chooser-base';
 
 describe('Column Hiding UI', () => {
     let fix;

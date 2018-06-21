@@ -427,7 +427,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         fixture.detectChanges();
         expect(grid.toolbar.columnHidingUI).toBeUndefined();
 
-        const button = fixture.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
+        const button = getButton('btnColumnHidingUI', fixture);
         expect(button).toBeUndefined();
     });
 
@@ -439,10 +439,32 @@ describe('IgxGrid - Grid Toolbar', () => {
         fixture.detectChanges();
         expect(grid.toolbar.columnHidingUI).toBeDefined();
 
-        const button = fixture.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
+        const button = getButton('btnColumnHidingUI', fixture);
         expect(button).toBeDefined();
         const btnText = button.nativeElement.innerText.toLowerCase();
         expect(btnText.includes('0') && btnText.includes('visibility') && !btnText.includes('visibility_off')).toBe(true);
+    });
+
+    it('shows the proper icon depending whether there is a hidden column or not.', () => {
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        const grid = fixture.componentInstance.grid1;
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        fixture.detectChanges();
+
+        grid.columns[0].hidden = true;
+        fixture.detectChanges();
+
+        const button = getButton('btnColumnHidingUI', fixture);
+        expect(button).toBeDefined();
+        let btnText = button.nativeElement.innerText.toLowerCase();
+        expect(btnText.includes('1') && btnText.includes('visibility_off')).toBe(true);
+
+        grid.columns[0].hidden = false;
+        fixture.detectChanges();
+        btnText = button.nativeElement.innerText.toLowerCase();
+        expect(btnText.includes('0') && btnText.includes('visibility') && !btnText.includes('visibility_off')).toBe(true);
+
     });
 
     it('toggleColumnHidingUI() method opens and closes the ColumnHiding dropdown.', () => {
@@ -458,7 +480,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(JSON.stringify(dropDownDiv.classes)).toBe('{"igx-toggle--hidden":true,"igx-toggle":false}');
         expect(dropDownDiv.query(By.css('igx-column-hiding'))).toBe(null);
 
-        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser').nativeElement;
+        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHidingUI').nativeElement;
         grid.toolbar.toggleColumnHidingUI();
         // button.click();
 
@@ -469,6 +491,59 @@ describe('IgxGrid - Grid Toolbar', () => {
         // expect(dropDownDiv.query(By.css('igx-column-hiding'))).toBe(null);
         // expect(JSON.stringify(dropDownDiv.classes)).toBe('{"igx-toggle--hidden":true,"igx-toggle":false}');
     });
+
+    it('does not show Column Pinning button by default.', () => {
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        const grid = fixture.componentInstance.grid1;
+        grid.showToolbar = true;
+        fixture.detectChanges();
+        expect(grid.toolbar.columnPinningUI).toBeUndefined();
+
+        const button = getButton('btnColumnPinningUI', fixture);
+        expect(button).toBeUndefined();
+    });
+
+    it('shows Column Pinning button with default content when columnPinning=true.', () => {
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        const grid = fixture.componentInstance.grid1;
+        grid.showToolbar = true;
+        fixture.detectChanges();
+        expect(grid.toolbar.columnPinningUI).toBeDefined();
+
+        const button = getButton('btnColumnPinningUI', fixture);
+        expect(button).toBeDefined();
+        const btnText = button.nativeElement.innerText.toLowerCase();
+        expect(btnText.includes('0') && btnText.includes('lock_open')).toBe(true);
+    });
+
+    it('toggleColumnPinningUI() method opens and closes the ColumnPinning dropdown.', () => {
+        const fix = TestBed.createComponent(GridToolbarTestPage1Component);
+        const grid = fix.componentInstance.grid1;
+        grid.showToolbar = true;
+        fix.detectChanges();
+
+        const dropdown = fix.debugElement.query(By.css('igx-drop-down'));
+        const dropDownDiv = dropdown.query(By.css('div.igx-drop-down__list'));
+
+        expect(JSON.stringify(dropDownDiv.classes)).toBe('{"igx-toggle--hidden":true,"igx-toggle":false}');
+        expect(dropDownDiv.query(By.css('igx-column-pinning'))).toBe(null);
+
+        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnPinningUI').nativeElement;
+        grid.toolbar.toggleColumnPinningUI();
+        // button.click();
+
+        expect(JSON.stringify(dropDownDiv.classes)).toBe('{"igx-toggle--hidden":false,"igx-toggle":true}');
+        expect(dropDownDiv.query(By.css('igx-column-pinning'))).not.toBe(null);
+        grid.toolbar.columnPinningDropdown.close();
+        // grid.toolbar.toggleColumnPinningUI();
+        // expect(dropDownDiv.query(By.css('igx-column-pinning'))).toBe(null);
+        // expect(JSON.stringify(dropDownDiv.classes)).toBe('{"igx-toggle--hidden":true,"igx-toggle":false}');
+    });
+
+    function getButton(name, fixture) {
+        const button = fixture.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === name);
+        return button;
+    }
 });
 
 @Component({
