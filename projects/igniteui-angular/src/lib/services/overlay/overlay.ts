@@ -142,8 +142,9 @@ export class IgxOverlayService {
     }
 
     hideAll() {
-        while (this._overlays.length > 0) {
-            this.hide(this._overlays[this._overlays.length - 1].id);
+        // since overlays are removed on animation done, que all hides
+        for (let i = this._overlays.length; i--;) {
+            this.hide( this._overlays[i].id);
         }
     }
 
