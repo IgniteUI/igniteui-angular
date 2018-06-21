@@ -15,7 +15,9 @@ import {
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { OverlaySettings } from '../../services';
+import { OverlaySettings, OverlayEventArgs } from '../../services';
+import { filter, take } from 'rxjs/operators';
+import { Subscription, OperatorFunction } from 'rxjs';
 
 @Directive({
     exportAs: 'toggle',
@@ -23,6 +25,11 @@ import { OverlaySettings } from '../../services';
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayId: string;
+    private _overlaySubFilter: OperatorFunction<OverlayEventArgs, OverlayEventArgs>[] = [
+        filter(x => x.id === this._overlayId),
+        take(1)
+    ];
+    private _overlayClosedSub: Subscription;
 
     @Output()
     public onOpened = new EventEmitter();
@@ -61,7 +68,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         private cdr: ChangeDetectorRef,
         @Inject(IgxOverlayService) private overlayService: IgxOverlayService,
         @Optional() private navigationService: IgxNavigationService) {
-        this.overlayService.onClosed.subscribe(this.overlayClosed);
     }
 
     public open(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
@@ -74,8 +80,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.collapsed = false;
 
         this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
+        this._overlayClosedSub = this.overlayService.onClosed
+            .pipe(...this._overlaySubFilter)
+            .subscribe(this.overlayClosed);
+
         if (fireEvents) {
-            this.onOpened.emit();
+            this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+                this.onOpened.emit();
+            });
         }
     }
 
@@ -88,12 +100,19 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
         if (this._overlayId !== undefined) {
             this.overlayService.hide(this._overlayId);
+            if (!fireEvents) {
+                // cancel onClosed sub
+                this._overlayClosedSub.unsubscribe();
+                this.overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
+                    this.collapsed = true;
+                });
+            }
         } else {
+            // opened though @Input, TODO
             this.collapsed = true;
-        }
-
-        if (fireEvents) {
-            this.onClosed.emit();
+            if (fireEvents) {
+                this.onClosed.emit();
+            }
         }
     }
 
@@ -111,13 +130,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (this.navigationService && this.id) {
             this.navigationService.remove(this.id);
         }
-        if (!this.collapsed) {
+        if (!this.collapsed && this._overlayId) {
             this.overlayService.hide(this._overlayId);
         }
     }
 
     private overlayClosed = () => {
         this.collapsed = true;
+        this.onClosed.emit();
     }
 }
 
