@@ -7,6 +7,8 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { IgxStringFilteringOperand } from '../../public_api';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 describe('IgxGrid - Cell component', () => {
 
@@ -100,7 +102,9 @@ describe('IgxGrid - Cell component', () => {
                 CtrlKeyKeyboardNagivationComponent,
                 VirtualGridComponent,
                 GridWithEditableColumnComponent,
-                NoColumnWidthGridComponent
+                NoColumnWidthGridComponent,
+                CellEditingTestComponent,
+                CellEditingScrollTestComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -276,6 +280,281 @@ describe('IgxGrid - Cell component', () => {
             expect(cell.inEditMode).toBe(false);
         });
     }));
+    it('edit template should be accourding column data type --number', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'age');
+        const cellDomNumber = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        let editTemplate;
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+
+            expect(cell.inEditMode).toBe(true);
+            editTemplate = cellDomNumber.query(By.css('input[type=\'number\']'));
+            expect(editTemplate).toBeDefined();
+
+            sendInput(editTemplate, 0.3698, fixture);
+            cellDomNumber.triggerEventHandler('keydown.enter', null);
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(parseFloat(cell.value)).toBe(0.3698);
+            expect(editTemplate.nativeElement.type).toBe('number');
+        });
+    }));
+    it('edit numeric column should validate input data', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'age');
+        const cellDomNumber = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        let editTemplate;
+        const expectedValue = 0;
+        let editValue = 'some696';
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editTemplate = cellDomNumber.query(By.css('input[type=\'number\']'));
+            sendInput(editTemplate, editValue, fixture);
+            cellDomNumber.triggerEventHandler('keydown.enter', null);
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(parseFloat(cell.value)).toBe(expectedValue);
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editValue = '';
+            sendInput(editTemplate, editValue, fixture);
+            cellDomNumber.triggerEventHandler('keydown.enter', null);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(parseFloat(cell.value)).toBe(expectedValue);
+        });
+
+    }));
+    it('edit template should be accourding column data type --boolean', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'isActive');
+        const cellDomBoolean = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
+        let editTemplate;
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDomBoolean.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+
+            expect(cell.inEditMode).toBe(true);
+            editTemplate = cellDomBoolean.query(By.css('.igx-checkbox')).query(By.css('.igx-checkbox__label'));
+            expect(editTemplate).toBeDefined();
+            expect(cell.value).toBe(true);
+            editTemplate.nativeElement.click();
+            fixture.detectChanges();
+            cellDomBoolean.triggerEventHandler('keydown.enter', null);
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(cell.value).toBe(false);
+        });
+    }));
+
+    it('edit template should be accourding column data type --date', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'birthday');
+        const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
+        const selectedDate = new Date('04/12/2017');
+        let datePicker;
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDomDate.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(true);
+            datePicker = cellDomDate.query(By.css('igx-datepicker')).componentInstance;
+            expect(datePicker).toBeDefined();
+
+            datePicker.selectDate(selectedDate);
+
+            fixture.detectChanges();
+            expect(datePicker.value).toBe(selectedDate);
+        }).then(() => {
+            cellDomDate.triggerEventHandler('keydown.enter', null);
+            fixture.detectChanges();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(cell.value).toBe(selectedDate);
+        });
+    }));
+
+    it('edit mode - leaves cell in edit mode on scroll', async(() => {
+        const fixture = TestBed.createComponent(CellEditingScrollTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'firstName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        const editableCellId = cell.cellID;
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            const editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
+            expect(editableCellId.columnID).toBe(editCellID.columnID);
+            expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
+            expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
+            fixture.componentInstance.scrollTop(1000);
+            return fixture.whenStable();
+        }).then(() => {
+            setTimeout(() => {
+                fixture.detectChanges();
+                fixture.componentInstance.scrollLeft(400);
+                setTimeout(() => {
+                    fixture.detectChanges();
+                    const editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
+                    expect(editableCellId.columnID).toBe(editCellID.columnID);
+                    expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
+                    expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
+                }, 100);
+            }, 100);
+        });
+    }));
+
+    it('edit mode - leaves cell in edit mode on pinning', async(() => {
+        const fixture = TestBed.createComponent(CellEditingScrollTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'firstName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
+            grid.pinColumn('firstName');
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
+            expect(grid.pinnedColumns.length).toBe(1);
+            grid.unpinColumn('firstName');
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
+            expect(grid.pinnedColumns.length).toBe(0);
+            cellDom.triggerEventHandler('keydown.enter', null);
+            fixture.detectChanges();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+        });
+    }));
+
+    it('edit mode - exit on filtering', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'fullName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        const cellValue = cell.value;
+        let editTemplate;
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editTemplate = cellDom.query(By.css('input'));
+            expect(cell.inEditMode).toBe(true);
+            sendInput(editTemplate, 'Rick Gilmore', fixture);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            cell.gridAPI.clear_filter(cell.gridID, 'fullName');
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(cell.value).toBe(cellValue);
+        });
+    }));
+
+    it('edit mode - exit on sorting', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'fullName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        let editTemplate;
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editTemplate = cellDom.query(By.css('input'));
+            expect(cell.inEditMode).toBe(true);
+            sendInput(editTemplate, 'Rick Gilmore', fixture);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            grid.sort('age', SortingDirection.Desc);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
+        });
+    }));
+
+    function sendInput(element, text, fix) {
+        element.nativeElement.value = text;
+        element.nativeElement.dispatchEvent(new Event('input'));
+        fix.detectChanges();
+        return fix.whenStable();
+    }
 
     it('edit mode - leaves edit mode on blur', async(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -1020,4 +1299,61 @@ export class GridWithEditableColumnComponent {
         { FirstName: 'Ben', LastName: 'Affleck', age: 30 },
         { FirstName: 'Tom', LastName: 'Riddle', age: 50 }
     ];
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column [editable]="true" field="fullName"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+        </igx-grid>
+    `
+})
+export class CellEditingTestComponent {
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public data = [
+        { fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { fullName: 'Ben Affleck', age: 30, isActive: false,  birthday: new Date('08/08/1991') },
+        { fullName: 'Tom Riddle', age: 50, isActive: true,  birthday: new Date('08/08/1961') }
+    ];
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" width="300px" height="250px">
+            <igx-column [editable]="true" field="firstName"></igx-column>
+            <igx-column [editable]="true" field="lastName"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+        </igx-grid>
+    `
+})
+export class CellEditingScrollTestComponent {
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public data = [
+        { firstName: 'John', lastName: 'Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { firstName: 'Ben', lastName: 'Hudson', age: 30, isActive: false,  birthday: new Date('08/08/1991') },
+        { firstName: 'Tom', lastName: 'Riddle', age: 50, isActive: true,  birthday: new Date('08/08/1967') },
+        { firstName: 'John', lastName: 'David', age: 27, isActive: true, birthday: new Date('08/08/1990') },
+        { firstName: 'David', lastName: 'Affleck', age: 36, isActive: false,  birthday: new Date('08/08/1982') },
+        { firstName: 'Jimmy', lastName: 'Johnson', age: 57, isActive: true,  birthday: new Date('08/08/1961') },
+        { firstName: 'Martin', lastName: 'Brown', age: 31, isActive: true, birthday: new Date('08/08/1987') },
+        { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false,  birthday: new Date('08/08/1931') },
+        { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true,  birthday: new Date('08/08/1970') }
+    ];
+
+    public scrollTop(newTop: number) {
+        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+    }
+
+    public scrollLeft(newLeft: number) {
+        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+    }
 }
