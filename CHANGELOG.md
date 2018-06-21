@@ -59,6 +59,8 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
+- `igxCell` default editing template is changed acording column data type. For more information you can read the [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Cell-Editing) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_editing.html)
+
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
@@ -78,9 +80,9 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
 ## 6.0.1
 - Introduced migration schematics to integrate with the Angular CLI update command. You can now run
-  
+
   `ng update igniteui-angular`
-  
+
   in existing projects to both update the package and apply any migrations needed to your project. Make sure to commit project state before proceeding.
   Currently these cover converting submodule imports as well as the deprecation of `igxForRemote` and rename of `igx-tab-bar` to `igx-bottom-nav` from 6.0.0.
 - **Breaking changes**:
