@@ -66,10 +66,10 @@ describe('IgxGrid - Cell component', () => {
             }
         };
     const navigateHorizontallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
-            // grid - the grid in which to navigate.
-            // cell - current cell from which the navigation will start.
-            // index - the index to which to navigate
-            // cb - callback function that will be called when index is reached.
+        // grid - the grid in which to navigate.
+        // cell - current cell from which the navigation will start.
+        // index - the index to which to navigate
+        // cb - callback function that will be called when index is reached.
 
             const currIndex = cell.visibleColumnIndex;
             const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
@@ -559,7 +559,7 @@ describe('IgxGrid - Cell component', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            grid.sort('age', SortingDirection.Desc);
+            grid.sort({ fieldName: 'age', dir: SortingDirection.Desc });
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
@@ -611,7 +611,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        const mockEvent = { preventDefault: () => {}};
+        const mockEvent = { preventDefault: () => { } };
 
         let topLeft;
         let topRight;
@@ -735,8 +735,8 @@ describe('IgxGrid - Cell component', () => {
 
             // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
             expect(lastCell.getBoundingClientRect().left +
-                    lastCell.offsetWidth +
-                    verticalScroll.offsetWidth).toEqual(grid.calcWidth);
+                lastCell.offsetWidth +
+                verticalScroll.offsetWidth).toEqual(grid.calcWidth);
         });
     }));
 
@@ -745,7 +745,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
 
         // the 2nd sell on the row with index 1
-        const cell =  fix.debugElement.queryAll(By.css(`${CELL_CSS_CLASS}:nth-child(2)`))[1];
+        const cell = fix.debugElement.queryAll(By.css(`${CELL_CSS_CLASS}:nth-child(2)`))[1];
 
         fix.componentInstance.scrollTop(25);
         fix.whenStable().then(() => {
@@ -848,7 +848,7 @@ describe('IgxGrid - Cell component', () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         const cols = [];
         for (let i = 0; i < 10; i++) {
-            cols.push({field: 'col' + i});
+            cols.push({ field: 'col' + i });
         }
         fix.componentInstance.cols = cols;
         fix.componentInstance.data = fix.componentInstance.generateData(1000);
@@ -871,7 +871,7 @@ describe('IgxGrid - Cell component', () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         const cols = [];
         for (let i = 0; i < 10; i++) {
-            cols.push({field: 'col' + i});
+            cols.push({ field: 'col' + i });
         }
         fix.componentInstance.cols = cols;
         fix.componentInstance.data = fix.componentInstance.generateData(1000);
@@ -1059,7 +1059,7 @@ describe('IgxGrid - Cell component', () => {
         const cellElem = firstCell.nativeElement;
         const component = fix.debugElement.query(By.css('igx-grid'));
 
-        component.triggerEventHandler('keydown.home' , null);
+        component.triggerEventHandler('keydown.home', null);
         fix.detectChanges();
 
         expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
@@ -1137,7 +1137,7 @@ describe('IgxGrid - Cell component', () => {
         });
 
         function triggerKeyDownEvtUponElem(evtName, elem) {
-            const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true};
+            const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true };
             elem.dispatchEvent(new KeyboardEvent('keydown', evtArgs));
             fix.detectChanges();
         }
@@ -1171,8 +1171,8 @@ describe('IgxGrid - Cell component', () => {
 export class DefaultGridComponent {
 
     public data = [
-        { index: 1, value: 1},
-        { index: 2, value: 2}
+        { index: 1, value: 1 },
+        { index: 2, value: 2 }
     ];
 
     public selectedCell: IgxGridCellComponent;
@@ -1206,8 +1206,8 @@ export class DefaultGridComponent {
 export class CtrlKeyKeyboardNagivationComponent {
 
     public data = [
-        { index: 1, value: 1, other: 1, another: 1},
-        { index: 2, value: 2, other: 2, another: 2}
+        { index: 1, value: 1, other: 1, another: 1 },
+        { index: 2, value: 2, other: 2, another: 2 }
     ];
 
     public selectedCell: IgxGridCellComponent;
@@ -1265,7 +1265,7 @@ export class VirtualGridComponent {
 
         for (let i = 0; i < numRows; i++) {
             const obj = {};
-            for (let j = 0; j <  this.cols.length; j++) {
+            for (let j = 0; j < this.cols.length; j++) {
                 const col = this.cols[j].field;
                 obj[col] = 10 * i * j;
             }
@@ -1345,8 +1345,8 @@ export class CellEditingTestComponent {
 
     public data = [
         { fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
-        { fullName: 'Ben Affleck', age: 30, isActive: false,  birthday: new Date('08/08/1991') },
-        { fullName: 'Tom Riddle', age: 50, isActive: true,  birthday: new Date('08/08/1961') }
+        { fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
     ];
 }
 
@@ -1367,14 +1367,14 @@ export class CellEditingScrollTestComponent {
 
     public data = [
         { firstName: 'John', lastName: 'Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
-        { firstName: 'Ben', lastName: 'Hudson', age: 30, isActive: false,  birthday: new Date('08/08/1991') },
-        { firstName: 'Tom', lastName: 'Riddle', age: 50, isActive: true,  birthday: new Date('08/08/1967') },
+        { firstName: 'Ben', lastName: 'Hudson', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { firstName: 'Tom', lastName: 'Riddle', age: 50, isActive: true, birthday: new Date('08/08/1967') },
         { firstName: 'John', lastName: 'David', age: 27, isActive: true, birthday: new Date('08/08/1990') },
-        { firstName: 'David', lastName: 'Affleck', age: 36, isActive: false,  birthday: new Date('08/08/1982') },
-        { firstName: 'Jimmy', lastName: 'Johnson', age: 57, isActive: true,  birthday: new Date('08/08/1961') },
+        { firstName: 'David', lastName: 'Affleck', age: 36, isActive: false, birthday: new Date('08/08/1982') },
+        { firstName: 'Jimmy', lastName: 'Johnson', age: 57, isActive: true, birthday: new Date('08/08/1961') },
         { firstName: 'Martin', lastName: 'Brown', age: 31, isActive: true, birthday: new Date('08/08/1987') },
-        { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false,  birthday: new Date('08/08/1931') },
-        { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true,  birthday: new Date('08/08/1970') }
+        { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false, birthday: new Date('08/08/1931') },
+        { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true, birthday: new Date('08/08/1970') }
     ];
 
     public scrollTop(newTop: number) {

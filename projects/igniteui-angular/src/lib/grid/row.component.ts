@@ -113,7 +113,7 @@ export class IgxGridRowComponent implements DoCheck {
 
     constructor(public gridAPI: IgxGridAPIService,
                 private selectionAPI: IgxSelectionAPIService,
-                private element: ElementRef,
+                public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
 

@@ -106,4 +106,8 @@ export class IgxGridSummaryComponent implements OnInit, DoCheck, AfterContentIni
             return this.gridAPI.get_summaries(this.gridID).get(this.column.field);
         }
     }
+
+    protected get hostClassPrefix() {
+        return 'igx-grid-summary';
+    }
 }
