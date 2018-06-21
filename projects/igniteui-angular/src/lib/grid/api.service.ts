@@ -2,19 +2,20 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
-import { IFilteringOperation } from '../../public_api';
+import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
 
 @Injectable()
 export class IgxGridAPIService {
 
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
+    protected editCellState: Map<string, any> = new Map<string, any>();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     public register(grid: IgxGridComponent) {
@@ -23,6 +24,12 @@ export class IgxGridAPIService {
 
     public get(id: string): IgxGridComponent {
         return this.state.get(id);
+    }
+
+    public unset(id: string) {
+        this.state.delete(id);
+        this.summaryCacheMap.delete(id);
+        this.editCellState.delete(id);
     }
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
@@ -55,6 +62,34 @@ export class IgxGridAPIService {
                 this.summaryCacheMap.get(id).delete(name);
             }
         }
+    }
+
+    public set_cell_inEditMode(gridId: string, cell,  editMode: boolean) {
+        if (!this.editCellState.has(gridId)) {
+            this.editCellState.set(gridId, null);
+        }
+        if (!this.get_cell_inEditMode(gridId) && editMode) {
+            this.editCellState.set(gridId, {cellID: cell.cellID, cell: Object.assign({}, cell)});
+        }
+    }
+
+    public escape_editMode(gridId, cellId) {
+        const editableCell = this.get_cell_inEditMode(gridId);
+        if (editableCell && cellId.rowID === editableCell.cellID.rowID &&
+            cellId.columnID === editableCell.cellID.columnID) {
+            this.editCellState.delete(gridId);
+        }
+    }
+
+
+    public get_cell_inEditMode(gridId) {
+        const editCellId = this.editCellState.get(gridId);
+        if (editCellId) {
+            return editCellId;
+        } else {
+            return null;
+        }
+
     }
 
     public get_row_by_key(id: string, rowSelector: any): IgxGridRowComponent {
@@ -94,9 +129,44 @@ export class IgxGridAPIService {
         }
     }
 
-    public update(id: string, cell: IgxGridCellComponent): void {
-        const index = this.get(id).data.indexOf(cell.row.rowData);
-        this.get(id).data[index][cell.column.field] = cell.value;
+    public submit_value(gridId) {
+        const editableCell = this.get_cell_inEditMode(gridId);
+        if (editableCell) {
+            if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
+                if (!this.get_cell_inEditMode(gridId).cell.editValue) {
+                    this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, 0);
+                } else {
+                    const val = parseFloat(this.get_cell_inEditMode(gridId).cell.editValue);
+                    if (!isNaN(val) || isFinite(val)) {
+                        this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, val);
+                    }
+                }
+            } else {
+                this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, editableCell.cell.editValue);
+            }
+        }
+    }
+
+    public update_cell(id: string, rowSelector, columnID, editValue) {
+        let cellObj;
+        let rowIndex;
+        const row = this.get_row_by_key(id, rowSelector);
+        const editableCell = this.get_cell_inEditMode(id);
+        if (editableCell) {
+            cellObj = editableCell.cell;
+            rowIndex = rowSelector;
+        } else if (row) {
+            rowIndex = row.index;
+            cellObj = this.get(id).columnList.toArray()[columnID].cells[rowIndex];
+        }
+        if (cellObj) {
+            const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
+                currentValue: cellObj.value, newValue: editValue };
+            this.get(id).onEditDone.emit(args);
+            const column =  this.get(id).columnList.toArray()[columnID];
+            this.get(id).data[rowIndex][column.field] = args.newValue;
+            this.get(id).refreshSearch();
+        }
     }
 
     public update_row(value: any, id: string, row: IgxGridRowComponent): void {
@@ -123,49 +193,65 @@ export class IgxGridAPIService {
         this.get(id).sortingExpressions = sortingState;
     }
 
-    public filter(id: string, fieldName: string, term, condition: IFilteringOperation, ignoreCase: boolean) {
-        const filteringState = this.get(id).filteringExpressions;
-        if (this.get(id).paging) {
-            this.get(id).page = 0;
-        }
-        this.prepare_filtering_expression(filteringState, fieldName, term, condition, ignoreCase);
-        this.get(id).filteringExpressions = filteringState;
-    }
-
-    public filter_multiple(id: string, expressions: IFilteringExpression[]) {
-        const filteringState = this.get(id).filteringExpressions;
-        if (this.get(id).paging) {
-            this.get(id).page = 0;
+    public filter(id: string, fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase: boolean) {
+        const grid = this.get(id);
+        const filteringTree = grid.filteringExpressionsTree;
+        if (grid.paging) {
+            grid.page = 0;
         }
 
-        for (const each of expressions) {
-            this.prepare_filtering_expression(filteringState, each.fieldName,
-                                              each.searchVal, each.condition, each.ignoreCase);
+        const fieldFilterIndex = filteringTree.findIndex(fieldName);
+        if (fieldFilterIndex > -1) {
+            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }
-        this.get(id).filteringExpressions = filteringState;
+
+        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase);
+        grid.filteringExpressionsTree = filteringTree;
     }
 
     public filter_global(id, term, condition, ignoreCase) {
-        const filteringState = this.get(id).filteringExpressions;
-        if (this.get(id).paging) {
-            this.get(id).page = 0;
+        const grid = this.get(id);
+        const filteringTree = grid.filteringExpressionsTree;
+        if (grid.paging) {
+            grid.page = 0;
         }
 
-        for (const column of this.get(id).columns) {
-            this.prepare_filtering_expression(filteringState, column.field, term,
-                condition || column.filteringCondition, ignoreCase || column.filteringIgnoreCase);
+        filteringTree.filteringOperands = [];
+        this.remove_summary(id);
+
+        if (condition) {
+            for (const column of grid.columns) {
+                this.prepare_filtering_expression(filteringTree, column.field, term,
+                    condition, ignoreCase || column.filteringIgnoreCase);
+            }
         }
-        this.get(id).filteringExpressions = filteringState;
+
+        grid.filteringExpressionsTree = filteringTree;
     }
 
     public clear_filter(id, fieldName) {
-        const filteringState = this.get(id).filteringExpressions;
-        const index = filteringState.findIndex((expr) => expr.fieldName === fieldName);
-        if (index > -1) {
-            filteringState.splice(index, 1);
-            this.get(id).filteringExpressions = filteringState;
+        if (fieldName) {
+            const column = this.get_column_by_name(id, fieldName);
+            if (!column) {
+                return;
+            }
         }
-        this.get(id).filteredData = null;
+
+        const grid = this.get(id);
+        const filteringState = grid.filteringExpressionsTree;
+        const index = filteringState.findIndex(fieldName);
+
+        if (index > -1) {
+            filteringState.filteringOperands.splice(index, 1);
+            this.remove_summary(id, fieldName);
+        } else {
+            filteringState.filteringOperands = [];
+            this.remove_summary(id);
+        }
+
+        grid.filteringExpressionsTree = filteringState;
+        grid.filteredData = null;
     }
 
     protected calculateSummaries(id: string, column, data) {
@@ -184,14 +270,48 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_filtering_expression(state, fieldName: string, searchVal, condition: IFilteringOperation, ignoreCase: boolean) {
+    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
 
-        const expression = state.find((expr) => expr.fieldName === fieldName);
+        let newExpressionsTree;
+        const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
+        const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+                                conditionOrExpressionsTree as IFilteringExpressionsTree : null;
+        const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+                          null : conditionOrExpressionsTree as IFilteringOperation;
         const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
-        if (!expression) {
-            state.push(newExpression);
+
+        if (oldExpressionsTreeIndex === -1) {
+            // no expressions tree found for this field
+            if (expressionsTree) {
+                filteringState.filteringOperands.push(expressionsTree);
+            } else if (condition) {
+                // create expressions tree for this field and add the new expression to it
+                newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
+                newExpressionsTree.filteringOperands.push(newExpression);
+                filteringState.filteringOperands.push(newExpressionsTree);
+            }
         } else {
-            Object.assign(expression, newExpression);
+            // expression or expressions tree found for this field
+            const expressionOrExpressionsTreeForField = filteringState.filteringOperands[oldExpressionsTreeIndex];
+
+            if (expressionsTree) {
+                // replace the existing expressions tree for this field with the new one passed as parameter
+                filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, expressionsTree);
+            } else if (condition) {
+                // a new expression have to be added
+                if (expressionOrExpressionsTreeForField instanceof FilteringExpressionsTree) {
+                    // add it to the existing list of expressions for this field
+                    expressionOrExpressionsTreeForField.filteringOperands.push(newExpression);
+                } else {
+                    // the element found for this field is an expression but it should be an expressions tree
+                    // so create new expressions tree for this field
+                    newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
+                    newExpressionsTree.filteringOperands.push(newExpression);
+                    // and replace the old expression with the newly created expressions tree
+                    filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, newExpressionsTree);
+                }
+            }
         }
     }
 

@@ -3,19 +3,22 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    HostBinding,
     Input,
     NgModule,
     OnDestroy,
     Output,
     TemplateRef,
-    ViewChild } from '@angular/core';
+    ViewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { DataUtil } from '../data-operations/data-util';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { IgxDropDownModule, IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxInputDirective } from '../directives/input/input.directive';
 
@@ -48,12 +51,12 @@ export class IgxColumnHidingComponent implements OnDestroy {
     }
 
     set title(value) {
-        this._title = (value && value !== null) ? value : '';
+        this._title = (value) ? value : '';
     }
 
     @Input()
     get filterColumnsPrompt() {
-        return  this._filterColumnsPrompt;
+        return this._filterColumnsPrompt;
     }
 
     set filterColumnsPrompt(value) {
@@ -88,10 +91,10 @@ export class IgxColumnHidingComponent implements OnDestroy {
     @Input()
     get disableHideAll(): boolean {
         if (!this._currentColumns || this._currentColumns.length < 1 ||
-                this.hiddenColumnsCount === this.columns.length) {
+            this.hiddenColumnsCount === this.columns.length) {
             return true;
         } else if (this.hidableColumns.length < 1 ||
-                this.hidableColumns.length === this.hidableColumns.filter((col) => col.value).length) {
+            this.hidableColumns.length === this.hidableColumns.filter((col) => col.value).length) {
             return true;
         } else {
             return false;
@@ -111,16 +114,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
     }
 
     @Input()
-    get togglable() {
-        return this._togglable;
-    }
-
-    set togglable(value) {
-        this._togglable = value;
-        this.cdr.markForCheck();
-    }
-
-    @Input()
     get columnDisplayOrder() {
         return this._columnDisplayOrder;
     }
@@ -128,6 +121,9 @@ export class IgxColumnHidingComponent implements OnDestroy {
     set columnDisplayOrder(value: ColumnDisplayOrder) {
         if (value !== undefined) {
             this.orderColumns(value);
+            if (this._filterCriteria.length > 0) {
+                this.filter();
+            }
         }
     }
 
@@ -137,17 +133,14 @@ export class IgxColumnHidingComponent implements OnDestroy {
     @Input()
     public hideAllText = 'Hide All';
 
+    @Input()
+    public columnsAreaMaxHeight = '100%';
+
     @Output()
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
 
-    @ViewChild('columnChooserToggle', { read: TemplateRef })
-    protected columnChooserToggle: TemplateRef<any>;
-
-    @ViewChild('columnChooserInline', { read: TemplateRef })
-    protected columnChooserInline: TemplateRef<any>;
-
-    @ViewChild(IgxDropDownComponent)
-    public dropDown: IgxDropDownComponent;
+    @HostBinding('attr.class')
+    public cssClass = 'igx-column-hiding';
 
     private _currentColumns = [];
     private _gridColumns = [];
@@ -160,14 +153,6 @@ export class IgxColumnHidingComponent implements OnDestroy {
 
     public get hiddenColumnsCount() {
         return (this._gridColumns) ? this._gridColumns.filter((col) => col.hidden).length : 0;
-    }
-
-    public get template(): TemplateRef<any> {
-        if (this.togglable) {
-            return this.columnChooserToggle;
-        } else {
-            return this.columnChooserInline;
-        }
     }
 
     constructor(public cdr: ChangeDetectorRef) {
@@ -190,6 +175,7 @@ export class IgxColumnHidingComponent implements OnDestroy {
                 this._rawColumns.push(this.createColumnHidingItem(this, column));
             });
             this._currentColumns = this._rawColumns.slice(0);
+            this.orderColumns(this._columnDisplayOrder);
         }
     }
 
@@ -216,15 +202,15 @@ export class IgxColumnHidingComponent implements OnDestroy {
     }
 
     protected filter() {
-        this._currentColumns = DataUtil.filter(this._currentColumns, {
-            expressions: [
-                {
-                    condition: IgxStringFilteringOperand.instance().condition('contains'),
-                    fieldName: 'name',
-                    ignoreCase: true,
-                    searchVal: this._filterCriteria
-                }]
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        filteringExpressionsTree.filteringOperands.push({
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                fieldName: 'name',
+                ignoreCase: true,
+                searchVal: this._filterCriteria
         });
+
+        this._currentColumns = DataUtil.filter(this._currentColumns, { expressionsTree: filteringExpressionsTree });
     }
 
     protected clearFiltering() {
@@ -246,21 +232,14 @@ export class IgxColumnHidingComponent implements OnDestroy {
     public onVisibilityChanged(args: IColumnVisibilityChangedEventArgs) {
         this.onColumnVisibilityChanged.emit(args);
     }
-
-    public toggleDropDown() {
-        if (this.togglable) {
-            this.dropDown.toggle();
-        }
-    }
 }
 
 @NgModule({
-    declarations: [ IgxColumnHidingComponent, IgxColumnHidingItemDirective ],
+    declarations: [IgxColumnHidingComponent, IgxColumnHidingItemDirective],
     exports: [IgxColumnHidingComponent],
     imports: [
         IgxButtonModule,
         IgxCheckboxModule,
-        IgxDropDownModule,
         IgxInputGroupModule,
         CommonModule,
         FormsModule,
