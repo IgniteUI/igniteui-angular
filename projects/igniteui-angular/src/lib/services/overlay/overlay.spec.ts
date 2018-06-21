@@ -677,11 +677,6 @@ describe('igxOverlay', () => {
                 expect(componentRect_1.height).toEqual(componentRect_2.height);
             });
         });
-        // adding more than one component to show in igx-overlay:
-        xit('When adding a component near the window borders(left,right,up,down), it should be rendered in the igx-overlay center ' +
-            '- default', () => {
-                // TO DO --> Relevant no more.
-            });
 
         it('If the shown component is bigger than the visible window, than it should be centered and scrollbars should appear.', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -854,16 +849,15 @@ describe('igxOverlay', () => {
                 expect(strategy.settings).toEqual(expectedDefaults);
             });
 
-        // In Progress
         xit('If using a ConnectedPositioningStrategy passing only target element the component is rendered based on defaults' +
             '(StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop)', () => {
-
+                // TO DO
             });
 
-        // In Progress
         xit('If using a ConnectedPositioningStrategy without passing options, the component is rendered based on defaults:' +
             'target: new Point(0, 0), StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, ' +
             'closeAnimation: scaleOutVerTop', () => {
+                // TO DO
             });
 
         xit('When adding a new component it should be rendered where expected based on the options passed.', () => {
@@ -871,7 +865,7 @@ describe('igxOverlay', () => {
         });
 
         // adding more than one component to show in igx-overlay:
-        xit('When adding a new instance of component with default settings, it is rendered exactly on top of the previous one', () => {
+        it('When adding a new instance of component with default settings, it is rendered exactly on top of the previous one', () => {
             const fixture = TestBed.createComponent(TopLeftOffsetComponent);
             const overlaySettings: OverlaySettings = {
                 positionStrategy: new ConnectedPositioningStrategy()
@@ -894,7 +888,7 @@ describe('igxOverlay', () => {
             expect(componentRect_1.height).toEqual(componentRect_2.height);
         });
 
-        xit('When adding a new instance of component with the same options, it is rendered exactly on top of the previous one', () => {
+        it('When adding a new instance of component with the same options, it is rendered exactly on top of the previous one', () => {
             const fixture = TestBed.createComponent(TopLeftOffsetComponent);
             const x = 200;
             const y = 300;
@@ -970,7 +964,6 @@ describe('igxOverlay', () => {
             const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
             const element = contentWrapper.firstChild as HTMLElement;
             const elementRect = element.getBoundingClientRect();
-            const targetElRect = targetEl.getBoundingClientRect();
 
             expect(noScroll.initialize).toHaveBeenCalledTimes(0);
             expect(noScroll.attach).toHaveBeenCalledTimes(0);
@@ -1288,7 +1281,6 @@ describe('igxOverlay', () => {
         });
 
         it('igx-overlay covers the whole window 100% width and height', () => {
-            // TO DO
             const fix = TestBed.createComponent(EmptyPageComponent);
             fix.detectChanges();
             const overlaySettings: OverlaySettings = {
@@ -1526,7 +1518,7 @@ describe('igxOverlay', () => {
         });
 
         // When adding more than one component to show in igx-overlay:
-        xit('When the options used fit the component in the window - adding a new instance of the component with the ' +
+        it('When the options used fit the component in the window - adding a new instance of the component with the ' +
             ' same options will render it on top of the previous one.', () => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
                 fix.detectChanges();
@@ -1566,7 +1558,7 @@ describe('igxOverlay', () => {
 
         // When adding more than one component to show in igx-overlay and the options used will not fit the component in the
         // window, so AutoPosition is used.
-        xit('adding a new instance of the component with the same options, will render it on top of the previous one.', () => {
+        it('adding a new instance of the component with the same options, will render it on top of the previous one.', () => {
             const fix = TestBed.createComponent(EmptyPageComponent);
             fix.detectChanges();
             const offset = 16;
@@ -1612,9 +1604,46 @@ describe('igxOverlay', () => {
 
         // 2. Scroll Strategy
         // 2.1. Scroll Strategy - None
-        xit('The component do not scroll with the window. The event is canceled. No scrolling happens.', () => {
-            // TO DO
-        });
+        fit('The component do not scroll with the window. No scrolling happens.', fakeAsync(() => {
+            // In progress
+            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                        position: absolute;
+                        top: 98%;
+                        left:98%;
+                    }`]
+                }
+            }).createComponent(EmptyPageComponent);
+
+            const noScroll = new NoOpScrollStrategy();
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+            };
+            const overlay = fixture.componentInstance.overlay;
+            spyOn(noScroll, 'initialize').and.callThrough();
+            spyOn(noScroll, 'attach').and.callThrough();
+            spyOn(noScroll, 'detach').and.callThrough();
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+
+            tick();
+            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            const element = contentWrapper.firstChild as HTMLElement;
+            const elementRect = element.getBoundingClientRect();
+
+            expect(noScroll.initialize).toHaveBeenCalledTimes(0);
+            expect(noScroll.attach).toHaveBeenCalledTimes(0);
+            expect(noScroll.detach).toHaveBeenCalledTimes(0);
+            document.documentElement.scrollTop = 100;
+            document.documentElement.scrollLeft = 50;
+            document.documentElement.dispatchEvent(new Event('scroll'));
+            tick();
+
+            expect(elementRect).toEqual(element.getBoundingClientRect());
+            expect(document.documentElement.scrollTop).toEqual(100);
+            expect(document.documentElement.scrollLeft).toEqual(50);
+        }));
 
         xit('The component shown in igx-overlay do not close.(example: expanded DropDown stays expanded during a scrolling attempt.)',
             () => {
