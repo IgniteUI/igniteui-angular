@@ -207,11 +207,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
-        this.gridAPI.arrange_sorting_expressions(this.id);
-        /* grouping should work in conjunction with sorting
-        and without overriding seperate sorting expressions */
-        this._applyGrouping();
-        this.cdr.markForCheck();
+        if (this.gridAPI.get(this.id)) {
+            this.gridAPI.arrange_sorting_expressions(this.id);
+            /* grouping should work in conjunction with sorting
+            and without overriding seperate sorting expressions */
+            this._applyGrouping();
+            this.cdr.markForCheck();
+        } else {
+            // setter called before grid is registered in grid API service
+            this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
+        }
     }
 
     @Input()
