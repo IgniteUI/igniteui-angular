@@ -140,6 +140,7 @@ export interface IColumnMovingEndEventArgs {
     templateUrl: './grid.component.html'
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+    private static DEFAULT_MIN_HEIGHT = '400px';
 
     @Input()
     public data = [];
@@ -306,10 +307,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public set height(value: any) {
         if (this._height !== value) {
             this._height = value;
-            requestAnimationFrame(() => {
-                this.calculateGridHeight();
-                this.cdr.markForCheck();
-            });
+            this.recalculateHeight();
         }
     }
 
@@ -327,6 +325,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 // This will change the height, which should be recalculated.
                 this.reflow();
             });
+        }
+    }
+
+    @HostBinding('style.min-height')
+    @Input()
+    public get minHeight(): string {
+        return this._minHeight;
+    }
+    public set minHeight(value: string) {
+        if (this._minHeight !== value) {
+            this._minHeight = value;
+            this.recalculateHeight();
         }
     }
 
@@ -692,6 +702,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
+    private _minHeight = IgxGridComponent.DEFAULT_MIN_HEIGHT;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -719,6 +730,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
         this.rowHeight = this.rowHeight ? this.rowHeight : this.defaultRowHeight;
+
+        if (!this.minHeight) {
+            this.minHeight = IgxGridComponent.DEFAULT_MIN_HEIGHT;
+        }
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
@@ -1815,5 +1830,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.lastSearchInfo.activeMatchIndex = 0;
             this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
         }
+    }
+
+    private recalculateHeight() {
+        requestAnimationFrame(() => {
+            this.calculateGridHeight();
+            this.cdr.markForCheck();
+        });
     }
 }
