@@ -1,3 +1,5 @@
+
+import { ConnectedPositioningStrategy } from './../services/overlay/position/connected-positioning-strategy';
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild,
@@ -22,6 +24,7 @@ import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
+import { OverlaySettings, NoOpScrollStrategy } from '../services';
 
 export enum DataTypes {
     EMPTY = 'empty',
@@ -95,6 +98,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _searchInput: ElementRef<HTMLInputElement> = null;
     private _comboInput: ElementRef<HTMLInputElement> = null;
     private _onChangeCallback: (_: any) => void = noop;
+    private overlaySettings: OverlaySettings = {
+        positionStrategy: new ConnectedPositioningStrategy(),
+        scrollStrategy: new NoOpScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
 
     private _value = '';
     private _searchValue = '';
@@ -383,7 +392,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public itemsMaxWidth = this.width;
+    public itemsMaxWidth;
 
     /**
      * Configures the drop down list item height
@@ -533,7 +542,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         evt.preventDefault();
         evt.stopPropagation();
         if (this.dropdown.collapsed) {
-            this.dropdown.toggle();
+            this.toggle();
         }
     }
 
@@ -546,7 +555,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         evt.preventDefault();
         evt.stopPropagation();
         if (!this.dropdown.collapsed) {
-            this.dropdown.toggle();
+            this.toggle();
         }
     }
 
@@ -556,7 +565,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     onInputClick(evt) {
         evt.stopPropagation();
         evt.preventDefault();
-        this.dropdown.toggle();
+        this.toggle();
     }
 
     get virtualizationState(): IForOfState {
@@ -921,6 +930,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public ngOnInit() {
         this.id += currentItem++;
         this.selectionAPI.set_selection(this.id, []);
+        this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
     }
 
     /**
@@ -928,6 +938,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
+        // this.dropdown.width = this.itemsMaxWidth ? this.itemsMaxWidth : this.elementRef.nativeElement.offsetWidth;
     }
 
     /**
@@ -988,12 +999,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     public toggle() {
         this.searchValue = '';
-        this.dropdown.toggle();
+        this.dropdown.toggle(this.overlaySettings);
     }
 
     public open() {
         this.searchValue = '';
-        this.dropdown.open();
+        this.dropdown.open(this.overlaySettings);
     }
 
     public close() {
