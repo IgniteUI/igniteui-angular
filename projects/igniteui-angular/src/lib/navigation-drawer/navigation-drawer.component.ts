@@ -653,9 +653,12 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (this.pinThreshold && !this._resizeObserver) {
+        if (!this._resizeObserver) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
-                .subscribe((value) => { this.checkPinThreshold(); });
+                .subscribe((value) => {
+                    this.checkPinThreshold();
+                    this.ensureDrawerHeight();
+                });
         }
     }
 
