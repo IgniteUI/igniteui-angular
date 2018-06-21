@@ -1087,8 +1087,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(dataRows.length).toEqual(6);
     });
 
-    /* reenable after #1634 */
-    xit('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', () => {
+    it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableEditing = true;
