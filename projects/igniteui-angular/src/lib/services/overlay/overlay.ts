@@ -252,9 +252,9 @@ export class IgxOverlayService {
     private getContentElement(wrapperElement: HTMLElement, overlaySettings: OverlaySettings): HTMLElement {
         const content: HTMLElement = this._document.createElement('div');
         if (overlaySettings.modal) {
-            content.classList.add('igx-overlay__content');
+            content.classList.add('igx-overlay__content--modal');
         } else {
-            content.classList.add('igx-overlay__content--no-modal');
+            content.classList.add('igx-overlay__content');
         }
 
         if (overlaySettings.closeOnOutsideClick) {

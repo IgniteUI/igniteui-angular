@@ -22,10 +22,10 @@ import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
 
-const CLASS_OVERLAY_CONTENT = 'igx-overlay__content--no-modal';
-const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content';
-const CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper--no-modal';
-const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper';
+const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
+const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
+const CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
+const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper--modal';
 const CLASS_OVERLAY_MAIN = 'igx-overlay';
 
 function clearOverlay() {

@@ -10,6 +10,7 @@
 /// @param {Color} $background-color [$overlay-color] - The background color used for modal overlays.
 ///
 /// @requires $overlay-color
+/// @requires extend
 ///
 /// @example scss Change the background color
 ///   $my-overlay-theme: igx-overlay-theme($background-color: rgba(yellow, .74));
@@ -18,15 +19,18 @@
 ///
 @function igx-overlay-theme(
     $palette: $default-palette,
-    $background-color: $overlay-color
+    $background-color: null
 ) {
-    $name: 'igx-overlay';
+    $default-theme: (
+        name: 'igx-overlay',
+        background-color: $overlay-color
+    );
 
-    @return (
-        name: $name,
+
+    @return extend($default-theme, (
         palette: $palette,
         background-color: $background-color
-    );
+    ));
 }
 
 ///
