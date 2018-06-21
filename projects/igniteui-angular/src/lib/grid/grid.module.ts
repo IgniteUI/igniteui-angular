@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {  IgxBadgeModule } from '../badge/badge.component';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDatePickerModule } from '../date-picker/date-picker.component';
@@ -30,11 +31,23 @@ import {
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
-    IgxColumnMovingService
+    IgxGroupAreaDropDirective,
+    IgxColumnMovingService,
+    IgxGroupByRowTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridFilterConditionPipe, IgxGridFilteringPipe, IgxGridPagingPipe, IgxGridSortingPipe } from './grid.pipes';
+import {
+    IgxGridFilterConditionPipe,
+    IgxGridFilteringPipe,
+    IgxGridPagingPipe,
+    IgxGridPostGroupingPipe,
+    IgxGridPreGroupingPipe,
+    IgxGridSortingPipe
+} from './grid.pipes';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
+import { IgxChipsModule } from '../chips/chips.module';
+import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 
@@ -44,17 +57,22 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
     IgxColumnComponent,
     IgxGridComponent,
     IgxGridRowComponent,
+    IgxGridGroupByRowComponent,
     IgxGridHeaderComponent,
     IgxGridSummaryComponent,
     IgxGridToolbarComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
+    IgxGroupByRowTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective,
     IgxGridFilterComponent,
+    IgxGridPreGroupingPipe,
+    IgxGridPostGroupingPipe,
     IgxGridSortingPipe,
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
@@ -67,6 +85,7 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
   exports: [
     IgxGridComponent,
     IgxGridCellComponent,
+    IgxGridGroupByRowComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridHeaderComponent,
@@ -75,11 +94,13 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
     IgxGridToolbarComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
+    IgxGroupByRowTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
-    IgxColumnMovingDropDirective
+    IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective
   ],
   imports: [
     CommonModule,
@@ -95,6 +116,9 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
     IgxTextHighlightModule,
     IgxTextSelectionModule,
     IgxCheckboxModule,
+    IgxBadgeModule,
+    IgxChipsModule,
+    IgxDragDropModule,
     IgxColumnHidingModule,
     IgxDropDownModule,
     IgxButtonGroupModule
