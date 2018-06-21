@@ -460,9 +460,6 @@ export class IgxNavigationDrawerComponent implements
             if (this.pinThreshold) {
                 this.ensureEvents();
                 this.checkPinThreshold();
-            } else if (this._resizeObserver) {
-                this._resizeObserver.unsubscribe();
-                this._resizeObserver = null;
             }
         }
 
