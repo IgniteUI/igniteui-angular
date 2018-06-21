@@ -1,9 +1,14 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, TestBed, discardPeriodicTasks } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { Component, ViewChild, QueryList } from '@angular/core';
+import { Component, ViewChild, QueryList, OnInit, ElementRef, DebugElement } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { By } from '@angular/platform-browser';
+
+const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
+const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
+const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 
 const expectedColumnGroups = 5;
 const expectedLevel = 2;
@@ -15,6 +20,7 @@ describe('IgxGrid - multi-column headers', () => {
             declarations: [
                 OneGroupOneColGridComponent,
                 OneGroupThreeColsGridComponent,
+                OneHundredColumnsGridComponent,
                 ColumnGroupTestComponent
             ],
             imports: [
@@ -301,6 +307,75 @@ describe('IgxGrid - multi-column headers', () => {
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
     });
+
+    it('Should render column group headers correctly.', ((done) => {
+        const fixture = TestBed.createComponent(OneHundredColumnsGridComponent);
+        fixture.detectChanges();
+        const componentInstance = fixture.componentInstance;
+        const grid = componentInstance.grid;
+        const columnWidthPx = parseInt(componentInstance.columnWidth, 10);
+        // 2 levels of column group and 1 level of columns
+        const gridHeadersDepth = 3;
+
+        const firstGroupChildrenCount = 100;
+        const secondGroupChildrenCount = 2;
+        const secondSubGroupChildrenCount = 50;
+        const secondSubGroupHeadersDepth = 2;
+        fixture.whenStable().then(() => {
+            const firstGroup = fixture.debugElement.query(By.css('.firstGroup'));
+            testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
+                gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
+                'firstGroupColumn', firstGroupChildrenCount);
+
+            const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+            const scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
+            horizontalScroll.scrollLeft = scrollToNextGroup;
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            setTimeout(() =>  {
+                const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
+                testColumnGroupHeaderRendering(secondGroup,
+                    secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
+                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
+                    'secondSubGroup', secondGroupChildrenCount);
+
+                const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
+                testColumnGroupHeaderRendering(secondSubGroups[0],
+                    secondSubGroupChildrenCount * columnWidthPx,
+                    secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+                    'secondSubGroupColumn', secondSubGroupChildrenCount);
+
+                testColumnGroupHeaderRendering(secondSubGroups[1],
+                    secondSubGroupChildrenCount * columnWidthPx,
+                    secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+                    'secondSubGroupColumn', secondSubGroupChildrenCount);
+
+                const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+                const scrollToNextGroup = horizontalScroll.scrollLeft +
+                    secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
+                horizontalScroll.scrollLeft = scrollToNextGroup;
+                return fixture.whenStable();
+            }, 100);
+        }).then(() => {
+            fixture.detectChanges();
+            setTimeout(() =>  {
+                const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
+                testColumnHeaderRendering(idColumn, columnWidthPx,
+                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.idHeaderTitle);
+
+                const companyNameColumn = fixture.debugElement.query(By.css('.companyName'));
+                testColumnHeaderRendering(companyNameColumn, columnWidthPx,
+                    2 * grid.defaultRowHeight, componentInstance.companyNameTitle);
+
+                const personDetailsColumn = fixture.debugElement.query(By.css('.personDetails'));
+                testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
+                    2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
+                    'personDetailsColumn', 2);
+                done();
+            }, 200);
+        });
+    }));
 });
 
 @Component({
@@ -377,6 +452,63 @@ export class ColumnGroupTestComponent {
     data = DATASOURCE;
 }
 
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
+            <igx-column-group headerClasses="firstGroup" [header]="firstGroupTitle">
+                <igx-column headerClasses="firstGroupColumn" field="ID" *ngFor="let item of hunderdItems;"></igx-column>
+            </igx-column-group>
+            <igx-column-group headerClasses="secondGroup" [header]="secondGroupTitle">
+                <igx-column-group headerClasses="secondSubGroup" [header]="secondSubGroupTitle">
+                    <igx-column headerClasses="secondSubGroupColumn" field="ID" *ngFor="let item of fiftyItems;"></igx-column>
+                </igx-column-group>
+                <igx-column-group headerClasses="secondSubGroup" [header]="secondSubGroupTitle">
+                    <igx-column  headerClasses="secondSubGroupColumn" field="ID" *ngFor="let item of fiftyItems;"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column headerClasses="lonelyId" [header]="idHeaderTitle" field="ID"></igx-column>
+            <igx-column-group header="General Information">
+                <igx-column headerClasses="companyName" [header]="companyNameTitle" field="CompanyName"></igx-column>
+                <igx-column-group headerClasses="personDetails" [header]="personDetailsTitle">
+                    <igx-column headerClasses="personDetailsColumn" field="ContactName"></igx-column>
+                    <igx-column headerClasses="personDetailsColumn" field="ContactTitle"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Address Information">
+                <igx-column-group header="Location">
+                    <igx-column field="Country"></igx-column>
+                    <igx-column field="Region"></igx-column>
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="Contact Information">
+                    <igx-column field="Phone"></igx-column>
+                    <igx-column field="Fax"></igx-column>
+                    <igx-column field="PostalCode"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+export class OneHundredColumnsGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    public gridHeight = '500px';
+    public columnWidth = '100px';
+    data = DATASOURCE;
+
+    hunderdItems = new Array(100);
+    fiftyItems = new  Array(50);
+
+    firstGroupTitle = '100 IDs';
+    secondGroupTitle = '2 col groups with 50 IDs each';
+    secondSubGroupTitle = '50 IDs';
+    idHeaderTitle = 'ID';
+    companyNameTitle = 'Company Name';
+    personDetailsTitle = 'Person Details';
+}
+
 export const DATASOURCE = [
     // tslint:disable:max-line-length
     { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
@@ -418,4 +550,31 @@ function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroup
     } else {
         throw new Error('More than one column group found.');
     }
+}
+
+// tests column and column group header rendering
+function testColumnGroupHeaderRendering(column: DebugElement, width: number, height: number,
+        title: string, descendentColumnCssClass?: string, descendentColumnCount?: number) {
+    expect(column.nativeElement.offsetHeight).toBe(height);
+    expect(column.nativeElement.offsetWidth).toBe(width);
+
+    const colHeaderTitle = column.children
+        .filter(c => c.nativeElement.classList.contains(GRID_COL_GROUP_THEAD_TITLE_CLASS))[0];
+    expect(colHeaderTitle.nativeElement.textContent).toBe(title);
+
+    const colGroupDirectChildren = column.children
+        .filter(c => c.nativeElement.classList.contains(GRID_COL_GROUP_THEAD_GROUP_CLASS))[0]
+        .children.filter(c => c.nativeElement.classList.contains(descendentColumnCssClass));
+
+    expect(colGroupDirectChildren.length).toBe(descendentColumnCount);
+}
+
+function testColumnHeaderRendering(column: DebugElement, width: number, height: number,
+        title: string) {
+    expect(column.nativeElement.offsetHeight).toBe(height);
+    expect(column.nativeElement.offsetWidth).toBe(width);
+
+    const colHeaderTitle = column.children
+        .filter(c => c.nativeElement.classList.contains(GRID_COL_THEAD_TITLE_CLASS))[0];
+    expect(colHeaderTitle.nativeElement.textContent.trim()).toBe(title);
 }
