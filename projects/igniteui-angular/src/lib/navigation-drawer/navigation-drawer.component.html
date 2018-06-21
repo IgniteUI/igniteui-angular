@@ -14,6 +14,7 @@
 </div>
 <aside role="navigation"
     class="igx-nav-drawer__aside"
+    [style.transitionDuration]="transionDuration"
     [class.igx-nav-drawer__aside--collapsed]="!miniTemplate && !isOpen"
     [class.igx-nav-drawer__aside--mini]="miniTemplate && !isOpen"
     [class.igx-nav-drawer__aside--pinned]="pin"

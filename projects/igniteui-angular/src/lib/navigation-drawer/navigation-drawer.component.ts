@@ -57,6 +57,8 @@ export class IgxNavigationDrawerComponent implements
     OnDestroy,
     OnChanges {
 
+    private _transitionDuration = '0s';
+
     @HostBinding('class') public cssClass = 'igx-nav-drawer';
 
     /**
@@ -323,6 +325,13 @@ export class IgxNavigationDrawerComponent implements
         return this._styleDummy.nativeElement;
     }
 
+    /**
+     *  @hidden
+     */
+    get transionDuration() {
+        return this._transitionDuration;
+    }
+
     /** Pan animation properties */
     private _panning = false;
     private _panStartWidth: number;
@@ -418,6 +427,10 @@ export class IgxNavigationDrawerComponent implements
         // need to set height without absolute positioning
         this.ensureDrawerHeight();
         this.ensureEvents();
+
+        setTimeout(() => {
+            this._transitionDuration = undefined;
+        });
 
         // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
         // (https://github.com/angular/angular/issues/6515), blocked by https://github.com/angular/angular/issues/6904
