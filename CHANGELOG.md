@@ -59,7 +59,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
-- `igxCell` default editing template is changed acording column data type. For more information you can read the [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Cell-Editing) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_editing.html)
+- `igxCell` default editing template is changed according column data type. For more information you can read the [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Cell-Editing) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_editing.html)
 
 - `igxToggle` changes
     - `onOpening` event added.
