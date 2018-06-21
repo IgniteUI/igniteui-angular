@@ -3,6 +3,8 @@ import { Subject } from 'rxjs';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
+import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
+import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
@@ -95,7 +97,7 @@ export class IgxGridAPIService {
     public get_row_by_key(id: string, rowSelector: any): IgxGridRowComponent {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
-            return this.get(id).rowList.find((row) => row.rowData[primaryKey] === rowSelector);
+            return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
         }
         return this.get(id).rowList.find((row) => row.index === rowSelector);
     }
@@ -106,7 +108,7 @@ export class IgxGridAPIService {
 
     public get_cell_by_field(id: string, rowSelector: any, field: string): IgxGridCellComponent {
         const row = this.get_row_by_key(id, rowSelector);
-        if (row) {
+        if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
     }
@@ -117,14 +119,14 @@ export class IgxGridAPIService {
 
     public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
         const row = this.get_row_by_index(id, rowIndex);
-        if (row) {
+        if (row && row.cells) {
             return row.cells.find((cell) => cell.columnIndex === columnIndex);
         }
     }
 
     public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
         const row = this.get_row_by_index(id, rowIndex);
-        if (row) {
+        if (row && row.cells) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
         }
     }
@@ -182,20 +184,108 @@ export class IgxGridAPIService {
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
-        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
+        if (dir === SortingDirection.None) {
+            this.remove_grouping_expression(id, fieldName);
+        }
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
 
-        this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase);
+        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase });
         this.get(id).sortingExpressions = sortingState;
     }
 
     public sort_multiple(id: string, expressions: ISortingExpression[]): void {
-        const sortingState = cloneArray(this.get(id).sortingExpressions, true);
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         for (const each of expressions) {
-            this.prepare_sorting_expression(sortingState, each.fieldName, each.dir, each.ignoreCase);
+            if (each.dir === SortingDirection.None) {
+                this.remove_grouping_expression(id, each.fieldName);
+            }
+            this.prepare_sorting_expression([sortingState], each);
         }
 
         this.get(id).sortingExpressions = sortingState;
+    }
+
+    public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+        const groupingState = cloneArray(this.get(id).groupingExpressions);
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
+
+        this.prepare_sorting_expression([sortingState, groupingState], { fieldName, dir, ignoreCase });
+        this.get(id).groupingExpressions = groupingState;
+        this.arrange_sorting_expressions(id);
+    }
+
+    public groupBy_multiple(id: string, expressions: ISortingExpression[]): void {
+        const groupingState = cloneArray(this.get(id).groupingExpressions);
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
+
+        for (const each of expressions) {
+            this.prepare_sorting_expression([sortingState, groupingState], each);
+        }
+
+        this.get(id).groupingExpressions = groupingState;
+        this.arrange_sorting_expressions(id);
+    }
+
+    public clear_groupby(id: string, name?: string) {
+        const groupingState = cloneArray(this.get(id).groupingExpressions);
+        const sortingState = cloneArray(this.get(id).sortingExpressions);
+
+        if (name) {
+            // clear specific expression
+            const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === name);
+            const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === name);
+            const grpExpandState = this.get(id).groupingExpansionState;
+            if (grExprIndex > -1) {
+                groupingState.splice(grExprIndex, 1);
+            }
+            if (sortExprIndex > -1) {
+                sortingState.splice(sortExprIndex, 1);
+            }
+            this.get(id).groupingExpressions = groupingState;
+            this.get(id).sortingExpressions = sortingState;
+
+            /* remove expansion states related to the cleared group
+            and all with deeper hierarchy than the cleared group */
+            this.get(id).groupingExpansionState = grpExpandState
+                .filter((val) => {
+                    return val.hierarchy && val.hierarchy.length <= grExprIndex;
+                });
+        } else {
+            // clear all
+            this.get(id).groupingExpressions = [];
+            this.get(id).groupingExpansionState = [];
+            for (const grExpr of groupingState) {
+                const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === grExpr.fieldName);
+                if (sortExprIndex > -1) {
+                    sortingState.splice(sortExprIndex, 1);
+                }
+            }
+            this.get(id).sortingExpressions = sortingState;
+        }
+    }
+
+    public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
+        const grState = this.get(id).groupingExpansionState;
+        const hierarchy = DataUtil.getHierarchy(groupRow);
+        return grState.find((state) =>
+            DataUtil.isHierarchyMatch(state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
+    }
+
+    public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
+        const grid = this.get(id);
+        const expansionState = grid.groupingExpansionState;
+
+        const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
+        if (state) {
+            state.expanded = !state.expanded;
+        } else {
+            expansionState.push({
+                expanded: !grid.groupsExpanded,
+                hierarchy: DataUtil.getHierarchy(groupRow)
+            });
+        }
+        this.get(id).groupingExpansionState = expansionState;
     }
 
     public filter(id: string, fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
@@ -320,19 +410,46 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_sorting_expression(state, fieldName, dir, ignoreCase) {
-
-        if (dir === SortingDirection.None) {
-            state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
+    protected prepare_sorting_expression(states, expression: ISortingExpression) {
+        if (expression.dir === SortingDirection.None) {
+            states.forEach(state => {
+                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
+            });
             return;
         }
 
-        const expression = state.find((expr) => expr.fieldName === fieldName);
+        states.forEach(state => {
+            const e = state.find((expr) => expr.fieldName === expression.fieldName);
+            if (!e) {
+                state.push(expression);
+            } else {
+                Object.assign(e, expression);
+            }
+        });
+    }
 
-        if (!expression) {
-            state.push({ fieldName, dir, ignoreCase });
-        } else {
-            Object.assign(expression, { fieldName, dir, ignoreCase });
+    public arrange_sorting_expressions(id) {
+        const groupingState = this.get(id).groupingExpressions;
+        this.get(id).sortingExpressions.sort((a, b) => {
+            const groupExprA = groupingState.find((expr) => expr.fieldName === a.fieldName);
+            const groupExprB = groupingState.find((expr) => expr.fieldName === b.fieldName);
+            if (groupExprA && groupExprB) {
+                return groupingState.indexOf(groupExprA) > groupingState.indexOf(groupExprB) ? 1 : -1;
+            } else if (groupExprA) {
+                return -1;
+            } else if (groupExprB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    protected remove_grouping_expression(id, fieldName) {
+        const groupingExpressions = this.get(id).groupingExpressions;
+        const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
+        if (index !== -1) {
+            groupingExpressions.splice(index, 1);
         }
     }
 }
