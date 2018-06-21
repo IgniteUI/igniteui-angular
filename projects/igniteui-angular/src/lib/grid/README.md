@@ -160,7 +160,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`paging`|bool|Enables the paging feature. Defaults to _false_.|
 |`perPage`|number|Visible items per page, default is 15|
 |`filteringLogic`|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
-|`filteringExpressions`|Array|The filtering state of the grid.|
+|`filteringExpressionsTree`|IFilteringExpressionsTree|The filtering state of the grid.|
 |`sortingExpressions`|Array|The sorting state of the grid.|
 |`rowSelectable`|Boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
@@ -186,7 +186,7 @@ A list of the events emitted by the **igx-grid**:
 |`onRowSelectionChange`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
 |`onColumnInit`|Emitted when the grid columns are initialized. Returns the column object.|
 |`onSortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
-|`onFilteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expression.|
+|`onFilteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|
 |`onPagingDone`|Emitted when paging is performed. Returns an object consisting of the previous and the new page.|
 |`onRowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
 |`onRowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
@@ -215,9 +215,8 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`deleteRow(rowIndex: number)`|Removes the row object and the corresponding data record from the data source.|
 |`updateRow(value: any, rowIndex: number)`|Updates the row object and the data source record with the passed value.|
 |`updateCell(value: any, rowIndex: number, column: string)`|Updates the cell object and the record field in the data source.|
-|`filter(column: string, value: any, condition?, ignoreCase?: boolean)`|Filters a single column. Check the available [filtering conditions](#filtering-conditions)|
-|`filter(expressions: Array)`|Filters the grid columns based on the provided array of filtering expressions.|
-|`filterGlobal(value: any, condition? ignoreCase?)`|Filters all the columns in the grid.|
+|`filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean)`|Filters a single column. A filtering condition or filtering expressions tree could be used. Check the available [filtering conditions](#filtering-conditions)|
+|`filterGlobal(value: any, condition?, ignoreCase?)`|Filters all the columns in the grid with the same condition.|
 |`clearFilter(name?: string)`|If `name` is provided, clears the filtering state of the corresponding column, otherwise clears the filtering state of all columns.|
 |`sort(name: string, direction, ignorecase)`|Sorts a single column.|
 |`sort(expressions: Array)`|Sorts the grid columns based on the provided array of sorting expressions.|
@@ -270,7 +269,6 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`cellClasses`|string|Additional CSS classes applied to the cells in this column.|
 |`formatter`|Function|A function used to "template" the values of the cells without the need to pass a cell template the column.|
 |`index`|string|Column index|
-|`filteringCondition`|FilteringCondition|Boolean, date, string or number conditions. Default is string _contains_|
 |`filteringIgnoreCase`|boolean|Ignore capitalization of strings when filtering is applied. Defaults to _true_.|
 |`sortingIgnoreCase`|boolean|Ignore capitalization of strings when sorting is applied. Defaults to _true_.|
 |`dataType`|DataType|One of string, number, boolean or Date. When filtering is enabled the filter UI conditions are based on the `dataType` of the column. Defaults to `string` if it is not provided. With `autoGenerate` enabled the grid will try to resolve the correct data type for each column based on the data source.|
