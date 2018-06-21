@@ -10,9 +10,9 @@ import { DataGenerator } from './test-util/data-generator';
 import {    DataType,
             DataUtil,
             FilteringLogic, FilteringStrategy, IDataState,
-            IFilteringExpressionsTree, IFilteringState, IPagingState, ISortingExpression, ISortingState,
+            IFilteringExpression, IFilteringState, IPagingState, ISortingExpression, ISortingState,
             PagingError, SortingDirection, IgxStringFilteringOperand, IgxNumberFilteringOperand,
-            IgxDateFilteringOperand, IgxBooleanFilteringOperand, FilteringExpressionsTree
+            IgxDateFilteringOperand, IgxBooleanFilteringOperand
         } from '../../public_api';
 /* Test sorting */
 function testSort() {
@@ -78,17 +78,17 @@ function testSort() {
 /* //Test sorting */
 /* Test filtering */
 class CustomFilteringStrategy extends FilteringStrategy {
-   public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
+   public filter<T>(data: T[], expressions: IFilteringExpression[], logic?: FilteringLogic): T[] {
         const len = Math.ceil(data.length / 2);
         const res: T[] = [];
         let i;
         let rec;
-        if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
+        if (!expressions || !expressions.length || !len) {
             return data;
         }
         for (i = 0; i < len; i++) {
             rec = data[i];
-            if (this.matchRecord(rec, expressionsTree)) {
+            if (this.matchRecordByExpressions(rec, expressions, logic)) {
                 res.push(rec);
             }
         }
@@ -101,96 +101,71 @@ function testFilter() {
     const data: object[] = dataGenerator.data;
     describe('test filtering', () => {
         it('filters \'number\' column greater than 3', () => {
-            const state: IFilteringState = {
-                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
-            };
-            state.expressionsTree.filteringOperands = [
-                {
-                    fieldName: 'number',
-                    condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                    searchVal: 3
-                }
-            ];
-            const res = DataUtil.filter(data, state);
+            const res = DataUtil.filter(data, {
+                expressions: [{fieldName: 'number', condition: IgxNumberFilteringOperand.instance().condition('greaterThan'), searchVal: 3}]
+            });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([4]);
         });
         // test string filtering - with ignoreCase true/false
         it('filters \'string\' column contains \'row\'', () => {
-            const state: IFilteringState = {
-                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
-            };
-            state.expressionsTree.filteringOperands = [
-                {
-                    condition: IgxStringFilteringOperand.instance().condition('contains'),
-                    fieldName: 'string',
-                    searchVal: 'row'
-                }
-            ];
-
-            const stateIgnoreCase: IFilteringState = {
-                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
-            };
-            stateIgnoreCase.expressionsTree.filteringOperands = [
-                {
-                    condition: IgxStringFilteringOperand.instance().condition('contains'),
-                    fieldName: 'string',
-                    ignoreCase: false,
-                    searchVal: 'ROW'
-                }
-            ];
-
-            let res = DataUtil.filter(data, state);
+            let res = DataUtil.filter(data, {
+                                        expressions: [
+                                                {
+                                                    condition: IgxStringFilteringOperand.instance().condition('contains'),
+                                                    fieldName: 'string',
+                                                    searchVal: 'row'
+                                                }]
+                                    });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual(dataGenerator.getValuesForColumn(data, 'number'));
             (res[0] as { string: string}).string = 'ROW';
             // case-sensitive
-            res = DataUtil.filter(res, stateIgnoreCase);
+            res = DataUtil.filter(res, {
+                                        expressions: [
+                                                {
+                                                    condition: IgxStringFilteringOperand.instance().condition('contains'),
+                                                    fieldName: 'string',
+                                                    ignoreCase: false,
+                                                    searchVal: 'ROW'
+                                                }]
+                                    });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([0]);
         });
         // test date
         it('filters \'date\' column', () => {
-            const state: IFilteringState = {
-                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
-            };
-            state.expressionsTree.filteringOperands = [
-                {
-                    condition: IgxDateFilteringOperand.instance().condition('after'),
-                    fieldName: 'date',
-                    searchVal: new Date()
-                }
-            ];
-            const res = DataUtil.filter(data, state);
+            const res = DataUtil.filter(data, {
+                                        expressions: [
+                                                {
+                                                    condition: IgxDateFilteringOperand.instance().condition('after'),
+                                                    fieldName: 'date',
+                                                    searchVal: new Date()
+                                                }]
+                                    });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([1, 2, 3, 4]);
         });
         it('filters \'bool\' column', () => {
-            const state: IFilteringState = {
-                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
-            };
-            state.expressionsTree.filteringOperands = [
-                {
-                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                    fieldName: 'boolean'
-                }
-            ];
-            const res = DataUtil.filter(data, state);
-            expect(dataGenerator.getValuesForColumn(res, 'number'))
-                .toEqual([0, 2, 4]);
+             const res = DataUtil.filter(data, {
+                                        expressions: [
+                                                {
+                                                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
+                                                    fieldName: 'boolean'
+                                                }]
+                                    });
+             expect(dataGenerator.getValuesForColumn(res, 'number'))
+                    .toEqual([0, 2, 4]);
         });
         it('filters using custom filtering strategy', () => {
-            const state: IFilteringState = {
-                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And),
-                strategy: new CustomFilteringStrategy()
-            };
-            state.expressionsTree.filteringOperands = [
-                {
-                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                    fieldName: 'boolean'
-                }
-            ];
-            const res = DataUtil.filter(data, state);
+            const res = DataUtil.filter(data, {
+                                        expressions: [
+                                                {
+                                                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
+                                                    fieldName: 'boolean'
+                                                }],
+                                        strategy: new CustomFilteringStrategy()
+                                    });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([0, 2]);
         });
@@ -239,18 +214,13 @@ function testProcess() {
     describe('test process', () => {
         it('calls process as applies filtering, sorting, paging', () => {
             let metadata;
-            const filteringState: IFilteringState = {
-                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
-            };
-            filteringState.expressionsTree.filteringOperands = [
-                {
-                    condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                    fieldName: 'number',
-                    searchVal: 1
-                }
-            ];
             const state: IDataState = {
-                filtering: filteringState,
+                filtering: {
+                    expressions: [{
+                        condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                        fieldName: 'number',
+                        searchVal: 1}]
+                },
                 paging: {
                     index: 1,
                     recordsPerPage: 2

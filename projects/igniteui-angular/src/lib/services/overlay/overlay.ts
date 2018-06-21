@@ -74,7 +74,7 @@ export class IgxOverlayService {
         this.OverlayElement.appendChild(wrapperElement);
 
         const size = element.getBoundingClientRect();
-        overlaySettings.positionStrategy.position(contentElement, size, document);
+        overlaySettings.positionStrategy.position(contentElement, size, document, true);
         const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
         const animationPlayer = animationBuilder.create(element);
         animationPlayer.onDone(() => {
@@ -111,7 +111,6 @@ export class IgxOverlayService {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
             return;
         }
-
         overlay.settings.scrollStrategy.detach();
         const animationBuilder = this.builder.build(overlay.settings.positionStrategy.settings.closeAnimation);
         const animationPlayer = animationBuilder.create(overlay.elementRef.nativeElement);
@@ -135,6 +134,7 @@ export class IgxOverlayService {
                 this._overlayElement.parentElement.removeChild(this._overlayElement);
                 this._overlayElement = null;
             }
+            overlay.settings.positionStrategy.clearCache();
             this.onClosed.emit({ id, componentRef });
         });
 

@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './api.service';
 
@@ -61,19 +60,17 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
-    public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
-                     id: string, pipeTrigger: number) {
-        const grid = this.gridAPI.get(id);
-        const state = { expressionsTree: expressionsTree };
+    public transform(collection: any[], expressions: IFilteringExpression | IFilteringExpression[],
+                     logic: FilteringLogic, id: string, pipeTrigger: number) {
+        const state = { expressions: [], logic };
+        state.expressions = this.gridAPI.get(id).filteringExpressions;
 
-        if (!state.expressionsTree ||
-            !state.expressionsTree.filteringOperands ||
-            state.expressionsTree.filteringOperands.length === 0) {
+        if (!state.expressions.length) {
             return collection;
         }
 
         const result = DataUtil.filter(cloneArray(collection), state);
-        grid.filteredData = result;
+        this.gridAPI.get(id).filteredData = result;
         return result;
     }
 }

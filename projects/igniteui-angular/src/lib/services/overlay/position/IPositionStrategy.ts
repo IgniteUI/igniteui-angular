@@ -4,5 +4,6 @@ export interface IPositionStrategy {
     settings: PositionSettings;
 
     /** Position the element based on the PositionStrategy implementing this interface */
-     position(contentElement: HTMLElement, size?: {}, document?: Document): void;
+     position(contentElement: HTMLElement, size?: {}, document?: Document, initialCall?: boolean): void;
+     clearCache(): void;
 }

@@ -9,8 +9,7 @@ import { DataGenerator } from './test-util/data-generator';
 
 import { FilteringLogic, FilteringStrategy, IFilteringExpression, IFilteringState, IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
-    IgxBooleanFilteringOperand,
-    FilteringExpressionsTree } from '../../public_api';
+    IgxBooleanFilteringOperand} from '../../public_api';
 
 describe('Unit testing FilteringStrategy', () => {
     let dataGenerator: DataGenerator;
@@ -22,57 +21,49 @@ describe('Unit testing FilteringStrategy', () => {
         fs = new FilteringStrategy();
     });
     it ('tests `filter`', () => {
-        const expressionTree = new FilteringExpressionsTree(FilteringLogic.And);
-        expressionTree.filteringOperands = [
-            {
+        const res = fs.filter(data, [{
                 condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
                 fieldName: 'number',
                 searchVal: 1
-            }
-        ];
-        const res = fs.filter(data, expressionTree);
+            }]);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([2, 3, 4]);
     });
     it ('tests `matchRecordByExpressions`', () => {
         const rec = data[0];
-        const expressionTree = new FilteringExpressionsTree(FilteringLogic.Or);
-        expressionTree.filteringOperands = [
-            {
-                condition: IgxStringFilteringOperand.instance().condition('contains'),
-                fieldName: 'string',
-                ignoreCase: false,
-                searchVal: 'ROW'
-            },
-            {
-                condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
-                fieldName: 'number',
-                searchVal: 1
-            }
-        ];
-        const res = fs.matchRecord(rec, expressionTree);
+        const res = fs.matchRecordByExpressions(rec,
+            [
+                {
+                    condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    fieldName: 'string',
+                    ignoreCase: false,
+                    searchVal: 'ROW'
+                },
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
+                    fieldName: 'number',
+                    searchVal: 1
+                }
+            ],
+            FilteringLogic.Or);
         expect(res).toBeTruthy();
     });
     it ('tests `findMatch`', () => {
         const rec = data[0];
-        const res = fs.findMatchByExpression(rec, {
+        const res = fs.findMatch(rec, {
             condition: IgxBooleanFilteringOperand.instance().condition('false'),
             fieldName: 'boolean'
-        });
+        }, -1);
         expect(res).toBeTruthy();
     });
     it ('tests default settings', () => {
         (data[0] as { string: string }).string = 'ROW';
         const filterstr = new FilteringStrategy();
-        const expressionTree = new FilteringExpressionsTree(FilteringLogic.And);
-        expressionTree.filteringOperands = [
-            {
-                condition: IgxStringFilteringOperand.instance().condition('contains'),
-                fieldName: 'string',
-                searchVal: 'ROW'
-            }
-        ];
-        const res = filterstr.filter(data, expressionTree);
+        const res = filterstr.filter(data, [{
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            fieldName: 'string',
+            searchVal: 'ROW'
+        }]);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([0]);
     });

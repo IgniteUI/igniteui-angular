@@ -46,5 +46,8 @@ export class GlobalPositionStrategy implements IPositionStrategy {
                 break;
         }
     }
+
+    clearCache(): void {
+    }
 }
 

@@ -44,7 +44,7 @@ import { ISummaryExpression } from './grid-summary';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridRowComponent } from './row.component';
-import { IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
+import { IFilteringOperation } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -153,26 +153,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public id = `igx-grid-${NEXT_ID++}`;
 
     @Input()
-    public get filteringLogic() {
-        return this._filteringExpressionsTree.operator;
-    }
-
-    public set filteringLogic(value: FilteringLogic) {
-        this._filteringExpressionsTree.operator = value;
-    }
+    public filteringLogic = FilteringLogic.And;
 
     @Input()
-    get filteringExpressionsTree() {
-        return this._filteringExpressionsTree;
+    get filteringExpressions() {
+        return this._filteringExpressions;
     }
 
-    set filteringExpressionsTree(value) {
-        if (value) {
-            this._filteringExpressionsTree = value;
-            this.clearSummaryCache();
-            this._pipeTrigger++;
-            this.cdr.markForCheck();
-        }
+    set filteringExpressions(value) {
+        this._filteringExpressions = cloneArray(value);
+        this.cdr.markForCheck();
     }
 
     get filteredData() {
@@ -381,7 +371,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onSortingDone = new EventEmitter<ISortingExpression>();
 
     @Output()
-    public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
+    public onFilteringDone = new EventEmitter<IFilteringExpression>();
 
     @Output()
     public onPagingDone = new EventEmitter<IPageEventArgs>();
@@ -685,7 +675,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _columns: IgxColumnComponent[] = [];
     protected _pinnedColumns: IgxColumnComponent[] = [];
     protected _unpinnedColumns: IgxColumnComponent[] = [];
-    protected _filteringExpressionsTree: IFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+    protected _filteringLogic = FilteringLogic.And;
+    protected _filteringExpressions = [];
     protected _sortingExpressions = [];
     protected _columnHiding = false;
     private _filteredData = null;
@@ -1028,21 +1019,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
-        ignoreCase?: boolean) {
-        const col = this.gridAPI.get_column_by_name(this.id, name);
-        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
-
-        if (conditionOrExpressionTree) {
-            this.gridAPI.filter(this.id, name, value, conditionOrExpressionTree, filteringIgnoreCase);
+    public filter(...rest): void {
+        if (rest.length === 1 && rest[0] instanceof Array) {
+            this._filterMultiple(rest[0]);
         } else {
-            const expressionsTreeForColumn = this._filteringExpressionsTree.find(name);
-            if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.gridAPI.filter(this.id, name, value, expressionsTreeForColumn, filteringIgnoreCase);
-            } else {
-                const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.gridAPI.filter(this.id, name, value, expressionForColumn.condition, filteringIgnoreCase);
-            }
+            this._filter(rest[0], rest[1], rest[2], rest[3]);
         }
     }
 
@@ -1075,13 +1056,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public clearFilter(name?: string) {
-        if (name) {
-            const column = this.gridAPI.get_column_by_name(this.id, name);
-            if (!column) {
-                return;
-            }
+
+        if (!name) {
+            this.filteringExpressions = [];
+            this.filteredData = null;
+            return;
         }
 
+        const column = this.gridAPI.get_column_by_name(this.id, name);
+        if (!column) {
+            return;
+        }
+        this.clearSummaryCache();
         this.gridAPI.clear_filter(this.id, name);
     }
 
@@ -1421,6 +1407,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.sort_multiple(this.id, expressions);
     }
 
+    protected _filter(name: string, value: any, condition?: IFilteringOperation, ignoreCase?: boolean) {
+        const col = this.gridAPI.get_column_by_name(this.id, name);
+        if (col) {
+            this.gridAPI
+                .filter(this.id, name, value,
+                    condition || col.filteringCondition, ignoreCase || col.filteringIgnoreCase);
+        } else {
+            this.gridAPI.filter(this.id, name, value, condition, ignoreCase);
+        }
+    }
+
+    protected _filterMultiple(expressions: IFilteringExpression[]) {
+        this.gridAPI.filter_multiple(this.id, expressions);
+    }
+
     protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
         const column = this.gridAPI.get_column_by_name(this.id, fieldName);
         column.hasSummary = hasSummary;
@@ -1524,7 +1525,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get headerCheckboxAriaLabel() {
-        return this._filteringExpressionsTree.filteringOperands.length > 0 ?
+        return this._filteringExpressions.length > 0 ?
             this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all filtered' : 'Select all filtered' :
             this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all' : 'Select all';
     }

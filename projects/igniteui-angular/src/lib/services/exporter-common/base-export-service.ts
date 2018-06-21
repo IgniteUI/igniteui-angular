@@ -159,12 +159,12 @@ export abstract class IgxBaseExporter {
     private prepareData(grid: any, options: IgxExporterOptionsBase): any[] {
         let data = grid.data;
 
-        if (grid.filteringExpressionsTree &&
-            grid.filteringExpressionsTree.filteringOperands.length > 0 &&
+        if (grid.filteringExpressions &&
+            grid.filteringExpressions.length > 0 &&
             !options.ignoreFiltering) {
 
             const filteringState = {
-                expressionsTree: grid.filteringExpressionsTree,
+                expressions: grid.filteringExpressions,
                 logic: grid.filteringLogic
             };
 

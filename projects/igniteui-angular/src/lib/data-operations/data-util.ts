@@ -77,13 +77,14 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
-    public static filter<T>(data: T[], state: IFilteringState): T[] {
+    public static filter<T>(data: T[],
+                            state: IFilteringState): T[] {
         // set defaults
         DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
         if (!state.strategy) {
             return data;
         }
-        return state.strategy.filter(data, state.expressionsTree);
+        return state.strategy.filter(data, state.expressions, state.logic);
     }
     public static process<T>(data: T[], state: IDataState): T[] {
         if (!state) {
