@@ -18,10 +18,10 @@ Basic usage of `igx-combo` bound to a local data source, defining `valueKey` and
 </igx-combo>
 ```
 
-Remote binding:
+Remote binding, defining `valueKey` and `displayKey`, and exposing `onDataPreLoad` that allows to load new chunk of remote data to the combo:
 
 ```html
-<igx-combo [data]="remoteData | async" [valueKey]="'ProductID'" [displayKey]="'ProductName'">
+<igx-combo [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [valueKey]="'ProductID'" [displayKey]="'ProductName'" >
 </igx-combo>
 ```
 
@@ -188,6 +188,8 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 |  `valueKey`              | combo value data source property                  | string                      |
 |  `displayKey`            | combo dispaly data source property                | string                      |
 |  `groupKey`              | combo item group                                  | string                      |
+|  `virtualizationState`   | defined he current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
+|  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
 |  `heigth`                | defines combo height                              | string                      |
 |  `itemsMaxHeight `       | defines drop down height                          | string                      |
@@ -206,6 +208,7 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 | `onSelectionChange` | Emitted when item selection is changing, before the selection completes | true         | { oldSelection: `Array<any>`, newSelection: `Array<any>`, event: Event } |
 | `onSearchInput`     | Emitted when an the search input's input event is triggered             | false        | { searchValue: `string` }               |
 | `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>` }|
+| `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: Event }                        |
 | `dropDownOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
 | `dropDownOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
 | `dropDownClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |

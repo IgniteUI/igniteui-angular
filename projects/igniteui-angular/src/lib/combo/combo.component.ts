@@ -11,7 +11,7 @@ import { cloneArray } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -295,6 +295,16 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public onSearchInput = new EventEmitter();
 
     /**
+     * Emitted when new chunk of data is loaded from the virtualization
+     *
+     * ```html
+     * <igx-combo (onDataPreLoad)='handleDataPreloadEvent()'></igx-combo>
+     * ```
+     */
+    @Output()
+    public onDataPreLoad = new EventEmitter<any>();
+
+    /**
      * Sets the style width of the element
      *
      * ```typescript
@@ -547,6 +557,21 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         evt.stopPropagation();
         evt.preventDefault();
         this.dropdown.toggle();
+    }
+
+    get virtualizationState(): IForOfState {
+        return this.dropdown.verticalScrollContainer.state;
+    }
+    set virtualizationState(state) {
+        this.dropdown.verticalScrollContainer.state = state;
+    }
+
+    get totalItemCount() {
+        return this.dropdown.verticalScrollContainer.totalItemCount;
+    }
+    set totalItemCount(count) {
+        this.dropdown.verticalScrollContainer.totalItemCount = count;
+        this.cdr.detectChanges();
     }
 
     /**
@@ -903,6 +928,13 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
+    }
+
+    /**
+     * @hidden
+     */
+    public dataLoading(event) {
+        this.onDataPreLoad.emit(event);
     }
 
     /**

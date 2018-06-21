@@ -41,7 +41,7 @@
             [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
             <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
                 [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight"
-                [igxForItemSize]="itemHeight" #virtualScrollContainer>
+                [igxForItemSize]="itemHeight" (onChunkPreload)="dataLoading($event)" #virtualScrollContainer>
                 <igx-combo-item [itemData]="item" isHeader={{item.isHeader}} role="option">
                     <ng-container *ngIf="!item.isHeader">
                         <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true"></igx-checkbox>
