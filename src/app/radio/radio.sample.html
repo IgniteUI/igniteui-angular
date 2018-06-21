@@ -30,8 +30,7 @@
                 </div>
                 <div>
                     <label for="radioGroupSeasons">Favorite season </label>
-                    <igx-radiogroup id="radioGroupSeasons" name="radioGroupSeasons" labelPosition="before" (change)="onRadioSeasonsChange($event)"
-                                    [(ngModel)]="personBob.favoriteSeason">
+                    <igx-radiogroup id="radioGroupSeasons" name="radioGroupSeasons" labelPosition="before" [(ngModel)]="personBob.favoriteSeason">
                         <igx-radio class="radio-sample" *ngFor="let item of seasons" value="{{item}}">
                             {{item}}
                         </igx-radio>

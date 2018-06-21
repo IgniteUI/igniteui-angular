@@ -1,7 +1,7 @@
 import { Component, ViewChild, AfterContentInit } from '@angular/core';
 import { IgxRadioGroupDirective } from 'igniteui-angular';
 
-export class Person {
+class Person {
     name: string;
     favoriteSeason: string;
 }
@@ -13,7 +13,6 @@ export class Person {
 })
 export class RadioSampleComponent implements AfterContentInit {
     @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective }) public radioGroup: IgxRadioGroupDirective;
-//    @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective }) public radioGroupSeasons: IgxRadioGroupDirective;
 
     selectedValue: any;
 
@@ -40,10 +39,6 @@ export class RadioSampleComponent implements AfterContentInit {
 
     onRadioChange(evt) {
         this.selectedValue = evt.value;
-    }
-
-    onRadioSeasonsChange(evt) {
-
     }
 
     onSubmit() {
