@@ -8,10 +8,6 @@ enum Axis {
 }
 export class AutoPositionStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
     public offsetPadding = 16;
-    private _initialSize: { width: number, height: number } = {
-        width: 0,
-        height: 0
-    };
     private _initialSettings;
     getViewPort(document) { // Material Design implementation
         const clientRect = document.documentElement.getBoundingClientRect();
@@ -38,10 +34,9 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         console.log(this.settings.target);
         if (!initialCall) {
-            super.position(contentElement, this._initialSize);
+            super.position(contentElement, size);
             return;
         }
-        this._initialSize = size;
         this._initialSettings = this._initialSettings || Object.assign({}, this._initialSettings, this.settings);
         this.settings = this._initialSettings ? Object.assign({}, this.settings, this._initialSettings) : this.settings;
         const viewPort = this.getViewPort(document);
@@ -97,10 +92,5 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
         checkIfMoveVertical(contentElement);
         checkIfMoveHorizontal(contentElement);
         super.position(contentElement, size);
-    }
-
-    clearCache(): void {
-        this._initialSettings = null;
-        this._initialSize = null;
     }
 }

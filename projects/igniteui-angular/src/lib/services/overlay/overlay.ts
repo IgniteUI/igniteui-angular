@@ -25,7 +25,8 @@ export class IgxOverlayService {
         id: string,
         elementRef: ElementRef,
         componentRef: ComponentRef<{}>,
-        settings: OverlaySettings
+        settings: OverlaySettings,
+        initialSize: { width?: number, height?: number, x?: number, y?: number}
     }[] = [];
     private _overlayElement: HTMLElement;
 
@@ -74,6 +75,7 @@ export class IgxOverlayService {
         this.OverlayElement.appendChild(wrapperElement);
 
         const size = element.getBoundingClientRect();
+        this._overlays.find(c => c.id === id).initialSize = size as DOMRect;
         overlaySettings.positionStrategy.position(contentElement, size, document, true);
         const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
         const animationPlayer = animationBuilder.create(element);
@@ -134,7 +136,6 @@ export class IgxOverlayService {
                 this._overlayElement.parentElement.removeChild(this._overlayElement);
                 this._overlayElement = null;
             }
-            overlay.settings.positionStrategy.clearCache();
             this.onClosed.emit({ id, componentRef });
         });
 
@@ -157,7 +158,7 @@ export class IgxOverlayService {
 
         overlay.settings.positionStrategy.position(
             overlay.elementRef.nativeElement.parentElement,
-            overlay.elementRef.nativeElement.parentElement.getBoundingClientRect(),
+            overlay.initialSize,
             this._document);
     }
 
@@ -174,7 +175,11 @@ export class IgxOverlayService {
                 id: id,
                 elementRef: <ElementRef>component,
                 componentRef: null,
-                settings: overlaySettings
+                settings: overlaySettings,
+                initialSize: {
+                    width: 0,
+                    height: 0
+                }
             });
             return element;
         }
@@ -197,7 +202,11 @@ export class IgxOverlayService {
             id: id,
             elementRef: <ElementRef>{ nativeElement: element },
             componentRef: dynamicComponent,
-            settings: overlaySettings
+            settings: overlaySettings,
+            initialSize: {
+                width: 0,
+                height: 0
+            }
         });
         return element;
     }
