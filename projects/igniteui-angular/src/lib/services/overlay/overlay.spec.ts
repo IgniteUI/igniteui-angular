@@ -44,7 +44,7 @@ describe('igxOverlay', () => {
     });
 
     afterAll(async () => {
-        clearOverlay();
+        // clearOverlay();
     });
 
     describe('Unit Tests: ', () => {
@@ -874,8 +874,59 @@ describe('igxOverlay', () => {
         });
 
         // adding more than one component to show in igx-overlay:
-        xit('When adding a new instance of component with the same options, it is rendered exactly on top of the previous one.', () => {
-            // TO DO
+        xit('When adding a new instance of component with default settings, it is rendered exactly on top of the previous one', () => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy()
+                };
+                fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fixture.detectChanges();
+
+                const overlayWrapper_1 = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+                const componentEl_1 = overlayWrapper_1.firstChild.lastChild;
+                const overlayWrapper_2 = fixture.debugElement.nativeElement.parentElement.lastChild.lastChild;
+                const componentEl_2 = overlayWrapper_2.firstChild.lastChild;
+                const componentRect_1 = componentEl_1.getBoundingClientRect();
+                const componentRect_2 = componentEl_2.getBoundingClientRect();
+                expect(componentRect_1.left).toEqual(0);
+                expect(componentRect_1.left).toEqual(componentRect_2.left);
+                expect(componentRect_1.top).toEqual(0);
+                expect(componentRect_1.top).toEqual(componentRect_2.top);
+                expect(componentRect_1.width).toEqual(componentRect_2.width);
+                expect(componentRect_1.height).toEqual(componentRect_2.height);
+        });
+
+        xit('When adding a new instance of component with the same options, it is rendered exactly on top of the previous one', () => {
+                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
+                const x = 200;
+                const y = 300;
+                const positionSettings: PositionSettings = {
+                target: new Point(x, y),
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Top,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Bottom,
+                };
+                const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(positionSettings)
+                };
+                fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fixture.detectChanges();
+
+                const overlayWrapper_1 = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
+                const componentEl_1 = overlayWrapper_1.firstChild.lastChild;
+                const overlayWrapper_2 = fixture.debugElement.nativeElement.parentElement.lastChild.lastChild;
+                const componentEl_2 = overlayWrapper_2.firstChild.lastChild;
+                const componentRect_1 = componentEl_1.getBoundingClientRect();
+                const componentRect_2 = componentEl_2.getBoundingClientRect();
+                expect(componentRect_1.left).toEqual(x - componentRect_1.width);
+                expect(componentRect_1.left).toEqual(componentRect_2.left);
+                expect(componentRect_1.top).toEqual(y - componentRect_1.height);
+                expect(componentRect_1.top).toEqual(componentRect_2.top);
+                expect(componentRect_1.width).toEqual(componentRect_2.width);
+                expect(componentRect_1.height).toEqual(componentRect_2.height);
         });
 
         // If adding a component near the visible window borders(left,right,up,down)
@@ -1442,13 +1493,80 @@ describe('igxOverlay', () => {
         // When adding more than one component to show in igx-overlay:
         xit('When the options used fit the component in the window - adding a new instance of the component with the ' +
             ' same options will render it on top of the previous one.', () => {
-                // TO DO
-            });
+                const fix = TestBed.createComponent(EmptyPageComponent);
+                fix.detectChanges();
+                const button = fix.componentInstance.buttonElement.nativeElement;
+                const positionSettings: PositionSettings = {
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                target: button,
+                horizontalStartPoint: HorizontalAlignment.Center,
+                verticalStartPoint: VerticalAlignment.Bottom
+                };
+                const overlaySettings: OverlaySettings = {
+                positionStrategy: new AutoPositionStrategy(positionSettings),
+                scrollStrategy: new NoOpScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false
+                };
+                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fix.detectChanges();
+                fix.whenStable().then(() => {
+                const buttonRect = button.getBoundingClientRect();
+                const overlayWrapper_1 = fix.debugElement.nativeElement.parentElement.lastChild.firstChild;
+                const componentEl_1 = overlayWrapper_1.firstChild.lastChild;
+                const overlayWrapper_2 = fix.debugElement.nativeElement.parentElement.lastChild.lastChild;
+                const componentEl_2 = overlayWrapper_2.firstChild.lastChild;
+                const componentRect_1 = componentEl_1.getBoundingClientRect();
+                const componentRect_2 = componentEl_2.getBoundingClientRect();
+                expect(componentRect_1.left).toEqual(buttonRect.left + buttonRect.width / 2);
+                expect(componentRect_1.left).toEqual(componentRect_2.left);
+                expect(componentRect_1.top).toEqual(buttonRect.top + buttonRect.height);
+                expect(componentRect_1.top).toEqual(componentRect_2.top);
+                expect(componentRect_1.width).toEqual(componentRect_2.width);
+                expect(componentRect_1.height).toEqual(componentRect_2.height);
+                });
+        });
 
         // When adding more than one component to show in igx-overlay and the options used will not fit the component in the
         // window, so AutoPosition is used.
         xit('adding a new instance of the component with the same options, will render it on top of the previous one.', () => {
-            // TO DO
+                const fix = TestBed.createComponent(EmptyPageComponent);
+                fix.detectChanges();
+                const offset = 16;
+                const button = fix.componentInstance.buttonElement.nativeElement;
+                const positionSettings: PositionSettings = {
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Top,
+                target: button,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Top
+                };
+                const overlaySettings: OverlaySettings = {
+                positionStrategy: new AutoPositionStrategy(positionSettings),
+                scrollStrategy: new NoOpScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false
+                };
+                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fix.detectChanges();
+                fix.whenStable().then(() => {
+                const buttonRect = button.getBoundingClientRect();
+                const overlayWrapper_1 = fix.debugElement.nativeElement.parentElement.lastChild.firstChild;
+                const componentEl_1 = overlayWrapper_1.firstChild.lastChild;
+                const overlayWrapper_2 = fix.debugElement.nativeElement.parentElement.lastChild.lastChild;
+                const componentEl_2 = overlayWrapper_2.firstChild.lastChild;
+                const componentRect_1 = componentEl_1.getBoundingClientRect();
+                const componentRect_2 = componentEl_2.getBoundingClientRect();
+                expect(componentRect_1.left).toEqual(buttonRect.left + offset);
+                expect(componentRect_1.left).toEqual(componentRect_2.left);
+                expect(componentRect_1.top).toEqual(buttonRect.top + offset);
+                expect(componentRect_1.top).toEqual(componentRect_2.top);
+                expect(componentRect_1.width).toEqual(componentRect_2.width);
+                expect(componentRect_1.height).toEqual(componentRect_2.height);
+                });
         });
 
         // When adding a component like Menu that has a sub-menu near the visible window, upon opening the sub-menu,
