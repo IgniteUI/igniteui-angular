@@ -129,10 +129,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      *@hidden
      */
-    private _onTouchedCallback: () => void = noop;
-    /**
-     *@hidden
-     */
     private _onChangeCallback: (_: any) => void = noop;
     /**
      *@hidden
@@ -178,8 +174,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      */
     public writeValue(value: any) {
-        // this._value = value;
-        // this.checked = (this._value === this.value);
+        this.value = value;
     }
 
     /**
@@ -190,7 +185,13 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      *@hidden
      */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnTouched(fn: () => void) {
+        if (this.radioButtons) {
+            this.radioButtons.forEach((button) => {
+                button.registerOnTouched(fn);
+            });
+        }
+    }
 
     private _initRadioButtons() {
         if (this.radioButtons) {
@@ -220,6 +221,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
 
         if (this._isInitialized) {
             this.change.emit(args);
+            this._onChangeCallback(this.value);
         }
     }
 
@@ -290,7 +292,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
 }
 
 /**
- *The IgxRadioModule provides the {@link IgxRadioGroupDirective} inside your application.
+ *The IgxRadioModule provides the {@link IgxRadioGroupDirective} and {@link IgxRadioComponent} inside your application.
  */
 @NgModule({
     declarations: [IgxRadioGroupDirective, IgxRadioComponent],
