@@ -220,7 +220,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const currentColumn = 'ProductName';
         const releasedColumn = 'Released';
 
-        grid.sort(currentColumn, SortingDirection.Asc);
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc});
 
         fix.detectChanges();
 

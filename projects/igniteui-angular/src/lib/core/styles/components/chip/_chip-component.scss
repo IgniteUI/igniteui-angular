@@ -1,0 +1,72 @@
+//// Chips
+/// @group components
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+@include b(igx-chips-area) {
+    @extend %igx-chips-area !optional;
+}
+
+@include b(igx-chip) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-chip !optional;
+
+    @include m(disabled) {
+        @extend %igx-chip--disabled !optional;
+    }
+
+    @include e(item) {
+        @extend %igx-chip__item !optional;
+    }
+
+    @include e(item, $m: selected) {
+        @extend %igx-chip__item--selected !optional;
+    }
+
+    @include e(label) {
+        @extend %igx-chip__label !optional;
+    }
+
+    @include e(text) {
+        @extend %igx-chip__text !optional;
+    }
+
+    @include e(order-icon) {
+        @extend %igx-chip__order-icon !optional;
+    }
+
+    @include e(dir-icon) {
+        @extend %igx-chip__dir-icon !optional;
+    }
+
+    @include e(remove-icon) {
+        @extend %igx-chip__remove-icon  !optional;
+    }
+
+    @include e(connector) {
+        @extend %igx-chip__connector  !optional;
+    }
+
+    @include e(ghost) {
+        @extend %igx-chip__ghost  !optional;
+    }
+
+    @include m(cosy) {
+        @include e(item) {
+            @extend %igx-chip__item--cosy !optional;
+        }
+    }
+
+    @include m(compact) {
+        @include e(item) {
+            @extend %igx-chip__item--compact  !optional;
+        }
+    }
+}
+
+
