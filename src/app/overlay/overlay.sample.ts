@@ -38,22 +38,22 @@ export class OverlaySampleComponent {
     buttonTop = 35;
 
     horizontalDirections = ['Left', 'Center', 'Right'];
-    horizontalDirection = '';
+    horizontalDirection = 'Left';
 
     verticalDirections = ['Top', 'Middle', 'Bottom'];
-    verticalDirection = '';
+    verticalDirection = 'Top';
 
     horizontalStartPoints = ['Left', 'Center', 'Right'];
-    horizontalStartPoint = '';
+    horizontalStartPoint = 'Left';
 
     verticalStartPoints = ['Top', 'Middle', 'Bottom'];
-    verticalStartPoint = '';
+    verticalStartPoint = 'Top';
 
     positionStrategies = ['Auto', 'Connected', 'Global'];
-    positionStrategy = '';
+    positionStrategy = 'Auto';
 
     scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
-    scrollStrategy = '';
+    scrollStrategy = 'Absolute';
 
     closeOnOutsideClick = true;
     modal = true;
@@ -163,7 +163,7 @@ export class OverlaySampleComponent {
                 switch (ev.value) {
                     case 'Absolute':
                         this._overlaySettings.scrollStrategy =
-                            new AbsoluteScrollStrategy(this.container.nativeElement.parentElement.parentElement);
+                            new AbsoluteScrollStrategy();
                         break;
                     case 'Block':
                         this._overlaySettings.scrollStrategy = new BlockScrollStrategy();
@@ -179,6 +179,57 @@ export class OverlaySampleComponent {
         }
     }
 
+    onChange2() { // WIP
+        const stringMapping = {
+            'ScrollStrategy': {
+                'Absolute' : new AbsoluteScrollStrategy(),
+                'Block' : new BlockScrollStrategy(),
+                'Close' : new CloseScrollStrategy(),
+                'NoOp' : new NoOpScrollStrategy()
+            },
+            'PositionStrategy' : {
+                'Auto' : new AutoPositionStrategy(),
+                'Connected' : new ConnectedPositioningStrategy(),
+                'Global' : new GlobalPositionStrategy()
+            },
+            'VerticalDirection' : {
+                'Top' : -1,
+                'Middle' : -0.5,
+                'Bottom' : 0
+            },
+            'VerticalStartPoint' : {
+                'Top' : -1,
+                'Middle' : -0.5,
+                'Bottom' : 0
+            },
+            'HorizontalDirection' : {
+                'Left' : -1,
+                'Center' : -0.5,
+                'Right' : 0
+            },
+            'HorizontalStartPoint' : {
+                'Left' : -1,
+                'Center' : -0.5,
+                'Right' : 0
+            }
+        };
+
+        this._overlaySettings = {
+            positionStrategy: stringMapping['PositionStrategy'][this.positionStrategy],
+            scrollStrategy: stringMapping['ScrollStrategy'][this.scrollStrategy],
+            modal: this.modal,
+            closeOnOutsideClick: this.closeOnOutsideClick
+        };
+        this._overlaySettings.positionStrategy.settings.verticalDirection =
+        stringMapping['VerticalDirection'][this.verticalDirection];
+        this._overlaySettings.positionStrategy.settings.verticalStartPoint =
+        stringMapping['VerticalStartPoint'][this.verticalStartPoint];
+        this._overlaySettings.positionStrategy.settings.horizontalDirection =
+        stringMapping['HorizontalDirection'][this.horizontalDirection];
+        this._overlaySettings.positionStrategy.settings.horizontalStartPoint =
+        stringMapping['HorizontalStartPoint'][this.horizontalStartPoint];
+    }
+
     onSwitchChange(ev) {
         switch (ev.switch.name) {
             case 'close':
@@ -191,6 +242,7 @@ export class OverlaySampleComponent {
     }
 
     public toggleDropDown() {
+        this.onChange2();
         this._overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
         this.igxDropDown.toggle(this._overlaySettings);
     }
