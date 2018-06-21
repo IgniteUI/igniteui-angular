@@ -1,0 +1,29 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-overlay) {
+    $block: bem--selector-to-string(&);
+    @include register-component(igx-overlay);
+
+    @include e(wrapper) {
+        @extend %overlay-wrapper !optional;
+    }
+
+    @include e(wrapper, $m: modal) {
+        @extend %overlay-wrapper !optional;
+        @extend %overlay-wrapper--modal !optional;
+    }
+
+    @include e(content) {
+        @extend %overlay-content !optional;
+    }
+
+    @include e(content, $m: modal) {
+        @extend %overlay-content !optional;
+        @extend %overlay-content--modal !optional;
+    }
+}
