@@ -161,7 +161,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(grExprs[0].fieldName).toEqual('ProductName');
 
         // verify rows
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(5);
@@ -174,13 +174,13 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         // verify no groups are present
-        expect(grid.groupedRowList.toArray().length).toEqual(0);
+        expect(grid.groupsRowList.toArray().length).toEqual(0);
 
         // group by number
         grid.groupBy({ fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(6);
@@ -194,7 +194,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(3);
@@ -208,7 +208,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(4);
@@ -230,7 +230,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
@@ -247,7 +247,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
@@ -268,7 +268,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
         // verify groups and data rows count
         expect(groupRows.length).toEqual(3);
@@ -279,7 +279,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.toggleGroup(groupRows[0].groupRow);
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(false);
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(4);
@@ -293,7 +293,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.toggleGroup(groupRows[0].groupRow);
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);
         expect(dataRows.length).toEqual(8);
@@ -317,7 +317,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupingExpressions = exprs;
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(13);
@@ -339,7 +339,7 @@ describe('IgxGrid - GroupBy', () => {
         ];
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(11);
         expect(dataRows.length).toEqual(8);
@@ -361,7 +361,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(3);
@@ -374,7 +374,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupsExpanded = true;
         grid.cdr.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(3);
@@ -407,7 +407,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
 
         for (const grRow of groupRows) {
             const elem = grRow.groupContent.nativeElement;
@@ -427,7 +427,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         for (const grRow of groupRows) {
             const elem = grRow.element.nativeElement;
             expect(elem.attributes['aria-describedby'].value).toEqual(grid.id + '_Released');
@@ -443,7 +443,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
         // verify groups and data rows count
         expect(groupRows.length).toEqual(5);
@@ -471,7 +471,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
@@ -483,7 +483,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
 
         // verify group order
@@ -499,7 +499,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
@@ -510,7 +510,7 @@ describe('IgxGrid - GroupBy', () => {
         checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
         grid.sort({ fieldName: 'ProductName', dir: SortingDirection.None, ignoreCase: false });
         fix.detectChanges();
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
 
         // verify groups and data rows count
@@ -558,7 +558,7 @@ describe('IgxGrid - GroupBy', () => {
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         // verify group order
         checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
     });
@@ -572,7 +572,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
         // verify groups and data rows count
         expect(groupRows.length).toEqual(5);
@@ -589,7 +589,7 @@ describe('IgxGrid - GroupBy', () => {
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
-        const gRow = grid.groupedRowList.toArray()[0];
+        const gRow = grid.groupsRowList.toArray()[0];
         expect(gRow.expanded).toBe(true);
         const evtEnter = new KeyboardEvent('keydown', {
             code: 'enter',
@@ -727,7 +727,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        expect(grid.groupedRowList.toArray().length).toEqual(3);
+        expect(grid.groupsRowList.toArray().length).toEqual(3);
         expect(grid.dataRowList.toArray().length).toEqual(2);
         expect(grid.rowList.toArray().length).toEqual(5);
     });
@@ -748,12 +748,12 @@ describe('IgxGrid - GroupBy', () => {
         const origScrollHeight = parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10);
 
         // collapse all group rows currently in the view
-        const grRows = grid.groupedRowList.toArray();
+        const grRows = grid.groupsRowList.toArray();
         grRows[0].toggle();
         fix.detectChanges();
 
         // verify rows are updated
-        expect(grid.groupedRowList.toArray().length).toEqual(4);
+        expect(grid.groupsRowList.toArray().length).toEqual(4);
         expect(grid.dataRowList.toArray().length).toEqual(1);
         expect(grid.rowList.toArray().length).toEqual(5);
 
@@ -764,7 +764,7 @@ describe('IgxGrid - GroupBy', () => {
         grRows[0].toggle();
         fix.detectChanges();
 
-        expect(grid.groupedRowList.toArray().length).toEqual(3);
+        expect(grid.groupsRowList.toArray().length).toEqual(3);
         expect(grid.dataRowList.toArray().length).toEqual(2);
         expect(grid.rowList.toArray().length).toEqual(5);
 
@@ -785,7 +785,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let groupRow = grid.groupedRowList.toArray()[0];
+        let groupRow = grid.groupsRowList.toArray()[0];
         groupRow.toggle();
 
         expect(groupRow.expanded).toBe(false);
@@ -799,7 +799,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
         fix.detectChanges();
 
-        groupRow = grid.groupedRowList.toArray()[0];
+        groupRow = grid.groupsRowList.toArray()[0];
 
         expect(groupRow.expanded).toBe(false);
     });
@@ -816,7 +816,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
-        const groupRow = grid.groupedRowList.toArray()[0];
+        const groupRow = grid.groupsRowList.toArray()[0];
         const origRect = groupRow.element.nativeElement.getBoundingClientRect();
         grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
         fix.detectChanges();
@@ -837,7 +837,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
         let allRows = grid.rowList.toArray();
 
@@ -849,7 +849,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         allRows = grid.rowList.toArray();
 
@@ -871,7 +871,7 @@ describe('IgxGrid - GroupBy', () => {
 
         fix.detectChanges();
 
-        const grRows = grid.groupedRowList.toArray();
+        const grRows = grid.groupsRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
         for (const grRow of grRows) {
             const checkBoxElement = grRow.element.nativeElement.querySelector('div.igx-grid__cbx-selection');
@@ -938,7 +938,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let grRows = grid.groupedRowList.toArray();
+        let grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
             expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
@@ -965,7 +965,7 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(grid.columns[0].width).toEqual('550px');
 
-        grRows = grid.groupedRowList.toArray();
+        grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
             expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
@@ -1011,7 +1011,7 @@ describe('IgxGrid - GroupBy', () => {
 
         fix.detectChanges();
 
-        const grRows = grid.groupedRowList.toArray();
+        const grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
             expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
@@ -1030,7 +1030,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.pinColumn('ProductName');
 
         fix.detectChanges();
-        const grRows = grid.groupedRowList.toArray();
+        const grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
             expect(grRow.element.nativeElement.clientWidth).toEqual(500);
         }
@@ -1048,7 +1048,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         // verify rows
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(5);
@@ -1063,7 +1063,7 @@ describe('IgxGrid - GroupBy', () => {
             Released: false
         });
         fix.detectChanges();
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(6);
         expect(dataRows.length).toEqual(9);
@@ -1072,7 +1072,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.updateRow({ ProductName: 'Ignite UI for Angular' }, 1010);
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(5);
         expect(dataRows.length).toEqual(9);
@@ -1081,13 +1081,14 @@ describe('IgxGrid - GroupBy', () => {
         grid.deleteRow(3);
         grid.deleteRow(6);
         fix.detectChanges();
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(6);
     });
 
-    it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group.', () => {
+    /* reenable after #1634 */
+    xit('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableEditing = true;
@@ -1119,7 +1120,7 @@ describe('IgxGrid - GroupBy', () => {
         inputElem.dispatchEvent(keyboardEvent);
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(5);
@@ -1129,7 +1130,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(8);
@@ -1143,7 +1144,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.instance.perPage = 3;
         fix.detectChanges();
         fix.componentInstance.instance.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
@@ -1160,7 +1161,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.instance.perPage = 3;
         fix.detectChanges();
         fix.componentInstance.instance.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
@@ -1173,7 +1174,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.instance.paginate(1);
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(3);
@@ -1194,7 +1195,7 @@ describe('IgxGrid - GroupBy', () => {
         });
         fix.detectChanges();
         fix.componentInstance.instance.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
@@ -1206,7 +1207,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.instance.paginate(1);
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(2);
@@ -1217,7 +1218,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.instance.paginate(0);
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(2);
@@ -1236,7 +1237,7 @@ describe('IgxGrid - GroupBy', () => {
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         // verify group area is rendered
         expect(gridElement.querySelectorAll('.igx-grouparea').length).toEqual(1);
     });
@@ -1260,7 +1261,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         grid.toggleAllGroupRows();
         fix.detectChanges();
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         expect(groupRows[0].expanded).not.toBe(true);
         expect(groupRows[groupRows.length - 1].expanded).not.toBe(true);
 
@@ -1283,7 +1284,7 @@ describe('IgxGrid - GroupBy', () => {
         ];
         grid.groupingExpressions = exprs;
         fix.detectChanges();
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         checkGroups(groupRows,
             ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
                 false, 'Ignite UI for Angular', false, null, '', true, null, true],
@@ -1302,7 +1303,7 @@ describe('IgxGrid - GroupBy', () => {
         ];
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         // verify groups
         checkGroups(groupRows,
             [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
@@ -1318,7 +1319,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
         checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
@@ -1395,7 +1396,7 @@ describe('IgxGrid - GroupBy', () => {
             const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
             checkChips(chipsElems, grid.groupingExpressions, grid.sortingExpressions);
             // verify groups
-            const groupRows = grid.groupedRowList.toArray();
+            const groupRows = grid.groupsRowList.toArray();
             checkGroups(groupRows,
                 ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
                     false, 'Ignite UI for Angular', false, null, '', true, null, true],
@@ -1457,7 +1458,7 @@ describe('IgxGrid - GroupBy', () => {
 
         fix.detectChanges();
 
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
 
         // group rows that have the same fieldName and value but belong to different parent groups
         const similarGroupRows = groupRows.filter((gRows) =>
@@ -1531,7 +1532,7 @@ describe('IgxGrid - GroupBy', () => {
         { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
-        const groupRows = grid.groupedRowList.toArray();
+        const groupRows = grid.groupsRowList.toArray();
         groupRows[1].toggle();
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
@@ -1589,7 +1590,7 @@ describe('IgxGrid - GroupBy', () => {
         { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         groupRows[1].toggle();
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
@@ -1608,7 +1609,7 @@ describe('IgxGrid - GroupBy', () => {
         simulatePointerEvent('pointerup', chips[0], 0, 0);
         fix.detectChanges();
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         expect(groupRows[0].expanded).toEqual(true);
         expect(groupRows[1].expanded).toEqual(true);
     });
@@ -1638,13 +1639,13 @@ describe('IgxGrid - GroupBy', () => {
         { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
         fix.detectChanges();
 
-        let groupRows = grid.groupedRowList.toArray();
+        let groupRows = grid.groupsRowList.toArray();
         groupRows[1].toggle();
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
         expect(groupRows[1].expanded).toEqual(false);
 
-        groupRows = grid.groupedRowList.toArray();
+        groupRows = grid.groupsRowList.toArray();
         // reorder chips by simulating events
         let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
@@ -1695,7 +1696,7 @@ describe('IgxGrid - GroupBy', () => {
                     expect(chipsElems[0].querySelector('span.igx-chip__label>span').textContent).toEqual('Released');
                     expect(chipsElems[1].querySelector('span.igx-chip__label>span').textContent).toEqual('ProductName');
 
-                    groupRows = grid.groupedRowList.toArray();
+                    groupRows = grid.groupsRowList.toArray();
                     expect(groupRows[0].expanded).toEqual(true);
                     expect(groupRows[1].expanded).toEqual(true);
 
@@ -1794,6 +1795,86 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.pinnedWidth).toEqual(0);
         expect(grid.unpinnedWidth).toEqual(400);
+    });
+
+    it('should expose tree structure to access groups', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy([{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
+
+        // there should be 3 groups at top level
+        const groupsRecords = grid.groupsRecords;
+        expect(groupsRecords.length).toBe(3);
+        expect(groupsRecords[0].value).toBeNull();
+        expect(groupsRecords[0].expression.fieldName).toBe('Released');
+        // the first group should have 1 sub group which has 1 subgroup too
+        const fsubGroups = groupsRecords[0].groups;
+        expect(fsubGroups.length).toBe(1);
+        expect(fsubGroups[0].value).toBe(1000);
+        expect(fsubGroups[0].expression.fieldName).toBe('Downloads');
+        const fsubsubGroups = groupsRecords[0].groups[0].groups;
+        expect(fsubsubGroups.length).toBe(1);
+        expect(fsubsubGroups[0].value).toBe('Ignite UI for Angular');
+        expect(fsubsubGroups[0].expression.fieldName).toBe('ProductName');
+
+        expect(groupsRecords[2].value).toBe(true);
+        expect(groupsRecords[2].expression.fieldName).toBe('Released');
+        // the last group should have 4 sub group which has 1 subgroup
+        const lsubGroups = groupsRecords[2].groups;
+        expect(lsubGroups.length).toBe(4);
+        expect(lsubGroups[0].value).toBeNull();
+        expect(lsubGroups[0].expression.fieldName).toBe('Downloads');
+        const lsubsubGroups = groupsRecords[2].groups[0].groups;
+        expect(lsubsubGroups.length).toBe(1);
+        expect(lsubsubGroups[0].value).toBe('Ignite UI for JavaScript');
+        expect(lsubsubGroups[0].expression.fieldName).toBe('ProductName');
+    });
+
+    it('should allows expanding/collapsing groups extracted from the groupRows tree', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        let groupRows = grid.groupsRowList.toArray();
+        let dataRows = grid.dataRowList.toArray();
+        // verify groups and data rows count
+        expect(groupRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(8);
+
+        // toggle grouprow - collapse
+        expect(groupRows[0].expanded).toEqual(true);
+        grid.toggleGroup(grid.groupsRecords[0]);
+        fix.detectChanges();
+        expect(groupRows[0].expanded).toEqual(false);
+        groupRows = grid.groupsRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(4);
+        // verify collapsed group sub records are not rendered
+
+        for (const rec of groupRows[0].groupRow.records) {
+            expect(grid.getRowByKey(rec.ID)).toBeUndefined();
+        }
+
+        // toggle grouprow - expand
+        grid.toggleGroup(grid.groupsRecords[0]);
+        fix.detectChanges();
+        expect(groupRows[0].expanded).toEqual(true);
+        groupRows = grid.groupsRowList.toArray();
+        dataRows = grid.dataRowList.toArray();
+        expect(groupRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(8);
+
+        // verify expanded group sub records are rendered
+        for (const rec of groupRows[0].groupRow.records) {
+            expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
+        }
     });
 
     it('should allow setting groupingExpressions and sortingExpressions initially.', () => {

@@ -3,6 +3,7 @@ import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
+import { IGroupByResult } from '../data-operations/sorting-strategy';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './api.service';
@@ -40,14 +41,17 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
 
     public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
                      expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-                     id: string, pipeTrigger: number): any[] {
+                     id: string, pipeTrigger: number): IGroupByResult {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.get(id);
         state.expressions = grid.groupingExpressions;
 
         if (!state.expressions.length) {
-            return collection;
+            return {
+                data: collection,
+                metadata: collection
+            };
         }
 
         state.expansion = grid.groupingExpansionState;
@@ -65,22 +69,25 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
-    public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
+    public transform(collection: IGroupByResult, expression: ISortingExpression | ISortingExpression[],
                      expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-                     id: string, pipeTrigger: number): any[] {
+                     id: string, groupsRecords: any[], pipeTrigger: number): any[] {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.get(id);
         state.expressions = grid.groupingExpressions;
 
         if (!state.expressions.length) {
-            return collection;
+            return collection.data;
         }
 
         state.expansion = grid.groupingExpansionState;
         state.defaultExpanded = grid.groupsExpanded;
 
-        return DataUtil.restoreGroups(cloneArray(collection), state);
+        return DataUtil.restoreGroups({
+            data: cloneArray(collection.data),
+            metadata: cloneArray(collection.metadata)
+        }, state, groupsRecords);
     }
 }
 
@@ -92,7 +99,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) {}
 
-    public transform(collection: any[], page = 0, perPage = 15, id: string, pipeTrigger: number): any[] {
+    public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 
         if (!this.gridAPI.get(id).paging) {
             return collection;
@@ -103,7 +110,10 @@ export class IgxGridPagingPipe implements PipeTransform {
             recordsPerPage: perPage
         };
 
-        const result = DataUtil.page(cloneArray(collection), state);
+        const result: IGroupByResult = {
+            data: DataUtil.page(cloneArray(collection.data), state),
+            metadata: DataUtil.page(cloneArray(collection.metadata), state)
+        };
         this.gridAPI.get(id).pagingState = state;
         return result;
     }
