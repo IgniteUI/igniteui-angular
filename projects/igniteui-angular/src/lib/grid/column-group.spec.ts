@@ -15,7 +15,8 @@ describe('IgxGrid - multi-column headers', () => {
             declarations: [
                 OneGroupOneColGridComponent,
                 OneGroupThreeColsGridComponent,
-                ColumnGroupTestComponent
+                ColumnGroupTestComponent,
+                ColumnGroupFourLevelTestComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -301,6 +302,141 @@ describe('IgxGrid - multi-column headers', () => {
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
     });
+
+    it('API method level should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+
+        // Get level of column
+        expect(grid.getColumnByName('ID').level).toEqual(0);
+        expect(grid.getColumnByName('CompanyName').level).toEqual(1);
+        expect(grid.getColumnByName('Country').level).toEqual(2);
+        expect(grid.getColumnByName('City').level).toEqual(3);
+        expect(grid.getColumnByName('PostalCode').level).toEqual(2);
+        // Get level of hidden column 
+        expect(grid.getColumnByName('Fax').level).toEqual(2);
+        // Get level of column in hidden group
+        expect(grid.getColumnByName('ContactTitle').level).toEqual(2);
+
+        // Get level of grouped column
+        expect(getColGroup(grid, 'General Information').level).toEqual(0);
+        expect(getColGroup(grid, 'Location').level).toEqual(1);
+        expect(getColGroup(grid, 'Location City').level).toEqual(2);
+        expect(getColGroup(grid, 'Contact Information').level).toEqual(1);
+        expect(getColGroup(grid, 'Postal Code').level).toEqual(1);
+        // Get level of hidden group
+        expect(getColGroup(grid, 'Person Details').level).toEqual(1);
+    });
+
+    it('API method columnGroup should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+        // Get columnGroup of column
+        expect(grid.getColumnByName('ID').columnGroup).toEqual(false);
+        expect(grid.getColumnByName('Fax').columnGroup).toEqual(false);
+        expect(grid.getColumnByName('ContactTitle').columnGroup).toEqual(false);
+
+        // Get columnGroup of grouped column
+        expect(getColGroup(grid, 'General Information').columnGroup).toEqual(true);
+        expect(getColGroup(grid, 'Location City').columnGroup).toEqual(true);
+        expect(getColGroup(grid, 'Contact Information').columnGroup).toEqual(true);
+        expect(getColGroup(grid, 'Postal Code').columnGroup).toEqual(true);
+        expect(getColGroup(grid, 'Person Details').columnGroup).toEqual(true);
+    });
+
+    it('API method allChildren should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+        // Get allChildren of column
+        expect(grid.getColumnByName('ID').allChildren.length).toEqual(0);
+        expect(grid.getColumnByName('PostalCode').allChildren.length).toEqual(0);
+        // Get allChildren of hidden column
+        expect(grid.getColumnByName('Fax').allChildren.length).toEqual(0);
+
+        // Get allChildren of group
+        const genInfGroupedColumnAllChildren = getColGroup(grid, 'General Information').allChildren;
+        expect(genInfGroupedColumnAllChildren.length).toEqual(4);
+        expect(genInfGroupedColumnAllChildren.indexOf(getColGroup(grid, 'Person Details'))).toBeGreaterThanOrEqual(0);
+
+        // Get allChildren of hidden group
+        expect(getColGroup(grid, 'Person Details').allChildren.length).toEqual(2);
+
+        // Get allChildren of group with one column
+        const postCodeGroupedColumnAllChildren = getColGroup(grid, 'Postal Code').allChildren;
+        expect(postCodeGroupedColumnAllChildren.length).toEqual(1);
+        expect(postCodeGroupedColumnAllChildren.indexOf(grid.getColumnByName('PostalCode'))).toEqual(0);
+
+        // Get allChildren of group with hidden columns and more levels
+        const addressGroupedColumnAllChildren = getColGroup(grid, 'Address Information').allChildren;
+        expect(addressGroupedColumnAllChildren.length).toEqual(11);
+        expect(addressGroupedColumnAllChildren.indexOf(getColGroup(grid, 'Postal Code'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('PostalCode'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('Address'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('Country'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('Fax'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(getColGroup(grid, 'General Information'))).toEqual(-1);
+    });
+
+    it('API method children should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+
+        // Get children of grouped column
+         expect(getColGroup(grid, 'General Information').children.length).toEqual(2);
+
+        // Get children of hidden group
+        expect(getColGroup(grid, 'Person Details').children.length).toEqual(2);
+
+        // Get children of group with one column
+        const postCodeGroupedColumnAllChildren = getColGroup(grid, 'Postal Code').children;
+        expect(postCodeGroupedColumnAllChildren.length).toEqual(1);
+
+        // Get children of group with more levels
+        const addressGroupedColumnAllChildren = getColGroup(grid, 'Address Information').children;
+        expect(addressGroupedColumnAllChildren.length).toEqual(3);
+    });
+
+    it('API method topLevelParent should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+
+        // Get topLevelParent of column with no group
+        expect(grid.getColumnByName('ID').topLevelParent).toBeNull();
+
+        // Get topLevelParent of column
+        const addressGroupedColumn = getColGroup(grid, 'Address Information');
+        expect(grid.getColumnByName('PostalCode').topLevelParent).toEqual(addressGroupedColumn);
+        expect(grid.getColumnByName('Fax').topLevelParent).toEqual(addressGroupedColumn);
+        expect(grid.getColumnByName('Country').topLevelParent).toEqual(addressGroupedColumn);
+
+        const genInfGroupedColumn = getColGroup(grid, 'General Information');
+        expect(grid.getColumnByName('ContactName').topLevelParent).toEqual(genInfGroupedColumn);
+        expect(grid.getColumnByName('CompanyName').topLevelParent).toEqual(genInfGroupedColumn);
+
+        // Get topLevelParent of top group
+        expect(genInfGroupedColumn.topLevelParent).toBeNull();
+        expect(addressGroupedColumn.topLevelParent).toBeNull();
+
+        // Get topLevelParent of group
+        expect(getColGroup(grid, 'Person Details').topLevelParent).toEqual(genInfGroupedColumn);
+        expect(getColGroup(grid, 'Postal Code').topLevelParent).toEqual(addressGroupedColumn);
+        expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
+    });
 });
 
 @Component({
@@ -371,6 +507,44 @@ export class OneGroupThreeColsGridComponent {
     `
 })
 export class ColumnGroupTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    data = DATASOURCE;
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="600px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information">
+            <igx-column  field="CompanyName"></igx-column>
+            <igx-column-group header="Person Details" hidden="true"> 
+                <igx-column field="ContactName"></igx-column>
+                <igx-column field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column-group header="Address Information">
+            <igx-column-group header="Location">
+                <igx-column field="Country"></igx-column>
+                <igx-column field="Region"></igx-column>
+                <igx-column-group header="Location City">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Contact Information">
+                <igx-column field="Phone"></igx-column>
+                <igx-column field="Fax" hidden="true"></igx-column>
+            </igx-column-group>
+            <igx-column-group header="Postal Code">
+                <igx-column field="PostalCode"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class ColumnGroupFourLevelTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
