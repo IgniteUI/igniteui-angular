@@ -1,9 +1,9 @@
-import { async, fakeAsync, tick, TestBed, discardPeriodicTasks } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { Component, ViewChild, QueryList, OnInit, ElementRef, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxColumnGroupComponent } from './column.component';
 import { By } from '@angular/platform-browser';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
@@ -20,7 +20,7 @@ describe('IgxGrid - multi-column headers', () => {
             declarations: [
                 OneGroupOneColGridComponent,
                 OneGroupThreeColsGridComponent,
-                OneHundredColumnsGridComponent,
+                BlueWhaleGridComponent,
                 ColumnGroupTestComponent,
                 ColumnGroupFourLevelTestComponent
             ],
@@ -445,7 +445,7 @@ describe('IgxGrid - multi-column headers', () => {
     });
 
     it('Should render column group headers correctly.', ((done) => {
-        const fixture = TestBed.createComponent(OneHundredColumnsGridComponent);
+        const fixture = TestBed.createComponent(BlueWhaleGridComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
@@ -664,7 +664,7 @@ export class ColumnGroupFourLevelTestComponent {
         </igx-grid>
     `
 })
-export class OneHundredColumnsGridComponent {
+export class BlueWhaleGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
