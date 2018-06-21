@@ -149,22 +149,22 @@ export class IgxGridAPIService {
 
     public update_cell(id: string, rowSelector, columnID, editValue) {
         let cellObj;
-        let rowIndex;
+        let rowID;
         const row = this.get_row_by_key(id, rowSelector);
         const editableCell = this.get_cell_inEditMode(id);
         if (editableCell) {
             cellObj = editableCell.cell;
-            rowIndex = rowSelector;
+            rowID = editableCell.cellID.rowID;
         } else if (row) {
-            rowIndex = row.index;
-            cellObj = this.get(id).columnList.toArray()[columnID].cells[rowIndex];
+            rowID = row.rowID;
+            cellObj = this.get(id).columnList.toArray()[columnID].cells[row.index];
         }
         if (cellObj) {
             const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
                 currentValue: cellObj.value, newValue: editValue };
             this.get(id).onEditDone.emit(args);
             const column =  this.get(id).columnList.toArray()[columnID];
-            this.get(id).data[rowIndex][column.field] = args.newValue;
+            this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
             this.get(id).refreshSearch();
         }
     }

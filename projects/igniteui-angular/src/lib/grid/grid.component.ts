@@ -724,6 +724,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
+        this.onColumnMovingStart.pipe(takeUntil(this.destroy$)).subscribe((source) => {
+            const editableCell =  this.gridAPI.get_cell_inEditMode(this.id);
+            if (editableCell) {
+                this.gridAPI.submit_value(this.id);
+                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+            }
+        });
     }
 
     public ngAfterContentInit() {
