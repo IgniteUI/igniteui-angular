@@ -597,7 +597,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 if (!this.hCache) {
                     this.initHCache(this.igxForOf);
                 }
-                 chunkSize = this._calcMaxChunkSize();
+                chunkSize = this._calcMaxChunkSize();
+                if (this.igxForOf && chunkSize > this.igxForOf.length) {
+                   chunkSize = this.igxForOf.length;
+                }
             } else {
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
@@ -652,7 +655,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                  length = arr.length;
              } else {
                  arr.push(item);
-                 length = arr.length;
+                 length = arr.length + 1;
                  arr.splice(0, 1);
              }
              if (length > maxLength) {

@@ -423,7 +423,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[5];
+        cell = cells[6];
         cell.triggerEventHandler('keydown.arrowup', mockEvent);
         tick();
         grid.cdr.detectChanges();
@@ -451,8 +451,8 @@ describe('IgxGrid - Column Pinning ', () => {
         cell.triggerEventHandler('keydown.control.arrowright', null);
         setTimeout(() => {
             cell.componentInstance.row.cdr.detectChanges();
-            expect(fix.componentInstance.selectedCell.value).toEqual('Berlin');
-            expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+            expect(fix.componentInstance.selectedCell.value).toEqual(null);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('Region');
 
              cell = cells[cells.length - 1];
 
