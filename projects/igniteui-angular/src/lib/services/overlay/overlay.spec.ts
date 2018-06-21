@@ -44,7 +44,7 @@ describe('igxOverlay', () => {
     });
 
     afterAll(async () => {
-        // clearOverlay();
+         clearOverlay();
     });
 
     describe('Unit Tests: ', () => {
@@ -931,9 +931,62 @@ describe('igxOverlay', () => {
 
         // If adding a component near the visible window borders(left,right,up,down)
         // it should be partially hidden and based on scroll strategy:
-        xit('Scroll Strategy None: no scrolling possible.', fakeAsync(() => {
-            // TO DO
-        }));
+        it('Scroll Strategy None: no scrolling possible.', fakeAsync(() => {
+            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                        position: absolute;
+                        top: 850px;
+                        left: -30px;
+                        width: 100px;
+                        height: 60px;
+                    }`]
+                }
+            }).createComponent(EmptyPageComponent);
+
+            const dummy = document.createElement('div');
+            dummy.setAttribute('style',
+            'width:60px; height:60px; color:green; position: absolute; top: 850px; left: 1700px;');
+            document.body.appendChild(dummy);
+
+            const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('button')[0];
+            const positionSettings2 = {
+                target: targetEl
+            };
+
+            const noScroll = new NoOpScrollStrategy();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(positionSettings2),
+                scrollStrategy: new NoOpScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            spyOn(noScroll, 'initialize').and.callThrough();
+            spyOn(noScroll, 'attach').and.callThrough();
+            spyOn(noScroll, 'detach').and.callThrough();
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            const strategy = new ConnectedPositioningStrategy();
+
+            tick();
+            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            const element = contentWrapper.firstChild as HTMLElement;
+            const elementRect = element.getBoundingClientRect();
+            const targetElRect = targetEl.getBoundingClientRect();
+
+            expect(noScroll.initialize).toHaveBeenCalledTimes(0);
+            expect(noScroll.attach).toHaveBeenCalledTimes(0);
+            expect(noScroll.detach).toHaveBeenCalledTimes(0);
+            document.documentElement.scrollTop = 100;
+            document.documentElement.scrollLeft = 50;
+            document.documentElement.dispatchEvent(new Event('scroll'));
+            tick();
+
+            expect(elementRect).toEqual(element.getBoundingClientRect());
+            expect(document.documentElement.scrollTop).toEqual(100);
+            expect(document.documentElement.scrollLeft).toEqual(50);
+    }));
 
         it('closingScrollStrategy: no scrolling possible. The component changes ' +
             'state to closed when reaching the threshold (example: expanded DropDown collapses).', fakeAsync(() => {
@@ -1727,7 +1780,7 @@ export class SimpleDynamicWithDirectiveComponent {
 }
 
 @Component({
-    template: `<button #button (click)=\'click($event)\'>Show Overlay</button>`
+    template: `<button #button (click)=\'click($event)\' class='button'>Show Overlay</button>`
 })
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
