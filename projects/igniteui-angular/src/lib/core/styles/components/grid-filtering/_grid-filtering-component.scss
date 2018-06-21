@@ -43,11 +43,15 @@
         @extend %igx-filtering-menu--to-right !optional;
     }
 
+    @include e(expression) {
+        @extend %igx-filtering-expression !optional;
+    }
+
     @include e(options-bgroup) {
         @extend %igx-filtering-menu-buttons !optional;
     }
 
-    @include e(op) {
-        @extend %igx-filtering-op !optional;
-    }
+    // @include e(op) {
+    //     @extend %igx-filtering-op !optional;
+    // }
 }
