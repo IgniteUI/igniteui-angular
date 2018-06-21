@@ -26,5 +26,8 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     contentElement.style.top = getPointFromPositionsSettings(this.settings).y + this.settings.verticalDirection * size.height + 'px';
     contentElement.style.left = getPointFromPositionsSettings(this.settings).x + this.settings.horizontalDirection * size.width + 'px';
   }
+
+  clearCache(): void {
+  }
 }
 

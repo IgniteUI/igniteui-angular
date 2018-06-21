@@ -1,4 +1,4 @@
-import { PositionSettings, VerticalAlignment, HorizontalAlignment } from './../utilities';
+import { PositionSettings, VerticalAlignment, HorizontalAlignment, Point } from './../utilities';
 import { IPositionStrategy } from './IPositionStrategy';
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
 
@@ -8,7 +8,11 @@ enum Axis {
 }
 export class AutoPositionStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
     public offsetPadding = 16;
-
+    private _initialSize: { width: number, height: number } = {
+        width: 0,
+        height: 0
+    };
+    private _initialSettings;
     getViewPort(document) { // Material Design implementation
         const clientRect = document.documentElement.getBoundingClientRect();
         const scrollPosition = {
@@ -31,25 +35,36 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
 
 
     // The position method should return a <div> container that will host the component
-    position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document): void {
+    position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
+        console.log(this.settings.target);
+        if (!initialCall) {
+            super.position(contentElement, this._initialSize);
+            return;
+        }
+        this._initialSize = size;
+        this._initialSettings = this._initialSettings || Object.assign({}, this._initialSettings, this.settings);
+        this.settings = this._initialSettings ? Object.assign({}, this.settings, this._initialSettings) : this.settings;
         const viewPort = this.getViewPort(document);
         super.position(contentElement, size);
         const checkIfMoveHorizontal = (elem: HTMLElement) => {
             const leftBound = elem.offsetLeft;
             const rightBound = elem.offsetLeft + elem.lastElementChild.clientWidth;
-            let newPosition;
             switch (this.settings.horizontalDirection) {
                 case HorizontalAlignment.Left:
-                    newPosition = leftBound < viewPort.left ?
-                        parseFloat(elem.style.left) + viewPort.left - leftBound + this.offsetPadding :
-                        parseFloat(elem.style.left);
-                    elem.style.left = newPosition + 'px';
+                    if (leftBound <= viewPort.left) {
+                        this.settings.horizontalDirection = HorizontalAlignment.Right;
+                        if (viewPort.left - leftBound < elem.lastElementChild.clientWidth) {
+                            this.settings.horizontalStartPoint = HorizontalAlignment.Right;
+                        }
+                    }
                     break;
                 case HorizontalAlignment.Right:
-                    newPosition = rightBound > viewPort.right ?
-                        parseFloat(elem.style.left) + viewPort.right - rightBound - this.offsetPadding :
-                        parseFloat(elem.style.left);
-                    elem.style.left = newPosition + 'px';
+                    if (rightBound >= viewPort.right) {
+                        this.settings.horizontalDirection = HorizontalAlignment.Left;
+                        if (viewPort.right - rightBound < elem.lastElementChild.clientWidth) {
+                            this.settings.horizontalStartPoint = HorizontalAlignment.Left;
+                        }
+                    }
                     break;
                 default:
                     return;
@@ -58,19 +73,22 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
         const checkIfMoveVertical = (elem: HTMLElement) => {
             const topBound = elem.offsetTop;
             const bottomBound = elem.offsetTop + elem.lastElementChild.clientHeight;
-            let newPosition;
             switch (this.settings.verticalDirection) {
                 case VerticalAlignment.Top:
-                    newPosition = topBound < viewPort.top ?
-                        parseFloat(elem.style.top) + viewPort.top - topBound + this.offsetPadding :
-                        parseFloat(elem.style.top);
-                    elem.style.top = newPosition + 'px';
+                    if (topBound <= viewPort.top) {
+                        this.settings.verticalDirection = VerticalAlignment.Bottom;
+                        if (viewPort.top - topBound < elem.lastElementChild.clientHeight) {
+                            this.settings.verticalStartPoint = VerticalAlignment.Bottom;
+                        }
+                    }
                     break;
                 case VerticalAlignment.Bottom:
-                    newPosition = bottomBound > viewPort.bottom ?
-                        parseFloat(elem.style.top) + viewPort.bottom - bottomBound - this.offsetPadding :
-                        parseFloat(elem.style.top);
-                    elem.style.top = newPosition + 'px';
+                    if (bottomBound >= viewPort.bottom) {
+                        this.settings.verticalDirection = VerticalAlignment.Top;
+                        if (bottomBound - viewPort.bottom < elem.lastElementChild.clientHeight) {
+                            this.settings.verticalStartPoint = VerticalAlignment.Top;
+                        }
+                    }
                     break;
                 default:
                     return;
@@ -78,5 +96,11 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
         };
         checkIfMoveVertical(contentElement);
         checkIfMoveHorizontal(contentElement);
+        super.position(contentElement, size);
+    }
+
+    clearCache(): void {
+        this._initialSettings = null;
+        this._initialSize = null;
     }
 }
