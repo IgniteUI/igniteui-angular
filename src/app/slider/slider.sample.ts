@@ -1,6 +1,16 @@
 import { Component } from '@angular/core';
 import { SliderType } from 'igniteui-angular';
 
+class Task {
+    title: string;
+    percentCompleted: number;
+
+    constructor(title: string, percentCompeted: number) {
+        this.title = title;
+        this.percentCompleted = percentCompeted;
+    }
+}
+
 @Component({
     selector: 'app-slider-sample',
     templateUrl: 'slider.sample.html'
@@ -14,14 +24,4 @@ export class SliderSampleComponent {
     };
 
     task: Task = new Task('Implement new app', 30);
-}
-
-class Task {
-    title: string;
-    percentCompleted: number;
-
-    constructor(title: string, percentCompeted: number) {
-        this.title = title;
-        this.percentCompleted = percentCompeted;
-    }
 }

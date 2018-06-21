@@ -840,7 +840,7 @@ describe('Column Hiding UI', () => {
         it('shows the number of hidden columns.', () => {
             const btnText = getColumnChooserButton().innerText;
             expect(btnText.includes('1') && btnText.includes('HIDDEN')).toBe(true);
-            expect(getColumnChooserButtonIcon().innerText).toBe('VISIBILITY_OFF');
+            expect(getColumnChooserButtonIcon().innerText.toLowerCase()).toBe('visibility_off');
         });
 
         it('shows the proper icon when no columns are hidden.', () => {
@@ -849,7 +849,7 @@ describe('Column Hiding UI', () => {
 
             const btnText = getColumnChooserButton().innerText;
             expect(btnText.includes('0') && btnText.includes('HIDDEN')).toBe(true);
-            expect(getColumnChooserButtonIcon().innerText).toBe('VISIBILITY');
+            expect(getColumnChooserButtonIcon().innerText.toLowerCase()).toBe('visibility');
         });
     });
 
