@@ -5,6 +5,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChipsSampleComponent} from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
@@ -29,10 +30,12 @@ import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
+import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
+import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
@@ -70,6 +73,10 @@ const appRoutes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
+    },
+    {
+        path: 'chip',
+        component: ChipsSampleComponent
     },
     {
         path: 'datePicker',
@@ -173,6 +180,10 @@ const appRoutes = [
         component: VirtualForSampleComponent
     },
     {
+        path: 'gridCellEditing',
+        component: GridCellEditingComponent
+    },
+    {
         path: 'grid',
         component: GridSampleComponent
     },
@@ -211,6 +222,10 @@ const appRoutes = [
     {
         path: 'buttonGroup',
         component: ButtonGroupSampleComponent
+    },
+    {
+        path: 'gridGroupBy',
+        component: GridGroupBySampleComponent
     }
 ];
 

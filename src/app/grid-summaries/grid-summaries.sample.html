@@ -9,7 +9,7 @@
         {{val}} {{row.gridID}}
         </ng-template>
     </igx-column>
-    <igx-column field="Supplier" width="200px" header="Supplier" [sortable]="true" [dataType]="'string'">
+    <igx-column field="Supplier" width="200px" header="Supplier" [sortable]="true" [dataType]="'string'" [editable]="true">
         <ng-template igxCell let-val>
         <div class="igx-grid__td-text">
             <a href="{{val['__deferred']['uri']}}">{{val['__deferred']['uri']}}</a>
@@ -26,7 +26,7 @@
         {{val}}
         </ng-template>
     </igx-column>
-    <igx-column field="CategoryID" header="CategoryID" width="200px" [hasSummary]="false">
+    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" editable="true">
         <ng-template igxCell let-cell="cell" let-val>
         {{val}}
         </ng-template>

@@ -768,7 +768,7 @@ export class GridSummaryComponent implements OnInit {
         }, 0);
     }
     pin() {
-        for (const name of ['UnitsInStock', 'CategoryID']) {
+        for (const name of ['UnitsInStock', 'Discontinued']) {
             if (this.grid1.getColumnByName(name).pinned) {
                 this.grid1.unpinColumn(name);
             } else {
