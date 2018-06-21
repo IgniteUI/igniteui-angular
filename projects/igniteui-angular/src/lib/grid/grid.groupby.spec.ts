@@ -1795,6 +1795,28 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.pinnedWidth).toEqual(0);
         expect(grid.unpinnedWidth).toEqual(400);
     });
+
+    it('should allow setting groupingExpressions and sortingExpressions initially.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.componentInstance.enableSorting = true;
+        const grid = fix.componentInstance.instance;
+        grid.sortingExpressions = [{ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }];
+        grid.groupingExpressions = [{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false }];
+        fix.detectChanges();
+
+        expect(grid.sortingExpressions.length).toEqual(2);
+        expect(grid.groupingExpressions.length).toEqual(1);
+
+        const groupRows = grid.groupedRowList.toArray();
+
+        expect(groupRows.length).toEqual(3);
+
+        const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+
+        const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+    });
 });
 
 export class DataParent {
