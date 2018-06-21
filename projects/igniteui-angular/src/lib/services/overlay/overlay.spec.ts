@@ -1025,7 +1025,7 @@ describe('igxOverlay', () => {
                 document.documentElement.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(2);
-                expect(document.documentElement.scrollTop).toEqual(0);
+                expect(document.documentElement.scrollTop).toEqual(34); // Should allow the scroll and close the overlay
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
                 expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
                 expect(overlay.hide).toHaveBeenCalledTimes(1);
