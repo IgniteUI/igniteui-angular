@@ -32,11 +32,14 @@
 
                 (onToolbarExporting)="toolbarExportClicked($event)"
             -->
-
             <br><igx-switch [(ngModel)]="this.igxGrid1.showToolbar">Toolbar</igx-switch>
             <br><igx-switch [(ngModel)]="this.igxGrid1.exportExcel">Export Excel</igx-switch>
             <br><igx-switch [(ngModel)]="this.igxGrid1.exportCsv">Export CSV</igx-switch>
             <br><input type="text" placeholder="" [(ngModel)]="this.igxGrid1.toolbarTitle" />
+
+            <button (click)="buttonToolbarClickedHandler()">Toggle toolbar</button>
+            <button (click)="grid1.toolbar.toggleColumnHidingUI()">Toggle Column Hiding UI</button>
+
         </article>
     </section>
 </div>

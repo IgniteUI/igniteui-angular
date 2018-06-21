@@ -1,30 +1,31 @@
-import { AnimationBuilder } from '@angular/animations';
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxCsvExporterService, IgxExcelExporterService } from '../services/index';
+import { NoopAnimationsModule, BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../services/index';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
 describe('IgxGrid - Grid Toolbar', () => {
 
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
                 GridToolbarTestPage1Component
             ],
             imports: [
-                IgxGridModule.forRoot()
+                IgxGridModule.forRoot(),
+                BrowserAnimationsModule,
+                NoopAnimationsModule
             ],
             providers: [
-                AnimationBuilder,
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
         })
         .compileComponents();
-    }));
+    });
 
     it('testing toolbar visibility', () => {
         const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
@@ -317,7 +318,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('excel');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxExcelExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
             args.cancel = true;
             done();
@@ -344,7 +346,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('excel');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxExcelExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
 
             // Spy the 'export' and 'exportData' methods so the files are not really created
@@ -375,7 +378,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('csv');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxCsvExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
             args.cancel = true;
             done();
@@ -402,7 +406,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         testPage.grid1.onToolbarExporting.subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
-            expect(args.type).toBe('csv');
+            expect(args.options).not.toBe(null);
+            expect(args.options instanceof IgxCsvExporterOptions).toBeTruthy();
             expect(args.cancel).toBe(false);
 
             // Spy the 'export' and 'exportData' methods so the files are not really created
@@ -415,6 +420,55 @@ describe('IgxGrid - Grid Toolbar', () => {
         exportCsvButton.nativeElement.click();
     });
 
+    it('does not show Column Hiding button by default.', () => {
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        const grid = fixture.componentInstance.grid1;
+        grid.showToolbar = true;
+        fixture.detectChanges();
+        expect(grid.toolbar.columnHidingUI).toBeUndefined();
+
+        const button = fixture.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
+        expect(button).toBeUndefined();
+    });
+
+    it('shows Column Hiding button with default content when columnHiding=true.', () => {
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        const grid = fixture.componentInstance.grid1;
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        fixture.detectChanges();
+        expect(grid.toolbar.columnHidingUI).toBeDefined();
+
+        const button = fixture.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
+        expect(button).toBeDefined();
+        const btnText = button.nativeElement.innerText;
+        expect(btnText.includes('0') && btnText.includes('VISIBILITY') && !btnText.includes('VISIBILITY_OFF')).toBe(true);
+    });
+
+    it('toggleColumnHidingUI() method opens and closes the ColumnHiding dropdown.', () => {
+        const fix = TestBed.createComponent(GridToolbarTestPage1Component);
+        const grid = fix.componentInstance.grid1;
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        fix.detectChanges();
+
+        const dropdown = fix.debugElement.query(By.css('igx-drop-down'));
+        const dropDownDiv = dropdown.query(By.css('div.igx-drop-down__list'));
+
+        expect(JSON.stringify(dropDownDiv.classes)).toBe('{"igx-toggle--hidden":true,"igx-toggle":false}');
+        expect(dropDownDiv.query(By.css('igx-column-hiding'))).toBe(null);
+
+        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser').nativeElement;
+        grid.toolbar.toggleColumnHidingUI();
+        // button.click();
+
+        expect(JSON.stringify(dropDownDiv.classes)).toBe('{"igx-toggle--hidden":false,"igx-toggle":true}');
+        expect(dropDownDiv.query(By.css('igx-column-hiding'))).not.toBe(null);
+        grid.toolbar.columnHidingDropdown.close();
+        // grid.toolbar.toggleColumnHidingUI();
+        // expect(dropDownDiv.query(By.css('igx-column-hiding'))).toBe(null);
+        // expect(JSON.stringify(dropDownDiv.classes)).toBe('{"igx-toggle--hidden":true,"igx-toggle":false}');
+    });
 });
 
 @Component({

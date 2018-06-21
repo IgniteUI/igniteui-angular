@@ -9,8 +9,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnDestroy,
-    OnInit,
     QueryList,
     ViewChild,
     ViewChildren
@@ -31,7 +29,7 @@ import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
     selector: 'igx-grid-row',
     templateUrl: './row.component.html'
 })
-export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck {
+export class IgxGridRowComponent implements IGridBus, DoCheck {
 
     @Input()
     public rowData: any;
@@ -113,27 +111,12 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     protected defaultCssClass = 'igx-grid__tr';
     protected _rowSelection = false;
     protected isFocused = false;
-    protected chunkLoaded$;
 
     constructor(public gridAPI: IgxGridAPIService,
                 private selectionAPI: IgxSelectionAPIService,
                 private element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
-    @autoWire(true)
-    public ngOnInit() {
-        this.chunkLoaded$ = this.virtDirRow.onChunkLoad.subscribe(() => {
-            if (this.grid.cellInEditMode) {
-                this.grid.cellInEditMode.inEditMode = false;
-            }
-        });
-    }
-
-    public ngOnDestroy() {
-        if (this.chunkLoaded$) {
-            this.chunkLoaded$.unsubscribe();
-        }
-    }
 
     @HostListener('focus', ['$event'])
     public onFocus(event) {
