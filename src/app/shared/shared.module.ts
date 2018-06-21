@@ -32,7 +32,7 @@ import {
     IgxBottomNavModule,
     IgxTabsModule,
     IgxTimePickerModule,
-    IgxToastModule,
+    IgxToastModule
 } from 'igniteui-angular';
 
 const igniteModules = [

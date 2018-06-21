@@ -44,6 +44,7 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
+import { OverlaySampleComponent } from './overlay/overlay.sample';
 
 const appRoutes = [
     {
@@ -134,6 +135,10 @@ const appRoutes = [
     {
         path: 'navdrawer',
         component: NavdrawerSampleComponent
+    },
+    {
+        path: 'overlay',
+        component: OverlaySampleComponent
     },
     {
         path: 'progressbar',
