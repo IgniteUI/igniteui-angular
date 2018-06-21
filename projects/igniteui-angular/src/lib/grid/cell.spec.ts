@@ -549,6 +549,41 @@ describe('IgxGrid - Cell component', () => {
         });
     }));
 
+    it('edit mode - update correct cell when sorting is applied', async(() => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        grid.sort('age', SortingDirection.Desc);
+        fixture.detectChanges();
+        const cell = grid.getCellByColumn(0, 'fullName');
+        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        let editTemplate;
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDom.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            editTemplate = cellDom.query(By.css('input'));
+            expect(cell.inEditMode).toBe(true);
+            expect(cell.editValue).toBe('Tom Riddle');
+            sendInput(editTemplate, 'Rick Gilmore', fixture);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue).toBe('Rick Gilmore');
+            cellDom.triggerEventHandler('keydown.enter', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.value).toBe('Rick Gilmore');
+            expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
+        });
+    }));
+
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
