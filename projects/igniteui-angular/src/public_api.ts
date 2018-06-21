@@ -28,6 +28,7 @@ export * from './lib/directives/toggle/toggle.directive';
  * Data operations
  */
 export * from './lib/data-operations/filtering-expression.interface';
+export * from './lib/data-operations/filtering-expressions-tree';
 export * from './lib/data-operations/filtering-condition';
 export * from './lib/data-operations/filtering-state.interface';
 export * from './lib/data-operations/filtering-strategy';
@@ -57,7 +58,7 @@ export * from './lib/drop-down/drop-down-item.component';
 export * from './lib/grid/index';
 export * from './lib/icon/index';
 export * from './lib/icon/icon.service';
-export * from './lib/input-group/input-group.component';
+export * from './lib/input-group/index';
 export * from './lib/list/list.component';
 export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/index';
@@ -67,7 +68,7 @@ export * from './lib/slider/slider.component';
 export * from './lib/snackbar/snackbar.component';
 export * from './lib/switch/switch.component';
 export * from './lib/tabbar/tabbar.component';
-export * from './lib/tabs/tabs.component';
+export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 

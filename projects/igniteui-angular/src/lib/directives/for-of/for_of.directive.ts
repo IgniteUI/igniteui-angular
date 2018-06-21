@@ -1,4 +1,4 @@
-﻿import { CommonModule, NgForOf, NgForOfContext } from '@angular/common';
+﻿import { CommonModule, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentFactory,
@@ -8,13 +8,10 @@ import {
     DoCheck,
     EmbeddedViewRef,
     EventEmitter,
-    HostListener,
     Input,
-    IterableChangeRecord,
     IterableChanges,
     IterableDiffer,
     IterableDiffers,
-    NgIterable,
     NgModule,
     NgZone,
     OnChanges,
@@ -31,7 +28,6 @@ import {
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
-import { IForOfState } from './IForOfState';
 import { VirtualHelperComponent } from './virtual.helper.component';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
@@ -296,9 +292,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === 'horizontal') {
             this.hScroll.scrollLeft = this.hCache[index] + 1;
         } else {
+            const containerSize = parseInt(this.igxForContainerSize, 10);
+            const maxVirtScrollTop = this._virtHeight - containerSize;
+            let nextScrollTop = index *  parseInt(this.igxForItemSize, 10);
+            if (nextScrollTop > maxVirtScrollTop) {
+                nextScrollTop = maxVirtScrollTop;
+            }
+
             this._bScrollInternal = true;
-            this._virtScrollTop = index * parseInt(this.igxForItemSize, 10);
-            this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop * this._virtHeightRatio;
+            this._virtScrollTop = nextScrollTop;
+            this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop / this._virtHeightRatio;
         }
     }
 
@@ -766,6 +769,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 export function getTypeNameForDebugging(type: any): string {
     const name = 'name';
     return type[name] || typeof type;
+}
+
+export interface IForOfState {
+    startIndex?: number;
+    chunkSize?: number;
 }
 
 @NgModule({
