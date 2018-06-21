@@ -29,7 +29,7 @@ const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper';
 const CLASS_OVERLAY_MAIN = 'igx-overlay';
 
 function clearOverlay() {
-    const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+    const overlays = document.getElementsByClassName(CLASS_OVERLAY_MAIN) as HTMLCollectionOf<Element>;
     Array.from(overlays).forEach(element => {
         element.parentElement.removeChild(element);
     });
@@ -46,6 +46,7 @@ fdescribe('igxOverlay', () => {
     afterAll(async () => {
         clearOverlay();
     });
+
     describe('Unit Tests: ', () => {
 
         it('OverlayElement should return a div attached to Document\'s body', fakeAsync(() => {
@@ -56,9 +57,7 @@ fdescribe('igxOverlay', () => {
             tick();
             const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
             expect(overlayDiv).toBeDefined();
-            // Does not have visibility property (currently)
-            // expect(overlayDiv.style.visibility).toEqual('visible');
-            expect(overlayDiv.classList.contains('igx-overlay')).toBeTruthy();
+            expect(overlayDiv.classList.contains(CLASS_OVERLAY_MAIN)).toBeTruthy();
         }));
 
         it('Should show component passed to overlay', fakeAsync(() => {
@@ -69,10 +68,16 @@ fdescribe('igxOverlay', () => {
             tick();
             const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
             expect(overlayDiv).toBeDefined();
-            // Does not have visibility property (currently)
-            // expect(overlayDiv.style.visibility).toEqual('visible');
             expect(overlayDiv.children.length).toEqual(1);
-            expect(overlayDiv.children[0].localName).toEqual('div');
+
+            const wrapperDiv = overlayDiv.children[0];
+            expect(wrapperDiv).toBeDefined();
+            expect(wrapperDiv.classList.contains(CLASS_OVERLAY_WRAPPER_MODAL)).toBeTruthy();
+            expect(wrapperDiv.children[0].localName).toEqual('div');
+
+            const contentDiv = wrapperDiv.children[0];
+            expect(contentDiv).toBeDefined();
+            expect(contentDiv.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBeTruthy();
         }));
 
         it('Hide() should hide component and overlay', fakeAsync(() => {
@@ -87,7 +92,6 @@ fdescribe('igxOverlay', () => {
             tick();
             overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
             expect(overlayDiv).toBeDefined();
-            // expect(overlayDiv.style.visibility).toEqual('visible');
             expect(overlayDiv.children.length).toEqual(2);
             expect(overlayDiv.children[0].localName).toEqual('div');
             expect(overlayDiv.children[1].localName).toEqual('div');
@@ -97,7 +101,6 @@ fdescribe('igxOverlay', () => {
             overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
             expect(overlayDiv).toBeDefined();
             expect(Array.from(overlayDiv.classList).indexOf(CLASS_OVERLAY_MAIN) > -1).toBeTruthy();
-            // expect(overlayDiv.style.visibility).toEqual('visible');
             expect(overlayDiv.children.length).toEqual(1);
             expect(overlayDiv.children[0].localName).toEqual('div');
 
@@ -105,10 +108,7 @@ fdescribe('igxOverlay', () => {
             tick();
             overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
             expect(overlayDiv).toBeDefined();
-            // Removing the last element in the overlay container also removes the container;
             expect(Array.from(overlayDiv.classList).indexOf(CLASS_OVERLAY_MAIN) > -1).toBeFalsy();
-            // Does not set visibility:hidden, just empties the container
-            // expect(overlayDiv.style.visibility).toEqual('hidden');
         }));
 
         xit('HideAll() should hide all components and overlay', fakeAsync(() => {
@@ -126,6 +126,8 @@ fdescribe('igxOverlay', () => {
             expect(overlayDiv.children[0].localName).toEqual('div');
             expect(overlayDiv.children[1].localName).toEqual('div');
 
+            //  TODO: calling animationPlayer.play(); hangs the application
+            //  check what happens there
             fixture.componentInstance.overlay.hideAll();
             tick();
             overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
@@ -142,7 +144,6 @@ fdescribe('igxOverlay', () => {
             tick();
             overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
             expect(overlayDiv).toBeDefined();
-            // expect(overlayDiv.style.visibility).toEqual('visible');
             expect(overlayDiv.children.length).toEqual(1);
             expect(overlayDiv.children[0].localName).toEqual('div');
 
@@ -150,7 +151,6 @@ fdescribe('igxOverlay', () => {
             tick();
             overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
             expect(overlayDiv).toBeDefined();
-            // expect(overlayDiv.style.visibility).toEqual('hidden');
             expect(overlayDiv.children.length).toEqual(0);
         }));
 
@@ -429,7 +429,6 @@ fdescribe('igxOverlay', () => {
         });
 
         it('Should properly initialize Scroll Strategy - Block', fakeAsync(() => {
-            // Block scroll strategy?
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -812,9 +811,10 @@ fdescribe('igxOverlay', () => {
             expect(componentEl.localName === 'div').toBeTruthy();
         }));
 
-        xit('The shown component is positioned according to the options passed (base point/Left, Center, Right/Top, Middle, Bottom).', () => {
-            // TO DO --> covered with position method tests.
-        });
+        xit('The shown component is positioned according to the options passed' +
+            '(base point/Left, Center, Right/Top, Middle, Bottom).', () => {
+                // TO DO --> covered with position method tests.
+            });
 
         it('If using a ConnectedPositioningStrategy without passing other but target element options, the omitted options default to:' +
             'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
