@@ -251,12 +251,12 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
         if (this._dragStarted) {
             if (this._lastDropArea && !this._lastDropArea.isEqualNode(this.element.nativeElement)) {
-                // dragging ended over a drop area
-                this.dispatchDropEvent(event.pageX, event.pageY);
-
                 if (!this.animateOnRelease) {
                     this.onTransitionEnd(null);
                 }
+
+                // dragging ended over a drop area. Call this after transition because onDrop might remove the element.
+                this.dispatchDropEvent(event.pageX, event.pageY);
                 // else the drop directive needs to call the dropFinished() method so the animation can perform
             } else if (this.animateOnRelease) {
                 // return the ghost to start position before removing it. See onTransitionEnd.

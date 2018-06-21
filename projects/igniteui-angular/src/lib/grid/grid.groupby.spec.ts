@@ -1351,11 +1351,12 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        simulateMouseEvent('click', chips[0].querySelector('span.igx-chip__label'), 0, 0);
-        fix.detectChanges();
+        const event = {owner: {id: 'ProductName'}};
+        grid.onChipClicked(event);
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe('arrow_upward');
     });
 
     it('should change grouping direction when sorting changes direction', () => {
@@ -1875,6 +1876,28 @@ describe('IgxGrid - GroupBy', () => {
         for (const rec of groupRows[0].groupRow.records) {
             expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
         }
+    });
+
+    it('should allow setting groupingExpressions and sortingExpressions initially.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.componentInstance.enableSorting = true;
+        const grid = fix.componentInstance.instance;
+        grid.sortingExpressions = [{ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }];
+        grid.groupingExpressions = [{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false }];
+        fix.detectChanges();
+
+        expect(grid.sortingExpressions.length).toEqual(2);
+        expect(grid.groupingExpressions.length).toEqual(1);
+
+        const groupRows = grid.groupsRowList.toArray();
+
+        expect(groupRows.length).toEqual(3);
+
+        const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+
+        const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
     });
 });
 
