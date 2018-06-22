@@ -1087,8 +1087,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(dataRows.length).toEqual(6);
     });
 
-    /* reenable after #1634 */
-    xit('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', () => {
+    it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group',
+    async(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableEditing = true;
@@ -1103,38 +1103,32 @@ describe('IgxGrid - GroupBy', () => {
         const cell = grid.getCellByColumn(5, 'ProductName');
 
         cell.column.editable = true;
-        rv.dispatchEvent(new Event('focus'));
-
-        fix.detectChanges();
         rv.dispatchEvent(new Event('dblclick'));
+
         fix.detectChanges();
         expect(cell.inEditMode).toBe(true);
 
-        const inputElem = cell.nativeElement.querySelector('.igx-input-group__input');
-        inputElem.value = 'NetAdvantage';
+        const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+        const input = editCellDom.query(By.css('input'));
+        sendInput(input, 'NetAdvantage', fix);
+        fix.whenStable().then(() => {
+            editCellDom.triggerEventHandler('keydown.enter', {});
+            return fix.whenStable();
+        }).then(() => {
+            let groupRows = grid.groupsRowList.toArray();
+            let dataRows = grid.dataRowList.toArray();
 
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            code: 'enter',
-            key: 'enter'
+            expect(groupRows.length).toEqual(5);
+            expect(dataRows.length).toEqual(8);
+            // re-apply grouping
+            grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
+            fix.detectChanges();
+            groupRows = grid.groupsRowList.toArray();
+            dataRows = grid.dataRowList.toArray();
+            expect(groupRows.length).toEqual(4);
+            expect(dataRows.length).toEqual(8);
         });
-        inputElem.dispatchEvent(keyboardEvent);
-        fix.detectChanges();
-
-        let groupRows = grid.groupsRowList.toArray();
-        let dataRows = grid.dataRowList.toArray();
-
-        expect(groupRows.length).toEqual(5);
-        expect(dataRows.length).toEqual(8);
-
-        // re-apply grouping
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
-        fix.detectChanges();
-
-        groupRows = grid.groupsRowList.toArray();
-        dataRows = grid.dataRowList.toArray();
-        expect(groupRows.length).toEqual(4);
-        expect(dataRows.length).toEqual(8);
-    });
+    }));
 
     // GroupBy + Paging integration
     it('should apply paging on data records only.', () => {
@@ -1351,7 +1345,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        const event = {owner: {id: 'ProductName'}};
+        const event = { owner: { id: 'ProductName' } };
         grid.onChipClicked(event);
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
@@ -1427,7 +1421,7 @@ describe('IgxGrid - GroupBy', () => {
             checkBoxElement.dispatchEvent(new Event('click'));
             setTimeout(() => {
                 expect(grid.selectedRows().length).toEqual(1);
-                expect(rows[0].element.nativeElement.className).toEqual('igx-grid__tr igx-grid__tr--selected');
+                expect(rows[0].element.nativeElement.className).toEqual('igx-grid__tr igx-grid__tr--odd igx-grid__tr--selected');
                 done();
             }, 100);
         }, 100);
@@ -1615,7 +1609,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[1].expanded).toEqual(true);
     });
 
-    xit('should remove expansion state when reordering chips', (done) => {
+    it('should remove expansion state when reordering chips', (done) => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.data = [
@@ -1803,8 +1797,8 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         grid.groupBy([{ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
+        { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
+        { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }]);
 
         // there should be 3 groups at top level
         const groupsRecords = grid.groupsRecords;
@@ -1899,6 +1893,13 @@ describe('IgxGrid - GroupBy', () => {
         const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
     });
+
+    function sendInput(element, text, fix) {
+        element.nativeElement.value = text;
+        element.nativeElement.dispatchEvent(new Event('input'));
+        fix.detectChanges();
+        return fix.whenStable();
+    }
 });
 
 export class DataParent {
