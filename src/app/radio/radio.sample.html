@@ -48,13 +48,15 @@
                     <input formControlName="name">
                 </label>
                 <br>
-                <label>Favorite Season
+                <!-- TODO: igx-radiogroup is not working properly when hosted in label element
+                When the radio button label is clicked a click event on the first item is triggered -->
+                <!-- <label>Favorite Season -->
                     <igx-radiogroup formControlName="favoriteSeason" name="radioGroupReactive">
                         <igx-radio class="radio-sample" *ngFor="let item of seasons" value="{{item}}">
                             {{item}}
                         </igx-radio>
                     </igx-radiogroup>
-                </label>
+                <!-- </label> -->
                 <br>
                 <button igxButton type="button" (click)="onUpdateBtnClick($event)" style="width: 200px">Update model</button>
             </form>
