@@ -78,6 +78,14 @@
         }
     }
 
+    @include e(tr, $m: odd) {
+        @extend %grid-row--odd !optional;
+    }
+
+    @include e(tr, $m: even) {
+        @extend %grid-row--even !optional;
+    }
+
     @include e(tr, $m: selected) {
         @extend %grid-row--selected !optional;
     }
@@ -154,6 +162,10 @@
 
     @include e(td, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
+    }
+
+    @include e(td-text) {
+        @extend %grid-cell-text !optional;
     }
 
     @include e(cbx-selection) {

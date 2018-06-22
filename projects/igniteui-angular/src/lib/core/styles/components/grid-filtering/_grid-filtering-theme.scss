@@ -51,6 +51,7 @@
 ) {
     $default-theme: (
         name: 'igx-grid-filtering',
+        toggle-background: transparent,
         toggle-icon-color: inherit,
         toggle-icon-hover-color: #fff,
         toggle-icon-active-color: igx-contrast-color($palette, 'secondary'),
@@ -60,7 +61,8 @@
         toggle-filtered-background: transparent,
         menu-background: #fff,
         menu-text-color: igx-color($palette, 'grays', 900),
-        menu-button-text-color: igx-color($palette, 'secondary')
+        menu-button-text-color: igx-color($palette, 'secondary'),
+        menu-button-disabled-text-color: initial
     );
 
     @if not($menu-text-color) and $menu-background {
@@ -213,7 +215,7 @@
             color: --var($theme, 'menu-button-text-color');
 
             &:disabled {
-                color: --var($theme, 'menu-button-text-color');
+                color: --var($theme, 'menu-button-disabled-text-color');
             }
         }
 
