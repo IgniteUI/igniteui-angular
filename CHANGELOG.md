@@ -2,6 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file. 
 
+## 6.0.3
+- **igxGrid** exposing the `filteredSortedData` method publicly - returns the grid data with current filtering and sorting applied.
+
 ## 6.0.2
 - **igxGrid** Improve scrolling on mac [#1563](https://github.com/IgniteUI/igniteui-angular/pull/1563)
 - The `ng update igniteui-angular` migration schematics now also update the theme import path in SASS files. [#1582](https://github.com/IgniteUI/igniteui-angular/issues/1582)
