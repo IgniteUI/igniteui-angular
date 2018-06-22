@@ -6,25 +6,44 @@ import { IgxRippleModule } from '../ripple/ripple.directive';
 const noop = () => { };
 let nextId = 0;
 
+/**
+ * **Ignite UI for Angular Radio Group** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio_group.html)
+ *
+ * The Ignite UI Radio Group allows the user to select a single option from an available set of options that are listed side by side.
+ *
+ * Example:
+ * ```html
+ * <igx-radiogroup name="radioGroup">
+ *   <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
+ *      {{item}}
+ *   </igx-radio>
+ * </igx-radiogroup>
+ * ```
+ */
 @Directive({
     selector: 'igx-radiogroup, [igxRadioGroup]',
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadioGroupDirective, multi: true }]
 })
 export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAccessor {
     /**
-     * @hidden
+     * Returns reference to the child radio buttons.
+     * ```typescript
+     * let radioButtons =  this.radioGroup.radioButtons;
+     * ```
+     * @memberof IgxRadioGroupDirective
      */
     @ContentChildren(IgxRadioComponent) public radioButtons: QueryList<IgxRadioComponent>;
 
     /**
      * Sets/gets the `value` attribute.
      * ```html
-     * <igx-radio [value] = "'radioButtonValue'"></igx-radio>
+     * <igx-radiogroup [value] = "'radioButtonValue'"></igx-radiogroup>
      * ```
      * ```typescript
-     * let value =  this.radio.value;
+     * let value =  this.radioGroup.value;
      * ```
-     * @memberof IgxRadioComponent
+     * @memberof IgxRadioGroupDirective
      */
     @Input()
     get value(): any { return this._value; }
@@ -36,14 +55,14 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
-     * Sets/gets the `name` attribute of the radio component.
+     * Sets/gets the `name` attribute of the radio group component. All child radio buttons inherits this name.
      * ```html
-     * <igx-radio name = "Radio1"></igx-radio>
+     * <igx-radiogroup name = "Radio1"></igx-radiogroup>
      *  ```
      * ```typescript
-     * let name =  this.radio.name;
+     * let name =  this.radioGroup.name;
      * ```
-     * @memberof IgxRadioComponent
+     * @memberof IgxRadioGroupDirective
      */
     @Input()
     get name(): string { return this._name; }
@@ -55,15 +74,15 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
-     * Sets/gets whether the radio button is required.
+     * Sets/gets whether the radio group is required.
      * If not set, `required` will have value `false`.
      * ```html
-     * <igx-radio [required] = "true"></igx-radio>
+     * <igx-radiogroup [required] = "true"></igx-radiogroup>
      * ```
      * ```typescript
-     * let isRequired =  this.radio.required;
+     * let isRequired =  this.radioGroup.required;
      * ```
-     * @memberof IgxRadioComponent
+     * @memberof IgxRadioGroupDirective
      */
     @Input()
     get required(): boolean { return this._required; }
@@ -75,10 +94,11 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
-     * An @Input property that allows you to disable the `igx-radiogroup` component. By default it's false.
+     * An @Input property that allows you to disable the radio group. By default it's false.
      * ```html
-     * <igx-buttongroup [disabled]="true" [multiSelection]="multi" [values]="fontOptions"></igx-buttongroup>
+     * <igx-radiogroup [disabled]="true"></igx-radiogroup>
      * ```
+     * @memberof IgxRadioGroupDirective
      */
     @Input()
     get disabled(): boolean { return this._disabled; }
@@ -90,15 +110,15 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
-     * Sets/gets the position of the `label` in the radio component.
+     * Sets/gets the position of the `label` in the child radio buttons.
      * If not set, `labelPosition` will have value `"after"`.
      * ```html
-     * <igx-radio labelPosition = "before"></igx-radio>
+     * <igx-radiogroup labelPosition = "before"></igx-radiogroup>
      * ```
      * ```typescript
-     * let labelPosition =  this.radio.labelPosition;
+     * let labelPosition =  this.radioGroup.labelPosition;
      * ```
-     * @memberof IgxRadioComponent
+     * @memberof IgxRadioGroupDirective
      */
     @Input()
     get labelPosition(): RadioLabelPosition | string { return this._labelPosition; }
@@ -109,6 +129,14 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         }
     }
 
+    /**
+     * Sets/gets the selected child radio button.
+     * ```typescript
+     * let selectedButton = this.radioGroup.selected;
+     * this.radioGroup.selected = selectedButton;
+     * ```
+     * @memberof IgxRadioGroupDirective
+     */
     @Input()
     get selected() { return this._selected; }
     set selected(selected: IgxRadioComponent | null) {
@@ -119,9 +147,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
-     * An event that is emitted after the radio `value` is changed.
-     * Provides references to the `IgxRadioComponent` and the `value` property as event arguments.
-     * @memberof IgxRadioComponent
+     * An event that is emitted after the radio group `value` is changed.
+     * Provides references to the selected `IgxRadioComponent` and the `value` property as event arguments.
+     * @memberof IgxRadioGroupDirective
      */
     @Output()
     readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
@@ -168,9 +196,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
 
     /**
      * Checks whether the provided value is consistent to the current radio button.
-     * If it is, the checked attribute will have value `true`;
+     * If it is, the checked attribute will have value `true` and selected property will contain the selected `IgxRadioComponent`.
      * ```typescript
-     * this.radio.writeValue('radioButtonValue');
+     * this.radioGroup.writeValue('radioButtonValue');
      * ```
      */
     public writeValue(value: any) {
@@ -193,6 +221,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         }
     }
 
+    /**
+     *@hidden
+     */
     private _initRadioButtons() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
@@ -211,6 +242,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         }
     }
 
+    /**
+     *@hidden
+     */
     private _selectedRadioButtonChanged(args: IChangeRadioEventArgs) {
         if (this._selected !== args.radio) {
             this._selected.checked = false;
@@ -225,6 +259,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         }
     }
 
+    /**
+     *@hidden
+     */
     private _setRadioButtonNames() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
@@ -233,6 +270,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         }
     }
 
+    /**
+     *@hidden
+     */
     private _selectRadioButton() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
@@ -258,34 +298,39 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
                         }
                     }
                 }
-                // TODO: mark for check?
             });
         }
     }
 
+    /**
+     *@hidden
+     */
     private _setRadioButtonLabelPosition() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
                 button.labelPosition = this._labelPosition;
-                // TODO: mark for check?
             });
         }
     }
 
+    /**
+     *@hidden
+     */
     private _disableRadioButtons() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
                 button.disabled = this._disabled;
-                // TODO: mark for check?
             });
         }
     }
 
+    /**
+     *@hidden
+     */
     private _setRadioButtonsRequired() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
                 button.required = this._required;
-                // TODO: mark for check?
             });
         }
     }
