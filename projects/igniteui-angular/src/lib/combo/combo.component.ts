@@ -549,8 +549,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    @HostListener('keydown.ArrowUp', ['$event'])
-    @HostListener('keydown.Alt.ArrowUp', ['$event'])
+    // @HostListener('keydown.ArrowUp', ['$event'])
+    // @HostListener('keydown.Alt.ArrowUp', ['$event'])
     onArrowUp(evt) {
         evt.preventDefault();
         evt.stopPropagation();
@@ -698,6 +698,15 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             this.dropdown.focusedItem = this.dropdown.items[0];
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
             this.toggle();
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public handleKeyDown(evt) {
+        if (evt.key === 'ArrowUp' || evt.key === 'Up') {
+            this.onArrowUp(evt);
         }
     }
 

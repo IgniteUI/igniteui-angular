@@ -32,7 +32,7 @@
     <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="width">
         <igx-input-group class="igx-combo__search">
             <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)"
-                (keyup)="handleKeyUp($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
+                (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
                 [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
         </igx-input-group>
         <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: this}">
