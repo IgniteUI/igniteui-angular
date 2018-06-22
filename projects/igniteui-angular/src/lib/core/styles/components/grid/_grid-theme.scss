@@ -344,6 +344,7 @@
     $grouping-padding-right: rem(12px);
 
     %grid-display {
+        position: relative;
         display: grid;
         grid-template-rows: auto auto 1fr auto;
         grid-template-columns: 1fr;
@@ -351,6 +352,7 @@
         box-shadow: $grid-shadow;
         outline-style: none;
         overflow: hidden;
+        z-index: 0;
     }
 
     %grid-caption {
