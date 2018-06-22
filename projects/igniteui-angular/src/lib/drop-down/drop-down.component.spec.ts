@@ -809,7 +809,7 @@ describe('IgxDropDown ', () => {
         });
     }));
 
-    fit('#1663 drop down flickers on open', () => {
+    it('#1663 drop down flickers on open', () => {
         const fixture = TestBed.createComponent(IgxDropDownWithScrollComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css('button')).nativeElement;
