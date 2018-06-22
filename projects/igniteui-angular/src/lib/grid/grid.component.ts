@@ -264,6 +264,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
           }
     }
 
+    @Input()
     public get displayDensity(): DisplayDensity | string {
         return this._displayDensity;
     }
@@ -918,12 +919,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const fi = list.indexOf(from);
         const ti = list.indexOf(to);
         list.splice(ti, 0, ...list.splice(fi, 1));
-        const newList = this._regenerateColumns(list);
+        const newList = this._resetColumnList(list);
         this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
     }
 
-    protected _regenerateColumns(list?) {
+    protected _resetColumnList(list?) {
         if (!list) {
             list = this.columnList.toArray();
         }
@@ -950,42 +951,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
         }
+
+        if (dropTarget.pinned && column.pinned) {
+            const pinned = this._pinnedColumns;
+            pinned.splice(pinned.indexOf(dropTarget), 0, ...pinned.splice(pinned.indexOf(column), 1));
+            return;
+        }
+
+        if (dropTarget.pinned && !column.pinned) {
+            column._pinColumn(dropTarget.index);
+            return;
+        }
+
+        if (!dropTarget.pinned && column.pinned) {
+            column.pinned = false;
+        }
+
         this._moveColumns(column, dropTarget);
-
-        // if (column.pinned) {
-        //     const fromIndex = this._pinnedColumns.indexOf(column);
-
-        //     const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
-        //         this._unpinnedColumns.indexOf(dropTarget);
-
-        //     this._pinnedColumns.splice(fromIndex, 1);
-
-        //     if (dropTarget.pinned) {
-        //         column.pinned = true;
-        //         // this._pinnedColumns.splice(toIndex, 0, column);
-        //     } else {
-        //         column.pinned = false;
-        //         // this._unpinnedColumns.splice(toIndex + 1, 0, column);
-        //     }
-        // } else {
-        //     const fromIndex = this._unpinnedColumns.indexOf(column);
-
-        //     const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
-        //         this._unpinnedColumns.indexOf(dropTarget);
-
-        //     this._unpinnedColumns.splice(fromIndex, 1);
-
-        //     if (dropTarget.pinned) {
-        //         column.pinned = true;
-        //         this._pinnedColumns.splice(toIndex, 0, column);
-        //     } else {
-        //         column.pinned = false;
-        //         this._unpinnedColumns.splice(toIndex, 0, column);
-        //     }
-        // }
-
-        // this.columnList.reset(this._pinnedColumns.concat(this._unpinnedColumns));
-        // this.columnList.notifyOnChanges();
     }
 
     public nextPage(): void {
@@ -1286,7 +1268,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight}px`;
+            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight + 1}px`;
         }
 
         if (!this._height) {
@@ -1500,6 +1482,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
         });
         this._columns = this.columnList.toArray();
+        // this._pinnedColumns = this.columnList.filter((c) => c.pinned);
+        // this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
+        this.reinitPinStates();
+    }
+
+    protected reinitPinStates() {
         this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
@@ -1850,5 +1838,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.lastSearchInfo.activeMatchIndex = 0;
             this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
         }
+    }
+
+    notGroups(arr) {
+        return arr.filter(c => !c.columnGroup);
     }
 }

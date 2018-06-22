@@ -43,12 +43,8 @@ export class GridColumnGroupsSampleComponent {
     // tslint:enable:max-line-length
 
     pinGroup() {
-        const t = this.grid.columnList.filter(c => c.header === 'General Information')[0];
+        const t = this.grid.getColumnByName('ID');
         t.pinned = !t.pinned;
-        const missing = this.grid.getColumnByName('Missing');
-        missing.pinned = !missing.pinned;
-        // this.grid.columnList.filter(c => c.columnGroup).forEach(g => console.log(g, g.allChildren));
-        // console.log(this.grid.pinnedColumns);
     }
 
     hideGroup() {

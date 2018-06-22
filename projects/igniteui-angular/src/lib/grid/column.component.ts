@@ -119,18 +119,9 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public cellClasses = '';
 
-    @Input()
     get index(): number {
         return this.grid.columns.indexOf(this);
-        // return this._index;
     }
-
-    // set index(value: number) {
-    //     if (this._index !== value) {
-    //         this._index = value;
-    //         this.check();
-    //     }
-    // }
 
     @Input()
     public formatter: (value: any) => any;
@@ -270,6 +261,7 @@ export class IgxColumnComponent implements AfterContentInit {
     parent = null;
     children;
 
+    protected _unpinnedIndex;
     protected _pinned = false;
     protected _bodyTemplate: TemplateRef<any>;
     protected _headerTemplate: TemplateRef<any>;
@@ -357,7 +349,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    protected _pinColumn() {
+    public _pinColumn(index?) {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
 
@@ -375,12 +367,13 @@ export class IgxColumnComponent implements AfterContentInit {
 
         this._pinned = true;
         const oldIndex = this.visibleIndex;
-        const index = grid._pinnedColumns.length;
+        this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
+        index = index !== undefined ? index : grid._pinnedColumns.length;
         const args = { column: this, insertAtIndex: index };
         grid.onColumnPinning.emit(args);
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
-            grid._pinnedColumns.splice(index, 0, this);
+            grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
 
             if (grid._unpinnedColumns.indexOf(this) !== -1) {
                 grid._unpinnedColumns.splice(grid._unpinnedColumns.indexOf(this), 1);
@@ -390,13 +383,14 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.columnGroup) {
             this.children.forEach(child => child.pinned = true);
         }
+        grid.reinitPinStates();
 
         grid.markForCheck();
         const newIndex = this.visibleIndex;
         this.updateHighlights(oldIndex, newIndex);
     }
 
-    protected _unpinColumn() {
+    public _unpinColumn(index?) {
         if (this.parent && this.parent.pinned) {
             this.topLevelParent.pinned = false;
             return;
@@ -404,9 +398,10 @@ export class IgxColumnComponent implements AfterContentInit {
 
         const grid = (this.grid as any);
         const oldIndex = this.visibleIndex;
+        index = index !== undefined ? index : this._unpinnedIndex;
         this._pinned = false;
 
-        grid._unpinnedColumns.splice(this.index, 0, this);
+        grid._unpinnedColumns.splice(index, 0, this);
         if (grid._pinnedColumns.indexOf(this) !== -1) {
             grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
         }
@@ -414,6 +409,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.columnGroup) {
             this.children.forEach(child => child.pinned = false);
         }
+        grid.reinitPinStates();
 
         grid.markForCheck();
         const newIndex = this.visibleIndex;

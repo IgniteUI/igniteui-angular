@@ -130,8 +130,8 @@ describe('IgxGrid - Column properties', () => {
         expect(headers[0].nativeElement.textContent).toMatch('ID');
         expect(headers[1].nativeElement.textContent).toMatch('Name');
 
-        grid.columnList.first.index = 1;
-        grid.columnList.last.index = 0;
+
+        grid.moveColumn(grid.columnList.first, grid.columnList.last);
         fix.detectChanges();
 
         expect(grid.columnList.first.index).toEqual(1);
