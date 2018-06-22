@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from './toggle.directive';
+import { IgxOverlayService } from '../../services';
 
-describe('IgxToggler', () => {
+describe('IgxToggle', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
     beforeEach(async(() => {
@@ -12,6 +13,7 @@ describe('IgxToggler', () => {
             declarations: [
                 IgxToggleActionTestComponent,
                 IgxToggleServiceInjectComponent,
+                IgxOverlayServiceComponent,
                 IgxToggleTestComponent,
                 TestWithOnPushComponent
             ],
@@ -78,6 +80,38 @@ describe('IgxToggler', () => {
         fixture.detectChanges();
 
         expect(toggle.onClosed.emit).toHaveBeenCalled();
+    }));
+
+    it('should propagate IgxOverlay onOpened/onClosed events', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxOverlayServiceComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+        const overlay = fixture.componentInstance.overlay;
+        spyOn(toggle.onOpened, 'emit');
+        spyOn(toggle.onClosed, 'emit');
+
+        toggle.open();
+        tick();
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(0);
+        expect(toggle.collapsed).toBe(false);
+        toggle.close();
+        tick();
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+        expect(toggle.collapsed).toBe(true);
+
+        toggle.open(true);
+        tick();
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+        const otherId = overlay.show(fixture.componentInstance.other);
+        overlay.hide(otherId);
+        tick();
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+        expect(toggle.collapsed).toBe(false);
+        overlay.hideAll(); // as if outside click
+        tick();
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.collapsed).toBe(true);
     }));
 
     it('should open toggle when IgxToggleActionDiretive is clicked and toggle is closed', fakeAsync(() => {
@@ -226,6 +260,25 @@ export class IgxToggleServiceInjectComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
 }
+
+@Component({
+    template: `
+        <div igxToggle id="toggleID">
+            <p>Some content</p>
+        </div>
+        <div #other> <p>Some more content</p> </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class IgxOverlayServiceComponent {
+    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(`other`) public other: ElementRef;
+    /**
+     *
+     */
+    constructor(public overlay: IgxOverlayService) {}
+}
+
 
 @Component({
     template: `
