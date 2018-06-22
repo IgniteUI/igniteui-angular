@@ -147,7 +147,6 @@ export class IgxTabsComponent implements AfterViewInit {
                 if (group) {
                     group.select(50, true);
                 }
-
             }
         }, 0);
     }
