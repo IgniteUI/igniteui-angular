@@ -10,10 +10,6 @@ class Person {
             this.favoriteSeason = season;
         }
     }
-
-    public populate(color: string) {
-        this.favoriteSeason = color;
-    }
 }
 
 @Component({

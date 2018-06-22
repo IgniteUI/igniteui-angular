@@ -1,14 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxRadioModule, IgxRadioGroupDirective } from './radio-group.directive';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 
 describe('IgxRadioGroupDirective', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 RadioGroupComponent,
-                RadioGroupWithModelComponent
+                RadioGroupWithModelComponent,
+                RadioGroupReactiveFormsComponent
             ],
             imports: [
                 IgxRadioModule,
@@ -156,6 +157,26 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.value).toEqual('Winter');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
     }));
+
+    it('Properly update the model when radio group is hosted in Reactive forms.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupReactiveFormsComponent);
+
+        fixture.detectChanges();
+        tick();
+
+        expect(fixture.componentInstance.personForm).toBeDefined();
+        expect(fixture.componentInstance.model).toBeDefined();
+        expect(fixture.componentInstance.newModel).toBeUndefined();
+
+        fixture.componentInstance.personForm.patchValue({ favoriteSeason: fixture.componentInstance.seasons[0] });
+        fixture.componentInstance.updateModel();
+        fixture.detectChanges();
+        tick();
+
+        expect(fixture.componentInstance.newModel).toBeDefined();
+        expect(fixture.componentInstance.newModel.name).toEqual(fixture.componentInstance.model.name);
+        expect(fixture.componentInstance.newModel.favoriteSeason).toEqual(fixture.componentInstance.seasons[0]);
+    }));
 });
 
 @Component({
@@ -194,4 +215,55 @@ class RadioGroupWithModelComponent {
     @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective }) public radioGroup: IgxRadioGroupDirective;
 
     personBob: Person = { name: 'Bob', favoriteSeason: 'Summer' };
+}
+
+@Component({
+    template: `
+<form [formGroup]="personForm">
+    <igx-radiogroup formControlName="favoriteSeason" name="radioGroupReactive">
+        <igx-radio *ngFor="let item of seasons" value="{{item}}">
+            {{item}}
+        </igx-radio>
+    </igx-radiogroup>
+</form>
+`
+})
+class RadioGroupReactiveFormsComponent {
+    seasons = [
+        'Winter',
+        'Spring',
+        'Summer',
+        'Autumn',
+    ];
+
+    newModel: Person;
+    model: Person = { name: 'Kirk', favoriteSeason: this.seasons[1] };
+    personForm: FormGroup;
+
+    constructor(private _formBuilder: FormBuilder) {
+        this._createForm();
+    }
+
+    updateModel() {
+        const formModel = this.personForm.value;
+
+        this.newModel = {
+            name: formModel.name as string,
+            favoriteSeason: formModel.favoriteSeason as string
+        };
+    }
+
+    private _createForm() {
+        // create form
+        this.personForm = this._formBuilder.group({
+            name: '',
+            favoriteSeason: ''
+        });
+
+        // simulate model loading from service
+        this.personForm.setValue({
+            name: this.model.name,
+            favoriteSeason: this.model.favoriteSeason
+        });
+    }
 }
