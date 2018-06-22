@@ -1606,7 +1606,6 @@ describe('igxOverlay', () => {
         // 2. Scroll Strategy
         // 2.1. Scroll Strategy - None
         it('The component do not scroll with the window. No scrolling happens.', fakeAsync(() => {
-            // In progress
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -1646,10 +1645,48 @@ describe('igxOverlay', () => {
             expect(document.documentElement.scrollLeft).toEqual(50);
         }));
 
-        xit('The component shown in igx-overlay do not close.(example: expanded DropDown stays expanded during a scrolling attempt.)',
-            () => {
-                // TO DO
-            });
+        fit('The component shown in igx-overlay do not close.(example: expanded DropDown stays expanded during a scrolling attempt.)',
+            fakeAsync(() => {
+                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+                    set: {
+                        styles: [`button {
+                            position: absolute;
+                            top: 98%;
+                            left:98%;
+                        }`]
+                    }
+                }).createComponent(EmptyPageComponent);
+
+                const noScroll = new NoOpScrollStrategy();
+                const overlaySettings: OverlaySettings = {
+                    modal: false,
+                };
+                const overlay = fixture.componentInstance.overlay;
+                spyOn(noScroll, 'initialize').and.callThrough();
+                spyOn(noScroll, 'attach').and.callThrough();
+                spyOn(noScroll, 'detach').and.callThrough();
+
+                overlay.show(SimpleDynamicComponent, overlaySettings);
+
+                tick();
+                const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                const element = contentWrapper.firstChild as HTMLElement;
+                const elementRect = element.getBoundingClientRect();
+
+                expect(noScroll.initialize).toHaveBeenCalledTimes(0);
+                expect(noScroll.attach).toHaveBeenCalledTimes(0);
+                expect(noScroll.detach).toHaveBeenCalledTimes(0);
+                document.documentElement.scrollTop = 100;
+                document.documentElement.scrollLeft = 50;
+                document.documentElement.dispatchEvent(new Event('scroll'));
+                tick();
+
+                expect(elementRect).toEqual(element.getBoundingClientRect());
+                expect(document.documentElement.scrollTop).toEqual(100);
+                expect(document.documentElement.scrollLeft).toEqual(50);
+                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+            }));
+
 
         // 2.2 Scroll Strategy - Closing. (Uses a tolerance and closes an expanded component upon scrolling if the tolerance is exceeded.)
         // (example: DropDown or Dialog component collapse/closes after scrolling 10px.)
