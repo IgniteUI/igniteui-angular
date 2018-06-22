@@ -13,9 +13,14 @@
 /// @param {Color} $ghost-header-background [null] - The dragged header background color.
 /// @param {Color} $content-background [null] - The table body background color.
 /// @param {Color} $content-text-color [null] - The table body text color.
+/// @param {Color} $row-odd-background [null] - The background color of odd rows.
+/// @param {Color} $row-even-background [null] - The background color of even rows.
+/// @param {Color} $row-odd-text-color [null] - The text color of odd rows.
+/// @param {Color} $row-even-text-color [null] - The text color of even rows.
 /// @param {Color} $row-selected-background [null] - The selected row background color.
 /// @param {Color} $row-selected-text-color [null] - The selected row text color.
 /// @param {Color} $row-hover-background [null] - The hover row background color.
+/// @param {Color} $row-hover-text-color [null] - The hover row text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
 /// @param {Color} $pinned-border-width [null] - The border width of the pinned border.
 /// @param {Color} $pinned-border-style [null] - The CSS border style of the pinned border.
@@ -61,9 +66,14 @@
     $ghost-header-icon-color: null,
     $ghost-header-background: null,
 
+    $row-odd-background: null,
+    $row-even-background: null,
+    $row-odd-text-color: null,
+    $row-even-text-color: null,
     $row-selected-background: null,
     $row-selected-text-color: null,
     $row-hover-background: null,
+    $row-hover-text-color: null,
     $row-border-color: null,
 
     $pinned-border-width: null,
@@ -109,9 +119,14 @@
         ghost-header-icon-color: igx-color($palette, 'grays'),
         ghost-header-background: #fff,
 
+        row-odd-background: #fff,
+        row-even-background: #fff,
+        row-odd-text-color: inherit,
+        row-even-text-color: inherit,
         row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
         row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
-        row-hover-background: darken(hexrgba(igx-color($palette, 'grays', 100)), 10%),
+        row-hover-background: hexrgba(igx-color($palette, 'grays', 200)),
+        row-hover-text-color: igx-color($palette, 'grays', 800),
         row-border-color: igx-color($palette, 'grays', 300),
 
         pinned-border-width: 2px,
@@ -161,6 +176,26 @@
 
     @if not($content-text-color) and $content-background {
         $content-text-color: text-contrast($content-background);
+    }
+
+    @if not($row-odd-background) and $content-background {
+        $row-odd-background: $content-background;
+    }
+
+    @if not($row-even-background) and $content-background {
+        $row-even-background: $content-background;
+    }
+
+    @if not($row-odd-text-color) and $row-odd-background {
+        $row-odd-text-color: text-contrast($row-odd-background);
+    }
+
+    @if not($row-even-text-color) and $row-even-background {
+        $row-even-text-color: text-contrast($row-even-background);
+    }
+
+    @if not($row-hover-text-color) and $row-hover-background {
+        $row-hover-text-color: text-contrast($row-hover-background);
     }
 
     @if not($cell-selected-text-color) and $cell-selected-background {
@@ -220,9 +255,14 @@
         content-background: $content-background,
         content-text-color: $content-text-color,
 
+        row-odd-background: $row-odd-background,
+        row-even-background: $row-even-background,
+        row-odd-text-color: $row-odd-text-color,
+        row-even-text-color: $row-even-text-color,
         row-selected-background: $row-selected-background,
         row-selected-text-color: $row-selected-text-color,
         row-hover-background: $row-hover-background,
+        row-hover-text-color: $row-hover-text-color,
         row-border-color: $row-border-color,
 
         pinned-border-width: $pinned-border-width,
@@ -371,9 +411,11 @@
 
         %grid-row {
             background: inherit;
+            color: inherit;
 
             &:hover {
                 background: inherit;
+                color: inherit;
             }
         }
     }
@@ -457,7 +499,18 @@
 
         &:hover {
             background-color: --var($theme, 'row-hover-background');
+            color: --var($theme, 'row-hover-text-color');
         }
+    }
+
+    %grid-row--odd {
+        background: --var($theme, 'row-odd-background');
+        color: --var($theme, 'row-odd-text-color');
+    }
+
+    %grid-row--even {
+        background: --var($theme, 'row-even-background');
+        color: --var($theme, 'row-even-text-color');
     }
 
     %grid-row--selected {
@@ -466,6 +519,7 @@
 
         &:hover {
             background-color: --var($theme, 'row-selected-background');
+            color: --var($theme, 'row-selected-text-color');
         }
     }
 
@@ -484,9 +538,10 @@
         line-height: $grid-cell-lh;
         color: inherit;
         text-align: left;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+    }
+
+    %grid-cell-text {
+        @include ellipsis();
     }
 
     %grid-cell-display--cosy {
@@ -509,8 +564,7 @@
 
     %grid-cell--editing {
         background-color: --var($theme, 'cell-editing-background') !important;
-        border: 1px solid --var($theme, 'cell-selected-background');
-        box-shadow: igx-elevation($elevations, 2);
+        border: 2px solid --var($theme, 'cell-selected-background');
 
         igx-input-group {
             width: 100%;
@@ -526,6 +580,10 @@
 
     %grid-cell--pinned-last {
         border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
+
+        &%grid-cell--editing {
+            border-right: map-get($cell-pin, 'style') --var($theme, 'cell-selected-background') !important;
+        }
     }
 
     %grid-cell-header {
@@ -539,10 +597,6 @@
         padding: map-get($grid-header-padding, 'comfortable');
         border-right: 1px dotted igx-color($palette, 'grays', 400);
         overflow: visible;
-
-        &:last-of-type {
-            border-right: transparent;
-        }
     }
 
     %grid-cell-header--cosy {
@@ -601,9 +655,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1;
-        position: relative;
         background: inherit;
+        z-index: 1;
     }
 
     %grid__cbx-selection--cosy {
