@@ -74,8 +74,13 @@ export class IgxColumnComponent implements AfterContentInit {
     set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
+            const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
+            if (cellInEditMode) {
+                if (cellInEditMode.cell.column.field === this.field) {
+                    this.gridAPI.escape_editMode(this.gridID, cellInEditMode.cellID);
+                }
+            }
             this.check();
-
             if (this.grid) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
                 const oldIndex = activeInfo.columnIndex;
