@@ -388,27 +388,6 @@ export class IgxGridAPIService {
                 newExpressionsTree.filteringOperands.push(newExpression);
                 filteringState.filteringOperands.push(newExpressionsTree);
             }
-        } else {
-            // expression or expressions tree found for this field
-            const expressionOrExpressionsTreeForField = filteringState.filteringOperands[oldExpressionsTreeIndex];
-
-            if (expressionsTree) {
-                // replace the existing expressions tree for this field with the new one passed as parameter
-                filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, expressionsTree);
-            } else if (condition) {
-                // a new expression have to be added
-                if (expressionOrExpressionsTreeForField instanceof FilteringExpressionsTree) {
-                    // add it to the existing list of expressions for this field
-                    expressionOrExpressionsTreeForField.filteringOperands.push(newExpression);
-                } else {
-                    // the element found for this field is an expression but it should be an expressions tree
-                    // so create new expressions tree for this field
-                    newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
-                    newExpressionsTree.filteringOperands.push(newExpression);
-                    // and replace the old expression with the newly created expressions tree
-                    filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, newExpressionsTree);
-                }
-            }
         }
     }
 
