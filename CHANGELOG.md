@@ -76,6 +76,9 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - `onClose` event renamed to `onClosed`.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
 
+## 6.0.3
+- **igxGrid** exposing the `filteredSortedData` method publicly - returns the grid data with current filtering and sorting applied.
+
 ## 6.0.2
 - **igxGrid** Improve scrolling on mac [#1563](https://github.com/IgniteUI/igniteui-angular/pull/1563)
 - The `ng update igniteui-angular` migration schematics now also update the theme import path in SASS files. [#1582](https://github.com/IgniteUI/igniteui-angular/issues/1582)
