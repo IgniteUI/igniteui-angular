@@ -33,6 +33,12 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         return this.verticalScrollContainer.dc.location.nativeElement;
     }
 
+    protected get isScrolledToLast(): boolean {
+        const scrollTop = this.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const scrollHeight = this.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        return Math.floor(scrollTop + this.verticalScrollContainer.igxForContainerSize) === scrollHeight;
+    }
+
     /**
      *  Event emitter overrides
      *
@@ -188,8 +194,17 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
                 }
             }
         }
-        if (newIndex === -1 || newIndex === this.items.length - 1) {
+        if (newIndex === -1) {
             this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
+        } else if (newIndex === this.items.length - 1 && !this.isScrolledToLast) {
+            this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
+        } else if (newIndex === this.items.length - 1 && this.isScrolledToLast) {
+            // When initially scrolling to the last item, a pseudo element is present in the children list
+            // We need to check if the element we're on is an actual element or an empty 'igx-combo-item' child
+            if (this.items[newIndex].element && this.items[newIndex].element.nativeElement.clientHeight) {
+                super.navigateItem(newIndex);
+            }
+            return;
         } else {
             super.navigateItem(newIndex);
         }
@@ -198,6 +213,13 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     private navigateVirtualItem(direction: Navigate, extraScroll?: number) {
         const vContainer = this.verticalScrollContainer;
         let state = vContainer.state;
+        if (this.isScrolledToLast && direction === Navigate.Down) { // If on the bottom most item, do not subscribe
+            return;
+        }
+        // If on the topmost item, do not subscribe
+        if (this.verticalScrollContainer.getVerticalScroll().scrollTop === 0 && direction === Navigate.Up) {
+            return;
+        }
         const isScrollUp = direction === Navigate.Up;
         let newScrollStartIndex = isScrollUp ? state.startIndex - 1 : state.startIndex + 1;
         if (newScrollStartIndex < 0) {
