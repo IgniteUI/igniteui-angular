@@ -351,6 +351,10 @@
         box-shadow: $grid-shadow;
         outline-style: none;
         overflow: hidden;
+
+        %cbx-display {
+            min-width: rem(20px);
+        }
     }
 
     %grid-caption {
