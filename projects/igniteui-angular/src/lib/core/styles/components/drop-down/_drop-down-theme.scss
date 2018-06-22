@@ -152,9 +152,6 @@
     $desktop-item-height: 32px;
     $mobile-item-height: 48px;
 
-    $desktop-item-min-width: 128px;
-    $mobile-item-min-width: 112px;
-
     $desktop-item-padding: 24px;
     $mobile-item-padding: 16px;
 
@@ -166,21 +163,13 @@
     $dd-shadow: igx-elevation($elevations, 3);
 
     %igx-drop-down {
-        // We need that calc to fix a bug with ellipsis which makes the ellipsis to appear even when there is no need
-        max-width: calc(100% - 32px);
-        min-width: rem($desktop-item-min-width);
         max-height: 100%;
         position: absolute;
-        @media only screen and (max-width: $mobile-break-point) {
-            min-width: rem($mobile-item-min-width);
-        }
     }
 
     %igx-drop-down__list {
         overflow-y: auto;
         z-index: 1;
-        // We need that calc to fix a bug with ellipsis which makes the ellipsis to appear even when there is no need
-        min-width: calc(100% + 32px);
         box-shadow: $dd-shadow;
         background: --var($theme, 'background-color');
     }

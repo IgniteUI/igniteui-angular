@@ -29,7 +29,7 @@
             </ng-template>
         </igx-suffix>
     </igx-input-group>
-    <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="width">
+    <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="itemsMaxWidth || '100%'">
         <igx-input-group class="igx-combo__search">
             <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)"
                 (keyup)="handleKeyUp($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
@@ -37,7 +37,7 @@
         </igx-input-group>
         <ng-container *ngTemplateOutlet="headerTemplate; context: {$impicit: this}">
         </ng-container>
-        <div #dropdownItemContainer class="igx-combo__content" [style.width.px]="itemsMaxWidth" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
+        <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
             [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
             <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
                 [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight"

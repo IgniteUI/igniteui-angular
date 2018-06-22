@@ -1,4 +1,3 @@
-
 import { ConnectedPositioningStrategy } from './../services/overlay/position/connected-positioning-strategy';
 import { CommonModule } from '@angular/common';
 import {
@@ -97,6 +96,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _dropdownContainer: ElementRef = null;
     private _searchInput: ElementRef<HTMLInputElement> = null;
     private _comboInput: ElementRef<HTMLInputElement> = null;
+    private _width = '250px';
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
         positionStrategy: new ConnectedPositioningStrategy(),
@@ -328,7 +328,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     @HostBinding('style.width')
     @Input()
-    public width = '250px';
+    public get width() {
+        return this._width;
+    }
+
+    public set width(val) {
+        this._width = val;
+    }
+
 
     /**
      * Sets the style height of the element
@@ -938,7 +945,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
-        // this.dropdown.width = this.itemsMaxWidth ? this.itemsMaxWidth : this.elementRef.nativeElement.offsetWidth;
     }
 
     /**
