@@ -1,5 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxDropDownComponent } from 'igniteui-angular';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {
+    IgxDropDownComponent,
+    ConnectedPositioningStrategy,
+    OverlaySettings,
+    NoOpScrollStrategy
+} from 'igniteui-angular';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -8,13 +13,14 @@ import { IgxDropDownComponent } from 'igniteui-angular';
     styleUrls: ['drop-down.sample.css']
 })
 export class DropDownSampleComponent implements OnInit {
-    private width = '160px';
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
+    @ViewChild('button') public button: ElementRef;
 
     items: any[] = [];
 
     ngOnInit() {
         this.igxDropDown.height = '400px';
+        this.igxDropDown.width = '180px';
         // this.igxDropDown.allowItemsFocus = false;
 
         const states = [
@@ -106,12 +112,20 @@ export class DropDownSampleComponent implements OnInit {
     }
 
     public toggleDropDown() {
-        this.igxDropDown.toggle();
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new ConnectedPositioningStrategy(),
+            scrollStrategy: new NoOpScrollStrategy(),
+            closeOnOutsideClick: true,
+            modal: false
+        };
+
+        overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
+        this.igxDropDown.toggle(overlaySettings);
     }
 
-    onSelection(ev) {
+    onSelection() {
     }
 
-    onOpening(ev) {
+    onOpening() {
     }
 }

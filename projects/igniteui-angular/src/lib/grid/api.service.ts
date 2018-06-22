@@ -136,37 +136,43 @@ export class IgxGridAPIService {
         if (editableCell) {
             if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
                 if (!this.get_cell_inEditMode(gridId).cell.editValue) {
-                    this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, 0);
+                    this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, 0);
                 } else {
                     const val = parseFloat(this.get_cell_inEditMode(gridId).cell.editValue);
                     if (!isNaN(val) || isFinite(val)) {
-                        this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, val);
+                        this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, val);
                     }
                 }
             } else {
-                this.update_cell(gridId, editableCell.cellID.rowIndex, editableCell.cellID.columnID, editableCell.cell.editValue);
+                this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, editableCell.cell.editValue);
             }
         }
     }
 
     public update_cell(id: string, rowSelector, columnID, editValue) {
         let cellObj;
-        let rowIndex;
+        let rowID;
         const row = this.get_row_by_key(id, rowSelector);
         const editableCell = this.get_cell_inEditMode(id);
         if (editableCell) {
             cellObj = editableCell.cell;
-            rowIndex = rowSelector;
+            rowID = editableCell.cellID.rowID;
         } else if (row) {
-            rowIndex = row.index;
-            cellObj = this.get(id).columnList.toArray()[columnID].cells[rowIndex];
+            rowID = row.rowID;
+            cellObj = this.get(id).columnList.toArray()[columnID].cells[row.index];
         }
         if (cellObj) {
             const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
                 currentValue: cellObj.value, newValue: editValue };
             this.get(id).onEditDone.emit(args);
             const column =  this.get(id).columnList.toArray()[columnID];
-            this.get(id).data[rowIndex][column.field] = args.newValue;
+            if (this.get(id).primaryKey) {
+                const index =  this.get(id).data.map((record) => record[this.get(id).primaryKey]).indexOf(rowSelector);
+                this.get(id).data[index][column.field] = args.newValue;
+            } else {
+                this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
+            }
+            (this.get(id) as any)._pipeTrigger++;
             this.get(id).refreshSearch();
         }
     }
@@ -176,6 +182,7 @@ export class IgxGridAPIService {
         const args: IGridEditEventArgs = { row, cell: null, currentValue: this.get(id).data[index], newValue: value };
         this.get(id).onEditDone.emit(args);
         this.get(id).data[index] = args.newValue;
+        (this.get(id) as any)._pipeTrigger++;
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
@@ -380,27 +387,6 @@ export class IgxGridAPIService {
                 newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
                 newExpressionsTree.filteringOperands.push(newExpression);
                 filteringState.filteringOperands.push(newExpressionsTree);
-            }
-        } else {
-            // expression or expressions tree found for this field
-            const expressionOrExpressionsTreeForField = filteringState.filteringOperands[oldExpressionsTreeIndex];
-
-            if (expressionsTree) {
-                // replace the existing expressions tree for this field with the new one passed as parameter
-                filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, expressionsTree);
-            } else if (condition) {
-                // a new expression have to be added
-                if (expressionOrExpressionsTreeForField instanceof FilteringExpressionsTree) {
-                    // add it to the existing list of expressions for this field
-                    expressionOrExpressionsTreeForField.filteringOperands.push(newExpression);
-                } else {
-                    // the element found for this field is an expression but it should be an expressions tree
-                    // so create new expressions tree for this field
-                    newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
-                    newExpressionsTree.filteringOperands.push(newExpression);
-                    // and replace the old expression with the newly created expressions tree
-                    filteringState.filteringOperands.splice(oldExpressionsTreeIndex, 1, newExpressionsTree);
-                }
             }
         }
     }
