@@ -89,6 +89,7 @@
 
     $grouparea-background: null,
     $group-row-background: null,
+    $row-content-focus-background: null,
     $row-indentation-background: null,
     $group-label-column-name-text: null,
     $group-label-icon: null,
@@ -154,6 +155,7 @@
         group-count-text-color: igx-color($palette, 'grays', 600),
         drop-area-text-color: igx-color($palette, 'grays', 600),
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
+        row-content-focus-background: igx-color($palette, grays, 100),
         row-indentation-background: hexrgba(igx-color($palette, 'grays', 100)),
         drop-area-icon-color: igx-color($palette, 'grays'),
         drop-area-background: igx-color($palette, grays, 100),
@@ -289,6 +291,7 @@
         group-count-text-color: $group-count-text-color,
         drop-area-text-color: $drop-area-text-color,
         group-row-background: $group-row-background,
+        row-content-focus-background: $row-content-focus-background,
         row-indentation-background: $row-indentation-background,
         drop-area-icon-color: $drop-area-icon-color,
         drop-area-on-drop-background: $drop-area-on-drop-background,
@@ -929,6 +932,7 @@
 
         &:focus {
             outline: transparent;
+            background: --var($theme, 'row-content-focus-background');
         }
     }
 
