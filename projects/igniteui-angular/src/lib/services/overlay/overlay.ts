@@ -71,7 +71,7 @@ export class IgxOverlayService {
 
         this.onOpening.emit({ id, componentRef });
 
-        const size = element.getBoundingClientRect();
+        let size = element.getBoundingClientRect();
 
         const wrapperElement = this.getWrapperElement(overlaySettings, id);
         const contentElement = this.getContentElement(wrapperElement, overlaySettings);
@@ -79,6 +79,12 @@ export class IgxOverlayService {
         const elementScrollTop = element.scrollTop;
         contentElement.appendChild(element);
         element.scrollTop = elementScrollTop;
+
+        if (componentRef) {
+            //  if we are positioning component this is first time it gets visible
+            //  and we can finally get its size
+            size = element.getBoundingClientRect();
+        }
 
         this._overlays.find(c => c.id === id).initialSize = size as DOMRect;
         overlaySettings.positionStrategy.position(contentElement, size, document, true);
