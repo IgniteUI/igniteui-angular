@@ -609,9 +609,8 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
 
-       let col = grid.getColumnByName('Phone');
-       col.pin();
-       fix.detectChanges();
+        grid.getColumnByName('Phone').pin();
+        fix.detectChanges();
 
         const gridChildren = Array.prototype.slice.call(grid.nativeElement.children);
         const gridWidth = grid.nativeElement.getBoundingClientRect().width;
