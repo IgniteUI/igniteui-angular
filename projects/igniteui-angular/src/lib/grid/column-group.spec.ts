@@ -24,7 +24,11 @@ describe('IgxGrid - multi-column headers', () => {
                 BlueWhaleGridComponent,
                 ColumnGroupTestComponent,
                 ColumnGroupFourLevelTestComponent,
+<<<<<<< Updated upstream
                 ThreeGroupsThreeColumnsGridComponent
+=======
+                ColumnGroupTwoGroupsTestComponent
+>>>>>>> Stashed changes
             ],
             imports: [
                 NoopAnimationsModule,
@@ -615,11 +619,24 @@ describe('IgxGrid - multi-column headers', () => {
         const grGeneralInf = getColGroup(grid, 'General Information');
         expect(grGeneralInf.allChildren.every(c => c.pinned === true)).toEqual(true);
 
-        expect(colContactTitle.visibleIndex).toEqual(5);
-        expect(grid.getColumnByName('CompanyName').visibleIndex).toEqual(0);
+        // expect(grGeneralInf.visibleIndex).toEqual(-1);
+        // expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
 
         expect(grid.pinnedColumns.length).toEqual(5);
         expect(grid.unpinnedColumns.length).toEqual(13);
+
+        // Unpin a column 
+        grid.getColumnByName('CompanyName').pinned = false;
+        fixture.detectChanges();
+
+         // Verify the topParent group is not pinned
+        expect(grGeneralInf.allChildren.every(c => c.pinned === false)).toEqual(true);
+ 
+        //expect(grGeneralInf.visibleIndex).toEqual(0);
+        //expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
+ 
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(18);
      });
 
      it('column pinning -  Pin a group in level one', () => {
@@ -629,19 +646,107 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.pinnedColumns.length).toEqual(0);
         expect(grid.unpinnedColumns.length).toEqual(18);
 
-        // Try to pin a column in a group
+        // Pin top group
         const grGeneralInf = getColGroup(grid, 'General Information');
         grGeneralInf.pinned = true;
         fixture.detectChanges();
 
         // Verify group and all its children are pinned
         expect(grGeneralInf.allChildren.every(c => c.pinned === true)).toEqual(true);
+<<<<<<< Updated upstream
 
         expect(grGeneralInf.visibleIndex).toEqual(-1);
         expect(grid.getColumnByName('CompanyName').visibleIndex).toEqual(0);
+=======
+      
+        //expect(grGeneralInf.visibleIndex).toEqual(-1);
+        //expect(grid.getColumnByName('CompanyName').visibleIndex).toEqual(0);
+>>>>>>> Stashed changes
 
         expect(grid.pinnedColumns.length).toEqual(5);
         expect(grid.unpinnedColumns.length).toEqual(13);
+
+        // Unpin top group
+        grGeneralInf.pinned = false;
+        fixture.detectChanges();
+
+        // Verify group and all its children are not pinned
+        expect(grGeneralInf.allChildren.every(c => c.pinned === false)).toEqual(true);
+      
+        //expect(grGeneralInf.visibleIndex).toEqual(0);
+        expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
+
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(18);
+     });
+
+     it('column pinning -  Try to pin column or group which not match in the view', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(18);
+
+        // Try to pin top group
+        const grAdressInf = getColGroup(grid, 'Address Information');
+        grAdressInf.pinned = true;
+        fixture.detectChanges();
+
+        // Verify group and all its children are not pinned
+        expect(grAdressInf.allChildren.every(c => c.pinned === false)).toEqual(true);
+      
+        expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
+
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(18);
+
+        // Try to pin a column
+        grid.getColumnByName('Fax').pinned = true;
+        fixture.detectChanges();
+
+        // Verify group and all its children are not pinned
+        expect(grAdressInf.allChildren.every(c => c.pinned === false)).toEqual(true);
+      
+        expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
+
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(18);
+
+        // Try to pin child group
+        getColGroup(grid, 'Contact Information').pinned = true;
+        fixture.detectChanges();
+
+        // Verify group and all its children are not pinned
+        expect(grAdressInf.allChildren.every(c => c.pinned === false)).toEqual(true);
+      
+        expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
+
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(18);
+     });
+
+     it('column pinning -  Verify pin a not fully visble group', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTwoGroupsTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(13);
+
+        // Pin a Group which is not fully visble
+        const grAdressInf = getColGroup(grid, 'Address Information');
+        grAdressInf.pinned = true;
+        fixture.detectChanges();
+
+        // Verify group and all its children are not pinned
+        expect(grAdressInf.allChildren.every(c => c.pinned === true)).toEqual(true);
+
+        expect(grid.getCellByColumn(0, 'ID')).toBeDefined();
+        expect(grid.getCellByColumn(0, 'Country')).toBeDefined();
+        expect(grid.getCellByColumn(0, 'City')).toBeDefined();
+
+        //expect(grid.getCellByColumn(0, 'ID').value).toEqual("ALFKI");
+        //expect(grid.getCellByColumn(0, 'Country').value).toEqual("Germany");
+        //expect(grid.getCellByColumn(0, 'City').value).toEqual("Berlin");
      });
 
      xit('Should move column group.', () => {
@@ -760,6 +865,38 @@ export class ColumnGroupTestComponent {
     `
 })
 export class ColumnGroupFourLevelTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    data = DATASOURCE;
+}
+
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="600px" width="800px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information">
+            <igx-column  field="CompanyName"></igx-column>
+            <igx-column-group header="Person Details">
+                <igx-column field="ContactName"></igx-column>
+                <igx-column field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column-group header="Address Information">
+            <igx-column field="Region"></igx-column>
+            <igx-column-group header="Location">
+                <igx-column field="Country"></igx-column>
+                <igx-column-group header="Location City">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class ColumnGroupTwoGroupsTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
