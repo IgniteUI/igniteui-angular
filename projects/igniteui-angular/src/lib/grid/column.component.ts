@@ -52,6 +52,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public sortable = false;
 
     @Input()
+    public groupable = false;
+
+    @Input()
     public editable = false;
 
     @Input()

@@ -30,7 +30,7 @@ describe('IgxGrid - Grid Sorting', () => {
         const currentColumn = 'Name';
         const lastNameColumn = 'LastName';
 
-        grid.sort(currentColumn, SortingDirection.Asc);
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc});
 
         fixture.detectChanges();
 
@@ -52,7 +52,7 @@ describe('IgxGrid - Grid Sorting', () => {
         const currentColumn = 'Name';
 
         // Ignore case on sorting set to false
-        grid.sort(currentColumn, SortingDirection.Desc, false);
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false});
         fixture.detectChanges();
 
         let expectedResult = 'Rick';
@@ -61,8 +61,8 @@ describe('IgxGrid - Grid Sorting', () => {
         expectedResult = 'ALex';
         expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
 
-        // Ignore case on sorting set to true (default)
-        grid.sort(currentColumn, SortingDirection.Desc);
+        // Ignore case on sorting set to true
+        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true});
         fixture.detectChanges();
 
         expectedResult = 'Rick';
@@ -79,7 +79,7 @@ describe('IgxGrid - Grid Sorting', () => {
         const grid = fixture.componentInstance.grid;
         const gridData = fixture.componentInstance.data;
         const invalidColumn = 'Age';
-        grid.sort(invalidColumn);
+        grid.sort({fieldName: invalidColumn, dir: SortingDirection.Desc});
 
         let expectedResult = 'Jane';
         expect(grid.getCellByColumn(0, 'Name').value).toEqual(expectedResult);
@@ -236,6 +236,7 @@ describe('IgxGrid - Grid Sorting', () => {
             expect(grid.getCellByColumn(index, firstColumn).value).toEqual(gridData[index].ID));
     });
 
+    // sort now allows only params of type ISortingExpression hence it is not possible to pass invalid expressions
     it(`Grid sort by mixed valid and invalid expressions should update the
             data only by valid ones (through API)`, () => {
         const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
@@ -245,23 +246,23 @@ describe('IgxGrid - Grid Sorting', () => {
         const firstColumn = 'ID';
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
-        const invalidAndValidExp = [{FieldName: secondColumn, dir: SortingDirection.Desc },
-            {fieldName: firstColumn }];
+        const invalidAndValidExp = [{fieldName: secondColumn, dir: SortingDirection.Desc },
+            {fieldName: firstColumn, dir: SortingDirection.Asc }];
 
         grid.sort(invalidAndValidExp);
 
         fixture.detectChanges();
 
-        let expectedResult = 'Brad';
+        let expectedResult = 'Rick';
         expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Williams';
+        expectedResult = 'Jones';
         expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(0, firstColumn).value).toEqual(1);
-        expectedResult = 'Rick';
+        expect(grid.getCellByColumn(0, firstColumn).value).toEqual(6);
+        expectedResult = 'ALex';
         expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'BRown';
+        expectedResult = 'Smith';
         expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
+        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(5);
     });
 
     // UI Tests
@@ -354,11 +355,11 @@ describe('IgxGrid - Grid Sorting', () => {
         const sortingIcon = fixture.debugElement.query(By.css('.sort-icon'));
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
 
-        grid.sort('ID', SortingDirection.Asc);
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc});
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
 
-        grid.sort('ID', SortingDirection.Desc);
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc});
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
 

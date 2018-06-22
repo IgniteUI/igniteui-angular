@@ -416,7 +416,7 @@ describe('Navigation Drawer', () => {
             });
         }));
 
-        it('should update pin based on window width (pinThreshold)', (done) => {
+        xit('should update pin based on window width (pinThreshold)', (done) => {
             const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
             let fixture: ComponentFixture<TestComponentPin>;
             TestBed.overrideComponent(TestComponentPin, {

@@ -2,6 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
+- `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay.html)
 - Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
     For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
 - `igxGrid` filtering operands
@@ -47,6 +48,15 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 }
 ```
 
+- `igxGrid` now supports grouping of columns enabling users to create critera for organizing data records. To explore the functionality start off by setting some columns as `groupable`:
+    ```html
+    <igx-grid [data]="data">
+        <igx-column [field]="'ProductName'"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [groupable]="true"></igx-column>
+    </igx-grid>
+    ```
+   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
+
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
@@ -56,6 +66,8 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
+    - `igxGrid` changes:
+        - sort API now accepts params of type `ISortingExpression` or `Array<ISortingExpression>`.
     - `igxToggle` changes
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
