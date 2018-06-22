@@ -1,9 +1,19 @@
 import { Component, ViewChild, AfterContentInit } from '@angular/core';
 import { IgxRadioGroupDirective } from 'igniteui-angular';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 class Person {
-    name: string;
     favoriteSeason: string;
+
+    constructor(public name: string, season?: string) {
+        if (season) {
+            this.favoriteSeason = season;
+        }
+    }
+
+    public populate(color: string) {
+        this.favoriteSeason = color;
+    }
 }
 
 @Component({
@@ -23,7 +33,15 @@ export class RadioSampleComponent implements AfterContentInit {
         'Autumn',
     ];
 
-    personBob: Person = { name: 'Bob', favoriteSeason: 'Summer' };
+    personBob: Person = new Person('Bob', this.seasons[2]);
+
+    newPerson: Person;
+    personKirk: Person = new Person('Kirk', this.seasons[1]);
+    personKirkForm: FormGroup;
+
+    constructor(private _formBuilder: FormBuilder) {
+        this._createPersonKirkForm();
+    }
 
     get diagnostic() {
         return JSON.stringify(this.personBob);
@@ -37,11 +55,29 @@ export class RadioSampleComponent implements AfterContentInit {
         this.radioGroup.value = 'Baz';
     }
 
+    onUpdateBtnClick(evt) {
+        const formModel = this.personKirkForm.value;
+
+        this.newPerson = new Person(formModel.name as string, formModel.favoriteSeason as string);
+    }
+
     onRadioChange(evt) {
         this.selectedValue = evt.value;
     }
 
     onSubmit() {
-        this.personBob.favoriteSeason = 'Spring';
+        this.personBob.favoriteSeason = this.seasons[1];
+    }
+
+    private _createPersonKirkForm() {
+        this.personKirkForm = this._formBuilder.group({
+            name: '',
+            favoriteSeason: ''
+        });
+
+        this.personKirkForm.setValue({
+            name: this.personKirk.name,
+            favoriteSeason: this.personKirk.favoriteSeason
+        });
     }
 }

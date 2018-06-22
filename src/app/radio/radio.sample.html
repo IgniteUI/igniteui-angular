@@ -23,7 +23,7 @@
         </article>
         <article class="sample-column">
             <h4 class="sample-title">Radio group in template-driven form</h4>
-            <form #personForm="ngForm" (ngSubmit)="onSubmit()">
+            <form #personBobForm="ngForm" (ngSubmit)="onSubmit()">
                 <div>
                     <label for="name">Name </label>
                     <input type="text" id="name" required [(ngModel)]="personBob.name" name="name">
@@ -38,36 +38,29 @@
                 </div>
 
                 {{diagnostic}}<br>
-                <button igxButton type="submit" [disabled]="!personForm.form.valid" style="width: 200px">Submit</button>
+                <button igxButton type="submit" [disabled]="!personBobForm.form.valid" style="width: 200px">Submit</button>
             </form>
-            <!-- <label>
-                <input type="checkbox" [checked]="radioGroup.disabled" (change)="radioGroup.disabled = !radioGroup.disabled"> Disabled
-            </label>
-            <label>
-                <input type="checkbox" [checked]="radioGroup.required" (change)="radioGroup.required = !radioGroup.required"> Required
-            </label>
-            Disabled = '{{radioGroup.disabled}}'<br>
-            Required = '{{radioGroup.required}}'<br>
-            SelectedValue = '{{selectedValue}}'<br>
-            <button igxButton type="button" (click)="onBtnClick($event)" style="width: 200px">Select 'Baz'</button> -->
         </article>
         <article class="sample-column">
-            <h4 class="sample-title">Radio group in reactive form</h4>
-            <!-- <igx-radiogroup #radioGroupZZ name="radiogroupZZ" value="Bar" required="true" (change)="onRadioChange($event)">
-                <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
-                    {{item}}
-                </igx-radio>
-            </igx-radiogroup>
-            <label>
-                <input type="checkbox" [checked]="radioGroup.disabled" (change)="radioGroup.disabled = !radioGroup.disabled"> Disabled
-            </label>
-            <label>
-                <input type="checkbox" [checked]="radioGroup.required" (change)="radioGroup.required = !radioGroup.required"> Required
-            </label>
-            Disabled = '{{radioGroup.disabled}}'<br>
-            Required = '{{radioGroup.required}}'<br>
-            SelectedValue = '{{selectedValue}}'<br>
-            <button igxButton type="button" (click)="onBtnClick($event)" style="width: 200px">Select 'Baz'</button> -->
+            <form [formGroup]="personKirkForm">
+                <h4 class="sample-title">Radio group in reactive form</h4>
+                <label>Name
+                    <input formControlName="name">
+                </label>
+                <br>
+                <label>Favorite Season
+                    <igx-radiogroup formControlName="favoriteSeason" name="radioGroupReactive">
+                        <igx-radio class="radio-sample" *ngFor="let item of seasons" value="{{item}}">
+                            {{item}}
+                        </igx-radio>
+                    </igx-radiogroup>
+                </label>
+                <br>
+                <button igxButton type="button" (click)="onUpdateBtnClick($event)" style="width: 200px">Update model</button>
+            </form>
+            <p>Form value: {{ personKirkForm.value | json }}</p>
+            <p>Model value: {{ personKirk | json }}</p>
+            <p>Updated model: {{ newPerson | json }}</p>
         </article>
     </section>
 </div>
