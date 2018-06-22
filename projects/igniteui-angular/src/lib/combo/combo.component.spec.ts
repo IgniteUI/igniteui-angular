@@ -1124,6 +1124,7 @@ describe('Combo', () => {
     // Rendering
     it('All appropriate classes should be applied on combo initialization', () => {
         const defaultComboWidth = '250px';
+        const defaultComboDDWidth = '100%';
         const fix = TestBed.createComponent(IgxComboScrollTestComponent);
         fix.detectChanges();
 
@@ -1187,7 +1188,7 @@ describe('Combo', () => {
 
         const dropDownWrapper = comboElement.children[1];
         expect(dropDownWrapper.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
-        expect(dropDownWrapper.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboWidth);
+        expect(dropDownWrapper.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
         expect(dropDownWrapper.childElementCount).toEqual(1);
 
         const dropDownElement = dropDownWrapper.children[0];
@@ -1197,7 +1198,7 @@ describe('Combo', () => {
         const dropDownList = dropDownElement.children[0];
         expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWNLIST)).toBeTruthy();
         expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
-        expect(dropDownList.style.width).toEqual(defaultComboWidth);
+        expect(dropDownList.style.width).toEqual(defaultComboDDWidth);
         expect(dropDownList.childElementCount).toEqual(0);
     });
     it('Should properly render grouped items', fakeAsync(() => {
