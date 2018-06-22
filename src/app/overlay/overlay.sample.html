@@ -1,0 +1,72 @@
+<div #container class="sample-wrapper">
+    <app-page-header title="Overlay" description="description for overlay"></app-page-header>
+    <section class="sample-content">
+        <div>
+            <p>Directions</p>
+            <div class="radio-group">
+                <p>Horizontal Direction</p>
+                <igx-radio *ngFor="let item of horizontalDirections" value="{{item}}" name="hd" [(ngModel)]="horizontalDirection" (change)="onChange($event)">{{item}}</igx-radio>
+            </div>
+            <div class="radio-group">
+                <p>Vertical Direction</p>
+                <igx-radio *ngFor="let item of verticalDirections" value="{{item}}" name="vd" [(ngModel)]="verticalDirection" (change)="onChange($event)">{{item}}</igx-radio>
+            </div>
+            <div class="radio-group">
+                <p>Horizontal Start Point</p>
+                <igx-radio *ngFor="let item of horizontalStartPoints" value="{{item}}" name="hsp" [(ngModel)]="horizontalStartPoint" (change)="onChange($event)">{{item}}</igx-radio>
+            </div>
+            <div class="radio-group">
+                <p>Vertical Start Point</p>
+                <igx-radio *ngFor="let item of verticalStartPoints" value="{{item}}" name="vsp" [(ngModel)]="verticalStartPoint" (change)="onChange($event)">{{item}}</igx-radio>
+            </div>
+        </div>
+        <div>
+            <p>Button Position</p>
+            <div class="radio-group w80">
+                <igx-input-group>
+                    <label igxLabel>Top</label>
+                    <input igxInput type="number" [(ngModel)]="buttonTop">
+                    <igx-suffix>
+                        %
+                    </igx-suffix>
+                </igx-input-group>
+
+            </div>
+            <div class="radio-group w80">
+                <igx-input-group>
+                    <label igxLabel>Left</label>
+                    <input igxInput type="number" [(ngModel)]="buttonLeft">
+                    <igx-suffix>
+                        %
+                    </igx-suffix>
+                </igx-input-group>
+            </div>
+        </div>
+        <div>
+            <p>Strategies</p>
+            <div class="radio-group">
+                <p>Position Strategies</p>
+                <igx-radio *ngFor="let item of positionStrategies" value="{{item}}" name="ps" [(ngModel)]="positionStrategy" (change)="onChange($event)">{{item}}</igx-radio>
+            </div>
+            <div class="radio-group">
+                <p>Scroll Strategies</p>
+                <igx-radio *ngFor="let item of scrollStrategies" value="{{item}}" name="ss" [(ngModel)]="scrollStrategy" (change)="onChange($event)">{{item}}</igx-radio>
+            </div>
+        </div>
+        <div>
+            <p>Settings</p>
+            <igx-switch class="settings" labelPosition="after" [(ngModel)]="closeOnOutsideClick" name="close" [value]="closeOnOutsideClick"
+                (change)="onSwitchChange($event)">Close On Outside Click</igx-switch>
+            <igx-switch class="settings" labelPosition="after" [(ngModel)]="modal" name="modal" [value]="modal" (change)="onSwitchChange($event)">Modal</igx-switch>
+        </div>
+        <button #button igxButton="raised" igxRipple (click)="toggleDropDown()" [style.position]="'absolute'" [style.top]="buttonTop + '%'"
+            [style.left]="buttonLeft + '%'">Toggle</button>
+        <igx-drop-down>
+            <igx-drop-down-item *ngFor="let item of items">
+                <div class="igx-drop-down__item-template">
+                    {{ item }}
+                </div>
+            </igx-drop-down-item>
+        </igx-drop-down>
+    </section>
+</div>

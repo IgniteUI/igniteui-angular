@@ -2,6 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
+- `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay.html)
 - Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
     For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
 - `igxGrid` filtering operands
@@ -56,6 +57,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     ```
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
 
+- `igxGrid` theme now has support for alternating grid row background and text colors.
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
@@ -71,6 +73,9 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
+
+## 6.0.3
+- **igxGrid** exposing the `filteredSortedData` method publicly - returns the grid data with current filtering and sorting applied.
 
 ## 6.0.2
 - **igxGrid** Improve scrolling on mac [#1563](https://github.com/IgniteUI/igniteui-angular/pull/1563)
