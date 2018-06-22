@@ -1609,7 +1609,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[1].expanded).toEqual(true);
     });
 
-    xit('should remove expansion state when reordering chips', (done) => {
+    it('should remove expansion state when reordering chips', (done) => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.data = [
