@@ -24,11 +24,8 @@ describe('IgxGrid - multi-column headers', () => {
                 BlueWhaleGridComponent,
                 ColumnGroupTestComponent,
                 ColumnGroupFourLevelTestComponent,
-<<<<<<< Updated upstream
                 ThreeGroupsThreeColumnsGridComponent
-=======
                 ColumnGroupTwoGroupsTestComponent
->>>>>>> Stashed changes
             ],
             imports: [
                 NoopAnimationsModule,
@@ -625,16 +622,16 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.pinnedColumns.length).toEqual(5);
         expect(grid.unpinnedColumns.length).toEqual(13);
 
-        // Unpin a column 
+        // Unpin a column
         grid.getColumnByName('CompanyName').pinned = false;
         fixture.detectChanges();
 
          // Verify the topParent group is not pinned
         expect(grGeneralInf.allChildren.every(c => c.pinned === false)).toEqual(true);
- 
-        //expect(grGeneralInf.visibleIndex).toEqual(0);
-        //expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
- 
+
+        // expect(grGeneralInf.visibleIndex).toEqual(0);
+        // expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
+
         expect(grid.pinnedColumns.length).toEqual(0);
         expect(grid.unpinnedColumns.length).toEqual(18);
      });
@@ -653,15 +650,12 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Verify group and all its children are pinned
         expect(grGeneralInf.allChildren.every(c => c.pinned === true)).toEqual(true);
-<<<<<<< Updated upstream
 
         expect(grGeneralInf.visibleIndex).toEqual(-1);
         expect(grid.getColumnByName('CompanyName').visibleIndex).toEqual(0);
-=======
-      
-        //expect(grGeneralInf.visibleIndex).toEqual(-1);
-        //expect(grid.getColumnByName('CompanyName').visibleIndex).toEqual(0);
->>>>>>> Stashed changes
+
+        // expect(grGeneralInf.visibleIndex).toEqual(-1);
+        // expect(grid.getColumnByName('CompanyName').visibleIndex).toEqual(0);
 
         expect(grid.pinnedColumns.length).toEqual(5);
         expect(grid.unpinnedColumns.length).toEqual(13);
@@ -672,8 +666,8 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Verify group and all its children are not pinned
         expect(grGeneralInf.allChildren.every(c => c.pinned === false)).toEqual(true);
-      
-        //expect(grGeneralInf.visibleIndex).toEqual(0);
+
+        // expect(grGeneralInf.visibleIndex).toEqual(0);
         expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
 
         expect(grid.pinnedColumns.length).toEqual(0);
@@ -694,7 +688,7 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Verify group and all its children are not pinned
         expect(grAdressInf.allChildren.every(c => c.pinned === false)).toEqual(true);
-      
+
         expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
 
         expect(grid.pinnedColumns.length).toEqual(0);
@@ -706,7 +700,7 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Verify group and all its children are not pinned
         expect(grAdressInf.allChildren.every(c => c.pinned === false)).toEqual(true);
-      
+
         expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
 
         expect(grid.pinnedColumns.length).toEqual(0);
@@ -718,7 +712,7 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Verify group and all its children are not pinned
         expect(grAdressInf.allChildren.every(c => c.pinned === false)).toEqual(true);
-      
+
         expect(grid.getColumnByName('ID').visibleIndex).toEqual(0);
 
         expect(grid.pinnedColumns.length).toEqual(0);
@@ -744,9 +738,9 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(0, 'Country')).toBeDefined();
         expect(grid.getCellByColumn(0, 'City')).toBeDefined();
 
-        //expect(grid.getCellByColumn(0, 'ID').value).toEqual("ALFKI");
-        //expect(grid.getCellByColumn(0, 'Country').value).toEqual("Germany");
-        //expect(grid.getCellByColumn(0, 'City').value).toEqual("Berlin");
+        // expect(grid.getCellByColumn(0, 'ID').value).toEqual("ALFKI");
+        // expect(grid.getCellByColumn(0, 'Country').value).toEqual("Germany");
+        // expect(grid.getCellByColumn(0, 'City').value).toEqual("Berlin");
      });
 
      xit('Should move column group.', () => {
