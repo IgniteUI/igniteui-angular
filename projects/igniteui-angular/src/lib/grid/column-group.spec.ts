@@ -1,9 +1,14 @@
 import { async, TestBed } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { Component, ViewChild, QueryList } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxColumnGroupComponent } from './column.component';
+import { By } from '@angular/platform-browser';
+
+const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
+const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
+const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 
 const expectedColumnGroups = 5;
 const expectedLevel = 2;
@@ -15,7 +20,9 @@ describe('IgxGrid - multi-column headers', () => {
             declarations: [
                 OneGroupOneColGridComponent,
                 OneGroupThreeColsGridComponent,
-                ColumnGroupTestComponent
+                BlueWhaleGridComponent,
+                ColumnGroupTestComponent,
+                ColumnGroupFourLevelTestComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -127,10 +134,8 @@ describe('IgxGrid - multi-column headers', () => {
         grid.columnWidth = gridColWidth;
         fixture.detectChanges();
 
-        const colGroupPx = (parseInt(gridColWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10);
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(colGroupPx.toString());
+        expect(locationColGroup.width).toBe(gridColWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridColWidth);
     });
@@ -158,10 +163,8 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = componentInstance.grid;
         fixture.detectChanges();
 
-        const colGroupPx = (parseInt(columnWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10);
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(colGroupPx.toString());
+        expect(locationColGroup.width).toBe(columnWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
     });
@@ -246,15 +249,14 @@ describe('IgxGrid - multi-column headers', () => {
     it('Width should be correct. Colum group with three columns. Column width in percent.', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const gridColWidth = '20%';
+        const groupWidth = '60%';
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
         grid.columnWidth = gridColWidth;
         fixture.detectChanges();
 
-        const groupWidthIxPx = (parseInt(gridColWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10) * 3;
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(groupWidthIxPx.toString());
+        expect(locationColGroup.width).toBe(groupWidth);
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(gridColWidth);
         const regionColumn = grid.getColumnByName('Region');
@@ -285,15 +287,14 @@ describe('IgxGrid - multi-column headers', () => {
     it('Width should be correct. Column group with three columns. Columns with width in percent.', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const columnWidth = '20%';
+        const groupWidth = '60%';
         const componentInstance = fixture.componentInstance;
         componentInstance.columnWidth = columnWidth;
         const grid = componentInstance.grid;
         fixture.detectChanges();
 
-        const groupWidthIxPx = (parseInt(columnWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10) * 3;
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(groupWidthIxPx.toString());
+        expect(locationColGroup.width).toBe(groupWidth);
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(columnWidth);
         const regionColumn = grid.getColumnByName('Region');
@@ -301,6 +302,210 @@ describe('IgxGrid - multi-column headers', () => {
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
     });
+
+    it('API method level should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+
+        // Get level of column
+        expect(grid.getColumnByName('ID').level).toEqual(0);
+        expect(grid.getColumnByName('CompanyName').level).toEqual(1);
+        expect(grid.getColumnByName('Country').level).toEqual(2);
+        expect(grid.getColumnByName('City').level).toEqual(3);
+        expect(grid.getColumnByName('PostalCode').level).toEqual(2);
+        // Get level of hidden column
+        expect(grid.getColumnByName('Fax').level).toEqual(2);
+        // Get level of column in hidden group
+        expect(grid.getColumnByName('ContactTitle').level).toEqual(2);
+
+        // Get level of grouped column
+        expect(getColGroup(grid, 'General Information').level).toEqual(0);
+        expect(getColGroup(grid, 'Location').level).toEqual(1);
+        expect(getColGroup(grid, 'Location City').level).toEqual(2);
+        expect(getColGroup(grid, 'Contact Information').level).toEqual(1);
+        expect(getColGroup(grid, 'Postal Code').level).toEqual(1);
+        // Get level of hidden group
+        expect(getColGroup(grid, 'Person Details').level).toEqual(1);
+    });
+
+    it('API method columnGroup should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+        // Get columnGroup of column
+        expect(grid.getColumnByName('ID').columnGroup).toEqual(false);
+        expect(grid.getColumnByName('Fax').columnGroup).toEqual(false);
+        expect(grid.getColumnByName('ContactTitle').columnGroup).toEqual(false);
+
+        // Get columnGroup of grouped column
+        expect(getColGroup(grid, 'General Information').columnGroup).toEqual(true);
+        expect(getColGroup(grid, 'Location City').columnGroup).toEqual(true);
+        expect(getColGroup(grid, 'Contact Information').columnGroup).toEqual(true);
+        expect(getColGroup(grid, 'Postal Code').columnGroup).toEqual(true);
+        expect(getColGroup(grid, 'Person Details').columnGroup).toEqual(true);
+    });
+
+    it('API method allChildren should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+        // Get allChildren of column
+        expect(grid.getColumnByName('ID').allChildren.length).toEqual(0);
+        expect(grid.getColumnByName('PostalCode').allChildren.length).toEqual(0);
+        // Get allChildren of hidden column
+        expect(grid.getColumnByName('Fax').allChildren.length).toEqual(0);
+
+        // Get allChildren of group
+        const genInfGroupedColumnAllChildren = getColGroup(grid, 'General Information').allChildren;
+        expect(genInfGroupedColumnAllChildren.length).toEqual(4);
+        expect(genInfGroupedColumnAllChildren.indexOf(getColGroup(grid, 'Person Details'))).toBeGreaterThanOrEqual(0);
+
+        // Get allChildren of hidden group
+        expect(getColGroup(grid, 'Person Details').allChildren.length).toEqual(2);
+
+        // Get allChildren of group with one column
+        const postCodeGroupedColumnAllChildren = getColGroup(grid, 'Postal Code').allChildren;
+        expect(postCodeGroupedColumnAllChildren.length).toEqual(1);
+        expect(postCodeGroupedColumnAllChildren.indexOf(grid.getColumnByName('PostalCode'))).toEqual(0);
+
+        // Get allChildren of group with hidden columns and more levels
+        const addressGroupedColumnAllChildren = getColGroup(grid, 'Address Information').allChildren;
+        expect(addressGroupedColumnAllChildren.length).toEqual(11);
+        expect(addressGroupedColumnAllChildren.indexOf(getColGroup(grid, 'Postal Code'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('PostalCode'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('Address'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('Country'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('Fax'))).toBeGreaterThanOrEqual(0);
+        expect(addressGroupedColumnAllChildren.indexOf(getColGroup(grid, 'General Information'))).toEqual(-1);
+    });
+
+    it('API method children should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+
+        // Get children of grouped column
+         expect(getColGroup(grid, 'General Information').children.length).toEqual(2);
+
+        // Get children of hidden group
+        expect(getColGroup(grid, 'Person Details').children.length).toEqual(2);
+
+        // Get children of group with one column
+        const postCodeGroupedColumnAllChildren = getColGroup(grid, 'Postal Code').children;
+        expect(postCodeGroupedColumnAllChildren.length).toEqual(1);
+
+        // Get children of group with more levels
+        const addressGroupedColumnAllChildren = getColGroup(grid, 'Address Information').children;
+        expect(addressGroupedColumnAllChildren.length).toEqual(3);
+    });
+
+    it('API method topLevelParent should return correct values', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
+
+        // Get topLevelParent of column with no group
+        expect(grid.getColumnByName('ID').topLevelParent).toBeNull();
+
+        // Get topLevelParent of column
+        const addressGroupedColumn = getColGroup(grid, 'Address Information');
+        expect(grid.getColumnByName('PostalCode').topLevelParent).toEqual(addressGroupedColumn);
+        expect(grid.getColumnByName('Fax').topLevelParent).toEqual(addressGroupedColumn);
+        expect(grid.getColumnByName('Country').topLevelParent).toEqual(addressGroupedColumn);
+
+        const genInfGroupedColumn = getColGroup(grid, 'General Information');
+        expect(grid.getColumnByName('ContactName').topLevelParent).toEqual(genInfGroupedColumn);
+        expect(grid.getColumnByName('CompanyName').topLevelParent).toEqual(genInfGroupedColumn);
+
+        // Get topLevelParent of top group
+        expect(genInfGroupedColumn.topLevelParent).toBeNull();
+        expect(addressGroupedColumn.topLevelParent).toBeNull();
+
+        // Get topLevelParent of group
+        expect(getColGroup(grid, 'Person Details').topLevelParent).toEqual(genInfGroupedColumn);
+        expect(getColGroup(grid, 'Postal Code').topLevelParent).toEqual(addressGroupedColumn);
+        expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
+    });
+
+    it('Should render column group headers correctly.', ((done) => {
+        const fixture = TestBed.createComponent(BlueWhaleGridComponent);
+        fixture.detectChanges();
+        const componentInstance = fixture.componentInstance;
+        const grid = componentInstance.grid;
+        const columnWidthPx = parseInt(componentInstance.columnWidth, 10);
+        // 2 levels of column group and 1 level of columns
+        const gridHeadersDepth = 3;
+
+        const firstGroupChildrenCount = 100;
+        const secondGroupChildrenCount = 2;
+        const secondSubGroupChildrenCount = 50;
+        const secondSubGroupHeadersDepth = 2;
+        fixture.whenStable().then(() => {
+            const firstGroup = fixture.debugElement.query(By.css('.firstGroup'));
+            testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
+                gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
+                'firstGroupColumn', firstGroupChildrenCount);
+
+            const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+            const scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
+            horizontalScroll.scrollLeft = scrollToNextGroup;
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            setTimeout(() =>  {
+                const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
+                testColumnGroupHeaderRendering(secondGroup,
+                    secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
+                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
+                    'secondSubGroup', secondGroupChildrenCount);
+
+                const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
+                testColumnGroupHeaderRendering(secondSubGroups[0],
+                    secondSubGroupChildrenCount * columnWidthPx,
+                    secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+                    'secondSubGroupColumn', secondSubGroupChildrenCount);
+
+                testColumnGroupHeaderRendering(secondSubGroups[1],
+                    secondSubGroupChildrenCount * columnWidthPx,
+                    secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+                    'secondSubGroupColumn', secondSubGroupChildrenCount);
+
+                const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+                const scrollToNextGroup = horizontalScroll.scrollLeft +
+                    secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
+                horizontalScroll.scrollLeft = scrollToNextGroup;
+                return fixture.whenStable();
+            }, 100);
+        }).then(() => {
+            fixture.detectChanges();
+            setTimeout(() =>  {
+                const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
+                testColumnHeaderRendering(idColumn, columnWidthPx,
+                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.idHeaderTitle);
+
+                const companyNameColumn = fixture.debugElement.query(By.css('.companyName'));
+                testColumnHeaderRendering(companyNameColumn, columnWidthPx,
+                    2 * grid.defaultRowHeight, componentInstance.companyNameTitle);
+
+                const personDetailsColumn = fixture.debugElement.query(By.css('.personDetails'));
+                testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
+                    2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
+                    'personDetailsColumn', 2);
+                done();
+            }, 200);
+        });
+    }));
 });
 
 @Component({
@@ -377,6 +582,101 @@ export class ColumnGroupTestComponent {
     data = DATASOURCE;
 }
 
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="600px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information">
+            <igx-column  field="CompanyName"></igx-column>
+            <igx-column-group header="Person Details" hidden="true">
+                <igx-column field="ContactName"></igx-column>
+                <igx-column field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column-group header="Address Information">
+            <igx-column-group header="Location">
+                <igx-column field="Country"></igx-column>
+                <igx-column field="Region"></igx-column>
+                <igx-column-group header="Location City">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Contact Information">
+                <igx-column field="Phone"></igx-column>
+                <igx-column field="Fax" hidden="true"></igx-column>
+            </igx-column-group>
+            <igx-column-group header="Postal Code">
+                <igx-column field="PostalCode"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class ColumnGroupFourLevelTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    data = DATASOURCE;
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
+            <igx-column-group headerClasses="firstGroup" [header]="firstGroupTitle">
+                <igx-column headerClasses="firstGroupColumn" field="ID" *ngFor="let item of hunderdItems;"></igx-column>
+            </igx-column-group>
+            <igx-column-group headerClasses="secondGroup" [header]="secondGroupTitle">
+                <igx-column-group headerClasses="secondSubGroup" [header]="secondSubGroupTitle">
+                    <igx-column headerClasses="secondSubGroupColumn" field="ID" *ngFor="let item of fiftyItems;"></igx-column>
+                </igx-column-group>
+                <igx-column-group headerClasses="secondSubGroup" [header]="secondSubGroupTitle">
+                    <igx-column  headerClasses="secondSubGroupColumn" field="ID" *ngFor="let item of fiftyItems;"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column headerClasses="lonelyId" [header]="idHeaderTitle" field="ID"></igx-column>
+            <igx-column-group header="General Information">
+                <igx-column headerClasses="companyName" [header]="companyNameTitle" field="CompanyName"></igx-column>
+                <igx-column-group headerClasses="personDetails" [header]="personDetailsTitle">
+                    <igx-column headerClasses="personDetailsColumn" field="ContactName"></igx-column>
+                    <igx-column headerClasses="personDetailsColumn" field="ContactTitle"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Address Information">
+                <igx-column-group header="Location">
+                    <igx-column field="Country"></igx-column>
+                    <igx-column field="Region"></igx-column>
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="Contact Information">
+                    <igx-column field="Phone"></igx-column>
+                    <igx-column field="Fax"></igx-column>
+                    <igx-column field="PostalCode"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+export class BlueWhaleGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    public gridHeight = '500px';
+    public columnWidth = '100px';
+    data = DATASOURCE;
+
+    hunderdItems = new Array(100);
+    fiftyItems = new  Array(50);
+
+    firstGroupTitle = '100 IDs';
+    secondGroupTitle = '2 col groups with 50 IDs each';
+    secondSubGroupTitle = '50 IDs';
+    idHeaderTitle = 'ID';
+    companyNameTitle = 'Company Name';
+    personDetailsTitle = 'Person Details';
+}
+
 export const DATASOURCE = [
     // tslint:disable:max-line-length
     { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
@@ -418,4 +718,31 @@ function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroup
     } else {
         throw new Error('More than one column group found.');
     }
+}
+
+// tests column and column group header rendering
+function testColumnGroupHeaderRendering(column: DebugElement, width: number, height: number,
+        title: string, descendentColumnCssClass?: string, descendentColumnCount?: number) {
+    expect(column.nativeElement.offsetHeight).toBe(height);
+    expect(column.nativeElement.offsetWidth).toBe(width);
+
+    const colHeaderTitle = column.children
+        .filter(c => c.nativeElement.classList.contains(GRID_COL_GROUP_THEAD_TITLE_CLASS))[0];
+    expect(colHeaderTitle.nativeElement.textContent).toBe(title);
+
+    const colGroupDirectChildren = column.children
+        .filter(c => c.nativeElement.classList.contains(GRID_COL_GROUP_THEAD_GROUP_CLASS))[0]
+        .children.filter(c => c.nativeElement.classList.contains(descendentColumnCssClass));
+
+    expect(colGroupDirectChildren.length).toBe(descendentColumnCount);
+}
+
+function testColumnHeaderRendering(column: DebugElement, width: number, height: number,
+        title: string) {
+    expect(column.nativeElement.offsetHeight).toBe(height);
+    expect(column.nativeElement.offsetWidth).toBe(width);
+
+    const colHeaderTitle = column.children
+        .filter(c => c.nativeElement.classList.contains(GRID_COL_THEAD_TITLE_CLASS))[0];
+    expect(colHeaderTitle.nativeElement.textContent.trim()).toBe(title);
 }

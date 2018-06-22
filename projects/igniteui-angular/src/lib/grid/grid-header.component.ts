@@ -88,7 +88,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
     @HostBinding('class.igx-grid__drag-col-header')
     get dragged() {
-        return this.column === this.cms.column && this.column.grid.isColumnMoving;
+        return this.column === this.column.grid.draggedColumn;
     }
 
     @HostBinding('style.z-index')
@@ -161,8 +161,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
                 if (editableCell) {
                     this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
                 }
-                this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
-                    : this.sortDirection;
+                const groupingExpr = grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
+                const sortDir = groupingExpr ?
+                    this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc  : SortingDirection.Desc
+                    : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
+                this.sortDirection = sortDir;
                 this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
                 grid.onSortingDone.emit({
                     dir: this.sortDirection,

@@ -5,6 +5,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChipsSampleComponent} from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
@@ -34,6 +35,7 @@ import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
+import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
@@ -42,6 +44,7 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { OverlaySampleComponent } from './overlay/overlay.sample';
 
 const appRoutes = [
     {
@@ -72,6 +75,10 @@ const appRoutes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
+    },
+    {
+        path: 'chip',
+        component: ChipsSampleComponent
     },
     {
         path: 'datePicker',
@@ -124,6 +131,10 @@ const appRoutes = [
     {
         path: 'navdrawer',
         component: NavdrawerSampleComponent
+    },
+    {
+        path: 'overlay',
+        component: OverlaySampleComponent
     },
     {
         path: 'progressbar',
@@ -221,6 +232,10 @@ const appRoutes = [
     {
         path: 'gridColumnGroups',
         component: GridColumnGroupsSampleComponent
+    },
+    {
+        path: 'gridGroupBy',
+        component: GridGroupBySampleComponent
     }
 ];
 

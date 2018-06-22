@@ -1,12 +1,5 @@
 import {
-    animate,
-    AnimationBuilder,
-    AnimationFactory,
-    AnimationPlayer,
-    style} from '@angular/animations';
-import {
     ChangeDetectorRef,
-    Component,
     Directive,
     ElementRef,
     EventEmitter,
@@ -17,15 +10,26 @@ import {
     OnDestroy,
     OnInit,
     Optional,
-    Output
+    Output,
+    Inject
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
+import { IgxOverlayService } from '../../services/overlay/overlay';
+import { OverlaySettings, OverlayEventArgs } from '../../services';
+import { filter, take } from 'rxjs/operators';
+import { Subscription, OperatorFunction } from 'rxjs';
 
 @Directive({
     exportAs: 'toggle',
     selector: '[igxToggle]'
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
+    private _overlayId: string;
+    private _overlaySubFilter: OperatorFunction<OverlayEventArgs, OverlayEventArgs>[] = [
+        filter(x => x.id === this._overlayId),
+        take(1)
+    ];
+    private _overlayClosedSub: Subscription;
 
     @Output()
     public onOpened = new EventEmitter();
@@ -59,58 +63,61 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         return !this.collapsed;
     }
 
-    private _id: string;
-
     constructor(
         private elementRef: ElementRef,
-        private builder: AnimationBuilder,
         private cdr: ChangeDetectorRef,
-        @Optional() private navigationService: IgxNavigationService) { }
+        @Inject(IgxOverlayService) private overlayService: IgxOverlayService,
+        @Optional() private navigationService: IgxNavigationService) {
+    }
 
-    public open(fireEvents?: boolean, handler?) {
+    public open(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
         if (!this.collapsed) { return; }
-
-        const player = this.animationActivation();
-        player.onStart(() => this.collapsed = false);
-        player.onDone(() =>  {
-            player.destroy();
-            if (fireEvents) {
-                this.onOpened.emit();
-            }
-        });
 
         if (fireEvents) {
             this.onOpening.emit();
         }
 
-        player.play();
+        this.collapsed = false;
+
+        this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
+        this._overlayClosedSub = this.overlayService.onClosed
+            .pipe(...this._overlaySubFilter)
+            .subscribe(this.overlayClosed);
+
+        if (fireEvents) {
+            this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+                this.onOpened.emit();
+            });
+        }
     }
 
-    public close(fireEvents?: boolean, handler?) {
+    public close(fireEvents?: boolean) {
         if (this.collapsed) { return; }
-
-        const player = this.animationActivation();
-        player.onDone(() => {
-            this.collapsed = true;
-            // When using directive into component with OnPush it is necessary to
-            // trigger change detection again when close animation ends
-            // due to late updated @collapsed property.
-            this.cdr.markForCheck();
-            player.destroy();
-            if (fireEvents) {
-                this.onClosed.emit();
-            }
-        });
 
         if (fireEvents) {
             this.onClosing.emit();
         }
 
-        player.play();
+        if (this._overlayId !== undefined) {
+            this.overlayService.hide(this._overlayId);
+            if (!fireEvents) {
+                // cancel onClosed sub
+                this._overlayClosedSub.unsubscribe();
+                this.overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
+                    this.collapsed = true;
+                });
+            }
+        } else {
+            // opened though @Input, TODO
+            this.collapsed = true;
+            if (fireEvents) {
+                this.onClosed.emit();
+            }
+        }
     }
 
-    public toggle(fireEvents?: boolean) {
-        this.collapsed ? this.open(fireEvents) : this.close(fireEvents);
+    public toggle(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
+        this.collapsed ? this.open(fireEvents, overlaySettings) : this.close(fireEvents);
     }
 
     public ngOnInit() {
@@ -123,30 +130,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (this.navigationService && this.id) {
             this.navigationService.remove(this.id);
         }
+        if (!this.collapsed && this._overlayId) {
+            this.overlayService.hide(this._overlayId);
+        }
     }
 
-    private animationActivation() {
-        let animation: AnimationFactory;
-
-        this.collapsed ?
-            animation = this.openingAnimation() :
-            animation = this.closingAnimation();
-
-        return animation.create(this.elementRef.nativeElement);
-    }
-
-    private openingAnimation() {
-        return this.builder.build([
-            style({ transform: 'scaleY(0) translateY(-48px)', transformOrigin: '100% 0%', opacity: 0 }),
-            animate('200ms ease-out', style({ transform: 'scaleY(1) translateY(0)', opacity: 1 }))
-        ]);
-    }
-
-    private closingAnimation() {
-        return this.builder.build([
-            style({ transform: 'translateY(0)', opacity: 1}),
-            animate('120ms ease-in', style({ transform: 'translateY(-12px)', opacity: 0 }))
-        ]);
+    private overlayClosed = () => {
+        this.collapsed = true;
+        this.onClosed.emit();
     }
 }
 
@@ -198,7 +189,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
 
     @HostListener('click')
     public onClick() {
-        this.target.toggle(true);
+        this.target.toggle(true, {});
 
         if (this._handler) {
             document.addEventListener('click', this._handler, true);
@@ -206,8 +197,8 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
     }
 }
 @NgModule({
-    declarations: [ IgxToggleDirective, IgxToggleActionDirective ],
-    exports: [ IgxToggleDirective, IgxToggleActionDirective ],
-    providers: [ IgxNavigationService ]
+    declarations: [IgxToggleDirective, IgxToggleActionDirective],
+    exports: [IgxToggleDirective, IgxToggleActionDirective],
+    providers: [IgxNavigationService]
 })
-export class IgxToggleModule {}
+export class IgxToggleModule { }
