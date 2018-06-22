@@ -441,8 +441,8 @@ describe('IgxGrid - Grid Toolbar', () => {
 
         const button = fixture.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
         expect(button).toBeDefined();
-        const btnText = button.nativeElement.innerText;
-        expect(btnText.includes('0') && btnText.includes('VISIBILITY') && !btnText.includes('VISIBILITY_OFF')).toBe(true);
+        const btnText = button.nativeElement.innerText.toLowerCase();
+        expect(btnText.includes('0') && btnText.includes('visibility') && !btnText.includes('visibility_off')).toBe(true);
     });
 
     it('toggleColumnHidingUI() method opens and closes the ColumnHiding dropdown.', () => {

@@ -114,7 +114,7 @@ export class IgxGridRowComponent implements IGridBus, DoCheck {
 
     constructor(public gridAPI: IgxGridAPIService,
                 private selectionAPI: IgxSelectionAPIService,
-                private element: ElementRef,
+                public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
 
@@ -128,6 +128,7 @@ export class IgxGridRowComponent implements IGridBus, DoCheck {
         this.isFocused = false;
     }
 
+    @autoWire(true)
     public onCheckboxClick(event) {
         const newSelection = (event.checked) ?
                             this.selectionAPI.select_item(this.gridID, this.rowID) :

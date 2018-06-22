@@ -31,6 +31,26 @@ export class IgxDragCustomEventDetails {
     owner: IgxDragDirective;
 }
 
+export class IgxDropEnterEventArgs {
+    owner: IgxDropDirective;
+    drag: IgxDragDirective;
+    dragData: any;
+    startX: number;
+    startY: number;
+    pageX: number;
+    pageY: number;
+}
+
+export class IgxDropLeaveEventArgs {
+    owner: IgxDropDirective;
+    drag: IgxDragDirective;
+    dragData: any;
+    startX: number;
+    startY: number;
+    pageX: number;
+    pageY: number;
+}
+
 export class IgxDropEventArgs {
     owner: IgxDropDirective;
     drag: IgxDragDirective;
@@ -41,6 +61,9 @@ export class IgxDropEventArgs {
     selector: '[igxDrag]'
 })
 export class IgxDragDirective implements OnInit, OnDestroy {
+
+    @Input('igxDrag')
+    public data: any;
 
     @Input()
     public dragTolerance = 5;
@@ -66,11 +89,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     @Output()
     public returnMoveEnd = new EventEmitter<any>();
 
+    @Output()
+    public dragClicked = new EventEmitter<any>();
+
     @HostBinding('style.touchAction')
     public touch = 'none';
-
-    @HostBinding('style.position')
-    public position = 'relative';
 
     @HostBinding('style.transitionProperty')
     public transitionProperty = 'top, left';
@@ -128,6 +151,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     protected _dragOffsetY;
     protected _dragStartX;
     protected _dragStartY;
+    protected _pointerDownId = null;
 
     protected _clicked = false;
     protected _lastDropArea = null;
@@ -157,10 +181,13 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         this._destroy.unsubscribe();
     }
 
+    /**
+     * Method bound to the PointerDown event of the base element igxDrag is initialized.
+     * @param event PointerDown event captured
+     */
     public onPointerDown(event) {
-        this.element.nativeElement.setPointerCapture(event.pointerId);
         this._clicked = true;
-
+        this._pointerDownId = event.pointerId;
         this._startX = event.pageX;
         this._startY = event.pageY;
 
@@ -169,24 +196,38 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         const marginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
 
         this._dragOffsetX = (event.pageX - this.element.nativeElement.getBoundingClientRect().left) + marginLeft;
-        this._dragOffsetY = (event.pageY - this.element.nativeElement.getBoundingClientRect().top)  + marginTop;
+        this._dragOffsetY = (event.pageY - this.element.nativeElement.getBoundingClientRect().top) + marginTop;
         this._dragStartX = event.pageX - this._dragOffsetX;
         this._dragStartY = event.pageY - this._dragOffsetY;
 
-        event.preventDefault();
+        // Set pointer capture so we detect pointermove even if mouse is out of bounds until dragGhost is created.
+        this.element.nativeElement.setPointerCapture(this._pointerDownId);
     }
 
+    /**
+     * Perfmorm drag move logic when dragging and dispatching events if there is igxDrop under the pointer.
+     * This method is bound at first at the base element.
+     * If dragging starts and after the dragGhost is rendered the pointerId is reassigned to the dragGhost. Then this method is bound to it.
+     * @param event PointerMove event captured
+     */
     public onPointerMove(event) {
         if (this._clicked) {
+            const dragStartArgs = {
+                owner: this,
+                cancel: false
+            };
             const totalMovedX = event.pageX - this._startX;
             const totalMovedY = event.pageY - this._startY;
 
             if (!this._dragStarted &&
-                    (Math.abs(totalMovedX) > this.dragTolerance || Math.abs(totalMovedY) > this.dragTolerance)) {
-                this.createDragGhost(event);
+                (Math.abs(totalMovedX) > this.dragTolerance || Math.abs(totalMovedY) > this.dragTolerance)) {
+                this.dragStart.emit(dragStartArgs);
 
-                this._dragStarted = true;
-                this.dragStart.emit();
+                if (!dragStartArgs.cancel) {
+                    // We moved enough so dragGhost can be rendered and actual dragging to start.
+                    this.createDragGhost(event);
+                    this._dragStarted = true;
+                }
                 return;
             } else if (!this._dragStarted) {
                 return;
@@ -196,38 +237,50 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             this.top = this._dragStartY + totalMovedY;
 
             this.dispatchDragEvents(event.pageX, event.pageY);
-            event.preventDefault();
         }
     }
 
+    /**
+     * Perform drag end logic when releasing the dragGhost and dispatchind drop event if igxDrop is under the pointer.
+     * This method is bound at first at the base element.
+     * If dragging starts and after the dragGhost is rendered the pointerId is reassigned to the dragGhost. Then this method is bound to it.
+     * @param event PointerUp event captured
+     */
     public onPointerUp(event) {
         this._clicked = false;
 
         if (this._dragStarted) {
             if (this._lastDropArea && !this._lastDropArea.isEqualNode(this.element.nativeElement)) {
-                // dragging ended over a drop area
-                this.dispatchDropEvent(event.pageX, event.pageY);
-
                 if (!this.animateOnRelease) {
                     this.onTransitionEnd(null);
                 }
+
+                // dragging ended over a drop area. Call this after transition because onDrop might remove the element.
+                this.dispatchDropEvent(event.pageX, event.pageY);
                 // else the drop directive needs to call the dropFinished() method so the animation can perform
             } else if (this.animateOnRelease) {
                 // return the ghost to start position before removing it. See onTransitionEnd.
                 this._dragGhost.style.transitionDuration = this.defaultReturnDuration;
                 this.left = this._dragStartX;
-                this.top = this._dragStartY ;
+                this.top = this._dragStartY;
             } else {
                 this.onTransitionEnd(null);
             }
 
             this.dragEnd.emit();
+        } else {
+            this.dragClicked.emit();
         }
     }
 
+    /**
+     * Create dragGhost element - copy of the base element. Bind all needed events.
+     * @param event Pointer event required when the dragGhost is being initialized.
+     */
     protected createDragGhost(event) {
         this._dragGhost = this.element.nativeElement.cloneNode(true);
         this._dragGhost.style.transitionDuration = '0.0s';
+        this._dragGhost.style.position = 'absolute';
 
         this.left = this._dragStartX;
         this.top = this._dragStartY;
@@ -238,18 +291,28 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
         document.body.appendChild(this._dragGhost);
 
+        // The dragGhost takes control for moving and dragging after it has been shown.
+        this._dragGhost.setPointerCapture(this._pointerDownId);
+        this._dragGhost.addEventListener('pointermove', (args) => {
+            this.onPointerMove(args);
+        });
+        this._dragGhost.addEventListener('pointerup', (args) => {
+            this.onPointerUp(args);
+        });
         if (this.animateOnRelease) {
+            // Transition animation when the dragGhost is released and it returns to it's original position.
             this._dragGhost.addEventListener('transitionend', (args) => {
                 this.onTransitionEnd(args);
             });
         }
 
+        // Hide the base after the dragGhost is created, because otherwise the dragGhost will be not visible.
         if (this.hideBaseOnDrag) {
             this.visible = false;
         }
-        this.cdr.detectChanges();
     }
 
+    /** Dispatch custom igxDragEnter/igxDragLeave events based on current pointer position and if drop area is under. */
     protected dispatchDragEvents(pageX: number, pageY: number) {
         let topDropArea;
         const eventArgs: IgxDragCustomEventDetails = {
@@ -270,7 +333,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         }
 
         if (topDropArea &&
-             (!this._lastDropArea || (this._lastDropArea && !this._lastDropArea.isEqualNode(topDropArea)))) {
+            (!this._lastDropArea || (this._lastDropArea && !this._lastDropArea.isEqualNode(topDropArea)))) {
             if (this._lastDropArea) {
                 this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
             }
@@ -283,6 +346,10 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Dispatch custom igxDrop event based on current pointer position if there is last recorder drop area under the pointer.
+     * Last recorder drop area is updated in @dispatchDragEvents method.
+     */
     protected dispatchDropEvent(pageX: number, pageY: number) {
         const eventArgs: IgxDragCustomEventDetails = {
             startX: this._startX,
@@ -292,11 +359,14 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             owner: this
         };
 
-        this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this.dispatchEvent(this._lastDropArea, 'igxDrop', eventArgs);
+        this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this._lastDropArea = null;
     }
 
+    /**
+     * Update relative positions
+     */
     public updateDragRelativePos() {
         if (!this._dragGhost) {
             return;
@@ -370,6 +440,15 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 })
 export class IgxDropDirective {
 
+    /** Event triggered when dragged element enters the area of the element */
+    @Output()
+    public onEnter = new EventEmitter<IgxDropEnterEventArgs>();
+
+    /** Event triggered when dragged element leaves the area of the element */
+    @Output()
+    public onLeave = new EventEmitter<IgxDropLeaveEventArgs>();
+
+    /** Event triggered when dragged element is dropped in the area of the element */
     @Output()
     public onDrop = new EventEmitter<IgxDropEventArgs>();
 
@@ -383,13 +462,33 @@ export class IgxDropDirective {
     }
 
     @HostListener('igxDragEnter', ['$event'])
-    public onDragEnter(event) {
+    public onDragEnter(event: CustomEvent<IgxDragCustomEventDetails>) {
         this.dragover = true;
+        const eventArgs: IgxDropEnterEventArgs = {
+            owner: this,
+            drag: event.detail.owner,
+            dragData: event.detail.owner.data,
+            startX: event.detail.startX,
+            startY: event.detail.startY,
+            pageX: event.detail.pageX,
+            pageY: event.detail.pageY
+        };
+        this.onEnter.emit(eventArgs);
     }
 
     @HostListener('igxDragLeave', ['$event'])
     public onDragLeave(event) {
         this.dragover = false;
+        const eventArgs: IgxDropLeaveEventArgs = {
+            owner: this,
+            drag: event.detail.owner,
+            dragData: event.detail.owner.data,
+            startX: event.detail.startX,
+            startY: event.detail.startY,
+            pageX: event.detail.pageX,
+            pageY: event.detail.pageY
+        };
+        this.onLeave.emit();
     }
 
     @HostListener('igxDrop', ['$event'])
@@ -417,4 +516,4 @@ export class IgxDropDirective {
     declarations: [IgxDragDirective, IgxDropDirective],
     exports: [IgxDragDirective, IgxDropDirective]
 })
-export class IgxDragDropModule {}
+export class IgxDragDropModule { }

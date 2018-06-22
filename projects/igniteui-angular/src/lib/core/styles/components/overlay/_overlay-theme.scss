@@ -1,0 +1,60 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+///
+/// @param {Color} $background-color [$overlay-color] - The background color used for modal overlays.
+///
+/// @requires $overlay-color
+///
+/// @example scss Change the background color
+///   $my-overlay-theme: igx-overlay-theme($background-color: rgba(yellow, .74));
+///   // Pass the theme to the igx-overlay component mixin
+///   igx-overlay($my-overlay-theme);
+///
+@function igx-overlay-theme(
+    $background-color: $overlay-color
+) {
+    @return (
+        name: 'igx-overlay',
+        background-color: $background-color
+    );
+}
+
+///
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires --var
+///
+@mixin igx-overlay($theme) {
+    @include igx-root-css-vars($theme);
+
+    %overlay-wrapper {
+        position: fixed;
+        display: flex;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-color: transparent;
+        transition: background-color .25s $ease-in-out-quad;
+        pointer-events: none;
+    }
+
+    %overlay-wrapper--modal {
+        background-color: --var($theme, 'background-color');
+        pointer-events: initial;
+    }
+
+    %overlay-content {
+        position: fixed;
+        pointer-events: all;
+    }
+
+    %overlay-content--modal {
+        pointer-events: initial;
+    }
+}
