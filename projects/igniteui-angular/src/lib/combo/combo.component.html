@@ -14,15 +14,13 @@
     {{ item[key] }}
 </ng-template>
 
-<div class="igx-combo" [style.width]="width" role="combobox" [attr.aria-expanded]="!dropdown.collapsed" aria-haspopup="listbox"
-    [attr.aria-owns]="dropdown.id">
-    <igx-input-group type="box">
-        <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%" readonly [placeholder]="placeholder"
-            [disabled]="disabled" (click)="onInputClick($event)" />
-        <igx-suffix igxButton="icon" class="clearButton" igxRipple (click)="deselectAllItems(true)">
+<div class="igx-combo" [style.width]="width" role="combobox" [attr.aria-expanded]="!dropdown.collapsed" aria-haspopup="listbox" [attr.aria-owns]="dropdown.id">
+    <igx-input-group type="box" (click)="onInputClick($event)">
+        <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%" readonly [placeholder]="placeholder" [disabled]="disabled" />
+        <igx-suffix igxButton="icon" class="clearButton" igxRipple (click)="handleClearItems($event)">
             <igx-icon *ngIf="value.length" fontSet="material" name="clear"></igx-icon>
         </igx-suffix>
-        <igx-suffix igxButton="icon" class="dropdownToggleButton" (click)="onInputClick($event)" igxRipple>
+        <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
             <igx-icon *ngIf="dropdown.collapsed; else toggleUp" fontSet="material" name="arrow_drop_down"></igx-icon>
             <ng-template #toggleUp>
                 <igx-icon fontSet="material" name="arrow_drop_up"></igx-icon>

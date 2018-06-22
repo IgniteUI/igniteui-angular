@@ -1060,6 +1060,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
         this.triggerSelectionChange(newSelection);
     }
+
+    public handleClearItems(event) {
+        this.deselectAllItems(true);
+        event.stopPropagation();
+    }
 }
 
 @NgModule({
