@@ -248,7 +248,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      */
     private _selectedRadioButtonChanged(args: IChangeRadioEventArgs) {
         if (this._selected !== args.radio) {
-            this._selected.checked = false;
+            if (this._selected) {
+                this._selected.checked = false;
+            }
             this._selected = args.radio;
         }
 
