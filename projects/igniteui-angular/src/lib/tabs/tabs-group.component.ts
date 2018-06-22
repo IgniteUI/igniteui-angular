@@ -1,16 +1,15 @@
-import { CommonModule } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewChecked,
     Component,
     ContentChild,
-    Directive,
     ElementRef,
     forwardRef,
     HostBinding,
     Inject,
     Input,
-    TemplateRef
+    TemplateRef,
+    HostListener
 } from '@angular/core';
 
 import { IgxTabItemComponent } from './tab-item.component';
@@ -23,10 +22,6 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
 })
 
 export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
-    private _itemStyle = 'igx-tabs-group';
-    /**
-     * @hidden
-     */
     public isSelected = false;
 
     /**
@@ -69,13 +64,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     @HostBinding('class')
     get styleClass(): string {
         return 'igx-tabs__group';
-    }
-
-    /**
-     *@hidden
-     */
-    public get itemStyle(): string {
-        return this._itemStyle;
     }
 
     /**
@@ -138,6 +126,16 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
         private _element: ElementRef) {
     }
 
+
+    @HostListener('window:resize', ['$event'])
+    public onResize(event) {
+        if (this.isSelected) {
+            const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
+            this._tabs.contentsContainer.nativeElement.style.transitionDuration = `0s`;
+            this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
+        }
+    }
+
     /**
      * @hidden
      */
@@ -163,7 +161,6 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      *public tab : IgxTabsGroupComponent;
      *ngAfterViewInit(){
      *    this.tab.select();
-     *    this.cdr.detectChanges();
      *}
      *```
      * @param focusDelay A number representing the expected delay.
@@ -196,6 +193,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
         }
 
         const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
+        this._tabs.contentsContainer.nativeElement.style.transitionDuration = `0.2s`;
         this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
 
         this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
