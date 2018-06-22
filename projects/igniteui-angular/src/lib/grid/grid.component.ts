@@ -379,10 +379,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
-    public evenRowCSS = '';
+    public evenRowCSS = 'igx-grid__tr--even';
 
     @Input()
-    public oddRowCSS = '';
+    public oddRowCSS = 'igx-grid__tr--odd';
 
     @Input()
     public rowHeight: number;
