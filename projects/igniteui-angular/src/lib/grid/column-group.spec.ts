@@ -24,7 +24,7 @@ describe('IgxGrid - multi-column headers', () => {
                 BlueWhaleGridComponent,
                 ColumnGroupTestComponent,
                 ColumnGroupFourLevelTestComponent,
-                ThreeGroupsThreeColumnsGridComponent
+                ThreeGroupsThreeColumnsGridComponent,
                 ColumnGroupTwoGroupsTestComponent
             ],
             imports: [
