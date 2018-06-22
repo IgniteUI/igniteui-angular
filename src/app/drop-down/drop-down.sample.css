@@ -9,3 +9,9 @@
     white-space: nowrap;
     width: 100%
 }
+
+button {
+    right: 12;
+    bottom: 12;
+    position: absolute;
+}

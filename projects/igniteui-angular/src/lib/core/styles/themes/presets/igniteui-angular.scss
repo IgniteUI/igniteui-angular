@@ -3,24 +3,3 @@
 // Generate a palette
 @include igx-core();
 @include igx-theme($default-palette);
-
-
-//$my-grid-theme: igx-grid-theme(
-//    $header-background: #1e6280,
-//    $grouparea-background: #1b5b76,
-//    $group-label-column-name-text: #a0c3df,
-//    $group-label-icon: #a0c3df,
-//    $group-label-text: #fff,
-//    $expand-all-icon-color: #a0c3df,
-//    $expand-all-icon-hover-color: #b9e0ff,
-//    $expand-icon-color: #a0c3df,
-//    $expand-icon-hover-color: #b9e0ff,
-//    $group-count-background: #1e6280,
-//    $group-count-text-color: #fff,
-//    $grouparea-placeholder-color: #fff,
-//    $content-background: #247498,
-//    $header-text-color: #fff
-//);
-//
-//@include igx-grid($my-grid-theme);
-
