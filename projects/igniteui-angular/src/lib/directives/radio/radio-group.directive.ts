@@ -161,7 +161,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      *@hidden
      */
-    private _name: string = `igx-radio-group-${nextId++}`;
+    private _name = `igx-radio-group-${nextId++}`;
     /**
      *@hidden
      */
@@ -173,7 +173,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      *@hidden
      */
-    private _isInitialized: boolean = false;
+    private _isInitialized = false;
     /**
      *@hidden
      */
@@ -181,14 +181,15 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      *@hidden
      */
-    private _disabled: boolean = false;
+    private _disabled = false;
     /**
      *@hidden
      */
-    private _required: boolean = false;
+    private _required = false;
 
     ngAfterContentInit() {
-        // The initial value can possibly be set by NgModel and it is possible that the OnInit of the NgModel occurs after the OnInit of this class.
+        // The initial value can possibly be set by NgModel and it is possible that
+        // the OnInit of the NgModel occurs after the OnInit of this class.
         this._isInitialized = true;
 
         setTimeout(() => { this._initRadioButtons(); });
