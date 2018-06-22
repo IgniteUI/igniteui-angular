@@ -337,7 +337,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         this._dragGhost.style.height = null;
         this._dragGhost.style.minWidth = null;
-        this._dragGhost.style.flexBasis  = null;
+        this._dragGhost.style.flexBasis = null;
+        this._dragGhost.style.position = null;
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');
@@ -434,7 +435,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 }
 
                 if (!this.cms.column.pinned && this.column.pinned) {
-                    const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
+                    const nextPinnedWidth = this.column.grid.getPinnedWidth(true) + parseFloat(this.cms.column.width);
 
                     if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
                         this.cms.icon.innerText = 'lock';
@@ -497,7 +498,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             let nextPinnedWidth;
             if (this.column.pinned && !this.cms.column.pinned) {
-                nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
+                nextPinnedWidth = this.column.grid.getPinnedWidth(true) + parseFloat(this.cms.column.width);
             }
 
             if ((nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth) ||
@@ -510,7 +511,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             let col;
             const selectedCells = this.cms.column.grid.selectedCells;
-            if (selectedCells && this.cms.column.grid.selectedCells.length > 0) {
+            if (selectedCells && selectedCells.length > 0) {
                 col = selectedCells[0].column;
             }
 

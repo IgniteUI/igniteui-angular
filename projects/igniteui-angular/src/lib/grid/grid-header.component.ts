@@ -17,7 +17,6 @@ import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { autoWire, IGridBus, IgxColumnMovingService } from './grid.common';
 
@@ -153,6 +152,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     @HostListener('click', ['$event'])
     @autoWire(true)
     public onClick(event) {
+
         if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.column.sortable) {
@@ -190,7 +190,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
         if (this.column.pinned) {
-            const pinnedMaxWidth = this._pinnedMaxWidth = this.grid.calcPinnedContainerMaxWidth - this.grid.pinnedWidth + actualWidth;
+            const pinnedMaxWidth = this._pinnedMaxWidth =
+                this.grid.calcPinnedContainerMaxWidth - this.grid.getPinnedWidth(true) + actualWidth;
 
             if (this.column.maxWidth && parseFloat(this.column.maxWidth) < pinnedMaxWidth) {
                 this._pinnedMaxWidth = this.column.maxWidth;
@@ -301,7 +302,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
             const size = Math.ceil(largestCell + largestCellPadding) + 'px';
 
             if (this.column.pinned) {
-                const newPinnedWidth = this.grid.pinnedWidth - currentColWidth + parseFloat(size);
+                const newPinnedWidth = this.grid.getPinnedWidth(true) - currentColWidth + parseFloat(size);
 
                 if (newPinnedWidth <= this.grid.calcPinnedContainerMaxWidth) {
                     this.column.width = size;
