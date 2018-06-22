@@ -134,10 +134,8 @@ describe('IgxGrid - multi-column headers', () => {
         grid.columnWidth = gridColWidth;
         fixture.detectChanges();
 
-        const colGroupPx = (parseInt(gridColWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10);
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(colGroupPx.toString());
+        expect(locationColGroup.width).toBe(gridColWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridColWidth);
     });
@@ -165,10 +163,8 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = componentInstance.grid;
         fixture.detectChanges();
 
-        const colGroupPx = (parseInt(columnWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10);
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(colGroupPx.toString());
+        expect(locationColGroup.width).toBe(columnWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
     });
@@ -253,15 +249,14 @@ describe('IgxGrid - multi-column headers', () => {
     it('Width should be correct. Colum group with three columns. Column width in percent.', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const gridColWidth = '20%';
+        const groupWidth = '60%';
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
         grid.columnWidth = gridColWidth;
         fixture.detectChanges();
 
-        const groupWidthIxPx = (parseInt(gridColWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10) * 3;
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(groupWidthIxPx.toString());
+        expect(locationColGroup.width).toBe(groupWidth);
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(gridColWidth);
         const regionColumn = grid.getColumnByName('Region');
@@ -292,15 +287,14 @@ describe('IgxGrid - multi-column headers', () => {
     it('Width should be correct. Column group with three columns. Columns with width in percent.', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const columnWidth = '20%';
+        const groupWidth = '60%';
         const componentInstance = fixture.componentInstance;
         componentInstance.columnWidth = columnWidth;
         const grid = componentInstance.grid;
         fixture.detectChanges();
 
-        const groupWidthIxPx = (parseInt(columnWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10) * 3;
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(groupWidthIxPx.toString());
+        expect(locationColGroup.width).toBe(groupWidth);
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(columnWidth);
         const regionColumn = grid.getColumnByName('Region');
