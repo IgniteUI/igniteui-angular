@@ -237,7 +237,7 @@ describe('IgxGrid - Grid Sorting', () => {
     });
 
     // sort now allows only params of type ISortingExpression hence it is not possible to pass invalid expressions
-    xit(`Grid sort by mixed valid and invalid expressions should update the
+    it(`Grid sort by mixed valid and invalid expressions should update the
             data only by valid ones (through API)`, () => {
         const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
@@ -253,16 +253,16 @@ describe('IgxGrid - Grid Sorting', () => {
 
         fixture.detectChanges();
 
-        let expectedResult = 'Brad';
+        let expectedResult = 'Rick';
         expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Williams';
+        expectedResult = 'Jones';
         expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(0, firstColumn).value).toEqual(1);
-        expectedResult = 'Rick';
+        expect(grid.getCellByColumn(0, firstColumn).value).toEqual(6);
+        expectedResult = 'ALex';
         expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'BRown';
+        expectedResult = 'Smith';
         expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
+        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(5);
     });
 
     // UI Tests
