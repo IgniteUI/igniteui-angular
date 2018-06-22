@@ -1379,7 +1379,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
-            return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
+            return this.rowList.filter((row) => row instanceof IgxGridRowComponent).map((row) => row.cells.filter((cell) => cell.selected))
                 .reduce((a, b) => a.concat(b), []);
         }
         return [];

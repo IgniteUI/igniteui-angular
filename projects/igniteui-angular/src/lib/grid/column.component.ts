@@ -16,7 +16,7 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
-import { IgxGridSummaryComponent } from './grid-summary.component';
+import { IgxGridRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -228,16 +228,19 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     get cells(): IgxGridCellComponent[] {
-        return this.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
-        .reduce((a, b) => a.concat(b), []);
+        return this.grid.rowList.filter((row) => row instanceof IgxGridRowComponent)
+            .map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
+                .reduce((a, b) => a.concat(b), []);
     }
 
     get visibleIndex(): number {
         const grid = this.gridAPI.get(this.gridID);
         let vIndex = -1;
+
         if (this.columnGroup) {
             return vIndex;
         }
+
         if (!this.pinned) {
             const indexInCollection = grid.unpinnedColumns.indexOf(this);
             vIndex = indexInCollection === -1 ? -1 : grid.pinnedColumns.length + indexInCollection;
@@ -502,7 +505,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     @Input()
     get hidden() {
-        return this._hidden;
+        return this.allChildren.every(c => c.hidden);
     }
 
     set hidden(value: boolean) {
@@ -537,8 +540,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 }
 
 
-function flatten(arr: any[]) {
 
+function flatten(arr: any[]) {
     let result = [];
 
     arr.forEach(el => {
