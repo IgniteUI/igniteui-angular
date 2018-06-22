@@ -807,6 +807,20 @@ describe('IgxDropDown ', () => {
             expect(igxDropDown.collapsed).toEqual(true);
         });
     }));
+
+    fit('#1663 drop down flickers on open', () => {
+        const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css('button')).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdownScroll;
+        spyOn<any>(igxDropDown, 'calculateScrollPosition').and.returnValue(50);
+        igxDropDown.setSelectedItem(10);
+        button.click();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(100);
+        });
+    });
 });
 
 @Component({
