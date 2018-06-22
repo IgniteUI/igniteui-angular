@@ -99,7 +99,7 @@ describe('IgxGrid - input properties', () => {
                 - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
                 expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
                 done();
-             }, 250);
+             }, 500);
         });
     });
 
