@@ -16,7 +16,7 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
-import { IgxGridSummaryComponent } from './grid-summary.component';
+import { IgxGridRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -228,8 +228,9 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     get cells(): IgxGridCellComponent[] {
-        return this.grid.rowList.map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
-        .reduce((a, b) => a.concat(b), []);
+        return this.grid.rowList.filter((row) => row instanceof IgxGridRowComponent)
+            .map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
+                .reduce((a, b) => a.concat(b), []);
     }
 
     get visibleIndex(): number {
