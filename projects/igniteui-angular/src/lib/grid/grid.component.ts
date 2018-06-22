@@ -744,6 +744,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public draggedColumn: IgxColumnComponent;
     public isColumnResizing: boolean;
+    public isColumnMoving: boolean;
 
     public eventBus = new Subject<boolean>();
 
