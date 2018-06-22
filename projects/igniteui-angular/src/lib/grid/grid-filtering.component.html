@@ -1,7 +1,7 @@
 <div class="igx-filtering">
     <div [attr.class]="filterCSS">
-        <span class="toggle-icon" [igxToggleAction]="directive">
-            <igx-icon (mousedown)="onMouseDown()">filter_list</igx-icon>
+        <span class="toggle-icon">
+            <igx-icon (mousedown)="onMouseDown($event)">filter_list</igx-icon>
         </span>
     </div>
 </div>
@@ -10,7 +10,7 @@
     (onOpened)="refresh()"
     (onClosed)="refresh()"
     #directive="toggle"
-    [attr.class]="dialogPosition">
+    class="igx-filtering__options">
 
     <igx-grid-filter-expression
         name="firstExpr"
