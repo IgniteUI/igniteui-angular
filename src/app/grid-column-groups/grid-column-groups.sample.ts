@@ -1,11 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
     templateUrl: 'grid-column-groups.sample.html'
 })
-export class GridColumnGroupsSampleComponent {
+export class GridColumnGroupsSampleComponent implements AfterViewInit {
 
     @ViewChild('grid', { read: IgxGridComponent })
     grid: IgxGridComponent;
@@ -43,12 +43,18 @@ export class GridColumnGroupsSampleComponent {
     // tslint:enable:max-line-length
 
     pinGroup() {
-        const t = this.grid.getColumnByName('ID');
+        const t = this.grid.getColumnByName('ContactTitle');
         t.pinned = !t.pinned;
     }
 
     hideGroup() {
         const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
         col.hidden = !col.hidden;
+        this.grid.getColumnByName('CompanyName').hidden = true;
+        console.log(this.grid.getColumnByName('CompanyName').parent);
+    }
+
+    ngAfterViewInit() {
+        // this.grid.groupBy({ fieldName: 'Country', dir: 1, ignoreCase: false });
     }
 }
