@@ -57,6 +57,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     ```
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
 
+- `igxGrid` theme now has support for alternating grid row background and text colors.
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
