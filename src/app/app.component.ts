@@ -91,6 +91,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Pinning'
         },
         {
+            link: '/gridGroupBy',
+            icon: 'view_column',
+            name: 'Grid GroupBy'
+        },
+        {
             link: '/gridColumnResizing',
             icon: 'view_column',
             name: 'Grid Column Resizing'
@@ -109,6 +114,11 @@ export class AppComponent implements OnInit {
             link: '/gridSummary',
             icon: 'view_column',
             name: 'Grid Summary'
+        },
+        {
+            link: '/gridCellEditing',
+            icon: 'view_column',
+            name: 'Grid Cell Editing'
         },
         {
             link: '/gridSelection',
@@ -156,6 +166,11 @@ export class AppComponent implements OnInit {
             name: 'Navdrawer'
         },
         {
+            link: '/overlay',
+            icon: 'overlay',
+            name: 'Overlay'
+        },
+        {
             link: '/progressbar',
             icon: 'poll',
             name: 'Progress Indicators'
@@ -189,6 +204,11 @@ export class AppComponent implements OnInit {
             link: '/toast',
             icon: 'android',
             name: 'Toast'
+        },
+        {
+            link: '/chip',
+            icon: 'android',
+            name: 'Chips'
         }
     ];
 

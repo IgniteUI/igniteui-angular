@@ -81,14 +81,16 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
         const callback = (mutationList) => {
             mutationList.forEach((mutation) => {
-                mutation.removedNodes.forEach((n) => {
+                const removedNodes = new Array(... mutation.removedNodes);
+                removedNodes.forEach((n) => {
                     if (n === this.container) {
                         this._nodeWasRemoved = true;
                         this.clearChildElements(false);
                     }
                 });
 
-                mutation.addedNodes.forEach((n) => {
+                const addedNodes = new Array(... mutation.addedNodes);
+                addedNodes.forEach((n) => {
                     if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
                         this.container = this.parentElement.firstElementChild;
                         this._nodeWasRemoved = false;
