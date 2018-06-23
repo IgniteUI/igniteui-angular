@@ -2,6 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
+- Added **igxRadioGroup** directive. It allows better control over its child `igxRadio` components and support template-driven and reactive forms. 
 - Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
     For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
 - `igxGrid` filtering operands
