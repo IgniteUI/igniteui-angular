@@ -75,6 +75,12 @@ export class IgxListComponent {
     public allowLeftPanning = false;
     @Input()
     public allowRightPanning = false;
+    @Input()
+    public emptyListMessage = "There are no items in the list";
+    @Input()
+    public isLoading = false;
+    @Input()
+    public loadingListMessage = "Loading data from server";
 
     @Output()
     public onLeftPan = new EventEmitter<IgxListItemComponent>();
