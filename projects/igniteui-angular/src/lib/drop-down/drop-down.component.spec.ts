@@ -1,4 +1,4 @@
-import { Component, ContentChildren, DebugElement, ViewChild, Directive, Host, ElementRef } from '@angular/core';
+import { Component, ContentChildren, DebugElement, ViewChild, OnInit } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,7 +30,8 @@ describe('IgxDropDown ', () => {
                 IgxDropDownTestScrollComponent,
                 IgxDropDownTestDisabledComponent,
                 IgxDropDownTestDisabledAnyComponent,
-                IgxDropDownTestEmptyListComponent
+                IgxDropDownTestEmptyListComponent,
+                IgxDropDownWithScrollComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -831,6 +832,19 @@ describe('IgxDropDown ', () => {
             expect(igxDropDown.collapsed).toEqual(true);
         });
     }));
+
+    it('#1663 drop down flickers on open', () => {
+        const fixture = TestBed.createComponent(IgxDropDownWithScrollComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css('button')).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdownScroll;
+        button.click();
+        igxDropDown.open();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(44);
+        });
+    });
 });
 
 @Component({
@@ -1019,5 +1033,37 @@ class IgxDropDownTestEmptyListComponent {
 
     public toggleDropDown() {
         this.dropdownEmpty.toggle();
+    }
+}
+@Component({
+    template: `
+    <button (click)="selectItem5()">Select 5</button>
+    <igx-drop-down #scrollDropDown>
+        <igx-drop-down-item *ngFor="let item of items">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    `
+})
+class IgxDropDownWithScrollComponent implements OnInit {
+
+    @ViewChild('scrollDropDown', { read: IgxDropDownComponent })
+    public dropdownScroll: IgxDropDownComponent;
+
+    public items: any[] = [];
+
+    public toggleDropDown() {
+        this.dropdownScroll.toggle();
+    }
+
+    public selectItem5() {
+        this.dropdownScroll.setSelectedItem(4);
+    }
+
+    ngOnInit() {
+        this.dropdownScroll.height = '200px';
+        for (let index = 1; index < 100; index++) {
+            this.items.push({ field: 'Item ' + index });
+        }
     }
 }
