@@ -1,0 +1,68 @@
+<div class="sample-wrapper">
+    <app-page-header title="Radio Group">
+        Demonstrates a group of radio buttons.
+    </app-page-header>
+    <section class="sample-content">
+        <article class="sample-column">
+            <h4 class="sample-title">Radio group without data model</h4>
+            <igx-radio-group #radioGroupZZ name="radiogroupZZ" value="Bar" required="true" (change)="onRadioChange($event)">
+                <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
+                    {{item}}
+                </igx-radio>
+            </igx-radio-group>
+            <label>
+                <input type="checkbox" [checked]="radioGroup.disabled" (change)="radioGroup.disabled = !radioGroup.disabled"> Disabled
+            </label>
+            <label>
+                <input type="checkbox" [checked]="radioGroup.required" (change)="radioGroup.required = !radioGroup.required"> Required
+            </label>
+            Disabled = '{{radioGroup.disabled}}'<br>
+            Required = '{{radioGroup.required}}'<br>
+            SelectedValue = '{{selectedValue}}'<br>
+            <button igxButton type="button" (click)="onBtnClick($event)" style="width: 200px">Select 'Baz'</button>
+        </article>
+        <article class="sample-column">
+            <h4 class="sample-title">Radio group in template-driven form</h4>
+            <form #personBobForm="ngForm" (ngSubmit)="onSubmit()">
+                <div>
+                    <label for="name">Name </label>
+                    <input type="text" id="name" required [(ngModel)]="personBob.name" name="name">
+                </div>
+                <div>
+                    <label for="radioGroupSeasons">Favorite season </label>
+                    <igx-radio-group id="radioGroupSeasons" name="radioGroupSeasons" labelPosition="before" [(ngModel)]="personBob.favoriteSeason">
+                        <igx-radio class="radio-sample" *ngFor="let item of seasons" value="{{item}}">
+                            {{item}}
+                        </igx-radio>
+                    </igx-radio-group>
+                </div>
+
+                {{diagnostic}}<br>
+                <button igxButton type="submit" [disabled]="!personBobForm.form.valid" style="width: 200px">Submit</button>
+            </form>
+        </article>
+        <article class="sample-column">
+            <form [formGroup]="personKirkForm">
+                <h4 class="sample-title">Radio group in reactive form</h4>
+                <label>Name
+                    <input formControlName="name">
+                </label>
+                <br>
+                <!-- TODO: igx-radio-group is not working properly when hosted in label element
+                When the radio button label is clicked a click event on the first item is triggered -->
+                <!-- <label>Favorite Season -->
+                    <igx-radio-group formControlName="favoriteSeason" name="radioGroupReactive">
+                        <igx-radio class="radio-sample" *ngFor="let item of seasons" value="{{item}}">
+                            {{item}}
+                        </igx-radio>
+                    </igx-radio-group>
+                <!-- </label> -->
+                <br>
+                <button igxButton type="button" (click)="onUpdateBtnClick($event)" style="width: 200px">Update model</button>
+            </form>
+            <p>Form value: {{ personKirkForm.value | json }}</p>
+            <p>Model value: {{ personKirk | json }}</p>
+            <p>Updated model: {{ newPerson | json }}</p>
+        </article>
+    </section>
+</div>
