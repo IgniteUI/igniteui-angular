@@ -402,8 +402,6 @@ export class IgxDropDownComponent implements OnInit {
      * @hidden
      */
     onToggleOpening() {
-        this.toggleDirective.collapsed = false;
-        this.cdr.detectChanges();
         this.scrollToItem(this.selectedItem);
         this.onOpening.emit();
     }
