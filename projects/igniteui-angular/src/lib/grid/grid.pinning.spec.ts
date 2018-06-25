@@ -220,7 +220,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const currentColumn = 'ProductName';
         const releasedColumn = 'Released';
 
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc});
+        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc });
 
         fix.detectChanges();
 
@@ -518,6 +518,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.pinnedColumns.length).toEqual(1);
         expect(grid.unpinnedColumns.length).toEqual(9);
     });
+
     it('should allow hiding columns in the unpinned area.', () => {
 
         const fix = TestBed.createComponent(GridPinningComponent);
@@ -590,7 +591,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         grid.columns.forEach((column) => {
             if (column.index === 0 || column.index === 1 || column.index === 4 ||
-                    column.index === 6) {
+                column.index === 6) {
                 column.pin();
             }
         });
@@ -600,6 +601,19 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.columns[4].pinned).toBe(false);
         expect(grid.columns[6].pinned).toBe(true);
         expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
+    });
+
+    it('should not have grid layout row with width that extends pass the container\'s one', () => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+
+        grid.getColumnByName('Phone').pin();
+        fix.detectChanges();
+
+        const gridChildren = Array.prototype.slice.call(grid.nativeElement.children);
+        const gridWidth = grid.nativeElement.getBoundingClientRect().width;
+        gridChildren.forEach(elem => expect(elem.getBoundingClientRect().width).toEqual(gridWidth));
     });
 });
 @Component({
