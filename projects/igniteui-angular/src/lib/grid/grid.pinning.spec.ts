@@ -410,6 +410,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
         const mockEvent = { preventDefault: () => { } };
+
         cell.triggerEventHandler('focus', {});
         tick();
         fix.detectChanges();
@@ -419,21 +420,22 @@ describe('IgxGrid - Column Pinning ', () => {
 
         cell.triggerEventHandler('keydown.arrowdown', mockEvent);
         tick();
-        grid.cdr.detectChanges();
+        fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[6];
+        cell = cells[4];
         cell.triggerEventHandler('keydown.arrowup', mockEvent);
         tick();
-        grid.cdr.detectChanges();
+        fix.detectChanges();
+
         expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         discardPeriodicTasks();
     }));
 
-    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', (done) => {
-       // discardPeriodicTasks();
+    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', fakeAsync(() => {
+        discardPeriodicTasks();
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const mockEvent = { preventDefault: () => { } };
@@ -449,22 +451,21 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
         cell.triggerEventHandler('keydown.control.arrowright', null);
-        setTimeout(() => {
-            cell.componentInstance.row.cdr.detectChanges();
-            expect(fix.componentInstance.selectedCell.value).toEqual(null);
-            expect(fix.componentInstance.selectedCell.column.field).toMatch('Region');
+        tick();
+        fix.detectChanges();
 
-             cell = cells[cells.length - 1];
+        expect(fix.componentInstance.selectedCell.value).toEqual('Sales Representative');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+        cell = cells[cells.length - 1];
 
-             cell.triggerEventHandler('keydown.control.arrowleft', null);
-             grid.cdr.detectChanges();
-             setTimeout(() => {
-                expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-                done();
-             }, 100);
-        }, 100);
-    });
+        cell.triggerEventHandler('keydown.control.arrowleft', null);
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+        discardPeriodicTasks();
+    }));
 
     it('should allow hiding/showing pinned column.', () => {
         const fix = TestBed.createComponent(GridPinningComponent);
