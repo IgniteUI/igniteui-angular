@@ -22,7 +22,7 @@ import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnPinningComponent } from './column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
-import {  ConnectedPositioningStrategy } from '../services/overlay/position';
+import { ConnectedPositioningStrategy } from '../services/overlay/position';
 
 @Component({
     selector: 'igx-grid-toolbar',
@@ -54,7 +54,10 @@ export class IgxGridToolbarComponent {
 
     @ViewChild(IgxColumnPinningComponent)
     public columnPinningUI: IgxColumnPinningComponent;
-  
+
+    @ViewChild('columnPinningButton')
+    public columnPinningButton;
+
     public get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
@@ -149,6 +152,7 @@ export class IgxGridToolbarComponent {
     }
 
     public toggleColumnPinningUI() {
-        this.columnPinningDropdown.toggle();
+        this._overlaySettings.positionStrategy.settings.target = this.columnPinningButton.nativeElement;
+        this.columnPinningDropdown.toggle(this._overlaySettings);
     }
 }

@@ -20,10 +20,9 @@
         </igx-drop-down>
     </div>
     <div>
-        <button igxButton="flat" name="btnColumnPinningUI" igxButton igxRipple
-            (click)="columnPinningDropdown.toggle()">
+        <button igxButton="flat" #columnPinningButton name="btnColumnPinning" igxButton igxRipple
+            (click)="toggleColumnPinningUI()">
             <div  class="igx-grid-toolbar__button-space">
-                <!-- <igx-icon fontSet="fas" iconName="fa-thumbtack"></igx-icon> -->
                 <igx-icon *ngIf="pinnedColumnsCount > 0">lock</igx-icon>
                 <igx-icon *ngIf="pinnedColumnsCount === 0">lock_open</igx-icon>
                 <span>{{ pinnedColumnsCount }}</span>
@@ -31,7 +30,7 @@
             </div>
         </button>
         <igx-drop-down #columnPinningDropdown>
-            <igx-column-pinning [columns]="grid.columnList" title="Column Pinning"></igx-column-pinning>
+            <igx-column-pinning [columns]="grid.columnList"></igx-column-pinning>
         </igx-drop-down>
     </div>
 
