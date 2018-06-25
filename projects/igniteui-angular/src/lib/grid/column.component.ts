@@ -379,7 +379,7 @@ export class IgxColumnComponent implements AfterContentInit {
         const width = parseInt(this.width, 10);
         const oldIndex = this.visibleIndex;
 
-        if (grid.getUnpinnedWidth(true) - width < grid.unpinnedAreaMinWidth) {
+        if (!this.parent && (grid.getUnpinnedWidth(true) - width < grid.unpinnedAreaMinWidth)) {
             return false;
         }
 
@@ -398,7 +398,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         if (this.columnGroup) {
-            this.children.forEach(child => child.pinned = true);
+            this.allChildren.forEach(child => child.pinned = true);
         }
         // grid.reinitPinStates();
 
@@ -430,7 +430,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         if (this.columnGroup) {
-            this.children.forEach(child => child.pinned = false);
+            this.allChildren.forEach(child => child.pinned = false);
         }
         grid.reinitPinStates();
 
