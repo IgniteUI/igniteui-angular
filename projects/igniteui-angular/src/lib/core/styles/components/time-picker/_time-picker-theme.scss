@@ -15,8 +15,8 @@
 /// @param {Color} $active-item-background [null] - The background color for current item in focused column inside the time picker.
 /// @param {Color} $header-background [null] - The header background color of a time picker.
 /// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
-/// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
-/// @param {Color} $background-color [null] - The time-picker panel background color.
+/// @param {Color} $header-time-period-text-color [null] - The header AM/PM text color of a time picker.
+/// @param {Color} $content-background [null] - The time-picker panel background color.
 ///
 /// @requires extend
 /// @requires text-contrast
@@ -25,7 +25,7 @@
 /// @example scss Change the background and text colors in  time picker
 ///   $my-time-picker-theme: igx-time-picker-theme(
 ///     $text-color: white,
-///     $background-color: black
+///     $content-background: black
 ///   );
 ///   // Pass the theme to the igx-time-picker component mixin
 ///   @include igx-time-picker($my-button-theme);
@@ -37,8 +37,8 @@
     $active-item-background: null,
     $header-background: null,
     $header-hour-text-color: null,
-    $header-time-period-color: null,
-    $background-color: null
+    $header-time-period-text-color: null,
+    $content-background: null
 ) {
     $default-theme: (
         name: 'igx-time-picker',
@@ -48,20 +48,20 @@
         active-item-background: igx-color($palette, 'grays', 100),
         header-background: igx-color($palette, 'secondary', 500),
         header-hour-text-color: white,
-        header-time-period-color: rgba(255, 255, 255, .8),
-        background-color: white
+        header-time-period-text-color: rgba(255, 255, 255, .8),
+        content-background: white
     );
 
-    @if not($text-color) and $background-color {
-        $text-color: text-contrast($background-color);
+    @if not($text-color) and $content-background {
+        $text-color: text-contrast($content-background);
     }
 
     @if not($header-hour-text-color) and $header-background {
         $header-hour-text-color: text-contrast($header-background);
     }
 
-    @if not($header-time-period-color) and $header-background {
-        $header-time-period-color: rgba(text-contrast($header-background), .8);
+    @if not($header-time-period-text-color) and $header-background {
+        $header-time-period-text-color: rgba(text-contrast($header-background), .8);
     }
 
     @if not($selected-text-color) and $active-item-background {
@@ -76,8 +76,8 @@
         active-item-background: $active-item-background,
         header-background: $header-background,
         header-hour-text-color: $header-hour-text-color,
-        header-time-period-color: $header-time-period-color,
-        background-color: $background-color
+        header-time-period-text-color: $header-time-period-text-color,
+        content-background: $content-background
     ));
 }
 
@@ -94,7 +94,7 @@
         display: flex;
         padding: 10px 0;
         justify-content: center;
-        background: --var($theme, 'background-color');
+        background: --var($theme, 'content-background');
     }
 
     %igx-time-picker__body--vertical {
@@ -200,7 +200,7 @@
     }
 
     %igx-time-picker__header-ampm {
-        color: --var($theme, 'header-time-period-color');
+        color: --var($theme, 'header-time-period-text-color');
         font-size: rem(16px);
     }
 
