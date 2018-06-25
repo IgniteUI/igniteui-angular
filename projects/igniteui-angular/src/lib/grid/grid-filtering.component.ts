@@ -200,7 +200,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
         return !this.isFilteringApplied();
     }
 
-    public onMouseDown(eventArgs): void {
+    public onIconClick(eventArgs): void {
         requestAnimationFrame(() => {
             const grid = this.gridAPI.get(this.gridID);
             const gridRect = grid.nativeElement.getBoundingClientRect();
