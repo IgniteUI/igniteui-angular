@@ -1650,6 +1650,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
 
         // XXX: Deprecate index
+        this._columns = this.columnList.toArray();
 
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
@@ -1660,9 +1661,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 cb(column);
             }
         });
-        this._columns = this.columnList.toArray();
-        // this._pinnedColumns = this.columnList.filter((c) => c.pinned);
-        // this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
         this.reinitPinStates();
     }
 

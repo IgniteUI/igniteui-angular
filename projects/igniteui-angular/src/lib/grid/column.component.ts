@@ -400,7 +400,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.columnGroup) {
             this.allChildren.forEach(child => child.pinned = true);
         }
-        // grid.reinitPinStates();
+        grid.reinitPinStates();
 
         grid.markForCheck();
         const newIndex = this.visibleIndex;

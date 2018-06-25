@@ -329,7 +329,6 @@ describe('IgxGrid - Column Pinning ', () => {
         tryPin = grid.pinColumn('ContactTitle');
         fix.detectChanges();
         expect(tryPin).toEqual(false);
-
         grid.unpinColumn('ContactName');
         fix.detectChanges();
 
