@@ -237,13 +237,12 @@ describe('IgxVirtual directive - simple template', () => {
         // scroll to the last right pos
         fix.componentInstance.scrollLeft(90000);
         fix.detectChanges();
-
         const rowChildren = displayContainer.querySelectorAll('igx-display-container');
         for (let i = 0; i < rowChildren.length; i++) {
-            expect(rowChildren[i].children.length).toBe(2);
-            expect(rowChildren[i].children[0].textContent)
+            expect(rowChildren[i].children.length).toBe(7);
+            expect(rowChildren[i].children[5].textContent)
                 .toBe(fix.componentInstance.data[i][298].toString());
-            expect(rowChildren[i].children[1].textContent)
+            expect(rowChildren[i].children[6].textContent)
                 .toBe(fix.componentInstance.data[i][299].toString());
         }
     });
@@ -264,7 +263,7 @@ describe('IgxVirtual directive - simple template', () => {
         let rows = displayContainer.querySelectorAll('igx-display-container');
         expect(rows.length).toBe(9);
         for (let i = 0; i < rows.length; i++) {
-            expect(rows[i].children.length).toBe(4);
+            expect(rows[i].children.length).toBe(7);
             expect(rows[i].children[3].textContent)
                 .toBe(fix.componentInstance.data[i][3].toString());
         }
@@ -276,7 +275,7 @@ describe('IgxVirtual directive - simple template', () => {
         rows = displayContainer.querySelectorAll('igx-display-container');
         expect(rows.length).toBe(9);
         for (let i = 0; i < rows.length; i++) {
-            expect(rows[i].children.length).toBe(5);
+            expect(rows[i].children.length).toBe(9);
             expect(rows[i].children[4].textContent)
                 .toBe(fix.componentInstance.data[i][4].toString());
         }
@@ -298,7 +297,7 @@ describe('IgxVirtual directive - simple template', () => {
         let rows = displayContainer.querySelectorAll('igx-display-container');
         expect(rows.length).toBe(9);
         for (let i = 0; i < rows.length; i++) {
-            expect(rows[i].children.length).toBe(4);
+            expect(rows[i].children.length).toBe(7);
             expect(rows[i].children[2].textContent)
                 .toBe(fix.componentInstance.data[i][2].toString());
         }
@@ -310,7 +309,7 @@ describe('IgxVirtual directive - simple template', () => {
         rows = displayContainer.querySelectorAll('igx-display-container');
         expect(rows.length).toBe(15);
         for (let i = 0; i < rows.length; i++) {
-            expect(rows[i].children.length).toBe(4);
+            expect(rows[i].children.length).toBe(7);
             expect(rows[i].children[2].textContent)
                 .toBe(fix.componentInstance.data[i][2].toString());
         }
@@ -448,7 +447,7 @@ describe('IgxVirtual directive - simple template', () => {
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
         expect(rowsRendered.length).toBe(9);
-        expect(colsRendered.length).toBe(4);
+        expect(colsRendered.length).toBe(7);
 
          /** Step 1. Scroll to the right. */
         fix.componentInstance.scrollLeft(1000);
@@ -519,7 +518,7 @@ describe('IgxVirtual directive - simple template', () => {
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
         expect(rowsRendered.length).toBe(9);
-        expect(colsRendered.length).toBe(4);
+        expect(colsRendered.length).toBe(7);
 
         /** Step 1. Lower the amount of cols to 3 so there would be no horizontal scrollbar */
         expect(() => {
@@ -530,7 +529,6 @@ describe('IgxVirtual directive - simple template', () => {
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
             fix.detectChanges();
         }).not.toThrow();
-
         rowsRendered = displayContainer.querySelectorAll('igx-display-container');
         colsRendered = rowsRendered[0].children;
 
@@ -573,7 +571,7 @@ describe('IgxVirtual directive - simple template', () => {
         expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
         expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
         expect(rowsRendered.length).toBe(9);
-        expect(colsRendered.length).toBe(4);
+        expect(colsRendered.length).toBe(7);
     });
 
     it('should scroll down when using touch events', () => {

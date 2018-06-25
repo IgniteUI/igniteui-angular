@@ -24,8 +24,8 @@ export class GridPerformanceSampleComponent implements OnInit {
                     Math.floor((Math.random() * 50) + 50) :
                     (
                         j % 3 === 1 ?
-                            Math.floor((Math.random() * 200) + 50) :
-                            Math.floor((Math.random() * 400) + 50)
+                            Math.floor((Math.random() * 60) + 50) :
+                            Math.floor((Math.random() * 70) + 50)
                     )
             });
         }

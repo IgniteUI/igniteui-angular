@@ -5,7 +5,8 @@ import {
     HostBinding,
     HostListener,
     Inject,
-    Input } from '@angular/core';
+    Input
+} from '@angular/core';
 import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component';
 
 /**
@@ -52,7 +53,7 @@ export class IgxDropDownItemComponent {
         }
 
         if (value && !this.dropDown.collapsed) {
-            this.elementRef.nativeElement.focus();
+            this.elementRef.nativeElement.focus({ preventScroll: true });
         }
         this._isFocused = value;
     }
