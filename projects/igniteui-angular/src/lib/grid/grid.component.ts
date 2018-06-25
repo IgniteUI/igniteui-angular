@@ -1066,7 +1066,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         if (dropTarget.pinned && !column.pinned) {
-            column._pinColumn(dropTarget.index);
+            column.pin(dropTarget.index);
             return;
         }
 
@@ -1279,16 +1279,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     // TODO: We have return values here. Move them to event args ??
 
-    public pinColumn(columnName: string | IgxColumnComponent): boolean {
+    public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
-        col.pinned = true;
-        return true;
+        return col.pin(index);
     }
 
-    public unpinColumn(columnName: string | IgxColumnComponent): boolean {
+    public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
-        col.pinned = false;
-        return true;
+        return col.unpin(index);
     }
 
     public toggleAllGroupRows() {

@@ -1,12 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../calendar/index';
-import { KEYCODES } from '../core/utils';
-import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
@@ -568,17 +565,13 @@ describe('IgxGrid - Column Pinning ', () => {
         const pinnedColumnsLength = grid.pinnedColumns.length;
         const unpinnedColumnsLength = grid.unpinnedColumns.length;
 
-        let col = grid.getColumnByName('CompanyName');
-
-        let result = col.pinned = true;
+        let result = grid.pinColumn('CompanyName');
         fix.detectChanges();
 
         expect(grid.pinnedColumns.length).toEqual(pinnedColumnsLength);
         expect(result).toBe(false);
 
-        col = grid.getColumnByName('City');
-
-        result = col.pinned = false;
+        result = grid.unpinColumn('City');
         fix.detectChanges();
 
         expect(grid.unpinnedColumns.length).toEqual(unpinnedColumnsLength);

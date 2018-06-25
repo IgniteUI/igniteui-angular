@@ -151,7 +151,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public set pinned(value: boolean) {
         if (this._pinned !== value) {
             if (this.grid && this.width && !isNaN(parseInt(this.width, 10))) {
-                value ? this._pinColumn() : this._unpinColumn();
+                value ? this.pin() : this.unpin();
                 return;
             }
             /* No grid/width available at initialization. `initPinning` in the grid
@@ -235,17 +235,20 @@ export class IgxColumnComponent implements AfterContentInit {
 
     get visibleIndex(): number {
         const grid = this.gridAPI.get(this.gridID);
+        const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
+        const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
+        let col = this;
         let vIndex = -1;
 
         if (this.columnGroup) {
-            return vIndex;
+            col = this.allChildren.filter(c => !c.columnGroup)[0] as any;
         }
 
         if (!this.pinned) {
-            const indexInCollection = grid.unpinnedColumns.indexOf(this);
-            vIndex = indexInCollection === -1 ? -1 : grid.pinnedColumns.length + indexInCollection;
+            const indexInCollection = unpinnedColumns.indexOf(col);
+            vIndex = indexInCollection === -1 ? -1 : pinnedColumns.length + indexInCollection;
         } else {
-            vIndex = grid.pinnedColumns.indexOf(this);
+            vIndex = pinnedColumns.indexOf(col);
         }
         return vIndex;
     }
@@ -360,24 +363,27 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    public _pinColumn(index?) {
+    public pin(index?) {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
 
+        if (this._pinned) {
+            return false;
+        }
+
         if (this.parent && !this.parent.pinned) {
-            this.topLevelParent.pinned = true;
-            return;
+            return this.topLevelParent.pin(index);
         }
 
         const grid = (this.grid as any);
         const width = parseInt(this.width, 10);
+        const oldIndex = this.visibleIndex;
 
         if (grid.getUnpinnedWidth(true) - width < grid.unpinnedAreaMinWidth) {
             return false;
         }
 
         this._pinned = true;
-        const oldIndex = this.visibleIndex;
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
         const args = { column: this, insertAtIndex: index };
@@ -394,22 +400,28 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.columnGroup) {
             this.children.forEach(child => child.pinned = true);
         }
-        grid.reinitPinStates();
+        // grid.reinitPinStates();
 
         grid.markForCheck();
         const newIndex = this.visibleIndex;
         this.updateHighlights(oldIndex, newIndex);
+        return true;
     }
 
-    public _unpinColumn(index?) {
+    public unpin(index?) {
+
+        if (!this._pinned) {
+            return false;
+        }
+
         if (this.parent && this.parent.pinned) {
-            this.topLevelParent.pinned = false;
-            return;
+            return this.topLevelParent.unpin(index);
         }
 
         const grid = (this.grid as any);
         const oldIndex = this.visibleIndex;
-        index = index !== undefined ? index : this._unpinnedIndex;
+        index = (index !== undefined ? index :
+            this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
 
         grid._unpinnedColumns.splice(index, 0, this);
@@ -425,6 +437,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.markForCheck();
         const newIndex = this.visibleIndex;
         this.updateHighlights(oldIndex, newIndex);
+        return true;
     }
 
     get topLevelParent() {
