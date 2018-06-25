@@ -608,7 +608,7 @@
     }
 
     %grid-cell-header--compact {
-        padding: map-get($grid-header-padding, 'compact');
+        padding: map-get($grid-header-padding, 'compact')m;
         min-height: map-get($grid-header-height, 'compact');
     }
 

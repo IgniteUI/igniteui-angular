@@ -118,8 +118,20 @@
 
 
     // Caption
-    $grid-toolbar-fs: rem(20px);
-    $grid-toolbar-padding: rem(8px) rem(24px);
+    $grid-toolbar-fs: rem(16px);
+
+    $grid-toolbar-padding: (
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
+    );
+
+    $grid-toolbar-height: (
+        comfortable: rem(56px),
+        cosy: rem(48px),
+        compact: rem(48px)
+    );
+
 
     %igx-grid-toolbar {
         display: flex;
@@ -127,9 +139,10 @@
         justify-content: space-between;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
-        padding: $grid-toolbar-padding;
+        padding: map-get($grid-toolbar-padding, 'cosy');
         border-bottom: 1px solid igx-color($palette, 'grays', 300);
         background: --var($theme, 'background-color');
+        min-height: map-get($grid-toolbar-height, 'comfortable');
 
         %igx-button--flat {
             background: --var($theme, 'button-background');
@@ -203,6 +216,16 @@
                 }
             }
         }
+    }
+
+    %igx-grid-toolbar--cosy {
+        min-height: map-get($grid-toolbar-height, 'cosy');
+        padding: map-get($grid-toolbar-padding, 'cosy');
+    }
+
+    %igx-grid-toolbar--compact {
+        min-height: map-get($grid-toolbar-height, 'compact');
+        padding: map-get($grid-toolbar-padding, 'compact');
     }
 
     [dir='rtl'] {

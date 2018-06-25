@@ -45,11 +45,6 @@ export class GridToolbarSampleComponent implements OnInit {
         }
     }
 
-    public buttonToolbarClickedHandler() {
-        this.toolbarShown = !this.toolbarShown;
-        this.igxGrid1.showToolbar = this.toolbarShown;
-    }
-
     public initColumns(column: IgxColumnComponent) {
         column.filterable = true;
         column.sortable = true;
