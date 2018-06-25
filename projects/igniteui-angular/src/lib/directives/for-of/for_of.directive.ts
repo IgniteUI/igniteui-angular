@@ -352,7 +352,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        this.dc.changeDetectorRef.detectChanges();
+        this._zone.run(() => {
+            this.cdr.markForCheck();
+        });
         this.onChunkLoad.emit(this.state);
     }
 
@@ -758,6 +760,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         this._embeddedViews.push(embeddedView);
         this.state.chunkSize++;
+
+        this._zone.run(() => {
+            this.cdr.markForCheck();
+        });
     }
 
     /**
