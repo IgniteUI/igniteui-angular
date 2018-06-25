@@ -18,7 +18,7 @@ import {
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 
 import { IgxListItemComponent } from './list-item.component';
-import { IgxEmptyListTemplateDirective, IgxListPanState } from './list.common';
+import { IgxEmptyListTemplateDirective, IgxDataLoadingTemplateDirective, IgxListPanState } from './list.common';
 
 let NEXT_ID = 0;
 export interface IPanStateChangeEventArgs {
@@ -61,12 +61,17 @@ export class IgxListComponent {
 
     @ContentChildren(forwardRef(() => IgxListItemComponent))
     public children: QueryList<IgxListItemComponent>;
-
     @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
+    /**@hidden*/
+    @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
+    public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
 
     @ViewChild('defaultEmptyList', { read: TemplateRef })
     protected defaultEmptyListTemplate: TemplateRef<any>;
+    /**@hidden*/
+    @ViewChild('defaultDataLoading', { read: TemplateRef })
+    protected defaultDataLoadingTemplate: TemplateRef<any>;
 
     @HostBinding('attr.id')
     @Input()
@@ -76,11 +81,12 @@ export class IgxListComponent {
     @Input()
     public allowRightPanning = false;
     @Input()
-    public emptyListMessage = "There are no items in the list";
-    @Input()
     public isLoading = false;
-    @Input()
-    public loadingListMessage = "Loading data from server";
+
+    //@Input()
+    //public emptyListMessage = "There are no items in the list";
+    //@Input()
+    //public loadingListMessage = "Loading data from the server";
 
     @Output()
     public onLeftPan = new EventEmitter<IgxListItemComponent>();
@@ -139,7 +145,11 @@ export class IgxListComponent {
     }
 
     public get template(): TemplateRef<any> {
-        return this.emptyListTemplate ? this.emptyListTemplate.template : this.defaultEmptyListTemplate;
+        if (this.isLoading) {
+            return this.dataLoadingTemplate ? this.dataLoadingTemplate.template : this.defaultDataLoadingTemplate;
+        } else {
+            return this.emptyListTemplate ? this.emptyListTemplate.template : this.defaultEmptyListTemplate;
+        }
     }
 }
 
