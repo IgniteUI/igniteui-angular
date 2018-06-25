@@ -18,7 +18,6 @@ import { Subject } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
@@ -30,7 +29,7 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
     selector: 'igx-grid-filter-expression',
     templateUrl: './grid-filtering-expression.component.html'
 })
-export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
+export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input()
     get column() {
@@ -136,14 +135,12 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         }
     }
 
-    @autoWire()
     public conditionChangedCallback(): void {
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
             this.onExpressionChanged.emit(this.expression);
         }
     }
 
-    @autoWire()
     public unaryConditionChangedCallback(): void {
         this.onExpressionChanged.emit(this.expression);
     }
