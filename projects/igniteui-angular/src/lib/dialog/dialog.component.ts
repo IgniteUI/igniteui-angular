@@ -16,9 +16,8 @@ import {
     ViewChild,
     AfterContentInit
 } from '@angular/core';
-
-import { EaseOut } from '../animations/easings';
-import { fadeIn, fadeOut, slideInBottom } from '../animations/main';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -269,6 +268,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private _overlayDefaultSettings: OverlaySettings;
     private _closeOnOutsideSelect = false;
     private _isModal = true;
+    protected destroy$ = new Subject<boolean>();
 
     /**
      * @hidden
@@ -286,7 +286,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public tabindex = -1;
 
     private _titleId: string;
-    private _state: string;
 
     /**
      * Returns the value of state. Possible state values are "open" or "close".
@@ -299,7 +298,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *```
      */
     get state(): string {
-        return this._state;
+        return this.isOpen ? 'open' : 'close';
     }
 
     /**
@@ -371,7 +370,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     ngAfterContentInit() {
-        this.toggleRef.onClosed.subscribe(() => this.emitCloseFromDialog());
+        this.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitCloseFromDialog());
     }
 
     private emitCloseFromDialog() {
@@ -471,15 +470,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         if (this.navService && this.id) {
             this.navService.remove(this.id);
         }
-        if (this.toggleRef.onClosed) {
-            this.toggleRef.onClosed.unsubscribe();
-        }
+
     }
 
-    private toggleState(overlaySettings?: OverlaySettings): void {
-
-        // this.toggleRef.open(true, overlaySettings);
-    }
 }
 
 export interface IDialogEventArgs {
