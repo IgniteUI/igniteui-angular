@@ -823,6 +823,7 @@
     }
 
     %grid__scroll-on-drag-pinned {
+        position: absolute;
         width: 15px;
         height: 100%;
         top: 0;
