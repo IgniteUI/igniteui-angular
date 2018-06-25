@@ -854,12 +854,12 @@ describe('Column Hiding UI', () => {
     });
 
     function getColumnChooserButton() {
-        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
+        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button ? button.nativeElement : undefined;
     }
 
     function getColumnChooserButtonIcon() {
-        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
+        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button.query(By.css('igx-icon')).nativeElement;
     }
 
