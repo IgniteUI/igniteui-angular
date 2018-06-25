@@ -539,7 +539,7 @@ describe('igxOverlay', () => {
 
         });
 
-        fit('fix for #1690 - click on second filter does not close first one', fakeAsync(() => {
+        it('fix for #1690 - click on second filter does not close first one', fakeAsync(() => {
             const fixture = TestBed.createComponent(TwoButtonsComponent);
             const button1 = fixture.nativeElement.getElementsByClassName('buttonOne')[0];
             const button2 = fixture.nativeElement.getElementsByClassName('buttonTwo')[0];
@@ -547,7 +547,6 @@ describe('igxOverlay', () => {
             button1.click();
             tick();
 
-            debugger;
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
             const wrapper = overlayDiv.children[0];
             expect(wrapper.classList).toContain(CLASS_OVERLAY_WRAPPER);
@@ -1911,7 +1910,7 @@ export class TopLeftOffsetComponent {
         <button class='buttonOne' (click)=\'clickOne($event)\'>Show first Overlay</button>
     </div>
     <div (click)=\'divClick($event)\'>
-        <button class='buttonTwo' (click)=\'clickOne($event)\'>Show second Overlay</button>
+        <button class='buttonTwo' (click)=\'clickTwo($event)\'>Show second Overlay</button>
     </div>`
 })
 export class TwoButtonsComponent {

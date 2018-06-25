@@ -12,7 +12,8 @@ import {
     EventEmitter,
     Inject,
     Injectable,
-    Injector
+    Injector,
+    Type
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata } from '@angular/animations';
 import { fromEvent } from 'rxjs';
@@ -61,7 +62,7 @@ export class IgxOverlayService {
         private builder: AnimationBuilder,
         @Inject(DOCUMENT) private _document: any) { }
 
-    show(component, overlaySettings?: OverlaySettings): string {
+    show(component: ElementRef | Type<{}>, overlaySettings?: OverlaySettings): string {
         const id: string = (this._componentId++).toString();
         overlaySettings = Object.assign({}, this._defaultSettings, overlaySettings);
 
@@ -87,13 +88,26 @@ export class IgxOverlayService {
         }
 
         this._overlays.find(c => c.id === id).initialSize = size as DOMRect;
-        contentElement.style.width = size.width + 'px';
-        contentElement.style.height = size.height + 'px';
         overlaySettings.positionStrategy.position(contentElement, size, document, true);
+
+        if (overlaySettings.closeOnOutsideClick) {
+            if (overlaySettings.modal) {
+                fromEvent(wrapperElement, 'click').pipe(take(1)).subscribe(() => this.hide(id));
+            } else if (this._overlays.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length <= 1) {
+                (<HTMLElement>this._document).addEventListener('click', this.documentClicked, true);
+            }
+        }
+
         const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
         const animationPlayer = animationBuilder.create(element);
 
         if (overlaySettings.modal) {
+            fromEvent(wrapperElement, 'keydown').pipe(take(1)).subscribe((ev: KeyboardEvent) => {
+                if (ev.key === 'Escape') {
+                    this.hide(id);
+                }
+            });
+
             wrapperElement.classList.remove('igx-overlay__wrapper');
             this.applyAnimationParams(wrapperElement, overlaySettings.positionStrategy.settings.openAnimation);
             wrapperElement.classList.add('igx-overlay__wrapper--modal');
@@ -101,18 +115,6 @@ export class IgxOverlayService {
 
         animationPlayer.onDone(() => {
             this.onOpened.emit({ id, componentRef });
-            if (overlaySettings.closeOnOutsideClick) {
-                if (overlaySettings.modal) {
-                    fromEvent(wrapperElement, 'click').pipe(take(1)).subscribe(() => this.hide(id));
-                    wrapperElement.addEventListener('keydown', (ev: KeyboardEvent) => {
-                        if (ev.key === 'Escape') {
-                            this.hide(id);
-                        }
-                    });
-                } else {
-                    fromEvent(this._document, 'click').pipe(take(1)).subscribe(() => this.hide(id));
-                }
-            }
             animationPlayer.reset();
         });
 
@@ -122,19 +124,6 @@ export class IgxOverlayService {
         overlaySettings.scrollStrategy.attach();
 
         return this._overlays[this._overlays.length - 1].id;
-    }
-
-    private applyAnimationParams(wrapperElement: HTMLElement, animationOptions: AnimationReferenceMetadata) {
-        if (!animationOptions || !animationOptions.options || !animationOptions.options.params) {
-            return;
-        }
-        const params = animationOptions.options.params as IAnimationParams;
-        if (params.duration) {
-            wrapperElement.style.transitionDuration = params.duration;
-        }
-        if (params.easing) {
-            wrapperElement.style.transitionTimingFunction = params.easing;
-        }
     }
 
     hide(id: string) {
@@ -173,6 +162,27 @@ export class IgxOverlayService {
             overlay.hook.parentElement.removeChild(overlay.hook);
 
             const index = this._overlays.indexOf(overlay);
+
+            if (overlay.settings.closeOnOutsideClick) {
+                if (this._overlays.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length <= 1) {
+                    (<HTMLElement>this._document).addEventListener('click', this.documentClicked, true);
+                }
+            }
+
+
+            if (overlay.settings.modal === false) {
+                let shouldRemoveClickEventListener = true;
+                this._overlays.forEach(o => {
+                    if (o.settings.modal === false && o.id !== id) {
+                        shouldRemoveClickEventListener = false;
+                    }
+                });
+
+                if (shouldRemoveClickEventListener) {
+                    (<HTMLElement>this._document).removeEventListener('click', () => this.hide(id), true);
+                }
+            }
+
             this._overlays.splice(index, 1);
             if (this._overlays.length === 0) {
                 this._overlayElement.parentElement.removeChild(this._overlayElement);
@@ -202,6 +212,19 @@ export class IgxOverlayService {
             overlay.elementRef.nativeElement.parentElement,
             overlay.initialSize,
             this._document);
+    }
+
+    private applyAnimationParams(wrapperElement: HTMLElement, animationOptions: AnimationReferenceMetadata) {
+        if (!animationOptions || !animationOptions.options || !animationOptions.options.params) {
+            return;
+        }
+        const params = animationOptions.options.params as IAnimationParams;
+        if (params.duration) {
+            wrapperElement.style.transitionDuration = params.duration;
+        }
+        if (params.easing) {
+            wrapperElement.style.transitionTimingFunction = params.easing;
+        }
     }
 
     private getElement(component: any, id: string, overlaySettings: OverlaySettings): HTMLElement {
@@ -273,14 +296,28 @@ export class IgxOverlayService {
         const content: HTMLElement = this._document.createElement('div');
         if (overlaySettings.modal) {
             content.classList.add('igx-overlay__content--modal');
+            content.addEventListener('click', (ev: Event) => {
+                ev.stopPropagation();
+            });
         } else {
             content.classList.add('igx-overlay__content');
         }
 
-        if (overlaySettings.closeOnOutsideClick) {
-            content.addEventListener('click', (ev) => ev.stopPropagation());
-        }
         wrapperElement.appendChild(content);
         return content;
+    }
+
+    private documentClicked = (ev: Event) => {
+        for (let i = this._overlays.length; i--;) {
+            const overlay = this._overlays[i];
+            if (overlay.settings.modal) {
+                return;
+            }
+            if (overlay.settings.closeOnOutsideClick) {
+                if (!overlay.elementRef.nativeElement.contains(ev.target)) {
+                    this.hide(overlay.id);
+                }
+            }
+        }
     }
 }
