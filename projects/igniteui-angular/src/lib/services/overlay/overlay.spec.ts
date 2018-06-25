@@ -980,8 +980,9 @@ describe('igxOverlay', () => {
             expect(document.documentElement.scrollLeft).toEqual(50);
         }));
 
-        it('closingScrollStrategy: no scrolling possible. The component changes ' +
-            'state to closed when reaching the threshold (example: expanded DropDown collapses).', fakeAsync(() => {
+        // TODO: Should test with ConnectedPositioningStrategy
+        it('closingScrollStrategy: The component changes state to closed when reaching the threshold' +
+            '(example: expanded DropDown collapses).', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
                         styles: [`button {
@@ -1031,6 +1032,7 @@ describe('igxOverlay', () => {
                 expect(overlay.hide).toHaveBeenCalledTimes(1);
             }));
 
+        // TODO:  Should test with ConnectedPositioningStrategy
         it('Scroll Strategy Block: it should be partially hidden. When scrolling, the component stays static. ' +
             'Component state remains the same (example: expanded DropDown remains expanded).', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
@@ -1603,7 +1605,7 @@ describe('igxOverlay', () => {
             // TO DO
         });
 
-        // 2. Scroll Strategy
+        // 2. Scroll Strategy (test with GlobalPositionStrategy(default))
         // 2.1. Scroll Strategy - None
         it('The component do not scroll with the window. No scrolling happens.', fakeAsync(() => {
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
@@ -1645,7 +1647,7 @@ describe('igxOverlay', () => {
             expect(document.documentElement.scrollLeft).toEqual(50);
         }));
 
-        fit('The component shown in igx-overlay do not close.(example: expanded DropDown stays expanded during a scrolling attempt.)',
+        it('The component shown in igx-overlay do not close.(example: expanded DropDown stays expanded during a scrolling attempt.)',
             fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
@@ -1685,8 +1687,8 @@ describe('igxOverlay', () => {
                 expect(document.documentElement.scrollTop).toEqual(100);
                 expect(document.documentElement.scrollLeft).toEqual(50);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-            }));
-
+            })
+        );
 
         // 2.2 Scroll Strategy - Closing. (Uses a tolerance and closes an expanded component upon scrolling if the tolerance is exceeded.)
         // (example: DropDown or Dialog component collapse/closes after scrolling 10px.)
@@ -1723,20 +1725,52 @@ describe('igxOverlay', () => {
 
         // 3. Interaction
         // 3.1 Modal
-        xit('igx-overlay applies a greyed our mask layers', () => {
-            // TO DO
-        });
+        it('igx-overlay applies a greyed our mask layers', fakeAsync(() => {
+            // Utility function to get all applied to element css from all sources.
+            function css(element) {
+                const sheets = document.styleSheets, ret = [];
+                element.matches = element.matches || element.webkitMatchesSelector || element.mozMatchesSelector
+                    || element.msMatchesSelector || element.oMatchesSelector;
+                    for (const key in sheets) {
+                        if (sheets.hasOwnProperty(key)) {
+                        const sheet = <CSSStyleSheet>sheets[key];
+                        const rules: any = sheet.rules || sheet.cssRules;
+
+                        for (const r in rules) {
+                            if (element.matches(rules[r].selectorText)) {
+                                ret.push(rules[r].cssText);
+                            }
+                        }
+                    }
+                }
+                return ret;
+            }
+
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlaySettings: OverlaySettings = {
+                modal: true,
+            };
+
+            fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+            const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            tick();
+            const styles = css(overlayWrapper);
+            const expectedBackgroundColor = 'background-color: rgba(0, 0, 0, 0.38)';
+            console.log(styles);
+            const appliedBackgroundStyles = styles[3];
+            expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
+        }));
 
         xit('Interaction is allowed only for the shown modal dialog component', () => {
-            // TO DO
+            // Not TO DO
         });
 
         xit('Esc key closes the dialog.', () => {
-            // TO DO
+            // Not TO DO
         });
 
         xit('Enter selects', () => {
-            // TO DO
+            // Not TO DO
         });
 
         xit('Clicking outside the dialog does not close it', () => {
@@ -1749,7 +1783,7 @@ describe('igxOverlay', () => {
         });
 
         xit('Tab allows changing focus to other components/elements on the window which are not shown via the igx-overlay', () => {
-            // TO DO
+            // Not TO DO
         });
 
         xit('Clicking outside the component it collapses/closes (DropDown, DatePicker, NavBar etc.)', () => {
@@ -1757,7 +1791,7 @@ describe('igxOverlay', () => {
         });
 
         xit('Escape - closes (DropDown, Dialog, etc.).', () => {
-            // TO DO
+            // Not TO DO
         });
 
         // 4. Css
