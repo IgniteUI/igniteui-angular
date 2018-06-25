@@ -1031,7 +1031,7 @@ export class GridWithPrimaryKeyComponent {
 
 @Component({
     template: `
-        <igx-grid #gridSelection2 [height]="'300px'" [data]="data" [primaryKey]="'ID'"
+        <igx-grid #gridSelection2 [height]="'600px'" [data]="data" [primaryKey]="'ID'"
         [autoGenerate]="true" [rowSelectable]="true" [paging]="true" [perPage]="50">
         </igx-grid>
         <button class="prevPageBtn" (click)="ChangePage(-1)">Prev page</button>
