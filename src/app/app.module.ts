@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -48,6 +48,7 @@ import { GridPerformanceSampleComponent } from './grid-performance/grid-performa
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { RadioSampleComponent } from './radio/radio.sample';
 
 
 const components = [
@@ -91,7 +92,7 @@ const components = [
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
-    TypographySampleComponent
+    RadioSampleComponent
 ];
 
 @NgModule({
@@ -100,6 +101,7 @@ const components = [
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule.forRoot(),
         IgxGridModule.forRoot(),

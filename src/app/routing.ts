@@ -36,6 +36,7 @@ import { GridPerformanceSampleComponent } from './grid-performance/grid-performa
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { RadioSampleComponent } from './radio/radio.sample';
 
 const appRoutes = [
     {
@@ -114,6 +115,10 @@ const appRoutes = [
     {
         path: 'progressbar',
         component: ProgressbarSampleComponent
+    },
+    {
+        path: 'radio',
+        component: RadioSampleComponent
     },
     {
         path: 'ripple',
