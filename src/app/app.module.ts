@@ -59,6 +59,7 @@ import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { RadioSampleComponent } from './radio/radio.sample';
 
 const components = [
     AppComponent,
@@ -109,7 +110,8 @@ const components = [
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
-    TypographySampleComponent
+    TypographySampleComponent,
+    RadioSampleComponent
 ];
 
 @NgModule({

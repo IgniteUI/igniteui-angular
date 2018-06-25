@@ -45,6 +45,7 @@ import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { RadioSampleComponent } from './radio/radio.sample';
 
 const appRoutes = [
     {
@@ -143,6 +144,10 @@ const appRoutes = [
     {
         path: 'progressbar',
         component: ProgressbarSampleComponent
+    },
+    {
+        path: 'radio',
+        component: RadioSampleComponent
     },
     {
         path: 'ripple',
