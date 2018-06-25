@@ -62,6 +62,28 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - **Breaking change** filteringExpressions property is removed.
 
 - `igxCell` default editing template is changed according column data type. For more information you can read the [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Cell-Editing) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_editing.html)
+- `igxCombo` component added
+
+    ```html
+    <igx-combo #combo [data]="towns" [displayKey]="'townName'" [valueKey]="'postCode'" [groupKey]="'province'"
+        [allowCustomValues]="true" placeholder="Town(s)" searchPlaceholder="Search town..." [width]="'100%'"></igx-combo>
+    ```
+
+    igxCombo features:
+
+        - Data Binding
+        - Value Binding
+        - Virtualized list
+        - Multiple Selection
+        - Filtering
+        - Grouping
+        - Custom values
+        - Templates
+        - Integration with Template Driven and Reactive Forms
+        - Keayboard Navigation
+        - Accessibility compliance
+
+    For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
 
 - `igxToggle` changes
     - `onOpening` event added.

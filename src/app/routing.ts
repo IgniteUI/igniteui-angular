@@ -43,6 +43,7 @@ import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 
 const appRoutes = [
@@ -74,6 +75,10 @@ const appRoutes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
+    },
+    {
+        path: 'combo',
+        component: ComboSampleComponent
     },
     {
         path: 'chip',
