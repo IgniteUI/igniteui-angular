@@ -7,13 +7,17 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DataGenerator } from './test-util/data-generator';
 
-import {    DataType,
-            DataUtil,
-            FilteringLogic, FilteringStrategy, IDataState,
-            IFilteringExpression, IFilteringState, IPagingState, ISortingExpression, ISortingState,
-            PagingError, SortingDirection, IgxStringFilteringOperand, IgxNumberFilteringOperand,
-            IgxDateFilteringOperand, IgxBooleanFilteringOperand
-        } from '../../public_api';
+import {
+    DataType,
+    DataUtil,
+    FilteringLogic, FilteringStrategy, IDataState, IFilteringExpressionsTree,
+    IFilteringState, IGroupByRecord, IGroupingState,
+    IPagingState, ISortingExpression, ISortingState, PagingError, SortingDirection,
+    IgxStringFilteringOperand, IgxNumberFilteringOperand,
+    IgxDateFilteringOperand, IgxBooleanFilteringOperand, FilteringExpressionsTree
+} from '../../public_api';
+import { IGroupByResult } from './sorting-strategy';
+import { cloneArray } from '../core/utils';
 /* Test sorting */
 function testSort() {
     let data: any[] = [];
@@ -28,7 +32,7 @@ function testSort() {
                 dir: SortingDirection.Desc,
                 fieldName: 'number'
             };
-            const res = DataUtil.sort(data, {expressions: [se]});
+            const res = DataUtil.sort(data, { expressions: [se] });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual(dataGenerator.generateArray(4, 0));
         });
@@ -37,7 +41,7 @@ function testSort() {
                 dir: SortingDirection.Asc,
                 fieldName: 'boolean'
             };
-            const res = DataUtil.sort(data, {expressions: [ se ]});
+            const res = DataUtil.sort(data, { expressions: [se] });
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                 .toEqual([false, false, false, true, true]);
         });
@@ -51,16 +55,16 @@ function testSort() {
                 dir: SortingDirection.Asc,
                 fieldName: 'date'
             };
-            const res = DataUtil.sort(data, {expressions: [se0, se1]});
+            const res = DataUtil.sort(data, { expressions: [se0, se1] });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([1, 3, 0, 2, 4]);
         });
-        it ('sorts as applying default setting ignoreCase to false', () => {
+        it('sorts as applying default setting ignoreCase to false', () => {
             data[4].string = data[4].string.toUpperCase();
             const se0: ISortingExpression = {
-                    dir: SortingDirection.Desc,
-                    fieldName: 'string'
-                };
+                dir: SortingDirection.Desc,
+                fieldName: 'string'
+            };
             let res = DataUtil.sort(data, {
                 expressions: [se0]
             });
@@ -68,27 +72,201 @@ function testSort() {
                 .toEqual([3, 2, 1, 0, 4], 'expressionDefaults.ignoreCase = false');
             se0.ignoreCase = true;
             res = DataUtil.sort(data, {
-                    expressions: [se0]
-                });
+                expressions: [se0]
+            });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual(dataGenerator.generateArray(4, 0));
+        });
+    });
+}
+
+function testGroupBy() {
+    let data: any[] = [];
+    let dataGenerator: DataGenerator;
+    let expr: ISortingExpression;
+    let state: IGroupingState;
+    beforeEach(async(() => {
+        dataGenerator = new DataGenerator();
+        data = dataGenerator.data;
+        expr = {
+            dir: SortingDirection.Asc,
+            fieldName: 'boolean'
+        };
+        state = {
+            expressions: [expr],
+            expansion: [],
+            defaultExpanded: true
+        };
+    }));
+    describe('Test groupBy', () => {
+        it('groups by descending column "boolean", expanded', () => {
+            // sort
+            let res = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            const gres = DataUtil.group(res, state);
+            // second group pipe
+            res = DataUtil.restoreGroups(gres, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                .toEqual([undefined, false, false, false, undefined, true, true]);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            const group1: IGroupByRecord = gres.metadata[0];
+            const group2: IGroupByRecord = gres.metadata[3];
+            expect(groups[0]).toEqual(null);
+            expect(res[0]).toEqual(group1);
+            expect(groups[4]).toEqual(null);
+            expect(res[4]).toEqual(group2);
+            expect(gres.metadata[0]).toEqual(gres.metadata[1]);
+            expect(gres.metadata[1]).toEqual(gres.metadata[2]);
+            expect(gres.metadata[3]).toEqual(gres.metadata[4]);
+            expect(group1.level).toEqual(0);
+            expect(group2.level).toEqual(0);
+            expect(group1.records).toEqual(res.slice(1, 4));
+            expect(group2.records).toEqual(res.slice(5, 7));
+            expect(group1.value).toEqual(false);
+            expect(group2.value).toEqual(true);
+        });
+
+        it('groups by descending column "boolean", collapsed', () => {
+            state.defaultExpanded = false;
+            // sort
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            const gres = DataUtil.group(sorted, state);
+            // second group pipe
+            const res = DataUtil.restoreGroups(gres, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                .toEqual([undefined, undefined]);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            expect(groups[0]).toEqual(null);
+            expect(groups[1]).toEqual(null);
+            expect(res[0].level).toEqual(0);
+            expect(res[1].level).toEqual(0);
+            expect(res[0].records).toEqual(sorted.slice(0, 3));
+            expect(res[1].records).toEqual(sorted.slice(3, 5));
+            expect(res[0].value).toEqual(false);
+            expect(res[1].value).toEqual(true);
+        });
+
+        it('groups by ascending column "boolean", partially collapsed', () => {
+            state.expansion.push({
+                expanded: false,
+                hierarchy: [{ fieldName: 'boolean', value: false }]
+            });
+            // sort
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            const gres = DataUtil.group(sorted, state);
+            // second group pipe
+            const res = DataUtil.restoreGroups(gres, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                .toEqual([undefined, undefined, true, true]);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            expect(groups[0]).toEqual(null);
+            expect(res[1]).toEqual(gres.metadata[4]);
+            expect(res[0].level).toEqual(0);
+            expect(res[1].level).toEqual(0);
+            expect(res[0].records).toEqual(sorted.slice(0, 3));
+            expect(res[1].records).toEqual(sorted.slice(3, 5));
+            expect(res[0].value).toEqual(false);
+            expect(res[1].value).toEqual(true);
+        });
+
+        it('two level groups', () => {
+            const expr2 = {
+                fieldName: 'string',
+                dir: SortingDirection.Asc
+            };
+            state.expressions.push(expr2);
+            // sort
+            const sorted = DataUtil.sort(data, { expressions: [expr, expr2] });
+            // first group pipe
+            const gres = DataUtil.group(sorted, state);
+            // second group pipe
+            const res = DataUtil.restoreGroups(gres, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                .toEqual([undefined, undefined, false, undefined, false,
+                    undefined, false, undefined, undefined, true, undefined, true]);
+            expect(dataGenerator.getValuesForColumn(res, 'string'))
+                .toEqual([undefined, undefined, 'row0, col1', undefined, 'row2, col1',
+                    undefined, 'row4, col1', undefined, undefined, 'row1, col1', undefined, 'row3, col1']);
+            const group1: IGroupByRecord = gres.metadata[0];
+            const group2: IGroupByRecord = group1.groupParent;
+            const group3: IGroupByRecord = gres.metadata[3];
+            const group4: IGroupByRecord = group3.groupParent;
+            expect(group1).toEqual(res[1]);
+            expect(group2).toEqual(res[0]);
+            expect(group3).toEqual(res[8]);
+            expect(group4).toEqual(res[7]);
+            expect(group1.level).toEqual(1);
+            expect(group2.level).toEqual(0);
+            expect(group3.level).toEqual(1);
+            expect(group4.level).toEqual(0);
+        });
+
+        it('groups by descending column "boolean", paging', () => {
+            // sort
+            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            // first group pipe
+            const grouped = DataUtil.group(sorted, state);
+            // page
+            let paged: IGroupByResult = {
+                data: cloneArray(grouped.data),
+                metadata: cloneArray(grouped.metadata)
+            };
+            paged.data = DataUtil.page(paged.data, { index: 0, recordsPerPage: 2 });
+            paged.metadata = DataUtil.page(paged.metadata, { index: 0, recordsPerPage: 2 });
+            // second group pipe
+            let res = DataUtil.restoreGroups(paged, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                .toEqual([undefined, false, false]);
+            let groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            const group1: IGroupByRecord = grouped.metadata[0];
+            expect(groups[0]).toEqual(null);
+            expect(res[0]).toEqual(group1);
+            expect(grouped.metadata[1]).toEqual(group1);
+            expect(group1.level).toEqual(0);
+            expect(group1.records).toEqual(grouped.data.slice(0, 3));
+            expect(group1.value).toEqual(false);
+
+            // page 2
+            paged = {
+                data: cloneArray(grouped.data),
+                metadata: cloneArray(grouped.metadata)
+            };
+            paged.data = DataUtil.page(paged.data, { index: 1, recordsPerPage: 2 });
+            paged.metadata = DataUtil.page(paged.metadata, { index: 1, recordsPerPage: 2 });
+            // second group pipe
+            res = DataUtil.restoreGroups(paged, state);
+            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+                .toEqual([undefined, false, undefined, true]);
+            groups = dataGenerator.getGroupRecords(res);
+            const group2: IGroupByRecord = grouped.metadata[2];
+            const group3: IGroupByRecord = grouped.metadata[3];
+            expect(res[0]).toEqual(group2);
+            expect(groups[0]).toEqual(null);
+            expect(res[2]).toEqual(group3);
+            expect(groups[2]).toEqual(null);
+            expect(group2.value).toEqual(false);
+            expect(group3.value).toEqual(true);
+            expect(group2.records).toEqual(grouped.data.slice(0, 3));
+            expect(group3.records).toEqual(grouped.data.slice(3, 5));
         });
     });
 }
 /* //Test sorting */
 /* Test filtering */
 class CustomFilteringStrategy extends FilteringStrategy {
-   public filter<T>(data: T[], expressions: IFilteringExpression[], logic?: FilteringLogic): T[] {
+    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
         const len = Math.ceil(data.length / 2);
         const res: T[] = [];
         let i;
         let rec;
-        if (!expressions || !expressions.length || !len) {
+        if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
             return data;
         }
         for (i = 0; i < len; i++) {
             rec = data[i];
-            if (this.matchRecordByExpressions(rec, expressions, logic)) {
+            if (this.matchRecord(rec, expressionsTree)) {
                 res.push(rec);
             }
         }
@@ -101,73 +279,98 @@ function testFilter() {
     const data: object[] = dataGenerator.data;
     describe('test filtering', () => {
         it('filters \'number\' column greater than 3', () => {
-            const res = DataUtil.filter(data, {
-                expressions: [{fieldName: 'number', condition: IgxNumberFilteringOperand.instance().condition('greaterThan'), searchVal: 3}]
-            });
+            const state: IFilteringState = {
+                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
+            };
+            state.expressionsTree.filteringOperands = [
+                {
+                    fieldName: 'number',
+                    condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                    searchVal: 3
+                }
+            ];
+            const res = DataUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
-                    .toEqual([4]);
+                .toEqual([4]);
         });
         // test string filtering - with ignoreCase true/false
         it('filters \'string\' column contains \'row\'', () => {
-            let res = DataUtil.filter(data, {
-                                        expressions: [
-                                                {
-                                                    condition: IgxStringFilteringOperand.instance().condition('contains'),
-                                                    fieldName: 'string',
-                                                    searchVal: 'row'
-                                                }]
-                                    });
+            const state: IFilteringState = {
+                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
+            };
+            state.expressionsTree.filteringOperands = [
+                {
+                    condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    fieldName: 'string',
+                    searchVal: 'row'
+                }
+            ];
+
+            const stateIgnoreCase: IFilteringState = {
+                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
+            };
+            stateIgnoreCase.expressionsTree.filteringOperands = [
+                {
+                    condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    fieldName: 'string',
+                    ignoreCase: false,
+                    searchVal: 'ROW'
+                }
+            ];
+
+            let res = DataUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
-                    .toEqual(dataGenerator.getValuesForColumn(data, 'number'));
-            (res[0] as { string: string}).string = 'ROW';
+                .toEqual(dataGenerator.getValuesForColumn(data, 'number'));
+            (res[0] as { string: string }).string = 'ROW';
             // case-sensitive
-            res = DataUtil.filter(res, {
-                                        expressions: [
-                                                {
-                                                    condition: IgxStringFilteringOperand.instance().condition('contains'),
-                                                    fieldName: 'string',
-                                                    ignoreCase: false,
-                                                    searchVal: 'ROW'
-                                                }]
-                                    });
+            res = DataUtil.filter(res, stateIgnoreCase);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
-                    .toEqual([0]);
+                .toEqual([0]);
         });
         // test date
         it('filters \'date\' column', () => {
-            const res = DataUtil.filter(data, {
-                                        expressions: [
-                                                {
-                                                    condition: IgxDateFilteringOperand.instance().condition('after'),
-                                                    fieldName: 'date',
-                                                    searchVal: new Date()
-                                                }]
-                                    });
+            const state: IFilteringState = {
+                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
+            };
+            state.expressionsTree.filteringOperands = [
+                {
+                    condition: IgxDateFilteringOperand.instance().condition('after'),
+                    fieldName: 'date',
+                    searchVal: new Date()
+                }
+            ];
+            const res = DataUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
-                    .toEqual([1, 2, 3, 4]);
+                .toEqual([1, 2, 3, 4]);
         });
         it('filters \'bool\' column', () => {
-             const res = DataUtil.filter(data, {
-                                        expressions: [
-                                                {
-                                                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                                                    fieldName: 'boolean'
-                                                }]
-                                    });
-             expect(dataGenerator.getValuesForColumn(res, 'number'))
-                    .toEqual([0, 2, 4]);
+            const state: IFilteringState = {
+                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
+            };
+            state.expressionsTree.filteringOperands = [
+                {
+                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
+                    fieldName: 'boolean'
+                }
+            ];
+            const res = DataUtil.filter(data, state);
+            expect(dataGenerator.getValuesForColumn(res, 'number'))
+                .toEqual([0, 2, 4]);
         });
         it('filters using custom filtering strategy', () => {
-            const res = DataUtil.filter(data, {
-                                        expressions: [
-                                                {
-                                                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
-                                                    fieldName: 'boolean'
-                                                }],
-                                        strategy: new CustomFilteringStrategy()
-                                    });
+            const state: IFilteringState = {
+                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And),
+                strategy: new CustomFilteringStrategy()
+            };
+            state.expressionsTree.filteringOperands = [
+                {
+                    condition: IgxBooleanFilteringOperand.instance().condition('false'),
+                    fieldName: 'boolean'
+                }
+            ];
+            const res = DataUtil.filter(data, state);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
-                    .toEqual([0, 2]);
+                .toEqual([0, 2]);
         });
     });
 }
@@ -179,14 +382,14 @@ function testPage() {
 
     describe('test paging', () => {
         it('paginates data', () => {
-            let state: IPagingState = {index: 0, recordsPerPage: 3};
+            let state: IPagingState = { index: 0, recordsPerPage: 3 };
             let res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.None);
             expect(state.metadata.countPages).toBe(2);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([0, 1, 2]);
             // go to second page
-            state = {index: 1, recordsPerPage: 3};
+            state = { index: 1, recordsPerPage: 3 };
             res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.None);
             expect(state.metadata.countPages).toBe(2);
@@ -194,13 +397,13 @@ function testPage() {
                 .toEqual([3, 4]);
         });
         it('tests paging errors', () => {
-            let state: IPagingState = {index: -1, recordsPerPage: 3};
+            let state: IPagingState = { index: -1, recordsPerPage: 3 };
             let res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.IncorrectPageIndex);
-            state = {index: 3, recordsPerPage: 3};
+            state = { index: 3, recordsPerPage: 3 };
             res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.IncorrectPageIndex);
-            state = {index: 3, recordsPerPage: 0};
+            state = { index: 3, recordsPerPage: 0 };
             res = DataUtil.page(data, state);
             expect(state.metadata.error).toBe(PagingError.IncorrectRecordsPerPage);
             // test with paging state null
@@ -214,13 +417,18 @@ function testProcess() {
     describe('test process', () => {
         it('calls process as applies filtering, sorting, paging', () => {
             let metadata;
+            const filteringState: IFilteringState = {
+                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
+            };
+            filteringState.expressionsTree.filteringOperands = [
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+                    fieldName: 'number',
+                    searchVal: 1
+                }
+            ];
             const state: IDataState = {
-                filtering: {
-                    expressions: [{
-                        condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                        fieldName: 'number',
-                        searchVal: 1}]
-                },
+                filtering: filteringState,
                 paging: {
                     index: 1,
                     recordsPerPage: 2
@@ -238,7 +446,7 @@ function testProcess() {
             const data: object[] = dataGenerator.data;
             const result = DataUtil.process(data, state);
             expect(dataGenerator.getValuesForColumn(result, 'number'))
-                    .toEqual([2]);
+                .toEqual([2]);
             metadata = state.paging.metadata;
             expect(metadata.countPages === 2 && metadata.error === PagingError.None)
                 .toBeTruthy();
@@ -248,6 +456,7 @@ function testProcess() {
 /* //Test paging */
 describe('DataUtil', () => {
     testSort();
+    testGroupBy();
     testFilter();
     testPage();
     // test process

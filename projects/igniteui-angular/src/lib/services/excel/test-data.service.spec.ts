@@ -255,20 +255,17 @@ export class FileContentData {
     }
 
     get contactsPartialDataContent() {
-        this._sharedStringsData = `count="8" uniqueCount="7"><si><t>name</t></si><si><t>phone</t></si><si><t>Terrance Orta</t></si><si>` +
-            `<t>770-504-2217</t></si><si><t>Richard Mahoney LongerName</t></si><si><t></t></si><si><t>780-555-1331</t></si>`;
+        this._sharedStringsData =
+        // tslint:disable-next-line:max-line-length
+        `count="6" uniqueCount="6"><si><t>name</t></si><si><t>phone</t></si><si><t>Terrance Orta</t></si><si><t>770-504-2217</t></si><si><t>Richard Mahoney LongerName</t></si><si><t>780-555-1331</t></si>`;
 
         this._tableData = `ref="A1:B4" totalsRowShown="0">
         <autoFilter ref="A1:B4"/><tableColumns count="2"><tableColumn id="1" name="name"/><tableColumn id="2" name="phone"/>` +
         `</tableColumns>`;
 
         this._worksheetData =
-        `<dimension ref="A1:B4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>` +
-        `<sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth` +
-        `="1"/><col min="2" max="2" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c>` +
-        `<c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3"><c r="A3" ` +
-        `t="s"><v>4</v></c><c r="B3" t="s"><v>5</v></c></row><row r="4"><c r="A4" t="s"><v>5</v></c><c r="B4" t="s"><v>6</v></c></row>` +
-        `</sheetData>`;
+        // tslint:disable-next-line:max-line-length
+        `<dimension ref="A1:B4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3"><c r="A3" t="s"><v>4</v></c><c r="B3" s="1"/></row><row r="4"><c r="A4" s="1"/><c r="B4" t="s"><v>5</v></c></row></sheetData>`;
 
         return this.createData();
     }

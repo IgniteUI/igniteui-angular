@@ -3,11 +3,24 @@ export class IgxSelectionAPIService {
     // If the primaryKey is omitted, then selection is based on the item data
     protected selection: Map<string,  any[]> = new Map<string, any[]>();
 
+    protected prevSelection: Map<string,  any[]> = new Map<string, any[]>();
+
     public get_selection(componentID: string): any[] {
         return this.selection.get(componentID);
     }
 
+    public get_prev_selection(componentID: string): any[] {
+        return this.prevSelection.get(componentID);
+    }
+    public set_prev_selection(componentID: string, currSelection: any[]) {
+       this.prevSelection.set(componentID, currSelection);
+    }
+
     public set_selection(componentID: string, currSelection: any[]) {
+        const sel = this.get_selection(componentID);
+        if (sel && sel.length > 0) {
+            this.set_prev_selection(componentID, sel);
+        }
         this.selection.set(componentID, currSelection);
     }
 

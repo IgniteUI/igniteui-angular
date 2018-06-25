@@ -2,16 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
     Component,
-    ContentChild,
     ContentChildren,
-    Directive,
     ElementRef,
     EventEmitter,
     forwardRef,
-    Host,
     HostBinding,
     HostListener,
-    Inject,
     Input,
     NgModule,
     Output,
@@ -151,7 +147,6 @@ export class IgxTabsComponent implements AfterViewInit {
                 if (group) {
                     group.select(50, true);
                 }
-
             }
         }, 0);
     }

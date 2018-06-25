@@ -5,6 +5,7 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
+
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
@@ -63,8 +64,20 @@
         }
     }
 
+    @include e(tr, $m: odd) {
+        @extend %grid-row--odd !optional;
+    }
+
+    @include e(tr, $m: even) {
+        @extend %grid-row--even !optional;
+    }
+
     @include e(tr, $m: selected) {
         @extend %grid-row--selected !optional;
+    }
+
+    @include e(tr, $m: group) {
+        @extend %grid-row--group !optional;
     }
 
     @include e(th) {
@@ -137,32 +150,32 @@
         @extend %grid-cell--fixed-width !optional;
     }
 
+    @include e(td-text) {
+        @extend %grid-cell-text !optional;
+    }
+
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
     }
 
-    @include m(cosy) {
-        @extend %grid-display !optional;
-
-        @include e(th) {
-            @extend %grid-cell-header--cosy !optional;
-        }
-
-        @include e(td) {
-            @extend %grid-cell-display--cosy !optional;
-        }
+    @include e(group-row) {
+        @extend %igx-grid__group-row !optional;
     }
 
-    @include m(compact) {
-        @extend %grid-display !optional;
+    @include e(group-content) {
+        @extend %igx-grid__group-content !optional;
+    }
 
-        @include e(th) {
-            @extend %grid-cell-header--compact !optional;
-        }
+    @include e(row-indentation) {
+        @extend %igx-grid__row-indentation !optional;
+    }
 
-        @include e(td) {
-            @extend %grid-cell-display--compact !optional;
-        }
+    @include e(grouparea) {
+        @extend %igx-grid__grouparea !optional;
+    }
+
+    @include e(grouping-indicator) {
+        @extend %igx-grid__grouping-indicator !optional;
     }
 
     @include e(th-drop-indicator-left) {
@@ -199,5 +212,174 @@
 
     @include e(drag-col-header) {
         @extend %igx-grid__drag-col-header !optional;
+    }
+
+    @include e(header-indentation) {
+        @extend %igx-grid__header-indentation !optional;
+    }
+
+    @include e(group-expand-btn) {
+        @extend %igx-grid__group-expand-btn !optional;
+    }
+
+    @for $i from 1 through 10 {
+        @include e(row-indentation, $m: level-#{$i}) {
+            @extend %igx-grid__row-indentation--level-#{$i} !optional;
+        }
+        @include e(group-row, $m: padding-level-#{$i}) {
+            @extend %igx-grid__group-row--padding-level-#{$i} !optional;
+        }
+    }
+
+    @include m(cosy) {
+        @extend %grid-display !optional;
+
+        @include e(cbx-selection) {
+            @extend %grid__cbx-selection--cosy !optional;
+        }
+
+        @include e(drag-ghost-image) {
+            @extend %grid__drag-ghost-image--cosy !optional;
+        }
+
+        @include e(th) {
+            @extend %grid-cell-header--cosy !optional;
+        }
+
+        @include e(td) {
+            @extend %grid-cell-display--cosy !optional;
+        }
+
+        @include e(group-content) {
+            @extend %igx-grid__group-content--cosy !optional;
+        }
+
+        @include e(row-indentation) {
+            @extend %igx-grid__row-indentation--cosy !optional;
+        }
+
+        @include e(grouparea) {
+            @extend %igx-grid__grouparea--cosy !optional;
+        }
+
+        @include e(grouping-indicator) {
+            @extend %igx-grid__grouping-indicator--cosy !optional;
+        }
+
+        @include e(group-expand-btn) {
+            @extend %igx-grid__group-expand-btn--cosy !optional;
+        }
+
+        @include e(group-row) {
+            @extend %igx-grid__group-row--cosy !optional;
+        }
+
+        @for $i from 1 through 10 {
+            @include e(row-indentation, $m: level-#{$i}) {
+                @extend %igx-grid__row-indentation-cosy--level-#{$i} !optional;
+            }
+            @include e(group-row, $m: padding-level-#{$i}) {
+                @extend %igx-grid__group-row--padding-cosy-level-#{$i} !optional;
+            }
+        }
+    }
+
+    @include m(compact) {
+        @extend %grid-display !optional;
+
+        @include e(cbx-selection) {
+            @extend %grid__cbx-selection--compact !optional;
+        }
+
+        @include e(drag-ghost-image) {
+            @extend %grid__drag-ghost-image--compact !optional;
+        }
+
+        @include e(th) {
+            @extend %grid-cell-header--compact !optional;
+        }
+
+        @include e(td) {
+            @extend %grid-cell-display--compact !optional;
+        }
+
+        @include e(group-content) {
+            @extend %igx-grid__group-content--compact !optional;
+        }
+
+        @include e(row-indentation) {
+            @extend %igx-grid__row-indentation--compact !optional;
+        }
+
+        @include e(grouparea) {
+            @extend %igx-grid__grouparea--compact !optional;
+        }
+
+        @include e(grouping-indicator) {
+            @extend %igx-grid__grouping-indicator--compact !optional;
+        }
+
+        @include e(group-expand-btn) {
+            @extend %igx-grid__group-expand-btn--compact !optional;
+        }
+
+        @include e(group-row) {
+            @extend %igx-grid__group-row--compact !optional;
+        }
+
+        @for $i from 1 through 10 {
+            @include e(row-indentation, $m: level-#{$i}) {
+                @extend %igx-grid__row-indentation-compact--level-#{$i} !optional;
+            }
+            @include e(group-row, $m: padding-level-#{$i}) {
+                @extend %igx-grid__group-row-compact--padding-level-#{$i} !optional;
+            }
+        }
+    }
+}
+
+@include b(igx-drop-area) {
+    @extend %igx-drop-area !optional;
+
+    @include m(hover) {
+        @extend %igx-drop-area--hover !optional;
+    }
+
+    @include e(icon) {
+        @extend %igx-drop-area__icon !optional;
+    }
+
+    @include e(text) {
+        @extend %igx-drop-area__text !optional;
+    }
+
+    @include m(compact) {
+        @extend %igx-drop-area !optional;
+        @extend %igx-drop-area--cosy !optional;
+    }
+
+    @include m(cosy) {
+        @extend %igx-drop-area !optional;
+        @extend %igx-drop-area--compact !optional;
+    }
+}
+
+@include b(igx-group-label) {
+    @extend %igx-group-label !optional;
+
+    @include e(icon) {
+        @extend %igx-group-label__icon !optional;
+    }
+
+    @include e(column-name) {
+        @extend %igx-group-label__column-name !optional;
+    }
+
+    @include e(text) {
+        @extend %igx-group-label__text !optional;
+    }
+
+    @include e(count-badge) {
+        @extend %igx-group-label__count-badge !optional;
     }
 }

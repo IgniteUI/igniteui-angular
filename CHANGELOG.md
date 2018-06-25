@@ -2,16 +2,29 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
+- `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay.html)
+- Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
+    For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
 - `igxGrid` filtering operands
-    - **Breaking change** `IFilteringExpression` condition property is no longer a direct reference to a filtering condition method, instead it's a reference to an `IFilteringOperation`
-    - 5 filtering operand classes are now exposed
-        - `IgxFilteringOperand` is a base filtering operand, which can be inherited when defining custom filtering conditions
-        - `IgxBooleanFilteringOperand` defines all default filtering conditions for `boolean` types
-        - `IgxNumberFilteringOperand` defines all default filtering conditions for `numeric` types
-        - `IgxStringFilteringOperand` defines all default filtering conditions for `string` types
-        - `IgxDateFilteringOperand` defines all default filtering conditions for `Date` types
-    - `IgxColumnComponent` now exposes a `filters` property, which takes an `IgxFilteringOperand` class reference
-        - Custom filters can now be provided to grid columns by populating the `operations` property of the `IgxFilteringOperand` with operations of `IFilteringOperation` type
+- `igxGrid`
+    - **Breaking change** `filter_multiple` method is removed. `filter` method and `filteringExpressionsTree` property could be used instead.
+    - **Breaking change** `filter` method has new signature. It now accepts the following parameters:
+        - `name` - the name of the column to be filtered.
+        - `value` - the value to be used for filtering.
+        - `conditionOrExpressionTree` - (optional) this parameter accepts object of type `IFilteringOperation` or `IFilteringExpressionsTree`. If only a simple filtering is required a filtering operation could be passes (see bellow for more info). In case of advanced filtering an expressions tree containing complex filtering logic could be passed.
+        - `ignoreCase` - (optional) - whether the filtering would be case sensitive or not.
+    - **Breaking change** `onFilteringDone` event now have only one parameter - `IFilteringExpressionsTree` which contains the filtering state of the filtered column.
+    - `filter_global` method clears all existing filters and applies the new filtering condition to all grid's columns.
+    - filtering operands:
+        - **Breaking change** `IFilteringExpression` condition property is no longer a direct reference to a filtering condition method, instead it's a reference to an `IFilteringOperation`
+        - 5 filtering operand classes are now exposed
+            - `IgxFilteringOperand` is a base filtering operand, which can be inherited when defining custom filtering conditions
+            - `IgxBooleanFilteringOperand` defines all default filtering conditions for `boolean` types
+            - `IgxNumberFilteringOperand` defines all default filtering conditions for `numeric` types
+            - `IgxStringFilteringOperand` defines all default filtering conditions for `string` types
+            - `IgxDateFilteringOperand` defines all default filtering conditions for `Date` types
+        - `IgxColumnComponent` now exposes a `filters` property, which takes an `IgxFilteringOperand` class reference
+            - Custom filters can now be provided to grid columns by populating the `operations` property of the `IgxFilteringOperand` with operations of `IFilteringOperation` type
 ```
 export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     // Making the implementation singleton
@@ -35,20 +48,50 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 }
 ```
 
+- `igxGrid` now supports grouping of columns enabling users to create critera for organizing data records. To explore the functionality start off by setting some columns as `groupable`:
+    ```html
+    <igx-grid [data]="data">
+        <igx-column [field]="'ProductName'"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [groupable]="true"></igx-column>
+    </igx-grid>
+    ```
+   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
+
+- `igxGrid` theme now has support for alternating grid row background and text colors.
+- `igxColumn` changes:
+    - **Breaking change** filteringExpressions property is removed.
+
+- `igxCell` default editing template is changed according column data type. For more information you can read the [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Cell-Editing) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_editing.html)
+
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
+    - `igxGrid` changes:
+        - sort API now accepts params of type `ISortingExpression` or `Array<ISortingExpression>`.
     - `igxToggle` changes
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
 
+## 6.0.3
+- **igxGrid** exposing the `filteredSortedData` method publicly - returns the grid data with current filtering and sorting applied.
+
+## 6.0.2
+- **igxGrid** Improve scrolling on mac [#1563](https://github.com/IgniteUI/igniteui-angular/pull/1563)
+- The `ng update igniteui-angular` migration schematics now also update the theme import path in SASS files. [#1582](https://github.com/IgniteUI/igniteui-angular/issues/1582)
+
 ## 6.0.1
+- Introduced migration schematics to integrate with the Angular CLI update command. You can now run
+
+  `ng update igniteui-angular`
+
+  in existing projects to both update the package and apply any migrations needed to your project. Make sure to commit project state before proceeding.
+  Currently these cover converting submodule imports as well as the deprecation of `igxForRemote` and rename of `igx-tab-bar` to `igx-bottom-nav` from 6.0.0.
 - **Breaking changes**:
-    - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
+    - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package. You can use `ng update igniteui-angular` when updating to automatically convert existing submodule imports in the project.
 
 ## 6.0.0
 - Theming - You can now use css variables to style the component instances you include in your project.

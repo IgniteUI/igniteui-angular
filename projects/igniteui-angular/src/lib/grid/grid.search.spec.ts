@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - search API', () => {
@@ -20,7 +21,8 @@ describe('IgxGrid - search API', () => {
                 ScrollableGridComponent,
                 PagingGridComponent,
                 HiddenColumnsGridComponent,
-                GridWithAvatarComponent
+                GridWithAvatarComponent,
+                UnsearchableColumnsGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -350,7 +352,7 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         fix.whenStable().then(() => {
-            grid.sort('Name');
+            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc});
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -732,6 +734,28 @@ describe('IgxGrid - search API', () => {
         expect(matches).toBe(0);
     });
 
+    it('Unsearchable column should not interfere with active highlight for other columns on its right', () => {
+        const fix = TestBed.createComponent(UnsearchableColumnsGridComponent);
+        fix.detectChanges();
+
+        const component: UnsearchableColumnsGridComponent = fix.componentInstance;
+        const count = component.gridSearch.findNext('Software');
+        fix.detectChanges();
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        expect(spans.length).toBe(5);
+        expect(count).toBe(5);
+
+        let activeSpan = fix.debugElement.nativeElement.querySelector('.' + component.activeClass);
+        expect(activeSpan).toBe(spans[0]);
+
+        component.gridSearch.findNext('Software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        activeSpan = fix.debugElement.nativeElement.querySelector('.' + component.activeClass);
+        expect(activeSpan).toBe(spans[1]);
+    });
+
     function triggerKeyDownEvtUponElem(evtName, elem, fix) {
         const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true};
         elem.dispatchEvent(new KeyboardEvent('keydown', evtArgs));
@@ -961,6 +985,37 @@ export class GridWithAvatarComponent {
             Name: 'Person 3',
             Avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
         }
+    ];
+
+    @ViewChild('gridSearch', { read: IgxGridComponent })
+    public gridSearch: IgxGridComponent;
+
+    public highlightClass = 'igx-highlight';
+    public activeClass = 'igx-highlight__active';
+}
+
+@Component({
+    template: `
+        <igx-grid #gridSearch [data]="data">
+            <igx-column field="ID"></igx-column>
+            <igx-column field="Name" [searchable]='false'></igx-column>
+            <igx-column field="JobTitle"></igx-column>
+            <igx-column field="Company" [searchable]='false'></igx-column>
+        </igx-grid>
+    `
+})
+export class UnsearchableColumnsGridComponent {
+    public data = [
+        { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', Company: 'Company A' },
+        { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', Company: 'Company C' },
+        { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', Company: 'Company A' },
+        { ID: 4, Name: 'Jack Simon', JobTitle: 'Software Developer', Company: 'Company D' },
+        { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software DEVELOPER', Company: 'Company B' },
+        { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', Company: 'Company C' },
+        { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', Company: 'Company B' },
+        { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', Company: 'Company A' },
+        { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Company: 'Company D' },
+        { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Company: 'Company E' }
     ];
 
     @ViewChild('gridSearch', { read: IgxGridComponent })
