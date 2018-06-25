@@ -1,4 +1,3 @@
-import {CommonModule} from "@angular/common";
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -13,9 +12,9 @@ import {
     Optional,
     Self
 } from "@angular/core";
-import { FormGroup, FormsModule, NgControl, NgModel } from "@angular/forms";
+import { FormControlName, NgControl, NgModel } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { IgxInputGroupComponent } from "../../main";
+import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 
 const nativeValidationAttributes = ["required", "pattern", "minlength", "maxlength", "min", "max", "step"];
 
@@ -36,8 +35,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         @Inject(forwardRef(() => IgxInputGroupComponent))
         public inputGroup: IgxInputGroupComponent,
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
+        @Optional() @Self() @Inject(FormControlName) protected formControl: FormControlName,
         protected element: ElementRef,
         protected cdr: ChangeDetectorRef) { }
+
+    private get ngControl(): NgControl {
+        return this.ngModel ? this.ngModel : this.formControl;
+    }
 
     @Input("value")
     set value(value: any) {
@@ -86,7 +90,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public onInput(event) {
         const value: string = this.nativeElement.value;
         this.inputGroup.isFilled = value && value.length > 0;
-        if (!this.ngModel && this._hasValidators()) {
+        if (!this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
@@ -116,8 +120,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.isInput = true;
         }
 
-        if (this.ngModel) {
-            this._statusChanges$ = this.ngModel.statusChanges.subscribe(this.onStatusChanged.bind(this));
+        if (this.ngControl) {
+            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
 
         this.cdr.detectChanges();
@@ -137,9 +141,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         return this.element.nativeElement;
     }
 
-    protected onStatusChanged(status: string) {
-        if (!this.ngModel.control.pristine && (this.ngModel.validator || this.ngModel.asyncValidator)) {
-            this._valid = this.ngModel.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+    protected onStatusChanged() {
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
 
