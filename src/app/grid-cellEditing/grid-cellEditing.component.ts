@@ -12,6 +12,7 @@ import {
 })
 export class GridCellEditingComponent {
 
+    orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent })
     public grid1: IgxGridComponent;
 
@@ -1350,5 +1351,9 @@ export class GridCellEditingComponent {
                 this.grid1.pinColumn(name);
             }
         }
+    }
+
+    hideColumn() {
+        this.orderDateHidden = !this.orderDateHidden;
     }
 }
