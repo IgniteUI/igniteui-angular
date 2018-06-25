@@ -11,7 +11,6 @@ import {
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridAPIService } from './api.service';
-import { autoWire } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 
 @Component({
@@ -65,7 +64,6 @@ export class IgxGridGroupByRowComponent {
 
     @HostListener('keydown.enter')
     @HostListener('keydown.space')
-    @autoWire(true)
     public toggle() {
         this.grid.toggleGroup(this.groupRow);
     }

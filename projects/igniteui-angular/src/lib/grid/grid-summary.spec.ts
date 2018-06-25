@@ -257,7 +257,6 @@ describe('IgxGrid - Summaries', () => {
     it('should recalculate summary functions on cell update', async(() => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
-
         const oldMaxValue = 20000;
         const newMaxValue = 99000;
         const grid = fixture.componentInstance.grid1;
@@ -267,6 +266,7 @@ describe('IgxGrid - Summaries', () => {
         let maxValue = summariesUnitOfStock.query(By.css('[title=\'Max\']')).nativeElement.nextSibling.innerText;
         expect(+maxValue).toBe(oldMaxValue);
         unitsInStockCell.update(newMaxValue);
+        grid.cdr.detectChanges();
         fixture.whenStable().then(() => {
             fixture.detectChanges();
 
@@ -515,7 +515,6 @@ describe('IgxGrid - Summaries', () => {
             viewport and have identical width with others`, async(() => {
         const fix = TestBed.createComponent(SummaryColumnsWithIdenticalWidthsComponent);
         fix.detectChanges();
-
         const grid = fix.componentInstance.grid1;
         let summaries = fix.componentInstance.gridApi.get_summaries(grid.id);
 
@@ -525,19 +524,21 @@ describe('IgxGrid - Summaries', () => {
             grid.addRow({
                 ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: new Date('2018-03-01')
             });
+            fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
             scrollLeft(grid, 400);
+            fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            summaries = fix.componentInstance.gridApi.get_summaries(grid.id);
-            getCountResSummary = summaries.get('UnitsInStock').find((k) => k.key === 'count').summaryResult;
-            return getCountResSummary;
-        }).then((expectedRes) => {
-            fix.detectChanges();
-            expect(expectedRes).toEqual(fix.componentInstance.data.length);
+           setTimeout(() => {
+                summaries = fix.componentInstance.gridApi.get_summaries(grid.id);
+                getCountResSummary = summaries.get('UnitsInStock').find((k) => k.key === 'count').summaryResult;
+                expect(getCountResSummary).toEqual(fix.componentInstance.data.length);
+                return getCountResSummary;
+            }, 100);
         });
     }));
 
