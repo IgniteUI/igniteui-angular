@@ -3,6 +3,7 @@
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
 - `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay.html)
+- Added **igxRadioGroup** directive. It allows better control over its child `igxRadio` components and support template-driven and reactive forms. 
 - Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
     For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
 - `igxGrid` filtering operands
@@ -62,6 +63,28 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - **Breaking change** filteringExpressions property is removed.
 
 - `igxCell` default editing template is changed according column data type. For more information you can read the [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Cell-Editing) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_editing.html)
+- `igxCombo` component added
+
+    ```html
+    <igx-combo #combo [data]="towns" [displayKey]="'townName'" [valueKey]="'postCode'" [groupKey]="'province'"
+        [allowCustomValues]="true" placeholder="Town(s)" searchPlaceholder="Search town..." [width]="'100%'"></igx-combo>
+    ```
+
+    igxCombo features:
+
+        - Data Binding
+        - Value Binding
+        - Virtualized list
+        - Multiple Selection
+        - Filtering
+        - Grouping
+        - Custom values
+        - Templates
+        - Integration with Template Driven and Reactive Forms
+        - Keayboard Navigation
+        - Accessibility compliance
+
+    For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
 
 - `igxToggle` changes
     - `onOpening` event added.
