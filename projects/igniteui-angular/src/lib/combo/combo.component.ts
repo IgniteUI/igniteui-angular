@@ -543,6 +543,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @Input()
     public disabled = false;
 
+    @Input()
+    public type = 'box';
+
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
@@ -1012,6 +1015,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         };
     }
 
+    /**
+     * @hidden
+     */
+    public handleClearItems(event) {
+        this.deselectAllItems(true);
+        event.stopPropagation();
+    }
+
     public toggle() {
         this.searchValue = '';
         this.dropdown.toggle(this.overlaySettings);
@@ -1059,11 +1070,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             [] :
             this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
         this.triggerSelectionChange(newSelection);
-    }
-
-    public handleClearItems(event) {
-        this.deselectAllItems(true);
-        event.stopPropagation();
     }
 }
 
