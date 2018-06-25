@@ -27,7 +27,8 @@ export class IgxOverlayService {
         elementRef: ElementRef,
         componentRef: ComponentRef<{}>,
         settings: OverlaySettings,
-        initialSize: { width?: number, height?: number, x?: number, y?: number}
+        initialSize: { width?: number, height?: number, x?: number, y?: number },
+        hook: HTMLElement
     }[] = [];
     private _overlayElement: HTMLElement;
 
@@ -70,12 +71,21 @@ export class IgxOverlayService {
 
         this.onOpening.emit({ id, componentRef });
 
+        let size = element.getBoundingClientRect();
+
         const wrapperElement = this.getWrapperElement(overlaySettings, id);
         const contentElement = this.getContentElement(wrapperElement, overlaySettings);
-        contentElement.appendChild(element);
         this.OverlayElement.appendChild(wrapperElement);
+        const elementScrollTop = element.scrollTop;
+        contentElement.appendChild(element);
+        element.scrollTop = elementScrollTop;
 
-        const size = element.getBoundingClientRect();
+        if (componentRef) {
+            //  if we are positioning component this is first time it gets visible
+            //  and we can finally get its size
+            size = element.getBoundingClientRect();
+        }
+
         this._overlays.find(c => c.id === id).initialSize = size as DOMRect;
         overlaySettings.positionStrategy.position(contentElement, size, document, true);
         const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
@@ -126,21 +136,21 @@ export class IgxOverlayService {
     }
 
     hide(id: string) {
-        const componentRef = this._overlays.find(c => c.id === id).componentRef;
-        this.onClosing.emit({ id, componentRef });
-
         const overlay = this.getOverlayById(id);
         if (!overlay) {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
             return;
         }
+
+        const componentRef = overlay.componentRef;
+        this.onClosing.emit({ id, componentRef });
         overlay.settings.scrollStrategy.detach();
         const animationBuilder = this.builder.build(overlay.settings.positionStrategy.settings.closeAnimation);
         const animationPlayer = animationBuilder.create(overlay.elementRef.nativeElement);
         const child: HTMLElement = overlay.elementRef.nativeElement;
 
         if (overlay.settings.modal) {
-            const parent =  child.parentNode.parentNode as HTMLElement;
+            const parent = child.parentNode.parentNode as HTMLElement;
             parent.classList.remove('igx-overlay__wrapper--modal');
             parent.classList.add('igx-overlay__wrapper');
         }
@@ -157,6 +167,9 @@ export class IgxOverlayService {
                 overlay.componentRef.destroy();
             }
 
+            overlay.hook.parentElement.insertBefore(overlay.elementRef.nativeElement, overlay.hook);
+            overlay.hook.parentElement.removeChild(overlay.hook);
+
             const index = this._overlays.indexOf(overlay);
             this._overlays.splice(index, 1);
             if (this._overlays.length === 0) {
@@ -172,7 +185,7 @@ export class IgxOverlayService {
     hideAll() {
         // since overlays are removed on animation done, que all hides
         for (let i = this._overlays.length; i--;) {
-            this.hide( this._overlays[i].id);
+            this.hide(this._overlays[i].id);
         }
     }
 
@@ -191,13 +204,15 @@ export class IgxOverlayService {
 
     private getElement(component: any, id: string, overlaySettings: OverlaySettings): HTMLElement {
         let element: HTMLElement;
-
+        const hook = this._document.createElement('div');
         if (this._overlays.find(e => e.id === id)) {
             return this._overlays.find(e => e.id === id).elementRef.nativeElement;
         }
 
+        hook.id = 'overlay-' + id + '-hook';
         if (component instanceof ElementRef) {
             element = component.nativeElement;
+            element.parentElement.insertBefore(hook, element);
             this._overlays.push({
                 id: id,
                 elementRef: <ElementRef>component,
@@ -206,7 +221,8 @@ export class IgxOverlayService {
                 initialSize: {
                     width: 0,
                     height: 0
-                }
+                },
+                hook
             });
             return element;
         }
@@ -223,6 +239,7 @@ export class IgxOverlayService {
 
         // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
         element = dynamicComponent.location.nativeElement.lastElementChild;
+        element.parentElement.insertBefore(hook, element);
         this._appRef.attachView(dynamicComponent.hostView);
 
         this._overlays.push({
@@ -233,7 +250,8 @@ export class IgxOverlayService {
             initialSize: {
                 width: 0,
                 height: 0
-            }
+            },
+            hook
         });
         return element;
     }
