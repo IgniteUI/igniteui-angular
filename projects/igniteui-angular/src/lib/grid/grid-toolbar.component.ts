@@ -15,7 +15,6 @@ import { CsvFileTypes,
          IgxExcelExporterOptions,
          IgxExcelExporterService } from '../services/index';
 import { IgxGridAPIService } from './api.service';
-import { IGridBus } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
@@ -25,7 +24,7 @@ import { IgxColumnPinningComponent } from './column-pinning.component';
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
 })
-export class IgxGridToolbarComponent implements IGridBus {
+export class IgxGridToolbarComponent {
 
     @HostBinding('class.igx-grid-toolbar')
     @Input()

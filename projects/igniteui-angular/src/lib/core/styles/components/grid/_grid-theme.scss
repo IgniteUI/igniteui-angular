@@ -391,6 +391,10 @@
         box-shadow: $grid-shadow;
         outline-style: none;
         overflow: hidden;
+
+        %cbx-display {
+            min-width: rem(20px);
+        }
     }
 
     %grid-caption {
@@ -424,7 +428,6 @@
         grid-row: 2;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         z-index: 2;
-        display: table;
 
         %grid__group-indentation {
             &::after {
