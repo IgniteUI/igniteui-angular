@@ -1,6 +1,7 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridCellComponent } from './cell.component';
@@ -114,7 +115,7 @@ describe('IgxGrid - Cell component', () => {
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [BrowserAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
     }));
 
