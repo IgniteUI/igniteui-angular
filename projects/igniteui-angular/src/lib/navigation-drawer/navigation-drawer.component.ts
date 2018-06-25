@@ -563,9 +563,13 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     protected ensureDrawerHeight() {
-        // TODO: nested in content?
-        // setElementStyle warning https://github.com/angular/angular/issues/6563
-        this.renderer.setElementStyle(this.drawer, 'height', window.innerHeight + 'px');
+        if (this.pin) {
+            // TODO: nested in content?
+            // setElementStyle warning https://github.com/angular/angular/issues/6563
+            this.renderer.setElementStyle(this.drawer, 'height', window.innerHeight + 'px');
+        } else {
+            this.renderer.setElementStyle(this.drawer, 'height', '');
+        }
     }
 
     /**
