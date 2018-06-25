@@ -1,16 +1,6 @@
 <div class="sample-wrapper">
     <app-page-header title="Combo" description="Combo lets you choose value from a list"></app-page-header>
     <section class="combo-sample">
-        <div class="btn-wrapper mb24">
-            <h3 class="mb24">COMBO DEMO</h3>
-            <span class="mb16">Change combo data to:</span>
-            <div class="btn-container">
-                <button class="igx-button--flat" igxRipple (click)="changeData()">Initial</button>
-                <button class="igx-button--flat" igxRipple (click)="changeData('primitive')">Primitve</button>
-                <button class="igx-button--flat" igxRipple (click)="changeData('complex')">Complex</button>
-                <button class="igx-button--flat" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
-            </div>
-        </div>
         <div class="input-wrapper">
             <div class="input-row">
                 <igx-input-group type="box" class="input-container">
@@ -23,76 +13,32 @@
                     <input igxInput name="age" placeholder="Age"/>
                 </igx-input-group>
             </div>
-
             <div class="input-row">
                 <igx-combo class="input-container" placeholder="Location(s)"
-                           (onAddition)="handleAddition($event)"
-                           [data]="items"
-                           [allowCustomValues]="true"
-                           [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
-                           [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                            (onAddition)="handleAddition($event)"
+                            [data]="items"
+                            [allowCustomValues]="true"
+                            [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
+                            [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                     <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
-                            <!--<span class="small-red-circle"></span>-->
                             <div class="display-value--main">{{display[key]}}</div>
                             <div class="display-value--sub">{{display.region}}</div>
                         </div>
                     </ng-template>
                     <ng-template *ngIf="currentDataType === 'primitive'" #itemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
-                            <!--<span class="small-red-circle"></span>-->
                             <div class="display-value--main">{{display}}</div>
                             <div class="display-value--sub"></div>
                         </div>
                     </ng-template>
-                    <!--<ng-template #dropdownHeader>-->
-                    <!--<div class="header-class"><span>State</span><span>Region</span></div>-->
-                    <!--</ng-template>-->
-                    <!--<ng-template #dropdownFooter>-->
-                    <!--<div class="footer-class">This is a footer</div>-->
-                    <!--</ng-template>-->
                 </igx-combo>
+            </div>
+            <div class="btn-wrapper mb24">
+                <div class="btn-container">
+                    <button class="igx-button--flat" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
+                </div>
             </div>
         </div>
     </section>
-    <!-- <section class="sample-content">
-        <hr>
-        <div>
-            <igx-combo class="input-container" placeholder="Location(s)"
-                [data]="[1,2,3,4,5,6,21,121,11,2121,1212,1121,21121,12111]" [width]="'400px'" [filterable]='true'>
-            </igx-combo>
-        </div>
-    </section> -->
-
-    <!-- <form #templateBased="ngForm" (ngSubmit)="onSubmitTemplateBased()">
-        <p>
-            <igx-combo #comboTemplate [(ngModel)]="valuesTemplate" name="comboTemplatche"
-                class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
-                [data]="items" [disaplyKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
-        </p>
-        <p>
-            <button type="submit" [disabled]="!templateBased.valid">Submit</button>
-        </p>
-    </form> -->
-    
-    <div class="input-wrapper" style="display: none; visibility: hidden;">
-        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
-            <p>
-                <label>First Name:</label>
-                <input type="text" formControlName="firstName">
-            </p>
-            <p>
-                <label>Password:</label>
-                <input type="password" formControlName="password">
-            </p>
-            <p>
-                <igx-combo #comboReactive formControlName="townCombo"
-                    class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
-                    [data]="items" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''"></igx-combo>
-            </p>
-            <p>
-                <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
-            </p>
-        </form>
-    </div>
 </div>
