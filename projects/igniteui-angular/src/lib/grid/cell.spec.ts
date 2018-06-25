@@ -14,94 +14,104 @@ describe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateVerticallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
-        // grid - the grid in which to navigate.
-        // cell - current cell from which the navigation will start.
-        // index - the index to which to navigate
-        // cb - callback function that will be called when index is reached.
-        const currIndex = cell.rowIndex;
-        const dir = currIndex < index ? 'ArrowDown' : 'ArrowUp';
-        const nextIndex = dir === 'ArrowDown' ? currIndex + 1 : currIndex - 1;
-        const nextRow = grid.getRowByIndex(nextIndex);
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            code: dir,
-            key: dir
-        });
-        if (!cell.focused) {
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-            grid.cdr.detectChanges();
-        }
-        // if index reached return
-        if (currIndex === index) { if (cb) { cb(); } return; }
-        // else call arrow up/down
-        if (dir === 'ArrowDown') {
-            cell.onKeydownArrowDown(keyboardEvent);
-        } else {
-            cell.onKeydownArrowUp(keyboardEvent);
-        }
-        grid.cdr.detectChanges();
-        // if next row exists navigate next
-        if (nextRow) {
-            setTimeout(() => {
-                cell = grid.selectedCells[0];
-                navigateVerticallyToIndex(grid, cell, index, cb);
-            }, 20);
-        } else {
-            // else wait for chunk to load.
-            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                next: () => {
-                    grid.cdr.detectChanges();
-                    cell = grid.selectedCells[0];
-                    navigateVerticallyToIndex(grid, cell, index, cb);
-                }
+            // grid - the grid in which to navigate.
+            // cell - current cell from which the navigation will start.
+            // index - the index to which to navigate
+            // cb - callback function that will be called when index is reached.
+            const currIndex = cell.rowIndex;
+            const dir = currIndex < index ? 'ArrowDown' : 'ArrowUp';
+            const nextIndex = dir === 'ArrowDown' ? currIndex + 1 : currIndex - 1;
+            const nextRow = grid.getRowByIndex(nextIndex);
+            const keyboardEvent = new KeyboardEvent('keydown', {
+                code: dir,
+                key: dir
             });
-        }
-    };
+            if (!cell.focused) {
+                cell.nativeElement.dispatchEvent(new Event('focus'));
+                grid.cdr.detectChanges();
+            }
+            // if index reached return
+            if (currIndex === index) { if (cb) { cb(); } return; }
+            // else call arrow up/down
+            // cell.nativeElement.dispatchEvent(keyboardEvent);
+            if (dir === 'ArrowDown') {
+                cell.onKeydownArrowDown(keyboardEvent);
+            } else {
+                cell.onKeydownArrowUp(keyboardEvent);
+            }
+            grid.cdr.detectChanges();
+            // if next row exists navigate next
+            if (nextRow) {
+                const nextCell = nextRow.cells.toArray()[0];
+                nextCell.cdr.detectChanges();
+                if (nextCell.focused) {
+                    navigateVerticallyToIndex(grid, nextCell, index, cb);
+                } else {
+                    grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                        next: () => {
+                            grid.cdr.detectChanges();
+                            navigateVerticallyToIndex(grid, nextCell, index, cb);
+                        }
+                    });
+                }
+            } else {
+                // else wait for chunk to load.
+                grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                    next: () => {
+                        grid.cdr.detectChanges();
+                        cell = grid.selectedCells[0];
+                        navigateVerticallyToIndex(grid, cell, index, cb);
+                    }
+                });
+            }
+        };
     const navigateHorizontallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
         // grid - the grid in which to navigate.
         // cell - current cell from which the navigation will start.
         // index - the index to which to navigate
         // cb - callback function that will be called when index is reached.
 
-        const currIndex = cell.visibleColumnIndex;
-        const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
-        const nextIndex = dir === 'ArrowRight' ? currIndex + 1 : currIndex - 1;
-        const nextCol = grid.visibleColumns[nextIndex];
-        const nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            code: dir,
-            key: dir
-        });
-        if (!cell.focused) {
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-            grid.cdr.detectChanges();
-        }
-        // if index reached return
-        if (currIndex === index) { if (cb) { cb(); } return; }
-        // else call arrow up/down
-
-        if (dir === 'ArrowRight') {
-            cell.onKeydownArrowRight(keyboardEvent);
-        } else {
-            cell.onKeydownArrowLeft(keyboardEvent);
-        }
-
-        grid.cdr.detectChanges();
-        // if next row exists navigate next
-        if (nextCell) {
-            setTimeout(() => {
-                cell = grid.selectedCells[0];
-                navigateHorizontallyToIndex(grid, cell, index, cb);
-            }, 20);
-        } else {
-            // else wait for chunk to load.
-            cell.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
-                next: () => {
-                    grid.cdr.detectChanges();
-                    cell = grid.selectedCells[0];
-                    navigateHorizontallyToIndex(grid, cell, index, cb);
-                }
+            const currIndex = cell.visibleColumnIndex;
+            const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
+            const nextIndex = dir === 'ArrowRight' ? currIndex + 1 : currIndex - 1;
+            const visibleColumns = grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+            const nextCol = visibleColumns[nextIndex];
+            let nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+            const keyboardEvent = new KeyboardEvent('keydown', {
+                code: dir,
+                key: dir
             });
-        }
+            if (!cell.focused) {
+                cell.nativeElement.dispatchEvent(new Event('focus'));
+                grid.cdr.detectChanges();
+            }
+            // if index reached return
+            if (currIndex === index) { if (cb) { cb(); } return; }
+            // else call arrow up/down
+            // cell.nativeElement.dispatchEvent(keyboardEvent);
+            if (dir === 'ArrowRight') {
+                cell.onKeydownArrowRight(keyboardEvent);
+            } else {
+                cell.onKeydownArrowLeft(keyboardEvent);
+            }
+
+            grid.cdr.detectChanges();
+            // if next row exists navigate next
+            if (nextCell) {
+                nextCell.cdr.detectChanges();
+                setTimeout(() => {
+                    navigateHorizontallyToIndex(grid, nextCell, index, cb);
+                }, 100);
+            } else {
+                // else wait for chunk to load.
+                cell.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
+                    next: () => {
+                        grid.cdr.detectChanges();
+                        nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+                        navigateHorizontallyToIndex(grid, nextCell, index, cb);
+                    }
+                });
+            }
     };
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -752,7 +762,8 @@ describe('IgxGrid - Cell component', () => {
         fix.whenStable().then(() => {
             // This won't work always in debugging mode due to the angular native events behavior, so errors are expected
             fix.detectChanges();
-            const lastCell = rows[1].querySelectorAll('igx-grid-cell')[3];
+            const cells = rows[1].querySelectorAll('igx-grid-cell');
+            const lastCell = cells[cells.length - 1];
             const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
 
             expect(lastCell.textContent.trim()).toEqual('990');
@@ -792,12 +803,14 @@ describe('IgxGrid - Cell component', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            const scrollContainer = fix.componentInstance.instance.verticalScrollContainer.dc.instance._viewContainer;
-            const scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
+            setTimeout(() => {
+                const scrollContainer = fix.componentInstance.instance.verticalScrollContainer.dc.instance._viewContainer;
+                const scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
 
-            expect(scrollContainerOffset).toEqual(0);
-            expect(fix.componentInstance.selectedCell.value).toEqual(0);
-            expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
+                expect(scrollContainerOffset).toEqual(0);
+                expect(fix.componentInstance.selectedCell.value).toEqual(0);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
+            }, 100);
         });
     }));
 
@@ -827,27 +840,45 @@ describe('IgxGrid - Cell component', () => {
         });
     });
 
-    it('keyboard navigation - should allow vertical navigation in virtualized grid.', (done) => {
+    it('keyboard navigation - should allow navigating down in virtualized grid.', (done) => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         const cell = grid.getCellByColumn(4, 'index');
         const cbFunc = () => {
-            // verify first cell 100th row is selected.
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
             fix.detectChanges();
-            const cbFunc2 = () => {
-                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+            // verify first cell 100th row is selected.
+            setTimeout( () => {
+                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
                 done();
-            };
-
-            // navigate back up to 0
-            navigateVerticallyToIndex(grid, fix.componentInstance.selectedCell, 0, cbFunc2);
+            }, 10);
 
         };
         // navigate down to 100th row.
         navigateVerticallyToIndex(grid, cell, 100, cbFunc);
     });
+
+    it('keyboard navigation - should allow navigating up in virtualized grid.', (done) => {
+        const fix = TestBed.createComponent(VirtualGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.verticalScrollContainer.addScrollTop(5000);
+        fix.detectChanges();
+        setTimeout(() => {
+            const cell = grid.getCellByColumn(104, 'index');
+            const cbFunc = () => {
+                fix.detectChanges();
+                // verify first cell 0 row is selected.
+                setTimeout( () => {
+                    expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+                    done();
+                }, 10);
+            };
+            // navigate to 0.
+            navigateVerticallyToIndex(grid, cell, 0, cbFunc);
+        }, 100);
+    });
+
     it('keyboard navigation - should allow horizontal navigation in virtualized grid.', (done) => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         const cols = [];
@@ -884,6 +915,7 @@ describe('IgxGrid - Cell component', () => {
 
         grid.pinColumn('col1');
         grid.pinColumn('col3');
+        fix.detectChanges();
         const cell = grid.getCellByColumn(0, 'col1');
         const cbFunc = () => {
             expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(9);
@@ -905,16 +937,11 @@ describe('IgxGrid - Cell component', () => {
         const cell = grid.getCellByColumn(4, 'index');
         const cbFunc = () => {
             // verify first cell 100th row is selected.
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
             fix.detectChanges();
-            const cbFunc2 = () => {
-                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+            setTimeout(() => {
+                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
                 done();
-            };
-
-            // navigate back up to 0
-            navigateVerticallyToIndex(grid, fix.componentInstance.selectedCell, 0, cbFunc2);
-
+            }, 10);
         };
         // navigate down to 100th row.
         navigateVerticallyToIndex(grid, cell, 100, cbFunc);
@@ -1061,7 +1088,6 @@ describe('IgxGrid - Cell component', () => {
     it('When cell in edit mode and try to navigate the caret around the cell text the focus should remain.', async(() => {
         const fix = TestBed.createComponent(GridWithEditableColumnComponent);
         fix.detectChanges();
-
         // const firstCellOfColumn: DebugElement = fix.componentInstance.grid.columnList.first.cells[0];
         const CELL_CLASS_IN_EDIT_MODE = 'igx_grid__cell--edit';
         const firstCell: DebugElement = fix.debugElement.query(By.css(CELL_CSS_CLASS));
@@ -1076,65 +1102,59 @@ describe('IgxGrid - Cell component', () => {
         fix.whenStable().then(() => {
             fix.detectChanges();
             cellElem.dispatchEvent(new MouseEvent('dblclick'));
+            fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             fix.detectChanges();
-
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('ArrowRight', inputElem);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             const elem = findCellByInputElem(cellElem, document.activeElement);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('ArrowLeft', inputElem);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
 
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
         }).then(() => {
             fix.detectChanges();
-
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
 
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('control.ArrowLeft', inputElem);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('control.ArrowRight', inputElem);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
-            const elem = findCellByInputElem(cellElem, document.activeElement);
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            const elem = findCellByInputElem(cellElem, inputElem);
             expect(cellElem).toBe(elem);
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-
-            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             triggerKeyDownEvtUponElem('ArrowUp', inputElem);
 
             return fix.whenStable();
