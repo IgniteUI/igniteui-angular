@@ -602,19 +602,6 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.columns[6].pinned).toBe(true);
         expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
     });
-
-    it('should not have grid layout row with width that extends pass the container\'s one', () => {
-        const fix = TestBed.createComponent(GridPinningComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.instance;
-
-        grid.getColumnByName('Phone').pinned = true;
-        fix.detectChanges();
-
-        const gridChildren = Array.prototype.slice.call(grid.nativeElement.children);
-        const gridWidth = grid.nativeElement.getBoundingClientRect().width;
-        gridChildren.forEach(elem => expect(elem.getBoundingClientRect().width).toEqual(gridWidth));
-    });
 });
 @Component({
     template: `
