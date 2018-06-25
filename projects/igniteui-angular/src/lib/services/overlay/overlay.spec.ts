@@ -538,6 +538,24 @@ describe('igxOverlay', () => {
         xit('Should properly call position method - DEFAULT', () => {
 
         });
+
+        fit('fix for #1690 - click on second filter does not close first one', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TwoButtonsComponent);
+            const button1 = fixture.nativeElement.getElementsByClassName('buttonOne')[0];
+            const button2 = fixture.nativeElement.getElementsByClassName('buttonTwo')[0];
+
+            button1.click();
+            tick();
+
+            debugger;
+            const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            const wrapper = overlayDiv.children[0];
+            expect(wrapper.classList).toContain(CLASS_OVERLAY_WRAPPER);
+
+            button2.click();
+            tick();
+            expect(overlayDiv.children.length).toBe(1);
+        }));
     });
 
     describe('Integration tests: ', () => {
@@ -1867,13 +1885,41 @@ export class TopLeftOffsetComponent {
     }
 }
 
+@Component({
+    template: `
+    <div>
+        <button class='buttonOne' (click)=\'clickOne($event)\'>Show first Overlay</button>
+    </div>
+    <div (click)=\'divClick($event)\'>
+        <button class='buttonTwo' (click)=\'clickOne($event)\'>Show second Overlay</button>
+    </div>`
+})
+export class TwoButtonsComponent {
+    private _setting: OverlaySettings = { modal: false };
+
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+
+    clickOne() {
+        this.overlay.show(SimpleDynamicComponent, this._setting);
+    }
+
+    clickTwo() {
+        this.overlay.show(SimpleDynamicComponent, this._setting);
+    }
+
+    divClick(ev: Event) {
+        ev.stopPropagation();
+    }
+}
+
 const DYNAMIC_COMPONENTS = [
     EmptyPageComponent,
     SimpleRefComponent,
     SimpleDynamicComponent,
     SimpleBigSizeComponent,
     DownRightButtonComponent,
-    TopLeftOffsetComponent
+    TopLeftOffsetComponent,
+    TwoButtonsComponent
 ];
 
 const DIRECTIVE_COMPONENTS = [
