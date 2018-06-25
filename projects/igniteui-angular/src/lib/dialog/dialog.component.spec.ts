@@ -1,9 +1,11 @@
 import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
+
+const CLASS_OVERLAY_MAIN = 'igx-overlay';
 
 describe('Dialog', () => {
     beforeEach(async(() => {
@@ -16,7 +18,7 @@ describe('Dialog', () => {
                 CustomTemplates1DialogComponent,
                 CustomTemplates2DialogComponent
             ],
-            imports: [BrowserAnimationsModule, IgxDialogModule]
+            imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
     it('Initialize a datepicker component with id', () => {
@@ -97,10 +99,9 @@ describe('Dialog', () => {
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 
-    it('Should execute open/close methods.', () => {
+    it('Should execute open/close methods.', fakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
-
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(false);
 
@@ -109,20 +110,21 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
+        tick();
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(false);
-    });
+    }));
 
-    it('Should set closeOnOutsideSelect.', () => {
+    it('Should set closeOnOutsideSelect.', fakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         fixture.detectChanges();
-
         const dialog = fixture.componentInstance.dialog;
         dialog.open();
         fixture.detectChanges();
 
         const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
         dialogElem.click();
+        tick();
         fixture.detectChanges();
 
         expect(dialog.isOpen).toEqual(false);
@@ -132,35 +134,34 @@ describe('Dialog', () => {
         fixture.detectChanges();
 
         dialogElem.click();
-
+        tick();
         fixture.detectChanges();
-
         expect(dialog.isOpen).toEqual(true);
-    });
+    }));
 
-    it('Should test events.', () => {
+    it('Should test events.', fakeAsync(() => {
         const fixture = TestBed.createComponent(DialogComponent);
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
             dialog,
             event: null
         };
-
         spyOn(dialog.onOpen, 'emit');
         dialog.open();
-        dialog.close();
+        tick();
         fixture.detectChanges();
         expect(dialog.onOpen.emit).toHaveBeenCalledWith(args);
 
         spyOn(dialog.onClose, 'emit');
-        dialog.open();
         dialog.close();
+        tick();
         fixture.detectChanges();
         expect(dialog.onClose.emit).toHaveBeenCalledWith(args);
 
         dialog.open();
+        tick();
         fixture.detectChanges();
-        const buttons = fixture.debugElement.nativeElement.querySelectorAll('button');
+        const buttons = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0].querySelectorAll('button');
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
@@ -170,8 +171,9 @@ describe('Dialog', () => {
 
         spyOn(dialog.onRightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
+        tick();
         expect(dialog.onRightButtonSelect.emit).toHaveBeenCalled();
-    });
+    }));
 
     it('Should set ARIA attributes.', () => {
         const alertFixture = TestBed.createComponent(AlertComponent);
@@ -192,7 +194,7 @@ describe('Dialog', () => {
         expect(titleWrapper.attributes.id).toEqual(dialogWindow.attributes['aria-labelledby']);
     });
 
-    it('Should close only inner dialog on closeOnOutsideSelect.', () => {
+    it('Should close only inner dialog on closeOnOutsideSelect.', fakeAsync(() => {
         const fixture = TestBed.createComponent(NestedDialogsComponent);
         fixture.detectChanges();
 
@@ -208,17 +210,19 @@ describe('Dialog', () => {
         const childDialogElem = dialogs[1].nativeElement;
 
         childDialogElem.click();
+        tick();
         fixture.detectChanges();
 
         expect(mainDialog.isOpen).toEqual(true);
         expect(childDialog.isOpen).toEqual(false);
 
         maindDialogElem.click();
+        tick();
         fixture.detectChanges();
 
         expect(mainDialog.isOpen).toEqual(false);
         expect(childDialog.isOpen).toEqual(false);
-    });
+    }));
 
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{

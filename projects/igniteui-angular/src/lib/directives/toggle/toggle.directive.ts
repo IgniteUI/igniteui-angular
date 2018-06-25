@@ -190,7 +190,7 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
 
     @HostListener('click')
     public onClick() {
-        this.target.toggle(true, {});
+        this.target.toggle(true);
 
         if (this._handler) {
             document.addEventListener('click', this._handler, true);
