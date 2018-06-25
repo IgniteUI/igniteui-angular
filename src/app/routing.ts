@@ -44,7 +44,9 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { RadioSampleComponent } from './radio/radio.sample';
 
 const appRoutes = [
     {
@@ -75,6 +77,10 @@ const appRoutes = [
     {
         path: 'carousel',
         component: CarouselSampleComponent
+    },
+    {
+        path: 'combo',
+        component: ComboSampleComponent
     },
     {
         path: 'chip',
@@ -139,6 +145,10 @@ const appRoutes = [
     {
         path: 'progressbar',
         component: ProgressbarSampleComponent
+    },
+    {
+        path: 'radio',
+        component: RadioSampleComponent
     },
     {
         path: 'ripple',
