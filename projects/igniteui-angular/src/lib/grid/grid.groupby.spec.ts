@@ -642,7 +642,7 @@ describe('IgxGrid - GroupBy', () => {
         navigateToIndex(grid, 0, 9, cbFunc);
     });
 
-    it('should persist last selected cell column index when navigation through group rows.', (done) => {
+    it('should persist last selected cell column index when navigation down through group rows.', (done) => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         const mockEvent = { preventDefault: () => { } };
@@ -657,27 +657,55 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
         fix.detectChanges();
-
-        const cbFunc2 = () => {
-            const row = grid.getRowByIndex(0);
-            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
-            expect(row.focused).toBe(true);
-            done();
-        };
         const cbFunc = () => {
-            fix.detectChanges();
-            const row = grid.getRowByIndex(9);
-            expect(row instanceof IgxGridRowComponent).toBe(true);
-            expect(row.focused).toBe(true);
-            expect(row.cells.last.selected).toBe(true);
-
-            navigateToIndex(grid, 9, 0, cbFunc2, 4);
+            grid.cdr.detectChanges();
+            setTimeout(() => {
+                const row = grid.getRowByIndex(9);
+                const cell = grid.getCellByColumn(9, 'Released');
+                expect(row instanceof IgxGridRowComponent).toBe(true);
+                expect(row.focused).toBe(true);
+                expect(cell.selected).toBe(true);
+                done();
+            }, 10);
         };
         setTimeout(() => {
             const cell = grid.getCellByColumn(2, 'Released');
             cell.onFocus(new Event('focus'));
             fix.detectChanges();
             navigateToIndex(grid, 0, 9, cbFunc, 4);
+        }, 10);
+    });
+
+    it('should persist last selected cell column index when navigation up through group rows.', (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '400px';
+        fix.componentInstance.height = '300px';
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        grid.verticalScrollContainer.addScrollTop(1000);
+
+        fix.detectChanges();
+        const cbFunc = () => {
+            grid.cdr.detectChanges();
+            setTimeout(() => {
+                const row = grid.getRowByIndex(0);
+                expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+                expect(row.focused).toBe(true);
+                done();
+            }, 10);
+        };
+        setTimeout(() => {
+            const cell = grid.getCellByColumn(20, 'Released');
+            cell.onFocus(new Event('focus'));
+            fix.detectChanges();
+            navigateToIndex(grid, 20, 0, cbFunc, 4);
         }, 10);
     });
 
@@ -1420,6 +1448,7 @@ describe('IgxGrid - GroupBy', () => {
             const checkBoxElement = rows[0].element.nativeElement.querySelector('.igx-checkbox__input');
             checkBoxElement.dispatchEvent(new Event('click'));
             setTimeout(() => {
+                grid.cdr.detectChanges();
                 expect(grid.selectedRows().length).toEqual(1);
                 expect(rows[0].element.nativeElement.className).toEqual('igx-grid__tr igx-grid__tr--odd igx-grid__tr--selected');
                 done();
