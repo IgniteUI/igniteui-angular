@@ -1746,6 +1746,26 @@ describe('igxOverlay', () => {
         xit('Css should not leak: From shown components to igx-overlay.', () => {
             // TO DO
         });
+
+        it('Components with 100% width/height should use their initial container\'s properties when placed inside of the overlay element',
+        fakeAsync(() => {
+            const fixture = TestBed.createComponent(WidthTestOverlayComponent);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.customComponent).toBeDefined();
+            expect(fixture.componentInstance.customComponent.nativeElement.style.width).toEqual('100%');
+            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().width).toEqual(420);
+            expect(fixture.componentInstance.customComponent.nativeElement.style.height).toEqual('100%');
+            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().height).toEqual(280);
+            fixture.componentInstance.buttonElement.nativeElement.click();
+            tick();
+            const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+            const overlayChild = overlayContent.lastElementChild as HTMLElement;
+            expect(overlayChild).toBeDefined();
+            expect(overlayChild.style.width).toEqual('100%');
+            expect(overlayChild.getBoundingClientRect().width).toEqual(420);
+            expect(overlayChild.style.height).toEqual('100%');
+            expect(overlayChild.getBoundingClientRect().height).toEqual(280);
+        }));
     });
 });
 
@@ -1867,13 +1887,49 @@ export class TopLeftOffsetComponent {
     }
 }
 
+@Component({
+    template: `<div style="width: 420px; height: 280px;">
+    <button class='300_button' igxToggle #button (click)=\'click($event)\'>Show Overlay</button>
+        <div #myCustomComponent class="customList" style="width: 100%; height: 100%;">
+            Some Content
+        </div>
+    <div>`,
+    styles: [`button {
+        position: absolute;
+        top: 300px;
+        left: 300px;
+        width: 100px;
+        height: 60px;
+        border: 0px;
+    }`]
+})
+export class WidthTestOverlayComponent {
+
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+
+    @ViewChild('button') buttonElement: ElementRef;
+    @ViewChild('myCustomComponent') customComponent: ElementRef;
+    click(event) {
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new ConnectedPositioningStrategy(),
+            scrollStrategy: new NoOpScrollStrategy(),
+            closeOnOutsideClick: true,
+            modal: false
+        };
+
+        overlaySettings.positionStrategy.settings.target = this.buttonElement.nativeElement;
+        this.overlay.show(this.customComponent, overlaySettings);
+    }
+}
+
 const DYNAMIC_COMPONENTS = [
     EmptyPageComponent,
     SimpleRefComponent,
     SimpleDynamicComponent,
     SimpleBigSizeComponent,
     DownRightButtonComponent,
-    TopLeftOffsetComponent
+    TopLeftOffsetComponent,
+    WidthTestOverlayComponent
 ];
 
 const DIRECTIVE_COMPONENTS = [
