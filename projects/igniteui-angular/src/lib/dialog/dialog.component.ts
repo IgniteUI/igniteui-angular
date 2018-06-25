@@ -1,4 +1,4 @@
-import { transition, trigger, useAnimation } from '@angular/animations';
+import { useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     Component,
@@ -23,7 +23,8 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy } from '../services';
+import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services';
+import { slideInBottom, slideOutTop } from '../animations/slide/index';
 
 let DIALOG_ID = 0;
 /**
@@ -50,15 +51,6 @@ let DIALOG_ID = 0;
  * ```
  */
 @Component({
-    // animations: [
-    //     trigger('fadeInOut', [
-    //         transition('void => open', useAnimation(fadeIn)),
-    //         transition('open => void', useAnimation(fadeOut))
-    //     ]),
-    //     trigger('slideIn', [
-    //         transition('void => open', useAnimation(slideInBottom))
-    //     ])
-    // ],
     selector: 'igx-dialog',
     templateUrl: 'dialog-content.component.html'
 })
@@ -265,6 +257,11 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     @Output()
     public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
+    private _animaitonSettings: PositionSettings = {
+        openAnimation: useAnimation(slideInBottom, {params: {fromPosition: 'translateY(100%)'}}),
+        closeAnimation: useAnimation(slideOutTop, {params: {toPosition: 'translateY(-100%)'}})
+    };
+
     private _overlayDefaultSettings: OverlaySettings;
     private _closeOnOutsideSelect = false;
     private _isModal = true;
@@ -365,8 +362,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         @Optional() private navService: IgxNavigationService
     ) {
         this._titleId = IgxDialogComponent.NEXT_ID++ + '_title';
+
         this._overlayDefaultSettings = {
-            positionStrategy: new GlobalPositionStrategy(),
+            positionStrategy: new GlobalPositionStrategy(this._animaitonSettings),
             scrollStrategy: new NoOpScrollStrategy(),
             modal: this.isModal,
             closeOnOutsideClick: this.closeOnOutsideSelect

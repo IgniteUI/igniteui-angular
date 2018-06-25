@@ -25,6 +25,8 @@ import {
 import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export interface IFormatViews {
     day?: boolean;
@@ -335,6 +337,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         return this.calendarRef.instance;
     }
 
+    protected destroy$ = new Subject<boolean>();
+
     private _formatOptions = {
         day: 'numeric',
         month: 'short',
@@ -380,19 +384,16 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *@hidden
      */
     public ngOnInit(): void {
-        /**
-         * If we have passed value from user, update @calendar.value and @calendar.viewDate.
-         */
-        this.alert.onOpen.subscribe((ev) => this._focusTheDialog());
-        this.alert.onClose.subscribe((ev) => this.handleDialogCloseAction());
+        this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusTheDialog());
+        this.alert.onClose.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
     }
 
     /**
      *@hidden
      */
     public ngOnDestroy(): void {
-        this.alert.onClose.unsubscribe();
-        this.alert.onOpen.unsubscribe();
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     /**
@@ -436,6 +437,15 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     public onOpenEvent(event): void {
+        if (!this.calendarRef) {
+            this.createCalendarRef();
+            this.alert.open();
+            this._onTouchedCallback();
+            this.onOpen.emit(this);
+        }
+    }
+
+    private createCalendarRef(): void {
         const factory = this.resolver.resolveComponentFactory(IgxCalendarComponent);
 
         this.calendarRef = this.container.createComponent(factory);
@@ -444,10 +454,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.updateCalendarInstance();
         this.calendarRef.location.nativeElement.classList.add('igx-date-picker__date--opened');
         this.calendarRef.changeDetectorRef.reattach();
-
-        this.alert.open();
-        this._onTouchedCallback();
-        this.onOpen.emit(this);
     }
 
     /**
@@ -457,7 +463,10 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     public handleDialogCloseAction() {
         this.onClose.emit(this);
-        setTimeout(() => this.calendarRef.destroy(), 350);
+        setTimeout(() => {
+            this.calendarRef.destroy();
+            this.calendarRef = null;
+        }, 350);
     }
 
     /**

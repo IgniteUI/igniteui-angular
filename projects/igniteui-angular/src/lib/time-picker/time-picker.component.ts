@@ -62,7 +62,7 @@ export interface IgxTimePickerValidationFailedEventArgs {
     selector: 'igx-time-picker',
     templateUrl: 'time-picker.component.html'
 })
-export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, AfterViewInit, DoCheck {
+export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, DoCheck {
 
     private _value: Date;
 
@@ -440,20 +440,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     // XXX - temporary fix related with issue #1660
-    public ngAfterViewInit(): void {
-        if (this.vertical) {
-            this._alert.toggleRef.element.classList.add('igx-time-picker--vertical');
-        } else {
-            this._alert.toggleRef.element.classList.add('igx-time-picker');
-        }
-    }
-
-    // XXX - temporary fix related with issue #1660
     public ngDoCheck(): void {
         if (this.vertical && this._alert) {
+            this._alert.toggleRef.element.classList.remove('igx-time-picker');
             this._alert.toggleRef.element.classList.add('igx-time-picker--vertical');
         } else if (!this.vertical && this._alert) {
             this._alert.toggleRef.element.classList.add('igx-time-picker');
+            this._alert.toggleRef.element.classList.remove('igx-time-picker--vertical');
         }
     }
 
