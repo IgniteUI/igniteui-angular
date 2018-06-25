@@ -117,6 +117,14 @@ export class IgxListComponent {
      */
     @Input()
     public allowRightPanning = false;
+
+    @Input()
+    public emptyListMessage = 'There are no items in the list';
+    @Input()
+    public isLoading = false;
+    @Input()
+    public loadingListMessage = 'Loading data from server';
+
     /**
      * Emits an event within the current list when left pan gesture is executed on list item.
      * Provides reference to the `IgxListItemComponent` as an event argument.

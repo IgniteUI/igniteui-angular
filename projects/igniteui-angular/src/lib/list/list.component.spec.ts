@@ -257,6 +257,21 @@ describe('List', () => {
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listCustomNoItemsTemplateContent);
     });
 
+    it('Should have default loading template.', () => {
+        const fixture = TestBed.createComponent(ListLoadingComponent);
+        const list = fixture.componentInstance.list;
+        const listLoadingItemsMessage = 'Loading data...';
+
+        fixture.detectChanges();
+
+        verifyItemsCount(list, 0);
+        expect(list.cssClass).toBeFalsy();
+        expect(list.isListEmpty).toBeTruthy();
+
+        const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
+        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
+    });
+
     it('should fire ItemClicked on click.', (done) => {
         let fixture;
         let list: IgxListComponent;
@@ -535,6 +550,21 @@ class ListWithNoItemsComponent {
                 </igx-list>
             </div>`
 })
+
+class ListLoadingComponent {
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
+}
+
+@Component({
+    template: `<div #wrapper>
+                <igx-list [isLoading]="true" >
+                    <ng-template igxEmptyList>
+                        <h3>Loading data...</h3>
+                    </ng-template>
+                </igx-list>
+            </div>`
+})
+
 class ListWithCustomNoItemsTemplateComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
