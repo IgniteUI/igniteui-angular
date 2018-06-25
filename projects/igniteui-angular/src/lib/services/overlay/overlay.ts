@@ -93,7 +93,7 @@ export class IgxOverlayService {
         if (overlaySettings.closeOnOutsideClick) {
             if (overlaySettings.modal) {
                 fromEvent(wrapperElement, 'click').pipe(take(1)).subscribe(() => this.hide(id));
-            } else if (this._overlays.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length <= 1) {
+            } else if (this._overlays.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
                 (<HTMLElement>this._document).addEventListener('click', this.documentClicked, true);
             }
         }
@@ -164,8 +164,8 @@ export class IgxOverlayService {
             const index = this._overlays.indexOf(overlay);
 
             if (overlay.settings.closeOnOutsideClick) {
-                if (this._overlays.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length <= 1) {
-                    (<HTMLElement>this._document).addEventListener('click', this.documentClicked, true);
+                if (this._overlays.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
+                    (<HTMLElement>this._document).removeEventListener('click', this.documentClicked, true);
                 }
             }
 
