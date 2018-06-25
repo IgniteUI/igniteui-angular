@@ -1,7 +1,7 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule, BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../services/index';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridComponent } from './grid.component';
@@ -17,8 +17,7 @@ describe('IgxGrid - Grid Toolbar', () => {
             ],
             imports: [
                 IgxGridModule.forRoot(),
-                BrowserAnimationsModule,
-                NoopAnimationsModule
+                BrowserAnimationsModule
             ],
             providers: [
                 IgxExcelExporterService,
