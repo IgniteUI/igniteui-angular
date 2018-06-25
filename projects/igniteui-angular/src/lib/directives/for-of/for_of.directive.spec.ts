@@ -1,4 +1,4 @@
-﻿import { CommonModule, NgForOf, NgForOfContext } from '@angular/common';
+﻿import { NgForOfContext } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -11,17 +11,15 @@ import {
     NgZone,
     OnInit,
     QueryList,
-    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IgxForOfDirective, IgxForOfModule} from './for_of.directive';
-import { IForOfState} from './IForOfState';
+import { IForOfState, IgxForOfDirective, IgxForOfModule} from './for_of.directive';
 
 describe('IgxVirtual directive - simple template', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -826,6 +824,27 @@ describe('IgxVirtual directive - simple template', () => {
             /** Offset should be equal to the offset before so there is no misalignment */
             firstRowDisplayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
+        }, 0);
+    }));
+
+    it('should correctly scroll to the last element when using the scrollTo method', async(() => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector('igx-display-container');
+
+        /**  Scroll to the last 49999 row. */
+        fix.componentInstance.parentVirtDir.scrollTo(49999);
+        fix.detectChanges();
+
+        /** Timeout for scroll event to trigger during test */
+        setTimeout(() => {
+            const rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            for (let i = 0; i < 8; i++) {
+                expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[49992 + i][1].toString());
+            }
         }, 0);
     }));
 });

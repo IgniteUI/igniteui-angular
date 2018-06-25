@@ -19,7 +19,7 @@ import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
+import { autoWire, IGridBus, IgxColumnMovingService } from './grid.common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,6 +76,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         return this.sortDirection !== SortingDirection.None;
     }
 
+    @HostBinding('class.igx-grid__drag-col-header')
+    get dragged() {
+        return this.column === this.column.grid.draggedColumn;
+    }
+
     @HostBinding('style.z-index')
     get zIndex() {
         if (!this.column.pinned) {
@@ -107,9 +112,14 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     protected sortDirection = SortingDirection.None;
     private _startResizePos;
     private _pinnedMaxWidth;
-    private _isResiznig = false;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone) { }
+    constructor(
+        public gridAPI: IgxGridAPIService,
+        public cdr: ChangeDetectorRef,
+        public elementRef: ElementRef,
+        public zone: NgZone,
+        private cms: IgxColumnMovingService
+    ) { }
 
     public ngOnInit() {
         this.cdr.markForCheck();
@@ -130,13 +140,19 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     @HostListener('click', ['$event'])
     @autoWire(true)
     public onClick(event) {
-        if (!this._isResiznig) {
+        if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.column.sortable) {
                 const grid = this.gridAPI.get(this.gridID);
-
-                this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
-                    : this.sortDirection;
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+                if (editableCell) {
+                    this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+                }
+                const groupingExpr = grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
+                const sortDir = groupingExpr ?
+                    this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc  : SortingDirection.Desc
+                    : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
+                this.sortDirection = sortDir;
                 this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
                 grid.onSortingDone.emit({
                     dir: this.sortDirection,
@@ -213,7 +229,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
             this.showResizer = true;
-            this._isResiznig = true;
+            this.column.grid.isColumnResizing = true;
             this.resizerHeight = this.grid.calcResizerHeight;
             this._startResizePos = event.clientX;
         } else {
@@ -292,7 +308,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     }
 
     public onResize(event) {
-        this._isResiznig = false;
+        this.column.grid.isColumnResizing = false;
 
         this.showResizer = false;
         const diff = event.clientX - this._startResizePos;

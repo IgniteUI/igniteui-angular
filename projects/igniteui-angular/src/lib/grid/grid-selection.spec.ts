@@ -771,7 +771,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
-        grid.sort('Column1', SortingDirection.Desc, true);
+        grid.sort({fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true});
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
@@ -873,7 +873,7 @@ describe('IgxGrid - Row Selection', () => {
         const oldCellID = oldCell.cellID;
         oldCell.nativeElement.focus();
         oldCell.nativeElement.click();
-        grid.sort('UnitsInStock', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
         const cellAfterSorting = fixture.debugElement.query(By.css('.igx-grid__td--selected'));
         expect(grid.selectedCells).toBeDefined();
@@ -914,6 +914,28 @@ describe('IgxGrid - Row Selection', () => {
             expect(firstRow.isSelected).toBeFalsy();
             expect(secondRow.isSelected).toBeFalsy();
             expect(thirdRow.isSelected).toBeFalsy();
+        });
+    }));
+
+    it('Should be able to correctly select all rows programatically', async(() => {
+        const fixture = TestBed.createComponent(GridWithSelectionComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector('.igx-grid');
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
+        expect(firstRow.isSelected).toBeFalsy();
+        grid.selectAllRows();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeTruthy();
+            firstRowCheckbox.dispatchEvent(new Event('click', {}));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
         });
     }));
 

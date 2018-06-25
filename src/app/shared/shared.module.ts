@@ -5,6 +5,7 @@ import {
     IgxCardModule,
     IgxCarouselModule,
     IgxCalendarModule,
+    IgxChipsModule,
     IgxIconModule,
     IgxButtonModule,
     IgxButtonGroupModule,
@@ -15,7 +16,6 @@ import {
     IgxToggleModule,
     IgxNavigationDrawerModule,
     IgxRippleModule,
-    IgxDragDropModule,
     IgxMaskModule,
     IgxLayoutModule,
     IgxSnackbarModule,
@@ -31,7 +31,7 @@ import {
     IgxBottomNavModule,
     IgxTabsModule,
     IgxTimePickerModule,
-    IgxToastModule,
+    IgxToastModule
 } from 'igniteui-angular';
 
 const igniteModules = [
@@ -40,7 +40,7 @@ const igniteModules = [
     IgxCardModule,
     IgxCalendarModule,
     IgxCarouselModule,
-    IgxDragDropModule,
+    IgxChipsModule,
     IgxDatePickerModule,
     IgxDialogModule,
     IgxDropDownModule,

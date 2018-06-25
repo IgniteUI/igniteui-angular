@@ -3,8 +3,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService } from 'igniteui-angular';
+import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService } from 'igniteui-angular';
+import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
+import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
 
 import { routing } from './routing';
 import { AppComponent } from './app.component';
@@ -15,8 +17,10 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
+import { ChipsSampleComponent} from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
+import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
 import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
@@ -40,15 +44,20 @@ import { ToastSampleComponent } from './toast/toast.sample';
 import { RemoteService } from './shared/remote.service';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { LocalService } from './shared/local.service';
+import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
+import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { OverlaySampleComponent } from './overlay/overlay.sample';
 
 const components = [
     AppComponent,
@@ -58,9 +67,11 @@ const components = [
     CalendarSampleComponent,
     CardSampleComponent,
     CarouselSampleComponent,
+    ChipsSampleComponent,
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    DragDropSampleComponent,
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
@@ -70,6 +81,7 @@ const components = [
     MaskSampleComponent,
     NavbarSampleComponent,
     NavdrawerSampleComponent,
+    OverlaySampleComponent,
     PageHeaderComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
@@ -81,14 +93,17 @@ const components = [
     ToastSampleComponent,
     VirtualForSampleComponent,
     ButtonGroupSampleComponent,
+    GridCellEditingComponent,
     GridSampleComponent,
+    GridColumnMovingSampleComponent,
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
+    GridGroupBySampleComponent,
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
+    GridToolbarSampleComponent,
     GridVirtualizationSampleComponent,
-
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
@@ -104,6 +119,8 @@ const components = [
         HttpClientModule,
         IgxIconModule.forRoot(),
         IgxGridModule.forRoot(),
+        IgxColumnHidingModule,
+        IgxDragDropModule,
         SharedModule,
         routing
     ],
@@ -111,7 +128,8 @@ const components = [
         LocalService,
         RemoteService,
         IgxExcelExporterService,
-        IgxCsvExporterService
+        IgxCsvExporterService,
+        IgxOverlayService
     ],
     bootstrap: [AppComponent]
 })

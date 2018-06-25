@@ -36,7 +36,7 @@ describe('IgxButton', () => {
         expect(button.classList.contains('igx-button--raised')).toBe(true);
         expect(button.classList.contains('igx-button--disabled')).toBe(true);
 
-        fixture.componentInstance.isDisabled = false;
+        fixture.componentInstance.disabled = false;
         fixture.detectChanges();
 
         expect(button.classList.contains('igx-button--disabled')).toBe(false);
@@ -66,10 +66,10 @@ class InitButtonComponent {
     `<span igxButton="raised"
         [igxButtonColor]="foreground"
         [igxButtonBackground]="background"
-        [disabled]="isDisabled">Test</span>`
+        [disabled]="disabled">Test</span>`
 })
 class ButtonWithAttribsComponent {
-    public isDisabled = true;
+    public disabled = true;
     public foreground = 'white';
     public background = 'black';
 }

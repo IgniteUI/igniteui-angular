@@ -1,4 +1,4 @@
-import { Component, ContentChildren, DebugElement, ViewChild } from '@angular/core';
+import { Component, ContentChildren, DebugElement, ViewChild, OnInit } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,7 +29,8 @@ describe('IgxDropDown ', () => {
                 IgxDropDownTestScrollComponent,
                 IgxDropDownTestDisabledComponent,
                 IgxDropDownTestDisabledAnyComponent,
-                IgxDropDownTestEmptyListComponent
+                IgxDropDownTestEmptyListComponent,
+                IgxDropDownWithScrollComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -346,14 +347,14 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DISABLED));
             expect(currentItem.length).toEqual(3);
-            expect(list.items[4].isDisabled).toBeFalsy();
-            list.items[4].isDisabled = true;
+            expect(list.items[4].disabled).toBeFalsy();
+            list.items[4].disabled = true;
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
             const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DISABLED));
             expect(currentItem.length).toEqual(4);
-            expect(list.items[4].isDisabled).toBeTruthy();
+            expect(list.items[4].disabled).toBeTruthy();
         });
     });
 
@@ -807,6 +808,19 @@ describe('IgxDropDown ', () => {
             expect(igxDropDown.collapsed).toEqual(true);
         });
     }));
+
+    it('#1663 drop down flickers on open', () => {
+        const fixture = TestBed.createComponent(IgxDropDownWithScrollComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css('button')).nativeElement;
+        const igxDropDown = fixture.componentInstance.dropdownScroll;
+        button.click();
+        igxDropDown.open();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(44);
+        });
+    });
 });
 
 @Component({
@@ -895,7 +909,7 @@ class IgxDropDownTestScrollComponent {
     <button (click)="toggleDropDown()">Show</button>
     <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down #dropdownDisabledAny>
-        <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>
@@ -938,7 +952,7 @@ class IgxDropDownTestDisabledAnyComponent {
     <button (click)="toggleDropDown()">Show</button>
     <button (click)="selectItem5()">Select 5</button>
     <igx-drop-down #dropdownDisabled>
-        <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>
@@ -980,7 +994,7 @@ class IgxDropDownTestDisabledComponent {
     template: `
     <button (click)="toggleDropDown()">Show</button>
     <igx-drop-down #dropdownDisabled>
-        <igx-drop-down-item *ngFor="let item of items" isDisabled={{item.disabled}} isHeader={{item.header}}>
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
             {{ item.field }}
         </igx-drop-down-item>
     </igx-drop-down>
@@ -995,5 +1009,37 @@ class IgxDropDownTestEmptyListComponent {
 
     public toggleDropDown() {
         this.dropdownEmpty.toggle();
+    }
+}
+@Component({
+    template: `
+    <button (click)="selectItem5()">Select 5</button>
+    <igx-drop-down #scrollDropDown>
+        <igx-drop-down-item *ngFor="let item of items">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    `
+})
+class IgxDropDownWithScrollComponent implements OnInit {
+
+    @ViewChild('scrollDropDown', { read: IgxDropDownComponent })
+    public dropdownScroll: IgxDropDownComponent;
+
+    public items: any[] = [];
+
+    public toggleDropDown() {
+        this.dropdownScroll.toggle();
+    }
+
+    public selectItem5() {
+        this.dropdownScroll.setSelectedItem(4);
+    }
+
+    ngOnInit() {
+        this.dropdownScroll.height = '200px';
+        for (let index = 1; index < 100; index++) {
+            this.items.push({ field: 'Item ' + index });
+        }
     }
 }

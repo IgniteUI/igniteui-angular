@@ -22,7 +22,7 @@ import {
     IgxCellTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
-import { IFilteringOperation, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+import { IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../../public_api';
 /**
  * **Ignite UI for Angular Column** -
@@ -50,6 +50,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public sortable = false;
 
     @Input()
+    public groupable = false;
+
+    @Input()
     public editable = false;
 
     @Input()
@@ -69,8 +72,13 @@ export class IgxColumnComponent implements AfterContentInit {
     set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
+            const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
+            if (cellInEditMode) {
+                if (cellInEditMode.cell.column.field === this.field) {
+                    this.gridAPI.escape_editMode(this.gridID, cellInEditMode.cellID);
+                }
+            }
             this.check();
-
             if (this.grid) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
                 const oldIndex = activeInfo.columnIndex;
@@ -84,6 +92,18 @@ export class IgxColumnComponent implements AfterContentInit {
                     }
                 }
             }
+        }
+    }
+
+    @Input()
+    get disableHiding(): boolean {
+        return this._disableHiding;
+    }
+
+    set disableHiding(value: boolean) {
+        if (this._disableHiding !== value) {
+            this._disableHiding = value;
+            this.check();
         }
     }
 
@@ -119,9 +139,6 @@ export class IgxColumnComponent implements AfterContentInit {
 
     @Input()
     public formatter: (value: any) => any;
-
-    @Input()
-    public filteringCondition: IFilteringOperation;
 
     @Input()
     public filteringIgnoreCase = true;
@@ -226,6 +243,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _filters = null;
     protected _hidden = false;
     protected _index: number;
+    protected _disableHiding = false;
 
     private _defaultMinWidth = '88';
 
