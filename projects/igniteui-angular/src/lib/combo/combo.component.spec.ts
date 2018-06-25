@@ -1146,7 +1146,7 @@ describe('Combo', () => {
         expect(comboElement.childElementCount).toEqual(2);
 
         const inputGroupElement = comboElement.children[0];
-        expect(inputGroupElement.attributes.getNamedItem('type').nodeValue).toEqual('box');
+        expect(inputGroupElement.attributes.getNamedItem('ng-reflect-type').nodeValue).toEqual('box');
         expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
         expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
         expect(inputGroupElement.classList.contains('igx-input-group--placeholder')).toBeTruthy();
