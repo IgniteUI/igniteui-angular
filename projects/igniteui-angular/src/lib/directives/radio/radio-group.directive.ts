@@ -14,15 +14,15 @@ let nextId = 0;
  *
  * Example:
  * ```html
- * <igx-radiogroup name="radioGroup">
+ * <igx-radio-group name="radioGroup">
  *   <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
  *      {{item}}
  *   </igx-radio>
- * </igx-radiogroup>
+ * </igx-radio-group>
  * ```
  */
 @Directive({
-    selector: 'igx-radiogroup, [igxRadioGroup]',
+    selector: 'igx-radio-group, [igxRadioGroup]',
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadioGroupDirective, multi: true }]
 })
 export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAccessor {
@@ -38,7 +38,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      * Sets/gets the `value` attribute.
      * ```html
-     * <igx-radiogroup [value] = "'radioButtonValue'"></igx-radiogroup>
+     * <igx-radio-group [value] = "'radioButtonValue'"></igx-radio-group>
      * ```
      * ```typescript
      * let value =  this.radioGroup.value;
@@ -57,7 +57,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      * Sets/gets the `name` attribute of the radio group component. All child radio buttons inherits this name.
      * ```html
-     * <igx-radiogroup name = "Radio1"></igx-radiogroup>
+     * <igx-radio-group name = "Radio1"></igx-radio-group>
      *  ```
      * ```typescript
      * let name =  this.radioGroup.name;
@@ -77,7 +77,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * Sets/gets whether the radio group is required.
      * If not set, `required` will have value `false`.
      * ```html
-     * <igx-radiogroup [required] = "true"></igx-radiogroup>
+     * <igx-radio-group [required] = "true"></igx-radio-group>
      * ```
      * ```typescript
      * let isRequired =  this.radioGroup.required;
@@ -96,7 +96,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      * An @Input property that allows you to disable the radio group. By default it's false.
      * ```html
-     * <igx-radiogroup [disabled]="true"></igx-radiogroup>
+     * <igx-radio-group [disabled]="true"></igx-radio-group>
      * ```
      * @memberof IgxRadioGroupDirective
      */
@@ -113,7 +113,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * Sets/gets the position of the `label` in the child radio buttons.
      * If not set, `labelPosition` will have value `"after"`.
      * ```html
-     * <igx-radiogroup labelPosition = "before"></igx-radiogroup>
+     * <igx-radio-group labelPosition = "before"></igx-radio-group>
      * ```
      * ```typescript
      * let labelPosition =  this.radioGroup.labelPosition;
