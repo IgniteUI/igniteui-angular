@@ -220,7 +220,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const currentColumn = 'ProductName';
         const releasedColumn = 'Released';
 
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc});
+        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc });
 
         fix.detectChanges();
 
@@ -410,7 +410,6 @@ describe('IgxGrid - Column Pinning ', () => {
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
         const mockEvent = { preventDefault: () => { } };
-
         cell.triggerEventHandler('focus', {});
         tick();
         fix.detectChanges();
@@ -420,22 +419,21 @@ describe('IgxGrid - Column Pinning ', () => {
 
         cell.triggerEventHandler('keydown.arrowdown', mockEvent);
         tick();
-        fix.detectChanges();
+        grid.cdr.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[4];
+        cell = cells[6];
         cell.triggerEventHandler('keydown.arrowup', mockEvent);
         tick();
-        fix.detectChanges();
-
+        grid.cdr.detectChanges();
         expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         discardPeriodicTasks();
     }));
 
-    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', fakeAsync(() => {
-        discardPeriodicTasks();
+    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', (done) => {
+       // discardPeriodicTasks();
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const mockEvent = { preventDefault: () => { } };
@@ -451,21 +449,22 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
         cell.triggerEventHandler('keydown.control.arrowright', null);
-        tick();
-        fix.detectChanges();
+        setTimeout(() => {
+            cell.componentInstance.row.cdr.detectChanges();
+            expect(fix.componentInstance.selectedCell.value).toEqual(null);
+            expect(fix.componentInstance.selectedCell.column.field).toMatch('Region');
 
-        expect(fix.componentInstance.selectedCell.value).toEqual('Sales Representative');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
-        cell = cells[cells.length - 1];
+             cell = cells[cells.length - 1];
 
-        cell.triggerEventHandler('keydown.control.arrowleft', null);
-        tick();
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-        discardPeriodicTasks();
-    }));
+             cell.triggerEventHandler('keydown.control.arrowleft', null);
+             grid.cdr.detectChanges();
+             setTimeout(() => {
+                expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+                done();
+             }, 100);
+        }, 100);
+    });
 
     it('should allow hiding/showing pinned column.', () => {
         const fix = TestBed.createComponent(GridPinningComponent);
@@ -519,6 +518,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.pinnedColumns.length).toEqual(1);
         expect(grid.unpinnedColumns.length).toEqual(9);
     });
+
     it('should allow hiding columns in the unpinned area.', () => {
 
         const fix = TestBed.createComponent(GridPinningComponent);
@@ -591,7 +591,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         grid.columns.forEach((column) => {
             if (column.index === 0 || column.index === 1 || column.index === 4 ||
-                    column.index === 6) {
+                column.index === 6) {
                 column.pin();
             }
         });
@@ -601,6 +601,19 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.columns[4].pinned).toBe(false);
         expect(grid.columns[6].pinned).toBe(true);
         expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
+    });
+
+    it('should not have grid layout row with width that extends pass the container\'s one', () => {
+        const fix = TestBed.createComponent(GridPinningComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+
+        grid.getColumnByName('Phone').pin();
+        fix.detectChanges();
+
+        const gridChildren = Array.prototype.slice.call(grid.nativeElement.children);
+        const gridWidth = grid.nativeElement.getBoundingClientRect().width;
+        gridChildren.forEach(elem => expect(elem.getBoundingClientRect().width).toEqual(gridWidth));
     });
 });
 @Component({
