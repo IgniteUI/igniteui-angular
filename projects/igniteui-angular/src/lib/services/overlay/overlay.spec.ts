@@ -645,23 +645,21 @@ describe('igxOverlay', () => {
             }
         }));
 
-        it('The shown component is in the center of igx-overlay (visible window) - default.', () => {
+        it('The shown component is in the center of igx-overlay (visible window) - default.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             fixture.componentInstance.overlay.show(SimpleDynamicComponent);
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
-                const overlayWrapper = overlayDiv.children[0] as HTMLElement;
-                const componentEl = overlayWrapper.children[0].children[0];
-                const wrapperRect = overlayWrapper.getBoundingClientRect();
-                const componentRect = componentEl.getBoundingClientRect();
-                expect(wrapperRect.width / 2).toEqual(componentRect.left);
-                expect(wrapperRect.height / 2).toEqual(componentRect.top);
-                expect(componentRect.left).toEqual(componentRect.right - componentRect.width);
-                expect(componentRect.top).toEqual(componentRect.bottom - componentRect.height);
-            });
-        });
+            tick();
+            const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            const overlayWrapper = overlayDiv.children[0] as HTMLElement;
+            const componentEl = overlayWrapper.children[0].children[0];
+            const wrapperRect = overlayWrapper.getBoundingClientRect();
+            const componentRect = componentEl.getBoundingClientRect();
+            expect(wrapperRect.width / 2 - componentRect.width / 2).toEqual(componentRect.left);
+            expect(wrapperRect.height / 2 - componentRect.height / 2).toEqual(componentRect.top);
+            expect(componentRect.left).toEqual(componentRect.right - componentRect.width);
+            expect(componentRect.top).toEqual(componentRect.bottom - componentRect.height);
+        }));
 
         it('When adding a new instance of a component with the same options, it is rendered exactly on top of the previous one.', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -1748,24 +1746,24 @@ describe('igxOverlay', () => {
         });
 
         it('Components with 100% width/height should use their initial container\'s properties when placed inside of the overlay element',
-        fakeAsync(() => {
-            const fixture = TestBed.createComponent(WidthTestOverlayComponent);
-            fixture.detectChanges();
-            expect(fixture.componentInstance.customComponent).toBeDefined();
-            expect(fixture.componentInstance.customComponent.nativeElement.style.width).toEqual('100%');
-            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().width).toEqual(420);
-            expect(fixture.componentInstance.customComponent.nativeElement.style.height).toEqual('100%');
-            expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().height).toEqual(280);
-            fixture.componentInstance.buttonElement.nativeElement.click();
-            tick();
-            const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
-            const overlayChild = overlayContent.lastElementChild as HTMLElement;
-            expect(overlayChild).toBeDefined();
-            expect(overlayChild.style.width).toEqual('100%');
-            expect(overlayChild.getBoundingClientRect().width).toEqual(420);
-            expect(overlayChild.style.height).toEqual('100%');
-            expect(overlayChild.getBoundingClientRect().height).toEqual(280);
-        }));
+            fakeAsync(() => {
+                const fixture = TestBed.createComponent(WidthTestOverlayComponent);
+                fixture.detectChanges();
+                expect(fixture.componentInstance.customComponent).toBeDefined();
+                expect(fixture.componentInstance.customComponent.nativeElement.style.width).toEqual('100%');
+                expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().width).toEqual(420);
+                expect(fixture.componentInstance.customComponent.nativeElement.style.height).toEqual('100%');
+                expect(fixture.componentInstance.customComponent.nativeElement.getBoundingClientRect().height).toEqual(280);
+                fixture.componentInstance.buttonElement.nativeElement.click();
+                tick();
+                const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                const overlayChild = overlayContent.lastElementChild as HTMLElement;
+                expect(overlayChild).toBeDefined();
+                expect(overlayChild.style.width).toEqual('100%');
+                expect(overlayChild.getBoundingClientRect().width).toEqual(420);
+                expect(overlayChild.style.height).toEqual('100%');
+                expect(overlayChild.getBoundingClientRect().height).toEqual(280);
+            }));
     });
 });
 
