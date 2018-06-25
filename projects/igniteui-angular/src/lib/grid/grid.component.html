@@ -34,6 +34,7 @@
                 <igx-icon class="igx-chip__order-icon" fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'"></igx-icon>
             </span>
             <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
+            <igx-icon *ngIf="!dropAreaVisible"></igx-icon>
         </igx-chip>
         <div igxGroupAreaDrop *ngIf="dropAreaVisible" [class]="groupAreaHostClass">
             <igx-icon fontSet="material" name="group_work" class="igx-drop-area__icon"></igx-icon>
