@@ -68,7 +68,6 @@ When the contents of the iterator changes, `igxForOf` makes the corresponding ch
 | igxForScrollContainer  | string          | Only the strings `vertical` and `horizontal` are valid and specify the scroll orientation                                  |
 | igxForContainerSize    | string          | The px-affixed size of the container along the axis of scrolling                                                           |
 | igxForScrollContainer  | IgxForOf        | Optionally pass the parent `igxForOf` instance to create a virtual template scrolling both horizontally and vertically     |
-| igxForRemote           | boolean         | Enables remote virtualization. Should be used in combination with the OnChunkPreload event, where the new data can be requested from a remote service. Note that the totalItemCount option of the igxFor directive should be updated with the actual total record count from the service. |
 
 ### Outputs
 

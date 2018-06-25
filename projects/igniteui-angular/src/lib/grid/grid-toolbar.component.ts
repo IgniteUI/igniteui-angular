@@ -4,7 +4,8 @@ import {
     HostBinding,
     Input,
     Optional,
-    ViewChild
+    ViewChild,
+    ElementRef
 } from '@angular/core';
 
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -13,12 +14,15 @@ import { CsvFileTypes,
          IgxCsvExporterOptions,
          IgxCsvExporterService,
          IgxExcelExporterOptions,
-         IgxExcelExporterService } from '../services/index';
+         IgxExcelExporterService,
+         CloseScrollStrategy} from '../services/index';
 import { IgxGridAPIService } from './api.service';
 import { IGridBus } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
+import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
+import {  ConnectedPositioningStrategy } from '../services/overlay/position';
 
 @Component({
     selector: 'igx-grid-toolbar',
@@ -30,14 +34,20 @@ export class IgxGridToolbarComponent implements IGridBus {
     @Input()
     public gridID: string;
 
-    @ViewChild(IgxToggleDirective, { read: IgxToggleDirective })
-    protected toggleDirective: IgxToggleDirective;
-
     @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
     public columnHidingDropdown: IgxDropDownComponent;
 
     @ViewChild(IgxColumnHidingComponent)
     public columnHidingUI: IgxColumnHidingComponent;
+
+    @ViewChild('columnHidingButton')
+    public columnHidingButton;
+
+    @ViewChild('exportDropdown', { read: IgxDropDownComponent })
+    public exportDropdown: IgxDropDownComponent;
+
+    @ViewChild('btnExport')
+    public exportButton;
 
     public get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
@@ -61,6 +71,21 @@ export class IgxGridToolbarComponent implements IGridBus {
                 @Optional() public csvExporter: IgxCsvExporterService) {
     }
 
+    private _positionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Left,
+        horizontalStartPoint: HorizontalAlignment.Right,
+        verticalDirection: VerticalAlignment.Bottom,
+        verticalStartPoint: VerticalAlignment.Bottom
+    };
+
+    private _overlaySettings: OverlaySettings = {
+        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
+        scrollStrategy: new CloseScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
+
     public getTitle(): string {
         return this.grid != null ? this.grid.toolbarTitle : '';
     }
@@ -78,7 +103,9 @@ export class IgxGridToolbarComponent implements IGridBus {
     }
 
     public exportClicked() {
-        this.toggleDirective.collapsed = !this.toggleDirective.collapsed;
+
+        this._overlaySettings.positionStrategy.settings.target = this.exportButton.nativeElement;
+        this.exportDropdown.toggle(this._overlaySettings);
     }
 
     public exportToExcelClicked() {
@@ -107,6 +134,7 @@ export class IgxGridToolbarComponent implements IGridBus {
     }
 
     public toggleColumnHidingUI() {
-        this.columnHidingDropdown.toggle();
+        this._overlaySettings.positionStrategy.settings.target = this.columnHidingButton.nativeElement;
+        this.columnHidingDropdown.toggle(this._overlaySettings);
     }
 }
