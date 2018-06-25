@@ -87,6 +87,8 @@ export class IgxOverlayService {
         }
 
         this._overlays.find(c => c.id === id).initialSize = size as DOMRect;
+        contentElement.style.width = size.width + 'px';
+        contentElement.style.height = size.height + 'px';
         overlaySettings.positionStrategy.position(contentElement, size, document, true);
         const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
         const animationPlayer = animationBuilder.create(element);
