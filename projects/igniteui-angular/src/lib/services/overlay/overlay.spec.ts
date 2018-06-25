@@ -695,8 +695,10 @@ describe('igxOverlay', () => {
                 const componentEl = overlayWrapper.children[0].children[0];
                 const wrapperRect = overlayWrapper.getBoundingClientRect();
                 const componentRect = componentEl.getBoundingClientRect();
-                expect(wrapperRect.width / 2).toEqual(componentRect.left);
-                expect(wrapperRect.height / 2).toEqual(componentRect.top);
+                expect(componentRect.left).toBeLessThan(0);
+                expect(wrapperRect.width / 2).toEqual(componentRect.left + componentRect.width / 2);
+                expect(componentRect.top).toBeLessThan(0);
+                expect(wrapperRect.height / 2).toEqual(componentRect.top + componentRect.height / 2);
                 hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
                 expect(hasScrollbar).toBeTruthy();
             });
