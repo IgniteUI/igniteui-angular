@@ -101,7 +101,7 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
     public ngOnInit() {
         this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
             if (!this.toggleDirective.collapsed) {
-                this.toggleDirective.open(true, this._overlaySettings);
+                this.toggleDirective.close(true);
                 this.refresh();
             }
         });
