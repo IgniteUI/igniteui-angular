@@ -180,11 +180,11 @@ describe('IgxRadioGroupDirective', () => {
 });
 
 @Component({
-    template: `<igx-radiogroup #radioGroup name="radioGroup" value="Baz" required="true" labelPosition="before">
+    template: `<igx-radio-group #radioGroup name="radioGroup" value="Baz" required="true" labelPosition="before">
     <igx-radio *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
         {{item}}
     </igx-radio>
-</igx-radiogroup>
+</igx-radio-group>
 `
 })
 class RadioGroupComponent {
@@ -197,11 +197,11 @@ class Person {
 }
 
 @Component({
-    template: ` <igx-radiogroup #radioGroupSeasons name="radioGroupSeasons" [(ngModel)]="personBob.favoriteSeason">
+    template: ` <igx-radio-group #radioGroupSeasons name="radioGroupSeasons" [(ngModel)]="personBob.favoriteSeason">
                     <igx-radio *ngFor="let item of seasons" value="{{item}}">
                         {{item}}
                     </igx-radio>
-                </igx-radiogroup>
+                </igx-radio-group>
 `
 })
 class RadioGroupWithModelComponent {
@@ -220,11 +220,11 @@ class RadioGroupWithModelComponent {
 @Component({
     template: `
 <form [formGroup]="personForm">
-    <igx-radiogroup formControlName="favoriteSeason" name="radioGroupReactive">
+    <igx-radio-group formControlName="favoriteSeason" name="radioGroupReactive">
         <igx-radio *ngFor="let item of seasons" value="{{item}}">
             {{item}}
         </igx-radio>
-    </igx-radiogroup>
+    </igx-radio-group>
 </form>
 `
 })
