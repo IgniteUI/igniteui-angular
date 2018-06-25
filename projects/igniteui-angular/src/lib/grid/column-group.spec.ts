@@ -23,6 +23,7 @@ describe('IgxGrid - multi-column headers', () => {
                 OneGroupThreeColsGridComponent,
                 BlueWhaleGridComponent,
                 ColumnGroupTestComponent,
+                ColumnGroupChildLevelTestComponent,
                 ColumnGroupFourLevelTestComponent,
                 ThreeGroupsThreeColumnsGridComponent,
                 ColumnGroupTwoGroupsTestComponent
@@ -46,7 +47,7 @@ describe('IgxGrid - multi-column headers', () => {
     });
 
     it('column hiding - parent level', () => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const addressGroup = grid.columnList.filter(c => c.header === 'Address Information')[0];
@@ -58,15 +59,15 @@ describe('IgxGrid - multi-column headers', () => {
     });
 
     it('column hiding - child level', () => {
-        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        const fixture = TestBed.createComponent(ColumnGroupChildLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        const addressGroup = grid.columnList.filter(c => c.header === 'Address Information')[0];
+        const addressGroup = grid.columnList.filter(c => c.header === 'Address')[0];
 
         addressGroup.children.first.hidden = true;
         fixture.detectChanges();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(11);
+        expect(document.querySelectorAll('igx-grid-header').length).toEqual(5);
         expect(addressGroup.children.first.hidden).toBe(true);
         expect(addressGroup.children.first.children.toArray().every(c => c.hidden === true)).toEqual(true);
     });
@@ -859,6 +860,34 @@ export class ColumnGroupTestComponent {
     `
 })
 export class ColumnGroupFourLevelTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    data = DATASOURCE;
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="600px" width="800px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="Address">
+            <igx-column-group header="Location">
+                <igx-column field="Country"></igx-column>
+                <igx-column field="Region"></igx-column>
+                <igx-column-group header="Location City">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Contact Information">
+                <igx-column field="Phone"></igx-column>
+                <igx-column field="Fax"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class ColumnGroupChildLevelTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
