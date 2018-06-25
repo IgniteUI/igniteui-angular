@@ -87,6 +87,9 @@ export class IgxOverlayService {
             size = element.getBoundingClientRect();
         }
 
+        contentElement.style.width = size.width + 'px';
+        contentElement.style.height = size.height + 'px';
+
         this._overlays.find(c => c.id === id).initialSize = size as DOMRect;
         overlaySettings.positionStrategy.position(contentElement, size, document, true);
 
