@@ -311,10 +311,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *}
      * ```
      */
-    @HostBinding('class.igx-dialog--hidden')
     @Input()
     get isOpen() {
         return !this.toggleRef.collapsed;
+    }
+
+    @HostBinding('class.igx-dialog--hidden')
+    get isCollapsed() {
+        return this.toggleRef.collapsed;
     }
 
     /**
@@ -385,7 +389,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *<igx-dialog #dialog></igx-dialog>
      *```
      */
-    public open(fireEvents?: boolean, overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
+    public open(fireEvents: boolean = true, overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
         if (this.isOpen) {
             return;
         }
