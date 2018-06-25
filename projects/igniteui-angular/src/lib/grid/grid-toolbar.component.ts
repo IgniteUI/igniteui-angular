@@ -15,7 +15,6 @@ import { CsvFileTypes,
          IgxCsvExporterService,
          IgxExcelExporterOptions,
          IgxExcelExporterService,
-         NoOpScrollStrategy,
          CloseScrollStrategy} from '../services/index';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
@@ -33,9 +32,6 @@ export class IgxGridToolbarComponent {
     @HostBinding('class.igx-grid-toolbar')
     @Input()
     public gridID: string;
-
-    // @ViewChild(IgxToggleDirective, { read: IgxToggleDirective })
-    // protected toggleDirective: IgxToggleDirective;
 
     @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
     public columnHidingDropdown: IgxDropDownComponent;
