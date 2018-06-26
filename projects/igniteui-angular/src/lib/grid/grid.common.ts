@@ -241,7 +241,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerDown(event) {
-        event.preventDefault();
         event.stopPropagation();
 
         if (!this.draggable || event.target.getAttribute('draggable') === 'false') {
