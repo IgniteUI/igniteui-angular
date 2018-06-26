@@ -320,11 +320,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set columnHiding(value) {
-        this._columnHiding = value;
-        if (this.gridAPI.get(this.id)) {
-            this.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
-                this.calculateGridSizes();
+        if (this._columnHiding !== value) {
+            this._columnHiding = value;
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+                if (this._ngAfterViewInitPaassed) {
+                    this.calculateGridSizes();
+                }
             }
         }
     }
@@ -408,11 +410,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set columnPinning(value) {
-        this._columnPinning = value;
-        if (this.gridAPI.get(this.id)) {
-            this.markForCheck();
-            if (this._ngAfterViewInitPaassed) {
-                this.calculateGridSizes();
+        if (this._columnPinning !== value) {
+            this._columnPinning = value;
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+                if (this._ngAfterViewInitPaassed) {
+                    this.calculateGridSizes();
+                }
             }
         }
     }
