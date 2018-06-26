@@ -296,8 +296,6 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     onToggleOpening() {
-        this.toggleDirective.collapsed = false;
-        this.cdr.detectChanges();
         this.parentElement.handleInputChange();
         this.onOpening.emit();
     }
