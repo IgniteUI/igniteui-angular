@@ -89,12 +89,14 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
+- `igxToggleAction` new `overlaySettings` input controls how applicable targets display content. Provides defaults with positioning based on the host element. The `closeOnOutsideClick` input is deprecated in favor of the new settings and will be removed in the future.
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
     - `igxGrid` changes:
         - sort API now accepts params of type `ISortingExpression` or `Array<ISortingExpression>`.
     - `igxToggle` changes
+        - `collapsed` now read-only, markup input is removed.
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
