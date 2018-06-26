@@ -12,7 +12,7 @@ import {
     Optional,
     Self
 } from "@angular/core";
-import { FormControlName, NgControl, NgModel } from "@angular/forms";
+import { AbstractControl, FormControlName, NgControl, NgModel } from "@angular/forms";
 import { Subscription } from "rxjs";
 import { IgxInputGroupComponent } from "../../input-group/input-group.component";
 
@@ -77,8 +77,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public onBlur(event) {
         this.inputGroup.isFocused = false;
         this._valid = IgxInputState.INITIAL;
-        if (this.ngModel) {
-            if (!this.ngModel.valid) {
+        if (this.ngControl) {
+            if (!this.ngControl.valid) {
                 this._valid = IgxInputState.INVALID;
             }
         } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
@@ -96,16 +96,15 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        if (this.nativeElement.hasAttribute("placeholder")) {
-            this.inputGroup.hasPlaceholder = true;
-        }
+        this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute("placeholder");
+        this.inputGroup.isDisabled = this.nativeElement.hasAttribute("disabled");
+        this.inputGroup.isRequired = this.nativeElement.hasAttribute("required");
 
-        if (this.nativeElement.hasAttribute("required")) {
-            this.inputGroup.isRequired = true;
-        }
-
-        if (this.nativeElement.hasAttribute("disabled")) {
-            this.inputGroup.isDisabled = true;
+        // Also check the control's validators for required
+        if (!this.inputGroup.isRequired && this.ngControl && this.ngControl.control.validator) {
+            // tslint:disable-next-line:no-object-literal-type-assertion
+            const validation = this.ngControl.control.validator({} as AbstractControl);
+            this.inputGroup.isRequired = validation && validation.required;
         }
 
         if ((this.nativeElement.value && this.nativeElement.value.length > 0) ||
@@ -167,7 +166,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             }
         }
 
-        return false;
+        return this.ngControl && !!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator;
     }
 
     public get focused() {
