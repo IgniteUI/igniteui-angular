@@ -80,7 +80,7 @@ export class IgxOverlayService {
         const elementScrollTop = element.scrollTop;
         contentElement.appendChild(element);
 
-        if (element.scrollTop) {
+        if (elementScrollTop) {
             element.scrollTop = elementScrollTop;
         }
 
