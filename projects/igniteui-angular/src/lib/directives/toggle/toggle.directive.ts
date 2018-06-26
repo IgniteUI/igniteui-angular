@@ -194,15 +194,8 @@ export class IgxToggleActionDirective implements OnInit {
 
     @HostListener('click')
     public onClick() {
-<<<<<<< HEAD
-        this.target.toggle(true);
-
-        if (this._handler) {
-            document.addEventListener('click', this._handler, true);
-=======
         if (this.closeOnOutsideClick !== undefined) {
             this._overlayDefaults.closeOnOutsideClick = this.closeOnOutsideClick;
->>>>>>> 2e4231efc0faee0399424dff6c4280216cfbfe2a
         }
         this.target.toggle(true, Object.assign({}, this._overlayDefaults, this.overlaySettings));
     }
