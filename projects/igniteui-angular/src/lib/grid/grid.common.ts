@@ -252,6 +252,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         super.onPointerDown(event);
 
+        this.column.grid.isColumnMoving = true;
+        this.column.grid.cdr.detectChanges();
+
         const args = {
             source: this.column
         };
@@ -292,6 +295,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         super.onPointerUp(event);
 
+        this.column.grid.isColumnMoving = false;
         this.column.grid.draggedColumn = null;
         this.column.grid.cdr.detectChanges();
     }
@@ -473,10 +477,16 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                     return;
             }
 
-            let col;
+            let col, index;
             const selectedCells = this.cms.column.grid.selectedCells;
             if (selectedCells && selectedCells.length > 0) {
                 col = selectedCells[0].column;
+                for (let i = 0; i < col.cells.length; i++) {
+                   if (col.cells[i].selected) {
+                       index = i;
+                       break;
+                    }
+                }
             }
 
             this.column.grid.moveColumn(this.cms.column, this.column);
@@ -485,7 +495,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.column.grid.cdr.detectChanges();
 
             if (col && selectedCells && selectedCells.length > 0) {
-                col.cells[selectedCells[0].rowIndex]._updateCellSelectionStatus();
+                col.cells[index]._updateCellSelectionStatus();
             }
         }
     }
