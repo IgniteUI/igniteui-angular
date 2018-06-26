@@ -106,6 +106,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Resizing'
         },
         {
+            link: '/gridColumnGroups',
+            icon: 'view_column',
+            name: 'Grid Column Groups'
+        },
+        {
             link: '/gridPerformance',
             icon: 'view_column',
             name: 'Grid Performance'
@@ -179,6 +184,11 @@ export class AppComponent implements OnInit {
             link: '/progressbar',
             icon: 'poll',
             name: 'Progress Indicators'
+        },
+        {
+            link: '/radio',
+            icon: 'pol',
+            name: 'Radio Group'
         },
         {
             link: '/slider',

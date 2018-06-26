@@ -40,26 +40,7 @@ export class ComboSampleComponent implements OnInit {
     public valueKeyVar = 'field';
     public currentDataType = '';
 
-    get valuesTemplate() {
-        return this.comboTemplate.selectedItems();
-    }
-    set valuesTemplate(values: Array<any>) {
-        this.comboTemplate.selectItems(values);
-    }
-
-    reactiveForm: FormGroup;
-
-    onSubmitReactive() {
-        console.log('model-based form submitted');
-        console.log(this.reactiveForm);
-    }
-
-    onSubmitTemplateBased() {
-        console.log('template-driven form submitted');
-        console.log(this.reactiveForm);
-    }
-
-    constructor(fb: FormBuilder) {
+    constructor() {
 
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
@@ -88,39 +69,6 @@ export class ComboSampleComponent implements OnInit {
                 });
                 this.initData = this.items;
             });
-        }
-
-        this.reactiveForm = fb.group({
-            'firstName': new FormControl('', Validators.required),
-            'password': ['', Validators.required],
-            'townCombo': [{ value: [this.items[0]], disabled: true }, Validators.required]
-        });
-
-    }
-
-    changeData(type) {
-        switch (type) {
-            case 'complex':
-                this.igxCombo.deselectAllItems();
-                this.valueKeyVar = 'field';
-                this.currentDataType = 'complex';
-                this.items = complex;
-                console.log(this.items, complex);
-                break;
-            case 'primitive':
-                this.igxCombo.deselectAllItems();
-                this.currentDataType = 'primitive';
-                this.igxCombo.groupKey = '';
-                this.valueKeyVar = '';
-                this.items = primitive;
-                console.log(this.items);
-                break;
-            default:
-                this.igxCombo.deselectAllItems();
-                this.valueKeyVar = 'field';
-                this.currentDataType = 'initial';
-                this.items = this.initData;
-                console.log(this.items);
         }
     }
 

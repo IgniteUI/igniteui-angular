@@ -2945,7 +2945,7 @@ export class LocalService {
     template: `
         <label id="mockID">Combo Label</label>
         <igx-combo #combo [placeholder]="'Products'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
-        [itemHeight]='40' [valueKey]="'product'" [width]="'400px'"
+        [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'"
         [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `,

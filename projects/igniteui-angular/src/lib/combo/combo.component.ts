@@ -534,14 +534,42 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return this._groupKey;
     }
 
+    /**
+     * An @Input property that enabled/disables filtering in the list. The default is `true`.
+     * ```html
+     *<igx-combo [filterable]="'false'">
+     * ```
+     */
     @Input()
     public filterable = true;
 
+    /**
+     * An @Input property that set aria-labelledby attribute
+     * ```html
+     *<igx-combo [ariaLabelledBy]="'label1'">
+     * ```
+     */
     @Input()
     public ariaLabelledBy: string;
 
+    /**
+     * An @Input property that enabled/disables combo. The default is `false`.
+     * ```html
+     *<igx-combo [disabled]="'true'">
+     * ```
+     */
     @Input()
     public disabled = false;
+
+    /**
+     * An @Input property that sets how the combo will be styled.
+     * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
+     * ```html
+     *<igx-combo [type]="'line'">
+     * ```
+     */
+    @Input()
+    public type = 'box';
 
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
@@ -1012,6 +1040,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         };
     }
 
+    /**
+     * @hidden
+     */
+    public handleClearItems(event) {
+        this.deselectAllItems(true);
+        event.stopPropagation();
+    }
+
     public toggle() {
         this.searchValue = '';
         this.dropdown.toggle(this.overlaySettings);
@@ -1059,11 +1095,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             [] :
             this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
         this.triggerSelectionChange(newSelection);
-    }
-
-    public handleClearItems(event) {
-        this.deselectAllItems(true);
-        event.stopPropagation();
     }
 }
 

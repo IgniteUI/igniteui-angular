@@ -19,6 +19,7 @@ export * from './lib/directives/focus/focus.directive';
 export * from './lib/directives/for-of/for_of.directive';
 export * from './lib/directives/layout/layout.directive';
 export * from './lib/directives/mask/mask.directive';
+export * from './lib/directives/radio/radio-group.directive';
 export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';

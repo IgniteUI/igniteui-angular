@@ -3,6 +3,7 @@
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
 - `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay.html)
+- Added **igxRadioGroup** directive. It allows better control over its child `igxRadio` components and support template-driven and reactive forms. 
 - Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
     For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
 - `igxGrid` filtering operands
@@ -88,15 +89,18 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
+- `igxToggleAction` new `overlaySettings` input controls how applicable targets display content. Provides defaults with positioning based on the host element. The `closeOnOutsideClick` input is deprecated in favor of the new settings and will be removed in the future.
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
     - `igxGrid` changes:
         - sort API now accepts params of type `ISortingExpression` or `Array<ISortingExpression>`.
     - `igxToggle` changes
+        - `collapsed` now read-only, markup input is removed.
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
+- The **deprecated** `igxForRemote` input for the `igxFor` directive is now removed. Setting the required `totalItemCount` property after receiving the first data chunk is enough to trigger the required functionality.
 
 ## 6.0.3
 - **igxGrid** exposing the `filteredSortedData` method publicly - returns the grid data with current filtering and sorting applied.

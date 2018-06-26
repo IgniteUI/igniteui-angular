@@ -19,17 +19,16 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
 import { IGridEditEventArgs } from './grid.component';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     preserveWhitespaces: false,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
+export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public column: IgxColumnComponent;
 
@@ -88,7 +87,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     get unpinnedColumnIndex(): number {
-        return this.grid.unpinnedColumns.indexOf(this.column);
+        return this.grid.unpinnedColumns.filter(c => !c.columnGroup).indexOf(this.column);
     }
 
     public get cellID() {
@@ -111,8 +110,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         }
     }
 
-    @autoWire(true)
-    set inEditMode(value: boolean) {
+     set inEditMode(value: boolean) {
         if (this.column.editable && value) {
             this.editValue = this.value;
             this.gridAPI.set_cell_inEditMode(this.gridID, this, value);
@@ -179,7 +177,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return this.inEditMode;
     }
 
-    @autoWire(true)
     get focused(): boolean {
         return this.isFocused;
     }
@@ -215,7 +212,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-grid__td--selected')
-    @autoWire(true)
     set selected(val: boolean) {
         this.isSelected = val;
     }
@@ -245,7 +241,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
-    private _updateCellSelectionStatus() {
+    public _updateCellSelectionStatus() {
         this._clearCellSelection();
         this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
         if (this.column.editable && this.previousCellEditMode) {
@@ -289,7 +285,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return false;
     }
 
-    @autoWire(true)
     public ngOnInit() {
         this.cellSelectionID = this.gridID + '-cells';
         this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
@@ -308,7 +303,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             });
     }
 
-    @autoWire(true)
     public update(val: any) {
         this.gridAPI.update_cell(this.gridID, this.cellID.rowIndex, this.cellID.columnID, val);
     }
@@ -362,7 +356,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     @HostListener('focus', ['$event'])
-    @autoWire()
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
@@ -389,7 +382,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     @HostListener('blur', ['$event'])
-    @autoWire()
     public onBlur(event) {
         this.isFocused = false;
         this.row.focused = false;
@@ -430,7 +422,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                 if (!this.column.pinned) {
                     this.row.virtDirRow.scrollPrev();
                 } else {
-                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.length - 1);
+                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.filter(c => !c.columnGroup).length - 1);
                 }
             }
 
@@ -476,7 +468,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         }
 
         event.preventDefault();
-        const visibleColumns = this.grid.visibleColumns;
+        const visibleColumns = this.grid.visibleColumns.filter(c => !c.columnGroup);
         const rowIndex = this.rowIndex;
         const columnIndex = this.visibleColumnIndex + 1;
 
