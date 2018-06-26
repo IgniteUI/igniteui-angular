@@ -1,0 +1,8 @@
+.sample-content {
+    flex-flow: column nowrap;
+}
+
+.radio-sample {
+    padding: 6px;
+}
+
