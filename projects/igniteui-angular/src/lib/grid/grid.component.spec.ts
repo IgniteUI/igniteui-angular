@@ -52,16 +52,13 @@ describe('IgxGrid - input properties', () => {
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             grid.height = '200px';
-            fix.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            requestAnimationFrame(() => {
-                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
-                expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-                verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
-                grid.width = '200px';
-            });
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
+            verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
+            grid.width = '200px';
             return fix.whenStable();
         }).then(() => {
             setTimeout(() => {
@@ -99,7 +96,7 @@ describe('IgxGrid - input properties', () => {
                 - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
                 expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
                 done();
-             }, 500);
+             }, 250);
         });
     });
 
