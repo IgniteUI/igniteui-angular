@@ -24,6 +24,10 @@ export class IgxGridAPIService {
         this.state.set(grid.id, grid);
     }
 
+    public unsubscribe(grid: IgxGridComponent) {
+        this.state.delete(grid.id);
+    }
+
     public get(id: string): IgxGridComponent {
         return this.state.get(id);
     }
