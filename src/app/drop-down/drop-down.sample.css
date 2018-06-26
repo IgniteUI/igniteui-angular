@@ -11,7 +11,5 @@
 }
 
 button {
-    right: 12;
-    bottom: 12;
-    position: absolute;
+    margin: 5px;
 }
