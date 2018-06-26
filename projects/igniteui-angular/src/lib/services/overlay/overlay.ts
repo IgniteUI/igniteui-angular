@@ -68,7 +68,6 @@ export class IgxOverlayService {
         info.settings = settings;
 
         this.onOpening.emit({ id, componentRef: info.componentRef });
-        console.log('Opening ' + id);
 
         info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
         if (!info.componentRef) {
@@ -97,7 +96,6 @@ export class IgxOverlayService {
         }
 
         this.onClosing.emit({ id, componentRef: info.componentRef });
-        console.log('Closing ' + id);
         info.settings.scrollStrategy.detach();
         this.playCloseAnimation(info);
     }
@@ -238,7 +236,6 @@ export class IgxOverlayService {
 
         animationPlayer.onDone(() => {
             this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
-            console.log('Opened ' + info.id);
             animationPlayer.reset();
         });
 
@@ -302,7 +299,6 @@ export class IgxOverlayService {
                 this._overlayElement = null;
             }
             this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
-            console.log('Closed ' + info.id);
         });
 
         animationPlayer.play();
