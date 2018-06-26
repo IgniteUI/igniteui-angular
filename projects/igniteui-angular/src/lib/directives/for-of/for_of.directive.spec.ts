@@ -827,17 +827,16 @@ describe('IgxVirtual directive - simple template', () => {
 
     it('should correctly scroll to the last element when using the scrollTo method', async(() => {
         const fix = TestBed.createComponent(VirtualComponent);
-        fix.componentRef.hostView.detectChanges();
         fix.detectChanges();
 
         const displayContainer: HTMLElement = fix.nativeElement.querySelector('igx-display-container');
 
         /**  Scroll to the last 49999 row. */
         fix.componentInstance.parentVirtDir.scrollTo(49999);
-        fix.detectChanges();
 
         /** Timeout for scroll event to trigger during test */
         setTimeout(() => {
+            fix.detectChanges();
             const rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < 8; i++) {
                 expect(rowsRendered[i].children[1].textContent)
