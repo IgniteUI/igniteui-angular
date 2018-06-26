@@ -56,6 +56,11 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/combo',
+            icon: 'arrow_drop_down_circle',
+            name: 'Combo'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'
@@ -99,6 +104,11 @@ export class AppComponent implements OnInit {
             link: '/gridColumnResizing',
             icon: 'view_column',
             name: 'Grid Column Resizing'
+        },
+        {
+            link: '/gridColumnGroups',
+            icon: 'view_column',
+            name: 'Grid Column Groups'
         },
         {
             link: '/gridPerformance',
@@ -174,6 +184,11 @@ export class AppComponent implements OnInit {
             link: '/progressbar',
             icon: 'poll',
             name: 'Progress Indicators'
+        },
+        {
+            link: '/radio',
+            icon: 'pol',
+            name: 'Radio Group'
         },
         {
             link: '/slider',
