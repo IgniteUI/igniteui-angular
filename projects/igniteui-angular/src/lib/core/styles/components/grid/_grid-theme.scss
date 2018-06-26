@@ -369,7 +369,7 @@
     );
 
     $grouparea-padding: (
-        comfortable: rem(16px) rem(24px),
+        comfortable: rem(8px) rem(24px),
         cosy: rem(8px) rem(16px),
         compact: rem(4px) rem(12px)
     );
@@ -385,7 +385,7 @@
 
     %grid-display {
         display: grid;
-        grid-template-rows: auto auto 1fr auto;
+        grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 1fr;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
@@ -425,7 +425,7 @@
     }
 
     %grid-thead {
-        grid-row: 2;
+        grid-row: 3;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         z-index: 2;
 
@@ -453,7 +453,7 @@
 
     %grid-tbody {
         position: relative;
-        grid-row: 3;
+        grid-row: 4;
         background: --var($theme, 'content-background');
         color: --var($theme, 'content-text-color');
         overflow: hidden;
@@ -469,9 +469,9 @@
     }
 
     %grid-scroll {
+        grid-row: 6;
         display: flex;
         flex-flow: row nowrap;
-        grid-row: 6;
         width: 100%;
         background: --var($theme, 'header-background');
     }
@@ -984,15 +984,15 @@
     }
 
     %igx-grid__grouparea {
-        grid-row: 1;
-        border-bottom: 1px solid --var($theme, 'row-border-color');
-        z-index: 2;
-        background: --var($theme, 'grouparea-background');
+        grid-row: 2;
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: map-get($grouparea-padding, 'comfortable');
         flex-wrap: wrap;
+        border-bottom: 1px solid --var($theme, 'row-border-color');
+        background: --var($theme, 'grouparea-background');
+        padding: map-get($grouparea-padding, 'comfortable');
+        z-index: 2;
 
         &:focus {
             outline: transparent;
