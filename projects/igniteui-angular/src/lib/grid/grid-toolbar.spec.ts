@@ -37,6 +37,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(getToolbar()).toBe(null);
 
         grid.showToolbar = true;
+        grid.toolbarTitle = 'Grid Toobar Title';
         fixture.detectChanges();
 
         expect(getToolbar()).not.toBe(null);
@@ -51,26 +52,23 @@ describe('IgxGrid - Grid Toolbar', () => {
         const someTitle = 'Grid Toobar Title';
 
         grid.showToolbar = true;
+        grid.toolbarTitle = someTitle;
         fixture.detectChanges();
 
         const gridToolbar = getToolbar();
         const gridToolbarTitle = gridToolbar.query(By.css('.igx-grid-toolbar__title')).nativeElement;
-
-        expect(gridToolbarTitle.innerText).toBe('');
-
-        grid.toolbarTitle = someTitle;
-        fixture.detectChanges();
 
         expect(gridToolbarTitle.innerText).toBe(someTitle);
 
         grid.toolbarTitle = '';
         fixture.detectChanges();
 
-        expect(gridToolbarTitle.innerText).toBe('');
+        expect(getToolbar()).toBe(null);
     });
 
     it('testing main export button visibility', () => {
         grid.showToolbar = true;
+        grid.toolbarTitle = 'Grid Toobar Title';
         fixture.detectChanges();
 
         const gridToolbar = getToolbar();
@@ -105,6 +103,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
     it('testing main export button text', () => {
         grid.showToolbar = true;
+        grid.toolbarTitle = 'Grid Toobar Title';
         fixture.detectChanges();
 
         const gridToolbar = getToolbar();
@@ -125,6 +124,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
     it('testing export to Excel button visibility', () => {
         grid.showToolbar = true;
+        grid.toolbarTitle = 'Grid Toobar Title';
         fixture.detectChanges();
 
         expect(getExportButton()).toBe(null);
@@ -162,6 +162,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
     it('testing export to CSV button visibility', () => {
         grid.showToolbar = true;
+        grid.toolbarTitle = 'Grid Toobar Title';
         grid.exportCsv = true;
         fixture.detectChanges();
 
@@ -308,6 +309,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
     it('does not show Column Hiding button by default.', () => {
         grid.showToolbar = true;
+        grid.toolbarTitle = 'Grid Toobar Title';
         fixture.detectChanges();
         expect(grid.toolbar.columnHidingUI).toBeUndefined();
 
