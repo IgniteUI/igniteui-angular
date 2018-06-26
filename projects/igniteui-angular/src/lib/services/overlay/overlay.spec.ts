@@ -162,30 +162,32 @@ describe('igxOverlay', () => {
             spyOn(overlayInstance.onOpening, 'emit');
 
             let id = overlayInstance.show(SimpleDynamicComponent);
+            tick();
+
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
             const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
             expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
 
-            tick();
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
             overlayInstance.hide(id);
+
+            tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
 
-            tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
 
-
             id = overlayInstance.show(fix.componentInstance.item);
+            tick();
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ id, componentRef: null });
-            tick();
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id, componentRef: null });
+
             overlayInstance.hide(id);
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id, componentRef: null });
             tick();
+            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id, componentRef: null });
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id, componentRef: null });
         }));
 
@@ -990,7 +992,7 @@ describe('igxOverlay', () => {
 
             const dummy = document.createElement('div');
             dummy.setAttribute('style',
-                'width:60px; height:60px; color:green; position: absolute; top: 850px; left: 1700px;');
+                'width:60px; height:60px; color:green; position: absolute; top: 3000px; left: 3000px;');
             document.body.appendChild(dummy);
 
             const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('button')[0];
