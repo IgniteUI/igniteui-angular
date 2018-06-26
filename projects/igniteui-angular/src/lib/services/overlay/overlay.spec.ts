@@ -37,7 +37,7 @@ function clearOverlay() {
     document.documentElement.scrollTop = 0;
     document.documentElement.scrollLeft = 0;
 }
-fdescribe('igxOverlay', () => {
+describe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -152,7 +152,7 @@ fdescribe('igxOverlay', () => {
             expect(overlayDiv).toBeUndefined();
         }));
 
-        fit('OVERLAY SERVICE should properly emit events', fakeAsync(() => {
+        it('OVERLAY SERVICE should properly emit events', fakeAsync(() => {
             const fix = TestBed.createComponent(SimpleRefComponent);
             fix.detectChanges();
             const overlayInstance = fix.componentInstance.overlay;
