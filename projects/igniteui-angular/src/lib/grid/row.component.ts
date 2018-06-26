@@ -150,4 +150,8 @@ export class IgxGridRowComponent implements DoCheck {
             this.checkboxElement.checked = this.isSelected;
         }
     }
+
+    notGroups(arr) {
+        return arr.filter(c => !c.columnGroup);
+    }
 }
