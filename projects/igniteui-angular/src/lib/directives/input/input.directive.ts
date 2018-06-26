@@ -166,7 +166,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             }
         }
 
-        return this.ngControl && !!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator;
+        return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
     }
 
     public get focused() {
