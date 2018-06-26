@@ -385,7 +385,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
-        col.pinned ? col.unpin() : col.pin();
+        col.pinned ? col.pinned = false : col.pinned = true;
     }
 
     onColumnMovingStart(event) {

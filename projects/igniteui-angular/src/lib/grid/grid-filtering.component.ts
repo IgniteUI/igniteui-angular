@@ -64,6 +64,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     public filteringLogicOptions: any[];
     public isSecondConditionVisible = false;
     protected chunkLoaded = new Subscription();
+    protected columnMoving = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
     private _secondExpression = null;
     private _overlaySettings: OverlaySettings = {
@@ -98,11 +99,19 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     public ngOnInit() {
-        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
+        const collapse = () => {
             if (!this.toggleDirective.collapsed) {
                 this.toggleDirective.close(true);
                 this.refresh();
             }
+        };
+
+        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
+            collapse();
+        });
+
+        this.columnMoving = this.gridAPI.get(this.gridID).onColumnMoving.subscribe(() => {
+            collapse();
         });
     }
 
@@ -112,6 +121,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
 
     public ngOnDestroy() {
         this.chunkLoaded.unsubscribe();
+        this.columnMoving.unsubscribe();
     }
 
     public refresh() {

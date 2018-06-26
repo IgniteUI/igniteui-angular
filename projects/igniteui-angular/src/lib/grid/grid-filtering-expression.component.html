@@ -23,7 +23,7 @@
     </igx-datePicker>
 </ng-template>
 
-<select #select (change)="selectionChanged($event.target.value)">
+<select #select [attr.draggable]="false" (change)="selectionChanged($event.target.value)">
     <option
         *ngIf="column.dataType === 'boolean'"
         [value]="booleanFilterAll">
