@@ -309,7 +309,7 @@ export class IgxOverlayService {
             content.classList.add('igx-overlay__content');
         }
 
-        content.addEventListener('scroll', (ev:Event) => {
+        content.addEventListener('scroll', (ev: Event) => {
             ev.stopPropagation();
         });
 
