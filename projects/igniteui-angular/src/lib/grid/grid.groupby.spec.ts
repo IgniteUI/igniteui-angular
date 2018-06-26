@@ -48,7 +48,7 @@ describe('IgxGrid - GroupBy', () => {
             setTimeout(() => {
                 grid.cdr.detectChanges();
                 navigateToIndex(grid, nextRow.index, rowEndIndex, cb, colIndex);
-            });
+            }, 10);
         } else {
             // else wait for chunk to load.
             grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
@@ -666,14 +666,14 @@ describe('IgxGrid - GroupBy', () => {
                 expect(row.focused).toBe(true);
                 expect(cell.selected).toBe(true);
                 done();
-            }, 10);
+            }, 50);
         };
         setTimeout(() => {
             const cell = grid.getCellByColumn(2, 'Released');
             cell.onFocus(new Event('focus'));
             fix.detectChanges();
             navigateToIndex(grid, 0, 9, cbFunc, 4);
-        }, 10);
+        }, 50);
     });
 
     it('should persist last selected cell column index when navigation up through group rows.', (done) => {
@@ -1395,45 +1395,6 @@ describe('IgxGrid - GroupBy', () => {
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     });
 
-    it('should reorder groups when reordering chip', (done) => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        const grid = fix.componentInstance.instance;
-        fix.detectChanges();
-        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
-
-        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        // Disable chip animations
-        chipComponents.forEach((chip) => {
-            chip.componentInstance.dragDir.animateOnRelease = false;
-        });
-
-        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 50);
-        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 50);
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
-
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
-
-            fix.detectChanges();
-            const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
-            checkChips(chipsElems, grid.groupingExpressions, grid.sortingExpressions);
-            // verify groups
-            const groupRows = grid.groupsRowList.toArray();
-            checkGroups(groupRows,
-                ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
-                    false, 'Ignite UI for Angular', false, null, '', true, null, true],
-                grid.groupingExpressions);
-
-            done();
-        });
-    });
-
     it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', (done) => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -1643,6 +1604,45 @@ describe('IgxGrid - GroupBy', () => {
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows[0].expanded).toEqual(true);
         expect(groupRows[1].expanded).toEqual(true);
+    });
+
+    it('should reorder groups when reordering chip', (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+
+        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        // Disable chip animations
+        chipComponents.forEach((chip) => {
+            chip.componentInstance.dragDir.animateOnRelease = false;
+        });
+
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 50);
+        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 50);
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+
+            fix.detectChanges();
+            const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
+            checkChips(chipsElems, grid.groupingExpressions, grid.sortingExpressions);
+            // verify groups
+            const groupRows = grid.groupsRowList.toArray();
+            checkGroups(groupRows,
+                ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
+                    false, 'Ignite UI for Angular', false, null, '', true, null, true],
+                grid.groupingExpressions);
+
+            done();
+        });
     });
 
     it('should remove expansion state when reordering chips', (done) => {
