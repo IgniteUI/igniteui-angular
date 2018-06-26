@@ -98,6 +98,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
+- The **deprecated** `igxForRemote` input for the `igxFor` directive is now removed. Setting the required `totalItemCount` property after receiving the first data chunk is enough to trigger the required functionality.
 
 ## 6.0.3
 - **igxGrid** exposing the `filteredSortedData` method publicly - returns the grid data with current filtering and sorting applied.
