@@ -160,7 +160,7 @@ describe('IgxGrid - CRUD operations', () => {
         // Update an existing row
         grid.updateRow('change', 0);
 
-        const row = grid.rowList[0];
+        const row = grid.rowList.toArray()[0];
         const args: IGridEditEventArgs = {
             row,
             cell: null,
@@ -170,7 +170,6 @@ describe('IgxGrid - CRUD operations', () => {
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-
             expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
             expect(grid.rowList.first.cells.first.value).toEqual(200);
             expect(grid.data[0].index).toEqual(200);

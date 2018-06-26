@@ -5,20 +5,22 @@ import {
     HostBinding,
     HostListener,
     Inject,
-    Input } from '@angular/core';
+    Input
+} from '@angular/core';
 import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component';
 
 /**
  * The `<igx-drop-down-item> is a container intended for row items in
  * a `<igx-drop-down>` container.
  */
-@Component({
-    selector: 'igx-drop-down-item',
-    templateUrl: 'drop-down-item.component.html'
-})
 
-export class IgxDropDownItemComponent {
-    private _isFocused = false;
+export class IgxDropDownItemBase {
+    protected _isFocused = false;
+    public get itemID() {
+        return;
+    }
+
+    public itemData: any;
 
     @HostBinding('class.igx-drop-down__item')
     get itemStyle(): boolean {
@@ -52,7 +54,7 @@ export class IgxDropDownItemComponent {
         }
 
         if (value && !this.dropDown.collapsed) {
-            this.elementRef.nativeElement.focus();
+            this.elementRef.nativeElement.focus({ preventScroll: true });
         }
         this._isFocused = value;
     }
@@ -103,8 +105,8 @@ export class IgxDropDownItemComponent {
     }
 
     constructor(
-        @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
-        private elementRef: ElementRef
+        public dropDown: any,
+        protected elementRef: ElementRef
     ) { }
 
     @HostListener('click', ['$event'])
@@ -114,53 +116,25 @@ export class IgxDropDownItemComponent {
             focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
             return;
         }
+        this.dropDown.navigateItem(this.index);
+        this.dropDown.selectItem(this);
+    }
 
+    markItemSelected() {
         this.dropDown.setSelectedItem(this.index);
         this.dropDown.close();
     }
+}
 
-    @HostListener('keydown.Escape', ['$event'])
-    onEscapeKeyDown(event) {
-        this.dropDown.close();
-    }
-
-    @HostListener('keydown.Space', ['$event'])
-    onSpaceKeyDown(event) {
-        this.dropDown.setSelectedItem(this.index);
-        this.dropDown.close();
-    }
-
-    @HostListener('keydown.Enter', ['$event'])
-    onEnterKeyDown(event) {
-        this.dropDown.setSelectedItem(this.index);
-        this.dropDown.close();
-    }
-
-    @HostListener('keydown.ArrowDown', ['$event'])
-    onArrowDownKeyDown(event) {
-        this.dropDown.focusNext();
-        event.stopPropagation();
-        event.preventDefault();
-    }
-
-    @HostListener('keydown.ArrowUp', ['$event'])
-    onArrowUpKeyDown(event) {
-        this.dropDown.focusPrev();
-        event.stopPropagation();
-        event.preventDefault();
-    }
-
-    @HostListener('keydown.End', ['$event'])
-    onEndKeyDown(event) {
-        this.dropDown.focusLast();
-        event.stopPropagation();
-        event.preventDefault();
-    }
-
-    @HostListener('keydown.Home', ['$event'])
-    onHomeKeyDown(event) {
-        this.dropDown.focusFirst();
-        event.stopPropagation();
-        event.preventDefault();
+@Component({
+    selector: 'igx-drop-down-item',
+    templateUrl: 'drop-down-item.component.html'
+})
+export class IgxDropDownItemComponent extends IgxDropDownItemBase {
+    constructor(
+        @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
+        protected elementRef: ElementRef
+    ) {
+        super(dropDown, elementRef);
     }
 }

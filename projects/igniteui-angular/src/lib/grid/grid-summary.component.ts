@@ -1,21 +1,18 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, DoCheck, HostBinding, HostListener, Input, OnDestroy, OnInit
+    Component, DoCheck, HostBinding, Input, OnInit
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
-import { autoWire, IGridBus } from './grid.common';
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-summary',
     templateUrl: './grid-summary.component.html'
 })
-export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, AfterContentInit {
+export class IgxGridSummaryComponent implements OnInit, DoCheck, AfterContentInit {
 
     fieldName: string;
 
@@ -82,7 +79,6 @@ export class IgxGridSummaryComponent implements IGridBus, OnInit, DoCheck, After
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
-    @autoWire(true)
     public ngOnInit() {
     }
 

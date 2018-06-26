@@ -2,7 +2,7 @@
     <app-page-header title="Dropdown menu" description="description for dropdown menu"></app-page-header>
     <section class="sample-content">
         <button #button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle</button>
-        <igx-drop-down (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+        <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
             <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
                 <div class="igx-drop-down__item-template">
                     {{ item.field }}
