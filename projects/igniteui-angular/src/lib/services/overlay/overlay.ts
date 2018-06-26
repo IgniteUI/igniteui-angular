@@ -217,7 +217,7 @@ export class IgxOverlayService {
     // TODO: refactor playAnimation methods
     private playOpenAnimation(info: OverlayInfo) {
         const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
-        const animationPlayer = animationBuilder.create(info);
+        const animationPlayer = animationBuilder.create(info.elementRef.nativeElement);
 
         if (info.settings.modal) {
             const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
