@@ -1,10 +1,10 @@
 # igx-combo
-The igx-combo provides a powerful input, combining features of the basic HTML input, select and the IgniteUI for Angular igx-drop-down controls.
-Control provides easy filtering and selection of multiple items, grouping and adding custom values to the list.
-Templates for different parts of the control can be defined, including items, header and footer, etc.
-Control is integrated with Template Driven and Reactive Forms.
+The igx-combo component provides a powerful input, combining the features of the basic HTML input, select and the IgniteUI for Angular igx-drop-down components.
+The combo component provides easy filtering and selection of multiple items, grouping and adding custom values to the dropdown list.
+Custom templates could be provided in order to customize different areas of the components, such as items, header, footer, etc.
+The combo component is integrated with the Template Driven and Reactive Forms.
 The igx-combo exposes intiutive keyboard navigation and it is accessibility compliant.
-Drop Down items are virtualized, which guarantees smooth work, even combo is bound to data source with a lot of items.
+Drop Down items are virtualized, which guarantees smooth work, even if the igx-combo is bound to data source with a lot of items.
 
 
 `igx-combo` is a component.  
@@ -14,16 +14,42 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 Basic usage of `igx-combo` bound to a local data source, defining `valueKey` and `displayKey`:
 
 ```html
-<igx-combo [data]="localData" [valueKey]="'ProductID'" [displayKey]="'ProductName'">
-</igx-combo>
+<igx-combo [data]="localData" [valueKey]="'ProductID'" [displayKey]="'ProductName'"></igx-combo>
 ```
 
-Remote binding, defining `valueKey` and `displayKey`, and exposing `onDataPreLoad` that allows to load new chunk of remote data to the combo:
+Remote binding, defining `valueKey` and `displayKey`, and exposing `onDataPreLoad` that allows to load new chunk of remote data to the combo (see the sample above as a reference):
 
 ```html
-<igx-combo [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [valueKey]="'ProductID'" [displayKey]="'ProductName'" >
-</igx-combo>
+<igx-combo [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [valueKey]="'ProductID'" [displayKey]="'ProductName'" ></igx-combo>
 ```
+
+```typesciprt
+public ngOnInit() {
+    this.remoteData = this.remoteService.remoteData;
+}
+
+public ngAfterViewInit() {
+    this.remoteService.getData(this.combo.virtualizationState, (data) => {
+        this.combo.totalItemCount = data.length;
+    });
+}
+
+public dataLoading(evt) {
+        if (this.prevRequest) {
+            this.prevRequest.unsubscribe();
+        }
+
+        this.prevRequest = this.remoteService.getData(this.combo.virtualizationState, () => {
+            this.cdr.detectChanges();
+            this.combo.triggerCheck();
+        });
+    }
+```
+
+> Note: In order to have combo with remote data, what you need is to have a service that retrives data chunks from a server. 
+What the combo exposes is a `virtualizationState` property that gives state of the combo - first index and the number of items that needs to be loaded.
+The service, should inform the combo for the total items that are on the server - using the `totalItemCount` property.
+
 
 ## Features
 
@@ -200,6 +226,7 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 |  `collapsed`             | gets drop down state                              | boolean                     |
 |  `disabled`              | defines whether the control is active or not      | boolean                     |
 |  `ariaLabelledBy`        | defines label ID related to combo                 | boolean                     |
+|  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
 
 ### Outputs
 
