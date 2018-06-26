@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
@@ -29,11 +29,13 @@ describe('IgxInput', () => {
                 DisabledInputComponent,
                 RequiredInputComponent,
                 RequiredTwoWayDataBoundInputComponent,
-                DataBoundDisabledInputComponent
+                DataBoundDisabledInputComponent,
+                ReactiveFormComponent
             ],
             imports: [
                 IgxInputGroupModule,
-                FormsModule
+                FormsModule,
+                ReactiveFormsModule
             ]
         })
         .compileComponents();
@@ -192,6 +194,20 @@ describe('IgxInput', () => {
         const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
         testRequiredValidation(inputElement, fixture);
     });
+
+    it('Should work properly with reactive forms validation.', () => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+
+        fixture.debugElement.componentInstance.markAsTouched();
+        fixture.detectChanges();
+
+        const invalidInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--invalid`);
+        expect(invalidInputGroups.length).toBe(4);
+
+        const requiredInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--required`);
+        expect(requiredInputGroups.length).toBe(4);
+    });
 });
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -330,6 +346,55 @@ class DataBoundDisabledInputComponent {
     @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
 
     public isDisabled = false;
+}
+
+@Component({
+    template:
+    `<form class="wrapper" [formGroup]="form">
+        <section>
+        <igx-input-group>
+            <label igxLabel>single line</label>
+            <input type="text" formControlName="str" igxInput>
+        </igx-input-group>
+        <br>
+        <igx-input-group>
+            <label igxLabel>multi line</label>
+            <textarea type="text" formControlName="textarea" igxInput></textarea>
+        </igx-input-group>
+        <br>
+        <igx-input-group>
+            <label igxLabel>password</label>
+            <input type="password" formControlName="password" igxInput>
+        </igx-input-group>
+        </section>
+        <section>
+        <igx-input-group>
+            <label igxLabel>1000</label>
+            <input type="number" formControlName="num" igxInput igxMask="###">
+        </igx-input-group>
+        </section>
+    </form>`
+})
+class ReactiveFormComponent {
+    form = this.fb.group({
+        str: ['', Validators.required],
+        textarea: ['', Validators.required],
+        password: ['', Validators.required],
+        num: [null, Validators.required]
+    });
+
+    constructor(private fb: FormBuilder) { }
+
+    public markAsTouched() {
+        if (!this.form.valid) {
+            for (const key in this.form.controls) {
+                if (this.form.controls[key]) {
+                    this.form.controls[key].markAsTouched();
+                    this.form.controls[key].updateValueAndValidity();
+                }
+            }
+        }
+    }
 }
 
 function testRequiredValidation(inputElement, fixture) {
