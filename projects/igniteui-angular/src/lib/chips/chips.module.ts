@@ -5,7 +5,7 @@ import { cloneArray } from '../core/utils';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
-import { IgxIconModule } from '../icon';
+import { IgxIconModule } from '../icon/index';
 import { IgxConnectorDirective } from './connector.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';

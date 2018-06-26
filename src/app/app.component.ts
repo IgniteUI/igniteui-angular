@@ -106,6 +106,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Resizing'
         },
         {
+            link: '/gridColumnGroups',
+            icon: 'view_column',
+            name: 'Grid Column Groups'
+        },
+        {
             link: '/gridPerformance',
             icon: 'view_column',
             name: 'Grid Performance'
