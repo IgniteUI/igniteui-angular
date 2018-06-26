@@ -742,7 +742,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /** If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize */
     protected addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
-        if (!this.igxForOf || elemIndex > this.igxForOf.length) {
+        if (!this.isRemote && (!this.igxForOf || elemIndex > this.igxForOf.length)) {
             return;
         }
 
