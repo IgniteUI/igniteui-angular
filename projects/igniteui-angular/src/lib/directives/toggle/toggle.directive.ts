@@ -30,6 +30,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         take(1)
     ];
     private _overlayClosedSub: Subscription;
+    private _overlayClosingSub: Subscription;
 
     @Output()
     public onOpened = new EventEmitter();
@@ -86,7 +87,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
-
+        this._overlayClosingSub = this.overlayService.onClosing
+            .pipe(...this._overlaySubFilter)
+            .subscribe(this.overlayClosing);
         if (fireEvents) {
             this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
                 this.onOpened.emit();
@@ -98,7 +101,11 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (this.collapsed) { return; }
 
         if (fireEvents) {
-            this.onClosing.emit();
+            if (this._overlayId !== undefined) {
+                this._overlayClosingSub.unsubscribe();
+            } else {
+                this.onClosing.emit();
+            }
         }
 
         if (this._overlayId !== undefined) {
@@ -136,6 +143,12 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (!this.collapsed && this._overlayId) {
             this.overlayService.hide(this._overlayId);
         }
+        if (!this._overlayClosedSub.closed) {
+            this._overlayClosedSub.unsubscribe();
+        }
+        if (!this._overlayClosingSub.closed) {
+            this._overlayClosingSub.unsubscribe();
+        }
     }
 
     private overlayClosed = () => {
@@ -143,6 +156,12 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         // this.cdr.detectChanges();
         this.onClosed.emit();
     }
+
+    private overlayClosing = () => {
+        // this.cdr.detectChanges();
+        this.onClosing.emit();
+    }
+
 }
 
 @Directive({
