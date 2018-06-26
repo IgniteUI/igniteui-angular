@@ -79,7 +79,10 @@ export class IgxOverlayService {
         this.OverlayElement.appendChild(wrapperElement);
         const elementScrollTop = element.scrollTop;
         contentElement.appendChild(element);
-        element.scrollTop = elementScrollTop;
+
+        if (elementScrollTop) {
+            element.scrollTop = elementScrollTop;
+        }
 
         if (componentRef) {
             //  if we are positioning component this is first time it gets visible
@@ -305,6 +308,10 @@ export class IgxOverlayService {
         } else {
             content.classList.add('igx-overlay__content');
         }
+
+        content.addEventListener('scroll', (ev: Event) => {
+            ev.stopPropagation();
+        });
 
         wrapperElement.appendChild(content);
         return content;
