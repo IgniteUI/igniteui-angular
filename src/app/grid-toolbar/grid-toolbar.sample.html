@@ -31,10 +31,12 @@
 
             <br><igx-switch [(ngModel)]="this.igxGrid1.showToolbar">Toolbar</igx-switch>
             <br><igx-switch [(ngModel)]="this.igxGrid1.columnHiding">Column Hiding</igx-switch>
+            <br><igx-switch [(ngModel)]="this.igxGrid1.columnPinning">Column Pinning</igx-switch>
             <br><igx-switch [(ngModel)]="this.igxGrid1.exportExcel">Export Excel</igx-switch>
             <br><igx-switch [(ngModel)]="this.igxGrid1.exportCsv">Export CSV</igx-switch>
             <br><input type="text" placeholder="" [(ngModel)]="this.igxGrid1.toolbarTitle" />
             <br><button (click)="grid1.toolbar.toggleColumnHidingUI()">Toggle Column Hiding UI</button>
+            <br><button (click)="grid1.toolbar.toggleColumnPinningUI()">Toggle Column Pinning UI</button>
 
             <!--
             <div class="radio-group">
