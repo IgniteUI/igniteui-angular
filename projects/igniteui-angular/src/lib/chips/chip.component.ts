@@ -197,7 +197,7 @@ export class IgxChipComponent implements AfterViewInit {
             return;
         }
 
-        if (event.key === 'Delete') {
+        if ((event.key === 'Delete' || event.key === 'Del') && this.removable) {
             this.onRemove.emit({
                 owner: this
             });
