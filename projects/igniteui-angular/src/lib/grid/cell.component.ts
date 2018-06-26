@@ -87,7 +87,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     get unpinnedColumnIndex(): number {
-        return this.grid.unpinnedColumns.indexOf(this.column);
+        return this.grid.unpinnedColumns.filter(c => !c.columnGroup).indexOf(this.column);
     }
 
     public get cellID() {
@@ -241,7 +241,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
-    private _updateCellSelectionStatus() {
+    public _updateCellSelectionStatus() {
         this._clearCellSelection();
         this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
         if (this.column.editable && this.previousCellEditMode) {
@@ -422,7 +422,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (!this.column.pinned) {
                     this.row.virtDirRow.scrollPrev();
                 } else {
-                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.length - 1);
+                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.filter(c => !c.columnGroup).length - 1);
                 }
             }
 
@@ -468,7 +468,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         event.preventDefault();
-        const visibleColumns = this.grid.visibleColumns;
+        const visibleColumns = this.grid.visibleColumns.filter(c => !c.columnGroup);
         const rowIndex = this.rowIndex;
         const columnIndex = this.visibleColumnIndex + 1;
 

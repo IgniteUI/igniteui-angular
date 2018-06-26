@@ -1,12 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../calendar/index';
-import { KEYCODES } from '../core/utils';
-import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
@@ -116,7 +113,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         const col = grid.getColumnByName('ID');
 
-        col.pin();
+        col.pinned = true;
         fix.detectChanges();
 
         // verify column is pinned
@@ -130,7 +127,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.pinnedWidth).toEqual(600);
         expect(grid.unpinnedWidth).toEqual(200);
 
-        col.unpin();
+        col.pinned = false;
 
         // verify column is unpinned
         expect(col.pinned).toBe(false);
@@ -152,7 +149,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(col.index).toEqual(2);
 
         // unpin
-        col.unpin();
+        col.pinned = false;
         fix.detectChanges();
 
         // check props
@@ -174,13 +171,13 @@ describe('IgxGrid - Column Pinning ', () => {
         const grid = fix.componentInstance.instance;
 
         let col = grid.getColumnByName('ID');
-        col.pin();
+        col.pinned = true;
         fix.detectChanges();
 
         expect(col.visibleIndex).toEqual(0);
 
         col = grid.getColumnByName('City');
-        col.pin();
+        col.pinned = true;
 
         fix.detectChanges();
         expect(col.visibleIndex).toEqual(0);
@@ -317,7 +314,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[3].parent.name).toEqual('igx-display-container');
     });
 
-    it('should allow unpinning even if new cols cannot be pinned', () => {
+    xit('should allow unpinning even if new cols cannot be pinned', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -332,7 +329,6 @@ describe('IgxGrid - Column Pinning ', () => {
         tryPin = grid.pinColumn('ContactTitle');
         fix.detectChanges();
         expect(tryPin).toEqual(false);
-
         grid.unpinColumn('ContactName');
         fix.detectChanges();
 
@@ -353,8 +349,8 @@ describe('IgxGrid - Column Pinning ', () => {
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        grid.getColumnByName('CompanyName').pin();
-        grid.getColumnByName('ContactName').pin();
+        grid.getColumnByName('CompanyName').pinned = true;
+        grid.getColumnByName('ContactName').pinned = true;
 
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -438,8 +434,8 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         const mockEvent = { preventDefault: () => { } };
         const grid = fix.componentInstance.instance;
-        grid.getColumnByName('CompanyName').pin();
-        grid.getColumnByName('ContactName').pin();
+        grid.getColumnByName('CompanyName').pinned = true;
+        grid.getColumnByName('ContactName').pinned = true;
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
@@ -471,7 +467,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         const col = grid.getColumnByName('CompanyName');
-        col.pin();
+        col.pinned = true;
         fix.detectChanges();
         expect(grid.pinnedColumns.length).toEqual(1);
         expect(grid.unpinnedColumns.length).toEqual(9);
@@ -506,7 +502,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const col = grid.getColumnByName('CompanyName');
 
         col.hidden = true;
-        col.pin();
+        col.pinned = true;
         fix.detectChanges();
 
         expect(grid.pinnedColumns.length).toEqual(0);
@@ -527,7 +523,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const col1 = grid.getColumnByName('CompanyName');
         const col2 = grid.getColumnByName('ID');
 
-        col1.pin();
+        col1.pinned = true;
         fix.detectChanges();
         col2.hidden = true;
         fix.detectChanges();
@@ -568,17 +564,13 @@ describe('IgxGrid - Column Pinning ', () => {
         const pinnedColumnsLength = grid.pinnedColumns.length;
         const unpinnedColumnsLength = grid.unpinnedColumns.length;
 
-        let col = grid.getColumnByName('CompanyName');
-
-        let result = col.pin();
+        let result = grid.pinColumn('CompanyName');
         fix.detectChanges();
 
         expect(grid.pinnedColumns.length).toEqual(pinnedColumnsLength);
         expect(result).toBe(false);
 
-        col = grid.getColumnByName('City');
-
-        result = col.unpin();
+        result = grid.unpinColumn('City');
         fix.detectChanges();
 
         expect(grid.unpinnedColumns.length).toEqual(unpinnedColumnsLength);
@@ -591,8 +583,8 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         grid.columns.forEach((column) => {
             if (column.index === 0 || column.index === 1 || column.index === 4 ||
-                column.index === 6) {
-                column.pin();
+                    column.index === 6) {
+                column.pinned = true;
             }
         });
         fix.detectChanges();
@@ -601,19 +593,6 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.columns[4].pinned).toBe(false);
         expect(grid.columns[6].pinned).toBe(true);
         expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
-    });
-
-    it('should not have grid layout row with width that extends pass the container\'s one', () => {
-        const fix = TestBed.createComponent(GridPinningComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.instance;
-
-        grid.getColumnByName('Phone').pin();
-        fix.detectChanges();
-
-        const gridChildren = Array.prototype.slice.call(grid.nativeElement.children);
-        const gridWidth = grid.nativeElement.getBoundingClientRect().width;
-        gridChildren.forEach(elem => expect(elem.getBoundingClientRect().width).toEqual(gridWidth));
     });
 });
 @Component({

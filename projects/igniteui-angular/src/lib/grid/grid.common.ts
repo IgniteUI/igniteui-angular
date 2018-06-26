@@ -4,6 +4,7 @@ import {
     Directive,
     ElementRef,
     HostBinding,
+    HostListener,
     Inject,
     Injectable,
     Input,
@@ -20,6 +21,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IColumnMovingEventArgs } from './grid.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 @Directive({
@@ -165,6 +167,8 @@ export class IgxColumnMovingService {
     private _column: IgxColumnComponent;
     private _target: IgxColumnComponent;
 
+    public cancelDrop: boolean;
+
     get column(): IgxColumnComponent {
         return this._column;
     }
@@ -216,7 +220,15 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     private _column: IgxColumnComponent;
+    private _ghostImageClass = 'igx-grid__drag-ghost-image';
     private _dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
+    private _dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
+
+    @HostListener('document:keydown.escape', ['$event'])
+    public onEscape(event) {
+        this.cms.cancelDrop = true;
+        this.onPointerUp(event);
+    }
 
     constructor(
         _element: ElementRef,
@@ -229,18 +241,19 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerDown(event) {
+        event.stopPropagation();
 
-        const resizeArea = document.elementFromPoint(event.pageX, event.pageY);
-        if (!this.draggable ||
-            (this.element.nativeElement.children[3] && this.element.nativeElement.children[3].isEqualNode(resizeArea))) {
+        if (!this.draggable || event.target.getAttribute('draggable') === 'false') {
             return;
         }
 
         this.cms.column = this.column;
-        this.ghostImageClass = 'igx-grid__drag-ghost-image';
-        this.defaultReturnDuration = '0.1s';
+        this.ghostImageClass = this._ghostImageClass;
 
         super.onPointerDown(event);
+
+        this.column.grid.isColumnMoving = true;
+        this.column.grid.cdr.detectChanges();
 
         const args = {
             source: this.column
@@ -249,6 +262,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerMove(event) {
+        event.preventDefault();
 
         if (!this.draggable) {
             return;
@@ -258,6 +272,18 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         if (this._dragStarted && this._dragGhost && !this.column.grid.draggedColumn) {
             this.column.grid.draggedColumn = this.column;
             this.column.grid.cdr.detectChanges();
+        }
+
+        if (this.column.grid.isColumnMoving) {
+            const args = {
+                source: this.column,
+                cancel: false
+            };
+            this.column.grid.onColumnMoving.emit(args);
+
+            if (args.cancel) {
+                this.onEscape(event);
+            }
         }
     }
 
@@ -269,40 +295,46 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         super.onPointerUp(event);
 
+        this.column.grid.isColumnMoving = false;
         this.column.grid.draggedColumn = null;
         this.column.grid.cdr.detectChanges();
     }
 
     protected createDragGhost(event) {
         super.createDragGhost(event);
-        this._dragGhost.removeChild(this._dragGhost.children[2]);
+
+        this._dragGhost.style.height = null;
+        this._dragGhost.style.minWidth = null;
+        this._dragGhost.style.flexBasis = null;
+        this._dragGhost.style.position = null;
 
         const icon = document.createElement('i');
-        const text = document.createTextNode('swap_horiz');
+        const text = document.createTextNode('block');
         icon.appendChild(text);
 
         icon.classList.add('material-icons');
-        this.renderer.addClass(icon, this._dragGhostImgIconClass);
-
-        this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
-
         this.cms.icon = icon;
 
-        this._dragGhost.style.minWidth = null;
-        this._dragGhost.style.flexBasis  = null;
+        if (!this.column.columnGroup) {
+            this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
-        const range = document.createRange();
-        range.selectNodeContents(this._dragGhost.children[2]);
+            this._dragGhost.removeChild(this._dragGhost.children[2]);
+            this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
 
-        const s = document.defaultView.getComputedStyle(this.element.nativeElement);
-        this._dragGhost.style.width = Math.ceil(range.getBoundingClientRect().width +
-            parseFloat(s.borderRightWidth) + parseFloat(s.borderLeftWidth) + parseFloat(s.paddingLeft) +
-            parseFloat(s.paddingRight) + icon.getBoundingClientRect().width) +
-            parseFloat(document.defaultView.getComputedStyle(icon).marginRight) + 'px';
+            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+        } else {
+            this._dragGhost.removeChild(this._dragGhost.children[2]);
+            this._dragGhost.removeChild(this._dragGhost.firstElementChild);
+            this._dragGhost.removeChild(this._dragGhost.lastElementChild);
+            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
 
-        this.left = this._dragStartX = event.clientX -
-            (((range.getBoundingClientRect().width + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)) / 3) * 2);
-        this.top = this._dragStartY = event.clientY - ((parseFloat(s.height) / 3) * 2);
+            this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
+            this._dragGhost.children[1].style.paddingLeft = '0px';
+
+            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+        }
     }
 }
 
@@ -356,52 +388,44 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             return;
         }
 
-        if (this.isDropTarget && this.cms.column !== this.column) {
-            const args = {
-                source: this.cms.column,
-                target: this.column,
-                cancel: false
-            };
-            this.column.grid.onColumnMoving.emit(args);
+        if (this.isDropTarget &&
+            this.cms.column !== this.column &&
+            this.cms.column.level === this.column.level &&
+            this.cms.column.parent === this.column.parent) {
 
-            if (args.cancel) {
-                this.cms.icon.innerText = 'block';
-                return;
-            }
+                if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned)) {
+                    this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.lastElementChild :
+                        this.elementRef.nativeElement.firstElementChild;
 
-            if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned)) {
-                this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.children[4] :
-                    this.elementRef.nativeElement.children[0];
-
-                this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
-
-                this.cms.icon.innerText = 'swap_horiz';
-            }
-
-            if (!this.cms.column.pinned && this.column.pinned) {
-                const nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
-
-                if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
-                    this._dropIndicator = this.elementRef.nativeElement.children[0];
                     this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
 
-                    this.cms.icon.innerText = 'lock';
-                } else {
-                    this.cms.icon.innerText = 'block';
+                    this.cms.icon.innerText = 'swap_horiz';
                 }
+
+                if (!this.cms.column.pinned && this.column.pinned) {
+                    const nextPinnedWidth = this.column.grid.getPinnedWidth(true) + parseFloat(this.cms.column.width);
+
+                    if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
+                        this.cms.icon.innerText = 'lock';
+
+                        this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
+                        this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+                    } else {
+                        this.cms.icon.innerText = 'block';
+                    }
+                }
+            } else {
+                this.cms.icon.innerText = 'block';
             }
-        } else {
-            this.cms.icon.innerText = 'swap_horiz';
-        }
 
-        if (this.horizontalScroll) {
-            this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
+            if (this.horizontalScroll) {
+                this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
 
-            interval(100).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
-                event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
-                    this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
-            });
-        }
+                interval(100).pipe(takeUntil(this._dragLeave)).subscribe((val) => {
+                    event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
+                        this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
+                });
+            }
     }
 
     public onDragLeave(event) {
@@ -414,17 +438,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
         if (this._dropIndicator) {
             this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
-
-            const args = {
-                source: this.cms.column,
-                target: this.column,
-                cancel: false
-            };
-            this.column.grid.onColumnMoving.emit(args);
-
-            if (args.cancel) {
-                return;
-            }
         }
 
         if (this.horizontalScroll) {
@@ -433,6 +446,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragDrop(event) {
+        event.preventDefault();
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {
             return;
@@ -452,17 +466,37 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             let nextPinnedWidth;
             if (this.column.pinned && !this.cms.column.pinned) {
-                nextPinnedWidth = this.column.grid.getPinnedWidth() + parseFloat(this.cms.column.width);
+                nextPinnedWidth = this.column.grid.getPinnedWidth(true) + parseFloat(this.cms.column.width);
             }
 
-            if (args.cancel || (nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth)) {
-                return;
+            if ((nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth) ||
+                this.column.level !== this.cms.column.level ||
+                this.column.parent !== this.cms.column.parent ||
+                this.cms.cancelDrop || args.cancel) {
+                    this.cms.cancelDrop = false;
+                    return;
+            }
+
+            let col, index;
+            const selectedCells = this.cms.column.grid.selectedCells;
+            if (selectedCells && selectedCells.length > 0) {
+                col = selectedCells[0].column;
+                for (let i = 0; i < col.cells.length; i++) {
+                   if (col.cells[i].selected) {
+                       index = i;
+                       break;
+                    }
+                }
             }
 
             this.column.grid.moveColumn(this.cms.column, this.column);
 
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
+
+            if (col && selectedCells && selectedCells.length > 0) {
+                col.cells[index]._updateCellSelectionStatus();
+            }
         }
     }
 }
