@@ -6,6 +6,7 @@ import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, 
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { DisplayDensity } from '../core/utils';
 
 describe('IgxGrid - Grid Toolbar', () => {
     let fixture;
@@ -402,6 +403,57 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(dropDownDiv.querySelector('igx-column-pinning')).not.toBe(null);
 
         getColumnPinningButton().nativeElement.click();
+    });
+
+    it('display density is properly applied.', () => {
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        fixture.detectChanges();
+
+        const toolbar = getToolbar().nativeElement;
+        expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
+        expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
+        expect(parseFloat(toolbar.offsetHeight) > 55).toBe(true);
+
+        grid.toolbar.displayDensity = DisplayDensity.compact;
+        grid.cdr.detectChanges();
+
+        expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
+        expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
+        expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
+
+        grid.toolbar.displayDensity = DisplayDensity.cosy;
+        grid.cdr.detectChanges();
+
+        expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
+        expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
+        expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
+    });
+
+    it('display density is properly applied through the grid.', () => {
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        fixture.detectChanges();
+
+        const toolbar = getToolbar().nativeElement;
+        expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
+        expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
+
+        grid.displayDensity = DisplayDensity.compact;
+        grid.cdr.detectChanges();
+
+        expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
+        expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
+
+        grid.displayDensity = DisplayDensity.cosy;
+        grid.cdr.detectChanges();
+
+        expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
+        expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
+
+        grid.displayDensity = DisplayDensity.comfortable;
+        grid.cdr.detectChanges();
+        expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
     });
 
     function getToolbar() {
