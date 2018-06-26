@@ -1774,7 +1774,7 @@ describe('igxOverlay', () => {
         });
 
         // 3.1.1 closeOnOutsideClick - modal
-        fit('Clicking outside the component does NOT close it', fakeAsync(() => {
+        it('Clicking outside the component does NOT close it', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlaySettings: OverlaySettings = {
                 modal: true,
@@ -1805,8 +1805,30 @@ describe('igxOverlay', () => {
         });
 
         // 3.2.1 closeOnOutsideClick - non modal
-        xit('Clicking outside the component does close it', fakeAsync(() => {
+        it('Clicking outside the component does close it', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+                closeOnOutsideClick: true,
+                positionStrategy: new GlobalPositionStrategy()
+            };
+
+            fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            const expectedRectangle = new DOMRect();
+            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            const element = contentWrapper.firstChild as HTMLElement;
+
+            document.body.click();
+            document.dispatchEvent(new Event('click'));
+            tick();
+
+            fixture.whenStable().then(() => {
+            expect(element.getBoundingClientRect()).toEqual(expectedRectangle);
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
+            });
         }));
+
         // 4. Css
         xit('All appropriate css classes should be applied on igx-overlay initialization. ' +
             '(class overlay, incl. position, width, height, etc.)', () => {
