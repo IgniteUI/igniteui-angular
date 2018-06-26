@@ -17,6 +17,7 @@ export function cloneObject(object: any) {
 
 export const enum KEYCODES {
     ENTER = 13,
+    SPACE = 32,
     ESCAPE = 27,
     LEFT_ARROW = 37,
     UP_ARROW = 38,
