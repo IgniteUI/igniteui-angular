@@ -238,6 +238,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.initHCache(this.igxForOf);
                 }
                 this._applyChanges(changes);
+                this._zone.run(() => {
+                    this.cdr.markForCheck();
+                });
             }
         }
     }
