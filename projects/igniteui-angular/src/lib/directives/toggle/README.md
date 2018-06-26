@@ -35,11 +35,6 @@ handlers when the toggle is opened and respectively closed.
 
 ## API Summary
 
-### Inputs
-| Name       |      Type      |  Description |
-|:----------:|:-------------|:------|
-| `collapsed`| `Boolean` | Determines whether the toggle is open or closed. |
-
 ### Outputs
 | Name | Return Type | Description |
 |:--:|:---|:---|
@@ -50,8 +45,9 @@ handlers when the toggle is opened and respectively closed.
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|
-| `open` | `None` | `void` | Opens the toggle. |
-| `close` | `None` | `void` | Closes the toggle. |
+| `open` | fireEvents?: `boolean`, overlaySettings?: `OverlaySettings` | `void` | Opens the toggle. |
+| `close` | fireEvents?: `boolean` | `void` | Closes the toggle. |
+| `toggle` | fireEvents?: `boolean`, overlaySettings?: `OverlaySettings` | `void` | Closes the toggle. |
 
 
 # IgxToggleAction Directive
@@ -60,7 +56,7 @@ The **IgxToggleAction** provides a way for user to Open/Close(toggle) every Comp
 
 You can see it in action [here](http://139.59.168.161/demos/toggle)
 
-#Usage
+## Usage
 ```typescript
 import { IgxToggleModule } from "igniteui-angular";
 ```
@@ -100,4 +96,5 @@ Providing reference from custom component which has already been registered into
 | Name       |      Type      |  Description |
 |:----------:|:-------------|:------|
 | `igxToggleAction`| `IToggleView | string` | Determines the target that have to be controled. |
-| `closeOnOutsideClick`| `Boolean` | Determines if passed Component/Directive have to be closed when it is clicked outside. |
+| `overlaySettings` | `OverlaySettings`| Passes `igxOverlay` settings for applicable targets (`igxToggle`) that control positioning, interaction and scroll behavior.
+| `closeOnOutsideClick`| `Boolean` | **Deprecated.** Determines if passed Component/Directive have to be closed when it is clicked outside. |

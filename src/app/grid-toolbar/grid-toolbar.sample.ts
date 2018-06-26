@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { IgxGridComponent, IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent } from 'igniteui-angular';
+import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/utils';
 
 @Component({
     selector: 'app-grid-toolbar-sample',
@@ -11,7 +12,7 @@ export class GridToolbarSampleComponent implements OnInit {
     @ViewChild('grid1', { read: IgxGridComponent })
     public igxGrid1: IgxGridComponent;
 
-    private toolbarShown = true;
+    public _displayDensity = [DisplayDensity.comfortable, DisplayDensity.cosy, DisplayDensity.compact];
 
     data = [
         {
@@ -43,11 +44,6 @@ export class GridToolbarSampleComponent implements OnInit {
                 // configure and perform export operation
                 break;
         }
-    }
-
-    public buttonToolbarClickedHandler() {
-        this.toolbarShown = !this.toolbarShown;
-        this.igxGrid1.showToolbar = this.toolbarShown;
     }
 
     public initColumns(column: IgxColumnComponent) {

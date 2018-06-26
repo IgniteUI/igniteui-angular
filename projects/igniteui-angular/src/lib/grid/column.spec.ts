@@ -121,23 +121,19 @@ describe('IgxGrid - Column properties', () => {
         const grid = fix.componentInstance.instance;
         let headers: DebugElement[];
 
-        expect(grid.columnList.first.index).toEqual(0);
         expect(grid.columnList.first.field).toMatch('ID');
-        expect(grid.columnList.last.index).toEqual(1);
         expect(grid.columnList.last.field).toMatch('Name');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('ID');
         expect(headers[1].nativeElement.textContent).toMatch('Name');
 
-        grid.columnList.first.index = 1;
-        grid.columnList.last.index = 0;
+        // Swap columns
+        grid.moveColumn(grid.columnList.first, grid.columnList.last);
         fix.detectChanges();
 
-        expect(grid.columnList.first.index).toEqual(1);
-        expect(grid.columnList.first.field).toMatch('ID');
-        expect(grid.columnList.last.index).toEqual(0);
-        expect(grid.columnList.last.field).toMatch('Name');
+        expect(grid.columnList.first.field).toMatch('Name');
+        expect(grid.columnList.last.field).toMatch('ID');
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.textContent).toMatch('Name');
