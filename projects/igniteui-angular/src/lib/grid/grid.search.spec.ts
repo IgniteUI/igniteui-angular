@@ -511,7 +511,7 @@ describe('IgxGrid - search API', () => {
             highlights = cellName.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
-            grid.columns[1].pin();
+            grid.columns[1].pinned = true;
 
             return fix.whenStable();
         }).then(() => {
@@ -522,7 +522,7 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.columns[1].unpin();
+            grid.columns[1].pinned = false;
 
             return fix.whenStable();
         }).then(() => {
