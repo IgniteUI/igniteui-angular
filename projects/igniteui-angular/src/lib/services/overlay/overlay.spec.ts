@@ -196,24 +196,25 @@ describe('igxOverlay', () => {
             spyOn(fix.componentInstance.overlay.onClosed, 'emit').and.callThrough();
             spyOn(fix.componentInstance.overlay.onOpening, 'emit').and.callThrough();
             spyOn(fix.componentInstance.overlay.onOpened, 'emit').and.callThrough();
+
             fix.componentInstance.show();
-            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(0);
             tick();
-            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(0);
-
-            fix.componentInstance.hide();
-            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(0);
-            tick();
-            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(0);
-
-            fix.componentInstance.overlay.open(true);
             expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
-            tick();
             expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
 
-            fix.componentInstance.overlay.close(true);
-            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+            fix.componentInstance.hide();
             tick();
+            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(1);
+
+            fix.componentInstance.overlay.open(false);
+            tick();
+            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
+
+            fix.componentInstance.overlay.close(false);
+            tick();
+            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
 
@@ -1066,13 +1067,13 @@ describe('igxOverlay', () => {
                 expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
                 expect(document.documentElement.scrollTop).toEqual(0);
                 document.documentElement.scrollTop += 9;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(1);
                 expect(document.documentElement.scrollTop).toEqual(9);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
                 document.documentElement.scrollTop += 25;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(2);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
@@ -1867,7 +1868,7 @@ export class SimpleDynamicWithDirectiveComponent {
 
     hide() {
         this.visible = false;
-        this.overlay.close();
+        this.overlay.close(true);
     }
 }
 
