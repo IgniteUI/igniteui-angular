@@ -1607,7 +1607,7 @@ describe('igxOverlay', () => {
 
         // 2. Scroll Strategy (test with GlobalPositionStrategy(default))
         // 2.1. Scroll Strategy - None
-        it('The component do not scroll with the window. No scrolling happens.', fakeAsync(() => {
+        it('The component do not scroll with the window.', fakeAsync(() => {
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -1773,9 +1773,23 @@ describe('igxOverlay', () => {
             // Not TO DO
         });
 
-        xit('Clicking outside the dialog does not close it', () => {
-            // TO DO
-        });
+        // 3.1.1 closeOnOutsideClick - modal
+        fit('Clicking outside the component does NOT close it', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlaySettings: OverlaySettings = {
+                modal: true,
+                closeOnOutsideClick: false
+            };
+
+            fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0];
+            const element = contentWrapper.firstChild as HTMLElement;
+            const elementRect = element.getBoundingClientRect();
+            document.body.click();
+            tick();
+            expect(elementRect).toEqual(element.getBoundingClientRect());
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL).length).toEqual(1);
+        }));
 
         // 3.2 Non - Modal
         xit('igx-overlay do not apply a greyed our mask layer', () => {
@@ -1786,14 +1800,13 @@ describe('igxOverlay', () => {
             // Not TO DO
         });
 
-        xit('Clicking outside the component it collapses/closes (DropDown, DatePicker, NavBar etc.)', () => {
-            // TO DO
-        });
-
         xit('Escape - closes (DropDown, Dialog, etc.).', () => {
             // Not TO DO
         });
 
+        // 3.2.1 closeOnOutsideClick - non modal
+        xit('Clicking outside the component does close it', fakeAsync(() => {
+        }));
         // 4. Css
         xit('All appropriate css classes should be applied on igx-overlay initialization. ' +
             '(class overlay, incl. position, width, height, etc.)', () => {
