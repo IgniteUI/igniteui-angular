@@ -12,8 +12,10 @@ export class CloseScrollStrategy implements IScrollStrategy {
     private _threshold: number;
     private _initialized = false;
     private _sourceElement: Element;
+    private _scrollContainer: HTMLElement;
 
     constructor(scrollContainer?: HTMLElement) {
+        this._scrollContainer = scrollContainer;
         this._threshold = 10;
         this.cumulativeScrollTop = 0;
         this.cumulativeScrollLeft = 0;
@@ -30,12 +32,31 @@ export class CloseScrollStrategy implements IScrollStrategy {
     }
 
     attach(): void {
-        this._document.addEventListener('scroll', this.onScroll, true);
+        if (this._scrollContainer) {
+            this._scrollContainer.addEventListener('scroll', this.onScroll);
+            this._sourceElement = this._scrollContainer;
+        } else {
+            this._document.addEventListener('scroll', this.onScroll);
+            if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
+                this._sourceElement = document.documentElement as Element;
+            } else if (document.body.scrollHeight > document.body.clientHeight) {
+                this._sourceElement = document.body as Element;
+            }
+        }
+
+        this.cumulativeScrollTop = 0;
+        this.cumulativeScrollLeft = 0;
+        this.initialScrollTop = this._sourceElement.scrollTop;
+        this.initialScrollLeft = this._sourceElement.scrollLeft;
     }
 
     detach(): void {
         // TODO: check why event listener removes only on first call and remains on each next!!!
-        this._document.removeEventListener('scroll', this.onScroll, true);
+        if (this._scrollContainer) {
+            this._scrollContainer.removeEventListener('scroll', this.onScroll);
+        } else {
+            this._document.removeEventListener('scroll', this.onScroll);
+        }
         this._sourceElement = null;
         this.cumulativeScrollTop = 0;
         this.cumulativeScrollLeft = 0;
@@ -45,14 +66,6 @@ export class CloseScrollStrategy implements IScrollStrategy {
     }
 
     private onScroll = (ev: Event) => {
-        if (!this._sourceElement || this._sourceElement !== ev.srcElement) {
-            this._sourceElement = ev.srcElement;
-            this.cumulativeScrollTop = 0;
-            this.cumulativeScrollLeft = 0;
-            this.initialScrollTop = this._sourceElement.scrollTop;
-            this.initialScrollLeft = this._sourceElement.scrollLeft;
-        }
-
         this.cumulativeScrollTop += this._sourceElement.scrollTop;
         this.cumulativeScrollLeft += this._sourceElement.scrollLeft;
 
