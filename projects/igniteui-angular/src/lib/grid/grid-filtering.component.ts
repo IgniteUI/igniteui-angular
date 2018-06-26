@@ -23,6 +23,8 @@ import { FilteringExpressionsTree } from '../data-operations/filtering-expressio
 import { IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { OverlaySettings, HorizontalAlignment } from '../services/overlay/utilities';
+import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,12 +61,17 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     public dialogShowing = false;
-    public dialogPosition = 'igx-filtering__options--to-right';
     public filteringLogicOptions: any[];
     public isSecondConditionVisible = false;
     protected chunkLoaded = new Subscription();
+    protected columnMoving = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
     private _secondExpression = null;
+    private _overlaySettings: OverlaySettings = {
+        positionStrategy: new ConnectedPositioningStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
 
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective })
     protected toggleDirective: IgxToggleDirective;
@@ -92,11 +99,19 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     public ngOnInit() {
-        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
+        const collapse = () => {
             if (!this.toggleDirective.collapsed) {
-                this.toggleDirective.collapsed = true;
+                this.toggleDirective.close(true);
                 this.refresh();
             }
+        };
+
+        this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
+            collapse();
+        });
+
+        this.columnMoving = this.gridAPI.get(this.gridID).onColumnMoving.subscribe(() => {
+            collapse();
         });
     }
 
@@ -106,6 +121,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
 
     public ngOnDestroy() {
         this.chunkLoaded.unsubscribe();
+        this.columnMoving.unsubscribe();
     }
 
     public refresh() {
@@ -190,7 +206,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         return !this.isFilteringApplied();
     }
 
-    public onMouseDown(): void {
+    public onIconClick(eventArgs): void {
         requestAnimationFrame(() => {
             const grid = this.gridAPI.get(this.gridID);
             const gridRect = grid.nativeElement.getBoundingClientRect();
@@ -201,8 +217,14 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
             x += window.pageXOffset;
             x1 += window.pageXOffset;
             if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
-                this.dialogPosition = 'igx-filtering__options--to-left';
+                this._overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Left;
+                this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
+            } else {
+                this._overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
+                this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
             }
+            this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
+            this.toggleDirective.toggle(true, this._overlaySettings);
         });
     }
 

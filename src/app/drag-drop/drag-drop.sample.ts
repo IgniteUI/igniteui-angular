@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
     selector: 'app-drag-drop-sample',
