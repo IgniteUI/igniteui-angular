@@ -365,7 +365,10 @@ describe('IgxGrid - Grid Toolbar', () => {
     it('does not show Column Pinning button by default.', () => {
         grid.showToolbar = true;
         fixture.detectChanges();
-        // expect(grid.toolbar.columnPinningUI).toBeUndefined();
+        expect(grid.toolbar.columnPinningUI).toBeUndefined();
+
+        grid.columnPinning = true;
+        fixture.detectChanges();
 
         const button = getColumnPinningButton();
         expect(button).toBeDefined();
@@ -373,6 +376,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
     it('shows Column Pinning button with default content when columnPinning=true.', () => {
         grid.showToolbar = true;
+        grid.columnPinning = true;
         fixture.detectChanges();
         expect(grid.toolbar.columnPinningUI).toBeDefined();
 
@@ -384,6 +388,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
     it('toggleColumnPinningUI() method opens and closes the ColumnPinning dropdown.', () => {
         grid.showToolbar = true;
+        grid.columnPinning = true;
         fixture.detectChanges();
 
         getColumnPinningButton().nativeElement.click();

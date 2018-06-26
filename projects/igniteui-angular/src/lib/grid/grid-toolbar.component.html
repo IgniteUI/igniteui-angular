@@ -14,12 +14,14 @@
             </div>
         </button>
         <igx-drop-down #columnHidingDropdown>
-            <igx-column-hiding [columns]="grid.columnList" [title]="grid.columnHidingTitle"
+            <igx-column-hiding
+                [columns]="grid.columnList"
+                [title]="grid.columnHidingTitle"
                 (onColumnVisibilityChanged)="grid.toggleColumnVisibility($event)">
             </igx-column-hiding>
         </igx-drop-down>
     </div>
-    <div>
+    <div *ngIf="grid.columnPinning">
         <button igxButton="flat" #columnPinningButton name="btnColumnPinning" igxButton igxRipple
             (click)="toggleColumnPinningUI()">
             <div  class="igx-grid-toolbar__button-space">
@@ -30,7 +32,9 @@
             </div>
         </button>
         <igx-drop-down #columnPinningDropdown>
-            <igx-column-pinning [columns]="grid.columnList"></igx-column-pinning>
+            <igx-column-pinning
+                [columns]="grid.columnList"
+                [title]="grid.columnPinningTitle"></igx-column-pinning>
         </igx-drop-down>
     </div>
 
