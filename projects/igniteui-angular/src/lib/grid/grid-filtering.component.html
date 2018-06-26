@@ -1,0 +1,37 @@
+<ng-template #defaultFilterUI>
+    <div *ngIf="!unaryCondition" class="igx-filtering__op">
+        <igx-input-group>
+            <input type="text" igxInput placeholder="Value" autocomplete="off" [value]="value" (input)="onInputChanged($event.target.value)" [igxFocus]="true" #input/>
+            <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
+                <igx-icon>clear</igx-icon>
+            </igx-suffix>
+        </igx-input-group>
+    </div>
+    <br>
+</ng-template>
+
+<ng-template #defaultDateUI>
+    <igx-datePicker (click)="onDatePickerClick()" *ngIf="!unaryCondition" [(ngModel)]="value"></igx-datePicker>
+</ng-template>
+
+<div class="igx-filtering">
+    <div [attr.class]="filterCSS">
+        <span class="toggle-icon" [igxToggleAction]="directive">
+            <igx-icon (mousedown)="onMouseDown()">filter_list</igx-icon>
+        </span>
+    </div>
+</div>
+
+<span igxToggle (onOpen)="refresh()" (onClose)="refresh()" #directive="toggle" [attr.class]="dialogPosition">
+    <div>
+        <select (change)="selectionChanged($event.target.value)" #select>
+            <option *ngIf="dataType === 'boolean'" [value]="booleanFilterAll">{{ booleanFilterAll | filterCondition | titlecase }}</option>
+            <option [selected]="isActive(each)" *ngFor="let each of conditions" [value]="each">{{ each | filterCondition | titlecase }}</option>
+        </select>
+    </div>
+    <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
+    <div class="igx-filtering__options-bgroup">
+        <button igxButton igxRipple (click)="clearFiltering(true)" [disabled]="disabled">Reset</button>
+        <button igxButton igxRipple (click)="directive.close(true)">Close</button>
+    </div>
+</span>

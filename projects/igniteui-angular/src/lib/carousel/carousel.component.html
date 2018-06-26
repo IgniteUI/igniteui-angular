@@ -1,0 +1,22 @@
+<div tabindex="0" aria-label="carousel" class="igx-carousel"
+        (mouseenter)="stop()"
+        (mouseleave)="play()"
+        (swipeleft)="next()"
+        (swiperight)="prev()"
+        (tap)="isPlaying ? stop() : play()">
+    <ul class="igx-carousel__indicators" [hidden]="slides.length <= 1">
+        <li *ngFor="let slide of slides" [attr.aria-label]="setAriaLabel(slide)" [attr.aria-selected]="slide.active" [class.active]="slide.active === true"
+            (click)="select(slide)"></li>
+    </ul>
+    <div class="igx-carousel__inner" role="list">
+        <ng-content></ng-content>
+    </div>
+    <div *ngIf="navigation">
+        <a role="button" tabindex="0" class="igx-carousel__arrow--prev" (click)="prev()" [hidden]="!slides.length">
+            <igx-icon fontSet="material" name="arrow_back"></igx-icon>
+        </a>
+        <a role="button" tabindex="0" class="igx-carousel__arrow--next" (click)="next()" [hidden]="!slides.length">
+            <igx-icon fontSet="material" name="arrow_forward"></igx-icon>
+        </a>
+    </div>
+</div>
