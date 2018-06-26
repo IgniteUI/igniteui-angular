@@ -195,7 +195,7 @@ describe('IgxInput', () => {
         testRequiredValidation(inputElement, fixture);
     });
 
-    fit('Should work properly with reactive forms validation.', () => {
+    it('Should work properly with reactive forms validation.', () => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
