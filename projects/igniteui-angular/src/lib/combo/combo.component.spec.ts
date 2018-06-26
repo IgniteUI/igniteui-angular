@@ -1328,6 +1328,7 @@ describe('Combo', () => {
         const fixture = TestBed.createComponent(IgxComboBindingTestComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
+        combo.toggle();
         tick(3200);
         fixture.whenStable().then(() => {
             fixture.detectChanges();
@@ -1337,6 +1338,11 @@ describe('Combo', () => {
                 expect(combo.data[i]['id']).toEqual(productIndex);
                 expect(combo.data[i]['product']).toEqual('Product ' + productIndex);
             }
+
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+
+            expect(dropdownItems[0].innerText).toEqual('Product 1');
         });
     }));
     it('The empty template should be rendered when combo data source is not set', fakeAsync(() => {
@@ -2991,7 +2997,7 @@ export class LocalService {
     template: `
         <label id="mockID">Combo Label</label>
         <igx-combo #combo [placeholder]="'Products'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
-        [itemHeight]='40' [valueKey]="'product'" [width]="'400px'"
+        [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'"
         [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `,
