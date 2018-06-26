@@ -460,9 +460,6 @@ export class IgxNavigationDrawerComponent implements
             if (this.pinThreshold) {
                 this.ensureEvents();
                 this.checkPinThreshold();
-            } else if (this._resizeObserver) {
-                this._resizeObserver.unsubscribe();
-                this._resizeObserver = null;
             }
         }
 
@@ -570,6 +567,8 @@ export class IgxNavigationDrawerComponent implements
             // TODO: nested in content?
             // setElementStyle warning https://github.com/angular/angular/issues/6563
             this.renderer.setElementStyle(this.drawer, 'height', window.innerHeight + 'px');
+        } else {
+            this.renderer.setElementStyle(this.drawer, 'height', '');
         }
     }
 
@@ -653,9 +652,12 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (this.pinThreshold && !this._resizeObserver) {
+        if (!this._resizeObserver) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
-                .subscribe((value) => { this.checkPinThreshold(); });
+                .subscribe((value) => {
+                    this.checkPinThreshold();
+                    this.ensureDrawerHeight();
+                });
         }
     }
 
