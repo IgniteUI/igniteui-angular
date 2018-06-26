@@ -1029,6 +1029,7 @@ describe('igxOverlay', () => {
             expect(elementRect).toEqual(element.getBoundingClientRect());
             expect(document.documentElement.scrollTop).toEqual(100);
             expect(document.documentElement.scrollLeft).toEqual(50);
+            document.body.removeChild(dummy);
         }));
 
         it('closingScrollStrategy: no scrolling possible. The component changes ' +
@@ -1255,6 +1256,7 @@ describe('igxOverlay', () => {
                     expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
                 }
             }
+            document.body.removeChild(contentWrapper);
         });
 
         it('Connected strategy position method. Position component based on Element', () => {
@@ -1303,6 +1305,7 @@ describe('igxOverlay', () => {
                     }
                 }
             }
+            document.body.removeChild(contentWrapper);
         });
 
         // 1.3 AutoPosition (fit the shown component into the visible window.)
