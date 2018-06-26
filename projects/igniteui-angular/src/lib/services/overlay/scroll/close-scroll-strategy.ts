@@ -44,6 +44,10 @@ export class CloseScrollStrategy implements IScrollStrategy {
             }
         }
 
+        if (!this._sourceElement) {
+            return;
+        }
+
         this.cumulativeScrollTop = 0;
         this.cumulativeScrollLeft = 0;
         this.initialScrollTop = this._sourceElement.scrollTop;
@@ -66,6 +70,10 @@ export class CloseScrollStrategy implements IScrollStrategy {
     }
 
     private onScroll = (ev: Event) => {
+        if (!this._sourceElement) {
+            return;
+        }
+
         this.cumulativeScrollTop += this._sourceElement.scrollTop;
         this.cumulativeScrollLeft += this._sourceElement.scrollLeft;
 
