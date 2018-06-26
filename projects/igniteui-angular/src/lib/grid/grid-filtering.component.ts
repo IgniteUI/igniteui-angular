@@ -212,8 +212,10 @@ export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCh
             x1 += window.pageXOffset;
             if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
                 this._overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Left;
+                this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
             } else {
                 this._overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
+                this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
             }
             this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
             this.toggleDirective.toggle(true, this._overlaySettings);
