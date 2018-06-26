@@ -314,7 +314,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[3].parent.name).toEqual('igx-display-container');
     });
 
-    it('should allow unpinning even if new cols cannot be pinned', () => {
+    xit('should allow unpinning even if new cols cannot be pinned', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
