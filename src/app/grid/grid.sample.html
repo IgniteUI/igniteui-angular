@@ -64,7 +64,7 @@
                 <div class="toggle-group" *ngFor="let col of grid1.columns">
                     <h4>{{ col.field }}</h4>
                     <div class="switch-group">
-                        <igx-switch [(ngModel)]="col.filtering">Filtering</igx-switch>
+                        <igx-switch [(ngModel)]="col.filterable">Filtering</igx-switch>
                     </div>
                     <div class="switch-group">
                         <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
@@ -133,7 +133,7 @@
                 </div>
                 <div class="igx-form-group">
                     <igx-input-group>
-                    <input min="0" type="number" igxInput [ngModel]="grid2.state?.paging?.index" (ngModelChange)="onPagination($event)">
+                    <input min="0" type="number" igxInput [ngModel]="grid2.pagingState?.paging?.index" (ngModelChange)="onPagination($event)">
                     <label igxLabel>Go to page</label>
                     </igx-input-group>
                 </div>

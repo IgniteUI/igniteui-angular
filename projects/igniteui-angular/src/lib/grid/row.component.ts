@@ -132,6 +132,7 @@ export class IgxGridRowComponent implements DoCheck {
                             this.selectionAPI.select_item(this.gridID, this.rowID) :
                             this.selectionAPI.deselect_item(this.gridID, this.rowID);
         this.grid.triggerRowSelectionChange(newSelection, this, event);
+        this.grid.cdr.detectChanges();
     }
 
     get rowCheckboxAriaLabel() {
@@ -148,5 +149,9 @@ export class IgxGridRowComponent implements DoCheck {
         if (this.checkboxElement) {
             this.checkboxElement.checked = this.isSelected;
         }
+    }
+
+    notGroups(arr) {
+        return arr.filter(c => !c.columnGroup);
     }
 }
