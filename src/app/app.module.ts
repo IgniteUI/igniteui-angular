@@ -55,6 +55,8 @@ import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
+
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
@@ -107,6 +109,8 @@ const components = [
     GridSelectionComponent,
     GridToolbarSampleComponent,
     GridVirtualizationSampleComponent,
+    GridColumnGroupsSampleComponent,
+
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,

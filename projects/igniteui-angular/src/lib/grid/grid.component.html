@@ -60,9 +60,9 @@
             </div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
-            <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" *ngFor="let col of pinnedColumns" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
+            <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" *ngFor="let col of onlyTopLevel(pinnedColumns)" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
         </ng-container>
-        <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
+        <ng-template igxFor let-col [igxForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
             <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
         </ng-template>
@@ -99,9 +99,9 @@
             <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
-            <igx-grid-summary [gridID]="id" *ngFor="let col of pinnedColumns"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
+            <igx-grid-summary [gridID]="id" *ngFor="let col of notGroups(pinnedColumns)"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-container>
-        <ng-template igxFor let-col [igxForOf]="unpinnedColumns" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #summaryContainer>
+        <ng-template igxFor let-col [igxForOf]="notGroups(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #summaryContainer>
             <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-template>
     </div>
