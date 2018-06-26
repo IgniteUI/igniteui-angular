@@ -23,7 +23,7 @@ import { IGridEditEventArgs } from './grid.component';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     preserveWhitespaces: false,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
