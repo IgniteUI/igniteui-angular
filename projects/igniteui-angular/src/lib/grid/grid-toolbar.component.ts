@@ -4,11 +4,10 @@ import {
     HostBinding,
     Input,
     Optional,
-    ViewChild,
-    ElementRef
+    ViewChild
 } from '@angular/core';
 
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { DisplayDensity } from '../core/utils';
 import { CsvFileTypes,
          IgxBaseExporter,
          IgxCsvExporterOptions,
@@ -76,6 +75,40 @@ export class IgxGridToolbarComponent {
 
     public get pinnedColumnsCount() {
         return this.grid.pinnedColumns.length;
+    }
+
+    private _displayDensity: DisplayDensity | string;
+
+    @Input()
+    public get displayDensity(): DisplayDensity | string {
+        return this._displayDensity;
+    }
+
+    public set displayDensity(val: DisplayDensity | string) {
+        switch (val) {
+            case 'compact':
+                this._displayDensity = DisplayDensity.compact;
+                break;
+            case 'cosy':
+                this._displayDensity = DisplayDensity.cosy;
+                break;
+            case 'comfortable':
+            default:
+                this._displayDensity = DisplayDensity.comfortable;
+        }
+    }
+
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.compact:
+                return 'igx-grid-toolbar--compact';
+            case DisplayDensity.cosy:
+                return 'igx-grid-toolbar--cosy';
+            case DisplayDensity.comfortable:
+            default:
+                return 'igx-grid-toolbar';
+        }
     }
 
     constructor(public gridAPI: IgxGridAPIService,

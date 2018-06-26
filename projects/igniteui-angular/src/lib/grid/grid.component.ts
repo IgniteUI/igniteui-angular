@@ -645,6 +645,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
 
+    public get shouldShowToolbar(): boolean {
+        return this.showToolbar &&
+               (this.columnHiding ||
+                this.columnPinning ||
+                this.exportExcel ||
+                this.exportCsv ||
+                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
+    }
+
     @Input()
     public get showToolbar(): boolean {
         return this._showToolbar;

@@ -1075,7 +1075,7 @@ export class ColumnHidingToggleComponent extends ColumnHidingInlineComponent {
 
 @Component({
     template: `<igx-grid [data]="data" width="500px" height="500px"
-        [showToolbar]="true" [columnHiding]="true" hiddenColumnsText="Hidden">
+        [showToolbar]="true" toolbarTitle="Grid Toolbar Title" [columnHiding]="true" hiddenColumnsText="Hidden">
         <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="false"></igx-column>
         <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>

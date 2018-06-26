@@ -11,30 +11,41 @@
                 [showToolbar]="true"
                 toolbarTitle="Grid Toolbar"
 
+                [columnHiding] = "true"
+                hiddenColumnsText = "Hidden"
+                columnHidingTitle = "Column Hiding"
+
                 [exportExcel]="true"
                 [exportCsv]="true"
                 exportText="Export"
                 exportExcelText="Export to Excel"
                 exportCsvText="Export to CSV"
-
-                [columnHiding] = "true"
-                hiddenColumnsText = "Hidden"
-                columnHidingTitle = "Column Hiding"
-
-
             >
             </igx-grid>
 
-            <!--
-                [columnHiding]="true"
-                columnHidingText="Hidden"
-                columnHidingTitle="Column Hiding"
-
+            <!-- igx-grid
+                displayDensity="cosy"
+                displayDensity="compact"
                 (onToolbarExporting)="toolbarExportClicked($event)"
             -->
 
-            <button (click)="buttonToolbarClickedHandler()">Toggle toolbar</button>
-            <button (click)="grid1.toolbar.toggleColumnHidingUI()">Toggle Column Hiding UI</button>
+            <br><igx-switch [(ngModel)]="this.igxGrid1.showToolbar">Toolbar</igx-switch>
+            <br><igx-switch [(ngModel)]="this.igxGrid1.columnHiding">Column Hiding</igx-switch>
+            <br><igx-switch [(ngModel)]="this.igxGrid1.exportExcel">Export Excel</igx-switch>
+            <br><igx-switch [(ngModel)]="this.igxGrid1.exportCsv">Export CSV</igx-switch>
+            <br><input type="text" placeholder="" [(ngModel)]="this.igxGrid1.toolbarTitle" />
+            <br><button (click)="grid1.toolbar.toggleColumnHidingUI()">Toggle Column Hiding UI</button>
+
+            <!--
+            <div class="radio-group">
+                <p>Display Density</p>
+                <igx-radio *ngFor="let item of _displayDensity"
+                    value="{{item}}"
+                    [(ngModel)]="grid1.displayDensity"
+                    (change)="grid1.displayDensity = item">{{item}}</igx-radio>
+            </div>
+            -->
+
         </article>
     </section>
 </div>
