@@ -314,7 +314,7 @@ describe('Excel Exporter', () => {
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
 
-                grid.columns[1].unpin();
+                grid.columns[1].pinned = false;
                 fix.detectChanges();
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
