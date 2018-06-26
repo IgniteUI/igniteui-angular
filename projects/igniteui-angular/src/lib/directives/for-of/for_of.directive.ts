@@ -412,18 +412,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected fixedUpdateAllCols(inScrollLeft) {
-        const startIndex = this.getHorizontalIndexAt(
+        this.state.startIndex = this.getHorizontalIndexAt(
             inScrollLeft,
             this.hCache,
             0
         );
         this.onChunkPreload.emit(this.state);
         /*recalculate and apply page size.*/
-        if (startIndex + this.state.chunkSize > this.igxForOf.length) {
-            this.state.startIndex = this.igxForOf.length - this.state.chunkSize;
-        } else {
-            this.state.startIndex = startIndex;
-        }
+        this.applyChunkSizeChange();
+
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const endingIndex = this.state.chunkSize + this.state.startIndex;
         for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
@@ -598,12 +595,27 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let chunkSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (this.igxForScrollOrientation === 'horizontal') {
+                const vc = this.igxForScrollContainer ?
+                    this.igxForScrollContainer._viewContainer :
+                    this._viewContainer;
+                const hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
+
+                const left = hScroll && hScroll.scrollLeft !== 0 ?
+                    hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
+                    parseInt(this.igxForContainerSize, 10);
+
                 if (!this.hCache) {
                     this.initHCache(this.igxForOf);
                 }
-                chunkSize = this._calcMaxChunkSize();
+
+                const endIndex = this.getHorizontalIndexAt(
+                    left,
+                    this.hCache,
+                    0
+                ) + 1;
+                chunkSize = endIndex - this.state.startIndex;
                 if (this.igxForOf && chunkSize > this.igxForOf.length) {
-                   chunkSize = this.igxForOf.length;
+                    chunkSize = this.igxForOf.length;
                 }
             } else {
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
@@ -641,32 +653,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.hCache.push(totalWidth);
         }
         return totalWidth;
-    }
-
-    protected _calcMaxChunkSize() {
-        let i = 0;
-        let length = 0;
-        let maxLength = 0;
-        const arr = [];
-        let sum = 0;
-        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem.width, 10);
-        const availableSize = parseInt(this.igxForContainerSize, 10);
-        for (i; i < this.igxForOf.length; i++) {
-            const item = this.igxForOf[i];
-            sum = arr.reduce(reducer,  parseInt(item.width, 10));
-            if (sum <= availableSize) {
-                 arr.push(item);
-                 length = arr.length;
-             } else {
-                 arr.push(item);
-                 length = arr.length + 1;
-                 arr.splice(0, 1);
-             }
-             if (length > maxLength) {
-                 maxLength = length;
-             }
-        }
-        return maxLength;
     }
 
     protected getHorizontalIndexAt(left, set, index) {
@@ -712,8 +698,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
         this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
 
-        this.applyChunkSizeChange();
-        this._recalcScrollBarSize();
         if (this.hCache) {
             this.state.startIndex = 0;
             if (this.hScroll.scrollLeft !== 0) {
@@ -724,6 +708,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.cdr.detectChanges();
             return;
         }
+        this.applyChunkSizeChange();
+        this._recalcScrollBarSize();
     }
 
     /** Removes an elemenet from the embedded views and updates chunkSize */

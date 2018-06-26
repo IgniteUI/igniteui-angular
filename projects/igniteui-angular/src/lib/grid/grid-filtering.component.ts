@@ -19,10 +19,13 @@ import { DataType } from '../data-operations/data-util';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
+import { autoWire, IGridBus } from './grid.common';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { OverlaySettings, HorizontalAlignment } from '../services/overlay/utilities';
+import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +33,7 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
     selector: 'igx-grid-filter',
     templateUrl: './grid-filtering.component.html'
 })
-export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
+export class IgxGridFilterComponent implements IGridBus, OnInit, OnDestroy, DoCheck {
 
     @Input()
     public column;
@@ -59,12 +62,16 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     public dialogShowing = false;
-    public dialogPosition = 'igx-filtering__options--to-right';
     public filteringLogicOptions: any[];
     public isSecondConditionVisible = false;
     protected chunkLoaded = new Subscription();
     private MINIMUM_VIABLE_SIZE = 240;
     private _secondExpression = null;
+    private _overlaySettings: OverlaySettings = {
+        positionStrategy: new ConnectedPositioningStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
 
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective })
     protected toggleDirective: IgxToggleDirective;
@@ -94,7 +101,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     public ngOnInit() {
         this.chunkLoaded = this.gridAPI.get(this.gridID).headerContainer.onChunkPreload.subscribe(() => {
             if (!this.toggleDirective.collapsed) {
-                this.toggleDirective.collapsed = true;
+                this.toggleDirective.close(true);
                 this.refresh();
             }
         });
@@ -140,6 +147,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         this.cdr.detectChanges();
     }
 
+    @autoWire(true)
     public clearFiltering(): void {
         this.expressionsList.forEach(el => {
             el.clearFiltering(true);
@@ -153,7 +161,8 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
     }
 
-     public onSelectLogicOperator(event): void {
+    @autoWire(true)
+    public onSelectLogicOperator(event): void {
         this.isSecondConditionVisible = true;
         const grid = this.gridAPI.get(this.gridID);
         const expr = grid.filteringExpressionsTree.find(this.column.field);
@@ -173,6 +182,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         }
     }
 
+    @autoWire(true)
     public onUnSelectLogicOperator(event): void {
         if (this.logicOperators.selectedIndexes.length === 0) {
             this.isSecondConditionVisible = false;
@@ -190,7 +200,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         return !this.isFilteringApplied();
     }
 
-    public onMouseDown(): void {
+    public onIconClick(eventArgs): void {
         requestAnimationFrame(() => {
             const grid = this.gridAPI.get(this.gridID);
             const gridRect = grid.nativeElement.getBoundingClientRect();
@@ -201,8 +211,14 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
             x += window.pageXOffset;
             x1 += window.pageXOffset;
             if (Math.abs(x - x1) < this.MINIMUM_VIABLE_SIZE) {
-                this.dialogPosition = 'igx-filtering__options--to-left';
+                this._overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Left;
+                this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
+            } else {
+                this._overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
+                this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
             }
+            this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
+            this.toggleDirective.toggle(true, this._overlaySettings);
         });
     }
 
@@ -211,6 +227,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         event.stopPropagation();
     }
 
+    @autoWire(true)
     public onExpressionChanged(expression: IFilteringExpression): void {
         const grid = this.gridAPI.get(this.gridID);
         const newExpression = this._createNewExpression(expression);

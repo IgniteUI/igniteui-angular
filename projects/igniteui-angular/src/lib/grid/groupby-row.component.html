@@ -1,6 +1,6 @@
 <ng-container #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
     <div (click)="toggle()" igxRipple class="igx-grid__grouping-indicator" [tabIndex]="tabindex">
-        <igx-icon *ngIf="!expanded" fontSet="material" name="chevron_right"></igx-icon>
+        <igx-icon *ngIf="!expanded" fontSet="material" name="expand_less"></igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
     </div>
 

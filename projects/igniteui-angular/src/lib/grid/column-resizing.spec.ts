@@ -541,6 +541,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
     it('should update grid after resizing a column to be bigger.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
+
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector('igx-display-container');
@@ -580,7 +581,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         colsRendered = rowsRendered[0].children;
 
         expect(hScrollVisible).toBe(true);
-        expect(colsRendered.length).toEqual(3);
+        expect(colsRendered.length).toEqual(1);
 
         discardPeriodicTasks();
     }));
