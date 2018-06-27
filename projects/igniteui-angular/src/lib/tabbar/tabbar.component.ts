@@ -55,10 +55,9 @@ export class IgxTabTemplateDirective {
  * ```
  */
 @Component({
-    selector: 'igx-tab-bar, igx-bottom-nav',
+    selector: 'igx-bottom-nav',
     templateUrl: 'tab-bar-content.component.html'
 })
-@DeprecateClass('\'igx-tab-bar\' selector is deprecated. Use \'igx-bottom-nav\' selector instead.')
 export class IgxBottomNavComponent implements AfterViewInit {
     /**
      * Gets the `IgxTabComponent` elements in the tab bar component.
