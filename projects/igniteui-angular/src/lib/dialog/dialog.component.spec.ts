@@ -1,10 +1,22 @@
 import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 
+const OVERLAY_MAIN_CLASS = 'igx-overlay';
+const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
+const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
+
+/* function clearOverlay() {
+    const overlays = document.getElementsByClassName(CLASS_OVERLAY_MAIN) as HTMLCollectionOf<Element>;
+    Array.from(overlays).forEach(element => {
+        element.parentElement.removeChild(element);
+    });
+    document.documentElement.scrollTop = 0;
+    document.documentElement.scrollLeft = 0;
+} */
 describe('Dialog', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -14,11 +26,13 @@ describe('Dialog', () => {
                 CustomDialogComponent,
                 NestedDialogsComponent,
                 CustomTemplates1DialogComponent,
-                CustomTemplates2DialogComponent
+                CustomTemplates2DialogComponent,
+                DialogSampleComponent
             ],
-            imports: [BrowserAnimationsModule, IgxDialogModule]
+            imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
+
     it('Initialize a datepicker component with id', () => {
         const fixture = TestBed.createComponent(AlertComponent);
         fixture.detectChanges();
@@ -97,10 +111,9 @@ describe('Dialog', () => {
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 
-    it('Should execute open/close methods.', () => {
+    it('Should execute open/close methods.', fakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
-
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(false);
 
@@ -109,20 +122,21 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
+        tick();
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(false);
-    });
+    }));
 
-    it('Should set closeOnOutsideSelect.', () => {
+    it('Should set closeOnOutsideSelect.', fakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         fixture.detectChanges();
-
         const dialog = fixture.componentInstance.dialog;
         dialog.open();
         fixture.detectChanges();
 
         const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
         dialogElem.click();
+        tick();
         fixture.detectChanges();
 
         expect(dialog.isOpen).toEqual(false);
@@ -132,35 +146,34 @@ describe('Dialog', () => {
         fixture.detectChanges();
 
         dialogElem.click();
-
+        tick();
         fixture.detectChanges();
-
         expect(dialog.isOpen).toEqual(true);
-    });
+    }));
 
-    it('Should test events.', () => {
-        const fixture = TestBed.createComponent(DialogComponent);
+    it('Should test events.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(DialogSampleComponent);
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
             dialog,
             event: null
         };
-
         spyOn(dialog.onOpen, 'emit');
         dialog.open();
-        dialog.close();
+        tick();
         fixture.detectChanges();
         expect(dialog.onOpen.emit).toHaveBeenCalledWith(args);
 
         spyOn(dialog.onClose, 'emit');
-        dialog.open();
         dialog.close();
+        tick();
         fixture.detectChanges();
         expect(dialog.onClose.emit).toHaveBeenCalledWith(args);
 
         dialog.open();
+        tick();
         fixture.detectChanges();
-        const buttons = fixture.debugElement.nativeElement.querySelectorAll('button');
+        const buttons = document.getElementsByClassName('custom-sample')[0].nextElementSibling.querySelectorAll('button');
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
@@ -170,8 +183,9 @@ describe('Dialog', () => {
 
         spyOn(dialog.onRightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
+        tick();
         expect(dialog.onRightButtonSelect.emit).toHaveBeenCalled();
-    });
+    }));
 
     it('Should set ARIA attributes.', () => {
         const alertFixture = TestBed.createComponent(AlertComponent);
@@ -192,7 +206,7 @@ describe('Dialog', () => {
         expect(titleWrapper.attributes.id).toEqual(dialogWindow.attributes['aria-labelledby']);
     });
 
-    it('Should close only inner dialog on closeOnOutsideSelect.', () => {
+    it('Should close only inner dialog on closeOnOutsideSelect.', fakeAsync(() => {
         const fixture = TestBed.createComponent(NestedDialogsComponent);
         fixture.detectChanges();
 
@@ -208,17 +222,19 @@ describe('Dialog', () => {
         const childDialogElem = dialogs[1].nativeElement;
 
         childDialogElem.click();
+        tick();
         fixture.detectChanges();
 
         expect(mainDialog.isOpen).toEqual(true);
         expect(childDialog.isOpen).toEqual(false);
 
         maindDialogElem.click();
+        tick();
         fixture.detectChanges();
 
         expect(mainDialog.isOpen).toEqual(false);
         expect(childDialog.isOpen).toEqual(false);
-    });
+    }));
 
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{
@@ -245,6 +261,38 @@ describe('Dialog', () => {
 
     });
 
+    fit('When modal mode is changed, overlay should be informed', fakeAsync(() => {
+        const fix = TestBed.createComponent(AlertComponent);
+        fix.detectChanges();
+
+        const dialog = fix.componentInstance.dialog;
+
+        dialog.open();
+        tick();
+        fix.detectChanges();
+
+        let overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
+        let overlayWrapper = overlaydiv.children[0];
+        expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
+        expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(false);
+
+        dialog.close();
+        tick();
+        fix.detectChanges();
+
+        fix.componentInstance.isModal = true;
+        fix.detectChanges();
+
+        dialog.open();
+        tick();
+        fix.detectChanges();
+
+        overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
+        overlayWrapper = overlaydiv.children[0];
+        expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(true);
+        expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(false);
+    }));
+
     function dispatchEvent(element: HTMLElement, eventType: string) {
         const event = new Event(eventType);
         element.dispatchEvent(event);
@@ -257,11 +305,13 @@ describe('Dialog', () => {
                                 title="alert"
                                 message="message"
                                 closeOnOutsideSelect="true"
-                                leftButtonLabel="OK">
+                                leftButtonLabel="OK"
+                                [isModal]="isModal">
                             </igx-dialog>
                         </div>` })
 class AlertComponent {
     @ViewChild('dialog') public dialog: IgxDialogComponent;
+    public isModal = false;
 }
 
 @Component({
@@ -283,7 +333,28 @@ class AlertComponent {
 class DialogComponent {
     @ViewChild('dialog') public dialog: IgxDialogComponent;
 }
+@Component({
+    template: `<div #wrapper>
+                            <igx-dialog #dialog
+                                leftButtonLabel="left button"
+                                leftButtonType="raised"
+                                leftButtonColor="black"
+                                leftButtonBackgroundColor="darkblue"
+                                leftButtonRipple="pink"
 
+                                rightButtonLabel="right button"
+                                rightButtonType="raised"
+                                rightButtonColor="orange"
+                                rightButtonBackgroundColor="lightblue"
+                                rightButtonRipple="white">
+                                <div class="custom-sample">
+                                    <h2>Custom Sample</h2>
+                                </div>
+                            </igx-dialog>
+                        </div>` })
+class DialogSampleComponent {
+    @ViewChild('dialog') public dialog: IgxDialogComponent;
+}
 @Component({
     template: `<div #wrapper>
                             <igx-dialog #dialog title="custom-dialog">
