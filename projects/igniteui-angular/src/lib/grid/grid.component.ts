@@ -320,9 +320,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set columnHiding(value) {
-        this._columnHiding = value;
-        if (this.gridAPI.get(this.id)) {
-            this.markForCheck();
+        if (this._columnHiding !== value) {
+            this._columnHiding = value;
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+                if (this._ngAfterViewInitPaassed) {
+                    this.calculateGridSizes();
+                }
+            }
         }
     }
 
@@ -398,6 +403,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Input()
     public columnHidingTitle = '';
+
+    @Input()
+    get columnPinning() {
+        return this._columnPinning;
+    }
+
+    set columnPinning(value) {
+        if (this._columnPinning !== value) {
+            this._columnPinning = value;
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+                if (this._ngAfterViewInitPaassed) {
+                    this.calculateGridSizes();
+                }
+            }
+        }
+    }
+
+    @Input()
+    public columnPinningTitle = '';
 
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
@@ -627,6 +652,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public get shouldShowToolbar(): boolean {
         return this.showToolbar &&
                (this.columnHiding ||
+                this.columnPinning ||
                 this.exportExcel ||
                 this.exportCsv ||
                 (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
@@ -783,6 +809,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _groupRowTemplate: TemplateRef<any>;
     protected _groupAreaTemplate: TemplateRef<any>;
     protected _columnHiding = false;
+    protected _columnPinning = false;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
