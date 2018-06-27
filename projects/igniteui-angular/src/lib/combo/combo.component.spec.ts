@@ -2753,13 +2753,13 @@ describe('Combo', () => {
         document.documentElement.dispatchEvent(new Event('click'));
         tick(500);
         expect(combo.collapsed).toEqual(true);
-        expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(2);
-        expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(2);
+        expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
         combo.toggle();
         tick(500);
         expect(combo.collapsed).toEqual(false);
-        expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
-        expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
+        expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
         vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
         expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
     }));
