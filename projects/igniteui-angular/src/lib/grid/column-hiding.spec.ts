@@ -658,6 +658,32 @@ describe('Column Hiding UI', () => {
             expect(JSON.stringify(columnsAreaDiv.styles)).toBe('{"max-height":"150px"}');
             expect(columnChooserElement.nativeElement.offsetHeight).toBe(250);
         });
+
+        it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', () => {
+            grid.height = '200px';
+            fix.detectChanges();
+            grid.reflow();
+            expect(grid.scr.nativeElement.hidden).toBe(false);
+            const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+            const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
+            let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+            expect(grid.calcHeight).toEqual(expectedHeight);
+
+            grid.columns[3].hidden = true;
+
+            expect(grid.scr.nativeElement.hidden).toBe(true);
+
+            expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
+
+            expect(grid.calcHeight).toEqual(expectedHeight);
+        });
     });
 
     describe('dropdown', () => {
