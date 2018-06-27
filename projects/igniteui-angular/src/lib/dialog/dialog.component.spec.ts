@@ -7,6 +7,14 @@ import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.
 
 const CLASS_OVERLAY_MAIN = 'igx-overlay';
 
+function clearOverlay() {
+    const overlays = document.getElementsByClassName(CLASS_OVERLAY_MAIN) as HTMLCollectionOf<Element>;
+    Array.from(overlays).forEach(element => {
+        element.parentElement.removeChild(element);
+    });
+    document.documentElement.scrollTop = 0;
+    document.documentElement.scrollLeft = 0;
+}
 describe('Dialog', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -21,6 +29,11 @@ describe('Dialog', () => {
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
+
+    afterAll(async () => {
+        clearOverlay();
+    });
+
     it('Initialize a datepicker component with id', () => {
         const fixture = TestBed.createComponent(AlertComponent);
         fixture.detectChanges();
