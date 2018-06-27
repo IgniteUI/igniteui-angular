@@ -106,7 +106,9 @@ export abstract class ColumnChooserBase implements OnDestroy {
         if (this._gridColumns.length > 0) {
             this._rawColumns = [];
             this._gridColumns.forEach((column) => {
-                this._rawColumns.push(this.createColumnItem(this, column));
+                if (!column.columnGroup) {
+                    this._rawColumns.push(this.createColumnItem(this, column));
+                }
             });
             this._currentColumns = this._rawColumns.slice(0);
             this.orderColumns(this._columnDisplayOrder);

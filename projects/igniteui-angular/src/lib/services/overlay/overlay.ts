@@ -33,16 +33,6 @@ export class IgxOverlayService {
         closeOnOutsideClick: true
     };
 
-    private get OverlayElement(): HTMLElement {
-        if (!this._overlayElement) {
-            this._overlayElement = this._document.createElement('div');
-            this._overlayElement.classList.add('igx-overlay');
-            this._document.body.appendChild(this._overlayElement);
-        }
-
-        return this._overlayElement;
-    }
-
     public onOpening = new EventEmitter<OverlayEventArgs>();
     public onOpened = new EventEmitter<OverlayEventArgs>();
     public onClosing = new EventEmitter<OverlayEventArgs>();
@@ -94,6 +84,12 @@ export class IgxOverlayService {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
             return;
         }
+
+        if (info.hiding) {
+            return;
+        }
+
+        info.hiding = true;
 
         this.onClosing.emit({ id, componentRef: info.componentRef });
         info.settings.scrollStrategy.detach();
@@ -154,7 +150,7 @@ export class IgxOverlayService {
     private moveElementToOverlay(info: OverlayInfo) {
         const wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(wrapperElement, info.settings);
-        this.OverlayElement.appendChild(wrapperElement);
+        this.getOverlayElement().appendChild(wrapperElement);
         const elementScrollTop = info.elementRef.nativeElement.scrollTop;
         contentElement.appendChild(info.elementRef.nativeElement);
 
@@ -186,6 +182,16 @@ export class IgxOverlayService {
 
         wrapperElement.appendChild(content);
         return content;
+    }
+
+    private getOverlayElement(): HTMLElement {
+        if (!this._overlayElement) {
+            this._overlayElement = this._document.createElement('div');
+            this._overlayElement.classList.add('igx-overlay');
+            this._document.body.appendChild(this._overlayElement);
+        }
+
+        return this._overlayElement;
     }
 
     private updateSize(info: OverlayInfo) {
@@ -256,12 +262,12 @@ export class IgxOverlayService {
 
         animationPlayer.onDone(() => {
             animationPlayer.reset();
-            if (!this.OverlayElement.contains(child)) {
+            if (!this._overlayElement.contains(child)) {
                 console.warn('Component with id:' + info.id + ' is already removed!');
                 return;
             }
 
-            this.OverlayElement.removeChild(child.parentNode.parentNode);
+            this._overlayElement.removeChild(child.parentNode.parentNode);
             if (info.componentRef) {
                 this._appRef.detachView(info.componentRef.hostView);
                 info.componentRef.destroy();
