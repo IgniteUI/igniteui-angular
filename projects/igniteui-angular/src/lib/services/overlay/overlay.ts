@@ -294,7 +294,7 @@ export class IgxOverlayService {
             }
 
             this._overlayInfos.splice(index, 1);
-            if (this._overlayInfos.length === 0) {
+            if (this._overlayInfos.length === 0 && this._overlayElement.parentElement) {
                 this._overlayElement.parentElement.removeChild(this._overlayElement);
                 this._overlayElement = null;
             }
