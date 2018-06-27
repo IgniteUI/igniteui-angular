@@ -833,18 +833,16 @@ describe('IgxDropDown ', () => {
         });
     }));
 
-    it('#1663 drop down flickers on open', () => {
+    it('#1663 drop down flickers on open', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDropDownWithScrollComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css('button')).nativeElement;
         const igxDropDown = fixture.componentInstance.dropdownScroll;
         button.click();
         igxDropDown.open();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(44);
-        });
-    });
+        tick();
+        expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(44);
+    }));
 });
 
 @Component({
