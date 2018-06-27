@@ -7,14 +7,14 @@ import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.
 
 const CLASS_OVERLAY_MAIN = 'igx-overlay';
 
-function clearOverlay() {
+/* function clearOverlay() {
     const overlays = document.getElementsByClassName(CLASS_OVERLAY_MAIN) as HTMLCollectionOf<Element>;
     Array.from(overlays).forEach(element => {
         element.parentElement.removeChild(element);
     });
     document.documentElement.scrollTop = 0;
     document.documentElement.scrollLeft = 0;
-}
+} */
 describe('Dialog', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -24,15 +24,12 @@ describe('Dialog', () => {
                 CustomDialogComponent,
                 NestedDialogsComponent,
                 CustomTemplates1DialogComponent,
-                CustomTemplates2DialogComponent
+                CustomTemplates2DialogComponent,
+                DialogSampleComponent
             ],
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
-
-    afterAll(async () => {
-        clearOverlay();
-    });
 
     it('Initialize a datepicker component with id', () => {
         const fixture = TestBed.createComponent(AlertComponent);
@@ -153,7 +150,7 @@ describe('Dialog', () => {
     }));
 
     it('Should test events.', fakeAsync(() => {
-        const fixture = TestBed.createComponent(DialogComponent);
+        const fixture = TestBed.createComponent(DialogSampleComponent);
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
             dialog,
@@ -174,7 +171,7 @@ describe('Dialog', () => {
         dialog.open();
         tick();
         fixture.detectChanges();
-        const buttons = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0].querySelectorAll('button');
+        const buttons = document.getElementsByClassName('custom-sample')[0].nextElementSibling.querySelectorAll('button');
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
@@ -300,7 +297,28 @@ class AlertComponent {
 class DialogComponent {
     @ViewChild('dialog') public dialog: IgxDialogComponent;
 }
+@Component({
+    template: `<div #wrapper>
+                            <igx-dialog #dialog
+                                leftButtonLabel="left button"
+                                leftButtonType="raised"
+                                leftButtonColor="black"
+                                leftButtonBackgroundColor="darkblue"
+                                leftButtonRipple="pink"
 
+                                rightButtonLabel="right button"
+                                rightButtonType="raised"
+                                rightButtonColor="orange"
+                                rightButtonBackgroundColor="lightblue"
+                                rightButtonRipple="white">
+                                <div class="custom-sample">
+                                    <h2>Custom Sample</h2>
+                                </div>
+                            </igx-dialog>
+                        </div>` })
+class DialogSampleComponent {
+    @ViewChild('dialog') public dialog: IgxDialogComponent;
+}
 @Component({
     template: `<div #wrapper>
                             <igx-dialog #dialog title="custom-dialog">
