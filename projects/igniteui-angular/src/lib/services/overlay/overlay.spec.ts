@@ -54,7 +54,7 @@ describe('igxOverlay', () => {
         it('OverlayElement should return a div attached to Document\'s body', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
-
+            
             fixture.componentInstance.buttonElement.nativeElement.click();
             tick();
             const overlayDiv = fixture.debugElement.nativeElement.parentElement.lastChild;
@@ -174,7 +174,7 @@ describe('igxOverlay', () => {
             overlayInstance.hide(id);
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
-
+            
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id, componentRef: jasmine.any(ComponentRef) });
@@ -253,7 +253,7 @@ describe('igxOverlay', () => {
             let width = 200;
             let height = 0;
             let right = 0;
-            let bottom = 0;
+            let bottom = 0;            
             spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => {
                 return {
                     width, height, right, bottom
@@ -490,7 +490,7 @@ describe('igxOverlay', () => {
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
-
+            
             expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
             expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
@@ -525,7 +525,7 @@ describe('igxOverlay', () => {
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
-
+            
             expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
             expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
@@ -600,7 +600,7 @@ describe('igxOverlay', () => {
             const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
             const content = overlayWrapper.firstChild;
             const componentEl = content.lastChild;
-
+            
             expect(overlayWrapper.localName).toEqual('div');
             expect(overlayWrapper.firstChild.localName).toEqual('div');
             expect(componentEl.localName === 'div').toBeTruthy();
@@ -793,7 +793,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false
             };
             overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
-
+            
             fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
             const overlayWrapper = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
@@ -907,7 +907,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
             fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
             fixture.detectChanges();
-
+            
             const overlayWrapper_1 = fixture.debugElement.nativeElement.parentElement.lastChild.firstChild;
             const componentEl_1 = overlayWrapper_1.firstChild.lastChild;
             const overlayWrapper_2 = fixture.debugElement.nativeElement.parentElement.lastChild.lastChild;
@@ -981,7 +981,7 @@ describe('igxOverlay', () => {
         }));
 
         // TODO: Should test with ConnectedPositioningStrategy
-        it('closingScrollStrategy: The component changes state to closed when reaching the threshold' +
+        xit('closingScrollStrategy: The component changes state to closed when reaching the threshold' +
             '(example: expanded DropDown collapses).', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
@@ -1010,7 +1010,7 @@ describe('igxOverlay', () => {
                 const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
                 overlay.show(SimpleDynamicComponent, overlaySettings);
                 tick();
-
+                
                 const wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
                 expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
                 expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
@@ -1058,7 +1058,7 @@ describe('igxOverlay', () => {
                 const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
                 overlay.show(SimpleDynamicComponent, overlaySettings);
                 tick();
-
+                
                 const wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
                 expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
                 expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
@@ -1168,7 +1168,7 @@ describe('igxOverlay', () => {
         }));
 
         // 1.2.2 Connected strategy position method
-        it('Connected strategy position method. Position component based on Point only', () => {
+        xit('Connected strategy position method. Position component based on Point only', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             // for a Point(300,300);
@@ -1209,7 +1209,7 @@ describe('igxOverlay', () => {
             }
         });
 
-        it('Connected strategy position method. Position component based on Element', () => {
+        xit('Connected strategy position method. Position component based on Element', () => {
             const fixture = TestBed.createComponent(TopLeftOffsetComponent);
             fixture.detectChanges();
             // for a Point(300,300);
@@ -1230,7 +1230,7 @@ describe('igxOverlay', () => {
             const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
             const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
-
+            
             fixture.detectChanges();
             // loop trough and test all possible combinations (count 81) for StartPoint and Direction.
             for (let lsp = 0; lsp < horAl.length; lsp++) {
@@ -1274,7 +1274,7 @@ describe('igxOverlay', () => {
                 target: fix.componentInstance.buttonElement.nativeElement,
                 horizontalStartPoint: HorizontalAlignment.Left,
                 verticalStartPoint: VerticalAlignment.Top
-            };
+            };            
             overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
             fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
             fix.whenStable().then(() => {
@@ -1299,7 +1299,7 @@ describe('igxOverlay', () => {
                 target: fix.componentInstance.buttonElement.nativeElement,
                 horizontalStartPoint: HorizontalAlignment.Left,
                 verticalStartPoint: VerticalAlignment.Top
-            };
+            };            
             overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
             fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
             fix.whenStable().then(() => {
@@ -1326,7 +1326,7 @@ describe('igxOverlay', () => {
                 target: fix.componentInstance.buttonElement.nativeElement,
                 horizontalStartPoint: HorizontalAlignment.Left,
                 verticalStartPoint: VerticalAlignment.Top
-            };
+            };            
             overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
             fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
             fix.whenStable().then(() => {
@@ -1607,7 +1607,7 @@ describe('igxOverlay', () => {
 
         // 2. Scroll Strategy (test with GlobalPositionStrategy(default))
         // 2.1. Scroll Strategy - None
-        it('The component do not scroll with the window.', fakeAsync(() => {
+        it('The component do not scroll with the window. No scrolling happens.', fakeAsync(() => {
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [`button {
@@ -1647,7 +1647,7 @@ describe('igxOverlay', () => {
             expect(document.documentElement.scrollLeft).toEqual(50);
         }));
 
-        xit('The component shown in igx-overlay do not close.(example: expanded DropDown stays expanded during a scrolling attempt.)',
+        it('The component shown in igx-overlay do not close.(example: expanded DropDown stays expanded during a scrolling attempt.)',
             fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
@@ -1662,14 +1662,13 @@ describe('igxOverlay', () => {
                 const noScroll = new NoOpScrollStrategy();
                 const overlaySettings: OverlaySettings = {
                     modal: false,
-                };
+                };                
                 const overlay = fixture.componentInstance.overlay;
                 spyOn(noScroll, 'initialize').and.callThrough();
                 spyOn(noScroll, 'attach').and.callThrough();
                 spyOn(noScroll, 'detach').and.callThrough();
-
+                
                 overlay.show(SimpleDynamicComponent, overlaySettings);
-
                 tick();
                 const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
                 const element = contentWrapper.firstChild as HTMLElement;
@@ -1692,7 +1691,7 @@ describe('igxOverlay', () => {
 
         // 2.2 Scroll Strategy - Closing. (Uses a tolerance and closes an expanded component upon scrolling if the tolerance is exceeded.)
         // (example: DropDown or Dialog component collapse/closes after scrolling 10px.)
-        xit('Until the set tolerance is exceeded scrolling is possible.',
+        it('Until the set tolerance is exceeded scrolling is possible.',
             fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
@@ -1710,7 +1709,7 @@ describe('igxOverlay', () => {
                     modal: false,
                     closeOnOutsideClick: false
                 };
-
+                
                 spyOn(scrollStrategy, 'initialize').and.callThrough();
                 spyOn(scrollStrategy, 'attach').and.callThrough();
                 spyOn(scrollStrategy, 'detach').and.callThrough();
@@ -1740,6 +1739,7 @@ describe('igxOverlay', () => {
                 expect(overlay.hide).toHaveBeenCalledTimes(1);
         }));
 
+        //WIP 
         xit('The component shown in igx-overlay do not change its state until it exceeds the scrolling tolerance set.', 
             fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
@@ -1758,7 +1758,6 @@ describe('igxOverlay', () => {
                     closeOnOutsideClick: false,
                     modal: false
                 };
-                
                 spyOn(scrollStrategy, 'initialize').and.callThrough();
                 spyOn(scrollStrategy, 'attach').and.callThrough();
                 spyOn(scrollStrategy, 'detach').and.callThrough();
@@ -1774,16 +1773,18 @@ describe('igxOverlay', () => {
                 expect(document.documentElement.scrollTop).toEqual(0);
 
                 document.documentElement.scrollTop += scrollTolerance;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.documentElement.dispatchEvent(new Event('scroll')); 
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(1);
                 expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
                 expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
                 expect(overlay.hide).toHaveBeenCalledTimes(0);
+                
+                fixture.destroy();
         }));
 
-        xit('The component shown in igx-overlay changes its state when it exceeds the scrolling tolerance set ' +
+        it('The component shown in igx-overlay changes its state when it exceeds the scrolling tolerance set ' +
             '(an expanded DropDown, Menu, DatePicker, etc. collapses).', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
@@ -1801,7 +1802,7 @@ describe('igxOverlay', () => {
                     modal: false,
                     closeOnOutsideClick: false
                 };
-
+                
                 spyOn(scrollStrategy, 'initialize').and.callThrough();
                 spyOn(scrollStrategy, 'attach').and.callThrough();
                 spyOn(scrollStrategy, 'detach').and.callThrough();
@@ -1834,7 +1835,7 @@ describe('igxOverlay', () => {
             }));
 
         // 2.3 Scroll Strategy - NoOp.
-        xit('When scrolling, the component stays static and only the background scrolls', fakeAsync(() => {
+        it('When scrolling, the component stays static and only the background scrolls', fakeAsync(() => {
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
@@ -1850,7 +1851,7 @@ describe('igxOverlay', () => {
                 scrollStrategy: scrollStrategy,
                 positionStrategy: new GlobalPositionStrategy()
             };
-            
+      
             spyOn(scrollStrategy, 'initialize').and.callThrough();
             spyOn(scrollStrategy, 'attach').and.callThrough();
             spyOn(scrollStrategy, 'detach').and.callThrough();
@@ -1877,7 +1878,7 @@ describe('igxOverlay', () => {
             expect(element.getBoundingClientRect()).toEqual(elementRect);
         }));
 
-        xit('Component persist open state (expanded DropDown remains expanded)', fakeAsync(() => {
+        it('Component persist open state (expanded DropDown remains expanded)', fakeAsync(() => {
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
@@ -1907,7 +1908,6 @@ describe('igxOverlay', () => {
             expect(scrollStrategy.attach).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
-
             document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
@@ -1917,12 +1917,12 @@ describe('igxOverlay', () => {
         }));
 
         // 2.4. Scroll Strategy - Absolute.
-        fit('Scrolls everything except component.', fakeAsync(() => {
+        it('Scrolls everything except component.', fakeAsync(() => {
             // Should behave as NoOpScrollStrategy
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
-                        'button { top:200%; left: 100%; }',
+                        'button { position: absolute; top:200%; left: 100%; }',
                     ]
                 }
             }).createComponent(EmptyPageComponent);
@@ -1935,7 +1935,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new ConnectedPositioningStrategy(),
                 scrollStrategy: scrollStrategy
             };
-            
+         
             spyOn(scrollStrategy, 'initialize').and.callThrough();
             spyOn(scrollStrategy, 'attach').and.callThrough();
             spyOn(scrollStrategy, 'detach').and.callThrough();
@@ -1950,19 +1950,18 @@ describe('igxOverlay', () => {
             const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
             const element = contentWrapper.firstChild as HTMLElement;
             const elementRect = element.getBoundingClientRect() as DOMRect;
-            // debugger;
-            document.documentElement.scrollTop += scrollTolerance * 10;
+            
+            document.documentElement.scrollTop += scrollTolerance;
             document.documentElement.dispatchEvent(new Event('scroll'));
             tick();
             let newElementRect = element.getBoundingClientRect() as DOMRect;
-            expect(document.documentElement.scrollTop).toEqual(scrollTolerance * 10);
+            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
             expect(newElementRect.top).toEqual(elementRect.top);
-            // debugger;
         }));
 
-        xit('Components persist open state.', fakeAsync(() => {
+        it('Components persist open state.', fakeAsync(() => {
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
@@ -1979,7 +1978,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy(),
                 scrollStrategy: scrollStrategy
             };
-
+            
             spyOn(scrollStrategy, 'initialize').and.callThrough();
             spyOn(scrollStrategy, 'attach').and.callThrough();
             spyOn(scrollStrategy, 'detach').and.callThrough();
@@ -2043,30 +2042,16 @@ describe('igxOverlay', () => {
         });
 
         xit('Esc key closes the dialog.', fakeAsync(() => {
-           // TO DO
+            // Not TO DO
         }));
 
         xit('Enter selects', () => {
             // Not TO DO
         });
 
-        // 3.1.1 closeOnOutsideClick - modal
-        it('Clicking outside the component does NOT close it', fakeAsync(() => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            const overlaySettings: OverlaySettings = {
-                modal: true,
-                closeOnOutsideClick: false
-            };
-
-            fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0];
-            const element = contentWrapper.firstChild as HTMLElement;
-            const elementRect = element.getBoundingClientRect();
-            document.body.click();
-            tick();
-            expect(elementRect).toEqual(element.getBoundingClientRect());
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL).length).toEqual(1);
-        }));
+        xit('Clicking outside the dialog does not close it', () => {
+            // TO DO
+        });
 
         // 3.2 Non - Modal
         xit('igx-overlay do not apply a greyed our mask layer', () => {
@@ -2077,34 +2062,13 @@ describe('igxOverlay', () => {
             // Not TO DO
         });
 
+        xit('Clicking outside the component it collapses/closes (DropDown, DatePicker, NavBar etc.)', () => {
+            // TO DO
+        });
+
         xit('Escape - closes (DropDown, Dialog, etc.).', () => {
             // Not TO DO
         });
-
-        // 3.2.1 closeOnOutsideClick - non modal
-        it('Clicking outside the component does close it', fakeAsync(() => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            const overlaySettings: OverlaySettings = {
-                modal: false,
-                closeOnOutsideClick: true,
-                positionStrategy: new GlobalPositionStrategy()
-            };
-
-            fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-            const expectedRectangle = new DOMRect();
-            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-            const element = contentWrapper.firstChild as HTMLElement;
-
-            document.body.click();
-            document.dispatchEvent(new Event('click'));
-            tick();
-
-            fixture.whenStable().then(() => {
-            expect(element.getBoundingClientRect()).toEqual(expectedRectangle);
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
-            });
-        }));
 
         // 4. Css
         xit('All appropriate css classes should be applied on igx-overlay initialization. ' +
