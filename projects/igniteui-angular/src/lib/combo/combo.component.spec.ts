@@ -681,6 +681,7 @@ fdescribe('igxCombo', () => {
                 expect(scrollbar.scrollTop).toEqual(0);
                 dropdownContent.dispatchEvent(endEvent);
                 setTimeout(() => {
+                    fixture.detectChanges();
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
                     dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
@@ -689,6 +690,7 @@ fdescribe('igxCombo', () => {
                     expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                     dropdownContent.dispatchEvent(homeEvent);
                     setTimeout(() => {
+                        fixture.detectChanges();
                         expect(scrollbar.scrollTop).toEqual(0);
                         dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                         firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
@@ -735,6 +737,7 @@ fdescribe('igxCombo', () => {
                 fixture.detectChanges();
                 dropdownContent.dispatchEvent(endEvent);
                 setTimeout(() => {
+                    fixture.detectChanges();
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
                     dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
