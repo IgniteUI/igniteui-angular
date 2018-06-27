@@ -92,6 +92,26 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - Accessibility compliance
 
     For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
+- `igxDropdown` component added
+
+    ```html
+    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
+                {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    ```
+
+    **igxDropDown** displays a scrollable list of items which may be visually grouped and supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down.
+
+    A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
+
+    igxDropdown features:
+
+        - Single Selection
+        - Grouping
+        - Keayboard Navigation
+        - Accessibility compliance
 
 - `igxChip` and `igxChipsArea` components added
 
