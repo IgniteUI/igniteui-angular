@@ -59,6 +59,12 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
 
 - `igxGrid` theme now has support for alternating grid row background and text colors.
+- `igxGrid` now has a toolbar (shown using the `showToolbar` property) which contains the following features:
+  - title (specified using the `toolbarTitle` property)
+  - column hiding feature (enabled using the `columnHiding` property)
+  - column pinning feature (enabled using the `columnPinning` property)
+  - export to excel (enabled using the `exportExcel` property)
+  - export to CSV (enabled using the `exportCsv` property)
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
@@ -85,6 +91,26 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - Accessibility compliance
 
     For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
+- `igxDropdown` component added
+
+    ```html
+    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
+                {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    ```
+
+    **igxDropDown** displays a scrollable list of items which may be visually grouped and supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down.
+
+    A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
+
+    igxDropdown features:
+
+        - Single Selection
+        - Grouping
+        - Keayboard Navigation
+        - Accessibility compliance
 
 - `igxChip` and `igxChipsArea` components added
 
