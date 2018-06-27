@@ -24,15 +24,27 @@
 /// @requires igx-color
 @function igx-drop-down-theme(
     $palette: $default-palette,
+
     $background-color: null,
     $header-text-color: null,
+
     $item-text-color: null,
     $hover-item-text-color: null,
+
     $hover-item-background:null,
+
     $focused-item-background:null,
     $focus-item-text-color:null,
+
     $selected-item-background:null,
     $selected-item-text-color:null,
+
+    $selected-hover-item-background:null,
+    $selected-hover-item-text-color:null,
+
+    $selected-focus-item-background:null,
+    $selected-focus-item-text-color:null,
+
     $disabled-item-background:null,
     $disabled-item-text-color:null
 ) {
@@ -46,8 +58,16 @@
         hover-item-background: igx-color($palette, 'grays', 100),
         focused-item-background: igx-color($palette, 'grays', 100),
         focus-item-text-color: igx-color($palette, 'grays', 800),
+
         selected-item-background: igx-color($palette, 'secondary', 500),
         selected-item-text-color: #fff,
+
+        selected-hover-item-background: igx-color($palette, 'secondary', 500),
+        selected-hover-item-text-color: #fff,
+
+        selected-focus-item-background: igx-color($palette, 'secondary', 500),
+        selected-focus-item-text-color: #fff,
+
         disabled-item-background: transparent,
         disabled-item-text-color: igx-color($palette, 'grays', 500)
     );
@@ -78,6 +98,16 @@
         $selected-item-text-color: text-contrast($selected-item-background);
     }
 
+    @if not($selected-hover-item-text-color) and $selected-hover-item-background {
+        $selected-hover-item-text-color: text-contrast($selected-hover-item-background);
+    }
+
+
+    @if not($selected-focus-item-text-color) and $selected-focus-item-background {
+        $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
+    }
+
+
     @if not($disabled-item-text-color) and $background-color {
         $disabled-item-text-color: rgba(text-contrast($background-color), .36);
     }
@@ -102,6 +132,10 @@
         focus-item-text-color:$focus-item-text-color,
         selected-item-background:$selected-item-background,
         selected-item-text-color:$selected-item-text-color,
+        selected-hover-item-background:$selected-hover-item-background,
+        selected-hover-item-text-color:$selected-hover-item-text-color,
+        selected-focus-item-background:$selected-focus-item-background,
+        selected-focus-item-text-color:$selected-focus-item-text-color,
         disabled-item-background:$disabled-item-background,
         disabled-item-text-color:$disabled-item-text-color,
     ));
@@ -118,9 +152,6 @@
     $desktop-item-height: 32px;
     $mobile-item-height: 48px;
 
-    $desktop-item-min-width: 128px;
-    $mobile-item-min-width: 112px;
-
     $desktop-item-padding: 24px;
     $mobile-item-padding: 16px;
 
@@ -132,21 +163,13 @@
     $dd-shadow: igx-elevation($elevations, 3);
 
     %igx-drop-down {
-        // We need that calc to fix a bug with ellipsis which makes the ellipsis to appear even when there is no need
-        max-width: calc(100% - 32px);
-        min-width: rem($desktop-item-min-width);
         max-height: 100%;
         position: absolute;
-        @media only screen and (max-width: $mobile-break-point) {
-            min-width: rem($mobile-item-min-width);
-        }
     }
 
     %igx-drop-down__list {
         overflow-y: auto;
         z-index: 1;
-        // We need that calc to fix a bug with ellipsis which makes the ellipsis to appear even when there is no need
-        min-width: calc(100% + 32px);
         box-shadow: $dd-shadow;
         background: --var($theme, 'background-color');
     }
@@ -221,12 +244,14 @@
         color: --var($theme, 'selected-item-text-color');
 
         &:hover {
-            background: --var($theme, 'selected-item-background');
+            background: --var($theme, 'selected-hover-item-background');
+            color: --var($theme, 'selected-hover-item-text-color');
         }
 
+        &%igx-drop-down__item--focused,
         &:focus {
-            background: --var($theme, 'selected-item-background');
-            color: --var($theme, 'selected-item-text-color');
+            background: --var($theme, 'selected-focus-item-background');
+            color: --var($theme, 'selected-focus-item-text-color');
         }
     }
 

@@ -44,9 +44,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     };
     public totalItemCount: number = null;
 
-    @DeprecateProperty(`igxForRemote is deprecated, setting this property is no longer needed for remote virtualization`)
-    @Input() public igxForRemote = false;
-
     @Output()
     public onChunkLoad = new EventEmitter<IForOfState>();
 
@@ -241,6 +238,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.initHCache(this.igxForOf);
                 }
                 this._applyChanges(changes);
+                this._zone.run(() => {
+                    this.cdr.markForCheck();
+                });
             }
         }
     }
@@ -352,7 +352,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        this.dc.changeDetectorRef.detectChanges();
+        this._zone.run(() => {
+            this.cdr.markForCheck();
+        });
         this.onChunkLoad.emit(this.state);
     }
 
@@ -415,15 +417,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected fixedUpdateAllCols(inScrollLeft) {
-        this.state.startIndex = this.getHorizontalIndexAt(
+        const startIndex = this.getHorizontalIndexAt(
             inScrollLeft,
             this.hCache,
             0
         );
         this.onChunkPreload.emit(this.state);
         /*recalculate and apply page size.*/
-        this.applyChunkSizeChange();
-
+        if (startIndex + this.state.chunkSize > this.igxForOf.length) {
+            this.state.startIndex = this.igxForOf.length - this.state.chunkSize;
+        } else {
+            this.state.startIndex = startIndex;
+        }
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const endingIndex = this.state.chunkSize + this.state.startIndex;
         for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
@@ -598,27 +603,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let chunkSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (this.igxForScrollOrientation === 'horizontal') {
-                const vc = this.igxForScrollContainer ?
-                    this.igxForScrollContainer._viewContainer :
-                    this._viewContainer;
-                const hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
-
-                const left = hScroll && hScroll.scrollLeft !== 0 ?
-                    hScroll.scrollLeft + parseInt(this.igxForContainerSize, 10) :
-                    parseInt(this.igxForContainerSize, 10);
-
                 if (!this.hCache) {
                     this.initHCache(this.igxForOf);
                 }
-
-                const endIndex = this.getHorizontalIndexAt(
-                    left,
-                    this.hCache,
-                    0
-                ) + 1;
-                chunkSize = endIndex - this.state.startIndex;
+                chunkSize = this._calcMaxChunkSize();
                 if (this.igxForOf && chunkSize > this.igxForOf.length) {
-                    chunkSize = this.igxForOf.length;
+                   chunkSize = this.igxForOf.length;
                 }
             } else {
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
@@ -656,6 +646,32 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.hCache.push(totalWidth);
         }
         return totalWidth;
+    }
+
+    protected _calcMaxChunkSize() {
+        let i = 0;
+        let length = 0;
+        let maxLength = 0;
+        const arr = [];
+        let sum = 0;
+        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem.width, 10);
+        const availableSize = parseInt(this.igxForContainerSize, 10);
+        for (i; i < this.igxForOf.length; i++) {
+            const item = this.igxForOf[i];
+            sum = arr.reduce(reducer,  parseInt(item.width, 10));
+            if (sum <= availableSize) {
+                 arr.push(item);
+                 length = arr.length;
+             } else {
+                 arr.push(item);
+                 length = arr.length + 1;
+                 arr.splice(0, 1);
+             }
+             if (length > maxLength) {
+                 maxLength = length;
+             }
+        }
+        return maxLength;
     }
 
     protected getHorizontalIndexAt(left, set, index) {
@@ -701,6 +717,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
         this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
 
+        this.applyChunkSizeChange();
+        this._recalcScrollBarSize();
         if (this.hCache) {
             this.state.startIndex = 0;
             if (this.hScroll.scrollLeft !== 0) {
@@ -711,8 +729,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.cdr.detectChanges();
             return;
         }
-        this.applyChunkSizeChange();
-        this._recalcScrollBarSize();
     }
 
     /** Removes an elemenet from the embedded views and updates chunkSize */
@@ -726,7 +742,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /** If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize */
     protected addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
-        if (!this.igxForOf || elemIndex > this.igxForOf.length) {
+        if (!this.isRemote && (!this.igxForOf || elemIndex > this.igxForOf.length)) {
             return;
         }
 
@@ -744,6 +760,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         this._embeddedViews.push(embeddedView);
         this.state.chunkSize++;
+
+        this._zone.run(() => {
+            this.cdr.markForCheck();
+        });
     }
 
     /**

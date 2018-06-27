@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
@@ -55,9 +55,13 @@ import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
+import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
+
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { RadioSampleComponent } from './radio/radio.sample';
 
 const components = [
     AppComponent,
@@ -72,6 +76,7 @@ const components = [
     DatePickerSampleComponent,
     DropDownSampleComponent,
     DragDropSampleComponent,
+    ComboSampleComponent,
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
@@ -104,10 +109,13 @@ const components = [
     GridSelectionComponent,
     GridToolbarSampleComponent,
     GridVirtualizationSampleComponent,
+    GridColumnGroupsSampleComponent,
+
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
-    TypographySampleComponent
+    TypographySampleComponent,
+    RadioSampleComponent
 ];
 
 @NgModule({
@@ -116,6 +124,7 @@ const components = [
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule.forRoot(),
         IgxGridModule.forRoot(),

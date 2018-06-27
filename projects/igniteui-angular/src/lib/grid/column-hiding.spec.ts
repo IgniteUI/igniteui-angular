@@ -6,12 +6,13 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { Calendar } from '../calendar';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { ColumnDisplayOrder, IgxColumnHidingComponent, IgxColumnHidingModule } from './column-hiding.component';
+import { IgxColumnHidingComponent, IgxColumnHidingModule } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownComponent, IgxDropDownModule } from '../../public_api';
+import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
+import { ColumnDisplayOrder } from './column-chooser-base';
 
 describe('Column Hiding UI', () => {
     let fix;
@@ -854,12 +855,12 @@ describe('Column Hiding UI', () => {
     });
 
     function getColumnChooserButton() {
-        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
+        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button ? button.nativeElement : undefined;
     }
 
     function getColumnChooserButtonIcon() {
-        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnChooser');
+        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button.query(By.css('igx-icon')).nativeElement;
     }
 
@@ -1074,7 +1075,7 @@ export class ColumnHidingToggleComponent extends ColumnHidingInlineComponent {
 
 @Component({
     template: `<igx-grid [data]="data" width="500px" height="500px"
-        [showToolbar]="true" [columnHiding]="true" hiddenColumnsText="Hidden">
+        [showToolbar]="true" toolbarTitle="Grid Toolbar Title" [columnHiding]="true" hiddenColumnsText="Hidden">
         <igx-column [field]="'ID'" [header]="'ID'" [disableHiding]="false"></igx-column>
         <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>

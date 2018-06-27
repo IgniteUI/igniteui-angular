@@ -65,3 +65,9 @@ igx-card {
 igx-card~igx-card {
     margin-left: 16px;
 }
+
+.radio-group {
+    display: flex;
+    flex-flow: column nowrap;
+    margin-top: 16px;
+}

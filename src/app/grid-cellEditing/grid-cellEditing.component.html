@@ -1,27 +1,27 @@
-<igx-grid #grid1 [data]="data" [autoGenerate]="false" displayDensity="cosy" width="500px" height="550px" [paging]="true">
+<igx-grid #grid1 [data]="data" [autoGenerate]="false" displayDensity="cosy" width="800px" height="550px" [paging]="true">
     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true">
         <ng-template igxCell let-cell="cell" let-val>
         <button (click)="viewRecord(grid1.data)">{{val}}</button>
         </ng-template>
     </igx-column>
-    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true" [dataType]="'number'" [hasSummary]="true">
+    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true" [dataType]="'number'" [hasSummary]="true" [movable]="true">
         <ng-template igxCell let-cell="cell" let-val let-row>
         {{val}} {{row.gridID}}
         </ng-template>
     </igx-column>
-    <igx-column field="ProductName" width="200px" header="ProductName" [sortable]="true" [dataType]="'string'" editable="true" [resizable]="true">
+    <igx-column field="ProductName" width="200px" header="ProductName" [sortable]="true" [dataType]="'string'" editable="true" [resizable]="true" [movable]="true">
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true" [sortable]="true" [hasSummary]="true" >
+    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true" [sortable]="true" [hasSummary]="true" [movable]="true">
         <ng-template igxCellEditor let-cell="cell">
             <input name="units" [(ngModel)]="cell.value" style="color: black"/>
         </ng-template>
     </igx-column>
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true" editable="true" [resizable]="true">
+    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true" editable="true" [resizable]="true" [hidden]="orderDateHidden" [movable]="true">
         <ng-template igxCell let-cell="cell" let-val let-row>
         {{val}}
         </ng-template>
     </igx-column>
-    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" editable="true" [resizable]="true">
+    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
         <ng-template igxCell let-cell="cell" let-val>
         {{val}}
         </ng-template>
@@ -33,3 +33,4 @@
 <button (click)="updateCell()">Update Cell</button>
 <button (click)="updateRow()">Update Row</button>
 <button (click)="pin()">Pin</button>
+<button (click)="hideColumn()">Hide/Show OrderDate</button>

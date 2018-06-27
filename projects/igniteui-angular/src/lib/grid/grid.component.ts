@@ -113,13 +113,13 @@ export interface IColumnMovingStartEventArgs {
 
 export interface IColumnMovingEventArgs {
     source: IgxColumnComponent;
-    target: IgxColumnComponent;
     cancel: boolean;
 }
 
 export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
+    cancel: boolean;
 }
 
 /**
@@ -320,9 +320,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     set columnHiding(value) {
-        this._columnHiding = value;
-        if (this.gridAPI.get(this.id)) {
-            this.markForCheck();
+        if (this._columnHiding !== value) {
+            this._columnHiding = value;
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+                if (this._ngAfterViewInitPaassed) {
+                    this.calculateGridSizes();
+                }
+            }
         }
     }
 
@@ -379,10 +384,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
-    public evenRowCSS = '';
+    public evenRowCSS = 'igx-grid__tr--even';
 
     @Input()
-    public oddRowCSS = '';
+    public oddRowCSS = 'igx-grid__tr--odd';
 
     @Input()
     public rowHeight: number;
@@ -398,6 +403,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Input()
     public columnHidingTitle = '';
+
+    @Input()
+    get columnPinning() {
+        return this._columnPinning;
+    }
+
+    set columnPinning(value) {
+        if (this._columnPinning !== value) {
+            this._columnPinning = value;
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+                if (this._ngAfterViewInitPaassed) {
+                    this.calculateGridSizes();
+                }
+            }
+        }
+    }
+
+    @Input()
+    public columnPinningTitle = '';
 
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
@@ -466,7 +491,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
     @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
@@ -588,6 +613,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
     }
 
+    get maxLevelHeaderDepth() {
+        if (this._maxLevelHeaderDepth === null) {
+            this._maxLevelHeaderDepth =  this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+        }
+        return this._maxLevelHeaderDepth;
+    }
+
     get hiddenColumnsCount() {
         return this.columnList.filter((col) => col.hidden === true).length;
     }
@@ -599,6 +631,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     set hiddenColumnsText(value) {
         this._hiddenColumnsText = value;
+
     }
 
     /* Toolbar related definitions */
@@ -615,6 +648,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
+
+    public get shouldShowToolbar(): boolean {
+        return this.showToolbar &&
+               (this.columnHiding ||
+                this.columnPinning ||
+                this.exportExcel ||
+                this.exportCsv ||
+                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
+    }
 
     @Input()
     public get showToolbar(): boolean {
@@ -736,6 +778,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public draggedColumn: IgxColumnComponent;
     public isColumnResizing: boolean;
+    public isColumnMoving: boolean;
 
     public eventBus = new Subject<boolean>();
 
@@ -760,11 +803,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected _unpinnedColumns: IgxColumnComponent[] = [];
     protected _filteringExpressionsTree: IFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
     protected _sortingExpressions = [];
+    protected _maxLevelHeaderDepth = null;
     protected _groupingExpressions = [];
     protected _groupingExpandState: IGroupByExpandState[] = [];
     protected _groupRowTemplate: TemplateRef<any>;
     protected _groupAreaTemplate: TemplateRef<any>;
     protected _columnHiding = false;
+    protected _columnPinning = false;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -805,6 +850,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
+        this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe((source) => {
+            const editableCell =  this.gridAPI.get_cell_inEditMode(this.id);
+            if (editableCell) {
+                this.gridAPI.submit_value(this.id);
+                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+            }
+        });
     }
 
     public ngAfterContentInit() {
@@ -857,6 +909,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
         });
         this._derivePossibleWidth();
+        this.initPinning();
         this.calculateGridSizes();
         this._ngAfterViewInitPaassed = true;
     }
@@ -948,7 +1001,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get unpinnedColumns(): IgxColumnComponent[] {
-        return this._unpinnedColumns.filter((col) => !col.hidden).sort((col1, col2) => col1.index - col2.index);
+        return this._unpinnedColumns.filter((col) => !col.hidden); // .sort((col1, col2) => col1.index - col2.index);
     }
 
     public getColumnByName(name: string): IgxColumnComponent {
@@ -993,7 +1046,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get totalWidth(): number {
-        const cols = this.visibleColumns;
+        // Take only top level columns
+        const cols = this.visibleColumns.filter(col => col.level === 0);
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
@@ -1002,41 +1056,60 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return totalWidth;
     }
 
+    protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent) {
+        const list = this.columnList.toArray();
+        const fi = list.indexOf(from);
+        const ti = list.indexOf(to);
+        list.splice(ti, 0, ...list.splice(fi, 1));
+        const newList = this._resetColumnList(list);
+        this.columnList.reset(newList);
+        this.columnList.notifyOnChanges();
+    }
+
+    protected _resetColumnList(list?) {
+        if (!list) {
+            list = this.columnList.toArray();
+        }
+        let newList = [];
+        list.filter(c => c.level === 0).forEach(p => {
+            newList.push(p);
+            if (p.columnGroup) {
+                newList = newList.concat(p.allChildren);
+            }
+        });
+        return newList;
+    }
+
+    protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent) {
+        const buffer = parent.children.toArray();
+        const fi = buffer.indexOf(from);
+        const ti = buffer.indexOf(to);
+        buffer.splice(ti, 0, ...buffer.splice(fi, 1));
+        parent.children.reset(buffer);
+    }
+
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
-        if (column.pinned) {
-            const fromIndex = this._pinnedColumns.indexOf(column);
 
-            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
-                this._unpinnedColumns.indexOf(dropTarget);
-
-            this._pinnedColumns.splice(fromIndex, 1);
-
-            if (dropTarget.pinned) {
-                column.pinned = true;
-                this._pinnedColumns.splice(toIndex, 0, column);
-            } else {
-                column.pinned = false;
-                this._unpinnedColumns.splice(toIndex + 1, 0, column);
-            }
-        } else {
-            const fromIndex = this._unpinnedColumns.indexOf(column);
-
-            const toIndex = dropTarget.pinned ? this._pinnedColumns.indexOf(dropTarget) :
-                this._unpinnedColumns.indexOf(dropTarget);
-
-            this._unpinnedColumns.splice(fromIndex, 1);
-
-            if (dropTarget.pinned) {
-                column.pinned = true;
-                this._pinnedColumns.splice(toIndex, 0, column);
-            } else {
-                column.pinned = false;
-                this._unpinnedColumns.splice(toIndex, 0, column);
-            }
+        if (column.level) {
+            this._moveChildColumns(column.parent, column, dropTarget);
         }
 
-        this.columnList.reset(this._pinnedColumns.concat(this._unpinnedColumns));
-        this.columnList.notifyOnChanges();
+        if (dropTarget.pinned && column.pinned) {
+            const pinned = this._pinnedColumns;
+            pinned.splice(pinned.indexOf(dropTarget), 0, ...pinned.splice(pinned.indexOf(column), 1));
+            return;
+        }
+
+        if (dropTarget.pinned && !column.pinned) {
+            column.pin(dropTarget.index);
+            return;
+        }
+
+        if (!dropTarget.pinned && column.pinned) {
+            column.pinned = false;
+        }
+
+        this._moveColumns(column, dropTarget);
     }
 
     public nextPage(): void {
@@ -1239,42 +1312,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    public pinColumn(columnName: string): boolean {
-        const col = this.getColumnByName(columnName);
-        const colWidth = parseInt(col.width, 10);
+    // TODO: We have return values here. Move them to event args ??
 
-        if (col.pinned) {
-            return false;
-        }
-        /**
-         * If the column that we want to pin is bigger or equal than the unpinned area we should not pin it.
-         * It should be also unpinned before pinning, since changing left/right pin area doesn't affect unpinned area.
-         */
-        if (this.getUnpinnedWidth(true) - colWidth < this.unpinnedAreaMinWidth) {
-            return false;
-        }
+    public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
+        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
+        return col.pin(index);
+    }
 
-        const oldIndex = col.visibleIndex;
-
-        col.pinned = true;
-        const index = this._pinnedColumns.length;
-
-        const args = { column: col, insertAtIndex: index };
-        this.onColumnPinning.emit(args);
-
-        // update grid collections.
-        if (this._pinnedColumns.indexOf(col) === -1) {
-            this._pinnedColumns.splice(args.insertAtIndex, 0, col);
-
-            if (this._unpinnedColumns.indexOf(col) !== -1) {
-                this._unpinnedColumns.splice(this._unpinnedColumns.indexOf(col), 1);
-            }
-        }
-        this.markForCheck();
-
-        const newIndex = col.visibleIndex;
-        col.updateHighlights(oldIndex, newIndex);
-        return true;
+    public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
+        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
+        return col.unpin(index);
     }
 
     public toggleAllGroupRows() {
@@ -1282,24 +1329,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.groupsExpanded = !this.groupsExpanded;
     }
 
-    public unpinColumn(columnName: string): boolean {
-        const col = this.getColumnByName(columnName);
-
-        if (!col.pinned) {
-            return false;
-        }
-        const oldIndex = col.visibleIndex;
-        col.pinned = false;
-        this._unpinnedColumns.splice(col.index, 0, col);
-        if (this._pinnedColumns.indexOf(col) !== -1) {
-            this._pinnedColumns.splice(this._pinnedColumns.indexOf(col), 1);
-        }
-        this.markForCheck();
-
-        const newIndex = col.visibleIndex;
-        col.updateHighlights(oldIndex, newIndex);
-        return true;
-    }
 
     /**
      * Recalculates grid width/height dimensions. Should be run when changing DOM elements dimentions manually that affect the grid's size.
@@ -1377,9 +1406,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList && this.columnList.some((col) => col.movable);
     }
 
+    get hasColumnGroups(): boolean {
+        return this.columnList.some(col => col.columnGroup);
+    }
+
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.rowList) {
-            return this.rowList.map((row) => row.cells.filter((cell) => cell.selected))
+            return this.rowList.filter((row) => row instanceof IgxGridRowComponent).map((row) => row.cells.filter((cell) => cell.selected))
                 .reduce((a, b) => a.concat(b), []);
         }
         return [];
@@ -1417,6 +1450,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected calculateGridHeight() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+
+        // TODO: Calculate based on grid density
+        if (this.maxLevelHeaderDepth) {
+            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight + 1}px`;
+        }
 
         if (!this._height) {
             this.calcHeight = null;
@@ -1543,7 +1581,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
         let sum = 0;
         for (const col of fc) {
-            sum += parseInt(col.width, 10);
+            if (col.level === 0) {
+                sum += parseInt(col.width, 10);
+            }
         }
         if (this.rowSelectable) {
             sum += this.calcRowCheckboxWidth;
@@ -1638,10 +1678,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.columnList.reset(columns);
     }
 
+    onlyTopLevel(arr) {
+        return arr.filter(c => c.level === 0);
+    }
+
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
-        collection.forEach((column: IgxColumnComponent, index: number) => {
+
+        // XXX: Deprecate index
+        this._columns = this.columnList.toArray();
+
+        collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
-            column.index = index;
             if (!column.width) {
                 column.width = this.columnWidth;
             }
@@ -1649,7 +1696,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 cb(column);
             }
         });
-        this._columns = this.columnList.toArray();
+        this.reinitPinStates();
+    }
+
+    protected reinitPinStates() {
         this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
@@ -1987,6 +2037,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return data;
     }
 
+    protected initPinning() {
+        this._pinnedColumns.forEach(col => {
+            if (col.parent) {
+                col.parent.pinned = true;
+            }
+            if (col.columnGroup) {
+                col.children.forEach(child => child.pinned = true);
+            }
+        });
+        this._pinnedColumns = this.columnList.filter(col => col.pinned);
+    }
+
     private scrollTo(row: number, column: number, page: number): void {
         if (this.paging) {
             this.page = page;
@@ -2089,6 +2151,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.lastSearchInfo.activeMatchIndex = 0;
             this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
         }
+    }
+
+    notGroups(arr) {
+        return arr.filter(c => !c.columnGroup);
     }
 
     public onChipRemoved(event) {
