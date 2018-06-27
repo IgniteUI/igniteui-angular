@@ -224,7 +224,7 @@ describe('IgxChipsArea', () => {
             expect(secondChipElem.style.visibility).toEqual('hidden');
         }, 100);
     }));
-    it('should fire onClick event',() => {
+    it('should fire onClick event', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
@@ -237,12 +237,13 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
         expect(firstChipComp.onClick.emit).toHaveBeenCalled();
     });
-    it('should fire onSelection event',() => {
+    it('should fire onSelection event', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
         const firstChipComp = fix.componentInstance.chips.toArray()[1];
-        spyOn(firstChipComp.onSelection, 'emit');
+
+        spyOn( firstChipComp.onSelection, 'emit');
         firstChipComp.chipArea.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
@@ -260,8 +261,8 @@ describe('IgxChipsArea', () => {
 
         chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
         fix.detectChanges();
-       
-        spyOn(chipAreaComponent.chipsArea.onSelection, `emit`).and.callFake(function(){
+
+        spyOn(chipAreaComponent.chipsArea.onSelection, `emit`).and.callFake(function() {
             selChips++;
         });
         chipAreaComponent.chipsArea.chipsList.toArray()[1].selected = true;
