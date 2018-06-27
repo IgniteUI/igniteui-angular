@@ -12,7 +12,7 @@ import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipComponent } from '../chips/chip.component';
 
-fdescribe('IgxGrid - GroupBy', () => {
+describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
