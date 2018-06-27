@@ -224,4 +224,50 @@ describe('IgxChipsArea', () => {
             expect(secondChipElem.style.visibility).toEqual('hidden');
         }, 100);
     }));
+    it('should fire onClick event',() => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const firstChipComp = fix.componentInstance.chips.toArray()[1];
+        spyOn(firstChipComp.onClick, 'emit');
+
+        firstChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1}));
+        firstChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
+
+        fix.detectChanges();
+        expect(firstChipComp.onClick.emit).toHaveBeenCalled();
+    });
+    it('should fire onSelection event',() => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const firstChipComp = fix.componentInstance.chips.toArray()[1];
+        spyOn(firstChipComp.onSelection, 'emit');
+        firstChipComp.chipArea.nativeElement.focus();
+
+        const keyEvent = new KeyboardEvent('keydown', {
+            'key': ' '
+        });
+        firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        fix.detectChanges();
+        expect(firstChipComp.onSelection.emit).toHaveBeenCalled();
+    });
+    it('should be able to have multiple chips selected', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+        let selChips = 0;
+        const chipAreaComponent = fix.componentInstance;
+
+        chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
+        fix.detectChanges();
+       
+        spyOn(chipAreaComponent.chipsArea.onSelection, `emit`).and.callFake(function(){
+            selChips++;
+        });
+        chipAreaComponent.chipsArea.chipsList.toArray()[1].selected = true;
+        fix.detectChanges();
+        chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
+        fix.detectChanges();
+        expect(selChips).toEqual(2);
+    });
 });
