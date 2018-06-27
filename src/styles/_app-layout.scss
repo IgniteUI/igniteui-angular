@@ -19,9 +19,17 @@
     overflow-y: scroll;
 }
 
+.nav-header {
+    display: flex;
+    align-items: center;
+    padding: 24px 16px;
+    background: #eee;
+    height: 142px;
+}
+
 .logo {
-    margin-top: 16px;
-    width: 238px;
+    width: 172px;
+    height: 56.666px;
 }
 
 .sample-wrapper {

@@ -104,7 +104,7 @@
         raised-text-color: igx-contrast-color($palette, 'secondary', 500),
         raised-background: igx-color($palette, 'secondary', 500),
         raised-hover-background: igx-color($palette, 'secondary', 600),
-        raised-hover-text-color: #fff,
+        raised-hover-text-color: igx-contrast-color($palette, 'secondary', 500),
         raised-focus-background: igx-color($palette, 'secondary', 500),
         raised-focus-text-color: igx-contrast-color($palette, 'secondary', 600),
 
