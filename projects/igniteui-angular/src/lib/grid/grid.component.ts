@@ -1177,6 +1177,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._groupBy(rest[0]);
         }
+        this.cdr.detectChanges();
         this.calculateGridSizes();
         this.onGroupingDone.emit(this.sortingExpressions);
     }
