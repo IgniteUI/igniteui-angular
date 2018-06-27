@@ -1,0 +1,66 @@
+@import '../../../../dist/igniteui-angular/lib/core/styles/themes/utilities';
+@import '../../../styles/app-palettes';
+
+.sample-column {
+    flex-flow: column nowrap;
+    flex: 1 0 100% !important;
+    padding: 0 8px;
+}
+
+.sample-title {
+    margin-left: 8px;
+}
+
+.color-palettes {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.color-palette {
+    min-width: 300px;
+    flex: 1 0 25%;
+    margin-bottom: 48px;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.colors-row {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+}
+
+.color-container {
+    @include igx-color-classes('background');
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    flex-basis: 100%;
+    color: #fff;
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.color-title {
+    font-size: 18px;
+    line-height: 72px;
+    margin: 0;
+    padding: 8px 16px;
+    text-transform: capitalize;
+}
+
+.color-values {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+}
+
+@media only screen and (min-width: 767px) {
+    .colors-row {
+        flex-flow: row nowrap;
+    }
+}
