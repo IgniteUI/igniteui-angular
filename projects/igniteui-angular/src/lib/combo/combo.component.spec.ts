@@ -39,7 +39,7 @@ const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -51,6 +51,7 @@ describe('igxCombo', () => {
                 IgxComboBindingTestComponent,
                 IgxComboEmptyTestComponent,
                 IgxComboInContainerTestComponent,
+                IgxComboInContainerFixedWidthComponent,
                 IgxComboFormComponent
             ],
             imports: [
@@ -415,7 +416,7 @@ describe('igxCombo', () => {
                 expect(combo.dropdown.collapsed).toEqual(true);
             });
         }));
-        it('IgxComboDropDown onFocus and onBlur event', () => {
+        it('IgxComboDropDown onFocus and onBlur event', async(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const dropdown = fix.componentInstance.combo.dropdown;
@@ -434,7 +435,7 @@ describe('igxCombo', () => {
                 expect(dropdown.focusedItem).toEqual(null);
                 dropdown.onBlur();
             });
-        });
+        }));
         it('IgxComboDropDown focusedItem getter/setter', () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
@@ -486,7 +487,7 @@ describe('igxCombo', () => {
             combo.handleKeyUp({ key: 'Escape' });
             expect(combo.toggle).toHaveBeenCalledTimes(1);
         });
-        it('Dropdown button should open/close dropdown list', () => {
+        it('Dropdown button should open/close dropdown list', async(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
@@ -510,8 +511,8 @@ describe('igxCombo', () => {
                 expect(dropdownList.classList.contains(CSS_CLASS_TOGGLE + '--hidden')).toBeTruthy();
                 expect(dropdownList.children.length).toEqual(0);
             });
-        });
-        it('Search input should be focused when dropdown is opened', () => {
+        }));
+        it('Search input should be focused when dropdown is opened', async(() => {
             let isFocused = false;
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -525,7 +526,7 @@ describe('igxCombo', () => {
             }).then(() => {
                 expect(isFocused).toEqual(true);
             });
-        });
+        }));
         it('Dropdown list open/close - key navigation', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboTestComponent);
             fix.detectChanges();
@@ -964,7 +965,7 @@ describe('igxCombo', () => {
             expect(combo.dropdown.selectedItem).toEqual([{ field: 'Connecticut', region: 'New England' }]);
             expect(combo.dropdown.selectedItem[0]).toEqual(combo.data[0]);
         });
-        it('Selected items should be appended to the input separated by comma', () => {
+        it('Selected items should be appended to the input separated by comma', async(() => {
             let dropdownList: HTMLElement;
             let dropdownItems: NodeListOf<HTMLElement>;
             let selectedItem: HTMLElement;
@@ -1017,7 +1018,7 @@ describe('igxCombo', () => {
                 expectedOutput = 'Paris, Sofia';
                 expect(inputElement.value).toEqual(expectedOutput);
             });
-        });
+        }));
         it('Selected items should be appended to the input in the order they are selected', async(() => {
             let dropdownItems: NodeListOf<HTMLElement>;
             let targetItem: HTMLElement;
@@ -1191,7 +1192,7 @@ describe('igxCombo', () => {
                 expect(combo.selectedItems().length).toEqual(0);
             });
         }));
-        it('Clear button should not throw exception when no items are selected', () => {
+        it('Clear button should not throw exception when no items are selected', async(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
             const clearButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
@@ -1199,7 +1200,7 @@ describe('igxCombo', () => {
             fixture.whenStable().then(() => {
                 expect(() => fixture.detectChanges()).not.toThrowError();
             });
-        });
+        }));
         it('Item selection - checkbox', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -1479,7 +1480,7 @@ describe('igxCombo', () => {
             expect(comboElement.childElementCount).toEqual(2);
 
             const inputGroupElement = comboElement.children[0];
-            expect(inputGroupElement.attributes.getNamedItem('type').nodeValue).toEqual('box');
+            expect(inputGroupElement.attributes.getNamedItem('ng-reflect-type').nodeValue).toEqual('box');
             expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--placeholder')).toBeTruthy();
@@ -1689,7 +1690,7 @@ describe('igxCombo', () => {
                 }, 20);
             };
         }));
-        it('Should render selected items properly', () => {
+        it('Should render selected items properly', async(() => {
             let selectedItem: HTMLElement;
             let itemCheckbox: HTMLElement;
             const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -1719,7 +1720,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
             });
-        });
+        }));
         it('Should render focused items properly', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -1767,7 +1768,7 @@ describe('igxCombo', () => {
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         }));
-        it('Should render combo width properly when placed in container', fakeAsync(() => {
+        it('Should ajust combo width to the container element width when set to 100%', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
 
@@ -1775,35 +1776,77 @@ describe('igxCombo', () => {
             const containerElement = fixture.debugElement.query(By.css('.comboContainer')).nativeElement;
             const combo = fixture.componentInstance.combo;
             const comboWrapper = fixture.debugElement.query(By.css(CSS_CLASS_COMBO)).nativeElement;
-            expect(containerElement.offsetWidth).toEqual(containerWidth);
-            expect(containerElement.offsetWidth).toEqual(comboWrapper.offsetWidth);
-            expect(containerElement.offsetHeight).toEqual(comboWrapper.offsetHeight);
+            let containerElementWidth = containerElement.getBoundingClientRect().width;
+            let wrapperWidth = comboWrapper.getBoundingClientRect().width;
+            expect(containerElementWidth).toEqual(containerWidth);
+            expect(containerElementWidth).toEqual(wrapperWidth);
 
             combo.toggle();
             tick();
             fixture.detectChanges();
 
-            const inputElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']')).nativeElement;
+            const inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_WRAPPER)).nativeElement;
             const dropDownElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-            expect(containerElement.offsetWidth).toEqual(comboWrapper.offsetWidth);
-            expect(dropDownElement.offsetWidth).toEqual(containerElement.offsetWidth);
-            expect(inputElement.offsetWidth).toEqual(containerElement.offsetWidth);
-
-            combo.width = '300px';
+            containerElementWidth = containerElement.getBoundingClientRect().width;
+            wrapperWidth = comboWrapper.getBoundingClientRect().width;
+            const inputWidth = inputElement.getBoundingClientRect().width;
+            const dropDownWidth = dropDownElement.getBoundingClientRect().width;
+            expect(containerElementWidth).toEqual(wrapperWidth);
+            expect(dropDownWidth).toEqual(containerElementWidth);
+            expect(inputWidth).toEqual(containerElementWidth);
+        }));
+        it('Should render combo width properly when placed in container', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboInContainerFixedWidthComponent);
             fixture.detectChanges();
-            let comboWidth = 300;
-            expect(containerElement.offsetWidth).toEqual(containerWidth);
-            expect(comboWrapper.offsetWidth).toEqual(comboWidth);
-            expect(dropDownElement.offsetWidth).toEqual(comboWidth);
-            expect(inputElement.offsetWidth).toEqual(comboWidth);
+            let comboWidth = '300px';
+            const containerWidth = '500px';
 
-            combo.width = '700px';
+            const combo = fixture.componentInstance.combo;
+            const containerElement = fixture.debugElement.query(By.css('.comboContainer')).nativeElement;
+            let comboWrapper = fixture.debugElement.query(By.css(CSS_CLASS_COMBO)).nativeElement;
+            let containerElementWidth = containerElement.style.width;
+            let wrapperWidth = comboWrapper.style.width;
+            expect(containerElementWidth).toEqual(containerWidth);
+            expect(wrapperWidth).toEqual(comboWidth);
+
+            combo.toggle();
+            tick();
             fixture.detectChanges();
-            comboWidth = 700;
-            expect(containerElement.offsetWidth).toEqual(containerWidth);
-            expect(comboWrapper.offsetWidth).toEqual(comboWidth);
-            expect(dropDownElement.offsetWidth).toEqual(comboWidth);
-            expect(inputElement.offsetWidth).toEqual(comboWidth);
+
+            let inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_WRAPPER)).nativeElement;
+            let dropDownElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            containerElementWidth = containerElement.style.width;
+            wrapperWidth = comboWrapper.style.width;
+            let inputWidth = inputElement.getBoundingClientRect().width + 'px';
+            let dropDownWidth = dropDownElement.getBoundingClientRect().width + 'px';
+            expect(containerElementWidth).toEqual(containerWidth);
+            expect(wrapperWidth).toEqual(comboWidth);
+            expect(dropDownWidth).toEqual(comboWidth);
+            expect(inputWidth).toEqual(comboWidth);
+
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+
+            comboWidth = '700px';
+            combo.width = comboWidth;
+            fixture.detectChanges();
+
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+
+            comboWrapper = fixture.debugElement.query(By.css(CSS_CLASS_COMBO)).nativeElement;
+            inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_WRAPPER)).nativeElement;
+            dropDownElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            containerElementWidth = containerElement.style.width;
+            wrapperWidth = comboWrapper.style.width;
+            inputWidth = inputElement.getBoundingClientRect().width + 'px';
+            dropDownWidth = dropDownElement.getBoundingClientRect().width + 'px';
+            expect(containerElementWidth).toEqual(containerWidth);
+            expect(wrapperWidth).toEqual(comboWidth);
+            expect(dropDownWidth).toEqual(comboWidth);
+            expect(inputWidth).toEqual(comboWidth);
         }));
     });
 
@@ -1921,7 +1964,6 @@ describe('igxCombo', () => {
         });
     });
 
-
     describe('Grouping tests: ', () => {
         it('Combo should group items correctly', () => {
             const fix = TestBed.createComponent(IgxComboInputTestComponent);
@@ -1937,8 +1979,8 @@ describe('igxCombo', () => {
                     dir: SortingDirection.Asc,
                     ignoreCase: true
                 });
-                const listItems = fix.debugElement.queryAll(By.css('.igx-drop-down__item'));
-                const listHeaders = fix.debugElement.queryAll(By.css('.igx-drop-down__header'));
+                const listItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
+                const listHeaders = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADERITEM));
                 expect(listItems.length).toBeGreaterThan(0);
                 expect(listHeaders.length).toBeGreaterThan(0);
                 expect(listHeaders[0].nativeElement.innerHTML).toContain('East North Central');
@@ -2486,7 +2528,7 @@ describe('igxCombo', () => {
                 expect(combo.comboInput.nativeElement.value).toEqual(component.items[0].field + ', ' + component.items[1].field);
                 expect(combo.value).toEqual(component.items[0].field + ', ' + component.items[1].field);
                 expect(combo.selectedItems()).toEqual([component.items[0], component.items[1]]);
-                fix.debugElement.query(By.css('.clearButton')).nativeElement.click();
+                fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click();
                 return fix.whenStable();
             }).then(() => {
                 fix.detectChanges();
@@ -2525,7 +2567,7 @@ describe('igxCombo', () => {
             }).then(() => {
                 expect(combo.selectedItems()).toEqual([{ field: 'New' }]);
                 expect(combo.comboInput.nativeElement.value).toEqual('New');
-                fix.debugElement.query(By.css('.clearButton')).nativeElement.click(mockEvent);
+                fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click(mockEvent);
                 return fix.whenStable();
             }).then(() => {
                 fix.detectChanges();
@@ -3015,4 +3057,40 @@ class IgxComboInContainerTestComponent {
         'Palma de Mallorca'];
 
 }
+
+@Component({
+    template: `
+    <div class="comboContainer" [style.width]="'500px'">
+    <igx-combo #combo placeholder="Location(s)"
+    [data]="citiesData"
+    [filterable]="true" [width]="'300px'">
+    >
+    </igx-combo>
+    </div>
+`
+})
+class IgxComboInContainerFixedWidthComponent {
+    @ViewChild('combo', { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+
+    public citiesData: string[] = [
+        'New York',
+        'Sofia',
+        'Istanbul',
+        'Paris',
+        'Hamburg',
+        'Berlin',
+        'London',
+        'Oslo',
+        'Los Angeles',
+        'Rome',
+        'Madrid',
+        'Ottawa',
+        'Prague',
+        'Padua',
+        'Palermo',
+        'Palma de Mallorca'];
+
+}
+
 
