@@ -59,6 +59,12 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
 
 - `igxGrid` theme now has support for alternating grid row background and text colors.
+- `igxGrid` now has a toolbar (shown using the `showToolbar` property) which contains the following features:
+  - title (specified using the `toolbarTitle` property)
+  - column hiding feature (enabled using the `columnHiding` property)
+  - column pinning feature (enabled using the `columnPinning` property)
+  - export to excel (enabled using the `exportExcel` property)
+  - export to CSV (enabled using the `exportCsv` property)
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
