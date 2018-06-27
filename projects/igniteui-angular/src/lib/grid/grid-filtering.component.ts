@@ -101,8 +101,8 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     public ngOnInit() {
         const collapse = () => {
             if (!this.toggleDirective.collapsed) {
-                this.toggleDirective.close(true);
-                this.refresh();
+                this.dialogShowing = false;
+                this.toggleDirective.close(false);
             }
         };
 
