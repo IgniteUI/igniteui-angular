@@ -19,6 +19,10 @@
         @extend %igx-combo__search !optional;
     }
 
+    @include e(checkbox) {
+        @extend %igx-combo__checkbox !optional;
+    }
+
     @include e(content) {
         @extend %igx-combo__content !optional;
     }
