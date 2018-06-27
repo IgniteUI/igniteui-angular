@@ -4,11 +4,10 @@ import {
     HostBinding,
     Input,
     Optional,
-    ViewChild,
-    ElementRef
+    ViewChild
 } from '@angular/core';
 
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { DisplayDensity } from '../core/utils';
 import { CsvFileTypes,
          IgxBaseExporter,
          IgxCsvExporterOptions,
@@ -20,8 +19,9 @@ import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
+import { IgxColumnPinningComponent } from './column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
-import {  ConnectedPositioningStrategy } from '../services/overlay/position';
+import { ConnectedPositioningStrategy } from '../services/overlay/position';
 
 @Component({
     selector: 'igx-grid-toolbar',
@@ -48,6 +48,15 @@ export class IgxGridToolbarComponent {
     @ViewChild('btnExport')
     public exportButton;
 
+    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent })
+    public columnPinningDropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxColumnPinningComponent)
+    public columnPinningUI: IgxColumnPinningComponent;
+
+    @ViewChild('columnPinningButton')
+    public columnPinningButton;
+
     public get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
@@ -62,6 +71,44 @@ export class IgxGridToolbarComponent {
 
     public get shouldShowExportCsvButton(): boolean {
         return (this.grid != null && this.grid.exportCsv);
+    }
+
+    public get pinnedColumnsCount() {
+        return this.grid.pinnedColumns.length;
+    }
+
+    private _displayDensity: DisplayDensity | string;
+
+    @Input()
+    public get displayDensity(): DisplayDensity | string {
+        return this._displayDensity;
+    }
+
+    public set displayDensity(val: DisplayDensity | string) {
+        switch (val) {
+            case 'compact':
+                this._displayDensity = DisplayDensity.compact;
+                break;
+            case 'cosy':
+                this._displayDensity = DisplayDensity.cosy;
+                break;
+            case 'comfortable':
+            default:
+                this._displayDensity = DisplayDensity.comfortable;
+        }
+    }
+
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.compact:
+                return 'igx-grid-toolbar--compact';
+            case DisplayDensity.cosy:
+                return 'igx-grid-toolbar--cosy';
+            case DisplayDensity.comfortable:
+            default:
+                return 'igx-grid-toolbar';
+        }
     }
 
     constructor(public gridAPI: IgxGridAPIService,
@@ -135,5 +182,10 @@ export class IgxGridToolbarComponent {
     public toggleColumnHidingUI() {
         this._overlaySettings.positionStrategy.settings.target = this.columnHidingButton.nativeElement;
         this.columnHidingDropdown.toggle(this._overlaySettings);
+    }
+
+    public toggleColumnPinningUI() {
+        this._overlaySettings.positionStrategy.settings.target = this.columnPinningButton.nativeElement;
+        this.columnPinningDropdown.toggle(this._overlaySettings);
     }
 }
