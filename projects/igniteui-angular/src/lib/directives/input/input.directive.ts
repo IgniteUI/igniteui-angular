@@ -30,6 +30,7 @@ export enum IgxInputState {
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
+    private _valueChanges$: Subscription;
 
     constructor(
         @Inject(forwardRef(() => IgxInputGroupComponent))
@@ -86,8 +87,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
     }
 
-    @HostListener('input', ['$event'])
-    public onInput(event) {
+    @HostListener('input')
+    public onInput() {
+        debugger;
         const value: string = this.nativeElement.value;
         this.inputGroup.isFilled = value && value.length > 0;
         if (!this.ngControl && this._hasValidators()) {
@@ -121,6 +123,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
         if (this.ngControl) {
             this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this._valueChanges$ = this.ngControl.valueChanges.subscribe((event) => {
+                this.inputGroup.isFilled = event && event.length > 0;
+                this.onStatusChanged();
+            });
         }
 
         this.cdr.detectChanges();
@@ -129,6 +135,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
+        }
+
+        if (this._valueChanges$) {
+            this._valueChanges$.unsubscribe();
         }
     }
 
