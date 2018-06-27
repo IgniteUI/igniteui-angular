@@ -22,10 +22,10 @@ import { IgxChipsAreaComponent } from './chips-area.component';
         </igx-chips-area>
     `
 })
-export class TestChipComponent {
+class TestChipComponent {
 
     public chipList = [
-        { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
+        { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: false },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
     ];
 
@@ -48,6 +48,22 @@ describe('IgxChipsArea', () => {
             imports: [FormsModule, IgxIconModule, IgxChipsModule]
         }).compileComponents();
     }));
+
+    function simulatePointerEvent(eventName: string, element, x, y) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1
+        };
+        const pointerEvent = new PointerEvent(eventName, options);
+        Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
+        Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(pointerEvent);
+            resolve();
+        });
+    }
 
     it('should add chips when adding data items ', () => {
         const fix = TestBed.createComponent(TestChipComponent);
@@ -92,4 +108,120 @@ describe('IgxChipsArea', () => {
 
         expect(chipArea[0].nativeElement.children[0].innerHTML).toContain('New text');
     });
+
+    it('should not be able to drag and drop when chip is not draggable', async(() => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+        const chipComponents = chipArea[0].queryAll(By.directive(IgxChipComponent));
+        const firstChip = chipComponents[0].componentInstance;
+        const firstChipElem = firstChip.chipArea.nativeElement;
+
+        const startingTop = firstChipElem.getBoundingClientRect().top;
+        const startingLeft = firstChipElem.getBoundingClientRect().left;
+        const startingBottom = firstChipElem.getBoundingClientRect().bottom;
+        const startingRight = firstChipElem.getBoundingClientRect().right;
+
+        const startingX = (startingLeft + startingRight) / 2;
+        const startingY = (startingTop + startingBottom) / 2;
+
+        simulatePointerEvent('pointerdown', firstChipElem, startingX, startingY);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', firstChipElem, startingX + 10, startingY + 10);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            const dragDir = firstChip.dragDir['_dragGhost'];
+
+            expect(dragDir).toBeUndefined();
+        });
+    }));
+
+    it('should be able to drag and drop when chip is draggable', async(() => {
+        const xDragDifference = 200;
+        const yDragDifference = 100;
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+        const chipComponents = chipArea[0].queryAll(By.directive(IgxChipComponent));
+        const secondChip = chipComponents[1].componentInstance;
+        const secondChipElem = secondChip.chipArea.nativeElement;
+
+        const startingTop = secondChipElem.getBoundingClientRect().top;
+        const startingLeft = secondChipElem.getBoundingClientRect().left;
+        const startingBottom = secondChipElem.getBoundingClientRect().bottom;
+        const startingRight = secondChipElem.getBoundingClientRect().right;
+
+        const startingX = (startingLeft + startingRight) / 2;
+        const startingY = (startingTop + startingBottom) / 2;
+
+        simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            fix.detectChanges();
+
+            return fix.whenRenderingDone();
+        });
+
+        setTimeout(() => {
+            const afterDragTop = secondChip.dragDir['_dragGhost'].getBoundingClientRect().top;
+            const afterDragLeft = secondChip.dragDir['_dragGhost'].getBoundingClientRect().left;
+            expect(afterDragTop - startingTop).toEqual(yDragDifference);
+            expect(afterDragLeft - startingLeft).toEqual(xDragDifference);
+        }, 100);
+    }));
+
+    it('all suffix conectors should be invisible when chip is dragged', async(() => {
+        const xDragDifference = 200;
+        const yDragDifference = 100;
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+        const chipComponents = chipArea[0].queryAll(By.directive(IgxChipComponent));
+        const secondChip = chipComponents[1].componentInstance;
+        const secondChipElem = secondChip.chipArea.nativeElement;
+
+        const startingTop = secondChipElem.getBoundingClientRect().top;
+        const startingLeft = secondChipElem.getBoundingClientRect().left;
+        const startingBottom = secondChipElem.getBoundingClientRect().bottom;
+        const startingRight = secondChipElem.getBoundingClientRect().right;
+
+        const startingX = (startingLeft + startingRight) / 2;
+        const startingY = (startingTop + startingBottom) / 2;
+
+        simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            fix.detectChanges();
+
+            return fix.whenRenderingDone();
+        });
+
+        setTimeout(() => {
+            expect(secondChipElem.style.visibility).toEqual('hidden');
+        }, 100);
+    }));
 });
