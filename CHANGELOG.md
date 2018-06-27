@@ -86,6 +86,18 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
     For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
 
+- `igxChip` and `igxChipsArea` components added
+
+    ```html
+    <igx-chips-area>
+        <igx-chip *ngFor="let chip of chipList" [id]="chip.id">
+            <label igxLabel>{{chip.text}}</label>
+        </igx-chip>
+    </igx-chips-area>
+    ```
+
+    For more detailed information see the [official igxChip documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip.html).
+
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
