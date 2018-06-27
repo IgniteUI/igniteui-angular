@@ -47,8 +47,8 @@
         selected-text-color: igx-color($palette, 'secondary', 500),
         active-item-background: igx-color($palette, 'grays', 100),
         header-background: igx-color($palette, 'secondary', 500),
-        header-hour-text-color: white,
-        header-time-period-color: rgba(255, 255, 255, .8),
+        header-hour-text-color: igx-contrast-color($palette, 'secondary', 500),
+        header-time-period-color: rgba(igx-contrast-color($palette, 'secondary', 500), .8),
         background-color: white
     );
 
