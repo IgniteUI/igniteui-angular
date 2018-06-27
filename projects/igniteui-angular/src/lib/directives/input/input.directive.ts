@@ -89,7 +89,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     @HostListener('input')
     public onInput() {
-        debugger;
         const value: string = this.nativeElement.value;
         this.inputGroup.isFilled = value && value.length > 0;
         if (!this.ngControl && this._hasValidators()) {
