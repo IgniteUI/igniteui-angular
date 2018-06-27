@@ -261,7 +261,7 @@ describe('Dialog', () => {
 
     });
 
-    fit('When modal mode is changed, overlay should be informed', fakeAsync(() => {
+    it('When modal mode is changed, overlay should be informed', fakeAsync(() => {
         const fix = TestBed.createComponent(AlertComponent);
         fix.detectChanges();
 
