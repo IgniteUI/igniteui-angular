@@ -17,9 +17,7 @@
         *ngFor="let columnItem of columnItems"
         class="igx-column-hiding__columns-item"
         (change)="checkboxValueChange($event, columnItem)"
-        [checked]="columnItem.value"
-        [disabled]="false"
-        [style.margin-left.px]="columnItem.calcIndent">
+        [checked]="columnItem.value">
         {{ columnItem.name }}
     </igx-checkbox>
 </div>

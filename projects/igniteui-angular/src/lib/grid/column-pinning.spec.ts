@@ -45,6 +45,10 @@ describe('Column Pinning UI', () => {
         columnChooserElement = fix.debugElement.query(By.css('igx-column-pinning'));
     });
 
+    afterAll(() => {
+        clearOverlay();
+    });
+
     it ('title is initially empty.', () => {
         const title = columnChooserElement.query(By.css('h4'));
         expect(title).toBe(null);
@@ -244,6 +248,15 @@ describe('Column Pinning UI', () => {
         expect(chkInput.type).toBe('checkbox');
         expect(chkInput.disabled).toBe(isDisabled);
         expect(chkInput.checked).toBe(isChecked);
+    }
+
+    function clearOverlay() {
+        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+        Array.from(overlays).forEach(element => {
+            element.remove();
+        });
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
     }
 });
 
