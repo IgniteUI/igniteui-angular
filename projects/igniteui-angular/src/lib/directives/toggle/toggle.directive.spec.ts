@@ -269,6 +269,27 @@ describe('IgxToggle', () => {
             fixture.componentInstance.toggleAction.onClick();
             expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(true, settings);
         });
+
+        it('Should fire toggle "onClosing" event when closing through closeOnOutsideClick', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxToggleActionSettingsComponent);
+            fixture.detectChanges();
+            const toggle = fixture.componentInstance.toggle;
+            spyOn(toggle, 'toggle').and.callThrough();
+            spyOn(toggle.onClosed, 'emit').and.callThrough();
+            spyOn(toggle.onClosing, 'emit').and.callThrough();
+            spyOn(toggle.onOpening, 'emit').and.callThrough();
+            spyOn(toggle.onOpened, 'emit').and.callThrough();
+            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            button.click();
+            tick(500);
+            expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+
+            document.documentElement.dispatchEvent(new Event('click'));
+            tick(500);
+            expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+        }));
     });
 });
 
