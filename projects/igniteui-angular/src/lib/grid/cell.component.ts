@@ -379,6 +379,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             cell: this,
             event
         });
+        this.grid.cdr.detectChanges();
     }
 
     @HostListener('blur', ['$event'])
