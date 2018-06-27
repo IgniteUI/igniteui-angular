@@ -5,7 +5,9 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 
-const CLASS_OVERLAY_MAIN = 'igx-overlay';
+const OVERLAY_MAIN_CLASS = 'igx-overlay';
+const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
+const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
 
 /* function clearOverlay() {
     const overlays = document.getElementsByClassName(CLASS_OVERLAY_MAIN) as HTMLCollectionOf<Element>;
@@ -259,6 +261,38 @@ describe('Dialog', () => {
 
     });
 
+    fit('When modal mode is changed, overlay should be informed', fakeAsync(() => {
+        const fix = TestBed.createComponent(AlertComponent);
+        fix.detectChanges();
+
+        const dialog = fix.componentInstance.dialog;
+
+        dialog.open();
+        tick();
+        fix.detectChanges();
+
+        let overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
+        let overlayWrapper = overlaydiv.children[0];
+        expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
+        expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(false);
+
+        dialog.close();
+        tick();
+        fix.detectChanges();
+
+        fix.componentInstance.isModal = true;
+        fix.detectChanges();
+
+        dialog.open();
+        tick();
+        fix.detectChanges();
+
+        overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
+        overlayWrapper = overlaydiv.children[0];
+        expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(true);
+        expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(false);
+    }));
+
     function dispatchEvent(element: HTMLElement, eventType: string) {
         const event = new Event(eventType);
         element.dispatchEvent(event);
@@ -271,11 +305,13 @@ describe('Dialog', () => {
                                 title="alert"
                                 message="message"
                                 closeOnOutsideSelect="true"
-                                leftButtonLabel="OK">
+                                leftButtonLabel="OK"
+                                [isModal]="isModal">
                             </igx-dialog>
                         </div>` })
 class AlertComponent {
     @ViewChild('dialog') public dialog: IgxDialogComponent;
+    public isModal = false;
 }
 
 @Component({
