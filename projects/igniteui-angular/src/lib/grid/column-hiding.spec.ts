@@ -39,6 +39,10 @@ describe('Column Hiding UI', () => {
         .compileComponents();
     }));
 
+    afterAll(() => {
+        clearOverlay();
+    });
+
     describe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(ColumnHidingInlineComponent);
@@ -961,6 +965,15 @@ describe('Column Hiding UI', () => {
         expect(chkInput.type).toBe('checkbox');
         expect(chkInput.disabled).toBe(isDisabled);
         expect(chkInput.checked).toBe(isChecked);
+    }
+
+    function clearOverlay() {
+        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+        Array.from(overlays).forEach(element => {
+            element.remove();
+        });
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
     }
 });
 
