@@ -2716,6 +2716,43 @@ describe('Combo', () => {
         fix.debugElement.query(By.css('button')).nativeElement.click();
         expect(console.log).toHaveBeenCalledTimes(2);
     });
+
+    it('Should properly close on click outside of the combo dropdown', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        document.documentElement.dispatchEvent(new Event('click'));
+        tick();
+        expect(combo.collapsed).toEqual(true);
+    }));
+
+    it('Should restore position of dropdown scroll after opening', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        let vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
+        expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
+        combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
+        tick(1000);
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(0);
+        document.documentElement.dispatchEvent(new Event('click'));
+        tick();
+        expect(combo.collapsed).toEqual(true);
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+    }));
 });
 
 @Component({
