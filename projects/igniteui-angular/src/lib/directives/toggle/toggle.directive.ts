@@ -100,23 +100,20 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public close(fireEvents?: boolean) {
         if (this.collapsed) { return; }
 
-        if (fireEvents) {
-            if (this._overlayId !== undefined) {
-                this._overlayClosingSub.unsubscribe();
-            } else {
-                this.onClosing.emit();
-            }
+        if (fireEvents && !(this._overlayId !== undefined)) {
+            this.onClosing.emit();
         }
 
         if (this._overlayId !== undefined) {
-            this.overlayService.hide(this._overlayId);
             if (!fireEvents) {
                 // cancel onClosed sub
+                this._overlayClosingSub.unsubscribe();
                 this._overlayClosedSub.unsubscribe();
                 this.overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
                     this._collapsed = true;
                 });
             }
+            this.overlayService.hide(this._overlayId);
         } else {
             // opened though @Input, TODO
             this._collapsed = true;
@@ -143,11 +140,15 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (!this.collapsed && this._overlayId) {
             this.overlayService.hide(this._overlayId);
         }
-        if (!this._overlayClosedSub.closed) {
-            this._overlayClosedSub.unsubscribe();
+        if (this._overlayClosedSub) {
+            if (!this._overlayClosedSub.closed) {
+                this._overlayClosedSub.unsubscribe();
+            }
         }
-        if (!this._overlayClosingSub.closed) {
-            this._overlayClosingSub.unsubscribe();
+        if (this._overlayClosingSub) {
+            if (!this._overlayClosingSub.closed) {
+                this._overlayClosingSub.unsubscribe();
+            }
         }
     }
 

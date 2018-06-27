@@ -275,12 +275,6 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
             const toggle = fixture.componentInstance.toggle;
             spyOn(toggle, 'toggle').and.callThrough();
-            const settings = /*<OverlaySettings>*/{
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
-                closeOnOutsideClick: true,
-                modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
-            };
             spyOn(toggle.onClosed, 'emit').and.callThrough();
             spyOn(toggle.onClosing, 'emit').and.callThrough();
             spyOn(toggle.onOpening, 'emit').and.callThrough();
