@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
+
 @import '../../dist/igniteui-angular/lib/core/styles/themes/index';
+@import 'app-palettes';
 @import 'app-layout';
 
 $exclude: (
@@ -37,3 +40,5 @@ $exclude: (
 // Generating a theme
 @include igx-core();
 @include igx-theme($default-palette, $exclude);
+
+@include igx-color-classes('background-color');
