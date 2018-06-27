@@ -241,11 +241,13 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerDown(event) {
-        event.stopPropagation();
 
         if (!this.draggable || event.target.getAttribute('draggable') === 'false') {
             return;
         }
+
+        event.preventDefault();
+        event.stopPropagation();
 
         this.cms.column = this.column;
         this.ghostImageClass = this._ghostImageClass;

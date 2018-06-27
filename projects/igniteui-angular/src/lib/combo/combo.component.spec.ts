@@ -23,6 +23,7 @@ const CSS_CLASS_CONTAINER = 'igx-display-container';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
 const CSS_CLASS_DROPDOWNBUTTON = 'dropdownToggleButton';
 const CSS_CLASS_CLEARBUTTON = 'clearButton';
+const CSS_CLASS_CHECK_GENERAL = 'igx-combo__checkbox';
 const CSS_CLASS_CHECKBOX = 'igx-checkbox';
 const CSS_CLASS_CHECKED = 'igx-checkbox--checked';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
@@ -1242,6 +1243,7 @@ describe('Combo', () => {
             selectedItem = dropdownItems[4];
             expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
             itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+            expect(itemCheckbox.classList.contains(CSS_CLASS_CHECK_GENERAL));
             itemCheckbox.click();
             fixture.detectChanges();
             expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
