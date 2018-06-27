@@ -3,7 +3,7 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 
 import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
 import { AnimationMetadata, AnimationReferenceMetadata } from '@angular/animations';
-import { ComponentRef } from '@angular/core';
+import { ComponentRef, ElementRef } from '@angular/core';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -61,4 +61,13 @@ export function getPointFromPositionsSettings(settings: PositionSettings): Point
     }
 
     return result;
+}
+
+export interface OverlayInfo {
+    id?: string;
+    elementRef?: ElementRef;
+    componentRef?: ComponentRef<{}>;
+    settings?: OverlaySettings;
+    initialSize?: { width?: number, height?: number, x?: number, y?: number };
+    hook?: HTMLElement;
 }
