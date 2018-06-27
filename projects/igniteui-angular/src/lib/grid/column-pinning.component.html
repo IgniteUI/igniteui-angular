@@ -16,7 +16,6 @@
     <igx-checkbox igxColumnPinningItem
         *ngFor="let columnItem of columnItems"
         class="igx-column-hiding__columns-item"
-        (onColumnPinning)="columnPinning($event)"
         (change)="checkboxValueChange($event, columnItem)"
         [checked]="columnItem.value"
         [disabled]="false"
