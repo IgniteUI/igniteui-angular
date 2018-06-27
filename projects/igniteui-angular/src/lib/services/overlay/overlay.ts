@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { OverlaySettings, OverlayEventArgs } from './utilities';
+import { OverlaySettings, OverlayEventArgs, OverlayInfo } from './utilities';
 
 import {
     ApplicationRef,
@@ -23,14 +23,7 @@ import { IAnimationParams } from '../../animations/main';
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
     private _componentId = 0;
-    private _overlays: {
-        id: string,
-        elementRef: ElementRef,
-        componentRef: ComponentRef<{}>,
-        settings: OverlaySettings,
-        initialSize: { width?: number, height?: number, x?: number, y?: number },
-        hook: HTMLElement
-    }[] = [];
+    private _overlayInfos: OverlayInfo[] = [];
     private _overlayElement: HTMLElement;
 
     private _defaultSettings: OverlaySettings = {
@@ -39,16 +32,6 @@ export class IgxOverlayService {
         modal: true,
         closeOnOutsideClick: true
     };
-
-    private get OverlayElement(): HTMLElement {
-        if (!this._overlayElement) {
-            this._overlayElement = this._document.createElement('div');
-            this._overlayElement.classList.add('igx-overlay');
-            this._document.body.appendChild(this._overlayElement);
-        }
-
-        return this._overlayElement;
-    }
 
     public onOpening = new EventEmitter<OverlayEventArgs>();
     public onOpened = new EventEmitter<OverlayEventArgs>();
@@ -62,148 +45,61 @@ export class IgxOverlayService {
         private builder: AnimationBuilder,
         @Inject(DOCUMENT) private _document: any) { }
 
-    show(component: ElementRef | Type<{}>, overlaySettings?: OverlaySettings): string {
+    show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
         const id: string = (this._componentId++).toString();
-        overlaySettings = Object.assign({}, this._defaultSettings, overlaySettings);
+        settings = Object.assign({}, this._defaultSettings, settings);
 
-        // get the element for both static and dynamic components
-        const element = this.getElement(component, id, overlaySettings);
-        const componentRef = this._overlays.find(c => c.id === id).componentRef;
-
-        this.onOpening.emit({ id, componentRef });
-
-        let size = element.getBoundingClientRect();
-
-        const wrapperElement = this.getWrapperElement(overlaySettings, id);
-        const contentElement = this.getContentElement(wrapperElement, overlaySettings);
-        this.OverlayElement.appendChild(wrapperElement);
-        const elementScrollTop = element.scrollTop;
-        contentElement.appendChild(element);
-
-        if (elementScrollTop) {
-            element.scrollTop = elementScrollTop;
+        const info = this.getOverlayInfo(component);
+        if (!info) {
+            return;
         }
 
-        if (componentRef) {
-            //  if we are positioning component this is first time it gets visible
-            //  and we can finally get its size
-            size = element.getBoundingClientRect();
+        info.id = id;
+        info.settings = settings;
+
+        this.onOpening.emit({ id, componentRef: info.componentRef });
+
+        info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
+        if (!info.componentRef) {
+            info.hook = this.placeElementHook(info.elementRef.nativeElement);
         }
 
-        contentElement.style.width = size.width + 'px';
-        contentElement.style.height = size.height + 'px';
+        this.moveElementToOverlay(info);
+        this.updateSize(info);
+        this._overlayInfos.push(info);
 
-        this._overlays.find(c => c.id === id).initialSize = size as DOMRect;
-        overlaySettings.positionStrategy.position(contentElement, size, document, true);
+        settings.positionStrategy.position(info.elementRef.nativeElement.parentElement, info.initialSize, document, true);
+        this.handleOutsideClick(info);
+        this.playOpenAnimation(info);
 
-        if (overlaySettings.closeOnOutsideClick) {
-            if (overlaySettings.modal) {
-                fromEvent(wrapperElement, 'click').pipe(take(1)).subscribe(() => this.hide(id));
-            } else if (this._overlays.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
-                (<HTMLElement>this._document).addEventListener('click', this.documentClicked, true);
-            }
-        }
+        settings.scrollStrategy.initialize(this._document, this, id);
+        settings.scrollStrategy.attach();
 
-        const animationBuilder = this.builder.build(overlaySettings.positionStrategy.settings.openAnimation);
-        const animationPlayer = animationBuilder.create(element);
-
-        if (overlaySettings.modal) {
-            fromEvent(wrapperElement, 'keydown').pipe(take(1)).subscribe((ev: KeyboardEvent) => {
-                if (ev.key === 'Escape') {
-                    this.hide(id);
-                }
-            });
-
-            wrapperElement.classList.remove('igx-overlay__wrapper');
-            this.applyAnimationParams(wrapperElement, overlaySettings.positionStrategy.settings.openAnimation);
-            wrapperElement.classList.add('igx-overlay__wrapper--modal');
-        }
-
-        animationPlayer.onDone(() => {
-            this.onOpened.emit({ id, componentRef });
-            animationPlayer.reset();
-        });
-
-        animationPlayer.play();
-
-        overlaySettings.scrollStrategy.initialize(this._document, this, id);
-        overlaySettings.scrollStrategy.attach();
-
-        return this._overlays[this._overlays.length - 1].id;
+        return id;
     }
 
     hide(id: string) {
-        const overlay = this.getOverlayById(id);
-        if (!overlay) {
+        const info: OverlayInfo = this.getOverlayById(id);
+        if (!info) {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
             return;
         }
 
-        const componentRef = overlay.componentRef;
-        this.onClosing.emit({ id, componentRef });
-        overlay.settings.scrollStrategy.detach();
-        const animationBuilder = this.builder.build(overlay.settings.positionStrategy.settings.closeAnimation);
-        const animationPlayer = animationBuilder.create(overlay.elementRef.nativeElement);
-        const child: HTMLElement = overlay.elementRef.nativeElement;
-
-        if (overlay.settings.modal) {
-            const parent = child.parentNode.parentNode as HTMLElement;
-            parent.classList.remove('igx-overlay__wrapper--modal');
-            parent.classList.add('igx-overlay__wrapper');
+        if (info.hiding) {
+            return;
         }
-        animationPlayer.onDone(() => {
-            animationPlayer.reset();
-            if (!this.OverlayElement.contains(child)) {
-                console.warn('Component with id:' + id + ' is already removed!');
-                return;
-            }
 
-            this.OverlayElement.removeChild(child.parentNode.parentNode);
-            if (overlay.componentRef) {
-                this._appRef.detachView(overlay.componentRef.hostView);
-                overlay.componentRef.destroy();
-            }
+        info.hiding = true;
 
-            overlay.hook.parentElement.insertBefore(overlay.elementRef.nativeElement, overlay.hook);
-            overlay.hook.parentElement.removeChild(overlay.hook);
-
-            const index = this._overlays.indexOf(overlay);
-
-            if (overlay.settings.closeOnOutsideClick) {
-                if (this._overlays.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
-                    (<HTMLElement>this._document).removeEventListener('click', this.documentClicked, true);
-                }
-            }
-
-
-            if (overlay.settings.modal === false) {
-                let shouldRemoveClickEventListener = true;
-                this._overlays.forEach(o => {
-                    if (o.settings.modal === false && o.id !== id) {
-                        shouldRemoveClickEventListener = false;
-                    }
-                });
-
-                if (shouldRemoveClickEventListener) {
-                    (<HTMLElement>this._document).removeEventListener('click', () => this.hide(id), true);
-                }
-            }
-
-            this._overlays.splice(index, 1);
-            if (this._overlays.length === 0) {
-                this._overlayElement.parentElement.removeChild(this._overlayElement);
-                this._overlayElement = null;
-            }
-            this.onClosed.emit({ id, componentRef });
-        });
-
-        animationPlayer.play();
+        this.onClosing.emit({ id, componentRef: info.componentRef });
+        info.settings.scrollStrategy.detach();
+        this.playCloseAnimation(info);
     }
 
     hideAll() {
         // since overlays are removed on animation done, que all hides
-        for (let i = this._overlays.length; i--;) {
-            this.hide(this._overlays[i].id);
+        for (let i = this._overlayInfos.length; i--;) {
+            this.hide(this._overlayInfos[i].id);
         }
     }
 
@@ -220,87 +116,58 @@ export class IgxOverlayService {
             this._document);
     }
 
-    private applyAnimationParams(wrapperElement: HTMLElement, animationOptions: AnimationReferenceMetadata) {
-        if (!animationOptions || !animationOptions.options || !animationOptions.options.params) {
-            return;
-        }
-        const params = animationOptions.options.params as IAnimationParams;
-        if (params.duration) {
-            wrapperElement.style.transitionDuration = params.duration;
-        }
-        if (params.easing) {
-            wrapperElement.style.transitionTimingFunction = params.easing;
-        }
-    }
-
-    private getElement(component: any, id: string, overlaySettings: OverlaySettings): HTMLElement {
-        let element: HTMLElement;
-        const hook = this._document.createElement('div');
-        if (this._overlays.find(e => e.id === id)) {
-            return this._overlays.find(e => e.id === id).elementRef.nativeElement;
-        }
-
-        hook.id = 'overlay-' + id + '-hook';
+    private getOverlayInfo(component: any): OverlayInfo {
+        const info: OverlayInfo = {};
         if (component instanceof ElementRef) {
-            element = component.nativeElement;
-            element.parentElement.insertBefore(hook, element);
-            this._overlays.push({
-                id: id,
-                elementRef: <ElementRef>component,
-                componentRef: null,
-                settings: overlaySettings,
-                initialSize: {
-                    width: 0,
-                    height: 0
-                },
-                hook
-            });
-            return element;
+            info.elementRef = <ElementRef>component;
+        } else {
+            let dynamicFactory: ComponentFactory<{}>;
+            try {
+                dynamicFactory = this._factoryResolver.resolveComponentFactory(component);
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+
+            const dynamicComponent: ComponentRef<{}> = dynamicFactory.create(this._injector);
+            this._appRef.attachView(dynamicComponent.hostView);
+
+            // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
+            const element = dynamicComponent.location.nativeElement.lastElementChild;
+            info.elementRef = <ElementRef>{ nativeElement: element };
+            info.componentRef = dynamicComponent;
         }
 
-        let dynamicFactory: ComponentFactory<{}>;
-        try {
-            dynamicFactory = this._factoryResolver.resolveComponentFactory(component);
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
+        return info;
+    }
 
-        const dynamicComponent: ComponentRef<{}> = dynamicFactory.create(this._injector);
-
-        // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
-        element = dynamicComponent.location.nativeElement.lastElementChild;
+    private placeElementHook(element: HTMLElement): HTMLElement {
+        const hook = this._document.createElement('div');
         element.parentElement.insertBefore(hook, element);
-        this._appRef.attachView(dynamicComponent.hostView);
-
-        this._overlays.push({
-            id: id,
-            elementRef: <ElementRef>{ nativeElement: element },
-            componentRef: dynamicComponent,
-            settings: overlaySettings,
-            initialSize: {
-                width: 0,
-                height: 0
-            },
-            hook
-        });
-        return element;
+        return hook;
     }
 
-    private getOverlayById(id: string) {
-        const overlay = this._overlays.find(e => e.id === id);
-        return overlay;
+    private moveElementToOverlay(info: OverlayInfo) {
+        const wrapperElement = this.getWrapperElement();
+        const contentElement = this.getContentElement(wrapperElement, info.settings);
+        this.getOverlayElement().appendChild(wrapperElement);
+        const elementScrollTop = info.elementRef.nativeElement.scrollTop;
+        contentElement.appendChild(info.elementRef.nativeElement);
+
+        if (elementScrollTop) {
+            info.elementRef.nativeElement.scrollTop = elementScrollTop;
+        }
     }
 
-    private getWrapperElement(overlaySettings: OverlaySettings, id: string): HTMLElement {
+    private getWrapperElement(): HTMLElement {
         const wrapper: HTMLElement = this._document.createElement('div');
         wrapper.classList.add('igx-overlay__wrapper');
         return wrapper;
     }
 
-    private getContentElement(wrapperElement: HTMLElement, overlaySettings: OverlaySettings): HTMLElement {
+    private getContentElement(wrapperElement: HTMLElement, settings: OverlaySettings): HTMLElement {
         const content: HTMLElement = this._document.createElement('div');
-        if (overlaySettings.modal) {
+        if (settings.modal) {
             content.classList.add('igx-overlay__content--modal');
             content.addEventListener('click', (ev: Event) => {
                 ev.stopPropagation();
@@ -317,9 +184,153 @@ export class IgxOverlayService {
         return content;
     }
 
+    private getOverlayElement(): HTMLElement {
+        if (!this._overlayElement) {
+            this._overlayElement = this._document.createElement('div');
+            this._overlayElement.classList.add('igx-overlay');
+            this._document.body.appendChild(this._overlayElement);
+        }
+
+        return this._overlayElement;
+    }
+
+    private updateSize(info: OverlayInfo) {
+        if (info.componentRef) {
+            //  if we are positioning component this is first time it gets visible
+            //  and we can finally get its size
+            info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
+        }
+
+        if (info.initialSize.width !== 0 && info.initialSize.height !== 0) {
+            info.elementRef.nativeElement.parentElement.style.width = info.initialSize.width + 'px';
+            info.elementRef.nativeElement.parentElement.style.height = info.initialSize.height + 'px';
+        }
+    }
+
+    private handleOutsideClick(info: OverlayInfo) {
+        if (info.settings.closeOnOutsideClick) {
+            if (info.settings.modal) {
+                fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
+                    .pipe(take(1))
+                    .subscribe(() => this.hide(info.id));
+            } else if (this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
+                (<HTMLElement>this._document).addEventListener('click', this.documentClicked, true);
+            }
+        }
+
+    }
+
+    // TODO: refactor playAnimation methods
+    private playOpenAnimation(info: OverlayInfo) {
+        const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
+        const animationPlayer = animationBuilder.create(info.elementRef.nativeElement);
+
+        if (info.settings.modal) {
+            const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
+            fromEvent(wrapperElement, 'keydown')
+                .pipe(take(1))
+                .subscribe((ev: KeyboardEvent) => {
+                    if (ev.key === 'Escape') {
+                        this.hide(info.id);
+                    }
+                });
+
+            wrapperElement.classList.remove('igx-overlay__wrapper');
+            this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
+            wrapperElement.classList.add('igx-overlay__wrapper--modal');
+        }
+
+        animationPlayer.onDone(() => {
+            this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+            animationPlayer.reset();
+        });
+
+        animationPlayer.play();
+    }
+
+    // TODO: refactor playAnimation methods
+    private playCloseAnimation(info: OverlayInfo) {
+        const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
+        const animationPlayer = animationBuilder.create(info.elementRef.nativeElement);
+        const child: HTMLElement = info.elementRef.nativeElement;
+
+        if (info.settings.modal) {
+            const parent = child.parentNode.parentNode as HTMLElement;
+            parent.classList.remove('igx-overlay__wrapper--modal');
+            parent.classList.add('igx-overlay__wrapper');
+        }
+
+        animationPlayer.onDone(() => {
+            animationPlayer.reset();
+            if (!this._overlayElement.contains(child)) {
+                console.warn('Component with id:' + info.id + ' is already removed!');
+                return;
+            }
+
+            this._overlayElement.removeChild(child.parentNode.parentNode);
+            if (info.componentRef) {
+                this._appRef.detachView(info.componentRef.hostView);
+                info.componentRef.destroy();
+            }
+
+            if (info.hook) {
+                info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
+                info.hook.parentElement.removeChild(info.hook);
+            }
+
+            const index = this._overlayInfos.indexOf(info);
+
+            if (info.settings.closeOnOutsideClick) {
+                if (this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
+                    (<HTMLElement>this._document).removeEventListener('click', this.documentClicked, true);
+                }
+            }
+
+            if (info.settings.modal === false) {
+                let shouldRemoveClickEventListener = true;
+                this._overlayInfos.forEach(o => {
+                    if (o.settings.modal === false && o.id !== info.id) {
+                        shouldRemoveClickEventListener = false;
+                    }
+                });
+
+                if (shouldRemoveClickEventListener) {
+                    (<HTMLElement>this._document).removeEventListener('click', () => this.hide(info.id), true);
+                }
+            }
+
+            this._overlayInfos.splice(index, 1);
+            if (this._overlayInfos.length === 0 && this._overlayElement.parentElement) {
+                this._overlayElement.parentElement.removeChild(this._overlayElement);
+                this._overlayElement = null;
+            }
+            this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+        });
+
+        animationPlayer.play();
+    }
+
+    private applyAnimationParams(wrapperElement: HTMLElement, animationOptions: AnimationReferenceMetadata) {
+        if (!animationOptions || !animationOptions.options || !animationOptions.options.params) {
+            return;
+        }
+        const params = animationOptions.options.params as IAnimationParams;
+        if (params.duration) {
+            wrapperElement.style.transitionDuration = params.duration;
+        }
+        if (params.easing) {
+            wrapperElement.style.transitionTimingFunction = params.easing;
+        }
+    }
+
+    private getOverlayById(id: string): OverlayInfo {
+        const overlay = this._overlayInfos.find(e => e.id === id);
+        return overlay;
+    }
+
     private documentClicked = (ev: Event) => {
-        for (let i = this._overlays.length; i--;) {
-            const overlay = this._overlays[i];
+        for (let i = this._overlayInfos.length; i--;) {
+            const overlay = this._overlayInfos[i];
             if (overlay.settings.modal) {
                 return;
             }
