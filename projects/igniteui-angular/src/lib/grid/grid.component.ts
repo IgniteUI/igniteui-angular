@@ -621,7 +621,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get hiddenColumnsCount() {
-        return this.columnList.filter((col) => col.hidden === true).length;
+        return this.columnList.filter((col) => col.columnGroup === false && col.hidden === true).length;
     }
 
     @Input()
