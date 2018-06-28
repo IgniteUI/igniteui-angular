@@ -746,7 +746,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
-        fix.componentInstance.width = '500px';
+        fix.componentInstance.width = '600px';
         fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
         fix.detectChanges();
@@ -764,7 +764,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
-        fix.componentInstance.width = '500px';
+        fix.componentInstance.width = '600px';
         fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
         fix.detectChanges();
