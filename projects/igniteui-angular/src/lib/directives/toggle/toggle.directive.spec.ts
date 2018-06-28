@@ -74,6 +74,7 @@ describe('IgxToggle', () => {
 
         const toggle = fixture.componentInstance.toggle;
         fixture.componentInstance.toggle.open();
+        tick();
         fixture.detectChanges();
 
         spyOn(toggle.onClosed, 'emit');
