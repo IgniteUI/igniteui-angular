@@ -11,8 +11,6 @@ import { IgxGridComponent, IPinColumnEventArgs } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
-import { ColumnDisplayOrder } from './column-chooser-base';
-import { ColumnChooserItemBase } from './column-chooser-item-base';
 
 describe('Column Pinning UI', () => {
     let fix;
@@ -45,6 +43,10 @@ describe('Column Pinning UI', () => {
         grid = fix.componentInstance.grid;
         columnChooser = fix.componentInstance.chooser;
         columnChooserElement = fix.debugElement.query(By.css('igx-column-pinning'));
+    });
+
+    afterAll(() => {
+        clearOverlay();
     });
 
     it ('title is initially empty.', () => {
@@ -246,6 +248,15 @@ describe('Column Pinning UI', () => {
         expect(chkInput.type).toBe('checkbox');
         expect(chkInput.disabled).toBe(isDisabled);
         expect(chkInput.checked).toBe(isChecked);
+    }
+
+    function clearOverlay() {
+        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+        Array.from(overlays).forEach(element => {
+            element.remove();
+        });
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
     }
 });
 

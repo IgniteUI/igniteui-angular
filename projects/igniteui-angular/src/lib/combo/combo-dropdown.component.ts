@@ -16,6 +16,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 })
 export class IgxComboDropDownComponent extends IgxDropDownBase {
     private _children: QueryList<IgxDropDownItemBase>;
+    private _scrollPosition = 0;
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -305,6 +306,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     onToggleOpened() {
         this.parentElement.triggerCheck();
+        this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
         this.parentElement.searchInput.nativeElement.focus();
         this.onOpened.emit();
     }
@@ -315,5 +317,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     onToggleClosed() {
         this.parentElement.comboInput.nativeElement.focus();
         this.onClosed.emit();
+    }
+
+    onToggleClosing() {
+        super.onToggleClosing();
+        this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }
 }

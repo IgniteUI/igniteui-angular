@@ -820,17 +820,16 @@ describe('IgxDropDown ', () => {
         fixture.detectChanges();
         expect(igxDropDown.collapsed).toEqual(true);
         igxDropDown.toggle();
+        tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.collapsed).toEqual(false);
-            igxDropDown.toggle();
-            tick();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.collapsed).toEqual(true);
-        });
+        fixture.detectChanges();
+        expect(igxDropDown.collapsed).toEqual(false);
+
+        igxDropDown.toggle();
+        tick();
+
+        fixture.detectChanges();
+        expect(igxDropDown.collapsed).toEqual(true);
     }));
 
     it('#1663 drop down flickers on open', fakeAsync(() => {
@@ -842,6 +841,24 @@ describe('IgxDropDown ', () => {
         igxDropDown.open();
         tick();
         expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(44);
+    }));
+
+    it('Should select item and close on Enter keydown', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxDropDownWithScrollComponent);
+        fixture.detectChanges();
+        const mockEvent = jasmine.createSpyObj('event', ['preventDefault']);
+        const igxDropDown = fixture.componentInstance.dropdownScroll;
+        igxDropDown.toggle();
+        tick();
+        expect(igxDropDown.collapsed).toEqual(false);
+        expect(igxDropDown.selectedItem).toEqual(null);
+        tick();
+        const dropdownHandler = fixture.debugElement.query(By.css(CSS_CLASS_DROP_DOWN_BASE));
+        dropdownHandler.triggerEventHandler('keydown.Enter', mockEvent);
+        tick();
+        expect(igxDropDown.collapsed).toEqual(true);
+        expect(igxDropDown.selectedItem).toEqual(igxDropDown.items[0]);
+        expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1);
     }));
 });
 
@@ -1036,7 +1053,7 @@ class IgxDropDownTestEmptyListComponent {
 @Component({
     template: `
     <button (click)="selectItem5()">Select 5</button>
-    <igx-drop-down #scrollDropDown>
+    <igx-drop-down igxDropDownItemNavigation #scrollDropDown>
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>
