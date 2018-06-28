@@ -34,6 +34,10 @@ describe('IgxGrid - Grid Toolbar', () => {
         grid = fixture.componentInstance.grid1;
     });
 
+    afterAll(() => {
+        clearOverlay();
+    });
+
     it('testing toolbar visibility', () => {
         expect(getToolbar()).toBe(null);
 
@@ -481,6 +485,15 @@ describe('IgxGrid - Grid Toolbar', () => {
     function getExportOptions() {
         const div = getOverlay();
         return (div) ? div.querySelectorAll('li') : null;
+    }
+
+    function clearOverlay() {
+        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+        Array.from(overlays).forEach(element => {
+            element.remove();
+        });
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
     }
 });
 

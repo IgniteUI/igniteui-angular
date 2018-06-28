@@ -211,6 +211,7 @@
 /// @returns {Map} - A map consisting of 26 color variations.
 @function generate-palette($color) {
     @return (
+        50: gen-color($color, 50),
         100: gen-color($color, 100),
         200: gen-color($color, 200),
         300: gen-color($color, 300),
@@ -225,6 +226,7 @@
         A400: gen-color($color, 'A400'),
         A700: gen-color($color, 'A700'),
         contrast: (
+            50: text-contrast(gen-color($color, 50)),
             100: text-contrast(gen-color($color, 100)),
             200: text-contrast(gen-color($color, 200)),
             300: text-contrast(gen-color($color, 300)),
@@ -277,6 +279,7 @@
         warn: (500: $warn),
         error: (500: $error),
         grays: (
+            50: rgba(0, 0, 0, .02),
             100: rgba(0, 0, 0, .04),
             200: rgba(0, 0, 0, .08),
             300: rgba(0, 0, 0, .12),
@@ -287,6 +290,7 @@
             800: rgba(0, 0, 0, .74),
             900: rgba(0, 0, 0, .87),
             contrast: (
+                50: text-contrast(rgba(0, 0, 0, .02)),
                 100: text-contrast(rgba(0, 0, 0, .04)),
                 200: text-contrast(rgba(0, 0, 0, .08)),
                 300: text-contrast(rgba(0, 0, 0, .12)),
