@@ -1,4 +1,3 @@
-import {  } from '@angular/core';
 import { ConnectedPositioningStrategy } from './../services/overlay/position/connected-positioning-strategy';
 import { CommonModule } from '@angular/common';
 import {
@@ -7,8 +6,7 @@ import {
     HostBinding, HostListener, Input, NgModule, OnInit, OnDestroy, Output, QueryList,
     TemplateRef, ViewChild, ViewChildren, Optional, Self, Inject
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor,
-    NgModel, FormControlName, NgControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
 import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray } from '../core/utils';
@@ -26,7 +24,7 @@ import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
-import { OverlaySettings, NoOpScrollStrategy } from '../services';
+import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 
 export enum DataTypes {
@@ -54,16 +52,14 @@ export interface IComboItemAdditionEvent {
     newCollection: any[];
 }
 
-let currentItem = 0;
+let NEXT_ID = 0;
 const noop = () => { };
 
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }],
     selector: 'igx-combo',
     templateUrl: 'combo.component.html'
 })
 export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
-    public id = '';
     /**
      * @hidden
      */
@@ -99,6 +95,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
+    protected _valueKey: string | number = '';
+    /**
+     * @hidden
+     */
     protected _displayKey: string | number = '';
     private _dataType = '';
     private _filteredData = [];
@@ -112,7 +112,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
         positionStrategy: new ConnectedPositioningStrategy(),
-        scrollStrategy: new NoOpScrollStrategy(),
+        scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
     };
@@ -124,12 +124,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService,
-        @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
-        @Optional() @Self() @Inject(FormControlName) protected formControl: FormControlName) {
-    }
-
-    private get ngControl(): NgControl {
-        return this.ngModel ? this.ngModel : this.formControl;
+        @Self() @Optional() public ngControl: NgControl) {
+            if (this.ngControl) {
+                // Note: we provide the value accessor through here, instead of
+                // the `providers` to avoid running into a circular import.
+                this.ngControl.valueAccessor = this;
+            }
     }
 
     /**
@@ -332,6 +332,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @Output()
     public onDataPreLoad = new EventEmitter<any>();
 
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-combo-${NEXT_ID++}`;
+
     /**
      * Sets the style width of the element
      *
@@ -514,7 +518,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public valueKey: string | number = '';
+    get valueKey() {
+        return this._valueKey;
+    }
+    set valueKey(val: string | number) {
+        this._valueKey = val;
+    }
 
     @Input()
     set displayKey(val: string | number) {
@@ -539,7 +548,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     get displayKey() {
-        return this._displayKey ? this._displayKey : this.valueKey;
+        return this._displayKey ? this._displayKey : this._valueKey;
     }
 
     /**
@@ -606,15 +615,19 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @Input()
     public type = 'box';
 
-    @HostListener('blur', ['$event'])
-     public onBlur(event) {
-         this._valid = IgxComboState.INITIAL;
-        if (this.ngControl) {
-            if (!this.ngControl.valid) {
+    /**
+     * @hidden
+     */
+    public onBlur(event) {
+        if (this.dropdown.collapsed) {
+            this._valid = IgxComboState.INITIAL;
+            if (this.ngControl) {
+                if (!this.ngControl.valid) {
+                    this._valid = IgxComboState.INVALID;
+                }
+            } else if (this._hasValidators() && !this.elementRef.nativeElement.checkValidity()) {
                 this._valid = IgxComboState.INVALID;
             }
-        } else if (this._hasValidators() && !this.elementRef.nativeElement.checkValidity()) {
-            this._valid = IgxComboState.INVALID;
         }
     }
 
@@ -707,6 +720,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public set sortingExpressions(value) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
+    }
+
+    public get valid(): IgxComboState {
+        return this._valid;
+    }
+
+    public set valid(value: IgxComboState) {
+        this._valid = value;
     }
 
     /**
@@ -927,7 +948,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             const args: IComboSelectionChangeEventArgs = { oldSelection, newSelection };
             this.onSelectionChange.emit(args);
             this.selectionAPI.set_selection(this.id, newSelection);
-            this.value = this._dataType !== DataTypes.PRIMITIVE ?
+            this.value = this.dataType !== DataTypes.PRIMITIVE ?
                 newSelection.map((e) => e[this.displayKey]).join(', ') :
                 newSelection.join(', ');
             // this.isHeaderChecked();
@@ -1033,9 +1054,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public ngOnInit() {
-        this.id += currentItem++;
-        this.selectionAPI.set_selection(this.id, []);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
+
+        if (this.ngControl) {
+            this.triggerSelectionChange(this.ngControl.value);
+        }
     }
 
     /**
@@ -1066,7 +1089,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public writeValue(value: any): void {
-        this.selectItems(value, true);
+        if (this.valueKey !== '') {
+            this.selectItems(value, true);
+        }
     }
 
     /**
