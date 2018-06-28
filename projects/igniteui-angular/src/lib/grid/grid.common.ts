@@ -168,11 +168,9 @@ export class IgxColumnMovingService {
     public cancelDrop: boolean;
     public selection: {
         column: IgxColumnComponent,
-        index: number,
+        rowIndex: number,
         rowID: any
     };
-
-    public test: any;
 
     get column(): IgxColumnComponent {
         return this._column;
@@ -262,12 +260,12 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this.column.grid.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
-        if (this.column.grid.selectionAPI.get_selection(this.column.gridID + '-cells')) {
-            const currSelection = this.column.grid.selectionAPI.get_selection(this.column.gridID + '-cells')[0];
+        const currSelection = this.column.grid.selectionAPI.get_selection(this.column.gridID + '-cells');
+        if (currSelection && currSelection.length > 0) {
             this.cms.selection = {
-                column: this.column.grid.columnList.toArray()[currSelection.columnID],
-                index: currSelection.rowIndex,
-                rowID: currSelection.rowID
+                column: this.column.grid.columnList.toArray()[currSelection[0].columnID],
+                rowIndex: currSelection[0].rowIndex,
+                rowID: currSelection[0].rowID
             };
         }
 
@@ -501,7 +499,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cells', [{
                     rowID: this.cms.selection.rowID,
                     columnID: colID,
-                    rowIndex: this.cms.selection.index
+                    rowIndex: this.cms.selection.rowIndex
                 }]);
 
                 this.cms.selection = null;
