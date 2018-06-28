@@ -1486,8 +1486,12 @@ describe('IgxGrid - GroupBy', () => {
         expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
-        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup', {}));
-        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup', {}));
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup'));
+        fix.detectChanges();
+
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup'));
 
         fix.detectChanges();
         grid.cdr.detectChanges();
