@@ -858,6 +858,7 @@ describe('IgxDropDown ', () => {
         dropdownHandler.triggerEventHandler('keydown.Enter', mockEvent);
         tick();
         expect(igxDropDown.collapsed).toEqual(true);
+        expect(igxDropDown.selectedItem).toEqual(igxDropDown.items[0]);
         expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1);
     }));
 });
