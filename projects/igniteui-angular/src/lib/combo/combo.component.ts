@@ -670,19 +670,75 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.toggle();
     }
 
+    /**
+     * Defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`
+     *
+     * ```typescript
+     * // get
+     * let state = this.combo.virtualizationState;
+     * ```
+    */
     get virtualizationState(): IForOfState {
         return this.dropdown.verticalScrollContainer.state;
     }
+    /**
+     * Sets the current state of the virtualized data.
+     *
+     * ```typescript
+     * // set
+     * this.combo.virtualizationState(state);
+     * ```
+     */
     set virtualizationState(state) {
         this.dropdown.verticalScrollContainer.state = state;
     }
 
+    /**
+     * Gets total count of the virtual data items, when using remote service.
+     *
+     * ```typescript
+     * // get
+     * let count = this.combo.totalItemCount;
+     * ```
+    */
     get totalItemCount() {
         return this.dropdown.verticalScrollContainer.totalItemCount;
     }
+    /**
+     * Sets total count of the virtual data items, when using remote service.
+     *
+     * ```typescript
+     * // set
+     * this.combo.totalItemCount(remoteService.count);
+     * ```
+     */
     set totalItemCount(count) {
         this.dropdown.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
+    }
+
+    /**
+     * Gets if control is valid, when used in a form
+     *
+     * ```typescript
+     * // get
+     * let valid = this.combo.valid;
+     * ```
+    */
+    public get valid(): IgxComboState {
+        return this._valid;
+    }
+
+    /**
+     * Sets valid state of the combo
+     *
+     * ```typescript
+     * // get
+     * this.combo.valid(IgxComboState.INVALID);
+     * ```
+     */
+    public set valid(value: IgxComboState) {
+        this._valid = value;
     }
 
     /**
@@ -720,14 +776,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public set sortingExpressions(value) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
-    }
-
-    public get valid(): IgxComboState {
-        return this._valid;
-    }
-
-    public set valid(value: IgxComboState) {
-        this._valid = value;
     }
 
     /**
