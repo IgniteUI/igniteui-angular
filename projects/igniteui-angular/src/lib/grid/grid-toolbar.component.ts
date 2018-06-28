@@ -33,6 +33,23 @@ export class IgxGridToolbarComponent {
     @Input()
     public gridID: string;
 
+    @Input()
+    public get filterColumnsPrompt() {
+        return this._filterColumnsPrompt;
+    }
+
+    public set filterColumnsPrompt(value: string) {
+        this._filterColumnsPrompt = value;
+    }
+
+    private _filterColumnsPrompt = 'Filter columns list ...';
+
+    @Input()
+    get defaultDropDownsMaxHeight() {
+        const gridHeight = this.grid.calcHeight;
+        return (gridHeight) ? gridHeight * 0.7 + 'px' : '100%';
+    }
+
     @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
     public columnHidingDropdown: IgxDropDownComponent;
 
