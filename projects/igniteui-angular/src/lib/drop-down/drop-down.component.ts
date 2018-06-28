@@ -550,7 +550,7 @@ export class IgxDropDownItemNavigationDirective {
 
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
-        if (!this.dropdown) {
+        if (!(this.target instanceof IgxDropDownComponent)) {
             this.target.close();
             event.preventDefault();
             return;
