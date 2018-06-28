@@ -316,7 +316,7 @@ export class IgxDropDownBase implements OnInit {
      * ```
      */
     open(overlaySettings?: OverlaySettings) {
-        this.toggleDirective.open(true, overlaySettings);
+        this.toggleDirective.open(overlaySettings);
     }
 
     /**
@@ -327,7 +327,7 @@ export class IgxDropDownBase implements OnInit {
      * ```
      */
     close() {
-        this.toggleDirective.close(true);
+        this.toggleDirective.close();
     }
 
     /**
@@ -451,7 +451,7 @@ export class IgxDropDownBase implements OnInit {
             item = this._focusedItem;
         }
         this.setSelectedItem(this._focusedItem.index);
-        this.toggleDirective.close(true);
+        this.toggleDirective.close();
     }
 
     protected changeSelectedItem(newSelection?: IgxDropDownItemBase) {

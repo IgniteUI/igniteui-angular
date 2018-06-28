@@ -26,19 +26,19 @@ export class IgxNavigationService {
         }
     }
 
-    public toggle(id: string, fireEvents?: boolean) {
+    public toggle(id: string, ...args) {
         if (this.navs[id]) {
-            return this.navs[id].toggle(fireEvents);
+            return this.navs[id].toggle(...args);
         }
     }
-    public open(id: string, fireEvents?: boolean) {
+    public open(id: string, ...args) {
         if (this.navs[id]) {
-            return this.navs[id].open(fireEvents);
+            return this.navs[id].open(...args);
         }
     }
-    public close(id: string, fireEvents?: boolean) {
+    public close(id: string, ...args) {
         if (this.navs[id]) {
-            return this.navs[id].close(fireEvents);
+            return this.navs[id].close(...args);
         }
     }
 }

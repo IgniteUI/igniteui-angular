@@ -45,9 +45,9 @@ handlers when the toggle is opened and respectively closed.
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|
-| `open` | fireEvents?: `boolean`, overlaySettings?: `OverlaySettings` | `void` | Opens the toggle. |
-| `close` | fireEvents?: `boolean` | `void` | Closes the toggle. |
-| `toggle` | fireEvents?: `boolean`, overlaySettings?: `OverlaySettings` | `void` | Closes the toggle. |
+| `open` | overlaySettings?: `OverlaySettings` | `void` | Opens the toggle. |
+| `close` | --- | `void` | Closes the toggle. |
+| `toggle` | overlaySettings?: `OverlaySettings` | `void` | Closes the toggle. |
 
 
 # IgxToggleAction Directive
