@@ -71,4 +71,5 @@ export interface OverlayInfo {
     initialSize?: { width?: number, height?: number, x?: number, y?: number };
     hook?: HTMLElement;
     hiding?: boolean;
+    showing?: boolean;
 }

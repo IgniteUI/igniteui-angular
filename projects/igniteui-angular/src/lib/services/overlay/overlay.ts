@@ -15,7 +15,7 @@ import {
     Injector,
     Type
 } from '@angular/core';
-import { AnimationBuilder, AnimationReferenceMetadata } from '@angular/animations';
+import { AnimationBuilder, AnimationReferenceMetadata, AnimationFactory, AnimationPlayer } from '@angular/animations';
 import { fromEvent } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
@@ -25,6 +25,9 @@ export class IgxOverlayService {
     private _componentId = 0;
     private _overlayInfos: OverlayInfo[] = [];
     private _overlayElement: HTMLElement;
+    private _animationBuilder: AnimationFactory;
+    private _openAnimationPlayer: AnimationPlayer;
+    private _closeAnimationPlayer: AnimationPlayer;
 
     private _defaultSettings: OverlaySettings = {
         positionStrategy: new GlobalPositionStrategy(),
@@ -46,14 +49,22 @@ export class IgxOverlayService {
         @Inject(DOCUMENT) private _document: any) { }
 
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
+        console.log('show');
         const id: string = (this._componentId++).toString();
         settings = Object.assign({}, this._defaultSettings, settings);
 
         const info = this.getOverlayInfo(component);
-        if (!info) {
+
+        if (!info || info.showing) {
             return;
         }
 
+        if (info.hiding) {
+            info.hiding = false;
+            this._closeAnimationPlayer.reset();
+        }
+
+        info.showing = true;
         info.id = id;
         info.settings = settings;
 
@@ -69,7 +80,6 @@ export class IgxOverlayService {
         this._overlayInfos.push(info);
 
         settings.positionStrategy.position(info.elementRef.nativeElement.parentElement, info.initialSize, document, true);
-        this.handleOutsideClick(info);
         this.playOpenAnimation(info);
 
         settings.scrollStrategy.initialize(this._document, this, id);
@@ -79,7 +89,9 @@ export class IgxOverlayService {
     }
 
     hide(id: string) {
+        console.log('hide');
         const info: OverlayInfo = this.getOverlayById(id);
+
         if (!info) {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
             return;
@@ -89,10 +101,16 @@ export class IgxOverlayService {
             return;
         }
 
+        if (info.showing) {
+            info.showing = false;
+            this._openAnimationPlayer.reset();
+        }
+
         info.hiding = true;
 
         this.onClosing.emit({ id, componentRef: info.componentRef });
         info.settings.scrollStrategy.detach();
+        this.removeOutsideClickListener(info);
         this.playCloseAnimation(info);
     }
 
@@ -207,7 +225,7 @@ export class IgxOverlayService {
         }
     }
 
-    private handleOutsideClick(info: OverlayInfo) {
+    private addOutsideClickListener(info: OverlayInfo) {
         if (info.settings.closeOnOutsideClick) {
             if (info.settings.modal) {
                 fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
@@ -222,8 +240,9 @@ export class IgxOverlayService {
 
     // TODO: refactor playAnimation methods
     private playOpenAnimation(info: OverlayInfo) {
-        const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
-        const animationPlayer = animationBuilder.create(info.elementRef.nativeElement);
+
+        this._animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
+        this._openAnimationPlayer = this._animationBuilder.create(info.elementRef.nativeElement);
 
         if (info.settings.modal) {
             const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
@@ -240,18 +259,22 @@ export class IgxOverlayService {
             wrapperElement.classList.add('igx-overlay__wrapper--modal');
         }
 
-        animationPlayer.onDone(() => {
+        this._openAnimationPlayer.onDone(() => {
+            console.log('open anim onDone');
+            this.addOutsideClickListener(info);
             this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
-            animationPlayer.reset();
+            info.showing = false;
+            this._openAnimationPlayer.reset();
         });
 
-        animationPlayer.play();
+        this._openAnimationPlayer.play();
     }
 
     // TODO: refactor playAnimation methods
     private playCloseAnimation(info: OverlayInfo) {
-        const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
-        const animationPlayer = animationBuilder.create(info.elementRef.nativeElement);
+
+        this._animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
+        this._closeAnimationPlayer = this._animationBuilder.create(info.elementRef.nativeElement);
         const child: HTMLElement = info.elementRef.nativeElement;
 
         if (info.settings.modal) {
@@ -260,8 +283,10 @@ export class IgxOverlayService {
             parent.classList.add('igx-overlay__wrapper');
         }
 
-        animationPlayer.onDone(() => {
-            animationPlayer.reset();
+        this._closeAnimationPlayer.onDone(() => {
+            console.log('close anim onDone');
+            this._closeAnimationPlayer.reset();
+            info.hiding = false;
             if (!this._overlayElement.contains(child)) {
                 console.warn('Component with id:' + info.id + ' is already removed!');
                 return;
@@ -286,19 +311,6 @@ export class IgxOverlayService {
                 }
             }
 
-            if (info.settings.modal === false) {
-                let shouldRemoveClickEventListener = true;
-                this._overlayInfos.forEach(o => {
-                    if (o.settings.modal === false && o.id !== info.id) {
-                        shouldRemoveClickEventListener = false;
-                    }
-                });
-
-                if (shouldRemoveClickEventListener) {
-                    (<HTMLElement>this._document).removeEventListener('click', () => this.hide(info.id), true);
-                }
-            }
-
             this._overlayInfos.splice(index, 1);
             if (this._overlayInfos.length === 0 && this._overlayElement.parentElement) {
                 this._overlayElement.parentElement.removeChild(this._overlayElement);
@@ -307,7 +319,7 @@ export class IgxOverlayService {
             this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
         });
 
-        animationPlayer.play();
+        this._closeAnimationPlayer.play();
     }
 
     private applyAnimationParams(wrapperElement: HTMLElement, animationOptions: AnimationReferenceMetadata) {
@@ -328,15 +340,31 @@ export class IgxOverlayService {
         return overlay;
     }
 
+    private removeOutsideClickListener(info: OverlayInfo) {
+        if (info.settings.modal === false) {
+            let shouldRemoveClickEventListener = true;
+            this._overlayInfos.forEach(o => {
+                if (o.settings.modal === false && o.id !== info.id) {
+                    shouldRemoveClickEventListener = false;
+                }
+            });
+
+            if (shouldRemoveClickEventListener) {
+                (<HTMLElement>this._document).removeEventListener('click', () => this.hide(info.id), true);
+            }
+        }
+    }
+
     private documentClicked = (ev: Event) => {
         for (let i = this._overlayInfos.length; i--;) {
-            const overlay = this._overlayInfos[i];
-            if (overlay.settings.modal) {
+            const info = this._overlayInfos[i];
+            if (info.settings.modal) {
                 return;
             }
-            if (overlay.settings.closeOnOutsideClick) {
-                if (!overlay.elementRef.nativeElement.contains(ev.target)) {
-                    this.hide(overlay.id);
+            if (info.settings.closeOnOutsideClick) {
+                if (!info.elementRef.nativeElement.contains(ev.target) || !info.hiding) {
+                    this.hide(info.id);
+                    // TODO: should we return here too and not closing all no-modal overlays?
                 }
             }
         }
