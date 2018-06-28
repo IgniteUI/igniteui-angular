@@ -5,14 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { ColumnChooserBase } from './column-chooser-base';
 import { ColumnChooserItemBase } from './column-chooser-item-base';
-import { IPinColumnEventArgs } from './grid.component';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
-import { IgxColumnComponent } from '../../public_api';
-
-export interface IColumnPinnedChangedEventArgs {
-    column: any;
-    newValue: boolean;
-}
 
 @Directive({
     selector: '[igxColumnPinningItem]'
@@ -41,16 +34,11 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
     constructor(public cdr: ChangeDetectorRef) {
         super(cdr);
     }
-    @Output()
-    public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
 
     createColumnItem(container: any, column: any) {
         const item = new IgxColumnPinningItemDirective();
         item.container = container;
         item.column = column;
-        item.valueChanged.subscribe((args) => {
-            this.columnPinning({ column: item.column, newValue: item.value });
-        });
         return item;
     }
 
@@ -60,9 +48,6 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
             return false;
         }
         columnItem.value = !columnItem.value;
-    }
-    public columnPinning(args: IColumnPinnedChangedEventArgs) {
-        console.log(args.column.grid.pinnedColumns.length);
     }
 }
 
