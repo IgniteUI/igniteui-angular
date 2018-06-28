@@ -168,7 +168,6 @@ export class IgxColumnMovingService {
     public cancelDrop: boolean;
     public selection: {
         column: IgxColumnComponent,
-        rowIndex: number,
         rowID: any
     };
 
@@ -264,7 +263,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         if (currSelection && currSelection.length > 0) {
             this.cms.selection = {
                 column: this.column.grid.columnList.toArray()[currSelection[0].columnID],
-                rowIndex: currSelection[0].rowIndex,
                 rowID: currSelection[0].rowID
             };
         }
@@ -498,8 +496,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
                 this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cells', [{
                     rowID: this.cms.selection.rowID,
-                    columnID: colID,
-                    rowIndex: this.cms.selection.rowIndex
+                    columnID: colID
                 }]);
 
                 this.cms.selection = null;
