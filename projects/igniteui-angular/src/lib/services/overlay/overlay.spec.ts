@@ -4,9 +4,7 @@ import {
     Inject,
     NgModule,
     ViewChild,
-    DebugElement,
-    ComponentRef,
-    ChangeDetectorRef
+    ComponentRef
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -878,11 +876,6 @@ describe('igxOverlay', () => {
             expect(componentEl.localName === 'div').toBeTruthy();
         }));
 
-        xit('The shown component is positioned according to the options passed (base point/Left, Center, Right/Top, Middle, Bottom).',
-            () => {
-                // TO DO --> covered with position method tests.
-            });
-
         it('If using a ConnectedPositioningStrategy without passing other but target element options, the omitted options default to:' +
             'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
                 const fixture = TestBed.createComponent(TopLeftOffsetComponent);
@@ -924,21 +917,6 @@ describe('igxOverlay', () => {
 
                 expect(strategy.settings).toEqual(expectedDefaults);
             });
-
-        xit('If using a ConnectedPositioningStrategy passing only target element the component is rendered based on defaults' +
-            '(StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop)', () => {
-                // TO DO
-            });
-
-        xit('If using a ConnectedPositioningStrategy without passing options, the component is rendered based on defaults:' +
-            'target: new Point(0, 0), StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, ' +
-            'closeAnimation: scaleOutVerTop', () => {
-                // TO DO
-            });
-
-        xit('When adding a new component it should be rendered where expected based on the options passed.', () => {
-            // TO DO --> covered with position method tests.
-        });
 
         // adding more than one component to show in igx-overlay:
         it('When adding a new instance of component with default settings, it is rendered exactly on top of the previous one', () => {
@@ -1585,16 +1563,7 @@ describe('igxOverlay', () => {
                 // TO DO
             });
 
-        xit('The component is repositioned and rendered correctly in the window, even when the rendering options passed ' +
-            ' should result in otherwise a partially hidden component. No scrollbars should appear.', () => {
-                // TO DO
-            });
-
         xit('igx-overlay margins should be rendered correctly', () => {
-            // TO DO
-        });
-
-        xit('igx-overlay displays each shown component in the browsers visible window and tries to fit it in case of AutoPosition.', () => {
             // TO DO
         });
 
@@ -1675,12 +1644,6 @@ describe('igxOverlay', () => {
             expect(componentRect_1.width).toEqual(componentRect_2.width); // Will have the same width
             expect(componentRect_1.height).toEqual(componentRect_2.height); // Will have the same height
         }));
-
-        // When adding a component like Menu that has a sub-menu near the visible window, upon opening the sub-menu,
-        // no scrollbar will appear but the sub-menus are rearranged in order to fit in the visible window.
-        xit('If the width/height allows, the sub-menu should be shown in the window. If not, it should be AutoPositioned', () => {
-            // TO DO
-        });
 
         // 2. Scroll Strategy (test with GlobalPositionStrategy(default))
         // 2.1. Scroll Strategy - None
@@ -2070,11 +2033,11 @@ describe('igxOverlay', () => {
         }));
 
         xit('Interaction is allowed only for the shown modal dialog component', () => {
-            // Not TO DO
+            // TO DO
         });
 
         xit('Esc key closes the dialog.', fakeAsync(() => {
-            // Not TO DO
+            // TO DO
         }));
 
         xit('Enter selects', () => {
@@ -2162,70 +2125,6 @@ describe('igxOverlay', () => {
         });
 
         // 4. Css
-        it('All appropriate css classes should be applied on igx-overlay initialization.' +
-            '(class overlay, incl. position, width, height, etc.) - Non modal.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            const overlay = fixture.componentInstance.overlay;
-            const overlaySettings: OverlaySettings = {
-                modal: false,
-                positionStrategy: new GlobalPositionStrategy()
-            };
-
-            spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
-
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-            expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay.hide).toHaveBeenCalledTimes(0);
-
-            const overlayMain = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
-            tick();
-            expect(overlayMain).not.toEqual(undefined);
-
-            const overlayWrapper = overlayMain.firstChild as HTMLElement;
-            expect(overlayWrapper.classList[0]).toEqual(CLASS_OVERLAY_WRAPPER);
-
-            const overlayContent = overlayWrapper.firstChild as HTMLElement;
-            expect(overlayContent.classList[0]).toEqual(CLASS_OVERLAY_CONTENT);
-
-            fixture.destroy();
-        }));
-
-        it('All appropriate css classes should be applied on igx-overlay initialization.' +
-        '(class overlay, incl. position, width, height, etc.) - Modal.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            const overlay = fixture.componentInstance.overlay;
-            const overlaySettings: OverlaySettings = {
-                modal: true,
-                positionStrategy: new GlobalPositionStrategy()
-            };
-
-            spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
-
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-            expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay.hide).toHaveBeenCalledTimes(0);
-
-            const overlayMain = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
-            tick();
-            expect(overlayMain).not.toEqual(undefined);
-
-            const overlayWrapperModal = overlayMain.firstChild as HTMLElement;
-            expect(overlayWrapperModal.classList[0]).toEqual(CLASS_OVERLAY_WRAPPER_MODAL);
-
-            const overlayContentModal = overlayWrapperModal.firstChild as HTMLElement;
-            expect(overlayContentModal.classList[0]).toEqual(CLASS_OVERLAY_CONTENT_MODAL);
-
-            fixture.destroy();
-        }));
-
-        xit('All css properties set should be actually applied.', () => {
-            // TO DO
-        });
-
         xit('Css should not leak: From igx-overlay to the inner components (greyed out modal).', () => {
             // TO DO
         });
