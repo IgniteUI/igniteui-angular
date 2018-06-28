@@ -1268,6 +1268,43 @@ describe('IgxGrid - Filtering actions', () => {
             }, 500);
         });
     }));
+
+    it('Choose only second unary condition should filter the grid', async(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
+
+        expect(grid.rowList.length).toEqual(8);
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            andButton.nativeElement.click();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
+            sendInput(input, 'g', fix);
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            verifyFilterUIPosition(filterUIContainer, grid);
+
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(3);
+            andButton.nativeElement.click();
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            expect(grid.rowList.length).toEqual(8);
+        });
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {

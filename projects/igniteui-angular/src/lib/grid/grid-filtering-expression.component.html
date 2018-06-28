@@ -25,12 +25,6 @@
 
 <select #select [attr.draggable]="false" (change)="selectionChanged($event.target.value)">
     <option
-        *ngIf="column.dataType === 'boolean'"
-        [value]="booleanFilterAll">
-        {{ booleanFilterAll | filterCondition | titlecase }}
-    </option>
-
-    <option
         [selected]="isActive(each)"
         *ngFor="let each of conditions"
         [value]="each">
