@@ -132,19 +132,22 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
 
             const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
 
-            if (expr) {
-                if (expr instanceof FilteringExpressionsTree) {
-                    this.expressionsList.toArray()[0].value = (expr.filteringOperands[0] as IFilteringExpression).searchVal;
-                    this.expressionsList.toArray()[0].expression.condition = (expr.filteringOperands[0] as IFilteringExpression).condition;
-                    if (expr.filteringOperands.length > 1) {
-                        this.isSecondConditionVisible = true;
-                        this.logicOperators.selectedIndexes = [];
-                        this.logicOperators.selectButton(expr.operator);
-                    } else if (this.expressionsList.toArray()[1]) {
-                        const secondExpr = this.expressionsList.toArray()[1];
-                        this.expressionsList.toArray()[1].value = null;
-                        this.expressionsList.toArray()[1].expression.condition = secondExpr.getCondition(secondExpr.conditions[0]);
+            if (expr && expr instanceof FilteringExpressionsTree) {
+                this.expressionsList.toArray()[0].value = (expr.filteringOperands[0] as IFilteringExpression).searchVal;
+                this.expressionsList.toArray()[0].expression.condition = (expr.filteringOperands[0] as IFilteringExpression).condition;
+                if (expr.filteringOperands.length > 1) {
+                    if (this.expressionsList.toArray()[1]) {
+                        this.expressionsList.toArray()[1].value = (expr.filteringOperands[1] as IFilteringExpression).searchVal;
+                        this.expressionsList.toArray()[1].expression.condition = 
+                            (expr.filteringOperands[1] as IFilteringExpression).condition;
                     }
+                    this.isSecondConditionVisible = true;
+                    this.logicOperators.selectedIndexes = [];
+                    this.logicOperators.selectButton(expr.operator);
+                } else if (this.expressionsList.toArray()[1]) {
+                    const secondExpr = this.expressionsList.toArray()[1];
+                    this.expressionsList.toArray()[1].value = null;
+                    this.expressionsList.toArray()[1].expression.condition = secondExpr.getCondition(secondExpr.conditions[0]);
                 }
             } else {
                 this.expressionsList.forEach(el => {

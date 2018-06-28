@@ -1,5 +1,5 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar, ICalendarDate } from '../calendar/calendar';
@@ -1269,7 +1269,7 @@ describe('IgxGrid - Filtering actions', () => {
         });
     }));
 
-    it('Choose only second unary condition should filter the grid', async(() => {
+    it('Choose only second unary condition should filter the grid', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1281,29 +1281,31 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(8);
 
         filterIcon.nativeElement.click();
+        tick(100);
         fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            andButton.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
-            sendInput(input, 'g', fix);
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            verifyFilterUIPosition(filterUIContainer, grid);
+        andButton.nativeElement.click();
+        tick(100);
+        fix.detectChanges();
 
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-            andButton.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-        });
+        const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
+        sendInput(input, 'g', fix);
+        tick(100);
+        fix.detectChanges();
+
+        verifyFilterUIPosition(filterUIContainer, grid);
+
+        tick(100);
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(3);
+        andButton.nativeElement.click();
+        tick(100);
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(8);
+
+        discardPeriodicTasks();
     }));
 });
 
