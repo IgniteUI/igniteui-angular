@@ -5,7 +5,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 
-import { IgxTextHighlightDirective} from './text-highlight.directive';
+import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
 describe('IgxHighlight', () => {
     beforeEach(async(() => {
@@ -239,6 +239,12 @@ class HighlightLoremIpsumComponent {
     }
 
     public activate(index: number) {
-        IgxTextHighlightDirective.setActiveHighlight(this.groupName, 0, 0, index, 0);
+        const activeHighlightInfo: IActiveHighlightInfo = {
+            rowIndex: 0,
+            columnIndex: 0,
+            page: 0,
+            index: index
+        };
+        IgxTextHighlightDirective.setActiveHighlight(this.groupName, activeHighlightInfo);
     }
 }
