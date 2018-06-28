@@ -100,7 +100,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public close(fireEvents?: boolean) {
         if (this.collapsed) { return; }
 
-        if (fireEvents && !(this._overlayId !== undefined)) {
+        if (fireEvents && this._overlayId === undefined) {
             this.onClosing.emit();
         }
 
@@ -154,12 +154,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     private overlayClosed = () => {
         this._collapsed = true;
-        // this.cdr.detectChanges();
         this.onClosed.emit();
     }
 
     private overlayClosing = () => {
-        // this.cdr.detectChanges();
         this.onClosing.emit();
     }
 
