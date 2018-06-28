@@ -2,7 +2,7 @@ import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { IPositionStrategy } from './position/IPositionStrategy';
 
 import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
-import { AnimationMetadata, AnimationReferenceMetadata } from '@angular/animations';
+import { AnimationMetadata, AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 
 export enum HorizontalAlignment {
@@ -70,6 +70,6 @@ export interface OverlayInfo {
     settings?: OverlaySettings;
     initialSize?: { width?: number, height?: number, x?: number, y?: number };
     hook?: HTMLElement;
-    hiding?: boolean;
-    showing?: boolean;
+    openAnimationPlayer?: AnimationPlayer;
+    closeAnimationPlayer?: AnimationPlayer;
 }

@@ -21,7 +21,7 @@ const base: AnimationMetadata[] = [
 const baseInParams: IAnimationParams = {
     delay: '0s',
     direction: '',
-    duration: '1000ms',
+    duration: '350ms',
     easing: EaseOut.quad,
     endOpacity: 1,
     fromScale: .5,
