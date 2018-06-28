@@ -126,7 +126,6 @@ export class IgxChipsAreaComponent implements DoCheck {
                 chipsArray[dragChipIndex + 1].chipArea.nativeElement.focus();
             }
         }
-        this.onMoveEnd.emit();
     }
 
     protected onChipMoveStart() {
