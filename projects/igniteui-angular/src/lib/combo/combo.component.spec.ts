@@ -1880,8 +1880,8 @@ fdescribe('igxCombo', () => {
             fixture.whenStable().then(() => {
                 fixture.detectChanges();
                 const scrollbarContainer = fixture.debugElement
-                                        .query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL))
-                                        .nativeElement as HTMLElement;
+                    .query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL))
+                    .nativeElement as HTMLElement;
                 const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
                 expect(hasScrollbar).toBeFalsy();
             });
@@ -1895,8 +1895,8 @@ fdescribe('igxCombo', () => {
             fixture.whenStable().then(() => {
                 fixture.detectChanges();
                 const scrollbarContainer = fixture.debugElement
-                                            .query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL))
-                                            .nativeElement as HTMLElement;
+                    .query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL))
+                    .nativeElement as HTMLElement;
                 const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
                 expect(hasScrollbar).toBeTruthy();
             });
@@ -1920,7 +1920,7 @@ fdescribe('igxCombo', () => {
             const comboData = combo.data;
             expect(comboData).toEqual(data);
         });
-        it('Combo data binding - remote service', fakeAsync(() => {
+        fit('Combo data binding - remote service', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboBindingTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
@@ -1933,6 +1933,16 @@ fdescribe('igxCombo', () => {
                     expect(combo.data[i]['id']).toEqual(productIndex);
                     expect(combo.data[i]['product']).toEqual('Product ' + productIndex);
                 }
+
+                combo.toggle();
+                tick();
+                return fixture.whenStable();
+            }).then(() => {
+                fixture.detectChanges();
+                const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+                const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+
+                expect(dropdownItems[0].innerText).toEqual('Product 1');
             });
         }));
         it('The empty template should be rendered when combo data source is not set', fakeAsync(() => {
