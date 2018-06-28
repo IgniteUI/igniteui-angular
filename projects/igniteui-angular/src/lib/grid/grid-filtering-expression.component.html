@@ -16,7 +16,6 @@
 
 <ng-template #defaultDateUI>
     <igx-datePicker
-        (click)="onDatePickerClick()"
         *ngIf="!unaryCondition"
         [(ngModel)]="value"
         (onSelection)="onDatePickerValueChanged()">

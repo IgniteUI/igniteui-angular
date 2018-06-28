@@ -54,6 +54,18 @@ function css(element) {
     }
     return ret;
 }
+
+function addScrollDivToElement(parent) {
+    const scrollDiv = document.createElement('div');
+    scrollDiv.style.width = '100px';
+    scrollDiv.style.height = '100px';
+    scrollDiv.style.top = '10000px';
+    scrollDiv.style.left = '10000px';
+    scrollDiv.style.position = 'absolute';
+    parent.appendChild(scrollDiv);
+
+}
+
 describe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -753,7 +765,9 @@ describe('igxOverlay', () => {
             expect(componentRect_1.height).toEqual(componentRect_2.height);
         }));
 
-        it('should show a component bigger than the visible window as centered and scrollbars should appear', fakeAsync(() => {
+        it('should show a component bigger than the visible window as centered and scrollbars should not appear', fakeAsync(() => {
+            // overlay div is forced to has width and height equal to 0. This will prevent body
+            // to show any scrollbars whatever the size of the component is.
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
             let hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
@@ -770,7 +784,7 @@ describe('igxOverlay', () => {
             expect(componentRect.top).toBeLessThan(0);
             expect(wrapperRect.height / 2).toEqual(componentRect.top + componentRect.height / 2);
             hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
-            expect(hasScrollbar).toBeTruthy();
+            expect(hasScrollbar).toBeFalsy();
         }));
         // 1.1.1 Global Css
         it('css class should be applied on igx-overlay component div wrapper.' +
@@ -1033,20 +1047,13 @@ describe('igxOverlay', () => {
             document.body.removeChild(dummy);
         }));
 
-        // TODO: Should test with ConnectedPositioningStrategy
-        it('closingScrollStrategy: The component changes state to closed when reaching the threshold' +
-            '(example: expanded DropDown collapses).', fakeAsync(() => {
-                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                    set: {
-                        styles: [`button {
-                    position: absolute,
-                    bottom: 200%;
-                }
-                body {
-                    bottom: -2000px;
-                }`]
-                    }
-                }).createComponent(EmptyPageComponent);
+        it('closingScrollStrategy: no scrolling possible. The component changes ' +
+            'state to closed when reaching the threshold (example: expanded DropDown collapses).', fakeAsync(() => {
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+
+                //  add one div far away to the right and to the bottom in order scrollbars to appear on page
+                addScrollDivToElement(fixture.nativeElement);
+
                 const scrollStrat = new CloseScrollStrategy();
                 fixture.detectChanges();
                 const overlaySettings: OverlaySettings = {
@@ -1138,14 +1145,10 @@ describe('igxOverlay', () => {
 
         it('Scroll Strategy Absolute: can scroll it into view. Component persist state. ' +
             '(example: expanded DropDown remains expanded)', fakeAsync(() => {
-                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                    set: {
-                        styles: [`button {
-                        position: absolute,
-                        bottom: -2000px;
-                    }`]
-                    }
-                }).createComponent(EmptyPageComponent);
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+
+                //  add one div far away to the right and to the bottom in order scrollbars to appear on page
+                addScrollDivToElement(fixture.nativeElement);
                 const scrollStrat = new AbsoluteScrollStrategy();
                 fixture.detectChanges();
                 const overlaySettings: OverlaySettings = {
@@ -2155,8 +2158,6 @@ describe('igxOverlay', () => {
             }));
     });
 });
-
-
 @Component({
     template: '<div style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
 })
