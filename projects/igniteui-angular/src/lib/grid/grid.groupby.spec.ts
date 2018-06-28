@@ -1620,16 +1620,16 @@ describe('IgxGrid - GroupBy', () => {
         });
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 50);
-        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 50);
+        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 75, 30);
+        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             fix.detectChanges();
             const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
@@ -1686,17 +1686,17 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 50);
-        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 50);
+        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 30);
+        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
 
-            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -1714,18 +1714,18 @@ describe('IgxGrid - GroupBy', () => {
             chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
             // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-            simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 50);
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 50);
+            simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 30);
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             return fix.whenStable();
         }).then(() => {
