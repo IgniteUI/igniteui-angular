@@ -1148,40 +1148,44 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public deleteRow(rowSelector: any): void {
-        const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
-        if (row) {
-            const index = this.data.indexOf(row.rowData);
-            if (this.rowSelectable === true) {
-                this.deselectRows([row.rowID]);
-            }
-            this.data.splice(index, 1);
-            this.onRowDeleted.emit({ data: row.rowData });
-            this._pipeTrigger++;
-            this.cdr.markForCheck();
+        if (this.primaryKey !== undefined && this.primaryKey !== null) {
+            const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
+            if (row) {
+                const index = this.data.indexOf(row.rowData);
+                if (this.rowSelectable === true) {
+                    this.deselectRows([row.rowID]);
+                }
+                this.data.splice(index, 1);
+                this.onRowDeleted.emit({ data: row.rowData });
+                this._pipeTrigger++;
+                this.cdr.markForCheck();
 
-            this.refreshSearch();
+                this.refreshSearch();
+            }
         }
     }
 
     public updateCell(value: any, rowSelector: any, column: string): void {
-        const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
-        if (columnEdit.length > 0) {
-            const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
-            this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
-            this._pipeTrigger++;
-            this.cdr.detectChanges();
+        if (this.primaryKey !== undefined && this.primaryKey !== null) {
+            const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
+            if (columnEdit.length > 0) {
+                const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
+                this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
+                this._pipeTrigger++;
+                this.cdr.detectChanges();
+            }
         }
     }
 
     public updateRow(value: any, rowSelector: any): void {
-        const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
-        if (row) {
-            if (this.primaryKey !== undefined && this.primaryKey !== null) {
+        if (this.primaryKey !== undefined && this.primaryKey !== null) {
+            const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
+            if (row) {
                 value[this.primaryKey] = row.rowData[this.primaryKey];
+                this.gridAPI.update_row(value, this.id, row);
+                this._pipeTrigger++;
+                this.cdr.markForCheck();
             }
-            this.gridAPI.update_row(value, this.id, row);
-            this._pipeTrigger++;
-            this.cdr.markForCheck();
         }
     }
 

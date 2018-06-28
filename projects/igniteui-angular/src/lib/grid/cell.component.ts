@@ -304,7 +304,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public update(val: any) {
-        this.gridAPI.update_cell(this.gridID, this.cellID.rowIndex, this.cellID.columnID, val);
+        let rowSelector = this.cellID.rowIndex;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            rowSelector = this.cellID.rowID;
+        }
+        this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
     }
 
     public ngOnDestroy() {
@@ -359,6 +363,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
+        debugger;
         if (this.gridAPI.get_cell_inEditMode(this.gridID) && event.path.length > 0 && event.relatedTarget) {
             const targetEditMode = event.path[0].classList.value.indexOf('igx-grid__td--editing') !== -1;
             if (targetEditMode) {

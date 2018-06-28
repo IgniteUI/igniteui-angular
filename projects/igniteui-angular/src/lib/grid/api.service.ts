@@ -103,15 +103,15 @@ export class IgxGridAPIService {
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
         }
-        return this.get(id).rowList.find((row) => row.index === rowSelector);
+        // return this.get(id).rowList.find((row) => row.index === rowSelector);
     }
 
     public get_row_by_index(id: string, rowIndex: number): IgxGridRowComponent {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
-    public get_cell_by_field(id: string, rowSelector: any, field: string): IgxGridCellComponent {
-        const row = this.get_row_by_key(id, rowSelector);
+    public get_cell_by_field(id: string, rowIndex: number, field: string): IgxGridCellComponent {
+        const row = this.get_row_by_index(id, rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
