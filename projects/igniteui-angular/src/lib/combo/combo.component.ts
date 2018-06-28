@@ -1056,7 +1056,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public ngOnInit() {
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
 
-        if (this.ngControl) {
+        if (this.ngControl && this.ngControl.value) {
             this.triggerSelectionChange(this.ngControl.value);
         }
     }
