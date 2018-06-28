@@ -1281,26 +1281,26 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(8);
 
         filterIcon.nativeElement.click();
-        tick(100);
+        tick();
         fix.detectChanges();
 
         andButton.nativeElement.click();
-        tick(100);
+        tick();
         fix.detectChanges();
 
         const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
         sendInput(input, 'g', fix);
-        tick(100);
+        tick();
         fix.detectChanges();
 
         verifyFilterUIPosition(filterUIContainer, grid);
 
-        tick(100);
+        tick();
         fix.detectChanges();
 
         expect(grid.rowList.length).toEqual(3);
         andButton.nativeElement.click();
-        tick(100);
+        tick();
         fix.detectChanges();
 
         expect(grid.rowList.length).toEqual(8);
