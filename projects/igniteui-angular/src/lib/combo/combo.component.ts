@@ -332,6 +332,19 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @Output()
     public onDataPreLoad = new EventEmitter<any>();
 
+    /**
+     * Gets/gets combo id.
+     *
+     * ```typescript
+     * // get
+     * let id = this.combo.id;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [id]='combo1'></igx-combo>
+     * ```
+    */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-combo-${NEXT_ID++}`;
