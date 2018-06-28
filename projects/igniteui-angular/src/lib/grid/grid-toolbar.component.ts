@@ -14,7 +14,7 @@ import { CsvFileTypes,
          IgxCsvExporterService,
          IgxExcelExporterOptions,
          IgxExcelExporterService,
-         CloseScrollStrategy} from '../services/index';
+         AbsoluteScrollStrategy} from '../services/index';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
@@ -143,7 +143,7 @@ export class IgxGridToolbarComponent {
 
     private _overlaySettings: OverlaySettings = {
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-        scrollStrategy: new CloseScrollStrategy(),
+        scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
     };
