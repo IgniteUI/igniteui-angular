@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - search API', () => {
