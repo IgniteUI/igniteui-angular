@@ -1812,7 +1812,7 @@ describe('igxOverlay', () => {
 
                 fixture.destroy();
         }));
-        
+
         it('The component shown in igx-overlay changes its state when it exceeds the scrolling tolerance set ' +
             '(an expanded DropDown, Menu, DatePicker, etc. collapses).', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
