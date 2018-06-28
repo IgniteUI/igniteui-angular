@@ -1048,28 +1048,77 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         event.stopPropagation();
     }
 
+    /**
+     * A method that opens/closes the dialog.
+     *
+     *```html
+     *<button (click)="combo.toggle()>Toggle Combo</button>
+     *<igx-combo #combo></igx-combo>
+     *```
+     */
     public toggle() {
         this.searchValue = '';
         this.dropdown.toggle(this.overlaySettings);
     }
 
+    /**
+     * A method that opens the dialog.
+     *
+     *```html
+     *<button (click)="combo.open()>Open Combo</button>
+     *<igx-combo #combo></igx-combo>
+     *```
+     */
     public open() {
         this.searchValue = '';
         this.dropdown.open(this.overlaySettings);
     }
 
+    /**
+     * A method that closes the dialog.
+     *
+     *```html
+     *<button (click)="combo.close()>Close Combo</button>
+     *<igx-combo #combo></igx-combo>
+     *```
+     */
     public close() {
         this.dropdown.close();
     }
 
+    /**
+     * Gets drop down state.
+     *
+     * ```typescript
+     * // get
+     * let state = this.combo.collapsed;
+     * ```
+    */
     public get collapsed() {
         return this.dropdown.collapsed;
     }
 
+    /**
+     * Get current selection state
+     * @returns Array of selected items
+     * ```typescript
+     * // get
+     * let selectedItems = this.combo.selectedItems();
+     * ```
+     */
     public selectedItems() {
         return this.dropdown.selectedItem;
     }
 
+    /**
+     * Select defined items
+     * @param newItems new items to be selected
+     * @param clearCurrentSelection if true clear previous selected items
+     * ```typescript
+     * // get
+     * this.combo.selectItems(["New York", "New Jersey"]);
+     * ```
+     */
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
             const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
@@ -1077,19 +1126,43 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
-    public deselectItems(newItems: Array<any>) {
-        if (newItems) {
-            const newSelection = this.selectionAPI.deselect_items(this.id, newItems);
+    /**
+     * Deselect defined items
+     * @param items items to deselected
+     * ```typescript
+     * // get
+     * this.combo.deselectItems(["New York", "New Jersey"]);
+     * ```
+     */
+    public deselectItems(items: Array<any>) {
+        if (items) {
+            const newSelection = this.selectionAPI.deselect_items(this.id, items);
             this.triggerSelectionChange(newSelection);
         }
     }
 
+    /**
+     * Select all (filtered) items
+     * @param ignoreFilter if set to true, selects all items, otherwise selects only the filtered ones.
+     * ```typescript
+     * // get
+     * this.combo.selectAllItems();
+     * ```
+     */
     public selectAllItems(ignoreFilter?: boolean) {
         const allVisible = this.selectionAPI.get_all_ids(ignoreFilter ? this.data : this.filteredData);
         const newSelection = this.selectionAPI.select_items(this.id, allVisible);
         this.triggerSelectionChange(newSelection);
     }
 
+    /**
+     * Deselect all (filtered) items
+     * @param ignoreFilter if set to true, deselects all items, otherwise deselects only the filtered ones.
+     * ```typescript
+     * // get
+     * this.combo.deselectAllItems();
+     * ```
+     */
     public deselectAllItems(ignoreFilter?: boolean) {
         const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
             [] :
