@@ -1,5 +1,5 @@
-import { Component, ContentChildren, QueryList, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, QueryList, ViewChild } from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
@@ -7,10 +7,10 @@ import { IgxListComponent, IgxListModule } from './list.component';
 
 declare var Simulator: any;
 
-describe('List', () => {
+fdescribe('List', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ListTestComponent, ListWithPanningAllowedComponent,
+            declarations: [ListTestComponent, ListWithPanningAllowedComponent, ListLoadingComponent,
                 ListWithLeftPanningAllowedComponent, ListWithRightPanningAllowedComponent,
                 ListWithNoItemsComponent, ListWithCustomNoItemsTemplateComponent, TwoHeadersListComponent],
             imports: [IgxListModule]
@@ -268,7 +268,7 @@ describe('List', () => {
         expect(list.cssClass).toBeFalsy();
         expect(list.isListEmpty).toBeTruthy();
 
-        const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
+        const noItemsParagraphEl = fixture.debugElement.query(By.css('h3'));
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
     });
 
@@ -518,13 +518,6 @@ class ListWithLeftPanningAllowedComponent {
 }
 
 @Component({
-    /* template: `<div #wrapper>
-                <igx-list [hasNoItemsTemplate]="false">
-                <!--emptyListMessage="Custom no items message."
-                    emptyListImage="https://example.com/noitems.png"
-                    emptyListButtonText="Custom Button Text">-->
-                </igx-list>
-            </div>` */
     template: `<div #wrapper>
             <igx-list>
             </igx-list>
@@ -535,37 +528,28 @@ class ListWithNoItemsComponent {
 }
 
 @Component({
-    /*template: `<div #wrapper>
-                <igx-list [hasNoItemsTemplate]="true">
-                    <div class="igx-list__empty--custom">
-                        Custom no items message.
-                    </div>
-                </igx-list>
-            </div>`*/
     template: `<div #wrapper>
-                <igx-list >
+                <igx-list>
                     <ng-template igxEmptyList>
                         <h3>Custom no items message.</h3>
                     </ng-template>
                 </igx-list>
             </div>`
 })
-
-class ListLoadingComponent {
+class ListWithCustomNoItemsTemplateComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
 @Component({
     template: `<div #wrapper>
-                <igx-list [isLoading]="true" >
-                    <ng-template igxEmptyList>
+                <igx-list [isLoading]="true">
+                    <ng-template igxDataLoading>
                         <h3>Loading data...</h3>
                     </ng-template>
                 </igx-list>
             </div>`
 })
-
-class ListWithCustomNoItemsTemplateComponent {
+class ListLoadingComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 

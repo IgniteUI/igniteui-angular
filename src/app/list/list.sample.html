@@ -86,8 +86,7 @@
             </igx-input-group>
 
             <div class="list-sample">
-                <igx-list [hidden]="fruitsFilteredItemsCount === 0" emptyListMessage="No fruits." emptyListImage="images/list/empty.png"
-                          (emptyListButtonClick)="addFruitDialog.open()" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
+                <igx-list [hidden]="fruitsFilteredItemsCount === 0" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
                     <igx-list-item *ngFor="let fruit of fruits">
                         <div class="item" [attr.data-fruit-id]="fruit.id">
                             <span>{{ fruit.name }}</span>
@@ -111,7 +110,7 @@
                     {{ fruit.name }}
                 </igx-list-item>
                 <ng-template igxDataLoading>
-                    <p>Data is still loading...</p>
+                    <p>Loading...</p>
                 </ng-template>
             </igx-list>
         </article>
@@ -122,13 +121,15 @@
                 <i class="light">w/ Custom template</i>
             </h4>
             <div class="list-sample">
-                <igx-list hasNoItemsTemplate="true">
+                <igx-list>
                     <igx-list-item *ngFor="let fruit of fruits">
                         {{ fruit.name }}
                     </igx-list-item>
-                    <div class="igx-list__empty--custom">
-                        No items, bruh.
-                    </div>
+                    <ng-template igxEmptyList>
+                        <div style="text-align: center">
+                            <button type="button" igxButton="flat" (click)="addFruitDialog.open()">Open Dialog</button>
+                        </div>
+                    </ng-template>
                 </igx-list>
             </div>
         </article>
@@ -144,3 +145,4 @@
         <input id="newFruit" igxInput #newFruitName type="text" />
     </igx-input-group>
 </igx-dialog>
+

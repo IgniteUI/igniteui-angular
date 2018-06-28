@@ -107,6 +107,7 @@ export class IgxListComponent {
      */
     @Input()
     public allowLeftPanning = false;
+
     /**
      * Sets/gets whether the right panning of an item is allowed.
      * Default value is `false`.
@@ -120,6 +121,19 @@ export class IgxListComponent {
      */
     @Input()
     public allowRightPanning = false;
+
+    /**
+     * Sets/gets whether the list is currently loading data.
+     * Set it to display the dataLoadingTemplate while data is being retrieved.
+     * Default value is `false`.
+     * ```html
+     *  <igx-list [isLoading]="true"></igx-list>
+     * ```
+     * ```typescript
+     * let isLoading = this.list.isLoading;
+     * ```
+     * @memberof IgxListComponent
+     */
     @Input()
     public isLoading = false;
 
