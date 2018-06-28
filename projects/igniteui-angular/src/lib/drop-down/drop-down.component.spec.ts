@@ -820,17 +820,16 @@ describe('IgxDropDown ', () => {
         fixture.detectChanges();
         expect(igxDropDown.collapsed).toEqual(true);
         igxDropDown.toggle();
+        tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.collapsed).toEqual(false);
-            igxDropDown.toggle();
-            tick();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.collapsed).toEqual(true);
-        });
+        fixture.detectChanges();
+        expect(igxDropDown.collapsed).toEqual(false);
+
+        igxDropDown.toggle();
+        tick();
+
+        fixture.detectChanges();
+        expect(igxDropDown.collapsed).toEqual(true);
     }));
 
     it('#1663 drop down flickers on open', fakeAsync(() => {
