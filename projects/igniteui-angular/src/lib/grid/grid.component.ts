@@ -48,8 +48,7 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
-import { IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
-import { DataUtil } from 'dist/igniteui-angular/public_api';
+import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
