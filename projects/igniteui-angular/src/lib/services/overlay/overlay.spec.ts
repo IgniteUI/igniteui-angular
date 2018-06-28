@@ -49,7 +49,7 @@ function addScrollDivToElement(parent) {
 
 }
 
-fdescribe('igxOverlay', () => {
+describe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
