@@ -6,12 +6,13 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { Calendar } from '../calendar';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { ColumnDisplayOrder, IgxColumnHidingComponent, IgxColumnHidingModule } from './column-hiding.component';
+import { IgxColumnHidingComponent, IgxColumnHidingModule } from './column-hiding.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownComponent, IgxDropDownModule } from '../../public_api';
+import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
+import { ColumnDisplayOrder } from './column-chooser-base';
 
 describe('Column Hiding UI', () => {
     let fix;
@@ -37,6 +38,10 @@ describe('Column Hiding UI', () => {
         })
         .compileComponents();
     }));
+
+    afterAll(() => {
+        clearOverlay();
+    });
 
     describe('', () => {
         beforeEach(() => {
@@ -960,6 +965,15 @@ describe('Column Hiding UI', () => {
         expect(chkInput.type).toBe('checkbox');
         expect(chkInput.disabled).toBe(isDisabled);
         expect(chkInput.checked).toBe(isChecked);
+    }
+
+    function clearOverlay() {
+        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+        Array.from(overlays).forEach(element => {
+            element.remove();
+        });
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
     }
 });
 

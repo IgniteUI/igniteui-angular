@@ -1,3 +1,4 @@
+
 <div class="igx-column-hiding__header">
     <h4 class="igx-column-hiding__header-title" *ngIf="title">{{ title }}</h4>
 
@@ -12,18 +13,11 @@
 
 <div class="igx-column-hiding__columns"
     [style.max-height]="columnsAreaMaxHeight">
-    <igx-checkbox igxColumnHidingItem
+    <igx-checkbox igxColumnPinningItem
         *ngFor="let columnItem of columnItems"
         class="igx-column-hiding__columns-item"
-        (onColumnVisibilityChanged)="onVisibilityChanged($event)"
-        (change)="columnItem.value = !columnItem.value"
-        [checked]="columnItem.value"
-        [disabled]="columnItem.disabled">
+        (change)="checkboxValueChange($event, columnItem)"
+        [checked]="columnItem.value">
         {{ columnItem.name }}
     </igx-checkbox>
-</div>
-
-<div class="igx-column-hiding__buttons">
-    <button igxButton igxRipple (click)="showAllColumns()" [disabled]="disableShowAll">{{ showAllText }}</button>
-    <button igxButton igxRipple (click)="hideAllColumns()" [disabled]="disableHideAll">{{ hideAllText }}</button>
 </div>
