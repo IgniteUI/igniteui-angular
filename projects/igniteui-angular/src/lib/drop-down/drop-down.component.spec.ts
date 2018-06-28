@@ -813,7 +813,7 @@ describe('IgxDropDown ', () => {
         });
     });
 
-    fit('Unit: should close drop down when call close()', fakeAsync(() => {
+    it('Unit: should close drop down when call close()', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDropDownTestComponent);
         const componentInstance = fixture.componentInstance;
         const igxDropDown = componentInstance.dropdown;
