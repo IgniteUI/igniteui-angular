@@ -330,7 +330,7 @@ describe('IgxChipsArea', () => {
         });
     }));
 
-    it('chip reorder should fire correctly', async(() => {
+    it('chip reorder should fire correctly with drag and drop', async(() => {
         const fix = TestBed.createComponent(TestChipReorderComponent);
         fix.detectChanges();
 
@@ -408,7 +408,24 @@ describe('IgxChipsArea', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
-        const firstChipComp = fix.componentInstance.chips.toArray()[1];
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        spyOn( secondChipComp.onSelection, 'emit');
+        secondChipComp.chipArea.nativeElement.focus();
+
+        const keyEvent = new KeyboardEvent('keydown', {
+            'key': ' '
+        });
+        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        fix.detectChanges();
+        expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
+    });
+
+    it('should not fire onSelection event when selectable is false', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
         spyOn( firstChipComp.onSelection, 'emit');
         firstChipComp.chipArea.nativeElement.focus();
@@ -418,7 +435,7 @@ describe('IgxChipsArea', () => {
         });
         firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
-        expect(firstChipComp.onSelection.emit).toHaveBeenCalled();
+        expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
     });
 
     it('should be able to have multiple chips selected', () => {
@@ -485,6 +502,59 @@ describe('IgxChipsArea', () => {
         expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
     });
 
+    it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', () => {
+        const leftKey = new KeyboardEvent('keydown', {
+            'key': 'ArrowLeft',
+            shiftKey: true
+        });
+        const rightKey = new KeyboardEvent('keydown', {
+            'key': 'ArrowRight',
+            shiftKey: true
+        });
+
+        let firstChipLeft;
+        let secondChipLeft;
+        let firstChipAreaElem;
+        let secondChipAreaElem;
+
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            firstChipAreaElem = chipComponents[0].componentInstance.chipArea.nativeElement;
+            secondChipAreaElem = chipComponents[1].componentInstance.chipArea.nativeElement;
+
+            firstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
+            secondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
+
+            firstChipAreaElem.focus();
+            fix.detectChanges();
+            expect(document.activeElement).toBe(firstChipAreaElem);
+
+            firstChipAreaElem.dispatchEvent(rightKey);
+            fix.detectChanges();
+
+            let newFirstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
+            let newSecondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
+
+            expect(firstChipLeft).toBeLessThan(newFirstChipLeft);
+            expect(newSecondChipLeft).toBeLessThan(secondChipLeft);
+
+            firstChipAreaElem.focus();
+
+            firstChipAreaElem.dispatchEvent(leftKey);
+            fix.detectChanges();
+
+            newFirstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
+            newSecondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
+
+            expect(firstChipLeft).toEqual(newFirstChipLeft);
+            expect(newSecondChipLeft).toEqual(secondChipLeft);
+        });
+    });
+
     it('should delete chip when delete button is pressed and chip is removable', () => {
         const deleteKey = new KeyboardEvent('keydown', {
             'key': 'Delete'
@@ -508,6 +578,25 @@ describe('IgxChipsArea', () => {
         expect(chipComponents.length).toEqual(3);
     });
 
+    it('should delete chip when delete button is pressed', () => {
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            expect(chipComponents.length).toEqual(4);
+
+            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
+            deleteButtonElement.nativeElement.click();
+
+            fix.detectChanges();
+
+            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            expect(chipComponents.length).toEqual(3);
+        });
+    });
+
     it('should delete chip when space button is pressed and chip delete button is focussed', () => {
         const spaceKeyEvent = new KeyboardEvent('keydown', {
             'key': ' '
@@ -529,6 +618,77 @@ describe('IgxChipsArea', () => {
 
             chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             expect(chipComponents.length).toEqual(3);
+        });
+    });
+
+    it('should delete chip when enter button is pressed and chip delete button is focussed', () => {
+        const enterKeyEvent = new KeyboardEvent('keydown', {
+            'key': 'Enter'
+        });
+
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            expect(chipComponents.length).toEqual(4);
+
+            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
+            deleteButtonElement.nativeElement.focus();
+
+            deleteButtonElement.nativeElement.dispatchEvent(enterKeyEvent);
+            fix.detectChanges();
+
+            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            expect(chipComponents.length).toEqual(3);
+        });
+    });
+
+    it('chip should persist selected state when it is dragged and dropped', () => {
+        const spaceKeyEvent = new KeyboardEvent('keydown', {
+            'key': ' '
+        });
+        const xDragDifference = 200;
+        const yDragDifference = 100;
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+        const chipComponents = chipArea[0].queryAll(By.directive(IgxChipComponent));
+        const secondChip = chipComponents[1].componentInstance;
+        const secondChipElem = secondChip.chipArea.nativeElement;
+
+        secondChip.dragDir.animateOnRelease = false;
+        secondChipElem.dispatchEvent(spaceKeyEvent);
+
+        const startingTop = secondChipElem.getBoundingClientRect().top;
+        const startingLeft = secondChipElem.getBoundingClientRect().left;
+        const startingBottom = secondChipElem.getBoundingClientRect().bottom;
+        const startingRight = secondChipElem.getBoundingClientRect().right;
+
+        const startingX = (startingLeft + startingRight) / 2;
+        const startingY = (startingTop + startingBottom) / 2;
+
+        simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+
+            expect(secondChip.selected).toBeTruthy();
+
+            simulatePointerEvent('pointerup', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            fix.detectChanges();
+            return fix.whenStable();
+        })
+        .then(() => {
+            expect(secondChip.selected).toBeTruthy();
         });
     });
 });
