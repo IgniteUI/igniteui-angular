@@ -355,6 +355,7 @@ import {
 
 |Name|Signature|Description|
 |--- |--- |--- |
+|`all`|`(target: boolean)`|Returns all rows.|
 |`true`|`(target: boolean)`|Returns if `target` is truthy.|
 |`false`|`(target: boolean)`|Returns true if `target` is falsy.|
 |`null`|`(target: any)`|Returns true if `target` is `null`.|

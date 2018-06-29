@@ -12,3 +12,10 @@ export enum IgxListPanState { NONE, LEFT, RIGHT }
 export class IgxEmptyListTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
+
+@Directive({
+    selector: '[igxDataLoading]'
+})
+export class IgxDataLoadingTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
