@@ -701,6 +701,7 @@ describe('Column Hiding UI', () => {
             fix.detectChanges();
             getCheckboxInput('Person Details').click();
             fix.detectChanges();
+            grid.cdr.detectChanges();
 
             verifyCheckbox('Person Details', true, false);
             fix.detectChanges();
@@ -716,6 +717,8 @@ describe('Column Hiding UI', () => {
 
             getCheckboxInput('Person Details').click();
             fix.detectChanges();
+            grid.cdr.detectChanges();
+
             verifyColumnIsHidden(grid.columns[3], false, 7);
             verifyColumnIsHidden(grid.columns[4], false, 7);
             verifyColumnIsHidden(grid.columns[5], false, 7);
