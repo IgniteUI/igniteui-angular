@@ -11,7 +11,7 @@ describe('List', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ListTestComponent, ListWithPanningAllowedComponent, ListLoadingComponent,
-                ListWithLeftPanningAllowedComponent, ListWithRightPanningAllowedComponent,
+                ListWithLeftPanningAllowedComponent, ListWithRightPanningAllowedComponent, ListCustomLoadingComponent,
                 ListWithNoItemsComponent, ListWithCustomNoItemsTemplateComponent, TwoHeadersListComponent],
             imports: [IgxListModule]
         }).compileComponents();
@@ -259,6 +259,21 @@ describe('List', () => {
 
     it('Should have default loading template.', () => {
         const fixture = TestBed.createComponent(ListLoadingComponent);
+        const list = fixture.componentInstance.list;
+        const listLoadingItemsMessage = 'Loading data from the server...';
+
+        fixture.detectChanges();
+
+        verifyItemsCount(list, 0);
+        expect(list.cssClass).toBeFalsy();
+        expect(list.isListEmpty).toBeTruthy();
+
+        const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
+        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
+    });
+
+    it('Should have custom loading template.', () => {
+        const fixture = TestBed.createComponent(ListCustomLoadingComponent);
         const list = fixture.componentInstance.list;
         const listLoadingItemsMessage = 'Loading data...';
 
@@ -543,13 +558,24 @@ class ListWithCustomNoItemsTemplateComponent {
 @Component({
     template: `<div #wrapper>
                 <igx-list [isLoading]="true">
+                </igx-list>
+            </div>`
+})
+class ListLoadingComponent {
+    @ViewChild(IgxListComponent) public list: IgxListComponent;
+}
+
+
+@Component({
+    template: `<div #wrapper>
+                <igx-list [isLoading]="true">
                     <ng-template igxDataLoading>
                         <h3>Loading data...</h3>
                     </ng-template>
                 </igx-list>
             </div>`
 })
-class ListLoadingComponent {
+class ListCustomLoadingComponent {
     @ViewChild(IgxListComponent) public list: IgxListComponent;
 }
 
