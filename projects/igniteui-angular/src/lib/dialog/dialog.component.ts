@@ -1,4 +1,4 @@
-import { transition, trigger, useAnimation } from '@angular/animations';
+import { useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     Component,
@@ -13,15 +13,18 @@ import {
     OnInit,
     Optional,
     Output,
-    ViewChild
+    ViewChild,
+    AfterContentInit
 } from '@angular/core';
-
-import { EaseOut } from '../animations/easings';
-import { fadeIn, fadeOut, slideInBottom } from '../animations/main';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
+import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services';
+import { slideInBottom, slideOutTop } from '../animations/slide/index';
 
 let DIALOG_ID = 0;
 /**
@@ -48,21 +51,15 @@ let DIALOG_ID = 0;
  * ```
  */
 @Component({
-    animations: [
-        trigger('fadeInOut', [
-            transition('void => open', useAnimation(fadeIn)),
-            transition('open => void', useAnimation(fadeOut))
-        ]),
-        trigger('slideIn', [
-            transition('void => open', useAnimation(slideInBottom))
-        ])
-    ],
     selector: 'igx-dialog',
     templateUrl: 'dialog-content.component.html'
 })
-export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
+export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
+
+    @ViewChild(IgxToggleDirective)
+    public toggleRef: IgxToggleDirective;
 
     /**
     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -73,6 +70,16 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-dialog-${DIALOG_ID++}`;
+
+    @Input()
+    get isModal() {
+        return this._isModal;
+    }
+
+    set isModal(val: boolean) {
+        this._overlayDefaultSettings.modal = val;
+        this._isModal = val;
+    }
 
     /**
     * An @Input property controlling the `title` of the dialog.
@@ -199,7 +206,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
      *```
      */
     @Input()
-    public closeOnOutsideSelect = false;
+    get closeOnOutsideSelect() {
+        return this._closeOnOutsideSelect;
+    }
+
+    set closeOnOutsideSelect(val: boolean) {
+        this._overlayDefaultSettings.closeOnOutsideClick = val;
+        this._closeOnOutsideSelect = val;
+    }
 
     /**
      * An event that is emitted when the dialog is opened.
@@ -243,6 +257,15 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     @Output()
     public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
+    private _animaitonSettings: PositionSettings = {
+        openAnimation: useAnimation(slideInBottom, {params: {fromPosition: 'translateY(100%)'}}),
+        closeAnimation: useAnimation(slideOutTop, {params: {toPosition: 'translateY(-100%)'}})
+    };
+
+    private _overlayDefaultSettings: OverlaySettings;
+    private _closeOnOutsideSelect = false;
+    private _isModal = true;
+    protected destroy$ = new Subject<boolean>();
 
     /**
      * @hidden
@@ -259,9 +282,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
     @HostBinding('attr.tabindex')
     public tabindex = -1;
 
-    private _isOpen = false;
     private _titleId: string;
-    private _state: string;
 
     /**
      * Returns the value of state. Possible state values are "open" or "close".
@@ -274,7 +295,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
      *```
      */
     get state(): string {
-        return this._state;
+        return this.isOpen ? 'open' : 'close';
     }
 
     /**
@@ -289,7 +310,12 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
      */
     @Input()
     get isOpen() {
-        return this._isOpen;
+        return !this.toggleRef.collapsed;
+    }
+
+    @HostBinding('class.igx-dialog--hidden')
+    get isCollapsed() {
+        return this.toggleRef.collapsed;
     }
 
     /**
@@ -336,6 +362,21 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         @Optional() private navService: IgxNavigationService
     ) {
         this._titleId = IgxDialogComponent.NEXT_ID++ + '_title';
+
+        this._overlayDefaultSettings = {
+            positionStrategy: new GlobalPositionStrategy(this._animaitonSettings),
+            scrollStrategy: new NoOpScrollStrategy(),
+            modal: this.isModal,
+            closeOnOutsideClick: this.closeOnOutsideSelect
+        };
+    }
+
+    ngAfterContentInit() {
+        this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitCloseFromDialog());
+    }
+
+    private emitCloseFromDialog() {
+        this.onClose.emit({ dialog: this, event: null });
     }
 
     /**
@@ -346,12 +387,12 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
      *<igx-dialog #dialog></igx-dialog>
      *```
      */
-    public open() {
+    public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
         if (this.isOpen) {
             return;
         }
 
-        this.toggleState('open');
+        this.toggleRef.open(overlaySettings);
         this.onOpen.emit({ dialog: this, event: null });
     }
 
@@ -367,9 +408,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         if (!this.isOpen) {
             return;
         }
-
-        this.toggleState('close');
-        this.onClose.emit({ dialog: this, event: null });
+        // `onClose` will emit from `toggleRef.onClosing` subscription
+        this.toggleRef.close();
     }
 
 
@@ -428,12 +468,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy {
         if (this.navService && this.id) {
             this.navService.remove(this.id);
         }
+
     }
 
-    private toggleState(state: string): void {
-        this._state = state;
-        this._isOpen = state === 'open' ? true : false;
-    }
 }
 
 export interface IDialogEventArgs {
@@ -448,6 +485,6 @@ export interface IDialogEventArgs {
 @NgModule({
     declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
-    imports: [CommonModule, IgxButtonModule, IgxRippleModule]
+    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxDialogModule { }

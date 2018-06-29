@@ -31,6 +31,7 @@ enum IgxInputGroupType {
 })
 export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
+    private _filled = false;
 
     /**
      * An ElementRef property of the `IgxInputGroupComponent`.
@@ -79,11 +80,6 @@ export class IgxInputGroupComponent {
     @HostBinding('class.igx-input-group--focused')
     public isFocused = false;
 
-    /**
-     * @hidden
-     */
-    @HostBinding('class.igx-input-group--filled')
-    public isFilled = false;
 
     /**
      * @hidden
@@ -182,6 +178,11 @@ export class IgxInputGroupComponent {
 
             this._type = type;
         }
+    }
+
+    @HostBinding('class.igx-input-group--filled')
+    get isFilled() {
+        return this._filled || (this.input && this.input.value);
     }
 
     /**
@@ -286,6 +287,14 @@ export class IgxInputGroupComponent {
      */
     get isTypeSearch() {
         return  this._type === IgxInputGroupType.SEARCH;
+    }
+
+    get filled() {
+        return this._filled;
+    }
+
+    set filled(val) {
+        this._filled = val;
     }
 }
 

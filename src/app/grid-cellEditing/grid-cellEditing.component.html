@@ -17,9 +17,6 @@
         </ng-template>
     </igx-column>
     <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true" editable="true" [resizable]="true" [hidden]="orderDateHidden" [movable]="true">
-        <ng-template igxCell let-cell="cell" let-val let-row>
-        {{val}}
-        </ng-template>
     </igx-column>
     <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
         <ng-template igxCell let-cell="cell" let-val>
