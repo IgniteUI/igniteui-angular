@@ -604,8 +604,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.gridAPI.submit_value(this.gridID);
+            } else {
+                this.inEditMode = true;
             }
-            this.inEditMode = !this.inEditMode;
             this.nativeElement.focus();
         }
     }
