@@ -123,7 +123,8 @@ describe('IgxGrid - Cell component', () => {
                 GridWithEditableColumnComponent,
                 NoColumnWidthGridComponent,
                 CellEditingTestComponent,
-                CellEditingScrollTestComponent
+                CellEditingScrollTestComponent,
+                CellEditingPrimaryKeyTestComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -299,6 +300,37 @@ describe('IgxGrid - Cell component', () => {
             expect(cell.inEditMode).toBe(false);
         });
     }));
+
+    it('edit cell which is a Primary Key', async(() => {
+        const fixture = TestBed.createComponent(CellEditingPrimaryKeyTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const cell = grid.getCellByColumn(0, 'personNumber');
+        const cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        let editTemplate;
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            cellDomPK.triggerEventHandler('dblclick', {});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(true);
+
+            editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
+            sendInput(editTemplate, 87, fixture);
+            cellDomPK.triggerEventHandler('keydown.enter', null);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
+            expect(parseFloat(cell.value)).toBe(87);
+            return fixture.whenStable();
+        });
+    }));
+
     it('edit template should be accourding column data type --number', async(() => {
         const fixture = TestBed.createComponent(CellEditingTestComponent);
         fixture.detectChanges();
@@ -1385,7 +1417,26 @@ export class CellEditingTestComponent {
         { fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
     ];
 }
+@Component({
+    template: `
+        <igx-grid [data]="data" [primaryKey]="'personNumber'">
+            <igx-column [editable]="true" field="personNumber" [dataType]="'number'"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+        </igx-grid>
+    `
+})
+export class CellEditingPrimaryKeyTestComponent {
 
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public data = [
+        { personNumber: 0, fullName: 'John Brown', age: 20, birthday: new Date('08/08/2001') },
+        { personNumber: 1, fullName: 'Ben Affleck', age: 30,  birthday: new Date('08/08/1991') },
+        { personNumber: 2, fullName: 'Tom Riddle', age: 50,  birthday: new Date('08/08/1961') }
+    ];
+}
 @Component({
     template: `
         <igx-grid [data]="data" width="300px" height="250px">
