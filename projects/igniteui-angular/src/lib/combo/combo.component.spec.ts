@@ -2763,7 +2763,6 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(form.status).toEqual('VALID');
             fix.debugElement.query(By.css('button')).nativeElement.click();
-            expect(console.log).toHaveBeenCalledTimes(2);
         });
     });
 
@@ -3060,15 +3059,9 @@ class IgxComboFormComponent {
         });
 
     }
-    onSubmitReactive() {
-        console.log('model-based form submitted');
-        console.log(this.reactiveForm);
-    }
+    onSubmitReactive() {}
 
-    onSubmitTemplateBased() {
-        console.log('template-driven form submitted');
-        console.log(this.reactiveForm);
-    }
+    onSubmitTemplateBased() {}
 }
 
 @Injectable()
