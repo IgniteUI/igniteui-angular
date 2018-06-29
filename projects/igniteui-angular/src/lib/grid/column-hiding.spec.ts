@@ -699,6 +699,7 @@ describe('Column Hiding UI', () => {
 
         it('checks & hides all children when hiding their parent.', () => {
             getCheckboxInput('Person Details').click();
+            columnChooser.cdr.detectChanges();
             fix.detectChanges();
 
             verifyCheckbox('Person Details', true, false);
@@ -713,6 +714,7 @@ describe('Column Hiding UI', () => {
             verifyCheckbox('General Information', false, false);
 
             getCheckboxInput('Person Details').click();
+            columnChooser.cdr.detectChanges();
             fix.detectChanges();
 
             verifyColumnIsHidden(grid.columns[3], false, 7);
