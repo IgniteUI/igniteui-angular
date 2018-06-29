@@ -372,7 +372,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     ngAfterContentInit() {
-        this.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitCloseFromDialog());
+        this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitCloseFromDialog());
     }
 
     private emitCloseFromDialog() {
@@ -387,16 +387,13 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *<igx-dialog #dialog></igx-dialog>
      *```
      */
-    public open(fireEvents: boolean = true, overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
+    public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
         if (this.isOpen) {
             return;
         }
 
-        this.toggleRef.open(false, overlaySettings);
-
-        if (fireEvents) {
-            this.onOpen.emit({ dialog: this, event: null });
-        }
+        this.toggleRef.open(overlaySettings);
+        this.onOpen.emit({ dialog: this, event: null });
     }
 
     /**
@@ -411,9 +408,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         if (!this.isOpen) {
             return;
         }
-
-        this.toggleRef.close(false);
-        this.onClose.emit({ dialog: this, event: null });
+        // `onClose` will emit from `toggleRef.onClosing` subscription
+        this.toggleRef.close();
     }
 
 
