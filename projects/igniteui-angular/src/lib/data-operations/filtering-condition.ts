@@ -45,6 +45,11 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
     protected constructor() {
         super();
         this.operations = [{
+            name: 'all',
+            logic: (target: boolean) => {
+                return true;
+            }
+        }, {
             name: 'true',
             logic: (target: boolean) => {
                 return !!(target && target !== null && target !== undefined);
