@@ -130,6 +130,8 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `onClosing` event added.
 - `igxToggleAction` new `overlaySettings` input controls how applicable targets display content. Provides defaults with positioning based on the host element. The `closeOnOutsideClick` input is deprecated in favor of the new settings and will be removed in the future.
 
+- `igxList` now supports a custom `emptyListTemplate` and `dataLoadingTemplate` through inputs.
+
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
     - `igxGrid` changes:
