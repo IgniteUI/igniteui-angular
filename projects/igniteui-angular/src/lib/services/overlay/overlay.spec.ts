@@ -54,6 +54,7 @@ function clearOverlay() {
     }
     return ret;
 }
+f
 describe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -2135,8 +2136,8 @@ describe('igxOverlay', () => {
             expect(overlay.hide).toHaveBeenCalledTimes(1);
         }));
 
-        xit('Escape - closes (DropDown, Dialog, etc.).', () => {
-            // Not TO DO
+        xit('Escape - do not close (DropDown, Dialog, etc.).', () => {
+            // TO DO
         });
 
         // 4. Css
