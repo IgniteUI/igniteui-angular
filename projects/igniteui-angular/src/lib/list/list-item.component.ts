@@ -8,8 +8,7 @@ import {
     HostListener,
     Inject,
     Input,
-    Renderer2,
-    ViewChild
+    Renderer2
 } from '@angular/core';
 
 import {
@@ -18,7 +17,6 @@ import {
 } from './list.common';
 
 import { HammerGesturesManager } from '../core/touch';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxListComponent } from './list.component';
 
 // ====================== ITEM ================================
