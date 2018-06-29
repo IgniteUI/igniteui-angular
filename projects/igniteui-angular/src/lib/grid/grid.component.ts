@@ -621,7 +621,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get hiddenColumnsCount() {
-        return this.columnList.filter((col) => col.hidden === true).length;
+        return this.columnList.filter((col) => col.columnGroup === false && col.hidden === true).length;
     }
 
     @Input()
@@ -821,7 +821,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     constructor(
         private gridAPI: IgxGridAPIService,
-        private selectionAPI: IgxSelectionAPIService,
+        public selectionAPI: IgxSelectionAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -1097,12 +1097,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (dropTarget.pinned && column.pinned) {
             const pinned = this._pinnedColumns;
             pinned.splice(pinned.indexOf(dropTarget), 0, ...pinned.splice(pinned.indexOf(column), 1));
-            return;
         }
 
         if (dropTarget.pinned && !column.pinned) {
             column.pin(dropTarget.index);
-            return;
         }
 
         if (!dropTarget.pinned && column.pinned) {

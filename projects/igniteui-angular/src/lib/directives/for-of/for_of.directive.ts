@@ -237,8 +237,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     // after changes in columns have occured re-init cache.
                     this.initHCache(this.igxForOf);
                 }
-                this._applyChanges(changes);
                 this._zone.run(() => {
+                    this._applyChanges(changes);
                     this.cdr.markForCheck();
                 });
             }

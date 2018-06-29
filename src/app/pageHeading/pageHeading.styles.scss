@@ -1,0 +1,40 @@
+@import '../../../dist/igniteui-angular/lib/core/styles/themes/utilities';
+@import '../../../dist/igniteui-angular/lib/core/styles/components/button/button-theme';
+@import '../../../dist/igniteui-angular/lib/core/styles/components/button/button-component';
+@import '../../styles/app-palettes';
+
+$button-background: igx-contrast-color($default-palette, 'primary');
+
+$hamburger-theme: igx-button-theme(
+    $icon-background: rgba($button-background, .86),
+    $icon-hover-background: $button-background,
+    $icon-focus-background: $button-background
+);
+
+:host ::ng-deep {
+     @include igx-button($hamburger-theme);
+
+    .hamburger {
+        margin-right: 32px;
+    }
+}
+
+.sample-header {
+    padding: 48px 24px;
+    background: rgba(igx-color($default-palette, 'primary'), .94);
+
+    .title {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        color: rgba(igx-contrast-color($default-palette, 'primary'), .86);
+        font-weight: 400;
+        margin: 0;
+    }
+
+    .description {
+        color: igx-contrast-color($default-palette, 'primary');
+        margin-top: 48px;
+        margin-bottom: 0;
+    }
+}
