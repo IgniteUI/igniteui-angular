@@ -47,7 +47,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input('value')
     set value(value: any) {
         this.nativeElement.value = value;
-        this.inputGroup.isFilled = value && value.length > 0;
     }
     get value() {
         return this.nativeElement.value;
@@ -89,8 +88,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     @HostListener('input')
     public onInput() {
-        const value: string = this.nativeElement.value;
-        this.inputGroup.isFilled = value && value.length > 0;
         if (!this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
@@ -107,11 +104,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.inputGroup.isRequired = validation && validation.required;
         }
 
-        if ((this.nativeElement.value && this.nativeElement.value.length > 0) ||
-            (this.ngModel && this.ngModel.model !== '' &&
-                this.ngModel.model !== undefined && this.ngModel.model !== null)) {
-            this.inputGroup.isFilled = true;
-        }
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
@@ -122,10 +114,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
         if (this.ngControl) {
             this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
-            this._valueChanges$ = this.ngControl.valueChanges.subscribe((event) => {
-                this.inputGroup.isFilled = event && event.length > 0;
-                this.onStatusChanged();
-            });
         }
 
         this.cdr.detectChanges();

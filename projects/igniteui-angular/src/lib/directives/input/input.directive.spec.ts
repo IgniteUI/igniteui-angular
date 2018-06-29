@@ -1,9 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
+import { IgxLabelDirective } from 'tmp/src-inlined/directives/label/label.directive';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
@@ -30,7 +31,8 @@ describe('IgxInput', () => {
                 RequiredInputComponent,
                 RequiredTwoWayDataBoundInputComponent,
                 DataBoundDisabledInputComponent,
-                ReactiveFormComponent
+                ReactiveFormComponent,
+                InputsWithSameNameAttributesComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -208,7 +210,51 @@ describe('IgxInput', () => {
         const requiredInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--required`);
         expect(requiredInputGroups.length).toBe(4);
     });
+
+    it('When updating two inputs with same attribute names through ngModel, label should responds', async(() => {
+        const fix = TestBed.createComponent(InputsWithSameNameAttributesComponent);
+        fix.detectChanges();
+
+        let igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
+        igxInputGroups.forEach(element => {
+            const inputGroup = element.nativeElement;
+            expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(false);
+        });
+
+        fix.componentInstance.model.firstName = 'Mike';
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
+            igxInputGroups.forEach(element => {
+                const inputGroup = element.nativeElement;
+                expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(true);
+            });
+        });
+    }));
 });
+
+@Component({ template: `
+                    <form>
+                        <igx-input-group #igxInputGroup>
+                            <label for="firstName" #igxLabel igxLabel>Name</label>
+                            <input name="firstName" [(ngModel)]="model.firstName" type="text" igxInput />
+                        </igx-input-group>
+                        <igx-input-group #igxInputGroup>
+                            <label for="firstName" #igxLabel igxLabel>Name</label>
+                            <input name="firstName" [(ngModel)]="model.firstName"  type="text" igxInput />
+                        </igx-input-group>
+                    </form>` })
+class InputsWithSameNameAttributesComponent {
+    @ViewChildren('igxInputGroup') public igxInputGroup: QueryList<DebugElement>;
+    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+
+    model = {
+        firstName: null
+    };
+}
+
 
 @Component({ template: `<igx-input-group #igxInputGroup>
                             <label for="test" igxLabel>Test</label>
