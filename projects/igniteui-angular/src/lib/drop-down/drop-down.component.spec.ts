@@ -31,7 +31,8 @@ describe('IgxDropDown ', () => {
                 IgxDropDownTestDisabledComponent,
                 IgxDropDownTestDisabledAnyComponent,
                 IgxDropDownTestEmptyListComponent,
-                IgxDropDownWithScrollComponent
+                IgxDropDownWithScrollComponent,
+                DoubleIgxDropDownComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -820,17 +821,16 @@ describe('IgxDropDown ', () => {
         fixture.detectChanges();
         expect(igxDropDown.collapsed).toEqual(true);
         igxDropDown.toggle();
+        tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.collapsed).toEqual(false);
-            igxDropDown.toggle();
-            tick();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(igxDropDown.collapsed).toEqual(true);
-        });
+        fixture.detectChanges();
+        expect(igxDropDown.collapsed).toEqual(false);
+
+        igxDropDown.toggle();
+        tick();
+
+        fixture.detectChanges();
+        expect(igxDropDown.collapsed).toEqual(true);
     }));
 
     it('#1663 drop down flickers on open', fakeAsync(() => {
@@ -860,6 +860,23 @@ describe('IgxDropDown ', () => {
         expect(igxDropDown.collapsed).toEqual(true);
         expect(igxDropDown.selectedItem).toEqual(igxDropDown.items[0]);
         expect(mockEvent.preventDefault).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should keep selection per instance', fakeAsync(() => {
+        const fixture = TestBed.createComponent(DoubleIgxDropDownComponent);
+        fixture.detectChanges();
+        const mockEvent = jasmine.createSpyObj('event', ['preventDefault']);
+        const dropdown1 = fixture.componentInstance.dropdown1;
+        const dropdown2 = fixture.componentInstance.dropdown2;
+        dropdown1.setSelectedItem(1);
+        expect(dropdown1.selectedItem).toEqual(dropdown1.items[1]);
+        expect(dropdown2.selectedItem).toEqual(null);
+        dropdown2.setSelectedItem(3);
+        expect(dropdown1.selectedItem).toEqual(dropdown1.items[1]);
+        expect(dropdown2.selectedItem).toEqual(dropdown2.items[3]);
+        dropdown1.setSelectedItem(5);
+        expect(dropdown1.selectedItem).toEqual(dropdown1.items[5]);
+        expect(dropdown2.selectedItem).toEqual(dropdown2.items[3]);
     }));
 });
 
@@ -1078,6 +1095,38 @@ class IgxDropDownWithScrollComponent implements OnInit {
 
     ngOnInit() {
         this.dropdownScroll.height = '200px';
+        for (let index = 1; index < 100; index++) {
+            this.items.push({ field: 'Item ' + index });
+        }
+    }
+}
+
+@Component({
+    template: `
+    <button (click)="selectItem5()">Select 5</button>
+    <igx-drop-down #dropdown1>
+        <igx-drop-down-item *ngFor="let item of items">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    <igx-drop-down #dropdown2>
+        <igx-drop-down-item *ngFor="let item of items">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    `
+})
+class DoubleIgxDropDownComponent implements OnInit {
+
+    @ViewChild('dropdown1', { read: IgxDropDownComponent })
+    public dropdown1: IgxDropDownComponent;
+
+    @ViewChild('dropdown2', { read: IgxDropDownComponent })
+    public dropdown2: IgxDropDownComponent;
+
+    public items: any[] = [];
+
+    ngOnInit() {
         for (let index = 1; index < 100; index++) {
             this.items.push({ field: 'Item ' + index });
         }
