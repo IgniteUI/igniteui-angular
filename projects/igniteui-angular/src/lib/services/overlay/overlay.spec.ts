@@ -1038,7 +1038,7 @@ describe('igxOverlay', () => {
             expect(noScroll.detach).toHaveBeenCalledTimes(0);
             document.documentElement.scrollTop = 100;
             document.documentElement.scrollLeft = 50;
-            document.documentElement.dispatchEvent(new Event('scroll'));
+            document.dispatchEvent(new Event('scroll'));
             tick();
 
             expect(elementRect).toEqual(element.getBoundingClientRect());
@@ -1123,19 +1123,19 @@ describe('igxOverlay', () => {
                 expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
                 expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
                 expect(document.documentElement.scrollTop).toEqual(0);
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(1);
                 expect(document.documentElement.scrollTop).toEqual(0);
 
                 document.documentElement.scrollTop += 25;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(2);
                 expect(document.documentElement.scrollTop).toEqual(0);
 
                 document.documentElement.scrollTop += 1000;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(3);
                 expect(document.documentElement.scrollTop).toEqual(0);
@@ -1175,13 +1175,13 @@ describe('igxOverlay', () => {
                 let overlayChildPosition: DOMRect = overlayElement.lastElementChild.getBoundingClientRect() as DOMRect;
                 expect(overlayChildPosition.y).toEqual(0);
                 expect(buttonElement.getBoundingClientRect().y).toEqual(0);
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(1);
                 expect(document.documentElement.scrollTop).toEqual(0);
 
                 document.documentElement.scrollTop += 25;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(2);
                 expect(document.documentElement.scrollTop).toEqual(25);
@@ -1191,7 +1191,7 @@ describe('igxOverlay', () => {
                 expect(buttonElement.getBoundingClientRect().y).toEqual(-25);
 
                 document.documentElement.scrollTop += 500;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 overlayElement = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0] as HTMLElement;
                 overlayChildPosition = overlayElement.lastElementChild.getBoundingClientRect() as DOMRect;
@@ -1682,7 +1682,7 @@ describe('igxOverlay', () => {
             expect(noScroll.detach).toHaveBeenCalledTimes(0);
             document.documentElement.scrollTop = 100;
             document.documentElement.scrollLeft = 50;
-            document.documentElement.dispatchEvent(new Event('scroll'));
+            document.dispatchEvent(new Event('scroll'));
             tick();
 
             expect(elementRect).toEqual(element.getBoundingClientRect());
@@ -1819,7 +1819,7 @@ describe('igxOverlay', () => {
                 expect(document.documentElement.scrollTop).toEqual(0);
 
                 document.documentElement.scrollTop += scrollTolerance;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
@@ -1913,7 +1913,7 @@ describe('igxOverlay', () => {
             const elementRect = element.getBoundingClientRect();
 
             document.documentElement.scrollTop += scrollTolerance;
-            document.documentElement.dispatchEvent(new Event('scroll'));
+            document.dispatchEvent(new Event('scroll'));
             tick();
             expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
             expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
@@ -1947,7 +1947,7 @@ describe('igxOverlay', () => {
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
             document.documentElement.scrollTop += scrollTolerance;
-            document.documentElement.dispatchEvent(new Event('scroll'));
+            document.dispatchEvent(new Event('scroll'));
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
@@ -1990,7 +1990,7 @@ describe('igxOverlay', () => {
             const elementRect = element.getBoundingClientRect() as DOMRect;
 
             document.documentElement.scrollTop += scrollTolerance;
-            document.documentElement.dispatchEvent(new Event('scroll'));
+            document.dispatchEvent(new Event('scroll'));
             tick();
             const newElementRect = element.getBoundingClientRect() as DOMRect;
             expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
@@ -2024,7 +2024,7 @@ describe('igxOverlay', () => {
             expect(scrollStrategy.attach).toHaveBeenCalledTimes(1);
 
             document.documentElement.scrollTop += scrollTolerance;
-            document.documentElement.dispatchEvent(new Event('scroll'));
+            document.dispatchEvent(new Event('scroll'));
             tick();
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
