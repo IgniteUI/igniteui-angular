@@ -387,7 +387,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *<igx-dialog #dialog></igx-dialog>
      *```
      */
-    public open(fireEvents: boolean = true, overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
+    public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
         if (this.isOpen) {
             return;
         }
