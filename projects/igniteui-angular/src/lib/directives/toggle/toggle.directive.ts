@@ -73,58 +73,34 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         @Optional() private navigationService: IgxNavigationService) {
     }
 
-    public open(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
+    public open(overlaySettings?: OverlaySettings) {
         if (!this.collapsed) { return; }
 
         this._collapsed = false;
         this.cdr.detectChanges();
+        this.onOpening.emit();
 
-        if (fireEvents) {
-            this.onOpening.emit();
-        }
 
         this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
+        this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+            this.onOpened.emit();
+        });
         this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
         this._overlayClosingSub = this.overlayService.onClosing
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosing);
-        if (fireEvents) {
-            this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
-                this.onOpened.emit();
-            });
-        }
     }
 
-    public close(fireEvents?: boolean) {
+    public close() {
         if (this.collapsed) { return; }
 
-        if (fireEvents && this._overlayId === undefined) {
-            this.onClosing.emit();
-        }
-
-        if (this._overlayId !== undefined) {
-            if (!fireEvents) {
-                // cancel onClosed sub
-                this._overlayClosingSub.unsubscribe();
-                this._overlayClosedSub.unsubscribe();
-                this.overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
-                    this._collapsed = true;
-                });
-            }
-            this.overlayService.hide(this._overlayId);
-        } else {
-            // opened though @Input, TODO
-            this._collapsed = true;
-            if (fireEvents) {
-                this.onClosed.emit();
-            }
-        }
+        this.overlayService.hide(this._overlayId);
     }
 
-    public toggle(fireEvents?: boolean, overlaySettings?: OverlaySettings) {
-        this.collapsed ? this.open(fireEvents, overlaySettings) : this.close(fireEvents);
+    public toggle(overlaySettings?: OverlaySettings) {
+        this.collapsed ? this.open(overlaySettings) : this.close();
     }
 
     public ngOnInit() {
@@ -215,7 +191,7 @@ export class IgxToggleActionDirective implements OnInit {
         if (this.closeOnOutsideClick !== undefined) {
             this._overlayDefaults.closeOnOutsideClick = this.closeOnOutsideClick;
         }
-        this.target.toggle(true, Object.assign({}, this._overlayDefaults, this.overlaySettings));
+        this.target.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings));
     }
 }
 @NgModule({
