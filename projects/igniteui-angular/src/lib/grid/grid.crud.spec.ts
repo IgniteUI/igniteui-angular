@@ -73,7 +73,7 @@ describe('IgxGrid - CRUD operations', () => {
         const grid = fix.componentInstance.instance;
         const data = fix.componentInstance.data;
 
-        grid.deleteRow(0);
+        grid.deleteRow(1);
         fix.detectChanges();
 
         expect(grid.data.length).toEqual(0);
@@ -197,12 +197,11 @@ describe('IgxGrid - CRUD operations', () => {
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-
             expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
             expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch('-100');
 
             // Update an existing cell
-            grid.updateCell('change', 0, 'index');
+            grid.updateCell('change', 1, 'index');
 
             return fix.whenStable();
         }).then(() => {
@@ -239,7 +238,8 @@ describe('IgxGrid - CRUD operations', () => {
             (onRowAdded)="rowAdded($event)"
             (onRowDeleted)="rowDeleted($event)"
             (onEditDone)="editDone($event)"
-            [autoGenerate]="true">
+            [autoGenerate]="true"
+            [primaryKey]="'index'">
         </igx-grid>
     `
 })

@@ -1020,8 +1020,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList.filter((col) => !col.hidden);
     }
 
-    public getCellByColumn(rowSelector: any, columnField: string): IgxGridCellComponent {
-        return this.gridAPI.get_cell_by_field(this.id, rowSelector, columnField);
+    public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
+        const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
+        if (columnId !== -1) {
+            return this.gridAPI.get_cell_by_index(this.id, rowIndex, columnId);
+        }
+    }
+
+    public getCellByKey(rowSelector: any, columnField: string): IgxGridCellComponent {
+        return this.gridAPI.get_cell_by_key(this.id, rowSelector, columnField);
     }
 
     get totalPages(): number {

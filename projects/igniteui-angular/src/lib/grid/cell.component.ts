@@ -363,7 +363,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
-        debugger;
         if (this.gridAPI.get_cell_inEditMode(this.gridID) && event.path.length > 0 && event.relatedTarget) {
             const targetEditMode = event.path[0].classList.value.indexOf('igx-grid__td--editing') !== -1;
             if (targetEditMode) {

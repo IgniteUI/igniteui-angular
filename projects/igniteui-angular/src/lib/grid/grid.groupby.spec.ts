@@ -1128,7 +1128,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         const rv = grid.getRowByKey(5).element.nativeElement.querySelectorAll(CELL_CSS_CLASS)[2];
-        const cell = grid.getCellByColumn(5, 'ProductName');
+        const cell = grid.getCellByKey(5, 'ProductName');
 
         cell.column.editable = true;
         rv.dispatchEvent(new Event('dblclick'));

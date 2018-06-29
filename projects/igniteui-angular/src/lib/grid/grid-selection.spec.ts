@@ -158,10 +158,10 @@ describe('IgxGrid - Row Selection', () => {
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-        const targetCell = grid.getCellByColumn(2, 'Name');
-        const targetCellElement: HTMLElement = grid.getCellByColumn(2, 'Name').nativeElement;
-        spyOn(grid.getCellByColumn(2, 'Name'), 'onFocus').and.callThrough();
-        expect(grid.getCellByColumn(2, 'Name').focused).toEqual(false);
+        const targetCell = grid.getCellByKey(2, 'Name');
+        const targetCellElement: HTMLElement = grid.getCellByKey(2, 'Name').nativeElement;
+        spyOn(grid.getCellByKey(2, 'Name'), 'onFocus').and.callThrough();
+        expect(grid.getCellByKey(2, 'Name').focused).toEqual(false);
         targetCellElement.focus();
         spyOn(targetCell.gridAPI, 'get_cell_by_visible_index').and.callThrough();
         fix.whenStable().then(() => {
@@ -178,7 +178,7 @@ describe('IgxGrid - Row Selection', () => {
         }).then(() => {
             fix.detectChanges();
             expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(1);
-            expect(grid.getCellByColumn(3, 'Name').focused).toEqual(true);
+            expect(grid.getCellByKey(3, 'Name').focused).toEqual(true);
             expect(targetCell.focused).toEqual(false);
             expect(grid.selectedCells.length).toEqual(1);
             expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
@@ -360,7 +360,7 @@ describe('IgxGrid - Row Selection', () => {
             expect(grid.selectedRows()).toBeDefined();
             expect(grid.rowList.first).toBeDefined();
             expect(grid.rowList.first.isSelected).toBeTruthy();
-            selectedCell = grid.getCellByColumn('2_0', 'Column2');
+            selectedCell = grid.getCellByKey('2_0', 'Column2');
             const scrollBar = gridElement.querySelector('.igx-vhelper--vertical');
             scrollBar.scrollTop = 500;
             setTimeout(() => {
