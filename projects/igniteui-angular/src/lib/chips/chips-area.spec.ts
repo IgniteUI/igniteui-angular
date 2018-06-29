@@ -64,6 +64,9 @@ class TestChipReorderComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
     public chipsArea: IgxChipsAreaComponent;
 
+    @ViewChildren('chipElem', { read: IgxChipComponent})
+    public chips: QueryList<IgxChipComponent>;
+
     chipsOrderChanged(event) {
         const newChipList = [];
         for (let i = 0; i < event.chipsArray.length; i++) {
@@ -241,7 +244,7 @@ describe('IgxChipsArea', () => {
                 const afterDragLeft = secondChip.dragDir['_dragGhost'].getBoundingClientRect().left;
                 expect(afterDragTop - startingTop).toEqual(yDragDifference);
                 expect(afterDragLeft - startingLeft).toEqual(xDragDifference);
-            });
+            }, 100);
         });
     }));
 
@@ -435,5 +438,97 @@ describe('IgxChipsArea', () => {
         chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
         fix.detectChanges();
         expect(selChips).toEqual(2);
+    });
+
+    it('should focus on chip corectly', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const firstChipComp = fix.componentInstance.chips.toArray()[0];
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        firstChipComp.chipArea.nativeElement.focus();
+
+        expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
+
+        secondChipComp.chipArea.nativeElement.focus();
+
+        expect(document.activeElement).toBe(secondChipComp.chipArea.nativeElement);
+    });
+
+    it('should focus on previous and next chips after arrows are pressed', () => {
+        const leftKey = new KeyboardEvent('keydown', {
+            'key': 'ArrowLeft'
+        });
+        const rightKey = new KeyboardEvent('keydown', {
+            'key': 'ArrowRight'
+        });
+
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const firstChipComp = fix.componentInstance.chips.toArray()[0];
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        firstChipComp.chipArea.nativeElement.focus();
+
+        fix.detectChanges();
+
+        expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
+
+        firstChipComp.chipArea.nativeElement.dispatchEvent(rightKey);
+        fix.detectChanges();
+        expect(document.activeElement).toBe(secondChipComp.chipArea.nativeElement);
+
+        secondChipComp.chipArea.nativeElement.dispatchEvent(leftKey);
+        fix.detectChanges();
+        expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
+    });
+
+    it('should delete chip when delete button is pressed and chip is removable', () => {
+        const deleteKey = new KeyboardEvent('keydown', {
+            'key': 'Delete'
+        });
+
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+        let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+        expect(chipComponents.length).toEqual(4);
+
+        const firstChipComp = chipComponents[0];
+
+        firstChipComp.componentInstance.chipArea.nativeElement.focus();
+
+        expect(document.activeElement).toBe(firstChipComp.componentInstance.chipArea.nativeElement);
+        firstChipComp.componentInstance.chipArea.nativeElement.dispatchEvent(deleteKey);
+        fix.detectChanges();
+
+        chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        expect(chipComponents.length).toEqual(3);
+    });
+
+    it('should delete chip when space button is pressed and chip delete button is focussed', () => {
+        const spaceKeyEvent = new KeyboardEvent('keydown', {
+            'key': ' '
+        });
+
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            expect(chipComponents.length).toEqual(4);
+
+            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
+            deleteButtonElement.nativeElement.focus();
+
+            deleteButtonElement.nativeElement.dispatchEvent(spaceKeyEvent);
+            fix.detectChanges();
+
+            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            expect(chipComponents.length).toEqual(3);
+        });
     });
 });
