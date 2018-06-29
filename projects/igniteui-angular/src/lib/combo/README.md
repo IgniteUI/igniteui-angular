@@ -208,13 +208,14 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 
 | Name                     | Description                                       | Type                        |
 |--------------------------|---------------------------------------------------|-----------------------------|
+|  `id`                    | combo id                                          | string                      |
 |  `data`                  | combo data source                                 | any                         |
 |  `value`                 | combo value                                       | string                      |
 |  `allowCustomValue`      | enable/disables combo custom value                | boolean                     |
 |  `valueKey`              | combo value data source property                  | string                      |
 |  `displayKey`            | combo dispaly data source property                | string                      |
 |  `groupKey`              | combo item group                                  | string                      |
-|  `virtualizationState`   | defined he current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
+|  `virtualizationState`   | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
 |  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
 |  `heigth`                | defines combo height                              | string                      |
@@ -227,6 +228,7 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 |  `disabled`              | defines whether the control is active or not      | boolean                     |
 |  `ariaLabelledBy`        | defines label ID related to combo                 | boolean                     |
 |  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
+|  `valid`                 | gets if control is valid, when used in a form     | boolean                     |
 
 ### Outputs
 

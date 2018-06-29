@@ -148,4 +148,34 @@ describe('IgxChipsArea', () => {
         expect(chipAreaComp.onMoveStart.emit).not.toHaveBeenCalled();
         expect(chipAreaComp.onMoveEnd.emit).not.toHaveBeenCalled();
     });
+
+    it('should select/deselect a chip by clicking on out and emit onSelection event', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chipAreaComp = fix.componentInstance.chipsArea;
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        spyOn(chipAreaComp.onSelection, 'emit');
+
+        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        fix.detectChanges();
+        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
+        fix.detectChanges();
+
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            owner: chipAreaComp,
+            newSelection: [secondChipComp]
+        });
+
+        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        fix.detectChanges();
+        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
+        fix.detectChanges();
+
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            owner: chipAreaComp,
+            newSelection: []
+        });
+    });
 });
