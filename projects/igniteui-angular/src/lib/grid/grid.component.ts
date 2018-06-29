@@ -1924,7 +1924,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @HostListener('scroll', ['$event'])
     public scrollHandler(event) {
         this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
+        this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
         event.target.scrollLeft = 0;
+        event.target.scrollTop = 0;
     }
 
     private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {

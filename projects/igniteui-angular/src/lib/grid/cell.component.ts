@@ -387,6 +387,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.row.focused = false;
     }
 
+    @HostListener('keydown.shift.tab', ['$event'])
     @HostListener('keydown.arrowleft', ['$event'])
     public onKeydownArrowLeft(event) {
         if (this.inEditMode) {
@@ -461,6 +462,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    @HostListener('keydown.tab', ['$event'])
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event) {
         if (this.inEditMode) {
