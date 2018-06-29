@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { async, TestBed} from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './api.service';
@@ -23,7 +23,7 @@ describe('IgxGrid - input properties', () => {
         }).compileComponents();
     }));
 
-    it('height/width should be calculated depending on number of records', (done) => {
+    it('height/width should be calculated depending on number of records', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridTestComponent);
         fix.detectChanges();
 
@@ -35,73 +35,66 @@ describe('IgxGrid - input properties', () => {
         let gridBodyHeight;
         let verticalScrollHeight;
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
+        fix.detectChanges();
 
-            expect(grid.rowList.length).toEqual(1);
-            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('50px');
+        expect(grid.rowList.length).toEqual(1);
+        expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('50px');
 
-            for (let i = 2; i <= 30; i++) {
-                grid.addRow({ index: i, value: i });
-            }
+        for (let i = 2; i <= 30; i++) {
+            grid.addRow({ index: i, value: i });
+        }
 
-            fix.detectChanges();
+        fix.detectChanges();
 
-            expect(grid.rowList.length).toEqual(30);
-            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1500px');
-            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
-            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-            grid.height = '200px';
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            requestAnimationFrame(() => {
-                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
-                expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-                verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
-                grid.width = '200px';
-            });
-            return fix.whenStable();
-        }).then(() => {
-            setTimeout(() => {
-                fix.detectChanges();
-                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
-                expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-                expect(fix.componentInstance.getVerticalScrollHeight()).toBeLessThan(verticalScrollHeight);
-                gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-                    - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-                    - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-                    - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+        expect(grid.rowList.length).toEqual(30);
+        expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1500px');
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
+        grid.height = '200px';
+        fix.detectChanges();
 
-                expect(window.getComputedStyle(grid.nativeElement).width).toMatch('200px');
-                expect(window.getComputedStyle(grid.nativeElement).height).toMatch('200px');
-                expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
-                grid.height = '50%';
-                grid.width = '50%';
-                return fix.whenStable();
-            }, 100);
-        }).then(() => {
-            fix.detectChanges();
-            setTimeout(() => {
-                fix.detectChanges();
-                expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
-                expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
-                return fix.whenStable();
-            }, 100);
-        }).then(() => {
-            fix.detectChanges();
-            setTimeout(() => {
-                fix.detectChanges();
-                gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-                - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-                - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
-                expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
-                done();
-             }, 500);
-        });
-    });
+        tick(200);
+        fix.detectChanges();
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
+        verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
+        grid.width = '200px';
+
+        tick(200);
+        fix.detectChanges();
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
+        expect(fix.componentInstance.getVerticalScrollHeight()).toBeLessThan(verticalScrollHeight);
+        gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+        expect(window.getComputedStyle(grid.nativeElement).width).toMatch('200px');
+        expect(window.getComputedStyle(grid.nativeElement).height).toMatch('200px');
+        expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
+        grid.height = '50%';
+        fix.detectChanges();
+        tick(200);
+        fix.detectChanges();
+
+        grid.width = '50%';
+        fix.detectChanges();
+        tick(200);
+        fix.detectChanges();
+
+        expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
+        expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
+
+        gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+        console.log(gridBodyHeight);
+        console.log(window.getComputedStyle(gridBody.nativeElement).height);
+        console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
+        expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
+    }));
 
     it('should not have column misalignment when no vertical scrollbar is shown', () => {
         const fix = TestBed.createComponent(IgxGridTestComponent);

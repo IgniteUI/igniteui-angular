@@ -40,7 +40,7 @@ const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-fdescribe('igxCombo', () => {
+describe('igxCombo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -1957,7 +1957,7 @@ fdescribe('igxCombo', () => {
             const comboData = combo.data;
             expect(comboData).toEqual(data);
         });
-        fit('Combo data binding - remote service', fakeAsync(() => {
+        it('Combo data binding - remote service', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboBindingTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
@@ -2766,6 +2766,53 @@ fdescribe('igxCombo', () => {
             expect(console.log).toHaveBeenCalledTimes(2);
         });
     });
+
+    it('Should properly close on click outside of the combo dropdown', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        document.documentElement.dispatchEvent(new Event('click'));
+        tick();
+        expect(combo.collapsed).toEqual(true);
+    }));
+
+    it('Should restore position of dropdown scroll after opening', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        spyOn(combo.dropdown, 'onToggleOpening').and.callThrough();
+        spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
+        spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
+        spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
+        let vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
+        expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
+        combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
+        tick(1000);
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(0);
+        document.documentElement.dispatchEvent(new Event('click'));
+        tick(500);
+        expect(combo.collapsed).toEqual(true);
+        expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
+        combo.toggle();
+        tick(500);
+        expect(combo.collapsed).toEqual(false);
+        expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
+        expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
+        vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+    }));
 });
 
 @Component({
