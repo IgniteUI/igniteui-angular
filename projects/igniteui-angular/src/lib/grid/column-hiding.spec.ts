@@ -14,12 +14,12 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
 import { ColumnDisplayOrder } from './column-chooser-base';
 
-describe('Column Hiding UI', () => {
+fdescribe('Column Hiding UI', () => {
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;
     let columnChooserElement: DebugElement;
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
                 GridWithColumnChooserComponent,
@@ -38,7 +38,7 @@ describe('Column Hiding UI', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     beforeAll(() => {
         clearOverlay();
