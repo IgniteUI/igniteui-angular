@@ -698,13 +698,10 @@ describe('Column Hiding UI', () => {
         });
 
         it('checks & hides all children when hiding their parent.', () => {
-            fix.detectChanges();
             getCheckboxInput('Person Details').click();
             fix.detectChanges();
-            grid.cdr.detectChanges();
 
             verifyCheckbox('Person Details', true, false);
-            fix.detectChanges();
             verifyCheckbox('ContactName', true, false);
             verifyCheckbox('ContactTitle', true, false);
 
@@ -717,7 +714,6 @@ describe('Column Hiding UI', () => {
 
             getCheckboxInput('Person Details').click();
             fix.detectChanges();
-            grid.cdr.detectChanges();
 
             verifyColumnIsHidden(grid.columns[3], false, 7);
             verifyColumnIsHidden(grid.columns[4], false, 7);
@@ -1235,7 +1231,7 @@ export class GridWithoutColumnChooserComponent extends GridData {
 
 @Component({
     template: `<igx-column-hiding [columns]="grid.columns"></igx-column-hiding>
-    <igx-grid [rowSelectable]="false" #grid [data]="data" displayDensity="compact">
+    <igx-grid [rowSelectable]="false" #grid [data]="data" width="500px" height="500px" displayDensity="compact">
     <igx-column [movable]="true" [hasSummary]="true" [resizable]="true" [pinned]="true" field="Missing"></igx-column>
     <igx-column-group [movable]="true" [pinned]="false" header="General Information">
         <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="CompanyName"></igx-column>
