@@ -92,34 +92,38 @@ describe('IgxInput', () => {
         expect(igxInput.placeholder).toBe('Test');
     });
 
-    it('Should have an initial filled style when data bound.', () => {
+    it('Should have an initial filled style when data bound.', async(() => {
         const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
         fixture.detectChanges();
 
-        const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
-        expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
 
-        const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
-        expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+            const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
+            expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-        const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
-        expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+            const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
+            expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-        const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
-        expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+            const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
+            expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-        const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
-        expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+            const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
+            expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-        const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
-        expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+            const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
+            expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-        const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
-        expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+            const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
+            expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-        const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
-        expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
-    });
+            const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
+            expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+
+            const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
+            expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        });
+    }));
 
     it('Should have a filled style. Value API.', () => {
         const fixture = TestBed.createComponent(FilledInputComponent);
