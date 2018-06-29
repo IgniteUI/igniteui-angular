@@ -126,5 +126,12 @@
                 background: transparent!important;
             }
         }
+
+        &%igx-drop-down__item--focused {
+            &:focus {
+                background: transparent!important;
+            }
+        }
     }
 }
+
