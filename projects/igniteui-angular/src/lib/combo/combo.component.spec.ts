@@ -9,7 +9,7 @@ import {
     IgxDropDownBase, IgxDropDownItemNavigationDirective, Navigate
 } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
-import { IgxComboComponent, IgxComboModule } from './combo.component';
+import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -1159,7 +1159,7 @@ describe('Combo', () => {
 
         const inputGroupBundle = inputGroupWrapper.children[0];
         expect(inputGroupBundle.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLE)).toBeTruthy();
-        expect(inputGroupBundle.childElementCount).toEqual(3);
+        expect(inputGroupBundle.childElementCount).toEqual(2);
 
         const mainInputGroupBundle = inputGroupBundle.children[0];
         expect(mainInputGroupBundle.classList.contains(CSS_CLASS_INPUTGROUP_MAINBUNDLE)).toBeTruthy();
@@ -1173,12 +1173,7 @@ describe('Combo', () => {
         expect(inputElement.attributes.getNamedItem('type').nodeValue).toEqual('text');
         expect(inputElement.attributes.getNamedItem('width').nodeValue).toEqual('90%');
 
-        const clearButton = inputGroupBundle.children[1];
-        expect(clearButton.classList.contains(CSS_CLASS_CLEARBUTTON)).toBeTruthy();
-        expect(clearButton.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLESUFFIX)).toBeTruthy();
-        expect(clearButton.childElementCount).toEqual(0);
-
-        const dropDownButton = inputGroupBundle.children[2];
+        const dropDownButton = inputGroupBundle.children[1];
         expect(dropDownButton.classList.contains(CSS_CLASS_DROPDOWNBUTTON)).toBeTruthy();
         expect(dropDownButton.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLESUFFIX)).toBeTruthy();
         expect(dropDownButton.childElementCount).toEqual(1);
@@ -1883,11 +1878,8 @@ describe('Combo', () => {
     it('Clear button should not throw exception when no items are selected', () => {
         const fixture = TestBed.createComponent(IgxComboTestComponent);
         fixture.detectChanges();
-        const clearButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
-        clearButton.click();
-        fixture.whenStable().then(() => {
-            expect(() => fixture.detectChanges()).not.toThrowError();
-        });
+        const clearButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON));
+        expect(clearButton).toBeNull();
     });
     it('Item selection - checkbox', fakeAsync(() => {
         const expectedOutput = 'Paris, Oslo, Sofia';
@@ -2626,7 +2618,7 @@ describe('Combo', () => {
         });
     }));
     // Form control
-    it('Should properly initialize when used as a form control', () => {
+    it('Should properly initialize when used as a form control', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboFormComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -2636,7 +2628,17 @@ describe('Combo', () => {
         expect(combo.selectedItems()).toEqual(comboFormReference.value);
         expect(combo.selectedItems().length).toEqual(1);
         expect(combo.selectedItems()[0].field).toEqual('Connecticut');
-    });
+        expect(combo.valid).toEqual(IgxComboState.INITIAL);
+        const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
+        clearButton.click();
+        fix.detectChanges();
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INVALID);
+            combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
+            expect(combo.valid).toEqual(IgxComboState.VALID);
+        });
+    }));
 
     it('Can be enabled/disabled when used as a form control', () => {
         const fix = TestBed.createComponent(IgxComboFormComponent);
@@ -2716,6 +2718,53 @@ describe('Combo', () => {
         fix.debugElement.query(By.css('button')).nativeElement.click();
         expect(console.log).toHaveBeenCalledTimes(2);
     });
+
+    it('Should properly close on click outside of the combo dropdown', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        document.documentElement.dispatchEvent(new Event('click'));
+        tick();
+        expect(combo.collapsed).toEqual(true);
+    }));
+
+    it('Should restore position of dropdown scroll after opening', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxComboSampleComponent);
+        fix.detectChanges();
+        const combo = fix.componentInstance.combo;
+        expect(combo).toBeDefined();
+        spyOn(combo.dropdown, 'onToggleOpening').and.callThrough();
+        spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
+        spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
+        spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
+        let vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
+        expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
+        combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
+        tick(1000);
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(0);
+        document.documentElement.dispatchEvent(new Event('click'));
+        tick(500);
+        expect(combo.collapsed).toEqual(true);
+        expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
+        expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
+        combo.toggle();
+        tick(500);
+        expect(combo.collapsed).toEqual(false);
+        expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
+        expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
+        vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+    }));
 });
 
 @Component({
@@ -2902,7 +2951,7 @@ class IgxComboInputTestComponent {
             </p>
             <p>
                 <igx-combo #comboReactive formControlName="townCombo"
-                    class="input-container" [filterable]="true"  placeholder="Location(s)"  [width]="'100%'"
+                    class="input-container" [filterable]="true" placeholder="Location(s)" [width]="'100%'"
                     [data]="items" [displayKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
             </p>
             <p>
