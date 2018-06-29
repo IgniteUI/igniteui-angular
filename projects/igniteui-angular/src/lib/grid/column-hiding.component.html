@@ -18,7 +18,8 @@
         (onColumnVisibilityChanged)="onVisibilityChanged($event)"
         (change)="columnItem.value = !columnItem.value"
         [checked]="columnItem.value"
-        [disabled]="columnItem.disabled">
+        [disabled]="columnItem.disabled"
+        [style.margin-left.px]="columnItem.calcIndent">
         {{ columnItem.name }}
     </igx-checkbox>
 </div>

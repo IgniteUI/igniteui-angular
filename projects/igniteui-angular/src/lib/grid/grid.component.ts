@@ -634,6 +634,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     }
 
+    @Input()
+    get pinnedColumnsText() {
+        return this._pinnedColumnsText;
+    }
+
+    set pinnedColumnsText(value) {
+        this._pinnedColumnsText = value;
+    }
+
     /* Toolbar related definitions */
     private _showToolbar = false;
     private _exportExcel = false;
@@ -814,6 +823,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private resizeHandler;
     private columnListDiffer;
     private _hiddenColumnsText = '';
+    private _pinnedColumnsText = '';
     private _height = '100%';
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;

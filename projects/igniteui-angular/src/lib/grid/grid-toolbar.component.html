@@ -17,6 +17,8 @@
             <igx-column-hiding
                 [columns]="grid.columnList"
                 [title]="grid.columnHidingTitle"
+                [filterColumnsPrompt]="filterColumnsPrompt"
+                [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"
                 (onColumnVisibilityChanged)="grid.toggleColumnVisibility($event)">
             </igx-column-hiding>
         </igx-drop-down>
@@ -28,13 +30,16 @@
                 <igx-icon *ngIf="pinnedColumnsCount > 0">lock</igx-icon>
                 <igx-icon *ngIf="pinnedColumnsCount === 0">lock_open</igx-icon>
                 <span>{{ pinnedColumnsCount }}</span>
+                <span>{{ grid.pinnedColumnsText }}</span>
                 <span></span>
             </div>
         </button>
         <igx-drop-down #columnPinningDropdown>
             <igx-column-pinning
                 [columns]="grid.columnList"
-                [title]="grid.columnPinningTitle"></igx-column-pinning>
+                [title]="grid.columnPinningTitle"
+                [filterColumnsPrompt]="filterColumnsPrompt"
+                [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"></igx-column-pinning>
         </igx-drop-down>
     </div>
 
