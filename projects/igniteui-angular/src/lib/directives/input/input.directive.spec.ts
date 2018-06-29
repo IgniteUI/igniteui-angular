@@ -1,10 +1,9 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
-import { IgxLabelDirective } from 'tmp/src-inlined/directives/label/label.directive';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
