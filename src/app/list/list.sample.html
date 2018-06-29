@@ -121,13 +121,13 @@
                 <i class="light">w/ Custom template</i>
             </h4>
             <div class="list-sample">
-                <igx-list>
+                <igx-list #fruitList>
                     <igx-list-item *ngFor="let fruit of fruits">
                         {{ fruit.name }}
                     </igx-list-item>
                     <ng-template igxEmptyList>
                         <div style="text-align: center">
-                            <button type="button" igxButton="flat" (click)="addFruitDialog.open()">Open Dialog</button>
+                            <button type="button" igxButton="flat" (click)="loadFruits()">Load data</button>
                         </div>
                     </ng-template>
                 </igx-list>
