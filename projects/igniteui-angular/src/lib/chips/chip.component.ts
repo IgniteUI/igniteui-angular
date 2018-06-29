@@ -168,6 +168,7 @@ export class IgxChipComponent implements AfterViewInit {
     private _selected = false;
     private _dragging = false;
     private _selectedItemClass = 'igx-chip__item--selected';
+    private _movedWhileRemoving = false;
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
 
@@ -226,6 +227,18 @@ export class IgxChipComponent implements AfterViewInit {
         this.onRemove.emit({
             owner: this
         });
+    }
+
+    public onChipRemoveMove() {
+        // We don't remove chip if user starting touch interacting on the remove button moves the chip
+        this._movedWhileRemoving = true;
+    }
+
+    public onChipRemoveEnd() {
+        if (!this._movedWhileRemoving) {
+            this.onChipRemove();
+        }
+        this._movedWhileRemoving = false;
     }
 
     // -----------------------------
