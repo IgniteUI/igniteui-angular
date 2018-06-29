@@ -102,8 +102,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     public ngOnInit() {
         const collapse = () => {
             if (!this.toggleDirective.collapsed) {
-                this.dialogShowing = false;
-                this.toggleDirective.close(false);
+                this.toggleDirective.close();
             }
         };
 
@@ -243,7 +242,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
             }
             this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
-            this.toggleDirective.toggle(true, this._overlaySettings);
+            this.toggleDirective.toggle(this._overlaySettings);
         });
     }
 
