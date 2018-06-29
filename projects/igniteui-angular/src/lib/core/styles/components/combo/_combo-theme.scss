@@ -127,8 +127,4 @@
             }
         }
     }
-
-    %igx-drop-down__item--focused {
-        @extend %igx-button--flat !optional;
-    }
 }
