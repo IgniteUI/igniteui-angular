@@ -666,7 +666,7 @@ describe('Column Hiding UI', () => {
     });
 
     describe('', () => {
-        beforeEach(async(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridWithGroupColumnsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -674,7 +674,7 @@ describe('Column Hiding UI', () => {
             fix.detectChanges();
 
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        }));
+        });
 
         it('indents columns according to their level.', () => {
             const items = columnChooser.columnItems;
@@ -698,9 +698,12 @@ describe('Column Hiding UI', () => {
         });
 
         it('checks & hides all children when hiding their parent.', () => {
+            fix.detectChanges();
             getCheckboxInput('Person Details').click();
             fix.detectChanges();
+
             verifyCheckbox('Person Details', true, false);
+            fix.detectChanges();
             verifyCheckbox('ContactName', true, false);
             verifyCheckbox('ContactTitle', true, false);
 
