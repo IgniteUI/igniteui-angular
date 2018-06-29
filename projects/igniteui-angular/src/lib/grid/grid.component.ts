@@ -224,7 +224,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set groupingExpansionState(value) {
         const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
 
-        let highlightItem;
+        let highlightItem = null;
         if (this.collapsedHighlightedItem) {
             highlightItem = this.collapsedHighlightedItem.item;
         } else if (this.lastSearchInfo.matchInfoCache.length) {
@@ -235,17 +235,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (highlightItem !== null && this.groupingExpressions.length) {
             const index = this.filteredSortedData.indexOf(highlightItem);
-            const groupData = this.getGroupIncrementData();
-            const groupRow = this.groupsRecords[groupData[index] - 1];
+            const groupRow = this.groupsRecords[index];
 
             if (!this.isExpandedGroup(groupRow)) {
                 IgxTextHighlightDirective.clearActiveHighlight(this.id);
-                if (!this.collapsedHighlightedItem) {
-                    this.collapsedHighlightedItem = {
-                        info: activeInfo,
-                        item: highlightItem
-                    };
-                }
+                this.collapsedHighlightedItem = {
+                    info: activeInfo,
+                    item: highlightItem
+                };
             } else if (this.collapsedHighlightedItem !== null) {
                 const collapsedInfo = this.collapsedHighlightedItem.info;
                 IgxTextHighlightDirective.setActiveHighlight(this.id, {
@@ -306,28 +303,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return;
         }
 
-        let rowIndex = -1;
-        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
-
-        if (this.lastSearchInfo.searchText !== '') {
-            rowIndex = (activeInfo.page * this._perPage) + activeInfo.rowIndex;
-        }
-
         this._perPage = val;
         this.page = 0;
 
-        if (this.lastSearchInfo.searchText !== '') {
-            const newRowIndex = rowIndex % this._perPage;
-            const newPage = Math.floor(rowIndex / this._perPage);
-            IgxTextHighlightDirective.setActiveHighlight( this.id, {
-                columnIndex: activeInfo.columnIndex,
-                rowIndex: newRowIndex,
-                index: activeInfo.index,
-                page: newPage,
-            });
-
-            this.rebuildMatchCache();
-        }
+        this.restoreHighlight();
     }
 
     @Input()
@@ -2153,13 +2132,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const groupIndexData = this.getGroupIncrementData();
 
         data.forEach((dataRow, i) => {
+            const groupByRecord = groupIndexData ? this.getGroupByRecords()[i] : null;
             const groupByIncrement = groupIndexData ? groupIndexData[i] : 0;
-            const groupByRecord = groupIndexData ? this.groupsRecords[groupIndexData[i] - 1] : null;
             // For paging we need just the increment between the start of the page and the current row
             let pagingIncrement = 0;
-            if ( this.paging && groupByIncrement) {
+            if (this.paging && groupByIncrement) {
                 const page = Math.floor(i / this.perPage);
-                pagingIncrement = page ? groupByIncrement - groupIndexData[page * this.perPage - 1] : groupByIncrement;
+                pagingIncrement = page ? groupByIncrement - groupIndexData[page * this.perPage - 1] + 1 : groupByIncrement;
             }
 
             const rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
@@ -2179,7 +2158,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                             page: pageIndex,
                             index: occurenceIndex++,
                             groupByRecord: groupByRecord,
-                            groupByIncrement: groupByIncrement,
                             item: dataRow
                         });
 
@@ -2191,32 +2169,56 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
     }
 
+    // This method's idea is to by how much each data row is offset by the group by row.
     private getGroupIncrementData(): number[] {
-        if (this.groupsRecords && this.groupingExpressions.length) {
+        if (this.groupingExpressions && this.groupingExpressions.length) {
+                const groupsRecords = this.getGroupByRecords();
                 const groupByIncrements = [];
-                this.addIncrements(this.groupsRecords, groupByIncrements, 0);
+                const values = [];
+
+                let prevHierarchy = null;
+                let increment = 0;
+
+                groupsRecords.forEach((gbr) => {
+                    if (values.indexOf(gbr) === -1) {
+                        let levelIncrement = 1;
+
+                        if (prevHierarchy !== null) {
+                            levelIncrement += this.getLevelIncrement(0, gbr.groupParent, prevHierarchy.groupParent);
+                        } else {
+                            // This is the first level we stumble upon, so we haven't accounted for any of its parents
+                            levelIncrement += gbr.level;
+                        }
+
+                        increment += levelIncrement;
+                        prevHierarchy = gbr;
+                        values.push(gbr);
+                    }
+
+                    groupByIncrements.push(increment);
+                });
                 return groupByIncrements;
         } else {
             return null;
         }
     }
 
-    private addIncrements(groupByRows: IGroupByRecord[], groupByIncrements: number[], increment: number): number {
-        if (!!groupByRows) {
-            groupByRows.forEach((gbr) => {
-                increment++;
-
-                if (!gbr.groups || !gbr.groups.length) {
-                    gbr.records.forEach(() => {
-                        groupByIncrements.push(increment);
-                    });
-                }
-
-                increment = this.addIncrements(gbr.groups, groupByIncrements, increment);
-            });
+    private getLevelIncrement(currentIncrement, currentHierarchy, prevHierarchy) {
+        if (currentHierarchy !== prevHierarchy && !!prevHierarchy && !!currentHierarchy) {
+            return this.getLevelIncrement(++currentIncrement, currentHierarchy.groupParent, prevHierarchy.groupParent);
+        } else {
+            return currentIncrement;
         }
+    }
 
-        return increment;
+    private getGroupByRecords(): IGroupByRecord[] {
+        const state = {
+            expressions: this.groupingExpressions,
+            expansion:  this.groupingExpansionState,
+            defaultExpanded: this.groupsExpanded
+        };
+
+        return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
     }
 
     private restoreHighlight(): void {
@@ -2226,18 +2228,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const data = this.filteredSortedData;
             const groupByIncrements = this.getGroupIncrementData();
 
-            let rowIndex = data.indexOf(matchInfo.item);
-            if (groupByIncrements !== null && rowIndex !== -1) {
-                rowIndex += groupByIncrements[rowIndex];
+            const rowIndex = data.indexOf(matchInfo.item);
+            const page = this.paging ? Math.floor(rowIndex / this.perPage) : 0;
+            let increment = groupByIncrements && rowIndex !== -1 ? groupByIncrements[rowIndex] : 0;
+            if (this.paging && increment) {
+                increment = page ? increment - groupByIncrements[page * this.perPage - 1] + 1 : increment;
             }
 
-            const page = this.paging ? Math.floor(rowIndex / this.perPage) : 0;
-            const row = this.paging ? rowIndex % this.perPage : rowIndex;
+            const row = this.paging ? (rowIndex % this.perPage) + increment : rowIndex + increment;
 
             this.rebuildMatchCache();
 
             if (rowIndex !== -1) {
                 if (this.collapsedHighlightedItem && groupByIncrements !== null) {
+                    this.collapsedHighlightedItem.info.page = page;
                     this.collapsedHighlightedItem.info.rowIndex = row;
                 } else {
                     IgxTextHighlightDirective.setActiveHighlight(this.id, {
@@ -2249,7 +2253,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
                     this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                         if (match.column === activeInfo.columnIndex &&
-                            match.row === rowIndex &&
+                            match.row === row &&
                             match.index === activeInfo.index &&
                             match.page === page) {
                             this.lastSearchInfo.activeMatchIndex = i;
