@@ -138,7 +138,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 if (expr.filteringOperands.length > 1) {
                     if (this.expressionsList.toArray()[1]) {
                         this.expressionsList.toArray()[1].value = (expr.filteringOperands[1] as IFilteringExpression).searchVal;
-                        this.expressionsList.toArray()[1].expression.condition = 
+                        this.expressionsList.toArray()[1].expression.condition =
                             (expr.filteringOperands[1] as IFilteringExpression).condition;
                     }
                     this.isSecondConditionVisible = true;
