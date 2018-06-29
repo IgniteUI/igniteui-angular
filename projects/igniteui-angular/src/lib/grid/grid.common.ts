@@ -333,8 +333,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
 
-            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            // event.clientX and event.clientY return a value that had not taken into account if the page is scrolled
+            // this is why we need to update the value with the current scroll positions
+            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) + window.scrollX;
+            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) + window.scrollY;
         } else {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.removeChild(this._dragGhost.firstElementChild);
@@ -344,8 +346,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
             this._dragGhost.children[1].style.paddingLeft = '0px';
 
-            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            // event.clientX and event.clientY return a value that had not taken into account if the page is scrolled
+            // this is why we need to update the value with the current scroll positions
+            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) + window.scrollX;
+            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) + window.scrollY;
         }
     }
 }
