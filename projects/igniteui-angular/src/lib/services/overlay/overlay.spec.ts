@@ -66,7 +66,7 @@ function addScrollDivToElement(parent) {
 
 }
 
-fdescribe('igxOverlay', () => {
+describe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -626,7 +626,7 @@ fdescribe('igxOverlay', () => {
         }));
     });
 
-    fdescribe('Integration tests: ', () => {
+    describe('Integration tests: ', () => {
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).
         it('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', fakeAsync(() => {
