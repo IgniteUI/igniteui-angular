@@ -1,5 +1,5 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar, ICalendarDate } from '../calendar/calendar';
@@ -1267,6 +1267,45 @@ describe('IgxGrid - Filtering actions', () => {
                 done();
             }, 500);
         });
+    }));
+
+    it('Choose only second unary condition should filter the grid', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
+
+        expect(grid.rowList.length).toEqual(8);
+
+        filterIcon.nativeElement.click();
+        tick();
+        fix.detectChanges();
+
+        andButton.nativeElement.click();
+        tick();
+        fix.detectChanges();
+
+        const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
+        sendInput(input, 'g', fix);
+        tick();
+        fix.detectChanges();
+
+        verifyFilterUIPosition(filterUIContainer, grid);
+
+        tick();
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(3);
+        andButton.nativeElement.click();
+        tick();
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(8);
+
+        discardPeriodicTasks();
     }));
 });
 

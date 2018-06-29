@@ -79,14 +79,13 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     public cssClass = 'igx-filtering__expression';
 
     private _column: any;
-    public booleanFilterAll = 'All';
     public expression: IFilteringExpression;
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
     protected _value = null;
 
     protected UNARY_CONDITIONS = [
-        'true', 'false', 'null', 'notNull', 'empty', 'notEmpty',
+        'all', 'true', 'false', 'null', 'notNull', 'empty', 'notEmpty',
         'yesterday', 'today', 'thisMonth', 'lastMonth', 'nextMonth',
         'thisYear', 'lastYear', 'nextYear'
     ];
@@ -99,7 +98,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     public ngOnInit() {
         this.expression = {
             fieldName: this.column.field,
-            condition: this.conditions[0],
+            condition: this.getCondition(this.conditions[0]),
             searchVal: this.value,
             ignoreCase: this.column.filteringIgnoreCase
         };
@@ -113,7 +112,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
                 this.expression.condition = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).condition;
             } else {
                 this.value = null;
-                this.expression.condition = undefined;
+                this.expression.condition = this.getCondition(this.conditions[0]);
             }
         }
     }
@@ -174,7 +173,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
         return this.column.filters.instance().conditionList();
     }
 
-    protected getCondition(value: string): IFilteringOperation {
+    public getCondition(value: string): IFilteringOperation {
         return this.column.filters.instance().condition(value);
     }
 
@@ -189,11 +188,6 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     }
 
     public selectionChanged(value): void {
-        if (value === this.booleanFilterAll) {
-            this.clearFiltering(true);
-            this.onExpressionChanged.emit(this.expression);
-            return;
-        }
         this.focusInput();
         this.expression.condition = this.getCondition(value);
         if (this.unaryCondition) {
