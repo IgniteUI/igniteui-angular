@@ -1939,6 +1939,24 @@ describe('IgxGrid - GroupBy', () => {
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
     });
 
+    it('should show horizontal scrollbar if column widths are equal to the grid width and a column is grouped.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+
+        const grid = fix.componentInstance.instance;
+
+        grid.columnWidth = '200px';
+        fix.componentInstance.width = '1000px';
+
+        fix.detectChanges();
+
+        const hScrBar = grid.scr.nativeElement;
+        expect(hScrBar.hidden).toBe(true);
+
+        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc});
+        fix.detectChanges();
+        expect(hScrBar.hidden).toBe(false);
+    });
+
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
