@@ -24,6 +24,8 @@ import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.
 import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 import { OverlaySettings } from '../services';
 
+let NEXT_ID = 0;
+
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemBase;
     newSelection: IgxDropDownItemBase;
@@ -55,7 +57,7 @@ export class IgxDropDownBase implements OnInit {
     protected _focusedItem: any = null;
     private _width;
     private _height;
-    private _id = 'DropDown_0';
+    private _id = `igx-drop-down-${NEXT_ID++}`;
 
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
     protected children: QueryList<IgxDropDownItemBase>;

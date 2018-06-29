@@ -1143,7 +1143,7 @@ describe('Combo', () => {
         expect(comboElement.style.width).toEqual(defaultComboWidth);
         expect(comboElement.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
         expect(comboElement.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
-        expect(comboElement.attributes.getNamedItem('aria-owns').nodeValue).toEqual('DropDown_0');
+        expect(comboElement.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fix.componentInstance.combo.dropdown.id);
         expect(comboElement.childElementCount).toEqual(2);
 
         const inputGroupElement = comboElement.children[0];
