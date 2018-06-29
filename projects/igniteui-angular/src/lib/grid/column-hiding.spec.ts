@@ -40,6 +40,10 @@ describe('Column Hiding UI', () => {
         .compileComponents();
     }));
 
+    beforeAll(() => {
+        clearOverlay();
+    });
+
     afterAll(() => {
         clearOverlay();
     });
@@ -661,6 +665,111 @@ describe('Column Hiding UI', () => {
         });
     });
 
+    describe('', () => {
+        beforeEach(async(() => {
+            fix = TestBed.createComponent(GridWithGroupColumnsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            columnChooser = fix.componentInstance.chooser;
+            fix.detectChanges();
+
+            columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
+        }));
+
+        it('indents columns according to their level.', () => {
+            const items = columnChooser.columnItems;
+
+            expect(items.filter((col) => col.calcIndent === 0).length).toBe(3);
+            expect(items.filter((col) => col.calcIndent === 30).length).toBe(2);
+            expect(items.filter((col) => col.calcIndent === 60).length).toBe(2);
+
+            const columnItems = getColumnHidingItems();
+
+            const margin0 = '{"margin-left":"0px"}';
+            const margin1 = '{"margin-left":"30px"}';
+            const margin2 = '{"margin-left":"60px"}';
+            expect(JSON.stringify(columnItems[0].styles)).toBe(margin0);
+            expect(JSON.stringify(columnItems[1].styles)).toBe(margin0);
+            expect(JSON.stringify(columnItems[2].styles)).toBe(margin1);
+            expect(JSON.stringify(columnItems[3].styles)).toBe(margin1);
+            expect(JSON.stringify(columnItems[4].styles)).toBe(margin2);
+            expect(JSON.stringify(columnItems[5].styles)).toBe(margin2);
+            expect(JSON.stringify(columnItems[6].styles)).toBe(margin0);
+        });
+
+        it('checks & hides all children when hiding their parent.', () => {
+            getCheckboxInput('Person Details').click();
+            fix.detectChanges();
+            verifyCheckbox('Person Details', true, false);
+            verifyCheckbox('ContactName', true, false);
+            verifyCheckbox('ContactTitle', true, false);
+
+            verifyColumnIsHidden(grid.columns[3], true, 4);
+            verifyColumnIsHidden(grid.columns[4], true, 4);
+            verifyColumnIsHidden(grid.columns[5], true, 4);
+
+            verifyCheckbox('CompanyName', false, false);
+            verifyCheckbox('General Information', false, false);
+
+            getCheckboxInput('Person Details').click();
+            fix.detectChanges();
+            verifyColumnIsHidden(grid.columns[3], false, 7);
+            verifyColumnIsHidden(grid.columns[4], false, 7);
+            verifyColumnIsHidden(grid.columns[5], false, 7);
+
+            verifyCheckbox('Person Details', false, false);
+            verifyCheckbox('ContactName', false, false);
+            verifyCheckbox('ContactTitle', false, false);
+
+            verifyCheckbox('CompanyName', false, false);
+            verifyCheckbox('General Information', false, false);
+        });
+
+        it('checks & hides all descendants when hiding top level parent.', () => {
+            getCheckboxInput('General Information').click();
+            fix.detectChanges();
+
+            verifyCheckbox('General Information', true, false);
+            verifyCheckbox('CompanyName', true, false);
+
+            verifyCheckbox('Person Details', true, false);
+            verifyCheckbox('ContactName', true, false);
+            verifyCheckbox('ContactTitle', true, false);
+
+            verifyCheckbox('Missing', false, false);
+            verifyCheckbox('ID', false, false);
+
+            getCheckboxInput('General Information').click();
+            fix.detectChanges();
+
+            verifyCheckbox('General Information', false, false);
+            verifyCheckbox('CompanyName', false, false);
+
+            verifyCheckbox('Person Details', false, false);
+            verifyCheckbox('ContactName', false, false);
+            verifyCheckbox('ContactTitle', false, false);
+        });
+
+        it('checks/unchecks parent when all children are checked/unchecked.', () => {
+            verifyCheckbox('Person Details', false, false);
+
+            getCheckboxInput('ContactName').click();
+            fix.detectChanges();
+            verifyCheckbox('Person Details', false, false);
+            getCheckboxInput('ContactTitle').click();
+            fix.detectChanges();
+            verifyCheckbox('Person Details', true, false);
+
+            getCheckboxInput('ContactName').click();
+            fix.detectChanges();
+            verifyCheckbox('Person Details', false, false);
+
+            getCheckboxInput('ContactTitle').click();
+            fix.detectChanges();
+            verifyCheckbox('Person Details', false, false);
+        });
+    });
+
     describe('dropdown', () => {
         let showButton;
         let dropDown;
@@ -856,111 +965,6 @@ describe('Column Hiding UI', () => {
             const btnText = getColumnChooserButton().innerText;
             expect(btnText.includes('0') && btnText.includes('HIDDEN')).toBe(true);
             expect(getColumnChooserButtonIcon().innerText.toLowerCase()).toBe('visibility');
-        });
-    });
-
-    describe('', () => {
-        beforeEach(async(() => {
-            fix = TestBed.createComponent(GridWithGroupColumnsComponent);
-            fix.detectChanges();
-            grid = fix.componentInstance.grid;
-            columnChooser = fix.componentInstance.chooser;
-            fix.detectChanges();
-
-            columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        }));
-
-        it('indents columns according to their level.', () => {
-            const items = columnChooser.columnItems;
-
-            expect(items.filter((col) => col.calcIndent === 0).length).toBe(3);
-            expect(items.filter((col) => col.calcIndent === 30).length).toBe(2);
-            expect(items.filter((col) => col.calcIndent === 60).length).toBe(2);
-
-            const columnItems = getColumnHidingItems();
-
-            const margin0 = '{"margin-left":"0px"}';
-            const margin1 = '{"margin-left":"30px"}';
-            const margin2 = '{"margin-left":"60px"}';
-            expect(JSON.stringify(columnItems[0].styles)).toBe(margin0);
-            expect(JSON.stringify(columnItems[1].styles)).toBe(margin0);
-            expect(JSON.stringify(columnItems[2].styles)).toBe(margin1);
-            expect(JSON.stringify(columnItems[3].styles)).toBe(margin1);
-            expect(JSON.stringify(columnItems[4].styles)).toBe(margin2);
-            expect(JSON.stringify(columnItems[5].styles)).toBe(margin2);
-            expect(JSON.stringify(columnItems[6].styles)).toBe(margin0);
-        });
-
-        it('checks & hides all children when hiding their parent.', () => {
-            getCheckboxInput('Person Details').click();
-            fix.detectChanges();
-            verifyCheckbox('Person Details', true, false);
-            verifyCheckbox('ContactName', true, false);
-            verifyCheckbox('ContactTitle', true, false);
-
-            verifyColumnIsHidden(grid.columns[3], true, 4);
-            verifyColumnIsHidden(grid.columns[4], true, 4);
-            verifyColumnIsHidden(grid.columns[5], true, 4);
-
-            verifyCheckbox('CompanyName', false, false);
-            verifyCheckbox('General Information', false, false);
-
-            getCheckboxInput('Person Details').click();
-            fix.detectChanges();
-            verifyColumnIsHidden(grid.columns[3], false, 7);
-            verifyColumnIsHidden(grid.columns[4], false, 7);
-            verifyColumnIsHidden(grid.columns[5], false, 7);
-
-            verifyCheckbox('Person Details', false, false);
-            verifyCheckbox('ContactName', false, false);
-            verifyCheckbox('ContactTitle', false, false);
-
-            verifyCheckbox('CompanyName', false, false);
-            verifyCheckbox('General Information', false, false);
-        });
-
-        it('checks & hides all descendants when hiding top level parent.', () => {
-            getCheckboxInput('General Information').click();
-            fix.detectChanges();
-
-            verifyCheckbox('General Information', true, false);
-            verifyCheckbox('CompanyName', true, false);
-
-            verifyCheckbox('Person Details', true, false);
-            verifyCheckbox('ContactName', true, false);
-            verifyCheckbox('ContactTitle', true, false);
-
-            verifyCheckbox('Missing', false, false);
-            verifyCheckbox('ID', false, false);
-
-            getCheckboxInput('General Information').click();
-            fix.detectChanges();
-
-            verifyCheckbox('General Information', false, false);
-            verifyCheckbox('CompanyName', false, false);
-
-            verifyCheckbox('Person Details', false, false);
-            verifyCheckbox('ContactName', false, false);
-            verifyCheckbox('ContactTitle', false, false);
-        });
-
-        it('checks/unchecks parent when all children are checked/unchecked.', () => {
-            verifyCheckbox('Person Details', false, false);
-
-            getCheckboxInput('ContactName').click();
-            fix.detectChanges();
-            verifyCheckbox('Person Details', false, false);
-            getCheckboxInput('ContactTitle').click();
-            fix.detectChanges();
-            verifyCheckbox('Person Details', true, false);
-
-            getCheckboxInput('ContactName').click();
-            fix.detectChanges();
-            verifyCheckbox('Person Details', false, false);
-
-            getCheckboxInput('ContactTitle').click();
-            fix.detectChanges();
-            verifyCheckbox('Person Details', false, false);
         });
     });
 
