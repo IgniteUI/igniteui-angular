@@ -666,7 +666,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     // reached end without exceeding
                     // include prev items until size is filled or first item is reached.
                     let prevIndex = this.igxForOf.indexOf(arr[0]) - 1;
-                    while (prevIndex > 0 && sum <= availableSize) {
+                    while (prevIndex >= 0 && sum <= availableSize) {
                         prevIndex = this.igxForOf.indexOf(arr[0]) - 1;
                         const prevItem = this.igxForOf[prevIndex];
                         sum = arr.reduce(reducer,  parseInt(prevItem.width, 10));
