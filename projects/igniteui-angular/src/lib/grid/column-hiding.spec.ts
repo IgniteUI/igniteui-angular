@@ -14,7 +14,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
 import { ColumnDisplayOrder } from './column-chooser-base';
 
-fdescribe('Column Hiding UI', () => {
+describe('Column Hiding UI', () => {
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;
