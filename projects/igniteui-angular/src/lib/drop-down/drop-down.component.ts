@@ -23,6 +23,7 @@ import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle
 import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.component';
 import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 import { OverlaySettings } from '../services';
+import { IToggleView } from '../core/navigation';
 
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemBase;
@@ -50,7 +51,7 @@ export enum Navigate {
  * </igx-drop-down>
  * ```
  */
-export class IgxDropDownBase implements OnInit {
+export class IgxDropDownBase implements OnInit, IToggleView {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     protected _focusedItem: any = null;
     private _width;
