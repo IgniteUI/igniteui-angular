@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild,
     ElementRef, EventEmitter,
-    HostBinding, HostListener, Input, NgModule, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren
+    HostBinding, HostListener, Input, NgModule, OnInit, OnDestroy, Output, QueryList,
+    TemplateRef, ViewChild, ViewChildren, Optional, Self, Inject
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
 import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray } from '../core/utils';
@@ -23,13 +24,20 @@ import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
-import { OverlaySettings, NoOpScrollStrategy } from '../services';
+import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
+import { Subscription } from 'rxjs';
 
 export enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
     COMPLEX = 'complex',
     PRIMARYKEY = 'valueKey'
+}
+
+export enum IgxComboState {
+    INITIAL,
+    VALID,
+    INVALID
 }
 
 export interface IComboSelectionChangeEventArgs {
@@ -44,16 +52,14 @@ export interface IComboItemAdditionEvent {
     newCollection: any[];
 }
 
-let currentItem = 0;
+let NEXT_ID = 0;
 const noop = () => { };
 
 @Component({
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }],
     selector: 'igx-combo',
     templateUrl: 'combo.component.html'
 })
-export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, OnInit {
-    public id = '';
+export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
      * @hidden
      */
@@ -89,6 +95,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
+    protected _valueKey: string | number = '';
+    /**
+     * @hidden
+     */
     protected _displayKey: string | number = '';
     private _dataType = '';
     private _filteredData = [];
@@ -96,11 +106,13 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _dropdownContainer: ElementRef = null;
     private _searchInput: ElementRef<HTMLInputElement> = null;
     private _comboInput: ElementRef<HTMLInputElement> = null;
+    private _valid = IgxComboState.INITIAL;
+    private _statusChanges$: Subscription;
     private _width = '250px';
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
         positionStrategy: new ConnectedPositioningStrategy(),
-        scrollStrategy: new NoOpScrollStrategy(),
+        scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
     };
@@ -111,8 +123,15 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selectionAPI: IgxSelectionAPIService) {
+        protected selectionAPI: IgxSelectionAPIService,
+        @Self() @Optional() public ngControl: NgControl) {
+            if (this.ngControl) {
+                // Note: we provide the value accessor through here, instead of
+                // the `providers` to avoid running into a circular import.
+                this.ngControl.valueAccessor = this;
+            }
     }
+
     /**
      * @hidden
      */
@@ -314,6 +333,23 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public onDataPreLoad = new EventEmitter<any>();
 
     /**
+     * Gets/gets combo id.
+     *
+     * ```typescript
+     * // get
+     * let id = this.combo.id;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [id]='combo1'></igx-combo>
+     * ```
+    */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-combo-${NEXT_ID++}`;
+
+    /**
      * Sets the style width of the element
      *
      * ```typescript
@@ -334,6 +370,22 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
     public set width(val) {
         this._width = val;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-input-group--valid')
+    public get validClass(): boolean {
+        return this._valid === IgxComboState.VALID;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-input-group--invalid')
+    public get invalidClass(): boolean {
+        return this._valid === IgxComboState.INVALID;
     }
 
 
@@ -479,7 +531,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public valueKey: string | number = '';
+    get valueKey() {
+        return this._valueKey;
+    }
+    set valueKey(val: string | number) {
+        this._valueKey = val;
+    }
 
     @Input()
     set displayKey(val: string | number) {
@@ -504,7 +561,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     get displayKey() {
-        return this._displayKey ? this._displayKey : this.valueKey;
+        return this._displayKey ? this._displayKey : this._valueKey;
     }
 
     /**
@@ -571,6 +628,29 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @Input()
     public type = 'box';
 
+    /**
+     * @hidden
+     */
+    public onBlur(event) {
+        if (this.dropdown.collapsed) {
+            this._valid = IgxComboState.INITIAL;
+            if (this.ngControl) {
+                if (!this.ngControl.valid) {
+                    this._valid = IgxComboState.INVALID;
+                }
+            } else if (this._hasValidators() && !this.elementRef.nativeElement.checkValidity()) {
+                this._valid = IgxComboState.INVALID;
+            }
+        }
+    }
+
+    private _hasValidators(): boolean {
+        if (this.elementRef.nativeElement.hasAttribute('required')) {
+            return true;
+        }
+        return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
+    }
+
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
@@ -603,19 +683,75 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.toggle();
     }
 
+    /**
+     * Defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`
+     *
+     * ```typescript
+     * // get
+     * let state = this.combo.virtualizationState;
+     * ```
+    */
     get virtualizationState(): IForOfState {
         return this.dropdown.verticalScrollContainer.state;
     }
+    /**
+     * Sets the current state of the virtualized data.
+     *
+     * ```typescript
+     * // set
+     * this.combo.virtualizationState(state);
+     * ```
+     */
     set virtualizationState(state) {
         this.dropdown.verticalScrollContainer.state = state;
     }
 
+    /**
+     * Gets total count of the virtual data items, when using remote service.
+     *
+     * ```typescript
+     * // get
+     * let count = this.combo.totalItemCount;
+     * ```
+    */
     get totalItemCount() {
         return this.dropdown.verticalScrollContainer.totalItemCount;
     }
+    /**
+     * Sets total count of the virtual data items, when using remote service.
+     *
+     * ```typescript
+     * // set
+     * this.combo.totalItemCount(remoteService.count);
+     * ```
+     */
     set totalItemCount(count) {
         this.dropdown.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
+    }
+
+    /**
+     * Gets if control is valid, when used in a form
+     *
+     * ```typescript
+     * // get
+     * let valid = this.combo.valid;
+     * ```
+    */
+    public get valid(): IgxComboState {
+        return this._valid;
+    }
+
+    /**
+     * Sets valid state of the combo
+     *
+     * ```typescript
+     * // get
+     * this.combo.valid(IgxComboState.INVALID);
+     * ```
+     */
+    public set valid(value: IgxComboState) {
+        this._valid = value;
     }
 
     /**
@@ -873,7 +1009,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             const args: IComboSelectionChangeEventArgs = { oldSelection, newSelection };
             this.onSelectionChange.emit(args);
             this.selectionAPI.set_selection(this.id, newSelection);
-            this.value = this._dataType !== DataTypes.PRIMITIVE ?
+            this.value = this.dataType !== DataTypes.PRIMITIVE ?
                 newSelection.map((e) => e[this.displayKey]).join(', ') :
                 newSelection.join(', ');
             // this.isHeaderChecked();
@@ -961,6 +1097,13 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.filteringExpressions = newArray;
     }
 
+    protected onStatusChanged() {
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            this._valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+        }
+    }
+
     /**
      * @hidden
      */
@@ -972,9 +1115,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public ngOnInit() {
-        this.id += currentItem++;
-        this.selectionAPI.set_selection(this.id, []);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
+
+        if (this.ngControl && this.ngControl.value) {
+            this.triggerSelectionChange(this.ngControl.value);
+        }
     }
 
     /**
@@ -982,6 +1127,16 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
+
+        if (this.ngControl) {
+            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
+        }
     }
 
     /**
@@ -995,7 +1150,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public writeValue(value: any): void {
-        this.selectItems(value, true);
+        if (this.valueKey !== '') {
+            this.selectItems(value, true);
+        }
     }
 
     /**
@@ -1048,28 +1205,77 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         event.stopPropagation();
     }
 
+    /**
+     * A method that opens/closes the dialog.
+     *
+     *```html
+     *<button (click)="combo.toggle()>Toggle Combo</button>
+     *<igx-combo #combo></igx-combo>
+     *```
+     */
     public toggle() {
         this.searchValue = '';
         this.dropdown.toggle(this.overlaySettings);
     }
 
+    /**
+     * A method that opens the dialog.
+     *
+     *```html
+     *<button (click)="combo.open()>Open Combo</button>
+     *<igx-combo #combo></igx-combo>
+     *```
+     */
     public open() {
         this.searchValue = '';
         this.dropdown.open(this.overlaySettings);
     }
 
+    /**
+     * A method that closes the dialog.
+     *
+     *```html
+     *<button (click)="combo.close()>Close Combo</button>
+     *<igx-combo #combo></igx-combo>
+     *```
+     */
     public close() {
         this.dropdown.close();
     }
 
+    /**
+     * Gets drop down state.
+     *
+     * ```typescript
+     * // get
+     * let state = this.combo.collapsed;
+     * ```
+    */
     public get collapsed() {
         return this.dropdown.collapsed;
     }
 
+    /**
+     * Get current selection state
+     * @returns Array of selected items
+     * ```typescript
+     * // get
+     * let selectedItems = this.combo.selectedItems();
+     * ```
+     */
     public selectedItems() {
         return this.dropdown.selectedItem;
     }
 
+    /**
+     * Select defined items
+     * @param newItems new items to be selected
+     * @param clearCurrentSelection if true clear previous selected items
+     * ```typescript
+     * // get
+     * this.combo.selectItems(["New York", "New Jersey"]);
+     * ```
+     */
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
             const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
@@ -1077,19 +1283,43 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
-    public deselectItems(newItems: Array<any>) {
-        if (newItems) {
-            const newSelection = this.selectionAPI.deselect_items(this.id, newItems);
+    /**
+     * Deselect defined items
+     * @param items items to deselected
+     * ```typescript
+     * // get
+     * this.combo.deselectItems(["New York", "New Jersey"]);
+     * ```
+     */
+    public deselectItems(items: Array<any>) {
+        if (items) {
+            const newSelection = this.selectionAPI.deselect_items(this.id, items);
             this.triggerSelectionChange(newSelection);
         }
     }
 
+    /**
+     * Select all (filtered) items
+     * @param ignoreFilter if set to true, selects all items, otherwise selects only the filtered ones.
+     * ```typescript
+     * // get
+     * this.combo.selectAllItems();
+     * ```
+     */
     public selectAllItems(ignoreFilter?: boolean) {
         const allVisible = this.selectionAPI.get_all_ids(ignoreFilter ? this.data : this.filteredData);
         const newSelection = this.selectionAPI.select_items(this.id, allVisible);
         this.triggerSelectionChange(newSelection);
     }
 
+    /**
+     * Deselect all (filtered) items
+     * @param ignoreFilter if set to true, deselects all items, otherwise deselects only the filtered ones.
+     * ```typescript
+     * // get
+     * this.combo.deselectAllItems();
+     * ```
+     */
     public deselectAllItems(ignoreFilter?: boolean) {
         const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
             [] :

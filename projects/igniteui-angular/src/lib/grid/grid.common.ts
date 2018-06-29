@@ -17,11 +17,9 @@ import {
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
-import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IColumnMovingEventArgs } from './grid.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 @Directive({
@@ -168,6 +166,10 @@ export class IgxColumnMovingService {
     private _target: IgxColumnComponent;
 
     public cancelDrop: boolean;
+    public selection: {
+        column: IgxColumnComponent,
+        rowID: any
+    };
 
     get column(): IgxColumnComponent {
         return this._column;
@@ -256,6 +258,14 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         this.column.grid.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
+
+        const currSelection = this.column.grid.selectionAPI.get_selection(this.column.gridID + '-cells');
+        if (currSelection && currSelection.length > 0) {
+            this.cms.selection = {
+                column: this.column.grid.columnList.toArray()[currSelection[0].columnID],
+                rowID: currSelection[0].rowID
+            };
+        }
 
         const args = {
             source: this.column
@@ -479,26 +489,21 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                     return;
             }
 
-            let col, index;
-            const selectedCells = this.cms.column.grid.selectedCells;
-            if (selectedCells && selectedCells.length > 0) {
-                col = selectedCells[0].column;
-                for (let i = 0; i < col.cells.length; i++) {
-                   if (col.cells[i].selected) {
-                       index = i;
-                       break;
-                    }
-                }
-            }
-
             this.column.grid.moveColumn(this.cms.column, this.column);
+
+            if (this.cms.selection && this.cms.selection.column) {
+                const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
+
+                this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cells', [{
+                    rowID: this.cms.selection.rowID,
+                    columnID: colID
+                }]);
+
+                this.cms.selection = null;
+            }
 
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
-
-            if (col && selectedCells && selectedCells.length > 0) {
-                col.cells[index]._updateCellSelectionStatus();
-            }
         }
     }
 }
