@@ -6,6 +6,8 @@
 /// @requires {mixin} bem-mod
 ////
 @include b(igx-overlay) {
+    width: 0;
+    height: 0;
     $block: bem--selector-to-string(&);
     @include register-component(igx-overlay);
 
