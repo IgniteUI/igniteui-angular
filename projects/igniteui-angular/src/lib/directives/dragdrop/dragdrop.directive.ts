@@ -249,9 +249,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 this.dragStart.emit(dragStartArgs);
 
                 if (!dragStartArgs.cancel) {
+                    this._dragStarted = true;
                     // We moved enough so dragGhost can be rendered and actual dragging to start.
                     this.createDragGhost(event);
-                    this._dragStarted = true;
                 }
                 return;
             } else if (!this._dragStarted) {
@@ -277,7 +277,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         }
 
         this._clicked = false;
-
         if (this._dragStarted) {
             if (this._lastDropArea && !this._lastDropArea.isEqualNode(this.element.nativeElement)) {
                 const pageX = event.pageX;
@@ -290,7 +289,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 // dragging ended over a drop area. Call this after transition because onDrop might remove the element.
                 this.dispatchDropEvent(pageX, pageY);
                 // else the drop directive needs to call the dropFinished() method so the animation can perform
-            } else if (this.animateOnRelease) {
+            } else if (this.animateOnRelease &&
+                    (this.left !== Math.floor(this._dragStartX) || this.top !== Math.floor(this._dragStartY))) {
+                // If the start positions are the same as the current the transition will not execute.
                 // return the ghost to start position before removing it. See onTransitionEnd.
                 this._dragGhost.style.transitionDuration = this.defaultReturnDuration;
                 this.left = this._dragStartX;
@@ -313,9 +314,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         this._dragGhost = this.element.nativeElement.cloneNode(true);
         this._dragGhost.style.transitionDuration = '0.0s';
         this._dragGhost.style.position = 'absolute';
-
-        this.left = this._dragStartX;
-        this.top = this._dragStartY;
+        this._dragGhost.style.top = this._dragStartY + 'px';
+        this._dragGhost.style.left = this._dragStartX + 'px';
 
         if (this.ghostImageClass) {
             this.renderer.addClass(this._dragGhost, this.ghostImageClass);
@@ -419,7 +419,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     }
 
     public dropFinished() {
-        if (this.animateOnRelease) {
+        if (this.animateOnRelease && this._dragGhost) {
             this.updateDragRelativePos();
 
             // Return the dragged element to the start. See onTransitionEnd next.
