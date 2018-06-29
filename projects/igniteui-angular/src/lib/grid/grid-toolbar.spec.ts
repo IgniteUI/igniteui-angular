@@ -460,6 +460,44 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
     });
 
+    it('test \'filterColumnsPrompt\' property.', () => {
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        fixture.detectChanges();
+        const toolbar = grid.toolbar;
+        expect(toolbar.filterColumnsPrompt).toBe('Filter columns list ...');
+
+        toolbar.toggleColumnHidingUI();
+        expect(toolbar.columnHidingUI.filterColumnsPrompt).toBe('Filter columns list ...');
+
+        toolbar.filterColumnsPrompt = null;
+        fixture.detectChanges();
+        expect(toolbar.filterColumnsPrompt).toBe(null);
+        expect(toolbar.columnHidingUI.filterColumnsPrompt).toBe('');
+
+        toolbar.filterColumnsPrompt = 'Test';
+        toolbar.cdr.detectChanges();
+        fixture.detectChanges();
+        expect(toolbar.filterColumnsPrompt).toBe('Test');
+        expect(toolbar.columnHidingUI.filterColumnsPrompt).toBe('Test');
+
+        toolbar.toggleColumnHidingUI();
+    });
+
+    it('test hiding and pinning dropdowns height.', () => {
+        grid.height = '300px';
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        fixture.detectChanges();
+
+        expect(parseInt(grid.toolbar.columnHidingUI.columnsAreaMaxHeight, 10)).toBe(134);
+
+        grid.height = '600px';
+        fixture.detectChanges();
+
+        expect(grid.toolbar.columnHidingUI.columnsAreaMaxHeight).toBe(grid.calcHeight * 0.7 + 'px');
+    });
+
     function getToolbar() {
         return fixture.debugElement.query(By.css('igx-grid-toolbar'));
     }

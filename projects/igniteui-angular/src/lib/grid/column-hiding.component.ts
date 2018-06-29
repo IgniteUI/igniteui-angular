@@ -56,7 +56,7 @@ export class IgxColumnHidingComponent extends ColumnChooserBase {
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
 
     public get hiddenColumnsCount() {
-        return (this.columns) ? this.columns.filter((col) => col.hidden).length : 0;
+        return (this.columns) ? this.columns.filter((col) => !col.columnGroup && col.hidden).length : 0;
     }
 
     constructor(public cdr: ChangeDetectorRef) {
@@ -64,16 +64,18 @@ export class IgxColumnHidingComponent extends ColumnChooserBase {
     }
 
     private get hidableColumns() {
-        return this.columnItems.filter((col) => !col.disabled);
+        return this.columnItems.filter((col) => !col.column.columnGroup && !col.disabled);
     }
 
     protected createColumnItem(container: any, column: any) {
         const item = new IgxColumnHidingItemDirective();
         item.container = container;
         item.column = column;
-        item.valueChanged.subscribe((args) => {
-            this.onVisibilityChanged({ column: item.column, newValue: args.newValue });
-        });
+        if (!item.column.columnGroup) {
+            item.valueChanged.subscribe((args) => {
+                this.onVisibilityChanged({ column: item.column, newValue: args.newValue });
+            });
+        }
         return item;
     }
 
