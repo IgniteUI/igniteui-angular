@@ -491,7 +491,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.moveColumn(this.cms.column, this.column);
 
-            if (this.cms.selection.column) {
+            if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
 
                 this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cells', [{
