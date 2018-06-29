@@ -844,6 +844,32 @@ describe('IgxVirtual directive - simple template', () => {
             }
         }, 0);
     }));
+
+    it('should always fill available space for last chunk size calculation', () => {
+        const fix = TestBed.createComponent(HorizontalVirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        fix.componentInstance.width = '1900px';
+        fix.componentInstance.cols = [
+            {field: '1', width: 100},
+            {field: '2', width: 1800},
+            {field: '3', width: 200},
+            {field: '4', width: 200},
+            {field: '5', width: 300},
+            {field: '6', width: 100},
+            {field: '7', width: 100},
+            {field: '8', width: 100},
+            {field: '9', width: 150},
+            {field: '10', width: 150}
+        ];
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const displayContainer: HTMLElement = fix.nativeElement.querySelector('igx-display-container');
+        const firstRecChildren = displayContainer.children;
+
+        const chunkSize = firstRecChildren.length;
+        expect(chunkSize).toEqual(9);
+    });
 });
 
 /** igxFor for testing */
