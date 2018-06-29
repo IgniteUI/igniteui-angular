@@ -821,7 +821,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     constructor(
         private gridAPI: IgxGridAPIService,
-        private selectionAPI: IgxSelectionAPIService,
+        public selectionAPI: IgxSelectionAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
