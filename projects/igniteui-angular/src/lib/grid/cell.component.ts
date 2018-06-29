@@ -255,9 +255,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editCell && this.updateCell) {
+            if (editCell.cell.column.field === this.gridAPI.get(this.gridID).primaryKey) {
+                if (editCell.cellID.rowIndex === this.cellID.rowIndex && editCell.cellID.columnID === this.cellID.columnID) {
+                    this.previousCellEditMode = false;
+                } else {
+                    this.previousCellEditMode = true;
+                }
+            } else {
+                this.previousCellEditMode = true;
+            }
             this.gridAPI.submit_value(this.gridID);
-            this.gridAPI.escape_editMode(this.gridID, editCell.cellID);
-            this.previousCellEditMode = true;
         } else {
             this.previousCellEditMode = false;
         }
