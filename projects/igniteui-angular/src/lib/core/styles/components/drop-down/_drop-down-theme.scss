@@ -12,7 +12,7 @@
 /// @param {Color} $hover-item-background [null] - The drop-down hover item background color.
 ///
 /// @param {Color} $focused-item-background [null] - The drop-down focused item background color.
-/// @param {Color} $focus-item-text-color [null] - The drop-down focused item text color.
+/// @param {Color} $focused-item-text-color [null] - The drop-down focused item text color.
 ///
 /// @param {Color} $selected-item-background [null] - The drop-down selected item background color.
 /// @param {Color} $selected-item-text-color [null] - The drop-down selected item text color.
@@ -34,7 +34,7 @@
     $hover-item-background:null,
 
     $focused-item-background:null,
-    $focus-item-text-color:null,
+    $focused-item-text-color:null,
 
     $selected-item-background:null,
     $selected-item-text-color:null,
@@ -43,7 +43,7 @@
     $selected-hover-item-text-color:null,
 
     $selected-focus-item-background:null,
-    $selected-focus-item-text-color:null,
+    $selected-focused-item-text-color:null,
 
     $disabled-item-background:null,
     $disabled-item-text-color:null
@@ -57,7 +57,7 @@
         hover-item-text-color: igx-color($palette, 'grays', 800),
         hover-item-background: igx-color($palette, 'grays', 100),
         focused-item-background: igx-color($palette, 'grays', 100),
-        focus-item-text-color: igx-color($palette, 'grays', 800),
+        focused-item-text-color: igx-color($palette, 'grays', 800),
 
         selected-item-background: igx-color($palette, 'secondary', 500),
         selected-item-text-color: #fff,
@@ -66,7 +66,7 @@
         selected-hover-item-text-color: #fff,
 
         selected-focus-item-background: igx-color($palette, 'secondary', 500),
-        selected-focus-item-text-color: #fff,
+        selected-focused-item-text-color: #fff,
 
         disabled-item-background: transparent,
         disabled-item-text-color: igx-color($palette, 'grays', 500)
@@ -87,11 +87,11 @@
 
     @if not($focused-item-background) and $background-color {
         $focused-item-background: rgba(text-contrast($background-color), .12);
-        $focus-item-text-color: text-contrast($background-color);
+        $focused-item-text-color: text-contrast($background-color);
     }
 
-    @if not($focus-item-text-color) and $focused-item-background {
-        $focus-item-text-color: text-contrast($focused-item-background);
+    @if not($focused-item-text-color) and $focused-item-background {
+        $focused-item-text-color: text-contrast($focused-item-background);
     }
 
     @if not($selected-item-text-color) and $selected-item-background {
@@ -103,8 +103,8 @@
     }
 
 
-    @if not($selected-focus-item-text-color) and $selected-focus-item-background {
-        $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
+    @if not($selected-focused-item-text-color) and $selected-focus-item-background {
+        $selected-focused-item-text-color: text-contrast($selected-focus-item-background);
     }
 
 
@@ -129,13 +129,13 @@
         hover-item-text-color: $hover-item-text-color,
         hover-item-background:$hover-item-background,
         focused-item-background:$focused-item-background,
-        focus-item-text-color:$focus-item-text-color,
+        focused-item-text-color:$focused-item-text-color,
         selected-item-background:$selected-item-background,
         selected-item-text-color:$selected-item-text-color,
         selected-hover-item-background:$selected-hover-item-background,
         selected-hover-item-text-color:$selected-hover-item-text-color,
         selected-focus-item-background:$selected-focus-item-background,
-        selected-focus-item-text-color:$selected-focus-item-text-color,
+        selected-focused-item-text-color:$selected-focused-item-text-color,
         disabled-item-background:$disabled-item-background,
         disabled-item-text-color:$disabled-item-text-color,
     ));
@@ -204,7 +204,7 @@
             outline: 0;
             outline-color: transparent;
             background: --var($theme, 'focused-item-background');
-            color: --var($theme, 'focus-item-text-color');
+            color: --var($theme, 'focused-item-text-color');
         }
 
         &:hover {
@@ -232,7 +232,7 @@
 
     %igx-drop-down__item--focused {
         background: --var($theme, 'focused-item-background');
-        color: --var($theme, 'focus-item-text-color');
+        color: --var($theme, 'focused-item-text-color');
 
         &:hover {
             background: --var($theme, 'focused-item-background');
@@ -251,7 +251,7 @@
         &%igx-drop-down__item--focused,
         &:focus {
             background: --var($theme, 'selected-focus-item-background');
-            color: --var($theme, 'selected-focus-item-text-color');
+            color: --var($theme, 'selected-focused-item-text-color');
         }
     }
 
