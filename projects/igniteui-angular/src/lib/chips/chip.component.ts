@@ -301,7 +301,7 @@ export class IgxChipComponent implements AfterViewInit {
     }
 
     /**
-     * Sets the `IgxChipComponent` to be selected.
+     * Returns if the `IgxChipComponent` is the last one among its siblings.
      * ```typescript
      * @ViewChild('myChip')
      * public chip: IgxChipComponent;
