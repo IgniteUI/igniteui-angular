@@ -1047,7 +1047,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get totalWidth(): number {
         // Take only top level columns
-        const cols = this.visibleColumns.filter(col => col.level === 0);
+        const cols = this.visibleColumns.filter(col => col.level === 0 && col.pinned === false);
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
