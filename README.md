@@ -71,7 +71,7 @@ ig start
 ## Building the Library
 ```
 // build the code
-ng build ignuteui-angular
+ng build igniteui-angular
 
 // build the css
 npm run build:style
