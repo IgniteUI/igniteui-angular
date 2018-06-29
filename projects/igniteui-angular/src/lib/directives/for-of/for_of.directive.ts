@@ -613,6 +613,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             } else {
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
+                chunkSize = isNaN(chunkSize) ? 0 : chunkSize;
                 if (chunkSize !== 0 && !this._isScrolledToBottom && !this._isAtBottomIndex) {
                     chunkSize++;
                     this.extraRowApplied = true;
