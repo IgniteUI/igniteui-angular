@@ -117,11 +117,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }
-        if (this.column.dataType === DataType.Date) {
-            requestAnimationFrame(() => this.cdr.markForCheck());
-        } else {
-            this.cdr.detectChanges();
-        }
+
+        this.cdr.detectChanges();
     }
 
     @HostBinding('attr.tabindex')

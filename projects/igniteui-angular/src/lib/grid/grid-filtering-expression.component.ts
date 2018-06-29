@@ -228,11 +228,6 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
         this.clearFiltering(false);
     }
 
-    // XXX - Temp fix for (#1183, #1177) (Should be deleted)
-    onDatePickerClick() {
-        this.zone.run(() => { });
-    }
-
     public onDatePickerValueChanged(): void {
         this.expression.condition = this.getCondition(this.select.nativeElement.value);
         this.onExpressionChanged.emit(this.expression);
