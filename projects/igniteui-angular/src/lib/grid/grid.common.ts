@@ -304,14 +304,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             return;
         }
 
-        // Use promise because on Safari after grouping by 2 columns and trying to group by more columns
-        // the pointerUp executes after draggedColumn is set to null and doesn't group
-        new Promise((resolve, reject) => {
+        // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
+        this.zone.run(() => {
             super.onPointerUp(event);
-            this.dragEnd.subscribe(() => {
-                resolve();
-            });
-        }).then(() => {
+
             this.column.grid.isColumnMoving = false;
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
