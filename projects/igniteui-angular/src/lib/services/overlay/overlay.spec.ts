@@ -1721,13 +1721,13 @@ fdescribe('igxOverlay', () => {
                 expect(noScroll.initialize).toHaveBeenCalledTimes(0);
                 expect(noScroll.attach).toHaveBeenCalledTimes(0);
                 expect(noScroll.detach).toHaveBeenCalledTimes(0);
-                document.documentElement.scrollTop = 100;
+                document.documentElement.scrollTop = 40;
                 document.documentElement.scrollLeft = 50;
-                document.documentElement.dispatchEvent(new Event('scroll'));
+                document.dispatchEvent(new Event('scroll'));
                 tick();
 
                 expect(elementRect).toEqual(element.getBoundingClientRect());
-                expect(document.documentElement.scrollTop).toEqual(100);
+                expect(document.documentElement.scrollTop).toEqual(40);
                 expect(document.documentElement.scrollLeft).toEqual(50);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
             })
@@ -1737,7 +1737,14 @@ fdescribe('igxOverlay', () => {
         // (example: DropDown or Dialog component collapse/closes after scrolling 10px.)
         it('Until the set tolerance is exceeded scrolling is possible.',
             fakeAsync(() => {
-                const fixture = TestBed.createComponent(EmptyPageComponent);
+                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+                    set: {
+                        styles: [
+                            'button { position: absolute; top: 100%; left: 90% }'
+                        ]
+                    }
+                }).createComponent(EmptyPageComponent);
+
                 const scrollTolerance = 10;
                 const scrollStrategy = new CloseScrollStrategy();
                 const overlay = fixture.componentInstance.overlay;
@@ -1763,7 +1770,7 @@ fdescribe('igxOverlay', () => {
                 expect(overlay.show).toHaveBeenCalledTimes(1);
                 expect(overlay.hide).toHaveBeenCalledTimes(0);
 
-                document.documentElement.scrollTop += scrollTolerance;
+                document.documentElement.scrollTop = scrollTolerance;
                 document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
@@ -1772,7 +1779,7 @@ fdescribe('igxOverlay', () => {
                 expect(overlay.hide).toHaveBeenCalledTimes(0);
                 expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
 
-                document.documentElement.scrollTop += scrollTolerance * 2;
+                document.documentElement.scrollTop = scrollTolerance * 2;
                 document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(scrollSpy).toHaveBeenCalledTimes(2);
@@ -1783,7 +1790,13 @@ fdescribe('igxOverlay', () => {
 
         it('The component shown in igx-overlay does not change its state until it exceeds the scrolling tolerance set.',
             fakeAsync(() => {
-                const fixture = TestBed.createComponent(EmptyPageComponent);
+                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
+                    set: {
+                        styles: [
+                            'button { position: absolute; top: 200%; left: 90% }'
+                        ]
+                    }
+                }).createComponent(EmptyPageComponent);
                 const scrollTolerance = 10;
                 const scrollStrategy = new CloseScrollStrategy();
                 const overlay = fixture.componentInstance.overlay;
@@ -2123,8 +2136,8 @@ fdescribe('igxOverlay', () => {
             expect(overlay.hide).toHaveBeenCalledTimes(1);
         }));
 
-        xit('Escape - closes (DropDown, Dialog, etc.).', () => {
-            // Not TO DO
+        xit('Escape - do not close (DropDown, Dialog, etc.).', () => {
+            // TO DO
         });
 
         // 4. Css
