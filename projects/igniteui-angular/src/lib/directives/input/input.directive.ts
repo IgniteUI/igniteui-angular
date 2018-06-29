@@ -30,7 +30,6 @@ export enum IgxInputState {
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
-    private _valueChanges$: Subscription;
 
     constructor(
         @Inject(forwardRef(() => IgxInputGroupComponent))
@@ -122,10 +121,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
-        }
-
-        if (this._valueChanges$) {
-            this._valueChanges$.unsubscribe();
         }
     }
 
