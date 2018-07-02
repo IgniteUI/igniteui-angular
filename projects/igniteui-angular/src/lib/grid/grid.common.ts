@@ -309,6 +309,15 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     protected createDragGhost(event) {
         super.createDragGhost(event);
 
+        let pageX, pageY;
+        if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
+            pageX = event.pageX;
+            pageY = event.pageY;
+        } else {
+            pageX = event.touches[0].pageX;
+            pageY = event.touches[0].pageY;
+        }
+
         this._dragGhost.style.height = null;
         this._dragGhost.style.minWidth = null;
         this._dragGhost.style.flexBasis = null;
@@ -327,8 +336,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
 
-            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         } else {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.removeChild(this._dragGhost.firstElementChild);
@@ -338,8 +347,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
             this._dragGhost.children[1].style.paddingLeft = '0px';
 
-            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         }
     }
 }
