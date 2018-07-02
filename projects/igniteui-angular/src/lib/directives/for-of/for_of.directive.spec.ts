@@ -19,7 +19,7 @@ import {
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IForOfState, IgxForOfDirective, IgxForOfModule} from './for_of.directive';
+import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
 
 describe('IgxVirtual directive - simple template', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -449,7 +449,7 @@ describe('IgxVirtual directive - simple template', () => {
         expect(rowsRendered.length).toBe(9);
         expect(colsRendered.length).toBe(7);
 
-         /** Step 1. Scroll to the right. */
+        /** Step 1. Scroll to the right. */
         fix.componentInstance.scrollLeft(1000);
         fix.detectChanges();
 
@@ -840,10 +840,57 @@ describe('IgxVirtual directive - simple template', () => {
             const rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < 8; i++) {
                 expect(rowsRendered[i].children[1].textContent)
-                .toBe(fix.componentInstance.data[49992 + i][1].toString());
+                    .toBe(fix.componentInstance.data[49992 + i][1].toString());
             }
         }, 0);
     }));
+
+    it('should always fill available space for last chunk size calculation', () => {
+        const fix = TestBed.createComponent(HorizontalVirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        fix.componentInstance.width = '1900px';
+        fix.componentInstance.cols = [
+            { field: '1', width: 100 },
+            { field: '2', width: 1800 },
+            { field: '3', width: 200 },
+            { field: '4', width: 200 },
+            { field: '5', width: 300 },
+            { field: '6', width: 100 },
+            { field: '7', width: 100 },
+            { field: '8', width: 100 },
+            { field: '9', width: 150 },
+            { field: '10', width: 150 }
+        ];
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        let displayContainer: HTMLElement = fix.nativeElement.querySelector('igx-display-container');
+        let firstRecChildren = displayContainer.children;
+
+        let chunkSize = firstRecChildren.length;
+        expect(chunkSize).toEqual(9);
+
+        fix.componentInstance.width = '1900px';
+        fix.componentInstance.cols = [
+            { field: '1', width: 1800 },
+            { field: '2', width: 100 },
+            { field: '3', width: 200 },
+            { field: '4', width: 200 },
+            { field: '5', width: 300 },
+            { field: '6', width: 100 },
+            { field: '7', width: 100 },
+            { field: '8', width: 100 },
+            { field: '9', width: 150 },
+            { field: '10', width: 150 }
+        ];
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        displayContainer = fix.nativeElement.querySelector('igx-display-container');
+        firstRecChildren = displayContainer.children;
+
+        chunkSize = firstRecChildren.length;
+        expect(chunkSize).toEqual(10);
+    });
 });
 
 /** igxFor for testing */
@@ -873,24 +920,24 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public testOnScroll(target) {
         const event = new Event('scroll');
-        Object.defineProperty(event, 'target', {value: target, enumerable: true});
+        Object.defineProperty(event, 'target', { value: target, enumerable: true });
         super.onScroll(event);
     }
 
     public testOnHScroll(target) {
         const event = new Event('scroll');
-        Object.defineProperty(event, 'target', {value: target, enumerable: true});
+        Object.defineProperty(event, 'target', { value: target, enumerable: true });
         super.onHScroll(event);
     }
 
     public testOnWheel(_deltaX: number, _deltaY: number) {
-        const event = new WheelEvent('wheel', {deltaX: _deltaX, deltaY: _deltaY});
+        const event = new WheelEvent('wheel', { deltaX: _deltaX, deltaY: _deltaY });
         super.onWheel(event);
     }
 
     public testOnTouchStart() {
         const touchEventObject = {
-            changedTouches: [{screenX: 200, screenY: 200}]
+            changedTouches: [{ screenX: 200, screenY: 200 }]
         };
 
         super.onTouchStart(touchEventObject);
@@ -898,8 +945,8 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public testOnTouchMove(movedX: number, movedY: number) {
         const touchEventObject = {
-            changedTouches: [{screenX: 200 - movedX, screenY: 200 - movedY}],
-            preventDefault: () => {}
+            changedTouches: [{ screenX: 200 - movedX, screenY: 200 - movedY }],
+            preventDefault: () => { }
         };
 
         super.onTouchMove(touchEventObject);
@@ -964,11 +1011,11 @@ export class VerticalVirtualComponent implements OnInit {
     public width = '450px';
     public height = '300px';
     public cols = [
-        {field: '1', width: '150px'},
-        {field: '2', width: '70px'},
-        {field: '3', width: '50px'},
-        {field: '4', width: '80px'},
-        {field: '5', width: '100px'}
+        { field: '1', width: '150px' },
+        { field: '2', width: '70px' },
+        { field: '3', width: '50px' },
+        { field: '4', width: '80px' },
+        { field: '5', width: '100px' }
     ];
     public data = [];
 
@@ -992,7 +1039,7 @@ export class VerticalVirtualComponent implements OnInit {
         const dummyData = [];
         for (let i = 0; i < 50000; i++) {
             const obj = {};
-            for (let j = 0; j <  this.cols.length; j++) {
+            for (let j = 0; j < this.cols.length; j++) {
                 const col = this.cols[j].field;
                 obj[col] = 10 * i * j;
             }
@@ -1033,10 +1080,10 @@ export class HorizontalVirtualComponent implements OnInit {
     public data = [];
     public scrollContainer = { _viewContainer: null };
 
-    @ViewChild('container', {read: ViewContainerRef})
+    @ViewChild('container', { read: ViewContainerRef })
     public container: ViewContainerRef;
 
-    @ViewChildren('childContainer', {read: TestIgxForOfDirective})
+    @ViewChildren('childContainer', { read: TestIgxForOfDirective })
     public childVirtDirs: QueryList<TestIgxForOfDirective<any>>;
 
     public ngOnInit(): void {
@@ -1065,7 +1112,7 @@ export class HorizontalVirtualComponent implements OnInit {
 
         for (let i = 0; i < 5; i++) {
             const obj = {};
-            for (let j = 0; j <  this.cols.length; j++) {
+            for (let j = 0; j < this.cols.length; j++) {
                 const col = this.cols[j].field;
                 obj[col] = 10 * i * j;
             }
@@ -1162,7 +1209,7 @@ export class VirtualComponent implements OnInit {
 
         for (let i = 0; i < numRows; i++) {
             const obj = {};
-            for (let j = 0; j <  this.cols.length; j++) {
+            for (let j = 0; j < this.cols.length; j++) {
                 const col = this.cols[j].field;
                 obj[col] = 10 * i * j;
             }
