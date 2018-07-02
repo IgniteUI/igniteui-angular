@@ -23,6 +23,10 @@ import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle
 import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.component';
 import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 import { OverlaySettings } from '../services';
+import { IToggleView } from '../core/navigation';
+import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
+
+let NEXT_ID = 0;
 
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemBase;
@@ -50,12 +54,12 @@ export enum Navigate {
  * </igx-drop-down>
  * ```
  */
-export class IgxDropDownBase implements OnInit {
+export class IgxDropDownBase implements OnInit, IToggleView {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     protected _focusedItem: any = null;
     private _width;
     private _height;
-    private _id = 'DropDown_0';
+    private _id = `igx-drop-down-${NEXT_ID++}`;
 
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
     protected children: QueryList<IgxDropDownItemBase>;
@@ -316,7 +320,7 @@ export class IgxDropDownBase implements OnInit {
      * ```
      */
     open(overlaySettings?: OverlaySettings) {
-        this.toggleDirective.open(true, overlaySettings);
+        this.toggleDirective.open(overlaySettings);
     }
 
     /**
@@ -327,7 +331,7 @@ export class IgxDropDownBase implements OnInit {
      * ```
      */
     close() {
-        this.toggleDirective.close(true);
+        this.toggleDirective.close();
     }
 
     /**
@@ -451,7 +455,7 @@ export class IgxDropDownBase implements OnInit {
             item = this._focusedItem;
         }
         this.setSelectedItem(this._focusedItem.index);
-        this.toggleDirective.close(true);
+        this.toggleDirective.close();
     }
 
     protected changeSelectedItem(newSelection?: IgxDropDownItemBase) {
@@ -550,8 +554,13 @@ export class IgxDropDownItemNavigationDirective {
 
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
-        if (!this.dropdown) {
-            this.target.close();
+        if (!(this.target instanceof IgxDropDownComponent)) {
+            if (this.target.focusedItem.itemData === 'ADD ITEM') {
+                const targetC = this.target as IgxComboDropDownComponent;
+                targetC.parentElement.addItemToCollection();
+            } else {
+                this.target.close();
+            }
             event.preventDefault();
             return;
         }

@@ -119,6 +119,7 @@ describe('Dialog', () => {
 
         dialog.open();
         fixture.detectChanges();
+        tick();
         expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
@@ -132,6 +133,7 @@ describe('Dialog', () => {
         fixture.detectChanges();
         const dialog = fixture.componentInstance.dialog;
         dialog.open();
+        tick();
         fixture.detectChanges();
 
         const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
@@ -143,6 +145,7 @@ describe('Dialog', () => {
 
         dialog.closeOnOutsideSelect = false;
         dialog.open();
+        tick();
         fixture.detectChanges();
 
         dialogElem.click();
@@ -214,7 +217,10 @@ describe('Dialog', () => {
         const childDialog = fixture.componentInstance.child;
 
         mainDialog.open();
+        tick();
+
         childDialog.open();
+        tick();
         fixture.detectChanges();
 
         const dialogs = fixture.debugElement.queryAll(By.css('.igx-dialog'));
@@ -261,7 +267,7 @@ describe('Dialog', () => {
 
     });
 
-    fit('When modal mode is changed, overlay should be informed', fakeAsync(() => {
+    it('When modal mode is changed, overlay should be informed', fakeAsync(() => {
         const fix = TestBed.createComponent(AlertComponent);
         fix.detectChanges();
 

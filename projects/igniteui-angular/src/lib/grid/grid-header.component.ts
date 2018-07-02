@@ -132,7 +132,8 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     ) { }
 
     public ngOnInit() {
-        this.cdr.markForCheck();
+        this.column.columnGroup ? this.zone.runTask(() => this.cdr.markForCheck()) :
+            this.cdr.markForCheck();
     }
 
     public ngDoCheck() {
