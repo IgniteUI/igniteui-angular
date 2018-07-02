@@ -79,7 +79,7 @@ describe('igxOverlay', () => {
         clearOverlay();
     });
 
-    xdescribe('Unit Tests: ', () => {
+    describe('Unit Tests: ', () => {
 
         it('OverlayElement should return a div attached to Document\'s body', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
