@@ -143,7 +143,11 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     setSelectedItem(itemID: any, select = true) {
-        this.parentElement.setSelectedItem(itemID, select);
+        if (itemID === 'ADD ITEM') {
+            this.parentElement.addItemToCollection();
+        } else {
+            this.parentElement.setSelectedItem(itemID, select);
+        }
     }
 
     /**

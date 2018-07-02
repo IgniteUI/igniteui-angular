@@ -2850,6 +2850,44 @@ describe('igxCombo', () => {
             }, 500);
         });
     }));
+
+    it(`Should handle click on "Add Item" properly`, async(() => {
+        const fixture = TestBed.createComponent(IgxComboSampleComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        expect(combo).toBeDefined();
+        combo.toggle();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
+            combo.handleInputChange();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(combo.collapsed).toBeFalsy();
+            expect(combo.value).toEqual('');
+            setTimeout(() => {
+                expect(combo.isAddButtonVisible()).toBeTruthy();
+                const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
+                combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+                fixture.whenStable().then(() => {
+                    fixture.detectChanges();
+                    dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+                    return fixture.whenStable();
+                }).then(() => {
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+                    expect(combo.value).toEqual('');
+                    combo.dropdown.focusedItem.element.nativeElement.click();
+                    return fixture.whenStable();
+                }).then(() => {
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+                    expect(combo.value).toEqual('My New Custom Item');
+                });
+            }, 500);
+        });
+    }));
 });
 
 @Component({
