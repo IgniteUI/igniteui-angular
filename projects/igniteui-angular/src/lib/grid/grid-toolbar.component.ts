@@ -14,13 +14,14 @@ import { CsvFileTypes,
          IgxCsvExporterService,
          IgxExcelExporterOptions,
          IgxExcelExporterService,
-         CloseScrollStrategy} from '../services/index';
+         AbsoluteScrollStrategy} from '../services/index';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
+import { IgxColumnPinningComponent } from './column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
-import {  ConnectedPositioningStrategy } from '../services/overlay/position';
+import { ConnectedPositioningStrategy } from '../services/overlay/position';
 
 @Component({
     selector: 'igx-grid-toolbar',
@@ -31,6 +32,23 @@ export class IgxGridToolbarComponent {
     @HostBinding('class.igx-grid-toolbar')
     @Input()
     public gridID: string;
+
+    @Input()
+    public get filterColumnsPrompt() {
+        return this._filterColumnsPrompt;
+    }
+
+    public set filterColumnsPrompt(value: string) {
+        this._filterColumnsPrompt = value;
+    }
+
+    private _filterColumnsPrompt = 'Filter columns list ...';
+
+    @Input()
+    get defaultDropDownsMaxHeight() {
+        const gridHeight = this.grid.calcHeight;
+        return (gridHeight) ? gridHeight * 0.7 + 'px' : '100%';
+    }
 
     @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
     public columnHidingDropdown: IgxDropDownComponent;
@@ -47,6 +65,15 @@ export class IgxGridToolbarComponent {
     @ViewChild('btnExport')
     public exportButton;
 
+    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent })
+    public columnPinningDropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxColumnPinningComponent)
+    public columnPinningUI: IgxColumnPinningComponent;
+
+    @ViewChild('columnPinningButton')
+    public columnPinningButton;
+
     public get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
@@ -61,6 +88,10 @@ export class IgxGridToolbarComponent {
 
     public get shouldShowExportCsvButton(): boolean {
         return (this.grid != null && this.grid.exportCsv);
+    }
+
+    public get pinnedColumnsCount() {
+        return this.grid.pinnedColumns.length;
     }
 
     private _displayDensity: DisplayDensity | string;
@@ -112,7 +143,7 @@ export class IgxGridToolbarComponent {
 
     private _overlaySettings: OverlaySettings = {
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-        scrollStrategy: new CloseScrollStrategy(),
+        scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
     };
@@ -168,5 +199,10 @@ export class IgxGridToolbarComponent {
     public toggleColumnHidingUI() {
         this._overlaySettings.positionStrategy.settings.target = this.columnHidingButton.nativeElement;
         this.columnHidingDropdown.toggle(this._overlaySettings);
+    }
+
+    public toggleColumnPinningUI() {
+        this._overlaySettings.positionStrategy.settings.target = this.columnPinningButton.nativeElement;
+        this.columnPinningDropdown.toggle(this._overlaySettings);
     }
 }

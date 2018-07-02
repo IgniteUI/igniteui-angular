@@ -237,7 +237,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     // after changes in columns have occured re-init cache.
                     this.initHCache(this.igxForOf);
                 }
-                this._applyChanges(changes);
+                this._zone.run(() => {
+                    this._applyChanges(changes);
+                    this.cdr.markForCheck();
+                });
             }
         }
     }
@@ -349,7 +352,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        this.dc.changeDetectorRef.detectChanges();
+        this._zone.run(() => {
+            this.cdr.markForCheck();
+        });
         this.onChunkLoad.emit(this.state);
     }
 
@@ -737,7 +742,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /** If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize */
     protected addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
-        if (!this.igxForOf || elemIndex > this.igxForOf.length) {
+        if (!this.isRemote && (!this.igxForOf || elemIndex > this.igxForOf.length)) {
             return;
         }
 
@@ -755,6 +760,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         this._embeddedViews.push(embeddedView);
         this.state.chunkSize++;
+
+        this._zone.run(() => {
+            this.cdr.markForCheck();
+        });
     }
 
     /**
