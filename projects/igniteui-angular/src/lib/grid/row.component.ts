@@ -60,7 +60,9 @@ export class IgxGridRowComponent implements DoCheck {
 
     @HostBinding('class')
     get styleClasses(): string {
-        return `${this.defaultCssClass} ${this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS}`;
+        const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
+        const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass}`;
     }
 
     get focused(): boolean {
@@ -88,7 +90,6 @@ export class IgxGridRowComponent implements DoCheck {
     }
 
     @HostBinding('attr.aria-selected')
-    @HostBinding('class.igx-grid__tr--selected')
     public isSelected: boolean;
 
     get grid(): IgxGridComponent {
