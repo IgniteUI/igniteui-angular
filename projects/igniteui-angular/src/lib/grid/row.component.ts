@@ -135,6 +135,47 @@ export class IgxGridRowComponent implements DoCheck {
         this.grid.triggerRowSelectionChange(newSelection, this, event);
     }
 
+    public update(value: any) {
+        let row;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            row = this.gridAPI.get_row_by_key(this.gridID, this.rowID);
+        } else {
+            row = this.gridAPI.get_row_by_index(this.gridID, this.index);
+        }
+        if (row) {
+            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
+                this.gridAPI.get(this.gridID).deselectRows([row.rowID]);
+                this.gridAPI.update_row(value, this.gridID, row);
+                this.gridAPI.get(this.gridID).selectRows([row.rowID]);
+            } else {
+                this.gridAPI.update_row(value, this.gridID, row);
+            }
+            this.cdr.markForCheck();
+            this.gridAPI.get(this.gridID).refreshSearch();
+        }
+
+    }
+
+    public delete() {
+        let row;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            row = this.gridAPI.get_row_by_key(this.gridID, this.rowID);
+        } else {
+            row = this.gridAPI.get_row_by_index(this.gridID, this.index);
+        }
+        if (row) {
+            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
+                this.gridAPI.get(this.gridID).deselectRows(row.rowID);
+            }
+            const index = this.gridAPI.get(this.gridID).data.indexOf(row.rowData);
+            this.gridAPI.get(this.gridID).data.splice(index, 1);
+            this.gridAPI.get(this.gridID).onRowDeleted.emit({ data: row.rowData });
+            (this.gridAPI.get(this.gridID) as any)._pipeTrigger++;
+            this.cdr.markForCheck();
+            this.gridAPI.get(this.gridID).refreshSearch();
+        }
+    }
+
     get rowCheckboxAriaLabel() {
         return this.grid.primaryKey ?
             this.isSelected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :

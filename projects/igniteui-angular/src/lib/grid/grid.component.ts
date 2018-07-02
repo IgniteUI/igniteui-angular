@@ -1033,8 +1033,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.columnList.filter((col) => !col.hidden);
     }
 
-    public getCellByColumn(rowSelector: any, columnField: string): IgxGridCellComponent {
-        return this.gridAPI.get_cell_by_field(this.id, rowSelector, columnField);
+    public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
+        const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
+        if (columnId !== -1) {
+            return this.gridAPI.get_cell_by_index(this.id, rowIndex, columnId);
+        }
+    }
+
+    public getCellByKey(rowSelector: any, columnField: string): IgxGridCellComponent {
+        return this.gridAPI.get_cell_by_key(this.id, rowSelector, columnField);
     }
 
     get totalPages(): number {
@@ -1162,40 +1169,49 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public deleteRow(rowSelector: any): void {
-        const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
-        if (row) {
-            const index = this.data.indexOf(row.rowData);
-            if (this.rowSelectable === true) {
-                this.deselectRows([row.rowID]);
-            }
-            this.data.splice(index, 1);
-            this.onRowDeleted.emit({ data: row.rowData });
-            this._pipeTrigger++;
-            this.cdr.markForCheck();
+        if (this.primaryKey !== undefined && this.primaryKey !== null) {
+            const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
+            if (row) {
+                const index = this.data.indexOf(row.rowData);
+                if (this.rowSelectable === true) {
+                    this.deselectRows([row.rowID]);
+                }
+                this.data.splice(index, 1);
+                this.onRowDeleted.emit({ data: row.rowData });
+                this._pipeTrigger++;
+                this.cdr.markForCheck();
 
-            this.refreshSearch();
+                this.refreshSearch();
+            }
         }
     }
 
     public updateCell(value: any, rowSelector: any, column: string): void {
-        const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
-        if (columnEdit.length > 0) {
-            const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
-            this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
-            this._pipeTrigger++;
-            this.cdr.detectChanges();
+        if (this.primaryKey !== undefined && this.primaryKey !== null) {
+            const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
+            if (columnEdit.length > 0) {
+                const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
+                this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
+                this.cdr.markForCheck();
+                this.refreshSearch();
+            }
         }
     }
 
     public updateRow(value: any, rowSelector: any): void {
-        const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
-        if (row) {
-            if (this.primaryKey !== undefined && this.primaryKey !== null) {
-                value[this.primaryKey] = row.rowData[this.primaryKey];
+        if (this.primaryKey !== undefined && this.primaryKey !== null) {
+            const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
+            if (row) {
+                if (this.rowSelectable === true && row.isSelected) {
+                    this.deselectRows([row.rowID]);
+                    this.gridAPI.update_row(value, this.id, row);
+                    this.selectRows([value[this.primaryKey]]);
+                } else {
+                    this.gridAPI.update_row(value, this.id, row);
+                }
+                this.cdr.markForCheck();
+                this.refreshSearch();
             }
-            this.gridAPI.update_row(value, this.id, row);
-            this._pipeTrigger++;
-            this.cdr.markForCheck();
         }
     }
 
