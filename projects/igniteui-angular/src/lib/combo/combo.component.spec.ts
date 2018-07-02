@@ -2229,12 +2229,18 @@ describe('igxCombo', () => {
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSearchInput.emit).toHaveBeenCalledWith({ key: 'Fake' });
 
+            combo.handleInputChange('');
+            fix.detectChanges();
+            expect(combo.filter).toHaveBeenCalledTimes(3);
+            expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
+            expect(combo.onSearchInput.emit).toHaveBeenCalledWith('');
+
             combo.filterable = false;
             fix.detectChanges();
 
             combo.handleInputChange();
-            expect(combo.filter).toHaveBeenCalledTimes(2);
-            expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
+            expect(combo.filter).toHaveBeenCalledTimes(3);
+            expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
         });
         it('Should properly handle addItemToCollection calls (Complex data)', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
