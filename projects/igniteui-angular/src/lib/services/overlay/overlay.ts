@@ -20,14 +20,12 @@ import { fromEvent } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 
-// added @dynamic to supress document type error on constructor
-// look here: https://github.com/angular/angular/issues/20351#issuecomment-344009887
-/** @dynamic */
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
     private _componentId = 0;
     private _overlayInfos: OverlayInfo[] = [];
     private _overlayElement: HTMLElement;
+    private _document: Document;
 
     private _defaultSettings: OverlaySettings = {
         positionStrategy: new GlobalPositionStrategy(),
@@ -46,7 +44,9 @@ export class IgxOverlayService {
         private _appRef: ApplicationRef,
         private _injector: Injector,
         private builder: AnimationBuilder,
-        @Inject(DOCUMENT) private _document: Document) { }
+        @Inject(DOCUMENT) private document: any) {
+        this._document = <Document>this.document;
+    }
 
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
         const id: string = (this._componentId++).toString();
@@ -368,14 +368,28 @@ export class IgxOverlayService {
     }
 
     private addResizeHandler(id: string) {
-        if (this._overlayInfos.length === 1) {
+        console.log('add with length = ' + this._overlayInfos.length);
+        const closingOverlaysCount =
+            this._overlayInfos
+                .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
+                .length;
+        console.log('add with closing = ' + closingOverlaysCount);
+        if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView.addEventListener('resize', this.repositionAll);
+            console.log('added');
         }
     }
 
     private removeResizeHandler(id: string) {
-        if (this._overlayInfos.length === 1) {
+        console.log('remove with length = ' + this._overlayInfos.length);
+        const closingOverlaysCount =
+            this._overlayInfos
+                .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
+                .length;
+        console.log('remove with closing = ' + closingOverlaysCount);
+        if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView.removeEventListener('resize', this.repositionAll);
+            console.log('removed');
         }
     }
 
