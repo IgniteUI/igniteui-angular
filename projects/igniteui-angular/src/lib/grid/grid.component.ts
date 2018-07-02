@@ -23,7 +23,8 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef
+    ViewContainerRef,
+    HostListener
 } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
@@ -925,6 +926,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
                 this.markForCheck();
             });
+        const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+        vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
     }
 
     public ngAfterViewInit() {
@@ -1947,6 +1950,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const scrollAmount = this.rowHeight + scrollOffset;
             this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex);
         }
+    }
+
+    @HostListener('scroll', ['$event'])
+    public scrollHandler(event) {
+        this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
+        this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
+        event.target.scrollLeft = 0;
+        event.target.scrollTop = 0;
     }
 
     private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {
