@@ -11,7 +11,7 @@ import { IgxGridModule } from './index';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../public_api';
 
-fdescribe('IgxGrid - search API', () => {
+describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
 
     beforeEach(async(() => {

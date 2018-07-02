@@ -7,7 +7,7 @@ import {
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
-fdescribe('IgxHighlight', () => {
+describe('IgxHighlight', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
