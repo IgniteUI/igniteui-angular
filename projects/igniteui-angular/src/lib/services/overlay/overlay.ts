@@ -368,7 +368,7 @@ export class IgxOverlayService {
     }
 
     private addResizeHandler(id: string) {
-        if (this._overlayInfos.length > 0) {
+        if (this._overlayInfos.length === 1) {
             this._document.defaultView.addEventListener('resize', this.repositionAll);
         }
     }
