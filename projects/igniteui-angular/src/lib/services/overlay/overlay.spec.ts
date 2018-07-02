@@ -2049,25 +2049,28 @@ describe('igxOverlay', () => {
         }));
 
         it('Interaction is allowed only for the shown modal dialog component', fakeAsync(() => {
-            const dummy = document.createElement('button');
-            dummy.setAttribute('id', 'dummyButton');
-            document.body.appendChild(dummy);
-
-            const button = document.getElementById('dummyButton');
-            button.addEventListener('click', (event) => {
-                if (event.which === 1) {
-                    expect(button.click).toHaveBeenCalledTimes(0);
-                }
-            });
-            spyOn(button, 'click').and.callThrough();
-
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 modal: true,
                 closeOnOutsideClick: false,
-                positionStrategy: new GlobalPositionStrategy
+                positionStrategy: new GlobalPositionStrategy()
             };
+            const dummy = document.createElement('button');
+            dummy.setAttribute('id', 'dummyButton');
+            document.body.appendChild(dummy);
+            const button = document.getElementById('dummyButton');
+
+            button.addEventListener('click', (event) => {
+                if (event.which === 1) {
+                    fixture.detectChanges();
+                    tick();
+                    expect(button.click).toHaveBeenCalledTimes(0);
+                    expect(button.onclick).toHaveBeenCalledTimes(0);
+                }
+            });
+            spyOn(button, 'click').and.callThrough();
+            spyOn(button, 'onclick').and.callThrough();
 
             spyOn(overlay, 'show').and.callThrough();
             spyOn(overlay, 'hide').and.callThrough();
@@ -2077,8 +2080,7 @@ describe('igxOverlay', () => {
             expect(overlay.show).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
 
-            const mouseClickEvent = new MouseEvent('click');
-            button.dispatchEvent(mouseClickEvent);
+            button.dispatchEvent(new MouseEvent('click'));
         }));
         // WIP
         xit('Esc key closes the dialog.', fakeAsync(() => {
