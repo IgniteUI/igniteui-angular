@@ -772,6 +772,48 @@ describe('Column Hiding UI', () => {
             fix.detectChanges();
             verifyCheckbox('Person Details', false, false);
         });
+
+        it('filters group columns properly.', () => {
+            columnChooser.filterCriteria = 'cont';
+            fix.detectChanges();
+
+            expect(columnChooser.columnItems.length).toBe(4);
+            expect(getColumnHidingItems().length).toBe(4);
+
+            expect(getCheckboxElement('General Information')).toBeTruthy();
+            expect(getCheckboxElement('Person Details')).toBeTruthy();
+
+            expect(getCheckboxElement('ContactName')).toBeTruthy();
+            expect(getCheckboxElement('ContactTitle')).toBeTruthy();
+
+            columnChooser.filterCriteria = 'pers';
+            fix.detectChanges();
+
+            expect(columnChooser.columnItems.length).toBe(2);
+            expect(getColumnHidingItems().length).toBe(2);
+            expect(getCheckboxElement('General Information')).toBeTruthy();
+            expect(getCheckboxElement('Person Details')).toBeTruthy();
+
+            columnChooser.filterCriteria = 'mi';
+            fix.detectChanges();
+
+            expect(columnChooser.columnItems.length).toBe(1);
+            expect(getColumnHidingItems().length).toBe(1);
+            expect(getCheckboxElement('General Information')).toBeFalsy();
+            expect(getCheckboxElement('Missing')).toBeTruthy();
+        });
+
+        fit('hides the proper columns when filtering and pressing hide all.', () => {
+            columnChooser.filterCriteria = 'cont';
+            fix.detectChanges();
+
+            getButtonElement('Hide All').click();
+            columnChooser.filterCriteria = '';
+            fix.detectChanges();
+            for (let i = 1; i < 6; i++) {
+                verifyColumnIsHidden(grid.columns[i], true, 2);
+            }
+        });
     });
 
     describe('dropdown', () => {
