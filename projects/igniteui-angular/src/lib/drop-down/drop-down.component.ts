@@ -23,6 +23,7 @@ import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle
 import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.component';
 import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 import { OverlaySettings } from '../services';
+import { IToggleView } from '../core/navigation';
 
 let NEXT_ID = 0;
 
@@ -52,7 +53,7 @@ export enum Navigate {
  * </igx-drop-down>
  * ```
  */
-export class IgxDropDownBase implements OnInit {
+export class IgxDropDownBase implements OnInit, IToggleView {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     protected _focusedItem: any = null;
     private _width;
@@ -318,7 +319,7 @@ export class IgxDropDownBase implements OnInit {
      * ```
      */
     open(overlaySettings?: OverlaySettings) {
-        this.toggleDirective.open(true, overlaySettings);
+        this.toggleDirective.open(overlaySettings);
     }
 
     /**
@@ -329,7 +330,7 @@ export class IgxDropDownBase implements OnInit {
      * ```
      */
     close() {
-        this.toggleDirective.close(true);
+        this.toggleDirective.close();
     }
 
     /**
@@ -453,7 +454,7 @@ export class IgxDropDownBase implements OnInit {
             item = this._focusedItem;
         }
         this.setSelectedItem(this._focusedItem.index);
-        this.toggleDirective.close(true);
+        this.toggleDirective.close();
     }
 
     protected changeSelectedItem(newSelection?: IgxDropDownItemBase) {
