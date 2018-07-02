@@ -961,6 +961,85 @@ describe('IgxGrid - search API', () => {
         expect(grid.page).toBe(1);
     });
 
+    it('Should be able to properly handle navigating through collapsed rows', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const component = fix.componentInstance;
+        const grid = component.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+
+        grid.findNext('software');
+        grid.findNext('software');
+        grid.findNext('software');
+
+        grid.toggleGroup(grid.groupsRecords[0]);
+
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[0]);
+
+        grid.findNext('software');
+        grid.findNext('software');
+        grid.findNext('software');
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(5);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBeTruthy();
+    });
+
+    it('Should be able to properly handle navigating through collapsed rows with paging', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const component = fix.componentInstance;
+        const grid = component.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+
+        component.perPage = 5;
+        component.paging = true;
+        fix.detectChanges();
+
+        grid.findNext('software');
+        grid.findNext('software');
+
+        grid.toggleGroup(grid.groupsRecords[0]);
+        grid.findNext('software');
+
+        fix.detectChanges();
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.page).toBe(1);
+
+        grid.findNext('software');
+        grid.findNext('software');
+        grid.findNext('software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(2);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBeTruthy();
+        expect(grid.page).toBe(0);
+
+    });
+
     function findNext(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
             grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {

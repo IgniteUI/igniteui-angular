@@ -233,6 +233,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this._groupingExpandState = cloneArray(value);
 
+        this.refreshSearch();
+
         if (highlightItem !== null && this.groupingExpressions.length) {
             const index = this.filteredSortedData.indexOf(highlightItem);
             const groupRow = this.groupsRecords[index];
@@ -2143,12 +2145,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         const groupIndexData = this.getGroupIncrementData();
         const groupByRecords = this.getGroupByRecords();
+        let collapsedRowsCount = 0;
 
         data.forEach((dataRow, i) => {
             const groupByRecord = groupByRecords ? groupByRecords[i] : null;
             const groupByIncrement = groupIndexData ? groupIndexData[i] : 0;
             const pagingIncrement = this.getPagingIncrement(groupByIncrement, groupIndexData, Math.floor(i / this.perPage));
-            const rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
+            let rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
+
+            if (this.paging && i % this.perPage === 0) {
+                collapsedRowsCount = 0;
+            }
+
+            rowIndex -= collapsedRowsCount;
+
+            if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
+                collapsedRowsCount++;
+            }
 
             columnItems.forEach((columnItem, j) => {
                 const value = dataRow[columnItem.name];
