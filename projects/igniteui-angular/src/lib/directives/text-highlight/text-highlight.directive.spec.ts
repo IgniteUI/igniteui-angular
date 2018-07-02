@@ -224,8 +224,6 @@ class HighlightLoremIpsumComponent {
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     public highlight: IgxTextHighlightDirective;
 
-    constructor(private element: ElementRef) {}
-
     public highlightText(text: string, caseSensitive?: boolean) {
         return this.highlight.highlight(text, caseSensitive);
     }

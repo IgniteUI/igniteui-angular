@@ -238,7 +238,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (highlightItem !== null && this.groupingExpressions.length) {
             const index = this.filteredSortedData.indexOf(highlightItem);
-            const groupRow = this.groupsRecords[index];
+            const groupRow = this.getGroupByRecords()[index];
 
             if (!this.isExpandedGroup(groupRow)) {
                 IgxTextHighlightDirective.clearActiveHighlight(this.id);
