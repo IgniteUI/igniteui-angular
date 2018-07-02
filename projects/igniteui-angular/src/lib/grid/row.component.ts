@@ -144,6 +144,7 @@ export class IgxGridRowComponent implements DoCheck {
         if (row) {
             value[this.gridAPI.get(this.gridID).primaryKey] = row.rowData[this.gridAPI.get(this.gridID).primaryKey];
             this.gridAPI.update_row(value, this.gridID, row);
+            this.cdr.markForCheck();
             this.gridAPI.get(this.gridID).refreshSearch();
         }
 

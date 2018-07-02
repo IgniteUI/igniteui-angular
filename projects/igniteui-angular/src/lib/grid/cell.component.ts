@@ -265,6 +265,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.previousCellEditMode = true;
             }
             this.gridAPI.submit_value(this.gridID);
+            this.cdr.markForCheck();
         } else {
             this.previousCellEditMode = false;
         }
