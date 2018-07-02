@@ -482,12 +482,16 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     }
 
     protected getElementsAtPoint(pageX: number, pageY: number) {
+        // correct the coordinates with the current scroll position, because
+        // document.elementsFromPoint conider position within the current viewport
+        const viewPortX = pageX - window.scrollX;
+        const viewPortY = pageY - window.scrollY;
         if (document.msElementsFromPoint) {
             // Edge and IE special snowflakes
-            return document.msElementsFromPoint(pageX, pageY);
+            return document.msElementsFromPoint(viewPortX, viewPortY);
         } else {
             // Other browsers like Chrome, Firefox, Opera
-            return document.elementsFromPoint(pageX, pageY);
+            return document.elementsFromPoint(viewPortX, viewPortY);
         }
     }
 
