@@ -471,9 +471,14 @@ export class IgxChipComponent implements AfterViewInit {
      */
     public onChipDragClicked() {
         const clickEventArgs = {
-            owner: this
+            owner: this,
+            cancel: false
         };
         this.onClick.emit(clickEventArgs);
+
+        if (!clickEventArgs.cancel && this.selectable) {
+            this.selected = !this.selected;
+        }
     }
     // End chip igxDrag behaviour
 

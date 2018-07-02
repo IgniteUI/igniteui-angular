@@ -6,6 +6,7 @@ All notable changes for each version of this project will be documented in this 
 - Added **igxRadioGroup** directive. It allows better control over its child `igxRadio` components and support template-driven and reactive forms. 
 - Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
     For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
+- `igx-tab-bar` selector removed from `IgxBottomNavComponent`.
 - `igxGrid` filtering operands
 - `igxGrid`
     - **Breaking change** `filter_multiple` method is removed. `filter` method and `filteringExpressionsTree` property could be used instead.
@@ -59,6 +60,12 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
 
 - `igxGrid` theme now has support for alternating grid row background and text colors.
+- `igxGrid` now has a toolbar (shown using the `showToolbar` property) which contains the following features:
+  - title (specified using the `toolbarTitle` property)
+  - column hiding feature (enabled using the `columnHiding` property)
+  - column pinning feature (enabled using the `columnPinning` property)
+  - export to excel (enabled using the `exportExcel` property)
+  - export to CSV (enabled using the `exportCsv` property)
 - `igxColumn` changes:
     - **Breaking change** filteringExpressions property is removed.
 
@@ -85,11 +92,45 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - Accessibility compliance
 
     For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
+- `igxDropdown` component added
+
+    ```html
+    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+        <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
+                {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    ```
+
+    **igxDropDown** displays a scrollable list of items which may be visually grouped and supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down.
+
+    A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
+
+    igxDropdown features:
+
+        - Single Selection
+        - Grouping
+        - Keayboard Navigation
+        - Accessibility compliance
+
+- `igxChip` and `igxChipsArea` components added
+
+    ```html
+    <igx-chips-area>
+        <igx-chip *ngFor="let chip of chipList" [id]="chip.id">
+            <label igxLabel>{{chip.text}}</label>
+        </igx-chip>
+    </igx-chips-area>
+    ```
+
+    For more detailed information see the [official igxChip documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip.html).
 
 - `igxToggle` changes
     - `onOpening` event added.
     - `onClosing` event added.
 - `igxToggleAction` new `overlaySettings` input controls how applicable targets display content. Provides defaults with positioning based on the host element. The `closeOnOutsideClick` input is deprecated in favor of the new settings and will be removed in the future.
+
+- `igxList` now supports a custom `emptyListTemplate` and `dataLoadingTemplate` through inputs.
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
@@ -101,6 +142,10 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - `onClose` event renamed to `onClosed`.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
 - The **deprecated** `igxForRemote` input for the `igxFor` directive is now removed. Setting the required `totalItemCount` property after receiving the first data chunk is enough to trigger the required functionality.
+
+## 6.0.4
+- **igxRadioGroup** directive introduced. It allows better control over its child `igxRadio` components and support template-driven and reactive forms.
+- Fixed ReactiveForms validations support for IgxInputGroup. Related [issue](https://github.com/IgniteUI/igniteui-angular/issues/1144).
 
 ## 6.0.3
 - **igxGrid** exposing the `filteredSortedData` method publicly - returns the grid data with current filtering and sorting applied.
