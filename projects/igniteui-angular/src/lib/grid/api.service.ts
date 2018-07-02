@@ -150,7 +150,7 @@ export class IgxGridAPIService {
                 this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, editableCell.cell.editValue);
             }
             this.escape_editMode(gridId, editableCell.cellID);
-            this.get(gridId).cdr.markForCheck();
+            this.get(gridId).cdr.detectChanges();
         }
     }
 
@@ -178,7 +178,6 @@ export class IgxGridAPIService {
                 this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
             }
             (this.get(id) as any)._pipeTrigger++;
-            this.get(id).refreshSearch();
         }
     }
 
