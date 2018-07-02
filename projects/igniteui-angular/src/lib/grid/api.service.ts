@@ -150,6 +150,7 @@ export class IgxGridAPIService {
                 this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, editableCell.cell.editValue);
             }
             this.escape_editMode(gridId, editableCell.cellID);
+            this.get(gridId).cdr.markForCheck();
         }
     }
 

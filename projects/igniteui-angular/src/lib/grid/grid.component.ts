@@ -1186,8 +1186,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (columnEdit.length > 0) {
                 const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
                 this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
-                this._pipeTrigger++;
-                this.cdr.detectChanges();
+                this.cdr.markForCheck();
             }
         }
     }
@@ -1198,7 +1197,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (row) {
                 value[this.primaryKey] = row.rowData[this.primaryKey];
                 this.gridAPI.update_row(value, this.id, row);
-                this._pipeTrigger++;
                 this.cdr.markForCheck();
             }
         }
