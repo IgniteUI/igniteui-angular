@@ -1070,7 +1070,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get totalWidth(): number {
         // Take only top level columns
-        const cols = this.visibleColumns.filter(col => col.level === 0 && col.pinned === false);
+        const cols = this.visibleColumns.filter(col => col.level === 0 && !col.pinned);
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
@@ -1112,6 +1112,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+        if (column.level !== dropTarget.level) {
+            return;
+        }
 
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
