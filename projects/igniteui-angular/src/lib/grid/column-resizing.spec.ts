@@ -580,7 +580,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         colsRendered = rowsRendered[0].children;
 
         expect(hScrollVisible).toBe(true);
-        expect(colsRendered.length).toEqual(3);
+        expect(colsRendered.length).toEqual(4);
 
         discardPeriodicTasks();
     }));
