@@ -37,7 +37,7 @@ export abstract class ColumnChooserBase implements OnDestroy {
     }
 
     set filterColumnsPrompt(value) {
-        this._filterColumnsPrompt = (value && value !== null) ? value : '';
+        this._filterColumnsPrompt = (value) ? value : '';
     }
 
     @Input()
@@ -106,8 +106,9 @@ export abstract class ColumnChooserBase implements OnDestroy {
         if (this._gridColumns.length > 0) {
             this._rawColumns = [];
             this._gridColumns.forEach((column) => {
-                if (!column.columnGroup) {
-                    this._rawColumns.push(this.createColumnItem(this, column));
+                const item = this.createColumnItem(this, column);
+                if (item) {
+                    this._rawColumns.push(item);
                 }
             });
             this._currentColumns = this._rawColumns.slice(0);

@@ -61,7 +61,7 @@ describe('IgxToggle', () => {
 
         const toggle = fixture.componentInstance.toggle;
         spyOn(toggle.onOpened, 'emit');
-        toggle.open(true);
+        toggle.open();
         tick();
         fixture.detectChanges();
 
@@ -78,7 +78,7 @@ describe('IgxToggle', () => {
         fixture.detectChanges();
 
         spyOn(toggle.onClosed, 'emit');
-        toggle.close(true);
+        toggle.close();
         tick();
         fixture.detectChanges();
 
@@ -96,24 +96,24 @@ describe('IgxToggle', () => {
 
         toggle.open();
         tick();
-        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(0);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
         expect(toggle.collapsed).toBe(false);
         toggle.close();
         tick();
-        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
         expect(toggle.collapsed).toBe(true);
 
-        toggle.open(true);
+        toggle.open();
         tick();
-        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(2);
         const otherId = overlay.show(fixture.componentInstance.other);
         overlay.hide(otherId);
         tick();
-        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
         expect(toggle.collapsed).toBe(false);
         overlay.hideAll(); // as if outside click
         tick();
-        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(2);
         expect(toggle.collapsed).toBe(true);
     }));
 
@@ -229,13 +229,13 @@ describe('IgxToggle', () => {
             };
 
             fixture.componentInstance.toggleAction.onClick();
-            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(true, defaults);
+            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(defaults);
 
             fixture.componentInstance.outsideClickClose = false;
             fixture.detectChanges();
             fixture.componentInstance.toggleAction.onClick();
             defaults.closeOnOutsideClick = false;
-            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(true, defaults);
+            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(defaults);
         }));
 
         it('should pass overlaySettings input from IgxToggleActionDiretive and respect outsideClickClose', () => {
@@ -252,7 +252,7 @@ describe('IgxToggle', () => {
 
             // defaults
             fixture.componentInstance.toggleAction.onClick();
-            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(true, settings);
+            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
 
             // override modal and strategy
             fixture.componentInstance.settings.modal = true;
@@ -261,14 +261,14 @@ describe('IgxToggle', () => {
             settings.positionStrategy = jasmine.any(AutoPositionStrategy);
             fixture.detectChanges();
             fixture.componentInstance.toggleAction.onClick();
-            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(true, settings);
+            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
 
             // override close on click
             fixture.componentInstance.settings.closeOnOutsideClick = false;
             settings.closeOnOutsideClick = false;
             fixture.detectChanges();
             fixture.componentInstance.toggleAction.onClick();
-            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(true, settings);
+            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
         });
 
         it('Should fire toggle "onClosing" event when closing through closeOnOutsideClick', fakeAsync(() => {

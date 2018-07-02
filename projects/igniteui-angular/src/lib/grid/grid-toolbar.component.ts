@@ -14,7 +14,7 @@ import { CsvFileTypes,
          IgxCsvExporterService,
          IgxExcelExporterOptions,
          IgxExcelExporterService,
-         CloseScrollStrategy} from '../services/index';
+         AbsoluteScrollStrategy} from '../services/index';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
@@ -32,6 +32,23 @@ export class IgxGridToolbarComponent {
     @HostBinding('class.igx-grid-toolbar')
     @Input()
     public gridID: string;
+
+    @Input()
+    public get filterColumnsPrompt() {
+        return this._filterColumnsPrompt;
+    }
+
+    public set filterColumnsPrompt(value: string) {
+        this._filterColumnsPrompt = value;
+    }
+
+    private _filterColumnsPrompt = 'Filter columns list ...';
+
+    @Input()
+    get defaultDropDownsMaxHeight() {
+        const gridHeight = this.grid.calcHeight;
+        return (gridHeight) ? gridHeight * 0.7 + 'px' : '100%';
+    }
 
     @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
     public columnHidingDropdown: IgxDropDownComponent;
@@ -126,7 +143,7 @@ export class IgxGridToolbarComponent {
 
     private _overlaySettings: OverlaySettings = {
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-        scrollStrategy: new CloseScrollStrategy(),
+        scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
     };

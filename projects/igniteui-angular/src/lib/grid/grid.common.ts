@@ -300,16 +300,18 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerUp(event) {
-
         if (!this.draggable) {
             return;
         }
 
-        super.onPointerUp(event);
+        // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
+        this.zone.run(() => {
+            super.onPointerUp(event);
 
-        this.column.grid.isColumnMoving = false;
-        this.column.grid.draggedColumn = null;
-        this.column.grid.cdr.detectChanges();
+            this.column.grid.isColumnMoving = false;
+            this.column.grid.draggedColumn = null;
+            this.column.grid.cdr.detectChanges();
+        });
     }
 
     protected createDragGhost(event) {
@@ -491,7 +493,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.moveColumn(this.cms.column, this.column);
 
-            if (this.cms.selection.column) {
+            if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
 
                 this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cells', [{
