@@ -1303,11 +1303,12 @@ export class GridCellEditingComponent {
         });
     }
 
+
     public deleteRow() {
         this.grid1.deleteRow(0);
     }
     public updateCell() {
-        this.grid1.updateCell(70, 0, 'ReorderLevel');
+        this.grid1.updateCell(70, 1, 'ReorderLevel');
     }
     public updateRow() {
         this.grid1.updateRow({
@@ -1341,7 +1342,7 @@ export class GridCellEditingComponent {
                     uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier'
                 }
             }
-        }, 0);
+        }, 1);
     }
     pin() {
         for (const name of ['UnitsInStock', 'Discontinued']) {
@@ -1355,5 +1356,33 @@ export class GridCellEditingComponent {
 
     hideColumn() {
         this.orderDateHidden = !this.orderDateHidden;
+    }
+
+    public updRecord() {
+        // let newData = 123456;
+        const newData = 'UPDATED';
+        const selectedCell = this.grid1.selectedCells[0];
+
+        // Updating the whole row
+        // let newData = {
+        //     Downloads: 9999,
+        //     ID: 17,
+        //     ProductName: null,
+        //     ReleaseDate: this.today,
+        //     Released: false
+        // }
+        // this.grid.updateRow(newData, 1);
+
+        // Just a particualr cell through the Grid API
+        // this.grid.updateCell(newData, selectedCell.rowIndex, selectedCell.column.field);
+
+        // Directly using the cell `update` method
+
+        selectedCell.update(newData);
+        // this.grid.updateCell(newData, selectedCell.rowIndex, selectedCell.column.field);
+    }
+
+    public updRecordWithRow() {
+
     }
 }
