@@ -363,13 +363,15 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
-        if (this.gridAPI.get_cell_inEditMode(this.gridID) && event.path.length > 0 && event.relatedTarget) {
-            const targetEditMode = event.path[0].classList.value.indexOf('igx-grid__td--editing') !== -1;
+        const classList = (event.composedPath() && event.composedPath().length > 0) ? event.path[0].classList : event.srcElement.classList;
+
+        if (this.gridAPI.get_cell_inEditMode(this.gridID) && classList && event.relatedTarget) {
+            const targetEditMode = classList.toLocaleString().indexOf('igx-grid__td--editing') !== -1;
             if (targetEditMode) {
-                if (event.path[0].classList.length > 0 && event.relatedTarget.classList.length > 0) {
-                    if ((event.relatedTarget.classList.value.indexOf('igx-checkbox__input') !== -1 ||
-                    event.relatedTarget.classList.value.indexOf('igx-calendar') !== -1)
-                    && event.path[0].classList[0] === 'igx-grid__td') {
+                if (classList.length > 0 && event.relatedTarget.classList.length > 0) {
+                    if ((event.relatedTarget.classList.toLocaleString().indexOf('igx-checkbox__input') !== -1 ||
+                    event.relatedTarget.classList.toLocaleString().indexOf('igx-calendar') !== -1)
+                    && classList[0] === 'igx-grid__td') {
                         this.updateCell = false;
                     }
                 }
