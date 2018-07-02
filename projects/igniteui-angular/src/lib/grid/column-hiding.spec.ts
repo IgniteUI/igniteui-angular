@@ -803,7 +803,7 @@ describe('Column Hiding UI', () => {
             expect(getCheckboxElement('Missing')).toBeTruthy();
         });
 
-        fit('hides the proper columns when filtering and pressing hide all.', () => {
+        it('hides the proper columns when filtering and pressing hide all.', () => {
             columnChooser.filterCriteria = 'cont';
             fix.detectChanges();
 
