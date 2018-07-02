@@ -20,6 +20,9 @@ import { fromEvent } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 
+// added @dynamic to supress document type error on constructor
+// look here: https://github.com/angular/angular/issues/20351#issuecomment-344009887
+/** @dynamic */
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService {
     private _componentId = 0;
@@ -43,7 +46,7 @@ export class IgxOverlayService {
         private _appRef: ApplicationRef,
         private _injector: Injector,
         private builder: AnimationBuilder,
-        @Inject(DOCUMENT) private _document: any) { }
+        @Inject(DOCUMENT) private _document: Document) { }
 
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
         const id: string = (this._componentId++).toString();
@@ -77,6 +80,7 @@ export class IgxOverlayService {
         settings.scrollStrategy.initialize(this._document, this, id);
         settings.scrollStrategy.attach();
         this.addOutsideClickListener(info);
+        this.addResizeHandler(info.id);
 
         this.playOpenAnimation(info);
 
@@ -100,6 +104,7 @@ export class IgxOverlayService {
         this.onClosing.emit({ id, componentRef: info.componentRef });
         info.settings.scrollStrategy.detach();
         this.removeOutsideClickListener(info);
+        this.removeResizeHandler(info.id);
         this.playCloseAnimation(info);
     }
 
@@ -215,39 +220,6 @@ export class IgxOverlayService {
         }
     }
 
-    private addOutsideClickListener(info: OverlayInfo) {
-        if (info.settings.closeOnOutsideClick) {
-            if (info.settings.modal) {
-                fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
-                    .pipe(take(1))
-                    .subscribe(() => this.hide(info.id));
-            } else if (
-                //  if all overlays minus closing overlays equals one add the handler
-                this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
-                this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal &&
-                    x.closeAnimationPlayer &&
-                    x.closeAnimationPlayer.hasStarted()).length === 1) {
-                (<HTMLElement>this._document).addEventListener('click', this.documentClicked, true);
-            }
-        }
-
-    }
-
-    private removeOutsideClickListener(info: OverlayInfo) {
-        if (info.settings.modal === false) {
-            let shouldRemoveClickEventListener = true;
-            this._overlayInfos.forEach(o => {
-                if (o.settings.modal === false && o.id !== info.id) {
-                    shouldRemoveClickEventListener = false;
-                }
-            });
-
-            if (shouldRemoveClickEventListener) {
-                (<HTMLElement>this._document).removeEventListener('click', this.documentClicked, true);
-            }
-        }
-    }
-
     // TODO: refactor playAnimation methods and allow null animations
     private playOpenAnimation(info: OverlayInfo) {
 
@@ -311,7 +283,7 @@ export class IgxOverlayService {
 
             if (info.settings.closeOnOutsideClick) {
                 if (this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
-                    (<HTMLElement>this._document).removeEventListener('click', this.documentClicked, true);
+                    this._document.removeEventListener('click', this.documentClicked, true);
                 }
             }
 
@@ -359,6 +331,57 @@ export class IgxOverlayService {
                     // TODO: should we return here too and not closing all no-modal overlays?
                 }
             }
+        }
+    }
+
+    private addOutsideClickListener(info: OverlayInfo) {
+        if (info.settings.closeOnOutsideClick) {
+            if (info.settings.modal) {
+                fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
+                    .pipe(take(1))
+                    .subscribe(() => this.hide(info.id));
+            } else if (
+                //  if all overlays minus closing overlays equals one add the handler
+                this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
+                this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal &&
+                    x.closeAnimationPlayer &&
+                    x.closeAnimationPlayer.hasStarted()).length === 1) {
+                this._document.addEventListener('click', this.documentClicked, true);
+            }
+        }
+
+    }
+
+    private removeOutsideClickListener(info: OverlayInfo) {
+        if (info.settings.modal === false) {
+            let shouldRemoveClickEventListener = true;
+            this._overlayInfos.forEach(o => {
+                if (o.settings.modal === false && o.id !== info.id) {
+                    shouldRemoveClickEventListener = false;
+                }
+            });
+
+            if (shouldRemoveClickEventListener) {
+                this._document.removeEventListener('click', this.documentClicked, true);
+            }
+        }
+    }
+
+    private addResizeHandler(id: string) {
+        if (this._overlayInfos.length > 0) {
+            this._document.defaultView.addEventListener('resize', this.repositionAll);
+        }
+    }
+
+    private removeResizeHandler(id: string) {
+        if (this._overlayInfos.length === 1) {
+            this._document.defaultView.removeEventListener('resize', this.repositionAll);
+        }
+    }
+
+    private repositionAll = (ev: Event) => {
+        for (let i = this._overlayInfos.length; i--;) {
+            this.reposition(this._overlayInfos[i].id);
         }
     }
 }

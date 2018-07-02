@@ -606,9 +606,9 @@ describe('igxOverlay', () => {
             fixture.componentInstance.hide();
         }));
 
-        fit('fix for #1799 - content div should reposition on window resize', fakeAsync(() => {
+        it('fix for #1799 - content div should reposition on window resize', fakeAsync(() => {
             let point: Point = new Point(50, 50);
-            spyOn(utilities, 'getPointFromPositionsSettings').and.returnValue(point);
+            const getPointSpy = spyOn(utilities, 'getPointFromPositionsSettings').and.returnValue(point);
             const fix = TestBed.createComponent(FlexContainerComponent);
             fix.detectChanges();
             const overlayInstance = fix.componentInstance.overlay;
@@ -624,11 +624,10 @@ describe('igxOverlay', () => {
             expect(50).toEqual(contentRect.left);
             expect(50).toEqual(contentRect.top);
 
+            point = new Point(200, 200);
+            getPointSpy.and.callThrough().and.returnValue(point);
             window.resizeBy(200, 200);
             window.dispatchEvent(new Event('resize'));
-            tick();
-
-            point = new Point(200, 200);
             tick();
 
             contentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
