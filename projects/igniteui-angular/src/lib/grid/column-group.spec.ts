@@ -744,13 +744,77 @@ describe('IgxGrid - multi-column headers', () => {
         // expect(grid.getCellByColumn(0, 'City').value).toEqual("Berlin");
     });
 
+    it('Should not allow moving group to another level via API.', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        fixture.detectChanges();
+        const componentInstance = fixture.componentInstance;
+        const grid = componentInstance.grid;
+
+        expect(grid.pinnedColumns.length).toEqual(0);
+        expect(grid.unpinnedColumns.length).toEqual(16);
+        expect(grid.rowList.first.cells.first.value).toMatch('ALFKI');
+        expect(grid.rowList.first.cells.toArray()[1].value).toMatch('Alfreds Futterkiste');
+        expect(grid.rowList.first.cells.toArray()[2].value).toMatch('Maria Anders');
+        expect(grid.rowList.first.cells.toArray()[3].value).toMatch('Sales Representative');
+
+        // Pin a column
+        const colID = grid.getColumnByName('ID');
+        colID.pinned = true;
+        fixture.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(1);
+        expect(grid.unpinnedColumns.length).toEqual(15);
+        expect(colID.visibleIndex).toEqual(0);
+        expect(grid.rowList.first.cells.first.value).toMatch('ALFKI');
+
+        // Try to move a group column to pinned area, where there is non group column
+        const contName = grid.getColumnByName('ContactName');
+        grid.moveColumn(contName, colID);
+
+        // pinning should be unsuccesfull !
+        expect(grid.pinnedColumns.length).toEqual(1);
+        expect(grid.unpinnedColumns.length).toEqual(15);
+        expect(grid.rowList.first.cells.first.value).toMatch('ALFKI');
+        fixture.detectChanges();
+
+        // pin grouped column to the pinned area
+        const genGroup = getColGroup(grid, 'General Information');
+        genGroup.pinned = true;
+        fixture.detectChanges();
+
+        expect(grid.pinnedColumns.length).toEqual(6);
+        expect(grid.unpinnedColumns.length).toEqual(10);
+        expect(genGroup.visibleIndex).toEqual(1);
+        expect(colID.visibleIndex).toEqual(0);
+
+        expect(grid.rowList.first.cells.first.value).toMatch('ALFKI');
+        expect(grid.rowList.first.cells.toArray()[1].value).toMatch('Alfreds Futterkiste');
+        expect(grid.rowList.first.cells.toArray()[2].value).toMatch('Maria Anders');
+        expect(grid.rowList.first.cells.toArray()[3].value).toMatch('Sales Representative');
+
+        // pin grouped column to the pinned area
+        const compName = grid.getColumnByName('CompanyName');
+        const persDetails = getColGroup(grid, 'Person Details');
+        const contTitle = grid.getColumnByName('ContactTitle');
+
+        grid.moveColumn(colID, genGroup);
+        grid.moveColumn(compName, persDetails);
+        grid.moveColumn(contName, contTitle);
+        fixture.detectChanges();
+
+        expect(grid.rowList.first.cells.first.value).toMatch('Sales Representative');
+        expect(grid.rowList.first.cells.toArray()[1].value).toMatch('Maria Anders');
+        expect(grid.rowList.first.cells.toArray()[2].value).toMatch('Alfreds Futterkiste');
+        expect(grid.rowList.first.cells.toArray()[3].value).toMatch('ALFKI');
+    });
+
     xit('Should move column group correctly. One level column groups.', () => {
         const fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
         const grid = ci.grid;
         const genInfoCols = [ci.genInfoColGroup, ci.companyNameCol,
-            ci.contactNameCol, ci.contactTitleCol];
+        ci.contactNameCol, ci.contactTitleCol];
         const locCols = [ci.locationColGroup, ci.countryCol, ci.regionCol, ci.cityCol];
         const contactInfoCols = [ci.contactInfoColGroup, ci.phoneCol, ci.faxCol, ci.postalCodeCol];
 
@@ -793,50 +857,50 @@ describe('IgxGrid - multi-column headers', () => {
         const ci = fixture.componentInstance;
         const grid = ci.grid;
         const genInfoAndLocCols = [ci.genInfoColGroup, ci.companyNameCol,
-            ci.contactNameCol, ci.contactTitleCol, ci.locationColGroup, ci.countryCol,
-            ci.regionCol, ci.cityCol];
+        ci.contactNameCol, ci.contactTitleCol, ci.locationColGroup, ci.countryCol,
+        ci.regionCol, ci.cityCol];
 
         // moving last to be first
         grid.moveColumn(ci.postalCodeCol, ci.phoneCol);
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
-            ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
+        ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
         // moving first to be last
         grid.moveColumn(ci.postalCodeCol, ci.faxCol);
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
-            ci.phoneCol, ci.faxCol, ci.postalCodeCol]));
+        ci.phoneCol, ci.faxCol, ci.postalCodeCol]));
 
         // moving inner to be last 
         grid.moveColumn(ci.faxCol, ci.postalCodeCol);
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
-            ci.phoneCol, ci.postalCodeCol, ci.faxCol]));
+        ci.phoneCol, ci.postalCodeCol, ci.faxCol]));
 
         // moving inner to be first
         grid.moveColumn(ci.postalCodeCol, ci.phoneCol);
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
-            ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
+        ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
         // moving to the sample spot, no change expected
         grid.moveColumn(ci.postalCodeCol, ci.postalCodeCol);
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
-            ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
+        ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
         // moving column to the place of its column group, no change expected
         grid.moveColumn(ci.postalCodeCol, ci.contactInfoColGroup);
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
-            ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
+        ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
         //// moving column to the place of a column group, no change expected
         grid.moveColumn(ci.postalCodeCol, ci.genInfoColGroup);
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
-            ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
+        ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
     });
 
     xit('Should move columns and groups. Two level column groups.', () => {
@@ -849,13 +913,13 @@ describe('IgxGrid - multi-column headers', () => {
         grid.moveColumn(ci.phoneCol, ci.locationColGroup);
         fixture.detectChanges();
         testColumnsOrder([ci.contactInfoColGroup, ci.phoneCol, ci.locationColGroup, ci.countryCol,
-            ci.genInfoColGroup, ci.companyNameCol, ci.cityCol]);
+        ci.genInfoColGroup, ci.companyNameCol, ci.cityCol]);
 
         // moving a three-level col
         grid.moveColumn(ci.cityCol, ci.contactInfoColGroup);
         fixture.detectChanges();
         const colsOrder = [ci.cityCol, ci.contactInfoColGroup, ci.phoneCol,
-            ci.locationColGroup, ci.countryCol, ci.genInfoColGroup, ci.companyNameCol];
+        ci.locationColGroup, ci.countryCol, ci.genInfoColGroup, ci.companyNameCol];
         testColumnsOrder(colsOrder);
 
         // moving between different groups, hould stay the same
@@ -925,7 +989,7 @@ export class OneGroupThreeColsGridComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data">
+    <igx-grid #grid [data]="data" height="500px">
         <igx-column field="ID"></igx-column>
         <igx-column-group header="General Information">
             <igx-column filterable="true" sortable="true" resizable="true" field="CompanyName"></igx-column>
