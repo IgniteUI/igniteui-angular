@@ -24,6 +24,7 @@ import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.
 import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 import { OverlaySettings } from '../services';
 import { IToggleView } from '../core/navigation';
+import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 
 let NEXT_ID = 0;
 
@@ -554,7 +555,12 @@ export class IgxDropDownItemNavigationDirective {
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
         if (!(this.target instanceof IgxDropDownComponent)) {
-            this.target.close();
+            if (this.target.focusedItem.itemData === 'ADD ITEM') {
+                const targetC = this.target as IgxComboDropDownComponent;
+                targetC.parentElement.addItemToCollection();
+            } else {
+                this.target.close();
+            }
             event.preventDefault();
             return;
         }
