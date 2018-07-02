@@ -16,7 +16,15 @@ import { IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/t
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment, OverlaySettings, Point, OverlayEventArgs } from './utilities';
+import {
+    PositionSettings,
+    HorizontalAlignment,
+    VerticalAlignment,
+    OverlaySettings,
+    Point,
+    OverlayEventArgs
+} from './utilities';
+import * as utilities from './utilities';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
@@ -597,6 +605,37 @@ describe('igxOverlay', () => {
             expect(overlayDiv).toBeDefined();
             fixture.componentInstance.hide();
         }));
+
+        it('fix for #1799 - content div should reposition on window resize', fakeAsync(() => {
+            let point: Point = new Point(50, 50);
+            const getPointSpy = spyOn(utilities, 'getPointFromPositionsSettings').and.returnValue(point);
+            const fix = TestBed.createComponent(FlexContainerComponent);
+            fix.detectChanges();
+            const overlayInstance = fix.componentInstance.overlay;
+            const buttonElement: HTMLElement = fix.componentInstance.buttonElement.nativeElement;
+
+            const id = overlayInstance.show(
+                SimpleDynamicComponent,
+                { positionStrategy: new ConnectedPositioningStrategy({ target: buttonElement }) });
+            tick();
+
+            let contentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
+
+            expect(50).toEqual(contentRect.left);
+            expect(50).toEqual(contentRect.top);
+
+            point = new Point(200, 200);
+            getPointSpy.and.callThrough().and.returnValue(point);
+            window.resizeBy(200, 200);
+            window.dispatchEvent(new Event('resize'));
+            tick();
+
+            contentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
+            expect(200).toEqual(contentRect.left);
+            expect(200).toEqual(contentRect.top);
+
+            overlayInstance.hide(id);
+        }));
     });
 
     describe('Integration tests: ', () => {
@@ -752,8 +791,9 @@ describe('igxOverlay', () => {
             const componentEl = overlayWrapper.children[0].children[0];
             const wrapperRect = overlayWrapper.getBoundingClientRect();
             const componentRect = componentEl.getBoundingClientRect();
-            expect(componentRect.left).toBeLessThan(0);
-            expect(wrapperRect.width / 2).toEqual(componentRect.left + componentRect.width / 2);
+            // display:flex parent will keep the content container within the wrapper in width (x, left = 0, right = width)
+            expect(componentRect.left).toBe(0);
+            expect(wrapperRect.width).toEqual(wrapperRect.right);
             expect(componentRect.top).toBeLessThan(0);
             expect(wrapperRect.height / 2).toEqual(componentRect.top + componentRect.height / 2);
             hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
@@ -2044,6 +2084,25 @@ export class ScrollableComponent {
 
 }
 
+@Component({
+    template: `
+    <div style=\'display:flex; width:100%; height:500px; justify-content:center;\'>
+        <button #button style=\'display:inline-flex; width:150px; height:30px;\' (click)=\'click($event)\' class=\'button\'>
+            Show Overlay
+        </button>
+    </div>
+    `
+})
+export class FlexContainerComponent {
+    public overlaySettings: OverlaySettings = {};
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+
+    @ViewChild('button') buttonElement: ElementRef;
+    click(event) {
+        this.overlay.show(SimpleDynamicComponent, this.overlaySettings);
+    }
+}
+
 const DYNAMIC_COMPONENTS = [
     EmptyPageComponent,
     SimpleRefComponent,
@@ -2053,7 +2112,8 @@ const DYNAMIC_COMPONENTS = [
     TopLeftOffsetComponent,
     TwoButtonsComponent,
     WidthTestOverlayComponent,
-    ScrollableComponent
+    ScrollableComponent,
+    FlexContainerComponent
 ];
 
 const DIRECTIVE_COMPONENTS = [

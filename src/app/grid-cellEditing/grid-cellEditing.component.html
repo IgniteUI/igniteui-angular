@@ -1,5 +1,5 @@
-<igx-grid #grid1 [data]="data" [autoGenerate]="false" displayDensity="cosy" width="800px" height="550px" [paging]="true">
-    <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true">
+<igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [autoGenerate]="false" displayDensity="cosy" width="800px" height="550px" [paging]="true">
+    <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true" [editable]="true">
         <ng-template igxCell let-cell="cell" let-val>
         <button (click)="viewRecord(grid1.data)">{{val}}</button>
         </ng-template>
@@ -25,6 +25,8 @@
     </igx-column>
 </igx-grid>
 
+<input id="updBtn" type="button" (click)="updRecord()" value="Update cell/record">
+<br />
 <button (click)="addRow()">Add Row</button>
 <button (click)="deleteRow()">Delete Row</button>
 <button (click)="updateCell()">Update Cell</button>
