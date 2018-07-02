@@ -75,11 +75,11 @@ describe('igxOverlay', () => {
         clearOverlay();
     });
 
-    // afterAll(async () => {
-    //     clearOverlay();
-    // });
+    afterAll(async () => {
+        clearOverlay();
+    });
 
-    describe('Unit Tests: ', () => {
+    xdescribe('Unit Tests: ', () => {
 
         it('OverlayElement should return a div attached to Document\'s body', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -2288,6 +2288,19 @@ describe('igxOverlay', () => {
         }));
 
         it('Interaction is allowed only for the shown modal dialog component', fakeAsync(() => {
+            // Utility handler meant for later detachment
+            function _handler(event) {
+                if (event.which === 1) {
+                    fixture.detectChanges();
+                    tick();
+                    expect(button.click).toHaveBeenCalledTimes(0);
+                    expect(button.onclick).toHaveBeenCalledTimes(0);
+                    document.removeEventListener('click', _handler);
+                    dummy.remove();
+                }
+
+                return event;
+            }
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -2300,17 +2313,10 @@ describe('igxOverlay', () => {
             document.body.appendChild(dummy);
             const button = document.getElementById('dummyButton');
 
-            button.addEventListener('click', (event) => {
-                if (event.which === 1) {
-                    fixture.detectChanges();
-                    tick();
-                    expect(button.click).toHaveBeenCalledTimes(0);
-                    expect(button.onclick).toHaveBeenCalledTimes(0);
-                }
-            });
+            button.addEventListener('click', _handler);
+
             spyOn(button, 'click').and.callThrough();
             spyOn(button, 'onclick').and.callThrough();
-
             spyOn(overlay, 'show').and.callThrough();
             spyOn(overlay, 'hide').and.callThrough();
 
@@ -2432,25 +2438,32 @@ describe('igxOverlay', () => {
         }));
 
         it('Escape - does not close (DropDown, Dialog, etc.).', fakeAsync(() => {
+            // Utility handler meant for later detachment
+            function _handler(event) {
+                if (event.key === targetButton) {
+                    expect(overlay.hide).toHaveBeenCalledTimes(0);
+                    document.removeEventListener(targetEvent, _handler);
+                }
+
+                return event;
+            }
+
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 modal: false,
                 positionStrategy: new GlobalPositionStrategy()
             };
+            const targetEvent = 'keydown';
             const targetButton = 'Escape';
-            const escEvent = new KeyboardEvent('keydown', {
+            const escEvent = new KeyboardEvent(targetEvent, {
                 key: targetButton
             });
 
             spyOn(overlay, 'show').and.callThrough();
             spyOn(overlay, 'hide').and.callThrough();
 
-            document.addEventListener('keydown', (event) => {
-                if (event.key === targetButton) {
-                    expect(overlay.hide).toHaveBeenCalledTimes(0);
-                }
-            });
+            document.addEventListener(targetEvent, _handler);
 
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
