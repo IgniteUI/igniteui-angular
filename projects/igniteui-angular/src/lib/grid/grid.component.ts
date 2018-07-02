@@ -1106,6 +1106,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+        if (column.level !== dropTarget.level) {
+            return;
+        }
 
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
