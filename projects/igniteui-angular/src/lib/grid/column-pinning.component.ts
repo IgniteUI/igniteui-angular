@@ -36,6 +36,9 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
     }
 
     createColumnItem(container: any, column: any) {
+        if (column.level !== 0) {
+            return null;
+        }
         const item = new IgxColumnPinningItemDirective();
         item.container = container;
         item.column = column;
