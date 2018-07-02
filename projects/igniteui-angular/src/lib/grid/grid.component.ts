@@ -2139,17 +2139,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             map((c) => ({ name: c.field, searchable: c.searchable }));
 
         const groupIndexData = this.getGroupIncrementData();
+        const groupByRecords = this.getGroupByRecords();
 
         data.forEach((dataRow, i) => {
-            const groupByRecord = groupIndexData ? this.getGroupByRecords()[i] : null;
+            const groupByRecord = groupIndexData ? groupByRecords[i] : null;
             const groupByIncrement = groupIndexData ? groupIndexData[i] : 0;
-            // For paging we need just the increment between the start of the page and the current row
-            let pagingIncrement = 0;
-            if (this.paging && groupByIncrement) {
-                const page = Math.floor(i / this.perPage);
-                pagingIncrement = page ? groupByIncrement - groupIndexData[page * this.perPage - 1] + 1 : groupByIncrement;
-            }
-
+            const pagingIncrement = this.getPagingIncrement(groupByIncrement, groupIndexData, Math.floor(i / this.perPage));
             const rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
 
             columnItems.forEach((columnItem, j) => {
@@ -2178,7 +2173,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
     }
 
-    // This method's idea is to by how much each data row is offset by the group by row.
+    // This method's idea is to get by how much each data row is offset by the group by rows before it.
     private getGroupIncrementData(): number[] {
         if (this.groupingExpressions && this.groupingExpressions.length) {
                 const groupsRecords = this.getGroupByRecords();
@@ -2230,6 +2225,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
     }
 
+    // For paging we need just the increment between the start of the page and the current row
+    private getPagingIncrement(groupByIncrement: number, groupIndexData: number[], page: number) {
+        let pagingIncrement = 0;
+
+        if (this.paging && groupByIncrement) {
+            const lastRowOnPrevPageInrement = page ? groupIndexData[page * this.perPage - 1] : 0;
+            const firstRowOnThisPageInrement = groupIndexData[page * this.perPage];
+            // If the page ends in the middle of the group, on the next page there is
+            // one additional group by row. We need to account for this.
+            const additionalPagingIncrement = lastRowOnPrevPageInrement === firstRowOnThisPageInrement ? 1 : 0;
+            pagingIncrement = groupByIncrement - lastRowOnPrevPageInrement + additionalPagingIncrement;
+        }
+
+        return pagingIncrement;
+    }
+
     private restoreHighlight(): void {
         if (this.lastSearchInfo.matchInfoCache.length) {
             const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
@@ -2241,7 +2252,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const page = this.paging ? Math.floor(rowIndex / this.perPage) : 0;
             let increment = groupByIncrements && rowIndex !== -1 ? groupByIncrements[rowIndex] : 0;
             if (this.paging && increment) {
-                increment = page ? increment - groupByIncrements[page * this.perPage - 1] + 1 : increment;
+                increment = this.getPagingIncrement(increment, groupByIncrements, page);
             }
 
             const row = this.paging ? (rowIndex % this.perPage) + increment : rowIndex + increment;

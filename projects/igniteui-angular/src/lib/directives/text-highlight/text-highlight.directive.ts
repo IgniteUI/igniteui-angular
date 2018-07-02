@@ -75,7 +75,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             rowIndex: -1,
             columnIndex: -1,
             page: -1,
-            index: -1,
+            index: -1
         });
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
     }
@@ -149,7 +149,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
                 rowIndex: -1,
                 columnIndex: -1,
                 page: -1,
-                index: -1,
+                index: -1
             });
         }
 

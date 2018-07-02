@@ -869,6 +869,98 @@ describe('IgxGrid - search API', () => {
         expect(highlight !== null).toBeTruthy();
     });
 
+    it('Should be able to navigate through highlights with grouping and paging enabled', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const component = fix.componentInstance;
+        const grid = component.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+        component.paging = true;
+
+        fix.detectChanges();
+
+        grid.findNext('Software');
+        fix.detectChanges();
+
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(2);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.page).toBe(0);
+
+        grid.findPrev('Software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[2]);
+        expect(grid.page).toBe(1);
+
+        grid.findPrev('Software');
+        grid.findPrev('Software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.page).toBe(1);
+    });
+
+    it('Should be able to properly handle perPage changes with gouping and paging', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const component = fix.componentInstance;
+        const grid = component.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+        component.paging = true;
+        component.perPage = 10;
+
+        grid.findNext('Software');
+        grid.findNext('Software');
+        grid.findNext('Software');
+        fix.detectChanges();
+
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(5);
+        expect(highlight).toBe(spans[2]);
+        expect(grid.page).toBe(0);
+
+        component.perPage = 5;
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(2);
+        expect(highlight).toBeNull();
+        expect(grid.page).toBe(0);
+
+        grid.page = 1;
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.page).toBe(1);
+    });
+
     function findNext(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
             grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
@@ -1162,7 +1254,7 @@ export class GroupableGridComponent {
     public highlightClass = 'igx-highlight';
     public activeClass = 'igx-highlight__active';
 
-    public perPage = 15;
+    public perPage = 6;
     public paging = false;
 }
 
