@@ -1199,8 +1199,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
             const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
             if (row) {
-                value[this.primaryKey] = row.rowData[this.primaryKey];
-                this.gridAPI.update_row(value, this.id, row);
+                if (this.rowSelectable === true && row.isSelected) {
+                    this.deselectRows([row.rowID]);
+                    this.gridAPI.update_row(value, this.id, row);
+                    this.selectRows([value[this.primaryKey]]);
+                } else {
+                    this.gridAPI.update_row(value, this.id, row);
+                }
                 this.cdr.markForCheck();
                 this.refreshSearch();
             }

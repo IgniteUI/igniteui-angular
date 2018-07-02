@@ -142,8 +142,13 @@ export class IgxGridRowComponent implements DoCheck {
             row = this.gridAPI.get_row_by_index(this.gridID, this.index);
         }
         if (row) {
-            value[this.gridAPI.get(this.gridID).primaryKey] = row.rowData[this.gridAPI.get(this.gridID).primaryKey];
-            this.gridAPI.update_row(value, this.gridID, row);
+            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
+                this.gridAPI.get(this.gridID).deselectRows([row.rowID]);
+                this.gridAPI.update_row(value, this.gridID, row);
+                this.gridAPI.get(this.gridID).selectRows([row.rowID]);
+            } else {
+                this.gridAPI.update_row(value, this.gridID, row);
+            }
             this.cdr.markForCheck();
             this.gridAPI.get(this.gridID).refreshSearch();
         }
@@ -158,7 +163,7 @@ export class IgxGridRowComponent implements DoCheck {
             row = this.gridAPI.get_row_by_index(this.gridID, this.index);
         }
         if (row) {
-            if (row.isSelected) {
+            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
                 this.gridAPI.get(this.gridID).deselectRows(row.rowID);
             }
             const index = this.gridAPI.get(this.gridID).data.indexOf(row.rowData);

@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { DataType } from '../data-operations/data-util';
+import { By } from '@angular/platform-browser';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
+const CELL_CSS_CLASS = '.igx-grid__td';
 describe('IgxGrid - CRUD operations', () => {
 
     beforeEach(async(() => {
@@ -227,6 +228,80 @@ describe('IgxGrid - CRUD operations', () => {
 
             expect(grid.rowList.first.cells.first.value).toEqual(100);
             expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('100');
+        });
+    }));
+
+    it('should update row through row object when PK is defined', async(() => {
+        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+        let firstRow = grid.getRowByKey(1);
+        firstRow.update({ index: 31, value: 51});
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            firstRow = grid.getRowByKey(31);
+            expect(firstRow).toBeDefined();
+            const firstCell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+            const secondCell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            expect(parseInt(firstCell.nativeElement.innerText, 10)).toBe(31);
+            expect(parseInt(secondCell.nativeElement.innerText, 10)).toBe(51);
+        });
+    }));
+
+    it('should update row through row object when PK is NOT defined', async(() => {
+        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+        grid.primaryKey = null;
+        fixture.detectChanges();
+        expect(grid.primaryKey).toBeNull();
+        let firstRow = grid.getRowByIndex(0);
+        firstRow.update({ index: 100, value: 99});
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            firstRow = grid.getRowByIndex(0);
+            expect(firstRow).toBeDefined();
+            const firstCell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+            const secondCell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            expect(parseInt(firstCell.nativeElement.innerText, 10)).toBe(100);
+            expect(parseInt(secondCell.nativeElement.innerText, 10)).toBe(99);
+        });
+    }));
+
+    it('should delete row through row object when PK is defined', async(() => {
+        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+        let firstRow = grid.getRowByKey(1);
+        firstRow.delete();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            firstRow = grid.getRowByKey(1);
+            expect(firstRow).toBeUndefined();
+            expect(grid.rowList.length).toBe(0);
+        });
+    }));
+
+    it('should delete row through row object when PK is NOT defined', async(() => {
+        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+        grid.primaryKey = null;
+        fixture.detectChanges();
+        expect(grid.primaryKey).toBeNull();
+        let firstRow = grid.getRowByIndex(0);
+        firstRow.delete();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            firstRow = grid.getRowByIndex(0);
+            expect(firstRow).toBeUndefined();
+            expect(grid.rowList.length).toBe(0);
         });
     }));
 });

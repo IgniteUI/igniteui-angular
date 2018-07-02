@@ -145,9 +145,9 @@ describe('IgxGrid - Row Selection', () => {
         grid.updateRow({ ID: 7, Name: 'Gilberto Todd', JobTitle: 'Vice President' }, 2);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            expect(grid.getRowByKey(2)).toBeDefined();
+            expect(grid.getRowByKey(7)).toBeDefined();
             expect(grid.getRowByIndex(1)).toBeDefined();
-            expect(grid.getRowByIndex(1).rowData[grid.primaryKey]).toEqual(2);
+            expect(grid.getRowByIndex(1).rowData[grid.primaryKey]).toEqual(7);
         });
     }));
 
