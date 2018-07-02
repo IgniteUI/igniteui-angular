@@ -143,19 +143,17 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     setSelectedItem(itemID: any, select = true) {
-        if (itemID === 'ADD ITEM') {
-            this.parentElement.addItemToCollection();
-        } else {
-            this.parentElement.setSelectedItem(itemID, select);
-        }
+        this.parentElement.setSelectedItem(itemID, select);
     }
 
     /**
      * @hidden
      */
-    selectItem(item: IgxComboItemComponent) {
+    selectItem(item: IgxComboItemComponent, event?: Event) {
         if (item.itemData === 'ADD ITEM') {
-            return;
+            if (event) {
+                this.parentElement.addItemToCollection();
+            }
         } else {
             this.setSelectedItem(item.itemID);
             this._focusedItem = item;

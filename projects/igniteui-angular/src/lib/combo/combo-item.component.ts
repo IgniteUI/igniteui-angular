@@ -53,6 +53,6 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
             }
             return;
         }
-        this.parentElement.setSelectedItem(this.itemID);
+        this.parentElement.selectItem(this, event);
     }
 }

@@ -870,7 +870,7 @@ describe('igxCombo', () => {
                 expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [targetItem.itemID], newSelection: [] });
 
                 spyOn(combo, 'addItemToCollection');
-                combo.dropdown.selectItem({ itemData: 'ADD ITEM' } as IgxComboItemComponent);
+                combo.dropdown.selectItem({ itemData: 'ADD ITEM' } as IgxComboItemComponent, new Event('click'));
                 fix.detectChanges();
                 expect(combo.addItemToCollection).toHaveBeenCalledTimes(1);
             });
