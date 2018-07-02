@@ -23,7 +23,8 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef
+    ViewContainerRef,
+    HostListener
 } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
@@ -912,6 +913,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
                 this.markForCheck();
             });
+        const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+        vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
     }
 
     public ngAfterViewInit() {
@@ -1057,7 +1060,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get totalWidth(): number {
         // Take only top level columns
-        const cols = this.visibleColumns.filter(col => col.level === 0);
+        const cols = this.visibleColumns.filter(col => col.level === 0 && !col.pinned);
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
@@ -1099,6 +1102,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+        if (column.level !== dropTarget.level) {
+            return;
+        }
 
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
@@ -1212,6 +1218,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._groupBy(rest[0]);
         }
+        this.cdr.detectChanges();
         this.calculateGridSizes();
         this.onGroupingDone.emit(this.sortingExpressions);
     }
@@ -1924,6 +1931,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const scrollAmount = this.rowHeight + scrollOffset;
             this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex);
         }
+    }
+
+    @HostListener('scroll', ['$event'])
+    public scrollHandler(event) {
+        this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
+        this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
+        event.target.scrollLeft = 0;
+        event.target.scrollTop = 0;
     }
 
     private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {

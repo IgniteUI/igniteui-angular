@@ -663,6 +663,32 @@ describe('Column Hiding UI', () => {
             expect(JSON.stringify(columnsAreaDiv.styles)).toBe('{"max-height":"150px"}');
             expect(columnChooserElement.nativeElement.offsetHeight).toBe(250);
         });
+
+        it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', () => {
+            grid.height = '200px';
+            fix.detectChanges();
+            grid.reflow();
+            expect(grid.scr.nativeElement.hidden).toBe(false);
+            const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+            const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
+            let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+
+            expect(grid.calcHeight).toEqual(expectedHeight);
+
+            grid.columns[3].hidden = true;
+
+            expect(grid.scr.nativeElement.hidden).toBe(true);
+
+            expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
+
+            expect(grid.calcHeight).toEqual(expectedHeight);
+        });
     });
 
     describe('', () => {
@@ -771,6 +797,48 @@ describe('Column Hiding UI', () => {
             getCheckboxInput('ContactTitle').click();
             fix.detectChanges();
             verifyCheckbox('Person Details', false, false);
+        });
+
+        it('filters group columns properly.', () => {
+            columnChooser.filterCriteria = 'cont';
+            fix.detectChanges();
+
+            expect(columnChooser.columnItems.length).toBe(4);
+            expect(getColumnHidingItems().length).toBe(4);
+
+            expect(getCheckboxElement('General Information')).toBeTruthy();
+            expect(getCheckboxElement('Person Details')).toBeTruthy();
+
+            expect(getCheckboxElement('ContactName')).toBeTruthy();
+            expect(getCheckboxElement('ContactTitle')).toBeTruthy();
+
+            columnChooser.filterCriteria = 'pers';
+            fix.detectChanges();
+
+            expect(columnChooser.columnItems.length).toBe(2);
+            expect(getColumnHidingItems().length).toBe(2);
+            expect(getCheckboxElement('General Information')).toBeTruthy();
+            expect(getCheckboxElement('Person Details')).toBeTruthy();
+
+            columnChooser.filterCriteria = 'mi';
+            fix.detectChanges();
+
+            expect(columnChooser.columnItems.length).toBe(1);
+            expect(getColumnHidingItems().length).toBe(1);
+            expect(getCheckboxElement('General Information')).toBeFalsy();
+            expect(getCheckboxElement('Missing')).toBeTruthy();
+        });
+
+        it('hides the proper columns when filtering and pressing hide all.', () => {
+            columnChooser.filterCriteria = 'cont';
+            fix.detectChanges();
+
+            getButtonElement('Hide All').click();
+            columnChooser.filterCriteria = '';
+            fix.detectChanges();
+            for (let i = 1; i < 6; i++) {
+                verifyColumnIsHidden(grid.columns[i], true, 2);
+            }
         });
     });
 

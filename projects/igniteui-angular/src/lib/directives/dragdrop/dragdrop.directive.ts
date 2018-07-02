@@ -140,6 +140,14 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         return parseInt(this._dragGhost.style.top, 10);
     }
 
+    public get pointerEventsEnabled() {
+        return typeof PointerEvent !== 'undefined';
+    }
+
+    public get touchEventsEnabled() {
+        return 'ontouchstart' in window;
+    }
+
     public defaultReturnDuration = '0.5s';
 
     protected _startX = 0;
@@ -163,16 +171,42 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            fromEvent(this.element.nativeElement, 'pointerdown').pipe(takeUntil(this._destroy))
+            if (this.pointerEventsEnabled) {
+                fromEvent(this.element.nativeElement, 'pointerdown').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onPointerDown(res));
 
-            fromEvent(this.element.nativeElement, 'pointermove').pipe(
-                takeUntil(this._destroy),
-                throttle(() => interval(0, animationFrameScheduler))
-            ).subscribe((res) => this.onPointerMove(res));
+                fromEvent(this.element.nativeElement, 'pointermove').pipe(
+                    takeUntil(this._destroy),
+                    throttle(() => interval(0, animationFrameScheduler))
+                ).subscribe((res) => this.onPointerMove(res));
 
-            fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
-                .subscribe((res) => this.onPointerUp(res));
+                fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
+                    .subscribe((res) => this.onPointerUp(res));
+            } else if (this.touchEventsEnabled) {
+                // We don't have pointer events and touch events. Use then mouse events.
+                fromEvent(this.element.nativeElement, 'touchstart').pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onPointerDown(res));
+
+                fromEvent(document.defaultView, 'touchmove').pipe(
+                    takeUntil(this._destroy),
+                    throttle(() => interval(0, animationFrameScheduler))
+                ).subscribe((res) => this.onPointerMove(res));
+
+                fromEvent(document.defaultView, 'touchend').pipe(takeUntil(this._destroy))
+                    .subscribe((res) => this.onPointerUp(res));
+            } else {
+                // We don't have pointer events and touch events. Use then mouse events.
+                fromEvent(this.element.nativeElement, 'mousedown').pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onPointerDown(res));
+
+                fromEvent(document.defaultView, 'mousemove').pipe(
+                    takeUntil(this._destroy),
+                    throttle(() => interval(0, animationFrameScheduler))
+                ).subscribe((res) => this.onPointerMove(res));
+
+                fromEvent(document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
+                    .subscribe((res) => this.onPointerUp(res));
+            }
         });
     }
 
@@ -188,20 +222,32 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public onPointerDown(event) {
         this._clicked = true;
         this._pointerDownId = event.pointerId;
-        this._startX = event.pageX;
-        this._startY = event.pageY;
+
+        if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
+            // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
+            this._startX = event.pageX;
+            this._startY = event.pageY;
+        } else if (this.touchEventsEnabled) {
+            this._startX = event.touches[0].pageX;
+            this._startY = event.touches[0].pageY;
+        }
 
         // Take margins because getBoundingClientRect() doesn't include margins of the element
         const marginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
         const marginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
 
-        this._dragOffsetX = (event.pageX - this.element.nativeElement.getBoundingClientRect().left) + marginLeft;
-        this._dragOffsetY = (event.pageY - this.element.nativeElement.getBoundingClientRect().top) + marginTop;
-        this._dragStartX = event.pageX - this._dragOffsetX;
-        this._dragStartY = event.pageY - this._dragOffsetY;
+        this._dragOffsetX = (this._startX - this.element.nativeElement.getBoundingClientRect().left) + marginLeft;
+        this._dragOffsetY = (this._startY - this.element.nativeElement.getBoundingClientRect().top) + marginTop;
+        this._dragStartX = this._startX - this._dragOffsetX;
+        this._dragStartY = this._startY - this._dragOffsetY;
 
         // Set pointer capture so we detect pointermove even if mouse is out of bounds until dragGhost is created.
-        this.element.nativeElement.setPointerCapture(this._pointerDownId);
+        if (this.pointerEventsEnabled) {
+            this.element.nativeElement.setPointerCapture(this._pointerDownId);
+        } else {
+            this.element.nativeElement.focus();
+            event.preventDefault();
+        }
     }
 
     /**
@@ -216,9 +262,21 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 owner: this,
                 cancel: false
             };
-            const totalMovedX = event.pageX - this._startX;
-            const totalMovedY = event.pageY - this._startY;
+            let pageX, pageY;
+            if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
+                // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
+                pageX = event.pageX;
+                pageY = event.pageY;
+            } else if (this.touchEventsEnabled) {
+                pageX = event.touches[0].pageX;
+                pageY = event.touches[0].pageY;
 
+                // Prevent scrolling on touch while dragging
+                event.preventDefault();
+            }
+
+            const totalMovedX = pageX - this._startX;
+            const totalMovedY = pageY - this._startY;
             if (!this._dragStarted &&
                 (Math.abs(totalMovedX) > this.dragTolerance || Math.abs(totalMovedY) > this.dragTolerance)) {
                 this.dragStart.emit(dragStartArgs);
@@ -236,7 +294,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             this.left = this._dragStartX + totalMovedX;
             this.top = this._dragStartY + totalMovedY;
 
-            this.dispatchDragEvents(event.pageX, event.pageY);
+            this.dispatchDragEvents(pageX, pageY);
         }
     }
 
@@ -247,6 +305,10 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * @param event PointerUp event captured
      */
     public onPointerUp(event) {
+        if (!this._clicked) {
+            return;
+        }
+
         this._clicked = false;
         if (this._dragStarted) {
             if (this._lastDropArea && !this._lastDropArea.isEqualNode(this.element.nativeElement)) {
@@ -291,14 +353,17 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
         document.body.appendChild(this._dragGhost);
 
-        // The dragGhost takes control for moving and dragging after it has been shown.
-        this._dragGhost.setPointerCapture(this._pointerDownId);
-        this._dragGhost.addEventListener('pointermove', (args) => {
-            this.onPointerMove(args);
-        });
-        this._dragGhost.addEventListener('pointerup', (args) => {
-            this.onPointerUp(args);
-        });
+        if (this.pointerEventsEnabled) {
+            // The dragGhost takes control for moving and dragging after it has been shown.
+            this._dragGhost.setPointerCapture(this._pointerDownId);
+            this._dragGhost.addEventListener('pointermove', (args) => {
+                this.onPointerMove(args);
+            });
+            this._dragGhost.addEventListener('pointerup', (args) => {
+                this.onPointerUp(args);
+            });
+        }
+
         if (this.animateOnRelease) {
             // Transition animation when the dragGhost is released and it returns to it's original position.
             this._dragGhost.addEventListener('transitionend', (args) => {

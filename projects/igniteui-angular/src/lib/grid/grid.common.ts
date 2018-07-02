@@ -300,20 +300,31 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerUp(event) {
-
         if (!this.draggable) {
             return;
         }
 
-        super.onPointerUp(event);
+        // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
+        this.zone.run(() => {
+            super.onPointerUp(event);
 
-        this.column.grid.isColumnMoving = false;
-        this.column.grid.draggedColumn = null;
-        this.column.grid.cdr.detectChanges();
+            this.column.grid.isColumnMoving = false;
+            this.column.grid.draggedColumn = null;
+            this.column.grid.cdr.detectChanges();
+        });
     }
 
     protected createDragGhost(event) {
         super.createDragGhost(event);
+
+        let pageX, pageY;
+        if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
+            pageX = event.pageX;
+            pageY = event.pageY;
+        } else {
+            pageX = event.touches[0].pageX;
+            pageY = event.touches[0].pageY;
+        }
 
         this._dragGhost.style.height = null;
         this._dragGhost.style.minWidth = null;
@@ -333,10 +344,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
 
-            // event.clientX and event.clientY return a value that had not taken into account if the page is scrolled
-            // this is why we need to update the value with the current scroll positions
-            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) + window.scrollX;
-            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) + window.scrollY;
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         } else {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.removeChild(this._dragGhost.firstElementChild);
@@ -346,10 +355,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
             this._dragGhost.children[1].style.paddingLeft = '0px';
 
-            // event.clientX and event.clientY return a value that had not taken into account if the page is scrolled
-            // this is why we need to update the value with the current scroll positions
-            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2) + window.scrollX;
-            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2) + window.scrollY;
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         }
     }
 }
