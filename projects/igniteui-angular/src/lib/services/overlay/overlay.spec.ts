@@ -233,30 +233,20 @@ describe('igxOverlay', () => {
         it('should properly emit events', fakeAsync(() => {
             const fix = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
             fix.detectChanges();
-            spyOn(fix.componentInstance.overlay.onClosing, 'emit').and.callThrough();
-            spyOn(fix.componentInstance.overlay.onClosed, 'emit').and.callThrough();
-            spyOn(fix.componentInstance.overlay.onOpening, 'emit').and.callThrough();
-            spyOn(fix.componentInstance.overlay.onOpened, 'emit').and.callThrough();
+            spyOn(fix.componentInstance.overlay.onClosing, 'emit');
+            spyOn(fix.componentInstance.overlay.onClosed, 'emit');
+            spyOn(fix.componentInstance.overlay.onOpening, 'emit');
+            spyOn(fix.componentInstance.overlay.onOpened, 'emit');
 
             fix.componentInstance.show();
+            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalled();
             tick();
-            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalled();
 
             fix.componentInstance.hide();
+            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalled();
             tick();
-            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(1);
-
-            fix.componentInstance.overlay.open(false);
-            tick();
-            expect(fix.componentInstance.overlay.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.overlay.onOpened.emit).toHaveBeenCalledTimes(1);
-
-            fix.componentInstance.overlay.close(false);
-            tick();
-            expect(fix.componentInstance.overlay.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.overlay.onClosed.emit).toHaveBeenCalled();
         }));
 
         it('Should properly call position method - GlobalPosition', () => {
@@ -2299,12 +2289,12 @@ export class SimpleDynamicWithDirectiveComponent {
 
     show(overlaySettings?: OverlaySettings) {
         this.visible = true;
-        this.overlay.open(true, overlaySettings);
+        this.overlay.open(overlaySettings);
     }
 
     hide() {
         this.visible = false;
-        this.overlay.close(true);
+        this.overlay.close();
     }
 }
 
@@ -2469,7 +2459,7 @@ export class ScrollableComponent {
     show() {
         this.visible = true;
         const settings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
-        this.toggle.open(true, settings);
+        this.toggle.open(settings);
     }
 
     hide() {
