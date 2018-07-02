@@ -805,7 +805,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.rowList.first.cells.first.value).toMatch('Sales Representative');
         expect(grid.rowList.first.cells.toArray()[1].value).toMatch('Maria Anders');
         expect(grid.rowList.first.cells.toArray()[2].value).toMatch('Alfreds Futterkiste');
-        expect(grid.rowList.first.cells.toArray()[3].value).toMatch('ALFKI'); 
+        expect(grid.rowList.first.cells.toArray()[3].value).toMatch('ALFKI');
      });
 
      xit('Should move column group.', () => {
