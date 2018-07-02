@@ -391,28 +391,22 @@ export class IgxOverlayService {
     }
 
     private addResizeHandler(id: string) {
-        console.log('add with length = ' + this._overlayInfos.length);
         const closingOverlaysCount =
             this._overlayInfos
                 .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
                 .length;
-        console.log('add with closing = ' + closingOverlaysCount);
         if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView.addEventListener('resize', this.repositionAll);
-            console.log('added');
         }
     }
 
     private removeResizeHandler(id: string) {
-        console.log('remove with length = ' + this._overlayInfos.length);
         const closingOverlaysCount =
             this._overlayInfos
                 .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
                 .length;
-        console.log('remove with closing = ' + closingOverlaysCount);
         if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView.removeEventListener('resize', this.repositionAll);
-            console.log('removed');
         }
     }
 
