@@ -204,34 +204,58 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 /// @param {String} $elem - The sub-element name.
 /// @param {String} $m - The modifier name.
 /// @param {String} $mod - An alias of `$m`.
-@mixin bem-elem($elem, $m: null, $mod: null) {
+@mixin bem-elem($elem, $m: null, $mod: null, $mods: null) {
     $this: bem--selector-to-string(&);
+    $block: bem--extract-block($this);
+    $first: bem--extract-first-selector($this);
+    $nested: bem--contains-pseudo($this) or bem--contains-mod($this);
+
+    $mod: $m or $mod;
+    $mx: ();
+
     @if $this == '' {
         @error 'Detected an Element that is not inside a Block: #{$elem}';
     }
+
     @if bem--contains-elem($this) {
         @error 'Detected a multi-level nested Element (#{$this} #{$elem})! Bemerald doesn\'t support nested ' + 'elements because they do not have BEM nature (www.getbem.com/faq/#css-nested-elements). ' + 'If you must do it, use a hardcoded selector like &__subsubelem ';
     }
-    $mod: $m or $mod;
-    $block: bem--extract-block($this);
-    $first: bem--extract-first-selector($this);
-    @if not (bem--contains-pseudo($this) or bem--contains-mod($this)) {
+
+    @if $mods != null and type-of($mods) == 'list' {
+        @each $i in $mods {
+            $mx: append($mx, #{bem-selector($block, $e: ($elem, $i))})
+        }
+    }
+
+    @if not($nested) {
         // Normal case, no pseudo-selector present or mod, so no nesting.
-        // .myblock__myelem { ... }
+        // .block__elem { ... }
         @at-root {
-            #{bem-selector($block, $e: ($elem, $mod))} {
-                @content;
+            @if $mods == null {
+                #{bem-selector($block, $e: ($elem, $mod))} {
+                    @content;
+                }
+            } @else {
+                #{implode($mx)} {
+                    @content;
+                }
             }
         }
     } @else {
         // pseudo-element or mod present, so we have nesting.
-        // .myblock:active .myblock__myelem { ... }
-        // .myblock--mymod .myblock__myelem { ... }
+        // .block:active .block__elem { ... }
+        // .block--mod .block__elem { ... }
         @at-root {
-            $selector: bem--extract-first-selector($this) + ' ' + bem-selector($block, $e: ($elem, $mod));
+            $selector: $first + ' ' + bem-selector($block, $e: ($elem, $mod));
 
-            #{$selector} {
-                @content;
+            @if $mods == null {
+                #{$selector} {
+                    @content;
+                }
+            } @else {
+                #{$first} #{implode($mx)} {
+                    @content;
+                }
             }
         }
     }
@@ -304,8 +328,8 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-elem
-@mixin elem($elem, $m: null, $mod: null) {
-    @include bem-elem($elem, $m: $m, $mod: $mod) {
+@mixin elem($elem, $m: null, $mod: null, $mods: null) {
+    @include bem-elem($elem, $m: $m, $mod: $mod, $mods: $mods) {
         @content;
     }
 }
@@ -332,8 +356,8 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-elem
-@mixin e($elem, $m: null, $mod: null) {
-    @include bem-elem($elem, $m: $m, $mod: $mod) {
+@mixin e($elem, $m: null, $mod: null, $mods: null) {
+    @include bem-elem($elem, $m: $m, $mod: $mod, $mods: $mods) {
         @content;
     }
 }
