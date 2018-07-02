@@ -237,8 +237,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     // after changes in columns have occured re-init cache.
                     this.initHCache(this.igxForOf);
                 }
-                this._applyChanges(changes);
                 this._zone.run(() => {
+                    this._applyChanges(changes);
                     this.cdr.markForCheck();
                 });
             }
@@ -662,6 +662,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             if (sum <= availableSize) {
                  arr.push(item);
                  length = arr.length;
+                 if (i === this.igxForOf.length - 1) {
+                    // reached end without exceeding
+                    // include prev items until size is filled or first item is reached.
+                    let prevIndex = this.igxForOf.indexOf(arr[0]) - 1;
+                    while (prevIndex >= 0 && sum <= availableSize) {
+                        prevIndex = this.igxForOf.indexOf(arr[0]) - 1;
+                        const prevItem = this.igxForOf[prevIndex];
+                        sum = arr.reduce(reducer,  parseInt(prevItem.width, 10));
+                        arr.unshift(prevItem);
+                        length = arr.length;
+                    }
+                 }
              } else {
                  arr.push(item);
                  length = arr.length + 1;

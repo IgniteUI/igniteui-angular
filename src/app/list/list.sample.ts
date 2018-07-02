@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { IgxDialogComponent, IgxFilterOptions } from 'igniteui-angular';
+import { IgxDialogComponent, IgxFilterOptions, IgxListComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-list-sample',
@@ -7,6 +7,8 @@ import { IgxDialogComponent, IgxFilterOptions } from 'igniteui-angular';
     templateUrl: 'list.sample.html'
 })
 export class ListSampleComponent {
+    @ViewChild('fruitList')
+    fruitList: IgxListComponent;
 
     @ViewChild('checkbox')
     checkbox: any;
@@ -140,8 +142,18 @@ export class ListSampleComponent {
     filteredHandler = (args) => { };
 
     onAddFruitButtonClicked(fruitName) {
-        this.fruits.push({ id: this.fruits.length, name: fruitName });
+        this.addFruit(fruitName);
         this.addFruitDialog.close();
+    }
+
+    addFruit(fruitName) {
+        this.fruits.push({ id: this.fruits.length, name: fruitName });
+    }
+
+    addFruits(fruits: string[]) {
+        fruits.forEach((fruit) => {
+            this.addFruit(fruit);
+        });
     }
 
     deleteFruit(fruitId) {
@@ -158,6 +170,22 @@ export class ListSampleComponent {
 
     fruitsFiltered(args) {
         this.fruitsFilteredItemsCount = args.filteredItems.length;
+    }
+
+    loadFruits() {
+        this.fruitList.isLoading = true;
+        setTimeout(() => {
+            this.addFruits([
+                'banana',
+                'orange',
+                'apple',
+                'kiwi',
+                'mango',
+                'strawberry',
+                'pear'
+            ]);
+            this.fruitList.isLoading = false;
+        }, 1000);
     }
 }
 

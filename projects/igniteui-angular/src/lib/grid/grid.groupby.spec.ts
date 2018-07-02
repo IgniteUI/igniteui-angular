@@ -746,7 +746,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
-        fix.componentInstance.width = '500px';
+        fix.componentInstance.width = '600px';
         fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
         fix.detectChanges();
@@ -764,7 +764,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
-        fix.componentInstance.width = '500px';
+        fix.componentInstance.width = '600px';
         fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
         fix.detectChanges();
@@ -1486,8 +1486,12 @@ describe('IgxGrid - GroupBy', () => {
         expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
-        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup', {}));
-        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup', {}));
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup'));
+        fix.detectChanges();
+
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup'));
 
         fix.detectChanges();
         grid.cdr.detectChanges();
@@ -1620,16 +1624,16 @@ describe('IgxGrid - GroupBy', () => {
         });
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 50);
-        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 50);
+        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 75, 30);
+        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             fix.detectChanges();
             const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
@@ -1686,17 +1690,17 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 50);
-        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 50);
+        simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 30);
+        simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
 
-            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -1714,18 +1718,18 @@ describe('IgxGrid - GroupBy', () => {
             chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
             // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-            simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 50);
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 50);
+            simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 30);
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 50);
+            simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['_dragGhost'], 250, 30);
 
             return fix.whenStable();
         }).then(() => {
@@ -1933,6 +1937,24 @@ describe('IgxGrid - GroupBy', () => {
 
         const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+    });
+
+    it('should show horizontal scrollbar if column widths are equal to the grid width and a column is grouped.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+
+        const grid = fix.componentInstance.instance;
+
+        grid.columnWidth = '200px';
+        fix.componentInstance.width = '1000px';
+
+        fix.detectChanges();
+
+        const hScrBar = grid.scr.nativeElement;
+        expect(hScrBar.hidden).toBe(true);
+
+        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc});
+        fix.detectChanges();
+        expect(hScrBar.hidden).toBe(false);
     });
 
     function sendInput(element, text, fix) {

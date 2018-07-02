@@ -621,7 +621,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get hiddenColumnsCount() {
-        return this.columnList.filter((col) => col.hidden === true).length;
+        return this.columnList.filter((col) => col.columnGroup === false && col.hidden === true).length;
     }
 
     @Input()
@@ -632,6 +632,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set hiddenColumnsText(value) {
         this._hiddenColumnsText = value;
 
+    }
+
+    @Input()
+    get pinnedColumnsText() {
+        return this._pinnedColumnsText;
+    }
+
+    set pinnedColumnsText(value) {
+        this._pinnedColumnsText = value;
     }
 
     /* Toolbar related definitions */
@@ -814,6 +823,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private resizeHandler;
     private columnListDiffer;
     private _hiddenColumnsText = '';
+    private _pinnedColumnsText = '';
     private _height = '100%';
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;
@@ -821,7 +831,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     constructor(
         private gridAPI: IgxGridAPIService,
-        private selectionAPI: IgxSelectionAPIService,
+        public selectionAPI: IgxSelectionAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -1047,7 +1057,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     get totalWidth(): number {
         // Take only top level columns
-        const cols = this.visibleColumns.filter(col => col.level === 0);
+        const cols = this.visibleColumns.filter(col => col.level === 0 && col.pinned === false);
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
@@ -1089,6 +1099,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+        if (column.level !== dropTarget.level) {
+            return;
+        }
 
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
@@ -1097,12 +1110,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (dropTarget.pinned && column.pinned) {
             const pinned = this._pinnedColumns;
             pinned.splice(pinned.indexOf(dropTarget), 0, ...pinned.splice(pinned.indexOf(column), 1));
-            return;
         }
 
         if (dropTarget.pinned && !column.pinned) {
             column.pin(dropTarget.index);
-            return;
         }
 
         if (!dropTarget.pinned && column.pinned) {
@@ -1204,6 +1215,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this._groupBy(rest[0]);
         }
+        this.cdr.detectChanges();
         this.calculateGridSizes();
         this.onGroupingDone.emit(this.sortingExpressions);
     }
