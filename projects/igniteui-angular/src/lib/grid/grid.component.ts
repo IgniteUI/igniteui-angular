@@ -2145,7 +2145,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const groupByRecords = this.getGroupByRecords();
 
         data.forEach((dataRow, i) => {
-            const groupByRecord = groupIndexData ? groupByRecords[i] : null;
+            const groupByRecord = groupByRecords ? groupByRecords[i] : null;
             const groupByIncrement = groupIndexData ? groupIndexData[i] : 0;
             const pagingIncrement = this.getPagingIncrement(groupByIncrement, groupIndexData, Math.floor(i / this.perPage));
             const rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
@@ -2219,13 +2219,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     private getGroupByRecords(): IGroupByRecord[] {
-        const state = {
-            expressions: this.groupingExpressions,
-            expansion:  this.groupingExpansionState,
-            defaultExpanded: this.groupsExpanded
-        };
+        if (this.groupingExpressions && this.groupingExpressions.length) {
+            const state = {
+                expressions: this.groupingExpressions,
+                expansion:  this.groupingExpansionState,
+                defaultExpanded: this.groupsExpanded
+            };
 
-        return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
+            return DataUtil.group(cloneArray(this.filteredSortedData), state).metadata;
+        } else {
+            return null;
+        }
     }
 
     // For paging we need just the increment between the start of the page and the current row
