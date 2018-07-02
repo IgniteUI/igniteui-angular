@@ -83,6 +83,14 @@
         background: --var($theme, 'background');
         box-shadow: igx-elevation($elevations, 24);
         overflow: hidden;
+
+        .igx-calendar {
+            width: rem(320px);
+        }
+
+        .igx-calendar--vertical {
+            width: rem(496px);
+        }
     }
 
     %igx-dialog-title {
