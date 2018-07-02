@@ -149,9 +149,11 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     /**
      * @hidden
      */
-    selectItem(item: IgxComboItemComponent) {
+    selectItem(item: IgxComboItemComponent, event?: Event) {
         if (item.itemData === 'ADD ITEM') {
-            this.parentElement.addItemToCollection();
+            if (event) {
+                this.parentElement.addItemToCollection();
+            }
         } else {
             this.setSelectedItem(item.itemID);
             this._focusedItem = item;

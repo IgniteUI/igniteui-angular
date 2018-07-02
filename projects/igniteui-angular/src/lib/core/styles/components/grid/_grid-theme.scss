@@ -378,6 +378,12 @@
         compact: rem(4px) rem(12px)
     );
 
+    $grouparea-min-height: (
+        comfortable: rem(57px),
+        cosy: rem(49px),
+        compact: rem(41px)
+    );
+
     $grid-grouping-indicator-padding: (
         comfortable: rem(24px),
         cosy: rem(16px),
@@ -1055,6 +1061,7 @@
         flex-wrap: wrap;
         border-bottom: 1px solid --var($theme, 'row-border-color');
         background: --var($theme, 'grouparea-background');
+        min-height: map-get($grouparea-min-height, 'comfortable');
         padding: map-get($grouparea-padding, 'comfortable');
         z-index: 2;
 
@@ -1064,10 +1071,12 @@
     }
 
     %igx-grid__grouparea--cosy {
+        min-height: map-get($grouparea-min-height, 'cosy');
         padding: map-get($grouparea-padding, 'cosy');
     }
 
     %igx-grid__grouparea--compact {
+        min-height: map-get($grouparea-min-height, 'compact');
         padding: map-get($grouparea-padding, 'compact');
     }
 
