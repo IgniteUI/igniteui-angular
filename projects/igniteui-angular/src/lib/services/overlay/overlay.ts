@@ -15,7 +15,7 @@ import {
     Injector,
     Type
 } from '@angular/core';
-import { AnimationBuilder, AnimationReferenceMetadata, AnimationFactory, AnimationPlayer } from '@angular/animations';
+import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
@@ -82,7 +82,15 @@ export class IgxOverlayService {
         this.addOutsideClickListener(info);
         this.addResizeHandler(info.id);
 
-        this.playOpenAnimation(info);
+        if (info.settings.modal) {
+            this.setupModalWrapper(info);
+        }
+
+        if (info.settings.positionStrategy.settings.openAnimation) {
+            this.playOpenAnimation(info);
+        } else {
+            this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+        }
 
         return id;
     }
@@ -105,7 +113,20 @@ export class IgxOverlayService {
         info.settings.scrollStrategy.detach();
         this.removeOutsideClickListener(info);
         this.removeResizeHandler(info.id);
-        this.playCloseAnimation(info);
+
+        const child: HTMLElement = info.elementRef.nativeElement;
+        if (info.settings.modal) {
+            const parent = child.parentNode.parentNode as HTMLElement;
+            this.applyAnimationParams(parent, info.settings.positionStrategy.settings.closeAnimation);
+            parent.classList.remove('igx-overlay__wrapper--modal');
+            parent.classList.add('igx-overlay__wrapper');
+        }
+
+        if (info.settings.positionStrategy.settings.closeAnimation) {
+            this.playCloseAnimation(info);
+        } else {
+            this.onCloseDone(info);
+        }
     }
 
     hideAll() {
@@ -220,26 +241,58 @@ export class IgxOverlayService {
         }
     }
 
-    // TODO: refactor playAnimation methods and allow null animations
+    private setupModalWrapper(info: OverlayInfo) {
+        const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
+        fromEvent(wrapperElement, 'keydown')
+            .pipe(take(1))
+            .subscribe((ev: KeyboardEvent) => {
+                if (ev.key === 'Escape') {
+                    this.hide(info.id);
+                }
+            });
+        wrapperElement.classList.remove('igx-overlay__wrapper');
+        this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
+        wrapperElement.classList.add('igx-overlay__wrapper--modal');
+    }
+
+    private onCloseDone(info: OverlayInfo) {
+        const child: HTMLElement = info.elementRef.nativeElement;
+        if (!this._overlayElement.contains(child)) {
+            console.warn('Component with id:' + info.id + ' is already removed!');
+            return;
+        }
+
+        this._overlayElement.removeChild(child.parentNode.parentNode);
+        if (info.componentRef) {
+            this._appRef.detachView(info.componentRef.hostView);
+            info.componentRef.destroy();
+        }
+
+        if (info.hook) {
+            info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
+            info.hook.parentElement.removeChild(info.hook);
+        }
+
+        if (info.settings.closeOnOutsideClick) {
+            if (this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
+                this._document.removeEventListener('click', this.documentClicked, true);
+            }
+        }
+
+        const index = this._overlayInfos.indexOf(info);
+        this._overlayInfos.splice(index, 1);
+        if (this._overlayInfos.length === 0 && this._overlayElement.parentElement) {
+            this._overlayElement.parentElement.removeChild(this._overlayElement);
+            this._overlayElement = null;
+        }
+
+        this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+    }
+
     private playOpenAnimation(info: OverlayInfo) {
 
         const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
         info.openAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
-
-        if (info.settings.modal) {
-            const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
-            fromEvent(wrapperElement, 'keydown')
-                .pipe(take(1))
-                .subscribe((ev: KeyboardEvent) => {
-                    if (ev.key === 'Escape') {
-                        this.hide(info.id);
-                    }
-                });
-
-            wrapperElement.classList.remove('igx-overlay__wrapper');
-            this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
-            wrapperElement.classList.add('igx-overlay__wrapper--modal');
-        }
 
         info.openAnimationPlayer.onDone(() => {
             this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
@@ -250,51 +303,14 @@ export class IgxOverlayService {
         info.openAnimationPlayer.play();
     }
 
-    // TODO: refactor playAnimation methods and allow null animations
     private playCloseAnimation(info: OverlayInfo) {
         const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
         info.closeAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
 
-        const child: HTMLElement = info.elementRef.nativeElement;
-        if (info.settings.modal) {
-            const parent = child.parentNode.parentNode as HTMLElement;
-            parent.classList.remove('igx-overlay__wrapper--modal');
-            parent.classList.add('igx-overlay__wrapper');
-        }
-
         info.closeAnimationPlayer.onDone(() => {
             info.closeAnimationPlayer.reset();
             info.closeAnimationPlayer = null;
-            if (!this._overlayElement.contains(child)) {
-                console.warn('Component with id:' + info.id + ' is already removed!');
-                return;
-            }
-
-            this._overlayElement.removeChild(child.parentNode.parentNode);
-            if (info.componentRef) {
-                this._appRef.detachView(info.componentRef.hostView);
-                info.componentRef.destroy();
-            }
-
-            if (info.hook) {
-                info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
-                info.hook.parentElement.removeChild(info.hook);
-            }
-
-            if (info.settings.closeOnOutsideClick) {
-                if (this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
-                    this._document.removeEventListener('click', this.documentClicked, true);
-                }
-            }
-
-            const index = this._overlayInfos.indexOf(info);
-            this._overlayInfos.splice(index, 1);
-            if (this._overlayInfos.length === 0 && this._overlayElement.parentElement) {
-                this._overlayElement.parentElement.removeChild(this._overlayElement);
-                this._overlayElement = null;
-            }
-
-            this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+            this.onCloseDone(info);
         });
 
         info.closeAnimationPlayer.play();
@@ -302,7 +318,14 @@ export class IgxOverlayService {
 
     //  TODO: check if applyAnimationParams will work with complex animations
     private applyAnimationParams(wrapperElement: HTMLElement, animationOptions: AnimationReferenceMetadata) {
-        if (!animationOptions || !animationOptions.options || !animationOptions.options.params) {
+        if (!animationOptions) {
+            wrapperElement.style.transitionDuration = '0ms';
+            return;
+        }
+        if (animationOptions.type === AnimationMetadataType.AnimateRef) {
+            animationOptions = (animationOptions as AnimationAnimateRefMetadata).animation;
+        }
+        if (!animationOptions.options || !animationOptions.options.params) {
             return;
         }
         const params = animationOptions.options.params as IAnimationParams;
