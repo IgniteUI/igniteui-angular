@@ -275,10 +275,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     public onPointerMove(event) {
         event.preventDefault();
-
-        if (!this.draggable) {
-            return;
-        }
         super.onPointerMove(event);
 
         if (this._dragStarted && this._dragGhost && !this.column.grid.draggedColumn) {
@@ -300,10 +296,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerUp(event) {
-        if (!this.draggable) {
-            return;
-        }
-
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
             super.onPointerUp(event);
