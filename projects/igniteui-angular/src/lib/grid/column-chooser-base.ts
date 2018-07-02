@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, HostBinding, Input,  OnDestroy } from '@angular/core';
 import { DataUtil } from '../data-operations/data-util';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { FilteringLogic } from '../data-operations/filtering-expression.interface';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { FilteringStrategy } from '../data-operations/filtering-strategy';
+import { ColumnChooserItemBase } from './column-chooser-item-base';
 
 export enum ColumnDisplayOrder {
     Alphabetical,
@@ -131,18 +133,44 @@ export abstract class ColumnChooserBase implements OnDestroy {
     }
 
     protected filter() {
-        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-        filteringExpressionsTree.filteringOperands.push({
-                condition: IgxStringFilteringOperand.instance().condition('contains'),
-                fieldName: 'name',
-                ignoreCase: true,
-                searchVal: this._filterCriteria
-        });
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        filteringExpressionsTree.filteringOperands.push(this.createFilteringExpression('name'));
+        filteringExpressionsTree.filteringOperands.push(this.createFilteringExpression('field'));
+        filteringExpressionsTree.filteringOperands.push(this.createFilteringExpression('header'));
 
-        this._currentColumns = DataUtil.filter(this._currentColumns, { expressionsTree: filteringExpressionsTree });
+        const strategy = new CustomFilteringStrategy();
+        this._currentColumns = strategy.filter(this._currentColumns, filteringExpressionsTree);
+    }
+
+    protected createFilteringExpression(fieldName: string): IFilteringExpression {
+        return {
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            fieldName: fieldName,
+            ignoreCase: true,
+            searchVal: this._filterCriteria
+        };
     }
 
     protected clearFiltering() {
         this.createColumnItems();
+    }
+}
+
+class CustomFilteringStrategy extends FilteringStrategy {
+    public filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[] {
+        const res: ColumnChooserItemBase[] = [];
+        data.forEach((item: ColumnChooserItemBase) => {
+            if (this.matchRecord(item, expressionsTree.filteringOperands[0] as IFilteringExpression)) {
+                res.push(item);
+            } else if (item.column.columnGroup) {
+                if (item.column.allChildren.findIndex((child) =>
+                    this.matchRecord(child, expressionsTree.filteringOperands[1] as IFilteringExpression) ||
+                    this.matchRecord(child, expressionsTree.filteringOperands[2] as IFilteringExpression)) > -1) {
+                        res.push(item);
+                }
+            }
+        });
+
+        return res;
     }
 }

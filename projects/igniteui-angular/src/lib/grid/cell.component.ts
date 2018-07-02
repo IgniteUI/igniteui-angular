@@ -334,6 +334,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('dblclick', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {
+            this.focused = true;
             this.inEditMode = true;
         }
 
@@ -611,6 +612,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (this.inEditMode) {
                 this.gridAPI.submit_value(this.gridID);
             } else {
+                this.focused = true;
                 this.inEditMode = true;
             }
             this.nativeElement.focus();
