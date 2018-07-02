@@ -1550,8 +1550,8 @@ describe('igxOverlay', () => {
                 expect(wrapperLeft).toEqual(expectedLeft);
             });
         });
-
-        it('igx-overlay displays each shown component based on the options specified if the component fits into the visible window.',
+        // WIP
+        xit('igx-overlay displays each shown component based on the options specified if the component fits into the visible window.',
             fakeAsync(() => {
                 let buttonRect: ClientRect;
                 let overlayWrapper: Element;
@@ -1741,8 +1741,8 @@ describe('igxOverlay', () => {
                     expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
                 });
             }));
-
-        fit('The component is repositioned and rendered correctly in the window, even when the rendering options passed ' +
+        // WIP
+        xit('The component is repositioned and rendered correctly in the window, even when the rendering options passed ' +
             ' should result in otherwise a partially hidden component. No scrollbars should appear.', fakeAsync(() => {
                 let buttonRect: ClientRect;
                 let overlayWrapper: Element;
@@ -1803,7 +1803,7 @@ describe('igxOverlay', () => {
                     expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
                     expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
             });
-    }));
+        }));
 
         xit('igx-overlay margins should be rendered correctly', () => {
             // TO DO
