@@ -62,10 +62,10 @@
         selected-item-background: igx-color($palette, 'secondary', 500),
         selected-item-text-color: #fff,
 
-        selected-hover-item-background: igx-color($palette, 'secondary', 500),
+        selected-hover-item-background: igx-color($palette, 'secondary', 600),
         selected-hover-item-text-color: #fff,
 
-        selected-focus-item-background: igx-color($palette, 'secondary', 500),
+        selected-focus-item-background: igx-color($palette, 'secondary', 600),
         selected-focus-item-text-color: #fff,
 
         disabled-item-background: transparent,
@@ -102,6 +102,10 @@
         $selected-hover-item-text-color: text-contrast($selected-hover-item-background);
     }
 
+
+    @if not($selected-focus-item-text-color) and $selected-focus-item-background {
+        $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
+    }
 
     @if not($selected-focus-item-text-color) and $selected-focus-item-background {
         $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
