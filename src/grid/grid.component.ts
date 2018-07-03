@@ -13,6 +13,7 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Inject,
     Input,
     IterableChangeRecord,
@@ -479,6 +480,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
                 this.markForCheck();
             });
+        const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+        vertScrDC.addEventListener("scroll", (evt) => { this.scrollHandler(evt); });
 }
 
     public ngAfterViewInit() {
@@ -1206,4 +1209,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.selectionAPI.set_selection(this.id, args.newSelection);
         this.checkHeaderChecboxStatus(headerStatus);
     }
+
+    @HostListener("scroll", ["$event"])
+    public scrollHandler(event) {
+        this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
+        this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
+        event.target.scrollLeft = 0;
+        event.target.scrollTop = 0;
+    }
+
 }
