@@ -361,19 +361,16 @@ describe('IgxDropDown ', () => {
         expect(list).toBeDefined();
         expect(list.items.length).toEqual(4);
         button.click(mockObj);
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const lastListItem = list.items[3].element.nativeElement;
-            lastListItem.click({});
-            tick();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(list.selectedItem).toEqual(list.items[3]);
-            expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
-        });
+        tick();
+        fixture.detectChanges();
+        const lastListItem = list.items[3].element.nativeElement;
+        lastListItem.click({});
+        tick();
+        fixture.detectChanges();
+        expect(list.selectedItem).toEqual(list.items[3]);
+        expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
+        expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
     }));
 
     it('Should be able to implement to image anchor', fakeAsync(() => {
@@ -388,40 +385,41 @@ describe('IgxDropDown ', () => {
         expect(list).toBeDefined();
         expect(list.items.length).toEqual(4);
         button.click(mockObj);
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const lastListItem = list.items[3].element.nativeElement;
-            lastListItem.click({});
-            tick();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(list.selectedItem).toEqual(list.items[3]);
-            expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
-        });
+        tick();
+        fixture.detectChanges();
+        const lastListItem = list.items[3].element.nativeElement;
+        lastListItem.click({});
+        tick();
+        fixture.detectChanges();
+        expect(list.selectedItem).toEqual(list.items[3]);
+        expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
+        expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
     }));
 
-    it('Should be able to implement to igx-tabs anchor', () => {
+    it('Should be able to implement to igx-tabs anchor', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDropDownTabsTestComponent);
         fixture.detectChanges();
         const tabs = fixture.componentInstance.tabs;
         const list = fixture.componentInstance.dropdown;
         const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
+        spyOn(list.onSelection, 'emit').and.callThrough();
+        spyOn(list.onClosed, 'emit').and.callThrough();
+        spyOn(fixture.componentInstance, 'onSelection');
         expect(list).toBeDefined();
         expect(list.items.length).toEqual(4);
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const lastListItem = list.items[3].element.nativeElement;
-            lastListItem.click({});
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(list.selectedItem).toEqual(list.items[3]);
-        });
-    });
+        tick(300);
+        fixture.detectChanges();
+        const lastListItem = list.items[3].element.nativeElement;
+        lastListItem.click({});
+        tick(300);
+        fixture.detectChanges();
+        expect(list.selectedItem).toEqual(list.items[3]);
+        expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
+        expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
+    }));
 
     it('Items can be disabled/enabled at runtime', () => {
         const fixture = TestBed.createComponent(IgxDropDownTestDisabledAnyComponent);
