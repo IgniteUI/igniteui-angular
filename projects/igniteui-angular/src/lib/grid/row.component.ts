@@ -167,6 +167,10 @@ export class IgxGridRowComponent implements DoCheck {
             if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
                 this.gridAPI.get(this.gridID).deselectRows(row.rowID);
             }
+            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+            if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+            }
             const index = this.gridAPI.get(this.gridID).data.indexOf(row.rowData);
             this.gridAPI.get(this.gridID).data.splice(index, 1);
             this.gridAPI.get(this.gridID).onRowDeleted.emit({ data: row.rowData });
