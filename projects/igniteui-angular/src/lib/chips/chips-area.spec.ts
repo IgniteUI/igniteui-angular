@@ -329,7 +329,7 @@ describe('IgxChipsArea', () => {
         });
     }));
 
-    it('chip reorder should fire correctly with drag and drop', async(() => {
+    it('chip reorder should fire correctly when element is dragged and dropped to the left', async(() => {
         const fix = TestBed.createComponent(TestChipReorderComponent);
         fix.detectChanges();
 
@@ -377,6 +377,66 @@ describe('IgxChipsArea', () => {
             return fix.whenRenderingDone();
         }).then(() => {
             simulatePointerEvent('pointerup', firstChip.dragDir['_dragGhost'], secondChipX, secondChipY);
+            return fix.whenRenderingDone();
+        }).then(() => {
+            setTimeout(() => {
+                const afterDropSecondChipLeft = secondChipElem.getBoundingClientRect().left;
+                expect(afterDropSecondChipLeft).toEqual(firstChipLeft);
+
+                const afterDropFirstChipLeft = firstChipElem.getBoundingClientRect().left;
+                expect(afterDropFirstChipLeft).not.toEqual(firstChipLeft);
+            });
+        });
+    }));
+
+    it('chip reorder should fire correctly when element is dragged and dropped to the right', async(() => {
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+
+        const chipComponents = chipArea[0].queryAll(By.directive(IgxChipComponent));
+        const firstChip = chipComponents[0].componentInstance;
+        const secondChip = chipComponents[1].componentInstance;
+
+        firstChip.dragDir.animateOnRelease = false;
+        secondChip.dragDir.animateOnRelease = false;
+
+        const firstChipElem = firstChip.chipArea.nativeElement;
+        const secondChipElem = secondChip.chipArea.nativeElement;
+
+        const firstChipTop = firstChipElem.getBoundingClientRect().top;
+        const firstChipLeft = firstChipElem.getBoundingClientRect().left;
+        const firstChipBottom = firstChipElem.getBoundingClientRect().bottom;
+        const firstChipRight = firstChipElem.getBoundingClientRect().right;
+
+        const firstChipX = (firstChipLeft + firstChipRight) / 2;
+        const firstChipY = (firstChipTop + firstChipBottom) / 2;
+
+        const secondChipTop = secondChipElem.getBoundingClientRect().top;
+        const secondChipLeft = secondChipElem.getBoundingClientRect().left;
+        const secondChipBottom = secondChipElem.getBoundingClientRect().bottom;
+        const secondChipRight = secondChipElem.getBoundingClientRect().right;
+
+        const secondChipX = (secondChipLeft + secondChipRight) / 2;
+        const secondChipY = (secondChipTop + secondChipBottom) / 2;
+
+        simulatePointerEvent('pointerdown', secondChipElem, secondChipX, secondChipY);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', secondChipElem, secondChipX + 10, secondChipY + 10);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], firstChipX, firstChipY);
+            fix.detectChanges();
+
+            return fix.whenRenderingDone();
+        }).then(() => {
+            simulatePointerEvent('pointerup', secondChip.dragDir['_dragGhost'], firstChipX, firstChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -554,6 +614,49 @@ describe('IgxChipsArea', () => {
         });
     });
 
+    it('should not reorder chips when shift + leftarrow and shift + rightarrow is pressed when the chip is going out of bounce', () => {
+        const leftKey = new KeyboardEvent('keydown', {
+            'key': 'ArrowLeft',
+            shiftKey: true
+        });
+        const rightKey = new KeyboardEvent('keydown', {
+            'key': 'ArrowRight',
+            shiftKey: true
+        });
+
+        let firstChipLeft;
+        let lastChipLeft;
+        let firstChipAreaElem;
+        let lastChipAreaElem;
+
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            firstChipAreaElem = chipComponents[0].componentInstance.chipArea.nativeElement;
+            lastChipAreaElem = chipComponents[chipComponents.length - 1].componentInstance.chipArea.nativeElement;
+
+            firstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
+            lastChipLeft = lastChipAreaElem.getBoundingClientRect().left;
+
+            firstChipAreaElem.focus();
+            fix.detectChanges();
+            expect(document.activeElement).toBe(firstChipAreaElem);
+
+            firstChipAreaElem.dispatchEvent(leftKey);
+            lastChipAreaElem.dispatchEvent(rightKey);
+            fix.detectChanges();
+
+            const newFirstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
+            const newlastChipLeft = lastChipAreaElem.getBoundingClientRect().left;
+
+            expect(firstChipLeft).toEqual(newFirstChipLeft);
+            expect(newlastChipLeft).toEqual(lastChipLeft);
+        });
+    });
+
     it('should delete chip when delete button is pressed and chip is removable', () => {
         const deleteKey = new KeyboardEvent('keydown', {
             'key': 'Delete'
@@ -581,19 +684,17 @@ describe('IgxChipsArea', () => {
         const fix = TestBed.createComponent(TestChipReorderComponent);
         fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
-            expect(chipComponents.length).toEqual(4);
+        expect(chipComponents.length).toEqual(4);
 
-            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
-            deleteButtonElement.nativeElement.click();
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
+        deleteButtonElement.nativeElement.click();
 
-            fix.detectChanges();
+        fix.detectChanges();
 
-            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            expect(chipComponents.length).toEqual(3);
-        });
+        chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        expect(chipComponents.length).toEqual(3);
     });
 
     it('chip should persist selected state when it is dragged and dropped', () => {
