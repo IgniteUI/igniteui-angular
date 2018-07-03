@@ -899,7 +899,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
             // this.isHeaderChecked();
         }
-        if (event) {
+        if (event !== undefined) {
             this.onSearchInput.emit(event);
         }
     }
