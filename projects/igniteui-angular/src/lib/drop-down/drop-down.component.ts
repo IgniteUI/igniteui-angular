@@ -452,10 +452,12 @@ export class IgxDropDownBase implements OnInit, IToggleView {
 
     public selectItem(item?) {
         if (!item) {
-            item = this._focusedItem;
+            item = this._focusedItem ? this._focusedItem : null;
         }
-        this.setSelectedItem(this._focusedItem.index);
-        this.toggleDirective.close();
+        if (item) {
+            this.setSelectedItem(item.index);
+            this.toggleDirective.close();
+        }
     }
 
     protected changeSelectedItem(newSelection?: IgxDropDownItemBase) {
