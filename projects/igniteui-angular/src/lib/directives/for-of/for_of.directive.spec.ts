@@ -891,6 +891,52 @@ describe('IgxVirtual directive - simple template', () => {
         chunkSize = firstRecChildren.length;
         expect(chunkSize).toEqual(10);
     });
+    it('should update horizontal scroll offsets if igxForOf changes. ', () => {
+        const fix = TestBed.createComponent(HorizontalVirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        fix.componentInstance.width = '500px';
+        fix.componentInstance.cols = [
+            { field: '1', width: 100 },
+            { field: '2', width: 200 },
+            { field: '3', width: 200 },
+            { field: '4', width: 200 },
+            { field: '5', width: 300 }
+        ];
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        const displayContainer = fix.nativeElement.querySelector('igx-display-container');
+
+        fix.componentInstance.scrollLeft(50);
+
+        fix.detectChanges();
+
+        expect(parseInt(displayContainer.style.left, 10)).toEqual(-50);
+
+        fix.componentInstance.cols = [
+            { field: '1', width: 100 }
+        ];
+        fix.detectChanges();
+
+        expect(parseInt(displayContainer.style.left, 10)).toEqual(0);
+
+    });
+    it('should update vertical scroll offsets if igxForOf changes. ', (done) => {
+        const fix = TestBed.createComponent(VerticalVirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+        fix.componentInstance.scrollTop(5);
+        fix.detectChanges();
+        const displayContainer = fix.nativeElement.querySelector('igx-display-container');
+
+        expect(parseInt(displayContainer.style.top, 10)).toEqual(-5);
+        fix.componentInstance.data = [{'1': 1, '2': 2, '3': 3, '4': 4}];
+        fix.detectChanges();
+        setTimeout(() => {
+            expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
+            done();
+        }, 10);
+    });
 });
 
 /** igxFor for testing */
