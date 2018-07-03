@@ -17,36 +17,40 @@ export class GridPerformanceSampleComponent implements OnInit {
     ngOnInit() {
 
         const cols = [];
+        cols.push({
+            field: 'ID',
+            width: 90
+        })
         for (let j = 0; j < 300; j++) {
             cols.push({
-                field: j.toString(),
-                width: j % 3 === 0 ?
-                    Math.floor((Math.random() * 50) + 50) :
-                    (
-                        j % 3 === 1 ?
-                            Math.floor((Math.random() * 60) + 50) :
-                            Math.floor((Math.random() * 70) + 50)
-                    )
+                field: (j + 1).toString(),
+                width: (Math.random() * 80) + 90
             });
         }
 
         this.columns = cols;
 
+        const obj = {};
+        for (let j = 0; j < cols.length; j++) {
+            const col = cols[j].field;
+            obj[col] = j;
+        }
+
         for (let i = 0; i < 100000; i++) {
-            const obj = {};
-            for (let j = 0; j < cols.length; j++) {
-                const col = cols[j].field;
-                obj[col] = 10 * i * j;
-            }
-            this.localData.push(obj);
+            var newObj = Object.create(obj);
+            newObj['ID'] = i + 1;
+            this.localData.push(newObj);
         }
     }
 
     ToggleCol() {
-        if (this.columns[0].field === '0') {
+        if (this.columns[0].field === 'new column') {
             this.columns.splice(0, 1);
         } else {
-            this.columns.unshift({ field: '0', width: '200px' });
+            this.columns.unshift({ field: 'new column', width: '200px' });
+            for(let i = 0; i < 100000; i++) {
+                this.localData[i]['new column'] = i * 3;
+            }
         }
         this.grid1.markForCheck();
     }

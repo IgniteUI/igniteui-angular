@@ -104,6 +104,7 @@
     @include scale-in-center();
 
     %cbx-display {
+        position: relative;
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
