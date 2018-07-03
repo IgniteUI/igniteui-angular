@@ -49,10 +49,10 @@ When creating an issue assign a `version:` label. Add `version:` labels for each
 
 When logging issue you should assign `severity:` label. If you cannot determine the issue severity use the `severity: medium` as initial label and a developer will re-evaluate it when doing investigation.
 
-1. `severity: low` this serverity means that the issue has low impact on the product.
-2. `severity: medium` this severity means that the issue can be seen by users occasionally, but it won't prevent them to complete their action/interaction. For example if there is a styling problem or misalignment in the UI, but this doesn't break any use cases.
-3. `severity: high` this severity means that the issue impacts a common use case of the control. For example filtering by dates for "last month" condition is not possible in the `igx-grid`.
-4. `severity: critical` this serverity means that the issue has big impact on the product and can easily be seen by the users. For example if there is na exception in the console and the control is not working.
+1. `severity: low` the issue is unnoticeable or barely noticeable in uncommon interactions with the feature. The issue does not affect end-user experience, or any of the general functionalities of the feature. The feature works fine if the issue persists to exist.
+2. `severity: medium` the issue is noticeable, but only in certain scenarios, which are not commonly anticipated. The issue affects end-user experience to a lesser degree, but does not affect the general functionalities of the feature. The feature behaviors may be affected by this issue when new behaviors are added, or new integration scenarios are developed.
+3. `severity: high` the issue is noticeable in common interaction scenarios. The issue affects the end-user experience significantly, and affects one or more of the general functionalities of the feature. The feature behaviors are affected by the issue, causing one or more of the behaviors to malfunction.
+4. `severity: critical` the issue appears in a core interaction scenarios (80% use-cases). The issue is immediately noticeable by end-users and stops their interaction flow (an exception is thrown which prevents the user to continue their work with the UI, or breaks the UI completely). The issues affects one or more of the core functionalities of the feature causing them or the entire feature to stop functioning. 
 
 ### Triaging
 
