@@ -14,6 +14,7 @@ import { IgxConnectorDirective } from './connector.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { DisplayDensity } from 'dist/igniteui-angular/lib/core/utils';
+import { TestChipReorderComponent } from './chips-area.spec';
 
 @Component({
     template: `
@@ -70,7 +71,7 @@ class TestChipsLabelAndSuffixComponent {
     public chips: QueryList<IgxChipComponent>;
 }
 
-describe('IgxChip', () => {
+fdescribe('IgxChip', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item chip-area';
     const CHIP_CONNECTOR = 'igx-chip__connector';
 
@@ -79,6 +80,7 @@ describe('IgxChip', () => {
             declarations: [
                 TestChipComponent,
                 TestChipsLabelAndSuffixComponent,
+                TestChipReorderComponent,
                 IgxPrefixDirective,
                 IgxSuffixDirective,
                 IgxLabelDirective
@@ -297,5 +299,53 @@ describe('IgxChip', () => {
 
         expect(chipAreaElem.nativeElement.style.backgroundColor).toEqual(chipColor);
         expect(firstComponent.componentInstance.color).toEqual(chipColor);
+    });
+
+    it('should delete chip when space button is pressed and chip delete button is focussed', () => {
+        const spaceKeyEvent = new KeyboardEvent('keydown', {
+            'key': ' '
+        });
+
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            expect(chipComponents.length).toEqual(4);
+
+            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
+            deleteButtonElement.nativeElement.focus();
+
+            deleteButtonElement.nativeElement.dispatchEvent(spaceKeyEvent);
+            fix.detectChanges();
+
+            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            expect(chipComponents.length).toEqual(3);
+        });
+    });
+
+    it('should delete chip when enter button is pressed and chip delete button is focussed', () => {
+        const enterKeyEvent = new KeyboardEvent('keydown', {
+            'key': 'Enter'
+        });
+
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            expect(chipComponents.length).toEqual(4);
+
+            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
+            deleteButtonElement.nativeElement.focus();
+
+            deleteButtonElement.nativeElement.dispatchEvent(enterKeyEvent);
+            fix.detectChanges();
+
+            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            expect(chipComponents.length).toEqual(3);
+        });
     });
 });

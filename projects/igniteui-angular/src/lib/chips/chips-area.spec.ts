@@ -52,7 +52,7 @@ class TestChipComponent {
         </igx-chips-area>
     `
 })
-class TestChipReorderComponent {
+export class TestChipReorderComponent {
 
     public chipList = [
         { id: 'Country', text: 'Country' },
@@ -101,7 +101,7 @@ class TestChipReorderComponent {
     }
 }
 
-describe('IgxChipsArea', () => {
+fdescribe('IgxChipsArea', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item chip-area';
     const CHIP_CONNECTOR = 'igx-chip__connecto';
 
@@ -590,54 +590,6 @@ describe('IgxChipsArea', () => {
             const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
             deleteButtonElement.nativeElement.click();
 
-            fix.detectChanges();
-
-            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            expect(chipComponents.length).toEqual(3);
-        });
-    });
-
-    it('should delete chip when space button is pressed and chip delete button is focussed', () => {
-        const spaceKeyEvent = new KeyboardEvent('keydown', {
-            'key': ' '
-        });
-
-        const fix = TestBed.createComponent(TestChipReorderComponent);
-        fix.detectChanges();
-
-        fix.whenStable().then(() => {
-            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-
-            expect(chipComponents.length).toEqual(4);
-
-            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
-            deleteButtonElement.nativeElement.focus();
-
-            deleteButtonElement.nativeElement.dispatchEvent(spaceKeyEvent);
-            fix.detectChanges();
-
-            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            expect(chipComponents.length).toEqual(3);
-        });
-    });
-
-    it('should delete chip when enter button is pressed and chip delete button is focussed', () => {
-        const enterKeyEvent = new KeyboardEvent('keydown', {
-            'key': 'Enter'
-        });
-
-        const fix = TestBed.createComponent(TestChipReorderComponent);
-        fix.detectChanges();
-
-        fix.whenStable().then(() => {
-            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-
-            expect(chipComponents.length).toEqual(4);
-
-            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
-            deleteButtonElement.nativeElement.focus();
-
-            deleteButtonElement.nativeElement.dispatchEvent(enterKeyEvent);
             fix.detectChanges();
 
             chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
