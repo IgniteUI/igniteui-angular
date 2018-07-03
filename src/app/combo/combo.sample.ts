@@ -51,11 +51,11 @@ export class ComboSampleComponent implements OnInit {
             'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
             'South Atlantic 01': ['Delaware', 'Florida', 'Georgia', 'Maryland'],
-            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia', 'District of Columbia', 'West Virginia'],
+            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia', 'West Virginia'],
             'South Atlantic 03': ['District of Columbia', 'West Virginia'],
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
-            'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
+            'West South Central': ['Arkansas', 'Louisiana', 'Oklahomа', 'Texas'],
             'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
