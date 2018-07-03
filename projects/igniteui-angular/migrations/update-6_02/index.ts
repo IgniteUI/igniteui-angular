@@ -15,7 +15,7 @@ export default function(): Rule {
         const config = getWorkspace(host);
         const projects = getProjects(config);
 
-        context.logger.info('Applying migration for Ignite UI for Angular to version 6.0.1');
+        context.logger.info('Applying migration for Ignite UI for Angular to version 6.0.2');
 
         if (config.schematics && config.schematics['@schematics/angular:component']) {
             // updated projects have global prefix rather than per-project:
