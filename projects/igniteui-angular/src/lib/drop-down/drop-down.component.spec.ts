@@ -5,6 +5,7 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule, IgxDropDownItemNavigationDirective } from './drop-down.component';
+import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -22,6 +23,7 @@ function wrapPromise(callback, resolve, time) {
         }, time);
     });
 }
+
 describe('IgxDropDown ', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -32,13 +34,17 @@ describe('IgxDropDown ', () => {
                 IgxDropDownTestDisabledAnyComponent,
                 IgxDropDownTestEmptyListComponent,
                 IgxDropDownWithScrollComponent,
-                DoubleIgxDropDownComponent
+                DoubleIgxDropDownComponent,
+                IgxDropDownInputTestComponent,
+                IgxDropDownImageTestComponent,
+                IgxDropDownTabsTestComponent
             ],
             imports: [
                 IgxDropDownModule,
                 BrowserAnimationsModule,
                 NoopAnimationsModule,
-                IgxToggleModule
+                IgxToggleModule,
+                IgxTabsModule
             ]
         })
             .compileComponents();
@@ -343,8 +349,78 @@ describe('IgxDropDown ', () => {
         });
     });
 
-    xit('Should be able to implement to any kind of anchor', () => {
-        // To DO
+    it('Should be able to implement to input anchor', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxDropDownInputTestComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css('input')).nativeElement;
+        const list = fixture.componentInstance.dropdown;
+        const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
+        spyOn(list.onSelection, 'emit').and.callThrough();
+        spyOn(list.onClosed, 'emit').and.callThrough();
+        spyOn(fixture.componentInstance, 'onSelection');
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(4);
+        button.click(mockObj);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const lastListItem = list.items[3].element.nativeElement;
+            lastListItem.click({});
+            tick();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items[3]);
+            expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
+        });
+    }));
+
+    it('Should be able to implement to image anchor', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxDropDownImageTestComponent);
+        fixture.detectChanges();
+        const button = fixture.debugElement.query(By.css('img')).nativeElement;
+        const list = fixture.componentInstance.dropdown;
+        const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
+        spyOn(list.onSelection, 'emit').and.callThrough();
+        spyOn(list.onClosed, 'emit').and.callThrough();
+        spyOn(fixture.componentInstance, 'onSelection');
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(4);
+        button.click(mockObj);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const lastListItem = list.items[3].element.nativeElement;
+            lastListItem.click({});
+            tick();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items[3]);
+            expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
+        });
+    }));
+
+    it('Should be able to implement to igx-tabs anchor', () => {
+        const fixture = TestBed.createComponent(IgxDropDownTabsTestComponent);
+        fixture.detectChanges();
+        const tabs = fixture.componentInstance.tabs;
+        const list = fixture.componentInstance.dropdown;
+        const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
+        expect(list).toBeDefined();
+        expect(list.items.length).toEqual(4);
+        tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const lastListItem = list.items[3].element.nativeElement;
+            lastListItem.click({});
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items[3]);
+        });
     });
 
     it('Items can be disabled/enabled at runtime', () => {
@@ -1131,4 +1207,139 @@ class DoubleIgxDropDownComponent implements OnInit {
             this.items.push({ field: 'Item ' + index });
         }
     }
+}
+
+@Component({
+    template: `
+    <input (click)="toggleDropDown()">
+    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)"
+    (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
+    (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
+        <igx-drop-down-item *ngFor="let item of items">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class IgxDropDownInputTestComponent {
+
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropdown: IgxDropDownComponent;
+
+    public items: any[] = [
+        { field: 'Nav1' },
+        { field: 'Nav2' },
+        { field: 'Nav3' },
+        { field: 'Nav4' }
+    ];
+
+    public toggleDropDown() {
+        this.dropdown.toggle();
+    }
+
+    public onSelection(ev) { }
+
+    public onToggleOpening() { }
+
+    public onToggleOpened() { }
+
+    public onToggleClosing() { }
+
+    public onToggleClosed() { }
+}
+
+@Component({
+    template: `
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
+    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)"
+    (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
+    (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
+        <igx-drop-down-item *ngFor="let item of items">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class IgxDropDownImageTestComponent {
+
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropdown: IgxDropDownComponent;
+
+    public items: any[] = [
+        { field: 'Nav1' },
+        { field: 'Nav2' },
+        { field: 'Nav3' },
+        { field: 'Nav4' }
+    ];
+
+    public toggleDropDown() {
+        this.dropdown.toggle();
+    }
+
+    public onSelection(ev) { }
+
+    public onToggleOpening() { }
+
+    public onToggleOpened() { }
+
+    public onToggleClosing() { }
+
+    public onToggleClosed() { }
+}
+
+@Component({
+    template: `
+    <igx-tabs (onTabItemSelected)="toggleDropDown()" tabsType="fixed">
+        <igx-tabs-group label="Tab111111111111111111111111">
+            <ng-template igxTab>
+                <div>T1</div>
+                </ng-template>
+                <h1>Tab 1 Content</h1>
+            </igx-tabs-group>
+        <igx-tabs-group label="Tab 2">
+            <ng-template igxTab>
+                <div>T2</div>
+            </ng-template>
+            <h1>Tab 2 Content</h1>
+        </igx-tabs-group>
+        <igx-tabs-group label="Tab 3">
+            <ng-template igxTab>
+                <div>T3</div>
+            </ng-template>
+            <h1>Tab 3 Content</h1>
+        </igx-tabs-group>
+    </igx-tabs>
+    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)"
+    (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
+    (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
+        <igx-drop-down-item *ngFor="let item of items">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class IgxDropDownTabsTestComponent {
+
+    @ViewChild(IgxTabsComponent)
+    public tabs: IgxTabsComponent;
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropdown: IgxDropDownComponent;
+
+    public items: any[] = [
+        { field: 'Nav1' },
+        { field: 'Nav2' },
+        { field: 'Nav3' },
+        { field: 'Nav4' }
+    ];
+
+    public toggleDropDown() {
+        this.dropdown.toggle();
+    }
+
+    public onSelection(ev) { }
+
+    public onToggleOpening() { }
+
+    public onToggleOpened() { }
+
+    public onToggleClosing() { }
+
+    public onToggleClosed() { }
 }
