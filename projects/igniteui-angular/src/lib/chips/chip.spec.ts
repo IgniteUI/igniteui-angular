@@ -39,7 +39,7 @@ export class TestChipComponent {
 }
 
 describe('IgxChip', () => {
-    const CHIP_ITEM_AREA = 'igx-chip__item chip-area';
+    const CHIP_ITEM_AREA = 'igx-chip__item';
     const CHIP_CONNECTOR = 'igx-chip__connector';
 
     beforeEach(async(() => {
