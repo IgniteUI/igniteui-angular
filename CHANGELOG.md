@@ -59,6 +59,8 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     ```
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
 
+- `igxGrid` now supports multi-column headers allowing you to have multiple levels of columns in the header area of the grid.
+    For more information, head over to [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_multi_column_headers.html)
 - `igxGrid` theme now has support for alternating grid row background and text colors.
 - `igxGrid` now has a toolbar (shown using the `showToolbar` property) which contains the following features:
   - title (specified using the `toolbarTitle` property)
