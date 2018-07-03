@@ -16,7 +16,7 @@ describe('IgxGrid - Grid Paging', () => {
                 GridDeclarationComponent,
                 IgxGridMarkupEditingDeclarationComponent,
                 IgxGridPageChangeComponent,
-                IgxGridPageInPercentHeight
+                IgxGridPageInPercentHeightComponent
             ],
             imports: [IgxGridModule.forRoot(), IgxButtonModule, IgxRippleModule]
         })
@@ -267,7 +267,7 @@ describe('IgxGrid - Grid Paging', () => {
     }));
 
     it('should not throw when initialized in a grid with % height', () => {
-        const fix = TestBed.createComponent(IgxGridPageInPercentHeight);
+        const fix = TestBed.createComponent(IgxGridPageInPercentHeightComponent);
         expect(() => {
             fix.detectChanges();
         }).not.toThrow();
@@ -384,7 +384,7 @@ export class IgxGridPageChangeComponent {
     </div>
     `
 })
-export class IgxGridPageInPercentHeight {
+export class IgxGridPageInPercentHeightComponent {
     public data = data;
     @ViewChild('grid1', { read: IgxGridComponent })
     public grid1: IgxGridComponent;
