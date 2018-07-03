@@ -4,6 +4,8 @@ import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IgxStringFilteringOperand} from '../../public_api';
 import { By } from '@angular/platform-browser';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
@@ -76,15 +78,13 @@ describe('IgxGrid - multi-column headers', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(18);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(11);
-
+        testGroupsAndColumns(18,11);
+  
         // Hide individual column
         grid.getColumnByName('ID').hidden = true;
         fixture.detectChanges();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(17);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(10);
+        testGroupsAndColumns(17,10);
 
         // Hide column in goup
         grid.getColumnByName('CompanyName').hidden = true;
@@ -94,32 +94,29 @@ describe('IgxGrid - multi-column headers', () => {
 
         grid.getColumnByName('Address').hidden = true;
         fixture.detectChanges();
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(15);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(8);
+
+        testGroupsAndColumns(15,8);
     });
 
     it('column hiding - Verify when 2 of 2 child columns are hidden, the Grouped column would be hidden as well.', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(18);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(11);
+        testGroupsAndColumns(18,11);
 
         // Hide 2 columns in the group
         grid.getColumnByName('ContactName').hidden = true;
         grid.getColumnByName('ContactTitle').hidden = true;
         fixture.detectChanges();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(15);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(9);
+        testGroupsAndColumns(15,9);
         expect(getColGroup(grid, 'Person Details').hidden).toEqual(true);
 
         // Show one of the columns
         grid.getColumnByName('ContactName').hidden = false;
         fixture.detectChanges();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(17);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(10);
+        testGroupsAndColumns(17,10);
         expect(getColGroup(grid, 'Person Details').hidden).toEqual(false);
     });
 
@@ -127,23 +124,20 @@ describe('IgxGrid - multi-column headers', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(18);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(11);
-
+        testGroupsAndColumns(18,11);
+       
         // Hide 2 columns in the group
         grid.getColumnByName('CompanyName').hidden = true;
         getColGroup(grid, 'Person Details').hidden = true;
         fixture.detectChanges();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(13);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(8);
+        testGroupsAndColumns(13,8);
         expect(getColGroup(grid, 'General Information').hidden).toEqual(true);
 
         // Show the group
         getColGroup(grid, 'Person Details').hidden = false;
         fixture.detectChanges();
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(17);
-        expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(10);
+        testGroupsAndColumns(17,10);
         expect(getColGroup(grid, 'General Information').hidden).toEqual(false);
     });
 
@@ -945,6 +939,170 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         testColumnsOrder(colsOrder);
     });
+
+    it('sorting -  sort a grouped column by API', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+  
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        grid.getColumnByName('ContactTitle').sortable = true;
+        grid.getColumnByName('Fax').sortable=true;
+        fixture.detectChanges();
+
+        // Sort column
+        grid.sort({fieldName: 'ContactTitle', dir: SortingDirection.Asc});
+        fixture.detectChanges();
+
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        // Verify cells
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual("BOTTM");
+        expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual("Accounting Manager");
+        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual("Bottom-Dollar Markets");
+        expect(grid.getCellByColumn(4, 'ID').value).toEqual("FRANR");
+        expect(grid.getCellByColumn(4, 'ContactTitle').value).toEqual("Marketing Manager");
+        expect(grid.getCellByColumn(4, 'Country').value).toEqual("France");
+
+        grid.clearSort();
+        fixture.detectChanges();
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        // Verify cells
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual("ALFKI");
+        expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual("Sales Representative");
+        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual("Alfreds Futterkiste");
+        expect(grid.getCellByColumn(4, 'ID').value).toEqual("BERGS");
+        expect(grid.getCellByColumn(4, 'Country').value).toEqual("Sweden");
+
+        //sort column which is not in the view
+        grid.sort({fieldName: 'Fax', dir: SortingDirection.Asc});
+        fixture.detectChanges();
+
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        // Verify cells
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual("CHOPS");
+        expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual("Owner");
+        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual("Chop-suey Chinese");
+        expect(grid.getCellByColumn(3, 'ID').value).toEqual("FAMIA");
+        expect(grid.getCellByColumn(3, 'ContactTitle').value).toEqual("Marketing Assistant");
+        expect(grid.getCellByColumn(3, 'Country').value).toEqual("Brazil");
+    });
+
+    it('sorting -  sort a grouped column by clicking on header cell UI', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+  
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        grid.getColumnByName('ContactTitle').sortable = true;
+        fixture.detectChanges();
+
+        // Sort column by clicking on it
+        const contactTitleHeaderCell = fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS))[3];
+        contactTitleHeaderCell.triggerEventHandler('click', new Event('click'));
+        fixture.detectChanges();
+
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+        // Verify cells
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual("BOTTM");
+        expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual("Accounting Manager");
+        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual("Bottom-Dollar Markets");
+        expect(grid.getCellByColumn(4, 'ID').value).toEqual("FRANR");
+        expect(grid.getCellByColumn(4, 'ContactTitle').value).toEqual("Marketing Manager");
+        expect(grid.getCellByColumn(4, 'Country').value).toEqual("France");
+    });
+
+    it('filtering -  filter a grouped column', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+  
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        grid.getColumnByName('ContactTitle').filterable = true;
+        grid.getColumnByName('PostalCode').filterable = true;
+        fixture.detectChanges();
+
+        // Filter column
+        grid.filter('ContactTitle', 'Accounting Manager', IgxStringFilteringOperand.instance().condition('equals'), true);
+        fixture.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        // Filter column
+        grid.filter('PostalCode', '28', IgxStringFilteringOperand.instance().condition('contains'), true);
+        fixture.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Reset filters
+        grid.clearFilter('ContactTitle');
+        grid.clearFilter('PostalCode');
+        fixture.detectChanges();
+
+        expect(grid.rowList.length).toEqual(8);
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        // Filter column with no match
+        grid.filter('ContactTitle', 'no items', IgxStringFilteringOperand.instance().condition('equals'), true);
+        fixture.detectChanges();
+        expect(grid.rowList.length).toEqual(0);
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        //Clear filter
+        grid.clearFilter('ContactTitle');
+        fixture.detectChanges();
+  
+        expect(grid.rowList.length).toEqual(8);
+        //Verify columns and groups
+        testGroupsAndColumns(18,11);
+    });
+
+    it('summaries -  verify summaries when there are grouped columns', () => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+  
+        // Verify columns and groups
+        testGroupsAndColumns(18,11);
+
+        const allColumns = grid.columnList;
+        allColumns.forEach((col) => {
+            if(!col.columnGroup){
+                col.hasSummary = true;
+            }
+        });
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();         
+            const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
+            expect(summaries.length).toBe(7);
+            let index = 0;
+            grid.visibleColumns.forEach((col) => {
+                if(!col.columnGroup && index<7){
+                    expect(col.hasSummary).toBeTruthy()
+                    const labels = summaries[index].queryAll(By.css('.igx-grid-summary__label'));
+                    expect(labels.length).toBe(1);
+                    expect(labels[0].nativeElement.innerText).toBe('Count');
+                    index++
+                }           
+            });
+        });
+    });
 });
 
 @Component({
@@ -1349,4 +1507,9 @@ function testColumnsOrder(columns: IgxColumnComponent[]) {
             visibleIndex++;
         }
     }
+}
+
+function testGroupsAndColumns(groups: number, columns: number) {
+    expect(document.querySelectorAll('igx-grid-header').length).toEqual(groups);
+    expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(columns);
 }
