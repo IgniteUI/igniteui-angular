@@ -10,7 +10,6 @@ import { IgxIconModule } from '../icon/index';
 import { IgxChipsModule } from './chips.module';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
-import { take } from 'rxjs/operators';
 
 @Component({
     template: `
@@ -52,7 +51,7 @@ class TestChipComponent {
         </igx-chips-area>
     `
 })
-export class TestChipReorderComponent {
+class TestChipReorderComponent {
 
     public chipList = [
         { id: 'Country', text: 'Country' },
@@ -101,7 +100,7 @@ export class TestChipReorderComponent {
     }
 }
 
-fdescribe('IgxChipsArea', () => {
+describe('IgxChipsArea', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item chip-area';
     const CHIP_CONNECTOR = 'igx-chip__connecto';
 

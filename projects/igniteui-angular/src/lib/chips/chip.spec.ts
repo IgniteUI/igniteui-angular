@@ -14,14 +14,13 @@ import { IgxConnectorDirective } from './connector.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { DisplayDensity } from 'dist/igniteui-angular/lib/core/utils';
-import { TestChipReorderComponent } from './chips-area.spec';
 
 @Component({
     template: `
         <igx-chips-area #chipsArea>
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
-            [displayDensity]="chip.density">
+            [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
                 <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
@@ -43,6 +42,13 @@ class TestChipComponent {
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
     public chips: QueryList<IgxChipComponent>;
+
+    chipRemoved(event) {
+        this.chipList = this.chipList.filter((item) => {
+            return item.id !== event.owner.id;
+        });
+        this.chipsArea.cdr.detectChanges();
+    }
 }
 
 @Component({
@@ -71,7 +77,7 @@ class TestChipsLabelAndSuffixComponent {
     public chips: QueryList<IgxChipComponent>;
 }
 
-fdescribe('IgxChip', () => {
+describe('IgxChip', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item chip-area';
     const CHIP_CONNECTOR = 'igx-chip__connector';
 
@@ -80,7 +86,6 @@ fdescribe('IgxChip', () => {
             declarations: [
                 TestChipComponent,
                 TestChipsLabelAndSuffixComponent,
-                TestChipReorderComponent,
                 IgxPrefixDirective,
                 IgxSuffixDirective,
                 IgxLabelDirective
@@ -306,23 +311,21 @@ fdescribe('IgxChip', () => {
             'key': ' '
         });
 
-        const fix = TestBed.createComponent(TestChipReorderComponent);
+        const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
-            expect(chipComponents.length).toEqual(4);
+        expect(chipComponents.length).toEqual(4);
 
-            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
-            deleteButtonElement.nativeElement.focus();
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
+        deleteButtonElement.nativeElement.focus();
 
-            deleteButtonElement.nativeElement.dispatchEvent(spaceKeyEvent);
-            fix.detectChanges();
+        deleteButtonElement.nativeElement.dispatchEvent(spaceKeyEvent);
+        fix.detectChanges();
 
-            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            expect(chipComponents.length).toEqual(3);
-        });
+        chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        expect(chipComponents.length).toEqual(3);
     });
 
     it('should delete chip when enter button is pressed and chip delete button is focussed', () => {
@@ -330,22 +333,19 @@ fdescribe('IgxChip', () => {
             'key': 'Enter'
         });
 
-        const fix = TestBed.createComponent(TestChipReorderComponent);
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+        let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+        expect(chipComponents.length).toEqual(4);
+
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
+        deleteButtonElement.nativeElement.focus();
+
+        deleteButtonElement.nativeElement.dispatchEvent(enterKeyEvent);
         fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-
-            expect(chipComponents.length).toEqual(4);
-
-            const deleteButtonElement = fix.debugElement.queryAll(By.css('#igx-icon-8'))[0];
-            deleteButtonElement.nativeElement.focus();
-
-            deleteButtonElement.nativeElement.dispatchEvent(enterKeyEvent);
-            fix.detectChanges();
-
-            chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            expect(chipComponents.length).toEqual(3);
-        });
+        chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        expect(chipComponents.length).toEqual(3);
     });
 });
