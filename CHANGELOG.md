@@ -139,7 +139,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `onClosing` event added.
 - `igxToggleAction` new `overlaySettings` input controls how applicable targets display content. Provides defaults with positioning based on the host element. The `closeOnOutsideClick` input is deprecated in favor of the new settings and will be removed in the future.
 
-- `igxList` now supports an `IgxDataLoadingTemplateDirective` directive with selector `igxDataLoading`. You can add a template using this directive and it will be shown when the list has no data and the `igxList`'s `isLoading` property is set to true.
+- `igxList` now supports a 'loading' template which is shown when the list is empty and its new `isLoading` property is set to `true`. You can redefine the default loading template by adding an `ng-template` with the `igxDataLoading` directive:
 
     ```html
     <igx-list [isLoading]="true">
