@@ -265,6 +265,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.previousCellEditMode = true;
             }
             this.gridAPI.submit_value(this.gridID);
+            this.cdr.markForCheck();
         } else {
             this.previousCellEditMode = false;
         }
@@ -308,7 +309,13 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public update(val: any) {
-        this.gridAPI.update_cell(this.gridID, this.cellID.rowIndex, this.cellID.columnID, val);
+        let rowSelector = this.cellID.rowIndex;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            rowSelector = this.cellID.rowID;
+        }
+        this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
+        this.cdr.markForCheck();
+        this.gridAPI.get(this.gridID).refreshSearch();
     }
 
     public ngOnDestroy() {
