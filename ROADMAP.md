@@ -6,6 +6,7 @@
 
 1.Hierarchical Grid  
 2.Tree Grid
+3.Advance Filtering Dialog
 
 ## Current Milestone
 
