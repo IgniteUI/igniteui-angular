@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.0
-- `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay.html)
+- `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
 - Added **igxRadioGroup** directive. It allows better control over its child `igxRadio` components and support template-driven and reactive forms.
 - Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
     For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
@@ -59,6 +59,8 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     ```
    For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
 
+- `igxGrid` now supports multi-column headers allowing you to have multiple levels of columns in the header area of the grid.
+    For more information, head over to [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_multi_column_headers.html)
 - `igxGrid` theme now has support for alternating grid row background and text colors.
 - `igxGrid` now has a toolbar (shown using the `showToolbar` property) which contains the following features:
   - title (specified using the `toolbarTitle` property)
@@ -149,6 +151,11 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - `collapsed` now read-only, markup input is removed.
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
+        - `open` method does not accept fireEvents optional boolean parameter. It is accepts now overlaySettings optional parameter of OverlaySettings type.
+        - `close` method does not accept fireEvents optional boolean parameter.
+        - `toggle` method does not accept fireEvents optional boolean parameter. It is accepts now overlaySettings optional parameter of OverlaySettings type.
+    - `igxDialog` changes
+        - `open` method does not accept fireEvents boolean parameter. It is accepts now overlaySettings optional parameter of OverlaySettings type.
 - **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to achieve consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
 - The **deprecated** `igxForRemote` input for the `igxFor` directive is now removed. Setting the required `totalItemCount` property after receiving the first data chunk is enough to trigger the required functionality.
 
