@@ -212,7 +212,7 @@ describe('IgxGrid - Summaries', () => {
             }
         });
 
-        grid.deleteRow(0);
+        grid.deleteRow(1);
         fixture.detectChanges();
 
         let updatedValue;
@@ -247,7 +247,7 @@ describe('IgxGrid - Summaries', () => {
 
         grid.updateRow({
             ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 1, OrderDate: new Date('2005-03-21')
-        }, 0);
+        }, 1);
         fixture.detectChanges();
 
         expect(+countValue).toBe(grid.rowList.length);
@@ -643,7 +643,7 @@ export class NoActiveSummariesComponent {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data">
+        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'">
             <igx-column field="ProductID" header="Product ID">
             </igx-column>
             <igx-column field="ProductName" [hasSummary]="true">

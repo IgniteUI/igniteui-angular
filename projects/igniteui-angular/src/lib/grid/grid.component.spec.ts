@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './api.service';
@@ -87,9 +87,9 @@ describe('IgxGrid - input properties', () => {
         expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
 
         gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-        - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
         console.log(gridBodyHeight);
         console.log(window.getComputedStyle(gridBody.nativeElement).height);
         console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
@@ -107,6 +107,7 @@ describe('IgxGrid - input properties', () => {
         expect(window.getComputedStyle(gridBody.children[0].nativeElement).width).toEqual(
             window.getComputedStyle(gridHeader.children[0].nativeElement).width
         );
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('col width should be >=136px - grid 5x5', () => {
@@ -118,6 +119,7 @@ describe('IgxGrid - input properties', () => {
         expect(grid.columns[0].width).not.toBeLessThan(136);
         expect(grid.columns[2].width).not.toBeLessThan(136);
         expect(grid.width).toMatch('100%');
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('col width should be >=136px - grid 10x30', () => {
@@ -130,6 +132,7 @@ describe('IgxGrid - input properties', () => {
         expect(grid.columns[4].width).not.toBeLessThan(136);
         expect(grid.columns[6].width).not.toBeLessThan(136);
         expect(grid.width).toMatch('100%');
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('col width should be >=136px - grid 30x1000', () => {
@@ -153,6 +156,7 @@ describe('IgxGrid - input properties', () => {
         expect(grid.columns[4].width).not.toBeLessThan(136);
         expect(grid.columns[100].width).not.toBeLessThan(136);
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('Test rendering of data with 5 columns and 5 rows where 2 of the columns have width set', () => {
@@ -185,6 +189,7 @@ describe('IgxGrid - input properties', () => {
         });
 
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('Test rendering of data with 5 columns and 5 rows where 2 of the columns have width set and grid has width', () => {
@@ -219,6 +224,7 @@ describe('IgxGrid - input properties', () => {
         });
 
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('Test rendering of data with 5 columns and 30 rows where 2 of the columns have width set', () => {
@@ -253,6 +259,7 @@ describe('IgxGrid - input properties', () => {
         });
 
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set', () => {
@@ -287,6 +294,7 @@ describe('IgxGrid - input properties', () => {
         });
 
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('Test rendering of data with 30 columns and 1000 rows where 5 of the columns have width set and grid has width', () => {
@@ -317,6 +325,7 @@ describe('IgxGrid - input properties', () => {
             }
         });
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set', () => {
@@ -343,6 +352,7 @@ describe('IgxGrid - input properties', () => {
         });
 
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('Test rendering of data with 150 columns and 20000 rows where 5 of the columns have width set and grid has width', () => {
@@ -370,6 +380,7 @@ describe('IgxGrid - input properties', () => {
         });
 
         expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('should render all records if height is explicitly set to null.', () => {
@@ -380,6 +391,7 @@ describe('IgxGrid - input properties', () => {
 
         // tbody should have height equal to all items * item height
         expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 50);
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it('Test rendering when width and height are set in %', () => {
@@ -390,34 +402,35 @@ describe('IgxGrid - input properties', () => {
 
         expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
         expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
+        expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
     it(`When edit a cell onto filtered data through grid method, the row should
             disapear and the new value should not persist onto the next row`, async(() => {
-        const fix = TestBed.createComponent(IgGridTest5x5Component);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.gridMinDefaultColWidth;
-        const cols = fix.componentInstance.cols;
-        const gridApi = fix.componentInstance.gridApi;
-        const editValue = 777;
-
-        fix.whenStable().then(() => {
-            grid.filter(cols[0].key, 1, IgxNumberFilteringOperand.instance().condition('equals'));
-            return fix.whenStable();
-        }).then(() => {
+            const fix = TestBed.createComponent(IgGridTest5x5Component);
             fix.detectChanges();
-            grid.updateCell(editValue, 0, cols[0].key);
-            grid.markForCheck();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
-            const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
-            const firstCellInputValue = firstRowCells[0].nativeElement.textContent.trim();
-            expect(firstCellInputValue).toEqual('1');
-        });
-    }));
+
+            const grid = fix.componentInstance.gridMinDefaultColWidth;
+            const cols = fix.componentInstance.cols;
+            const gridApi = fix.componentInstance.gridApi;
+            const editValue = 777;
+
+            fix.whenStable().then(() => {
+                grid.filter(cols[0].key, 1, IgxNumberFilteringOperand.instance().condition('equals'));
+                return fix.whenStable();
+            }).then(() => {
+                fix.detectChanges();
+                grid.updateCell(editValue, 0, cols[0].key);
+                grid.markForCheck();
+                return fix.whenStable();
+            }).then(() => {
+                fix.detectChanges();
+                const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+                const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
+                const firstCellInputValue = firstRowCells[0].nativeElement.textContent.trim();
+                expect(firstCellInputValue).toEqual('1');
+            });
+        }));
 
     it('should render correct columns if after scrolling right container size changes so that all columns become visible.', (done) => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
@@ -447,7 +460,7 @@ describe('IgxGrid - input properties', () => {
                 // verify correct columns are rendered.
                 const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
                 expect(headers.length).toEqual(5);
-                for (let i = 0; i < headers.length; i ++) {
+                for (let i = 0; i < headers.length; i++) {
                     expect(headers[i].context.column.field).toEqual(fix.componentInstance.grid2.columns[i].field);
                 }
 
@@ -459,13 +472,18 @@ describe('IgxGrid - input properties', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-    <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate">
-        <igx-column field="index" header="index" dataType="number"></igx-column>
-        <igx-column field="value" header="value" dataType="number"></igx-column>
-    </igx-grid></div>`
+        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate">
+            <igx-column *ngFor="let column of columns;" [field]="column.field" [header]="column.field" [width]="column.width">
+            </igx-column>
+        </igx-grid>
+    </div>`
 })
 export class IgxGridTestComponent {
-    public data = [{ index: 1, value: 1 }];
+    public data: any[] = [{ index: 1, value: 1 }];
+    public columns = [
+        { field: 'index', header: 'index', dataType: 'number', width: null },
+        { field: 'value', header: 'value', dataType: 'number', width: null }
+    ];
     @ViewChild('grid') public grid: IgxGridComponent;
 
     public autoGenerate = false;
@@ -643,7 +661,7 @@ export class IgGridTest10x30Component {
         this.cols = [];
         for (let i = 0; i < count; i++) {
             this.cols.push({
-                key: 'col' +  i,
+                key: 'col' + i,
                 dataType: 'number'
             });
         }
@@ -688,7 +706,7 @@ export class IgGridTest30x1000Component {
         this.cols = [];
         for (let i = 0; i < count; i++) {
             this.cols.push({
-                key: 'col' +  i,
+                key: 'col' + i,
                 dataType: 'number'
             });
         }
@@ -783,7 +801,7 @@ export class IgGridNullHeightComponent {
 
 @Component({
     template:
-    `<div style="width: 800px; height: 600px;">
+        `<div style="width: 800px; height: 600px;">
         <igx-grid #grid [data]="data" [autoGenerate]="true" height="50%" width="50%">
         </igx-grid>
     </div>`

@@ -94,6 +94,7 @@
     );
 
     %radio-display {
+        position: relative;
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;

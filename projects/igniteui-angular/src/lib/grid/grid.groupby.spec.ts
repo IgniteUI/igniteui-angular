@@ -1065,7 +1065,8 @@ describe('IgxGrid - GroupBy', () => {
     });
 
     // GroupBy + Updating
-    it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', () => {
+    it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', fakeAsync(() => {
+        discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '500px';
@@ -1090,6 +1091,7 @@ describe('IgxGrid - GroupBy', () => {
             ReleaseDate: new Date(),
             Released: false
         });
+        tick();
         fix.detectChanges();
         groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
@@ -1097,7 +1099,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(dataRows.length).toEqual(9);
 
         // update records
-        grid.updateRow({ ProductName: 'Ignite UI for Angular' }, 1010);
+        grid.updateRow({ ID: 1010, ProductName: 'Ignite UI for Angular' }, 1010);
+        tick();
         fix.detectChanges();
 
         groupRows = grid.groupsRowList.toArray();
@@ -1106,14 +1109,20 @@ describe('IgxGrid - GroupBy', () => {
         expect(dataRows.length).toEqual(9);
 
         grid.deleteRow(1010);
+        tick();
+        fix.detectChanges();
         grid.deleteRow(3);
+        tick();
+        fix.detectChanges();
         grid.deleteRow(6);
+        tick();
         fix.detectChanges();
         groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(6);
-    });
+        discardPeriodicTasks();
+    }));
 
     it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group',
     async(() => {
@@ -1128,7 +1137,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         const rv = grid.getRowByKey(5).element.nativeElement.querySelectorAll(CELL_CSS_CLASS)[2];
-        const cell = grid.getCellByColumn(5, 'ProductName');
+        const cell = grid.getCellByKey(5, 'ProductName');
 
         cell.column.editable = true;
         rv.dispatchEvent(new Event('dblclick'));
@@ -1143,16 +1152,10 @@ describe('IgxGrid - GroupBy', () => {
             editCellDom.triggerEventHandler('keydown.enter', {});
             return fix.whenStable();
         }).then(() => {
-            let groupRows = grid.groupsRowList.toArray();
-            let dataRows = grid.dataRowList.toArray();
-
-            expect(groupRows.length).toEqual(5);
-            expect(dataRows.length).toEqual(8);
-            // re-apply grouping
-            grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
-            groupRows = grid.groupsRowList.toArray();
-            dataRows = grid.dataRowList.toArray();
+            const groupRows = grid.groupsRowList.toArray();
+            const dataRows = grid.dataRowList.toArray();
+
             expect(groupRows.length).toEqual(4);
             expect(dataRows.length).toEqual(8);
         });
