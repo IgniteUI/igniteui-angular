@@ -139,7 +139,15 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `onClosing` event added.
 - `igxToggleAction` new `overlaySettings` input controls how applicable targets display content. Provides defaults with positioning based on the host element. The `closeOnOutsideClick` input is deprecated in favor of the new settings and will be removed in the future.
 
-- `igxList` now supports a custom `emptyListTemplate` and `dataLoadingTemplate` through inputs.
+- `igxList` now supports an `IgxDataLoadingTemplateDirective` directive with selector `igxDataLoading`. You can add a template using this directive and it will be shown when the list has no data and the `igxList`'s `isLoading` property is set to true.
+
+    ```html
+    <igx-list [isLoading]="true">
+        <ng-template igxDataLoading>
+            <p>Please wait, data is loading...</p>
+        </ng-template>
+    </igx-list>
+    ```
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
