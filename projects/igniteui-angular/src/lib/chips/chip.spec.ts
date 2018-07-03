@@ -13,12 +13,14 @@ import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxConnectorDirective } from './connector.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
+import { DisplayDensity } from 'dist/igniteui-angular/lib/core/utils';
 
 @Component({
     template: `
         <igx-chips-area #chipsArea>
             <igx-chip #chipElem *ngFor="let chip of chipList"
-            [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
+            [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
+            [displayDensity]="chip.density">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
                 <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
@@ -30,9 +32,9 @@ class TestChipComponent {
 
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
-        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true },
-        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true },
-        { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true},
+        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
+        { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: 'compact' },
+        { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true, density: 'cosy' },
     ];
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
@@ -240,5 +242,60 @@ describe('IgxChip', () => {
         const firstChipSuffixConnectorIconName = firstChipSuffixConnector[0].nativeElement.textContent;
 
         expect(firstChipSuffixConnectorIconName).toContain('forward');
+    });
+
+    it('should make chip comfortable when density is not set', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const firstComponent = components[0];
+
+        expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
+    });
+
+    it('should make chip comfortable when density is set to comfortable', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const secondComponent = components[1];
+
+        expect(secondComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
+    });
+
+    it('should make chip compact when density is set to compat', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const thirdComponent = components[2];
+
+        expect(thirdComponent.componentInstance.displayDensity).toEqual(DisplayDensity.compact);
+    });
+
+    it('should make chip cosy when density is set to cosy', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const fourthComponent = components[3];
+
+        expect(fourthComponent.componentInstance.displayDensity).toEqual(DisplayDensity.cosy);
+    });
+
+    it('should set correctly color of chip when color is set through code', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+        const chipColor = 'rgb(255, 0, 0)';
+
+        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const firstComponent = components[0];
+        const chipAreaElem = firstComponent.queryAll(By.css('.igx-chip__item'))[0];
+
+        firstComponent.componentInstance.color = chipColor;
+
+        expect(chipAreaElem.nativeElement.style.backgroundColor).toEqual(chipColor);
+        expect(firstComponent.componentInstance.color).toEqual(chipColor);
     });
 });
