@@ -93,6 +93,7 @@ export class IgxColumnComponent implements AfterContentInit {
                         this.grid.refreshSearch();
                     }
                 }
+                this.grid.reflow();
             }
         }
     }
@@ -353,11 +354,12 @@ export class IgxColumnComponent implements AfterContentInit {
         const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
 
         if (activeInfo && activeInfo.columnIndex === oldIndex) {
-            IgxTextHighlightDirective.setActiveHighlight(this.grid.id,
-                newIndex,
-                activeInfo.rowIndex,
-                activeInfo.index,
-                activeInfo.page);
+            IgxTextHighlightDirective.setActiveHighlight(this.grid.id, {
+                columnIndex: newIndex,
+                rowIndex: activeInfo.rowIndex,
+                index: activeInfo.index,
+                page: activeInfo.page,
+            });
 
             this.grid.refreshSearch(true);
         }

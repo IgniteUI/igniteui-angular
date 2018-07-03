@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ViewChild, ViewChildren, ChangeDetectorRef } from '@angular/core';
 import { IgxChipsAreaComponent, IgxChipComponent } from 'igniteui-angular';
 
 @Component({
@@ -16,6 +16,8 @@ export class ChipsSampleComponent {
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
     public chipsArea: IgxChipsAreaComponent;
+
+    constructor(public cdr: ChangeDetectorRef) { }
 
     chipsOrderChanged(event) {
         const newChipList = [];
@@ -36,7 +38,7 @@ export class ChipsSampleComponent {
         this.chipList = this.chipList.filter((item) => {
             return item.id !== event.owner.id;
         });
-        this.chipsArea.cdr.detectChanges();
+        this.cdr.detectChanges();
     }
 
     selectChip(chipId) {

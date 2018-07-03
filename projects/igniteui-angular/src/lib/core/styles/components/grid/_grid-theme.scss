@@ -47,6 +47,7 @@
 /// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
 /// @param {Color} $grouping-indicator-hover-background [null] - grouping indicator hover background color.
 /// @param {Color} $grouping-indicator-focus-background [null] - grouping indicator focus background color.
+/// @param {Color} $row-content-focus-background [null] - grouping row background color on focus.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -89,6 +90,7 @@
 
     $grouparea-background: null,
     $group-row-background: null,
+    $row-content-focus-background: null,
     $row-indentation-background: null,
     $group-label-column-name-text: null,
     $group-label-icon: null,
@@ -154,6 +156,7 @@
         group-count-text-color: igx-color($palette, 'grays', 600),
         drop-area-text-color: igx-color($palette, 'grays', 600),
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
+        row-content-focus-background: igx-color($palette, grays, 100),
         row-indentation-background: hexrgba(igx-color($palette, 'grays', 100)),
         drop-area-icon-color: igx-color($palette, 'grays'),
         drop-area-background: igx-color($palette, grays, 100),
@@ -289,6 +292,7 @@
         group-count-text-color: $group-count-text-color,
         drop-area-text-color: $drop-area-text-color,
         group-row-background: $group-row-background,
+        row-content-focus-background: $row-content-focus-background,
         row-indentation-background: $row-indentation-background,
         drop-area-icon-color: $drop-area-icon-color,
         drop-area-on-drop-background: $drop-area-on-drop-background,
@@ -369,9 +373,15 @@
     );
 
     $grouparea-padding: (
-        comfortable: rem(16px) rem(24px),
+        comfortable: rem(8px) rem(24px),
         cosy: rem(8px) rem(16px),
         compact: rem(4px) rem(12px)
+    );
+
+    $grouparea-min-height: (
+        comfortable: rem(57px),
+        cosy: rem(49px),
+        compact: rem(41px)
     );
 
     $grid-grouping-indicator-padding: (
@@ -386,7 +396,7 @@
     %grid-display {
         position: relative;
         display: grid;
-        grid-template-rows: auto auto 1fr auto;
+        grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 1fr;
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
@@ -428,7 +438,7 @@
 
     %grid-thead {
         position: relative;
-        grid-row: 2;
+        grid-row: 3;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         z-index: 2;
 
@@ -482,7 +492,7 @@
 
     %grid-tbody {
         position: relative;
-        grid-row: 3;
+        grid-row: 4;
         background: --var($theme, 'content-background');
         color: --var($theme, 'content-text-color');
         overflow: hidden;
@@ -498,9 +508,9 @@
     }
 
     %grid-scroll {
+        grid-row: 6;
         display: flex;
         flex-flow: row nowrap;
-        grid-row: 6;
         width: 100%;
         background: --var($theme, 'header-background');
     }
@@ -987,6 +997,7 @@
 
         &:focus {
             outline: transparent;
+            background: --var($theme, 'row-content-focus-background');
         }
     }
 
@@ -1043,15 +1054,16 @@
     }
 
     %igx-grid__grouparea {
-        grid-row: 1;
-        border-bottom: 1px solid --var($theme, 'row-border-color');
-        z-index: 2;
-        background: --var($theme, 'grouparea-background');
+        grid-row: 2;
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: map-get($grouparea-padding, 'comfortable');
         flex-wrap: wrap;
+        border-bottom: 1px solid --var($theme, 'row-border-color');
+        background: --var($theme, 'grouparea-background');
+        min-height: map-get($grouparea-min-height, 'comfortable');
+        padding: map-get($grouparea-padding, 'comfortable');
+        z-index: 2;
 
         &:focus {
             outline-style: none;
@@ -1059,10 +1071,12 @@
     }
 
     %igx-grid__grouparea--cosy {
+        min-height: map-get($grouparea-min-height, 'cosy');
         padding: map-get($grouparea-padding, 'cosy');
     }
 
     %igx-grid__grouparea--compact {
+        min-height: map-get($grouparea-min-height, 'compact');
         padding: map-get($grouparea-padding, 'compact');
     }
 
@@ -1213,5 +1227,3 @@
         }
     }
 }
-
-

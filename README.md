@@ -9,6 +9,8 @@
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
 #### [**View running samples here**](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+#### [**Install our VSCode Toolbox extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-toolbox)
+![](https://dl.infragistics.com/tools/extensions/angular-toolbox/toolbox.gif)
 #### [**Install our VSCode tooltip extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-tooltips)
 ![](https://dl.infragistics.com/tools/extensions/angular-tooltips/tooltip_preview.gif)
 
@@ -69,7 +71,7 @@ ig start
 ## Building the Library
 ```
 // build the code
-ng build ignuteui-angular
+ng build igniteui-angular
 
 // build the css
 npm run build:style

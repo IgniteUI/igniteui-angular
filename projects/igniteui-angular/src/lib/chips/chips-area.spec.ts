@@ -92,4 +92,90 @@ describe('IgxChipsArea', () => {
 
         expect(chipArea[0].nativeElement.children[0].innerHTML).toContain('New text');
     });
+
+    it('should not fire any event of the chip area when attempting deleting of a chip', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chipAreaComp = fix.componentInstance.chipsArea;
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        spyOn(chipAreaComp.onReorder, 'emit');
+        spyOn(chipAreaComp.onSelection, 'emit');
+        spyOn(chipAreaComp.onMoveStart, 'emit');
+        spyOn(chipAreaComp.onMoveEnd, 'emit');
+        spyOn(secondChipComp.onRemove, 'emit');
+
+        secondChipComp.chipArea.nativeElement.focus();
+        fix.detectChanges();
+
+        const keyEvent = new KeyboardEvent('keydown', {
+            'key': 'Delete'
+        });
+        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        fix.detectChanges();
+
+        expect(secondChipComp.onRemove.emit).toHaveBeenCalled();
+        expect(chipAreaComp.onReorder.emit).not.toHaveBeenCalled();
+        expect(chipAreaComp.onSelection.emit).not.toHaveBeenCalled();
+        expect(chipAreaComp.onMoveStart.emit).not.toHaveBeenCalled();
+        expect(chipAreaComp.onMoveEnd.emit).not.toHaveBeenCalled();
+    });
+
+    it('should fire only onSelection event for chip area when selecting a chip', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chipAreaComp = fix.componentInstance.chipsArea;
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        spyOn(chipAreaComp.onReorder, 'emit');
+        spyOn(chipAreaComp.onSelection, 'emit');
+        spyOn(chipAreaComp.onMoveStart, 'emit');
+        spyOn(chipAreaComp.onMoveEnd, 'emit');
+
+        secondChipComp.chipArea.nativeElement.focus();
+        fix.detectChanges();
+
+        const keyEvent = new KeyboardEvent('keydown', {
+            'key': 'Spacebar'
+        });
+        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        fix.detectChanges();
+
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalled();
+        expect(chipAreaComp.onReorder.emit).not.toHaveBeenCalled();
+        expect(chipAreaComp.onMoveStart.emit).not.toHaveBeenCalled();
+        expect(chipAreaComp.onMoveEnd.emit).not.toHaveBeenCalled();
+    });
+
+    it('should select/deselect a chip by clicking on out and emit onSelection event', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chipAreaComp = fix.componentInstance.chipsArea;
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        spyOn(chipAreaComp.onSelection, 'emit');
+
+        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        fix.detectChanges();
+        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
+        fix.detectChanges();
+
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            owner: chipAreaComp,
+            newSelection: [secondChipComp]
+        });
+
+        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        fix.detectChanges();
+        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
+        fix.detectChanges();
+
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            owner: chipAreaComp,
+            newSelection: []
+        });
+    });
 });

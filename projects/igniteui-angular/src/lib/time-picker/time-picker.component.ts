@@ -13,7 +13,9 @@ import {
     Output,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    AfterViewInit,
+    DoCheck
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -60,7 +62,7 @@ export interface IgxTimePickerValidationFailedEventArgs {
     selector: 'igx-time-picker',
     templateUrl: 'time-picker.component.html'
 })
-export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, DoCheck {
 
     private _value: Date;
 
@@ -290,19 +292,6 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     private _alert: IgxDialogComponent;
 
     /**
-     * The default css class applied to the component.
-     *
-     * @hidden
-     */
-    @HostBinding('class')
-    get styleClass(): string {
-        if (this.vertical) {
-            return 'igx-time-picker--vertical';
-        }
-        return 'igx-time-picker';
-    }
-
-    /**
      * @hidden
      */
     public _hourItems = [];
@@ -448,6 +437,17 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     public ngOnDestroy(): void {
+    }
+
+    // XXX - temporary fix related with issue #1660
+    public ngDoCheck(): void {
+        if (this.vertical && this._alert) {
+            this._alert.toggleRef.element.classList.remove('igx-time-picker');
+            this._alert.toggleRef.element.classList.add('igx-time-picker--vertical');
+        } else if (!this.vertical && this._alert) {
+            this._alert.toggleRef.element.classList.add('igx-time-picker');
+            this._alert.toggleRef.element.classList.remove('igx-time-picker--vertical');
+        }
     }
 
     /**
