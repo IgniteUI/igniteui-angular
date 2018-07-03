@@ -201,6 +201,9 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 grid.onFilteringDone.emit(expr);
             }
         }
+        requestAnimationFrame(() => {
+            this.cdr.detectChanges();
+        });
     }
 
     public onUnSelectLogicOperator(event): void {
