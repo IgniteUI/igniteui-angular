@@ -311,6 +311,5 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         } else {
             grid.filter(this.column.field, null, expr, this.column.filteringIgnoreCase);
         }
-        grid.cdr.detectChanges();
     }
 }
