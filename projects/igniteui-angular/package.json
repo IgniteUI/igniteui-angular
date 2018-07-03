@@ -32,5 +32,11 @@
   },
   "ng-update": {
     "migrations": "./migrations/migration-collection.json"
+  },
+  "ngPackage": {
+    "whitelistedNonPeerDependencies": [
+      "@types/hammerjs",
+      "hammerjs"
+    ]
   }
 }
