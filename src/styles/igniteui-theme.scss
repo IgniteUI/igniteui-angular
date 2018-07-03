@@ -39,6 +39,6 @@ $exclude: (
 
 // Generating a theme
 @include igx-core();
-@include igx-theme($default-palette, $exclude);
+@include igx-theme($default-palette, $exclude, $legacy-support: true);
 
 @include igx-color-classes('background-color');
