@@ -25,20 +25,7 @@ import { DisplayDensity } from '../core/utils';
 
 @Component({
     selector: 'igx-chip',
-    templateUrl: 'chip.component.html',
-    styles: [
-        `:host {
-            display: flex;
-            align-items: center;
-            position: relative;
-            transition-property: top, left;
-            touch-action: none;
-        }
-        .item-selected {
-            background: lightblue;
-        }
-        `
-    ]
+    templateUrl: 'chip.component.html'
 })
 export class IgxChipComponent implements AfterViewInit {
 

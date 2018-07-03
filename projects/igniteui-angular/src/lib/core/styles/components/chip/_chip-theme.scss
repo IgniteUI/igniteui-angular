@@ -253,6 +253,10 @@
     }
 
     %igx-chip {
+        position: relative;
+        transition-property: top, left;
+        touch-action: none;
+
         &:focus {
             outline: transparent;
 
@@ -421,14 +425,14 @@
         }
     }
 
-    .igx-grid--cosy {
+    %igx-chip--cosy {
         %igx-chip__item {
             border-radius: map-get($chip-height, 'cosy') / 2;
             height: map-get($chip-height, 'cosy');
         }
     }
 
-    .igx-grid--compact {
+    %igx-chip--compact {
         %igx-chip__item {
             border-radius: map-get($chip-height, 'compact') / 2;
             height: map-get($chip-height, 'compact');

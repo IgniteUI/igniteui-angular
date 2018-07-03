@@ -57,12 +57,14 @@
     }
 
     @include m(cosy) {
+        @extend %igx-chip !optional;
         @include e(item) {
             @extend %igx-chip__item--cosy !optional;
         }
     }
 
     @include m(compact) {
+        @extend %igx-chip !optional;
         @include e(item) {
             @extend %igx-chip__item--compact  !optional;
         }

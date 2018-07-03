@@ -34,12 +34,6 @@ import { IgxConnectorDirective } from './connector.directive';
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
-    styles: [
-        `:host {
-            display: flex;
-        }
-        `
-    ]
 })
 export class IgxChipsAreaComponent implements DoCheck {
 
