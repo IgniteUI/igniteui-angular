@@ -141,7 +141,15 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `onClosing` event added.
 - `igxToggleAction` new `overlaySettings` input controls how applicable targets display content. Provides defaults with positioning based on the host element. The `closeOnOutsideClick` input is deprecated in favor of the new settings and will be removed in the future.
 
-- `igxList` now supports a custom `emptyListTemplate` and `dataLoadingTemplate` through inputs.
+- `igxList` now supports a 'loading' template which is shown when the list is empty and its new `isLoading` property is set to `true`. You can redefine the default loading template by adding an `ng-template` with the `igxDataLoading` directive:
+
+    ```html
+    <igx-list [isLoading]="true">
+        <ng-template igxDataLoading>
+            <p>Please wait, data is loading...</p>
+        </ng-template>
+    </igx-list>
+    ```
 
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package.
@@ -151,12 +159,12 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - `collapsed` now read-only, markup input is removed.
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
-        - `open` method does not accept fireEvents optional boolean parameter. It is accepts now overlaySettings optional parameter of OverlaySettings type.
+        - `open` method does not accept fireEvents optional boolean parameter. Now it accepts only overlaySettings optional parameter of type `OverlaySettings`.
         - `close` method does not accept fireEvents optional boolean parameter.
-        - `toggle` method does not accept fireEvents optional boolean parameter. It is accepts now overlaySettings optional parameter of OverlaySettings type.
+        - `toggle` method does not accept fireEvents optional boolean parameter. Now it accepts only overlaySettings optional parameter of type `OverlaySettings`.
     - `igxDialog` changes
-        - `open` method does not accept fireEvents boolean parameter. It is accepts now overlaySettings optional parameter of OverlaySettings type.
-- **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to achieve consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
+        - `open` method does not accept fireEvents boolean parameter. Now it accepts only overlaySettings optional parameter of type `OverlaySettings`.
+- **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
 - The **deprecated** `igxForRemote` input for the `igxFor` directive is now removed. Setting the required `totalItemCount` property after receiving the first data chunk is enough to trigger the required functionality.
 
 ## 6.0.4
