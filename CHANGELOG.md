@@ -50,7 +50,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 }
 ```
 
-- `igxGrid` now supports grouping of columns enabling users to create critera for organizing data records. To explore the functionality start off by setting some columns as `groupable`:
+- `igxGrid` now supports grouping of columns enabling users to create criteria for organizing data records. To explore the functionality start off by setting some columns as `groupable`:
     ```html
     <igx-grid [data]="data">
         <igx-column [field]="'ProductName'"></igx-column>
@@ -97,7 +97,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - Custom values
         - Templates
         - Integration with Template Driven and Reactive Forms
-        - Keayboard Navigation
+        - Keyboard Navigation
         - Accessibility compliance
 
     For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
@@ -119,7 +119,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
         - Single Selection
         - Grouping
-        - Keayboard Navigation
+        - Keyboard Navigation
         - Accessibility compliance
 
 - `igxChip` and `igxChipsArea` components added
@@ -149,7 +149,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - `collapsed` now read-only, markup input is removed.
         - `onOpen` event renamed to `onOpened`.
         - `onClose` event renamed to `onClosed`.
-- **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to acheive consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
+- **Breaking change** All properties that were named `isDisabled` have been renamed to `disabled` in order to achieve consistency across our component suite. This affects: date-picker, input directive, input-group, dropdown-item, tabbar and time-picker.
 - The **deprecated** `igxForRemote` input for the `igxFor` directive is now removed. Setting the required `totalItemCount` property after receiving the first data chunk is enough to trigger the required functionality.
 
 ## 6.0.4
@@ -280,7 +280,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `igxForOf` is now available as an alternative to `ngForOf` for templating large amounts of data. The `igxForOf` uses virtualization technology behind the scenes to optimize DOM rendering and memory consumption. Virtualization technology works similar to Paging by slicing the data into smaller chucks which are swapped from a container viewport while the user scrolls the data horizontally/vertically. The difference with the Paging is that virtualization mimics the natural behavior of the scrollbar.
 - `igxToggle` and `igxToggleAction` directives added
     - `igxToggle` allows users to implement toggleable components/views (eg. dropdowns), while `igxToggleAction` can control the
-      `igxToggle` directive. Refer to the official documenation for more information.
+      `igxToggle` directive. Refer to the official documentation for more information.
     - `igxToggle` requires `BrowserAnimationsModule` to be imported in your application.
 - [`Ignite UI for Angular Theming`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes.html) - comprehensive set of **Sass** functions and mixins will give the ability to easily style your entire application or only certain parts of it.
     - Previously bundled fonts, are now listed as external dependencies. You should supply both the [Material Icons](http://google.github.io/material-design-icons/) and [Titillium Web](https://fonts.google.com/selection?selection.family=Titillium+Web:300,400,600,700) fonts yourself by either hosting or using CDN.
@@ -308,12 +308,12 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - The grid filtering UI dropdowns are now controlled by the `igxToggle` directive.
       - Make sure to import `BrowserAnimationsModule` inside your application module as `igxToggle` uses animations for state transition.
     - `state` input
-        - filtering expressions and sortin expressions provided
+        - filtering expressions and sorting expressions provided
     - Removed `onCellSelection` and `onRowSelection` event emitters, `onSelection` added instead.
     - Removed `onBeforeProcess` event emitter.
     - Removed `onMovingDone` event emitter.
     - Removed methods `focusCell` and `focusRow`.
-    - Renamed method `filderData` to `filter`.
+    - Renamed method `filterData` to `filter`.
     - New methods `filterGlobal` and `clearFilter`.
     - New method `clearSort`.
     - Renamed method `sortColumn` to `sort`.
