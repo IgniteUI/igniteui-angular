@@ -1526,7 +1526,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         let pagingHeight = 0;
         let groupAreaHeight = 0;
-        if (this.paging) {
+        if (this.paging && this.paginator) {
             pagingHeight = this.paginator.nativeElement.firstElementChild ?
                 this.paginator.nativeElement.clientHeight : 0;
         }
