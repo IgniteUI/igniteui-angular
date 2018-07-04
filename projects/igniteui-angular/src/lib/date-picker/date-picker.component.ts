@@ -12,7 +12,8 @@ import {
     OnInit,
     Output,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    HostListener
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -480,6 +481,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.onSelection.emit(event);
     }
 
+    @HostListener('keydown.space')
+    public onSpaceClick() {
+        this.onOpenEvent();
+    }
+
     private updateCalendarInstance() {
         this.calendar.formatOptions = this._formatOptions;
         this.calendar.formatViews = this._formatViews;
@@ -504,7 +510,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     // Focus the dialog element, after its appearence into DOM.
     private _focusTheDialog() {
-        requestAnimationFrame(() => this.alert.element.focus());
+        requestAnimationFrame(() => this.alert.toggleRef.element.focus());
     }
 
     private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
