@@ -103,14 +103,13 @@ export class IgxGridAPIService {
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
         }
-        return this.get(id).rowList.find((row) => row.index === rowSelector);
     }
 
     public get_row_by_index(id: string, rowIndex: number): IgxGridRowComponent {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
-    public get_cell_by_field(id: string, rowSelector: any, field: string): IgxGridCellComponent {
+    public get_cell_by_key(id: string, rowSelector: any, field: string): IgxGridCellComponent {
         const row = this.get_row_by_key(id, rowSelector);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
@@ -151,13 +150,14 @@ export class IgxGridAPIService {
                 this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, editableCell.cell.editValue);
             }
             this.escape_editMode(gridId, editableCell.cellID);
+            this.get(gridId).cdr.detectChanges();
         }
     }
 
     public update_cell(id: string, rowSelector, columnID, editValue) {
         let cellObj;
         let rowID;
-        const row = this.get_row_by_key(id, rowSelector);
+        const row = this.get(id).primaryKey ? this.get_row_by_key(id, rowSelector) : this.get_row_by_index(id, rowSelector);
         const editableCell = this.get_cell_inEditMode(id);
         if (editableCell) {
             cellObj = editableCell.cell;
@@ -178,7 +178,6 @@ export class IgxGridAPIService {
                 this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
             }
             (this.get(id) as any)._pipeTrigger++;
-            this.get(id).refreshSearch();
         }
     }
 

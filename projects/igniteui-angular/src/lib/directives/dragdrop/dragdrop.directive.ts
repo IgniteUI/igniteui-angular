@@ -144,6 +144,10 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         return typeof PointerEvent !== 'undefined';
     }
 
+    public get touchEventsEnabled() {
+        return 'ontouchstart' in window;
+    }
+
     public defaultReturnDuration = '0.5s';
 
     protected _startX = 0;
@@ -178,6 +182,18 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
                 fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
+            } else if (this.touchEventsEnabled) {
+                // We don't have pointer events and touch events. Use then mouse events.
+                fromEvent(this.element.nativeElement, 'touchstart').pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onPointerDown(res));
+
+                fromEvent(document.defaultView, 'touchmove').pipe(
+                    takeUntil(this._destroy),
+                    throttle(() => interval(0, animationFrameScheduler))
+                ).subscribe((res) => this.onPointerMove(res));
+
+                fromEvent(document.defaultView, 'touchend').pipe(takeUntil(this._destroy))
+                    .subscribe((res) => this.onPointerUp(res));
             } else {
                 // We don't have pointer events and touch events. Use then mouse events.
                 fromEvent(this.element.nativeElement, 'mousedown').pipe(takeUntil(this._destroy))
@@ -206,8 +222,15 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public onPointerDown(event) {
         this._clicked = true;
         this._pointerDownId = event.pointerId;
-        this._startX = event.pageX;
-        this._startY = event.pageY;
+
+        if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
+            // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
+            this._startX = event.pageX;
+            this._startY = event.pageY;
+        } else if (this.touchEventsEnabled) {
+            this._startX = event.touches[0].pageX;
+            this._startY = event.touches[0].pageY;
+        }
 
         // Take margins because getBoundingClientRect() doesn't include margins of the element
         const marginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
@@ -239,8 +262,18 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 owner: this,
                 cancel: false
             };
-            const pageX = event.pageX;
-            const pageY = event.pageY;
+            let pageX, pageY;
+            if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
+                // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
+                pageX = event.pageX;
+                pageY = event.pageY;
+            } else if (this.touchEventsEnabled) {
+                pageX = event.touches[0].pageX;
+                pageY = event.touches[0].pageY;
+
+                // Prevent scrolling on touch while dragging
+                event.preventDefault();
+            }
 
             const totalMovedX = pageX - this._startX;
             const totalMovedY = pageY - this._startY;
@@ -279,15 +312,12 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         this._clicked = false;
         if (this._dragStarted) {
             if (this._lastDropArea && !this._lastDropArea.isEqualNode(this.element.nativeElement)) {
-                const pageX = event.pageX;
-                const pageY = event.pageY;
-
                 if (!this.animateOnRelease) {
                     this.onTransitionEnd(null);
                 }
 
                 // dragging ended over a drop area. Call this after transition because onDrop might remove the element.
-                this.dispatchDropEvent(pageX, pageY);
+                this.dispatchDropEvent(event.pageX, event.pageY);
                 // else the drop directive needs to call the dropFinished() method so the animation can perform
             } else if (this.animateOnRelease &&
                     (this.left !== Math.floor(this._dragStartX) || this.top !== Math.floor(this._dragStartY))) {
@@ -452,12 +482,18 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     }
 
     protected getElementsAtPoint(pageX: number, pageY: number) {
+        // correct the coordinates with the current scroll position, because
+        // document.elementsFromPoint conider position within the current viewport
+        // window.pageXOffset == window.scrollX; // always true
+        // using window.pageXOffset for IE9 compatibility
+        const viewPortX = pageX - window.pageXOffset;
+        const viewPortY = pageY - window.pageYOffset;
         if (document.msElementsFromPoint) {
             // Edge and IE special snowflakes
-            return document.msElementsFromPoint(pageX, pageY);
+            return document.msElementsFromPoint(viewPortX, viewPortY);
         } else {
             // Other browsers like Chrome, Firefox, Opera
-            return document.elementsFromPoint(pageX, pageY);
+            return document.elementsFromPoint(viewPortX, viewPortY);
         }
     }
 

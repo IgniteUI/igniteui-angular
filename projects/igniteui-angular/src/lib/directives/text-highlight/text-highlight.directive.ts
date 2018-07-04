@@ -34,7 +34,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
 
     private _lastSearchInfo: ISearchInfo;
-    private _addedElements = [];
+    private _div = null;
     private _observer: MutationObserver;
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
@@ -45,6 +45,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     @Input('activeCssClass')
     public activeCssClass: string;
+
+    @Input('containerClass')
+    public containerClass: string;
 
     @Input('groupName')
     public groupName = '';
@@ -63,16 +66,20 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     public parentElement: any;
 
-    private container: any;
+    private _container: any;
 
-    public static setActiveHighlight(groupName: string, column: number, row: number, index: number, page: number) {
-        const group = IgxTextHighlightDirective.highlightGroupsMap.get(groupName);
+    public static setActiveHighlight(groupName: string, highlight: IActiveHighlightInfo) {
+        IgxTextHighlightDirective.highlightGroupsMap.set(groupName, highlight);
+        IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
+    }
 
-        group.columnIndex = column;
-        group.rowIndex = row;
-        group.index = index;
-        group.page = page;
-
+    public static clearActiveHighlight(groupName) {
+        IgxTextHighlightDirective.highlightGroupsMap.set(groupName, {
+            rowIndex: -1,
+            columnIndex: -1,
+            page: -1,
+            index: -1
+        });
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
     }
 
@@ -83,7 +90,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             mutationList.forEach((mutation) => {
                 const removedNodes = new Array(... mutation.removedNodes);
                 removedNodes.forEach((n) => {
-                    if (n === this.container) {
+                    if (n === this._container) {
                         this._nodeWasRemoved = true;
                         this.clearChildElements(false);
                     }
@@ -92,7 +99,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
                 const addedNodes = new Array(... mutation.addedNodes);
                 addedNodes.forEach((n) => {
                     if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
-                        this.container = this.parentElement.firstElementChild;
+                        this._container = this.parentElement.firstElementChild;
                         this._nodeWasRemoved = false;
 
                         this._forceEvaluation = true;
@@ -156,7 +163,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             caseSensitive: false
         };
 
-        this.container = this.parentElement.firstElementChild;
+        this._container = this.parentElement.firstElementChild;
     }
 
     public highlight(text: string, caseSensitive?: boolean): number {
@@ -195,16 +202,18 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     private activate(index: number) {
         this.deactivate();
 
-        const spans = this._addedElements.filter((el) => el.nodeName === 'SPAN');
-        this._activeElementIndex = index;
+        if (this._div !== null) {
+            const spans = this._div.querySelectorAll('span');
+            this._activeElementIndex = index;
 
-        if (spans.length <= index) {
-            return;
+            if (spans.length <= index) {
+                return;
+            }
+
+            const elementToActivate = spans[index];
+            this.renderer.addClass(elementToActivate, this.activeCssClass);
+            this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;font-weight:bold');
         }
-
-        const elementToActivate = spans[index];
-        this.renderer.addClass(elementToActivate, this.activeCssClass);
-        this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;font-weight:bold');
     }
 
     private deactivate() {
@@ -212,7 +221,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             return;
         }
 
-        const spans = this._addedElements.filter((el) => el.nodeName === 'SPAN');
+        const spans = this._div.querySelectorAll('span');
 
         if (spans.length <= this._activeElementIndex) {
             this._activeElementIndex = -1;
@@ -230,16 +239,17 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             this.renderer.setProperty(this.parentElement.firstElementChild, 'hidden', originalContentHidden);
         }
 
-        while (this._addedElements.length) {
-            const el = this._addedElements.pop();
+        if (this._div !== null) {
+            this.renderer.removeChild(this.parentElement, this._div);
 
-            this.renderer.removeChild(this.parentElement, el);
+            this._div = null;
+            this._activeElementIndex = -1;
         }
-
-        this._activeElementIndex = -1;
     }
 
     private getHighlightedText(searchText: string, caseSensitive: boolean) {
+        this.appendDiv();
+
         const stringValue = String(this.value);
         const contentStringResolved = !caseSensitive ? stringValue.toLowerCase() : stringValue;
         const searchTextResolved = !caseSensitive ? searchText.toLowerCase() : searchText;
@@ -269,17 +279,19 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     private appendText(text: string) {
         const textElement = this.renderer.createText(text);
-        this.renderer.appendChild(this.parentElement, textElement);
-        this._addedElements.push(textElement);
+        this.renderer.appendChild(this._div, textElement);
     }
 
     private appendSpan(outerHTML: string) {
         const span = this.renderer.createElement('span');
-        this.renderer.appendChild(this.parentElement, span);
+        this.renderer.appendChild(this._div, span);
         this.renderer.setProperty(span, 'outerHTML', outerHTML);
+    }
 
-        const childNodes = this.parentElement.childNodes;
-        this._addedElements.push(childNodes[childNodes.length - 1]);
+    private appendDiv() {
+        this._div = this.renderer.createElement('div');
+        this.renderer.addClass(this._div, this.containerClass);
+        this.renderer.appendChild(this.parentElement, this._div);
     }
 
     private searchNeedsEvaluation(text: string, caseSensitive: boolean): boolean {

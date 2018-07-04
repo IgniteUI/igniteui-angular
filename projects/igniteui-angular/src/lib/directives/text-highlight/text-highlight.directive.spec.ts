@@ -5,7 +5,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 
-import { IgxTextHighlightDirective} from './text-highlight.directive';
+import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
 describe('IgxHighlight', () => {
     beforeEach(async(() => {
@@ -30,6 +30,7 @@ describe('IgxHighlight', () => {
         expect(component.highlight.row).toBe(0);
         expect(component.highlight.column).toBe(0);
         expect(component.highlight.page).toBe(0);
+        expect(component.highlight.containerClass).toBe('test');
     });
 
     it('Should highlight all instances of text', () => {
@@ -209,7 +210,7 @@ describe('IgxHighlight', () => {
 @Component({
     template:
         // tslint:disable-next-line:max-line-length
-        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [page]="0">
+        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [page]="0" [containerClass]="'test'">
             {{html}}
         </div>`
 })
@@ -224,8 +225,6 @@ class HighlightLoremIpsumComponent {
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     public highlight: IgxTextHighlightDirective;
 
-    constructor(private element: ElementRef) {}
-
     public highlightText(text: string, caseSensitive?: boolean) {
         return this.highlight.highlight(text, caseSensitive);
     }
@@ -239,6 +238,12 @@ class HighlightLoremIpsumComponent {
     }
 
     public activate(index: number) {
-        IgxTextHighlightDirective.setActiveHighlight(this.groupName, 0, 0, index, 0);
+        const activeHighlightInfo: IActiveHighlightInfo = {
+            rowIndex: 0,
+            columnIndex: 0,
+            page: 0,
+            index: index
+        };
+        IgxTextHighlightDirective.setActiveHighlight(this.groupName, activeHighlightInfo);
     }
 }
