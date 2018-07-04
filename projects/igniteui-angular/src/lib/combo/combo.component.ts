@@ -893,6 +893,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public handleInputChange(event?) {
+        if (event !== undefined) {
+            this.dropdown.verticalScrollContainer.scrollTo(0);
+        }
         if (this.filterable) {
             this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
