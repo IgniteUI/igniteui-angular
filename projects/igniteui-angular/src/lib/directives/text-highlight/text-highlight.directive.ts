@@ -52,8 +52,19 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     @Input('groupName')
     public groupName = '';
 
+    private _value = '';
+
     @Input('value')
-    public value: any = '';
+    public get value(): any {
+        return this._value;
+    }
+    public set value(value: any) {
+        if (value === undefined || value === null) {
+            this._value = '';
+        } else {
+            this._value = value;
+        }
+    }
 
     @Input('row')
     public row: number;
