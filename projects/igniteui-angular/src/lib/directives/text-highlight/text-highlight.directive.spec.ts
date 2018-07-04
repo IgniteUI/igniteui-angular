@@ -205,6 +205,31 @@ describe('IgxHighlight', () => {
         const spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
     });
+
+    it('Should properly handle empty or null values', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+
+        component.html = null;
+        component.highlightText('z', true);
+        fix.detectChanges();
+        expect(component.textContent).toBe('');
+
+        component.clearHighlight();
+        fix.detectChanges();
+        expect(component.textContent).toBe('');
+
+        component.html = undefined;
+        component.highlightText('z', true);
+        fix.detectChanges();
+        expect(component.textContent).toBe('');
+
+        component.clearHighlight();
+        fix.detectChanges();
+        expect(component.textContent).toBe('');
+    });
 });
 
 @Component({
