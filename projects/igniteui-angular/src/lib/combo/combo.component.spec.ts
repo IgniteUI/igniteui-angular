@@ -2117,7 +2117,6 @@ describe('igxCombo', () => {
             comboSearch.dispatchEvent(new Event('input'));
             fix.detectChanges();
             tick();
-            debugger;
             expect(combo.data.length).toEqual(initialDataLength + 3);
             expect(combo.dropdown.items.length).toEqual(4); // Add Item button is included
             expect(combo.dropdown.headers.length).toEqual(1);
