@@ -29,7 +29,8 @@ describe('IgxGrid - multi-column headers', () => {
                 ColumnGroupFourLevelTestComponent,
                 ThreeGroupsThreeColumnsGridComponent,
                 ColumnGroupTwoGroupsTestComponent,
-                NestedColGroupsGridComponent
+                NestedColGroupsGridComponent,
+                ColumnGroupGroupingTestComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1103,6 +1104,40 @@ describe('IgxGrid - multi-column headers', () => {
             });
         });
     });
+
+    it('grouping -  verify grouping when there are grouped columns', () => {
+        const fixture = TestBed.createComponent(ColumnGroupGroupingTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+  
+        // Verify columns and groups
+        testGroupsAndColumns(9,6);
+
+        grid.getColumnByName('ContactTitle').groupable = true;
+        grid.getColumnByName('Country').groupable = true;
+        grid.getColumnByName('Phone').groupable = true;
+        fixture.detectChanges();
+
+        grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false });
+        fixture.detectChanges();
+
+        // verify grouping expressions
+        const grExprs = grid.groupingExpressions;
+        expect(grExprs.length).toEqual(1);
+        expect(grExprs[0].fieldName).toEqual('ContactTitle');
+
+         // verify rows
+         let groupRows = grid.groupsRowList.toArray();
+         let dataRows = grid.dataRowList.toArray();
+ 
+         expect(groupRows.length).toEqual(4);
+         expect(dataRows.length).toEqual(8);
+
+         //Verify first grouped row
+         const firstGroupedRow = groupRows[0].groupRow;
+         expect(firstGroupedRow.value).toEqual("Sales Representative");
+         expect(firstGroupedRow.records.length).toEqual(3);
+    });
 });
 
 @Component({
@@ -1247,6 +1282,31 @@ export class ColumnGroupChildLevelTestComponent {
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" height="1000px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information">
+             <igx-column field="ContactName"></igx-column>
+             <igx-column field="ContactTitle"></igx-column>
+        </igx-column-group>
+        <igx-column-group header="Address Information">
+                <igx-column field="Country"></igx-column>
+                <igx-column field="City"></igx-column>
+				<igx-column-group header="Phone Information">
+				    <igx-column field="Phone"></igx-column>
+				</igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class ColumnGroupGroupingTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    data = DATASOURCEGROUPING;
+}
+
+@Component({
+    template: `
     <igx-grid #grid [data]="data" height="600px" width="800px">
         <igx-column field="ID"></igx-column>
         <igx-column-group header="General Information">
@@ -1267,7 +1327,7 @@ export class ColumnGroupChildLevelTestComponent {
             </igx-column-group>
         </igx-column-group>
     </igx-grid>
-    `
+       `
 })
 export class ColumnGroupTwoGroupsTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -1457,6 +1517,19 @@ export const DATASOURCE = [
     { 'ID': 'FRANK', 'CompanyName': 'Frankenversand', 'ContactName': 'Peter Franken', 'ContactTitle': 'Marketing Manager', 'Address': 'Berliner Platz 43', 'City': 'München', 'Region': null, 'PostalCode': '80805', 'Country': 'Germany', 'Phone': '089-0877310', 'Fax': '089-0877451' },
     { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
     { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
+];
+// tslint:enable:max-line-length
+
+export const DATASOURCEGROUPING = [
+    // tslint:disable:max-line-length
+    { 'ID': '1', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative',  'City': 'Berlin', 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321' },
+    { 'ID': '2', 'ContactName': 'Ana Trujillo', 'ContactTitle': 'Owner',  'City': 'México D.F.',  'PostalCode': '05021', 'Country': 'Mexico', 'Phone': '(5) 555-4729' },
+    { 'ID': '3',  'ContactName': 'Antonio Moreno', 'ContactTitle': 'Owner',  'City': 'México D.F.', 'PostalCode': '05023', 'Country': 'Mexico', 'Phone': '(5) 555-3932' },
+    { 'ID': '4', 'ContactName': 'Thomas Hardy', 'ContactTitle': 'Sales Representative',  'City': 'London',  'PostalCode': 'WA1 1DP', 'Country': 'UK', 'Phone': '(171) 555-7788' },
+    { 'ID': '5', 'ContactName': 'Christina Berglund', 'ContactTitle': 'Order Administrator',  'City': 'Luleå',  'PostalCode': 'S-958 22', 'Country': 'Sweden', 'Phone': '0921-12 34 65' },
+    { 'ID': '6', 'ContactName': 'Hanna Moos', 'ContactTitle': 'Sales Representative',  'City': 'Mannheim',  'PostalCode': '68306', 'Country': 'Germany', 'Phone': '0621-08460' },
+    { 'ID': '7',  'ContactName': 'Frédérique Citeaux', 'ContactTitle': 'Marketing Manager', 'City': 'Strasbourg',  'PostalCode': '67000', 'Country': 'France', 'Phone': '88.60.15.31' },
+    { 'ID': '8', 'ContactName': 'Martín Sommer', 'ContactTitle': 'Owner', 'City': 'Madrid',  'PostalCode': '28023', 'Country': 'Spain', 'Phone': '(91) 555 22 82' }
 ];
 // tslint:enable:max-line-length
 
