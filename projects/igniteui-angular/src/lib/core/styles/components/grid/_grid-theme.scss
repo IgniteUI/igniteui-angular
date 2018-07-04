@@ -450,7 +450,7 @@
     }
 
     %grid-thead-title {
-        display: flex;
+        flex-basis: auto !important;
         align-items: center !important;
         border-bottom: 1px dotted igx-color($palette, 'grays', 400);
         height: map-get($grid-header-height, 'comfortable');
