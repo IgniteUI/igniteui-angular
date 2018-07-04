@@ -2857,6 +2857,31 @@ describe('igxCombo', () => {
         });
     }));
 
+    it(`Should properly display "Add Item" button when filtering is off`, fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        combo.filterable = false;
+        tick();
+        expect(combo).toBeDefined();
+        expect(combo.filterable).toEqual(false);
+        expect(combo.isAddButtonVisible()).toEqual(false);
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        const comboInput = combo.searchInput.nativeElement;
+        comboInput.value = combo.data[2];
+        comboInput.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        tick();
+        expect(combo.isAddButtonVisible()).toEqual(false);
+        comboInput.value = combo.searchValue.substring(0, 2);
+        comboInput.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        tick();
+        expect(combo.isAddButtonVisible()).toEqual(true);
+    }));
+
     it(`Should handle click on "Add Item" properly`, async(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();

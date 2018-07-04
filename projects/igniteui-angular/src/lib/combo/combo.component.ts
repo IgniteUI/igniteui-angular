@@ -848,7 +848,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public get filteredData(): any[] {
-        return this._filteredData;
+        return this.filterable ? this._filteredData : this.data;
     }
 
     /**
@@ -856,7 +856,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public set filteredData(val: any[]) {
         this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
-        this.checkMatch();
     }
 
     /**
@@ -897,11 +896,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         if (this.filterable) {
             this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
-            // this.isHeaderChecked();
         }
         if (event !== undefined) {
             this.onSearchInput.emit(event);
         }
+        this.checkMatch();
     }
 
     /**
@@ -1028,7 +1027,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isAddButtonVisible(): boolean {
-        return this.searchValue && this.customValueFlag;
+        // This should always return a boolean value. If this.searchValue was '', it returns '' instead of false;
+        return this.searchValue !== '' && this.customValueFlag;
     }
 
     /**
@@ -1062,6 +1062,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         };
         this.onAddition.emit(args);
         this.data.push(addedItem);
+        // If you mutate the array, no pipe is invoked and the display isn't updated;
+        // if you replace the array, the pipe executes and the display is updated.
+        this.data = cloneArray(this.data);
         this.changeSelectedItem(addedItem, true);
         this.customValueFlag = false;
         if (this.searchInput) {
