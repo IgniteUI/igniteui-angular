@@ -2292,7 +2292,8 @@ describe('igxCombo', () => {
             expect(combo.data.length).toEqual(initialData.length + 1);
             expect(combo.onAddition.emit).toHaveBeenCalledTimes(1);
             expect(combo.data[combo.data.length - 1]).toEqual({
-                field: 'myItem'
+                field: 'myItem',
+                region: 'Other'
             });
             combo.onAddition.subscribe((e) => {
                 e.addedItem.region = 'exampleRegion';
@@ -2654,7 +2655,7 @@ describe('igxCombo', () => {
                 fix.detectChanges();
                 return fix.whenStable();
             }).then(() => {
-                expect(combo.selectedItems()).toEqual([{ field: 'New' }]);
+                expect(combo.selectedItems()).toEqual([{ field: 'New', region: 'Other'}]);
                 expect(combo.comboInput.nativeElement.value).toEqual('New');
                 fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click(mockEvent);
                 return fix.whenStable();
