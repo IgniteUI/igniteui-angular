@@ -1189,6 +1189,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
             if (row) {
                 const index = this.data.indexOf(row.rowData);
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                }
                 if (this.rowSelectable === true) {
                     this.deselectRows([row.rowID]);
                 }
@@ -1207,6 +1211,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
             if (columnEdit.length > 0) {
                 const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                if (editableCell && editableCell.cellID.rowID === rowSelector &&
+                    editableCell.cellID.columnID === columnId) {
+                        this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                }
                 this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
                 this.cdr.markForCheck();
                 this.refreshSearch();
@@ -1218,6 +1227,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
             const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
             if (row) {
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                }
                 if (this.rowSelectable === true && row.isSelected) {
                     this.deselectRows([row.rowID]);
                     this.gridAPI.update_row(value, this.id, row);
@@ -1526,7 +1539,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         let pagingHeight = 0;
         let groupAreaHeight = 0;
-        if (this.paging) {
+        if (this.paging && this.paginator) {
             pagingHeight = this.paginator.nativeElement.firstElementChild ?
                 this.paginator.nativeElement.clientHeight : 0;
         }
