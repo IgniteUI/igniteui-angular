@@ -2091,6 +2091,37 @@ describe('igxCombo', () => {
                 expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
             });
         }));
+
+        it('Should properly add items to the defaultFallbackGroup', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboSampleComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+            combo.toggle();
+            tick();
+            const comboSearch = combo.searchInput.nativeElement;
+            const fallBackGroup = combo.defaultFallbackGroup;
+            const initialDataLength = combo.data.length + 0;
+            expect(combo.filteredData.filter((e) => e[combo.groupKey]  === undefined  )).toEqual([]);
+            combo.searchValue = 'My Custom Item 1';
+            tick();
+            combo.addItemToCollection();
+            tick();
+            combo.searchValue = 'My Custom Item 2';
+            combo.addItemToCollection();
+            tick();
+            combo.searchValue = 'My Custom Item 3';
+            combo.addItemToCollection();
+            tick();
+            combo.searchValue = 'My Custom Item';
+            comboSearch.value = 'My Custom Item';
+            comboSearch.dispatchEvent(new Event('input'));
+            fix.detectChanges();
+            tick();
+            expect(combo.data.length).toEqual(initialDataLength + 3);
+            expect(combo.dropdown.items.length).toEqual(4); // Add Item button is included
+            expect(combo.dropdown.headers.length).toEqual(1);
+            expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual(fallBackGroup);
+        }));
     });
 
     describe('Filtering tests: ', () => {
@@ -2261,7 +2292,8 @@ describe('igxCombo', () => {
             expect(combo.data.length).toEqual(initialData.length + 1);
             expect(combo.onAddition.emit).toHaveBeenCalledTimes(1);
             expect(combo.data[combo.data.length - 1]).toEqual({
-                field: 'myItem'
+                field: 'myItem',
+                region: 'Other'
             });
             combo.onAddition.subscribe((e) => {
                 e.addedItem.region = 'exampleRegion';
@@ -2623,7 +2655,7 @@ describe('igxCombo', () => {
                 fix.detectChanges();
                 return fix.whenStable();
             }).then(() => {
-                expect(combo.selectedItems()).toEqual([{ field: 'New' }]);
+                expect(combo.selectedItems()).toEqual([{ field: 'New', region: 'Other'}]);
                 expect(combo.comboInput.nativeElement.value).toEqual('New');
                 fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click(mockEvent);
                 return fix.whenStable();
