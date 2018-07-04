@@ -1096,10 +1096,24 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const list = this.columnList.toArray();
         const fi = list.indexOf(from);
         const ti = list.indexOf(to);
+
+        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+        const activeColumnIndex = activeInfo.columnIndex;
+        let activeColumn = null;
+
+        if (activeInfo.columnIndex !== -1) {
+            activeColumn = list[activeColumnIndex];
+        }
+
         list.splice(ti, 0, ...list.splice(fi, 1));
         const newList = this._resetColumnList(list);
         this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
+
+        if (activeColumn !== null && activeColumn !== undefined) {
+            const newIndex = newList.indexOf(activeColumn);
+            IgxColumnComponent.updateHighlights(activeColumnIndex, newIndex, this);
+        }
     }
 
     protected _resetColumnList(list?) {
@@ -2181,7 +2195,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const columnItems = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
+        const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
             map((c) => ({ name: c.field, searchable: c.searchable }));
 
         const groupIndexData = this.getGroupIncrementData();

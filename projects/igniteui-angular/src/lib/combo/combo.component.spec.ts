@@ -1979,7 +1979,7 @@ fdescribe('igxCombo', () => {
                 const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
                 const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
 
-                expect(dropdownItems[0].innerText).toEqual('Product 1');
+                expect(dropdownItems[0].innerText.trim()).toEqual('Product 1');
             });
         }));
         it('The empty template should be rendered when combo data source is not set', fakeAsync(() => {
@@ -2817,6 +2817,10 @@ fdescribe('igxCombo', () => {
         expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
         vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
         expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+
+        combo.searchInput.nativeElement.value = 'c';
+        combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
     }));
 
     it(`Should handle enter keydown on "Add Item" properly`, async(() => {
@@ -2855,6 +2859,31 @@ fdescribe('igxCombo', () => {
                 });
             }, 500);
         });
+    }));
+
+    it(`Should properly display "Add Item" button when filtering is off`, fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        combo.filterable = false;
+        tick();
+        expect(combo).toBeDefined();
+        expect(combo.filterable).toEqual(false);
+        expect(combo.isAddButtonVisible()).toEqual(false);
+        combo.toggle();
+        tick();
+        expect(combo.collapsed).toEqual(false);
+        const comboInput = combo.searchInput.nativeElement;
+        comboInput.value = combo.data[2];
+        comboInput.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        tick();
+        expect(combo.isAddButtonVisible()).toEqual(false);
+        comboInput.value = combo.searchValue.substring(0, 2);
+        comboInput.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        tick();
+        expect(combo.isAddButtonVisible()).toEqual(true);
     }));
 
     it(`Should handle click on "Add Item" properly`, async(() => {
