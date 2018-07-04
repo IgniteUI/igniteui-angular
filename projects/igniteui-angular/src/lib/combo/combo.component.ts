@@ -26,7 +26,6 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
-import { AutoPositionStrategy } from '../services/overlay/position/auto-position-strategy';
 
 export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
     private _callback: () => void;
