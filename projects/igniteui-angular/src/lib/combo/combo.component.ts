@@ -1062,6 +1062,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         };
         this.onAddition.emit(args);
         this.data.push(addedItem);
+        // If you mutate the array, no pipe is invoked and the display isn't updated;
+        // if you replace the array, the pipe executes and the display is updated.
+        this.data = cloneArray(this.data);
         this.changeSelectedItem(addedItem, true);
         this.customValueFlag = false;
         if (this.searchInput) {
