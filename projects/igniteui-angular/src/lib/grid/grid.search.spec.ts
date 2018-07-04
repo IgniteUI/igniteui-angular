@@ -1040,7 +1040,7 @@ describe('IgxGrid - search API', () => {
 
     });
 
-    it('Active highlight should be preserved when all rows are filted out', async(() => {
+    it('Active highlight should be preserved when all rows are filtered out', async(() => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
         fix.detectChanges();
 
@@ -1075,7 +1075,7 @@ describe('IgxGrid - search API', () => {
         });
     }));
 
-    it('Active highlight should be preserved when all rows are filted out', async(() => {
+    it('Active highlight should be preserved when a column is moved', async(() => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
         fix.detectChanges();
 
