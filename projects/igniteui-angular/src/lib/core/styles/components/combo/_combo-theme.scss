@@ -4,7 +4,6 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 ///
-/// @param {Color} $add-icon-color [null] - The combo add new item icon color.
 /// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
 /// @param {Color} $search-background [null] - The combo search box background color.
 /// @param {Color} $search-background [null] - The combo search box background color.
@@ -14,9 +13,6 @@
 /// @requires igx-color
 @function igx-combo-theme(
     $palette: $default-palette,
-
-    $background-color: null,
-    $add-icon-color: null,
     $search-separator-border-color: null,
     $empty-list-placeholder-color: null,
     $empty-list-background: null
@@ -24,18 +20,14 @@
 
     $default-theme: (
         name: 'igx-combo',
-        add-icon-color: igx-color($palette, 'primary', 500),
         search-separator-border-color: igx-color($palette, 'grays', 300),
         empty-list-placeholder-color: igx-color($palette, 'grays', 400),
         empty-list-background: #fff
     );
 
-
     @return extend($default-theme,
     (
         pallete: $palette,
-        background-color: $background-color,
-        add-icon-color: $add-icon-color,
         search-separator-border-color: $search-separator-border-color,
         empty-list-placeholder-color: $empty-list-placeholder-color,
         empty-list-background: $empty-list-background
@@ -102,6 +94,7 @@
         align-items: center;
         position: relative;
         padding: rem(16px);
+        background-color: --var($theme, 'empty-list-background');
     }
 
     %igx-combo__empty {
@@ -110,7 +103,6 @@
         align-items: center;
         width: 100%;
         color: --var($theme, 'empty-list-placeholder-color');
-        background-color: --var($theme, 'empty-list-background');
         padding: 0 rem(24px);
         font-size: rem(13px);
     }
@@ -134,4 +126,3 @@
         }
     }
 }
-
