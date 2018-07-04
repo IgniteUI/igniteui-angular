@@ -7,7 +7,7 @@ import {
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
-fdescribe('IgxHighlight', () => {
+describe('IgxHighlight', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -206,7 +206,7 @@ fdescribe('IgxHighlight', () => {
         expect(spans.length).toBe(0);
     });
 
-    fit('Should properly handle empty or null values', () =>{
+    it('Should properly handle empty or null values', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
 
