@@ -500,7 +500,7 @@ describe('igxCombo', () => {
             tick();
             expect(combo.collapsed).toEqual(true);
         }));
-        it('Should restore position of dropdown scroll after opening', fakeAsync(() => {
+        it('Should NOT restore position of dropdown scroll after opening', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -531,7 +531,7 @@ describe('igxCombo', () => {
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
             expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
             vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
-            expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+            expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
         }));
         it('Dropdown button should open/close dropdown list', async(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -2785,7 +2785,7 @@ describe('igxCombo', () => {
         expect(combo.collapsed).toEqual(true);
     }));
 
-    it('Should restore position of dropdown scroll after opening', fakeAsync(() => {
+    it('Should NOT restore position of dropdown scroll after opening', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxComboSampleComponent);
         fix.detectChanges();
         const combo = fix.componentInstance.combo;
@@ -2816,7 +2816,7 @@ describe('igxCombo', () => {
         expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
         expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
         vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
     }));
 
     it(`Should handle enter keydown on "Add Item" properly`, async(() => {
