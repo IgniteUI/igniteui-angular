@@ -30,6 +30,7 @@ describe('IgxHighlight', () => {
         expect(component.highlight.row).toBe(0);
         expect(component.highlight.column).toBe(0);
         expect(component.highlight.page).toBe(0);
+        expect(component.highlight.containerClass).toBe('test');
     });
 
     it('Should highlight all instances of text', () => {
@@ -209,7 +210,7 @@ describe('IgxHighlight', () => {
 @Component({
     template:
         // tslint:disable-next-line:max-line-length
-        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [page]="0">
+        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [page]="0" [containerClass]="'test'">
             {{html}}
         </div>`
 })
