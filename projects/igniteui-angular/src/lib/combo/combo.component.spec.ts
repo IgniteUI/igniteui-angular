@@ -2817,6 +2817,10 @@ describe('igxCombo', () => {
         expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
         vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
         expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+
+        combo.searchInput.nativeElement.value = 'c';
+        combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
     }));
 
     it(`Should handle enter keydown on "Add Item" properly`, async(() => {
