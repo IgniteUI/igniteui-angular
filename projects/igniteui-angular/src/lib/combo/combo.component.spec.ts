@@ -1979,7 +1979,7 @@ describe('igxCombo', () => {
                 const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
                 const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
 
-                expect(dropdownItems[0].innerText).toEqual('Product 1');
+                expect(dropdownItems[0].innerText.trim()).toEqual('Product 1');
             });
         }));
         it('The empty template should be rendered when combo data source is not set', fakeAsync(() => {
