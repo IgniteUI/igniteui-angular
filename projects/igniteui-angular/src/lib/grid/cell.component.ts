@@ -313,6 +313,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
             rowSelector = this.cellID.rowID;
         }
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editableCell && editableCell.cellID.rowID === this.cellID.rowID
+            && editableCell.cellID.columnID === this.cellID.columnID) {
+            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+        }
         this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
         this.cdr.markForCheck();
         this.gridAPI.get(this.gridID).refreshSearch();
