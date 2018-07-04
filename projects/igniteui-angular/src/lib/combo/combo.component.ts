@@ -26,7 +26,22 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
+import { AutoPositionStrategy } from '../services/overlay/position/auto-position-strategy';
 
+export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
+    private _callback: () => void;
+    constructor(callback: () => void) {
+        super();
+        this._callback = callback;
+    }
+
+    position(contentElement, size, document?, initialCall?) {
+        if (initialCall) {
+            this._callback();
+        }
+        super.position(contentElement, size);
+    }
+}
 export enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
@@ -109,9 +124,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _valid = IgxComboState.INITIAL;
     private _statusChanges$: Subscription;
     private _width = '250px';
+    private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
-        positionStrategy: new ConnectedPositioningStrategy(),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
@@ -125,11 +140,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService,
         @Self() @Optional() public ngControl: NgControl) {
-            if (this.ngControl) {
-                // Note: we provide the value accessor through here, instead of
-                // the `providers` to avoid running into a circular import.
-                this.ngControl.valueAccessor = this;
-            }
+        if (this.ngControl) {
+            // Note: we provide the value accessor through here, instead of
+            // the `providers` to avoid running into a circular import.
+            this.ngControl.valueAccessor = this;
+        }
     }
 
     /**
@@ -1115,6 +1130,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public ngOnInit() {
+        this._positionCallback =  () => this.dropdown.updateScrollPosition();
+        this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
 
         if (this.ngControl && this.ngControl.value) {
