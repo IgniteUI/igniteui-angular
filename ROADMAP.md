@@ -1,15 +1,24 @@
 # Roadmap - Ignite UI for Angular
 
+## Next Milestone
 
-## Milestone 3 (by June 30th, 2018)
+## Milestone 5 (by November 30th, 2018)
 
-1. Grouping
-2. Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
-3. Combo
-4. Column Hiding UI
-5. Operations UI - column chooser
-6. Advanced Filtering
-7. Column Moving
+1. Hierarchical Grid  
+2. Tree Grid
+3. Advanced Filtering Dialog
+
+## Current Milestone
+
+## Milestone 3 (by July 6th, 2018)
+
+1. **[DONE]**Grouping
+2. **[DONE]**Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
+3. **[DONE]**Combo
+4. **[DONE]**Column Hiding UI
+5. **[DONE]**Operations UI - column chooser
+6. **[DONE]**Advanced Filtering
+7. **[DONE]**Column Moving
 8. **[DONE]** Update to Angular 6
 9. Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
 10. Design: Data dense theme for data grid 
