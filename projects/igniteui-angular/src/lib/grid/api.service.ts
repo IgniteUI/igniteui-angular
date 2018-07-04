@@ -85,6 +85,7 @@ export class IgxGridAPIService {
             cellId.columnID === editableCell.cellID.columnID) {
             this.editCellState.delete(gridId);
         }
+        editableCell.cell.cdr.detectChanges();
     }
 
 
