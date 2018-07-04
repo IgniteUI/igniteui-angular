@@ -102,7 +102,7 @@ class TestChipReorderComponent {
 
 describe('IgxChipsArea', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item chip-area';
-    const CHIP_CONNECTOR = 'igx-chip__connecto';
+    const CHIP_CONNECTOR = 'igx-chip__connector';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

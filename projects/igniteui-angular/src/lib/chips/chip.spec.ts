@@ -259,6 +259,12 @@ describe('IgxChip', () => {
         const firstComponent = components[0];
 
         expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
+
+        // Assert default css class is applied
+        const comfortableComponents = fix.debugElement.queryAll(By.css('.igx-chip'));
+
+        expect(comfortableComponents.length).toEqual(2);
+        expect(comfortableComponents[0].nativeElement).toBe(firstComponent.nativeElement);
     });
 
     it('should make chip comfortable when density is set to comfortable', () => {
@@ -269,9 +275,15 @@ describe('IgxChip', () => {
         const secondComponent = components[1];
 
         expect(secondComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
+
+        // Assert default css class is applied
+        const comfortableComponents = fix.debugElement.queryAll(By.css('.igx-chip'));
+
+        expect(comfortableComponents.length).toEqual(2);
+        expect(comfortableComponents[1].nativeElement).toBe(secondComponent.nativeElement);
     });
 
-    it('should make chip compact when density is set to compat', () => {
+    it('should make chip compact when density is set to compact', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
@@ -279,6 +291,12 @@ describe('IgxChip', () => {
         const thirdComponent = components[2];
 
         expect(thirdComponent.componentInstance.displayDensity).toEqual(DisplayDensity.compact);
+
+        // Assert compact css class is added
+        const compactComponents = fix.debugElement.queryAll(By.css('.igx-chip--compact'));
+
+        expect(compactComponents.length).toEqual(1);
+        expect(compactComponents[0].nativeElement).toBe(thirdComponent.nativeElement);
     });
 
     it('should make chip cosy when density is set to cosy', () => {
@@ -289,6 +307,12 @@ describe('IgxChip', () => {
         const fourthComponent = components[3];
 
         expect(fourthComponent.componentInstance.displayDensity).toEqual(DisplayDensity.cosy);
+
+        // Assert cosy css class is added
+        const cosyComponents = fix.debugElement.queryAll(By.css('.igx-chip--cosy'));
+
+        expect(cosyComponents.length).toEqual(1);
+        expect(cosyComponents[0].nativeElement).toBe(fourthComponent.nativeElement);
     });
 
     it('should set correctly color of chip when color is set through code', () => {
@@ -321,11 +345,17 @@ describe('IgxChip', () => {
         const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
         deleteButtonElement.nativeElement.focus();
 
+        // Removes chip with id City, because country chip is unremovable
         deleteButtonElement.nativeElement.dispatchEvent(spaceKeyEvent);
         fix.detectChanges();
 
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         expect(chipComponents.length).toEqual(3);
+
+        const chipComponentsIds = fix.componentInstance.chipList.map(c => c.id);
+
+        expect(chipComponentsIds.length).toEqual(3);
+        expect(chipComponentsIds).not.toContain('City');
     });
 
     it('should delete chip when enter button is pressed and chip delete button is focussed', () => {
@@ -342,10 +372,16 @@ describe('IgxChip', () => {
         const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
         deleteButtonElement.nativeElement.focus();
 
+        // Removes chip with id City, because country chip is unremovable
         deleteButtonElement.nativeElement.dispatchEvent(enterKeyEvent);
         fix.detectChanges();
 
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         expect(chipComponents.length).toEqual(3);
+
+        const chipComponentsIds = fix.componentInstance.chipList.map(c => c.id);
+
+        expect(chipComponentsIds.length).toEqual(3);
+        expect(chipComponentsIds).not.toContain('City');
     });
 });
