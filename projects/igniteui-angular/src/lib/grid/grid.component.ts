@@ -2294,13 +2294,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     private restoreHighlight(): void {
-        if (this.lastSearchInfo.matchInfoCache.length) {
+        if (this.lastSearchInfo.searchText) {
             const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
             const data = this.filteredSortedData;
             const groupByIncrements = this.getGroupIncrementData();
 
-            const rowIndex = data.indexOf(matchInfo.item);
+            const rowIndex = matchInfo ? data.indexOf(matchInfo.item) : -1;
             const page = this.paging ? Math.floor(rowIndex / this.perPage) : 0;
             let increment = groupByIncrements && rowIndex !== -1 ? groupByIncrements[rowIndex] : 0;
             if (this.paging && increment) {

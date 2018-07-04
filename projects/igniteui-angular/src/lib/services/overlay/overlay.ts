@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, filter } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 
 @Injectable({ providedIn: 'root' })
@@ -243,13 +243,10 @@ export class IgxOverlayService {
 
     private setupModalWrapper(info: OverlayInfo) {
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
-        fromEvent(wrapperElement, 'keydown')
-            .pipe(take(1))
-            .subscribe((ev: KeyboardEvent) => {
-                if (ev.key === 'Escape') {
-                    this.hide(info.id);
-                }
-            });
+        fromEvent(wrapperElement, 'keydown').pipe(
+            filter((ev: KeyboardEvent) => ev.key === 'Escape'),
+            take(1)
+        ).subscribe(() => this.hide(info.id));
         wrapperElement.classList.remove('igx-overlay__wrapper');
         this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
         wrapperElement.classList.add('igx-overlay__wrapper--modal');
