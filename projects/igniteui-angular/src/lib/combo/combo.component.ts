@@ -900,6 +900,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             // this.isHeaderChecked();
         }
         if (event !== undefined) {
+            this.dropdown.verticalScrollContainer.scrollTo(0);
             this.onSearchInput.emit(event);
         }
     }
