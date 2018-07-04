@@ -1054,6 +1054,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             [this.valueKey]: newValue,
             [this.displayKey]: newValue
         } : newValue;
+        if (this.groupKey || this.groupKey === 0) {
+            Object.assign(addedItem, { [this.groupKey] : this.defaultFallbackGroup});
+        }
         const oldCollection = this.data;
         const newCollection = [...this.data];
         newCollection.push(addedItem);
