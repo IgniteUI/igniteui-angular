@@ -1096,10 +1096,24 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const list = this.columnList.toArray();
         const fi = list.indexOf(from);
         const ti = list.indexOf(to);
+
+        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+        const activeColumnIndex = activeInfo.columnIndex;
+        let activeColumn = null;
+
+        if (activeInfo.columnIndex !== -1) {
+            activeColumn = list[activeColumnIndex];
+        }
+
         list.splice(ti, 0, ...list.splice(fi, 1));
         const newList = this._resetColumnList(list);
         this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
+
+        if (activeColumn !== null && activeColumn !== undefined) {
+            const newIndex = newList.indexOf(activeColumn);
+            IgxColumnComponent.updateHighlights(activeColumnIndex, newIndex, this);
+        }
     }
 
     protected _resetColumnList(list?) {

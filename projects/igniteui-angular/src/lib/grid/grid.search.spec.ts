@@ -1075,6 +1075,30 @@ describe('IgxGrid - search API', () => {
         });
     }));
 
+    it('Active highlight should be preserved when all rows are filted out', async(() => {
+        const fix = TestBed.createComponent(ScrollableGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        grid.findNext('casey');
+
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const columns = grid.columnList.toArray();
+            grid.moveColumn(columns[0], columns[1]);
+            fix.detectChanges();
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const activeHighlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            const highlights = grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+    }));
+
     function findNext(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
             grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
