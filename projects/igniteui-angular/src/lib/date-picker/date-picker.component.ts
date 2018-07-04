@@ -385,7 +385,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     public ngOnInit(): void {
         this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusTheDialog());
-        this.alert.onClose.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
+        this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
     }
 
     /**
@@ -436,13 +436,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *
      * @hidden
      */
-    public onOpenEvent(event): void {
-        if (!this.calendarRef) {
-            this.createCalendarRef();
-            this.alert.open();
-            this._onTouchedCallback();
-            this.onOpen.emit(this);
-        }
+    public onOpenEvent(): void {
+        this.createCalendarRef();
+        this.alert.open();
+        this._onTouchedCallback();
+        this.onOpen.emit(this);
     }
 
     private createCalendarRef(): void {
@@ -463,10 +461,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     public handleDialogCloseAction() {
         this.onClose.emit(this);
-        setTimeout(() => {
-            this.calendarRef.destroy();
-            this.calendarRef = null;
-        }, 350);
+        this.calendarRef.destroy();
     }
 
     /**
