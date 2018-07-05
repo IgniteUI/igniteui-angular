@@ -2403,6 +2403,52 @@ describe('igxOverlay', () => {
             tick();
         }));
 
+        // Test fix for #1883 #1820
+        it('Esc key closes the dialog in case there are other keys pressed prior to Esc.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                 modal: true,
+                 positionStrategy: new GlobalPositionStrategy()
+            };
+
+            const escEvent = new KeyboardEvent('keydown', {
+                key: 'Escape'
+            });
+            const enterEvent = new KeyboardEvent('keydown', {
+                key: 'Enter'
+            });
+            const arrowUpEvent = new KeyboardEvent('keydown', {
+                key: 'ArrowUp'
+            });
+            const aEvent = new KeyboardEvent('keydown', {
+                key: 'a'
+            });
+
+            spyOn(overlay, 'show').and.callThrough();
+            spyOn(overlay, 'hide').and.callThrough();
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+
+            let overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            overlayWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
+                if (event.key === 'Escape') {
+                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+                    expect(overlayWrapper).toBeFalsy();
+                    expect(overlay.hide).toHaveBeenCalledTimes(1);
+                }
+            });
+            tick();
+            expect(overlay.show).toHaveBeenCalledTimes(1);
+            expect(overlay.hide).toHaveBeenCalledTimes(0);
+            expect(overlayWrapper).toBeTruthy();
+
+            overlayWrapper.dispatchEvent(enterEvent);
+            overlayWrapper.dispatchEvent(aEvent);
+            overlayWrapper.dispatchEvent(arrowUpEvent);
+            overlayWrapper.dispatchEvent(escEvent);
+        }));
+
         xit('Enter selects', () => {
             // Not TO DO
         });
