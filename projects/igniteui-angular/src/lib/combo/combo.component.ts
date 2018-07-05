@@ -1013,7 +1013,16 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isItemSelected(item) {
-        return this.selectionAPI.is_item_selected(this.id, item);
+        const dropDown = this.dropdown;
+        let selectedItemsIDs, itemID;
+        if (this.totalItemCount > 0) {
+            selectedItemsIDs = this.selectionAPI.get_all_ids(dropDown.selectedItem, this.valueKey);
+            itemID = item[this.valueKey];
+        } else {
+            selectedItemsIDs = dropDown.selectedItem;
+            itemID = item;
+        }
+        return selectedItemsIDs.indexOf(itemID) > -1;
     }
 
     /**

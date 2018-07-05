@@ -41,7 +41,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
     }
 
     get isSelected() {
-        return this.parentElement.selectedItem.indexOf(this.itemID) > -1;
+        return this.parentElement.parentElement.isItemSelected(this.itemID);
     }
 
     @HostListener('click', ['$event'])

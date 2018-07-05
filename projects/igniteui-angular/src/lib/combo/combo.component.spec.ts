@@ -1961,6 +1961,8 @@ describe('igxCombo', () => {
             const fixture = TestBed.createComponent(IgxComboBindingTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
+            let selectedItem;
+            let itemCheckbox;
             tick(3200);
             fixture.whenStable().then(() => {
                 fixture.detectChanges();
@@ -1980,6 +1982,23 @@ describe('igxCombo', () => {
                 const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
 
                 expect(dropdownItems[0].innerText.trim()).toEqual('Product 1');
+
+                selectedItem = dropdownItems[0];
+                itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+                itemCheckbox.click();
+                fixture.detectChanges();
+                return fixture.whenStable();
+            }).then(() => {
+                expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
+                combo.toggle();
+                tick();
+                return fixture.whenStable();
+            }).then(() => {
+                combo.toggle();
+                tick();
+                return fixture.whenStable();
+            }).then(() => {
+                expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
             });
         }));
         it('The empty template should be rendered when combo data source is not set', fakeAsync(() => {
