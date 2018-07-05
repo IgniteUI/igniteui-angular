@@ -77,7 +77,7 @@ set values(newValues: Array<any>) {
 By default filtering in the combo is enabled. However you can disable it using the following code:
 
 ```html
-<igx-combo [filaterable]="false"></igx-combo>
+<igx-combo [filterable]="false"></igx-combo>
 ```
 
 <div class="divider--half"></div>
@@ -211,14 +211,15 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 |  `id`                    | combo id                                          | string                      |
 |  `data`                  | combo data source                                 | any                         |
 |  `value`                 | combo value                                       | string                      |
-|  `allowCustomValue`      | enable/disables combo custom value                | boolean                     |
+|  `allowCustomValue`      | enables/disables combo custom value                | boolean                     |
+|  `filterable`            | enables/disables combo drop down filtering - enabled by default                  | boolean                     |
 |  `valueKey`              | combo value data source property                  | string                      |
 |  `displayKey`            | combo display data source property                | string                      |
 |  `groupKey`              | combo item group                                  | string                      |
 |  `virtualizationState`   | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
 |  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
-|  `heigth`                | defines combo height                              | string                      |
+|  `height`                | defines combo height                              | string                      |
 |  `itemsMaxHeight `       | defines drop down height                          | string                      |
 |  `itemsMaxWidth `        | defines drop down width                           | string                      |
 |  `itemHeight `           | defines drop down item height                     | string                      |
