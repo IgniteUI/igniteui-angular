@@ -793,8 +793,8 @@ describe('igxOverlay', () => {
             expect(componentRect_1.width).toEqual(componentRect_2.width);
             expect(componentRect_1.height).toEqual(componentRect_2.height);
         }));
-        // WIP
-        xit('should show a component bigger than the visible window as centered and scrollbars should not appear', fakeAsync(() => {
+
+        it('should show a component bigger than the visible window as centered and scrollbars should not appear', fakeAsync(() => {
             // overlay div is forced to has width and height equal to 0. This will prevent body
             // to show any scrollbars whatever the size of the component is.
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -811,10 +811,11 @@ describe('igxOverlay', () => {
             // display:flex parent will keep the content container within the wrapper in width (x, left = 0, right = width)
             expect(componentRect.left).toBe(0);
             expect(wrapperRect.width).toEqual(wrapperRect.right);
+            expect(wrapperRect.height).toEqual(wrapperRect.bottom);
             expect(componentRect.top).toBeLessThan(0);
             expect(wrapperRect.height / 2).toEqual(componentRect.top + componentRect.height / 2);
             hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
-            expect(hasScrollbar).toBeTruthy();
+            expect(hasScrollbar).toBeFalsy();
         }));
         // 1.1.1 Global Css
         it('css class should be applied on igx-overlay component div wrapper.' +
@@ -1428,7 +1429,6 @@ describe('igxOverlay', () => {
         });
 
         it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT', () => {
-            // WIP
             const fix = TestBed.createComponent(DownRightButtonComponent);
             fix.detectChanges();
             const currentElement = fix.componentInstance;
@@ -2449,10 +2449,6 @@ describe('igxOverlay', () => {
             overlayWrapper.dispatchEvent(escEvent);
         }));
 
-        xit('Enter selects', () => {
-            // Not TO DO
-        });
-
         it('Clicking outside the dialog does not close it', fakeAsync(() => {
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
@@ -2496,10 +2492,6 @@ describe('igxOverlay', () => {
             const appliedBackgroundStyles = styles[3];
             expect(appliedBackgroundStyles).not.toContain(expectedBackgroundColor);
         }));
-
-        xit('Tab allows changing focus to other components/elements on the window which are not shown via the igx-overlay', () => {
-            // Not TO DO
-        });
 
         it('Clicking outside the component collapses/closes (DropDown, DatePicker, NavBar etc.)', fakeAsync(() => {
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
@@ -2570,14 +2562,6 @@ describe('igxOverlay', () => {
         }));
 
         // 4. Css
-        xit('Css should not leak: From igx-overlay to the inner components (greyed out modal).', () => {
-            // TO DO
-        });
-
-        xit('Css should not leak: From shown components to igx-overlay.', () => {
-            // TO DO
-        });
-
         it('Components with 100% width/height should use their initial container\'s properties when placed inside of the overlay element',
             fakeAsync(() => {
                 const fixture = TestBed.createComponent(WidthTestOverlayComponent);
