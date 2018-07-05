@@ -2001,13 +2001,13 @@ describe('igxOverlay', () => {
                 expect(noScroll.attach).toHaveBeenCalledTimes(0);
                 expect(noScroll.detach).toHaveBeenCalledTimes(0);
                 document.documentElement.scrollTop = 40;
-                document.documentElement.scrollLeft = 50;
+                document.documentElement.scrollLeft = 30;
                 document.dispatchEvent(new Event('scroll'));
                 tick();
 
                 expect(elementRect).toEqual(element.getBoundingClientRect());
                 expect(document.documentElement.scrollTop).toEqual(40);
-                expect(document.documentElement.scrollLeft).toEqual(50);
+                expect(document.documentElement.scrollLeft).toEqual(30);
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
             })
         );
@@ -2367,14 +2367,15 @@ describe('igxOverlay', () => {
 
             button.dispatchEvent(new MouseEvent('click'));
         }));
-        // WIP
-        xit('Esc key closes the dialog.', fakeAsync(() => {
+
+        it('Esc key closes the dialog.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                  modal: true,
                  positionStrategy: new GlobalPositionStrategy()
             };
+
             const targetButton = 'Escape';
             const escEvent = new KeyboardEvent('keydown', {
                 key: targetButton
@@ -2382,19 +2383,24 @@ describe('igxOverlay', () => {
 
             spyOn(overlay, 'show').and.callThrough();
             spyOn(overlay, 'hide').and.callThrough();
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
 
-            document.addEventListener('keydown', (event) => {
+            let overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            overlayWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
                 if (event.key === targetButton) {
+                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+                    expect(overlayWrapper).toBeFalsy();
                     expect(overlay.hide).toHaveBeenCalledTimes(1);
                 }
             });
-
-            overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
+            expect(overlayWrapper).toBeTruthy();
             expect(overlay.show).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
 
-            document.dispatchEvent(escEvent);
+            overlayWrapper.dispatchEvent(escEvent);
+            tick();
         }));
 
         xit('Enter selects', () => {
@@ -2481,6 +2487,8 @@ describe('igxOverlay', () => {
             // Utility handler meant for later detachment
             function _handler(event) {
                 if (event.key === targetButton) {
+                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+                    expect(overlayWrapper).toBeTruthy();
                     expect(overlay.hide).toHaveBeenCalledTimes(0);
                     document.removeEventListener(targetEvent, _handler);
                 }
@@ -2503,14 +2511,16 @@ describe('igxOverlay', () => {
             spyOn(overlay, 'show').and.callThrough();
             spyOn(overlay, 'hide').and.callThrough();
 
-            document.addEventListener(targetEvent, _handler);
-
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
+            let overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            overlayWrapper.addEventListener(targetEvent, _handler);
+
+            expect(overlayWrapper).toBeTruthy();
             expect(overlay.show).toHaveBeenCalledTimes(1);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
 
-            document.dispatchEvent(escEvent);
+            overlayWrapper.dispatchEvent(escEvent);
         }));
 
         // 4. Css
