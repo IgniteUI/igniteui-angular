@@ -1096,10 +1096,24 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const list = this.columnList.toArray();
         const fi = list.indexOf(from);
         const ti = list.indexOf(to);
+
+        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
+        const activeColumnIndex = activeInfo.columnIndex;
+        let activeColumn = null;
+
+        if (activeInfo.columnIndex !== -1) {
+            activeColumn = list[activeColumnIndex];
+        }
+
         list.splice(ti, 0, ...list.splice(fi, 1));
         const newList = this._resetColumnList(list);
         this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
+
+        if (activeColumn !== null && activeColumn !== undefined) {
+            const newIndex = newList.indexOf(activeColumn);
+            IgxColumnComponent.updateHighlights(activeColumnIndex, newIndex, this);
+        }
     }
 
     protected _resetColumnList(list?) {
@@ -1189,6 +1203,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
             if (row) {
                 const index = this.data.indexOf(row.rowData);
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                }
                 if (this.rowSelectable === true) {
                     this.deselectRows([row.rowID]);
                 }
@@ -1207,6 +1225,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
             if (columnEdit.length > 0) {
                 const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                if (editableCell && editableCell.cellID.rowID === rowSelector &&
+                    editableCell.cellID.columnID === columnId) {
+                        this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                }
                 this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
                 this.cdr.markForCheck();
                 this.refreshSearch();
@@ -1218,6 +1241,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
             const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
             if (row) {
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                }
                 if (this.rowSelectable === true && row.isSelected) {
                     this.deselectRows([row.rowID]);
                     this.gridAPI.update_row(value, this.id, row);
@@ -1526,7 +1553,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         let pagingHeight = 0;
         let groupAreaHeight = 0;
-        if (this.paging) {
+        if (this.paging && this.paginator) {
             pagingHeight = this.paginator.nativeElement.firstElementChild ?
                 this.paginator.nativeElement.clientHeight : 0;
         }
@@ -2168,7 +2195,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const columnItems = this.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
+        const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
             map((c) => ({ name: c.field, searchable: c.searchable }));
 
         const groupIndexData = this.getGroupIncrementData();
@@ -2290,13 +2317,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     private restoreHighlight(): void {
-        if (this.lastSearchInfo.matchInfoCache.length) {
+        if (this.lastSearchInfo.searchText) {
             const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
             const data = this.filteredSortedData;
             const groupByIncrements = this.getGroupIncrementData();
 
-            const rowIndex = data.indexOf(matchInfo.item);
+            const rowIndex = matchInfo ? data.indexOf(matchInfo.item) : -1;
             const page = this.paging ? Math.floor(rowIndex / this.perPage) : 0;
             let increment = groupByIncrements && rowIndex !== -1 ? groupByIncrements[rowIndex] : 0;
             if (this.paging && increment) {

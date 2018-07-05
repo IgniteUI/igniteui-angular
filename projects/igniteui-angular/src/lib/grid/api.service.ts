@@ -164,7 +164,7 @@ export class IgxGridAPIService {
             rowID = editableCell.cellID.rowID;
         } else if (row) {
             rowID = row.rowID;
-            cellObj = this.get(id).columnList.toArray()[columnID].cells[row.index];
+            cellObj = this.get(id).columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
         }
         if (cellObj) {
             const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
