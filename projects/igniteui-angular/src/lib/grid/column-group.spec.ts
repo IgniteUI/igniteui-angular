@@ -975,6 +975,50 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnsOrder(colsOrder);
     });
 
+    xit('Should move columns and groups. Pinning enabled.', () => {
+        const fixture = TestBed.createComponent(StegosaurusGridComponent);
+        fixture.detectChanges();
+        const ci = fixture.componentInstance;
+        const grid = ci.grid;
+
+        ci.idCol.pinned = true;
+        ci.genInfoColGroup.pinned = true;
+        ci.postalCodeColGroup.pinned = true;
+        ci.cityColGroup.pinned = true;
+        fixture.detectChanges();
+
+        // moving group from unpinned to pinned
+        ci.grid.moveColumn(ci.phoneColGroup, ci.idCol);
+        let postMovingOrder = ci.phoneColList.concat([ci.idCol]).concat(ci.genInfoColList)
+            .concat(ci.postalCodeColList).concat(ci.cityColList).concat(ci.countryColList)
+            .concat(ci.regionColList).concat(ci.addressColList).concat(ci.faxColList);
+        testColumnsVisibleIndexes(postMovingOrder);
+        testColumnPinning(ci.phoneColGroup, true);
+        testColumnPinning(ci.idCol, true);
+
+        // moving sub group to different parent, should not be allowed
+        ci.grid.moveColumn(ci.pDetailsColGroup, ci.regionCol);
+        testColumnsVisibleIndexes(postMovingOrder);
+        testColumnPinning(ci.pDetailsColGroup, true);
+        testColumnPinning(ci.regionCol, false);
+
+        // moving pinned group as firstly unpinned
+        ci.grid.moveColumn(ci.idCol, ci.countryColGroup);
+        postMovingOrder = ci.phoneColList.concat(ci.genInfoColList)
+            .concat(ci.postalCodeColList).concat(ci.cityColList).concat([ci.idCol])
+            .concat(ci.countryColList).concat(ci.regionColList)
+            .concat(ci.addressColList).concat(ci.faxColList);
+        testColumnsVisibleIndexes(postMovingOrder);
+        testColumnPinning(ci.idCol, true);
+        testColumnPinning(ci.countryColGroup, true);
+        
+        // moving column to different parent, shound not be allowed
+        ci.grid.moveColumn(ci.postalCodeCol, ci.cityCol);
+        testColumnsVisibleIndexes(postMovingOrder);
+        testColumnPinning(ci.postalCodeCol, true);
+        testColumnPinning(ci.cityCol, true);
+    });
+
     it('sorting - sort a grouped column by API', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
