@@ -19,8 +19,6 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { IGridEditEventArgs } from './grid.component';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -309,10 +307,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public update(val: any) {
-        let rowSelector = this.cellID.rowIndex;
-        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
-            rowSelector = this.cellID.rowID;
-        }
+        const rowSelector = this.cellID.rowID;
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.cellID.rowID
             && editableCell.cellID.columnID === this.cellID.columnID) {
