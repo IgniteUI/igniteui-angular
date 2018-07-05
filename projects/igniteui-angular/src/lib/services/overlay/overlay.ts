@@ -270,12 +270,6 @@ export class IgxOverlayService {
             info.hook.parentElement.removeChild(info.hook);
         }
 
-        if (info.settings.closeOnOutsideClick) {
-            if (this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
-                this._document.removeEventListener('click', this.documentClicked, true);
-            }
-        }
-
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
         if (this._overlayInfos.length === 0 && this._overlayElement.parentElement) {
