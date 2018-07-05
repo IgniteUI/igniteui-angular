@@ -20,9 +20,9 @@
 
     &:active {
         @include e(ripple) {
-            @extend %radio-ripple--hover !optional;
-            @extend %radio-ripple--hover-unchecked !optional;
-            @extend %radio-ripple--pressed !optional;
+            @extend %switch-ripple--hover !optional;
+            @extend %switch-ripple--hover-unchecked !optional;
+            @extend %switch-ripple--pressed !optional;
         }
     }
 
@@ -76,9 +76,9 @@
 
         &:active {
             @include e(ripple) {
-                @extend %radio-ripple--hover !optional;
-                @extend %radio-ripple--hover-checked !optional;
-                @extend %radio-ripple--pressed !optional;
+                @extend %switch-ripple--hover !optional;
+                @extend %switch-ripple--hover-checked !optional;
+                @extend %switch-ripple--pressed !optional;
             }
         }
     }
