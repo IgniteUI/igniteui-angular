@@ -893,7 +893,7 @@
     }
 
     %igx-grid__drag-col-header {
-        background-color: lighten(--var($theme, 'header-background'), 10%);
+        background-color: --var($theme, 'header-background');
 
         %grid-cell-header-title,
         %grid-cell-header-icons {
@@ -1064,6 +1064,7 @@
         min-height: map-get($grouparea-min-height, 'comfortable');
         padding: map-get($grouparea-padding, 'comfortable');
         z-index: 2;
+        height: 100%;
 
         &:focus {
             outline-style: none;
