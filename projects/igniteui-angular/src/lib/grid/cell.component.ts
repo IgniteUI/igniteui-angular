@@ -335,6 +335,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     focusCell() {
+        this.updateCell = false;
         this.nativeElement.focus();
     }
 
@@ -385,8 +386,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.updateCell = false;
                     }
                 }
-            } else {
-                this.updateCell = true;
             }
         }
         this._updateCellSelectionStatus();
@@ -399,6 +398,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostListener('blur', ['$event'])
     public onBlur(event) {
+        this.updateCell = true;
         this.isFocused = false;
         this.row.focused = false;
     }
