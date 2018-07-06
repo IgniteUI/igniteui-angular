@@ -1,6 +1,9 @@
 ### Description  
 Describe the issue.
 
+ * igniteui-angular version: 
+ * browser: 
+
 ### Steps to reproduce  
 
 1. Step 1
