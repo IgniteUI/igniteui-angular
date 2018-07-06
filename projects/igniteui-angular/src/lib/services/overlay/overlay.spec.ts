@@ -576,10 +576,6 @@ describe('igxOverlay', () => {
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
         }));
 
-        xit('Should properly call position method - DEFAULT', () => {
-
-        });
-
         it('fix for #1690 - click on second filter does not close first one', fakeAsync(() => {
             const fixture = TestBed.createComponent(TwoButtonsComponent);
             const button1 = fixture.nativeElement.getElementsByClassName('buttonOne')[0];
@@ -947,7 +943,6 @@ describe('igxOverlay', () => {
 
         it('If using a ConnectedPositioningStrategy without passing options, the omitted options default to: target: new Point(0, 0),' +
             'StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop', () => {
-                const fixture = TestBed.createComponent(TopLeftOffsetComponent);
                 const strategy = new ConnectedPositioningStrategy();
 
                 const expectedDefaults = {
@@ -1122,21 +1117,17 @@ describe('igxOverlay', () => {
                 expect(overlay.hide).toHaveBeenCalledTimes(1);
             }));
 
-        // TODO:  Should test with ConnectedPositioningStrategy
-        xit('Scroll Strategy Block: it should be partially hidden. When scrolling, the component stays static. ' +
+        it('Scroll Strategy Block: it should be partially hidden. When scrolling, the component stays static. ' +
             'Component state remains the same (example: expanded DropDown remains expanded).', fakeAsync(() => {
                 const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                     set: {
-                        styles: [`button {
-                    position: absolute,
-                    bottom: -2000px;
-                }`]
+                        styles: [`button { position: absolute, bottom: -2000px; }`]
                     }
                 }).createComponent(EmptyPageComponent);
                 const scrollStrat = new BlockScrollStrategy();
                 fixture.detectChanges();
                 const overlaySettings: OverlaySettings = {
-                    positionStrategy: new GlobalPositionStrategy(),
+                    positionStrategy: new ConnectedPositioningStrategy(),
                     scrollStrategy: scrollStrat,
                     modal: false,
                     closeOnOutsideClick: false
@@ -1148,8 +1139,6 @@ describe('igxOverlay', () => {
                 const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
                 overlay.show(SimpleDynamicComponent, overlaySettings);
                 tick();
-
-                const wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
                 expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
                 expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
                 expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
