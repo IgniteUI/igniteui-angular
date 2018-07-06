@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';

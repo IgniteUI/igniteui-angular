@@ -85,61 +85,113 @@ let NEXT_ID = 0;
 })
 export class IgxSnackbarComponent {
 
-    /** ID of the component */
+    /**
+     * Sets/gets the `id` of the snackbar.
+     * If not set, the `id` of the first snackbar component  will be `"igx-snackbar-0"`;
+     * ```html
+     * <igx-snackbar id = "Snackbar1"></igx-snackbar>
+     * ```
+     * ```typescript
+     * let snackbarId = this.snackbar.id;
+     * ```
+     * @memberof IgxSnackbarComponent
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-snackbar-${NEXT_ID++}`;
     /**
-     * The message that will be shown message by the IgxSnackbar component
+     * Sets/gets the `message` attribute.
+     * ```html
+     * <igx-snackbar [message] = "'Snackbar Component'"></igx-snackbar>
+     * ```
+     * ```typescript
+     * let message =  this.snackbar.message;
+     * ```
      */
     @Input() public message: string;
 
     /**
-     * The IgxSnackbar component visual state state
+     * Enables/Disables the visibility of the snackbar.
+     * If not set, the `isVisible` attribute will have value `false`.
+     * ```html
+     * <igx-snackbar [isVisible] = "true"></igx-snackbar>
+     * ```
+     * ```typescript
+     * let isVisible =  this.snackbar.isVisible;
+     * ```
      */
     @Input() public isVisible = false;
 
     /**
-     * Sets if the IgxSnackbar component will be hidden after shown
-     * Default value is true
+     * Sets/gets if the snackbar will be automatically hidden after the `displayTime` is over.
+     * Default value is `true`.
+     * ```html
+     * <igx-snackbar [autoHide] = "false"></igx-snackbar>
+     * ```
+     * ```typescript
+     * let autoHide =  this.snackbar.autoHide;
+     * ```
      */
     @Input() public autoHide = true;
 
     /**
-     * The duration of time span in ms which the IgxSnackbar component will be visible
-     * after it is being shown.
-     * Default value is 4000
+     * Sets/gets the duration of time(in milliseconds) in which the snackbar will be visible after it is being shown.
+     * Default value is 4000.
+     * ```html
+     * <igx-snackbar [displayTime] = "2000"></igx-snackbar>
+     * ```
+     * ```typescript
+     * let displayTime = this.snackbar.displayTime;
+     * ```
      */
     @Input() public displayTime = 4000;
 
     /**
-     * The text of the IgxSnackbar component action
+     * Sets/gets the `actionText` attribute.
+     * ```html
+     * <igx-snackbar [actionText] = "'Action Text'"></igx-snackbar>
+     * ```
      */
     @Input() public actionText?: string;
 
     /**
-     * The event that will be thrown when the action is executed,
-     * provides reference to the IgxSnackbar component as argument
+     * An event that will be emitted when the action is executed.
+     * Provides reference to the `IgxSnackbarComponent` as an argument.
+     * ```html
+     * <igx-snackbar (onAction) = "onAction($event)"></igx-snackbar>
+     * ```
      */
     @Output() public onAction = new EventEmitter<IgxSnackbarComponent>();
 
     /**
-     * The event that will be thrown when the snackbar animation starts
+     * An event that will be emitted when the snackbar animation starts.
+     * Provides reference to the `AnimationEvent` interface as an argument.
+     * ```html
+     * <igx-snackbar (animationStarted) = "animationStarted($event)"></igx-snackbar>
+     * ```
      */
     @Output() public animationStarted = new EventEmitter<AnimationEvent>();
 
     /**
-     * The event that will be thrown when the snackbar animation ends
+     * An event that will be emitted when the snackbar animation ends.
+     * Provides reference to the `AnimationEvent` interface as an argument.
+     * ```html
+     * <igx-snackbar (animationDone) = "animationDone($event)"></igx-snackbar>
+     * ```
      */
     @Output() public animationDone = new EventEmitter<AnimationEvent>();
-
+    /**
+     *@hidden
+     */
     private timeoutId;
 
     constructor(private zone: NgZone) { }
 
     /**
-     * Shows the IgxSnackbar component and hides it after some time span
-     * if autoHide is enabled
+     * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
+     * ```typescript
+     * this.snackbar.show();
+     * ```
      */
     public show(): void {
         clearTimeout(this.timeoutId);
@@ -154,30 +206,43 @@ export class IgxSnackbarComponent {
     }
 
     /**
-     * Hides the IgxSnackbar component
+     * Hides the snackbar.
+     * ```typescript
+     * this.snackbar.hide();
+     * ```
      */
     public hide(): void {
         this.isVisible = false;
         clearTimeout(this.timeoutId);
     }
-
+    /**
+     *@hidden
+     */
     public triggerAction(): void {
         this.onAction.emit(this);
     }
-
+    /**
+     *@hidden
+     * @memberof IgxSnackbarComponent
+     */
     public snackbarAnimationStarted(evt: AnimationEvent): void {
         if (evt.fromState === 'void') {
             this.animationStarted.emit(evt);
         }
     }
-
+    /**
+     *@hidden
+     * @memberof IgxSnackbarComponent
+     */
     public snackbarAnimationDone(evt: AnimationEvent): void {
         if (evt.fromState === 'show') {
             this.animationDone.emit(evt);
         }
     }
 }
-
+/**
+ *The IgxSnackbarModule provides the {@link IgxSnackbarComponent} inside your application.
+ */
 @NgModule({
     declarations: [IgxSnackbarComponent],
     exports: [IgxSnackbarComponent],

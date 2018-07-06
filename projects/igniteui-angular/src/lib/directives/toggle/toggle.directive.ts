@@ -1,12 +1,5 @@
 import {
-    animate,
-    AnimationBuilder,
-    AnimationFactory,
-    AnimationPlayer,
-    style} from '@angular/animations';
-import {
     ChangeDetectorRef,
-    Component,
     Directive,
     ElementRef,
     EventEmitter,
@@ -17,15 +10,27 @@ import {
     OnDestroy,
     OnInit,
     Optional,
-    Output
+    Output,
+    Inject
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
+import { IgxOverlayService } from '../../services/overlay/overlay';
+import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../services';
+import { filter, take } from 'rxjs/operators';
+import { Subscription, OperatorFunction } from 'rxjs';
 
 @Directive({
     exportAs: 'toggle',
     selector: '[igxToggle]'
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
+    private _overlayId: string;
+    private _overlaySubFilter: OperatorFunction<OverlayEventArgs, OverlayEventArgs>[] = [
+        filter(x => x.id === this._overlayId),
+        take(1)
+    ];
+    private _overlayClosedSub: Subscription;
+    private _overlayClosingSub: Subscription;
 
     @Output()
     public onOpened = new EventEmitter();
@@ -39,8 +44,10 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     @Output()
     public onClosing = new EventEmitter();
 
-    @Input()
-    public collapsed = true;
+    private _collapsed = true;
+    public get collapsed(): boolean {
+        return this._collapsed;
+    }
 
     @Input()
     public id: string;
@@ -59,58 +66,41 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         return !this.collapsed;
     }
 
-    private _id: string;
-
     constructor(
         private elementRef: ElementRef,
-        private builder: AnimationBuilder,
         private cdr: ChangeDetectorRef,
-        @Optional() private navigationService: IgxNavigationService) { }
+        @Inject(IgxOverlayService) private overlayService: IgxOverlayService,
+        @Optional() private navigationService: IgxNavigationService) {
+    }
 
-    public open(fireEvents?: boolean, handler?) {
+    public open(overlaySettings?: OverlaySettings) {
         if (!this.collapsed) { return; }
 
-        const player = this.animationActivation();
-        player.onStart(() => this.collapsed = false);
-        player.onDone(() =>  {
-            player.destroy();
-            if (fireEvents) {
-                this.onOpened.emit();
-            }
+        this._collapsed = false;
+        this.cdr.detectChanges();
+        this.onOpening.emit();
+
+
+        this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
+        this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+            this.onOpened.emit();
         });
-
-        if (fireEvents) {
-            this.onOpening.emit();
-        }
-
-        player.play();
+        this._overlayClosedSub = this.overlayService.onClosed
+            .pipe(...this._overlaySubFilter)
+            .subscribe(this.overlayClosed);
+        this._overlayClosingSub = this.overlayService.onClosing
+            .pipe(...this._overlaySubFilter)
+            .subscribe(this.overlayClosing);
     }
 
-    public close(fireEvents?: boolean, handler?) {
+    public close() {
         if (this.collapsed) { return; }
 
-        const player = this.animationActivation();
-        player.onDone(() => {
-            this.collapsed = true;
-            // When using directive into component with OnPush it is necessary to
-            // trigger change detection again when close animation ends
-            // due to late updated @collapsed property.
-            this.cdr.markForCheck();
-            player.destroy();
-            if (fireEvents) {
-                this.onClosed.emit();
-            }
-        });
-
-        if (fireEvents) {
-            this.onClosing.emit();
-        }
-
-        player.play();
+        this.overlayService.hide(this._overlayId);
     }
 
-    public toggle(fireEvents?: boolean) {
-        this.collapsed ? this.open(fireEvents) : this.close(fireEvents);
+    public toggle(overlaySettings?: OverlaySettings) {
+        this.collapsed ? this.open(overlaySettings) : this.close();
     }
 
     public ngOnInit() {
@@ -123,40 +113,51 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (this.navigationService && this.id) {
             this.navigationService.remove(this.id);
         }
+        if (!this.collapsed && this._overlayId) {
+            this.overlayService.hide(this._overlayId);
+        }
+        if (this._overlayClosedSub) {
+            if (!this._overlayClosedSub.closed) {
+                this._overlayClosedSub.unsubscribe();
+            }
+        }
+        if (this._overlayClosingSub) {
+            if (!this._overlayClosingSub.closed) {
+                this._overlayClosingSub.unsubscribe();
+            }
+        }
     }
 
-    private animationActivation() {
-        let animation: AnimationFactory;
-
-        this.collapsed ?
-            animation = this.openingAnimation() :
-            animation = this.closingAnimation();
-
-        return animation.create(this.elementRef.nativeElement);
+    private overlayClosed = () => {
+        this._collapsed = true;
+        this.onClosed.emit();
     }
 
-    private openingAnimation() {
-        return this.builder.build([
-            style({ transform: 'scaleY(0) translateY(-48px)', transformOrigin: '100% 0%', opacity: 0 }),
-            animate('200ms ease-out', style({ transform: 'scaleY(1) translateY(0)', opacity: 1 }))
-        ]);
+    private overlayClosing = () => {
+        this.onClosing.emit();
     }
 
-    private closingAnimation() {
-        return this.builder.build([
-            style({ transform: 'translateY(0)', opacity: 1}),
-            animate('120ms ease-in', style({ transform: 'translateY(-12px)', opacity: 0 }))
-        ]);
-    }
 }
 
 @Directive({
     exportAs: 'toggle-action',
     selector: '[igxToggleAction]'
 })
-export class IgxToggleActionDirective implements OnDestroy, OnInit {
+export class IgxToggleActionDirective implements OnInit {
+    private _overlayDefaults: OverlaySettings;
+
     @Input()
-    public closeOnOutsideClick = true;
+    public overlaySettings: OverlaySettings;
+
+    private _closeOnOutsideClick: boolean;
+    public get closeOnOutsideClick(): boolean {
+        return this._closeOnOutsideClick;
+    }
+    @Input()
+    public set closeOnOutsideClick(v: boolean) {
+        console.warn(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`);
+        this._closeOnOutsideClick = v;
+    }
 
     @Input('igxToggleAction')
     set target(target: any) {
@@ -172,42 +173,30 @@ export class IgxToggleActionDirective implements OnDestroy, OnInit {
         return this._target;
     }
 
-    private _handler;
     private _target: IToggleView | string;
 
     constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
 
-    public ngOnDestroy() {
-        document.removeEventListener('click', this._handler, true);
-    }
-
     public ngOnInit() {
-        if (this.closeOnOutsideClick) {
-            this._handler = (evt) => {
-                if (this.target.element.contains(evt.target) || this.element.nativeElement.contains(evt.target)) {
-                    return;
-                }
-
-                this.target.close(true);
-                document.removeEventListener('click', this._handler, true);
-            };
-
-            document.addEventListener('click', this._handler, true);
-        }
+        this._overlayDefaults = {
+            positionStrategy: new ConnectedPositioningStrategy({ target: this.element.nativeElement }),
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            closeOnOutsideClick: true,
+            modal: false
+        };
     }
 
     @HostListener('click')
     public onClick() {
-        this.target.toggle(true);
-
-        if (this._handler) {
-            document.addEventListener('click', this._handler, true);
+        if (this.closeOnOutsideClick !== undefined) {
+            this._overlayDefaults.closeOnOutsideClick = this.closeOnOutsideClick;
         }
+        this.target.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings));
     }
 }
 @NgModule({
-    declarations: [ IgxToggleDirective, IgxToggleActionDirective ],
-    exports: [ IgxToggleDirective, IgxToggleActionDirective ],
-    providers: [ IgxNavigationService ]
+    declarations: [IgxToggleDirective, IgxToggleActionDirective],
+    exports: [IgxToggleDirective, IgxToggleActionDirective],
+    providers: [IgxNavigationService]
 })
-export class IgxToggleModule {}
+export class IgxToggleModule { }

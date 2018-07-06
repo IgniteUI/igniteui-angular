@@ -72,19 +72,6 @@
     $dialog-message-font-weight: 400;
     $dialog-actions-padding: rem(8px);
 
-    %igx-dialog-display {
-        display: flex;
-        position: fixed;
-        align-items: center;
-        justify-content: center;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        background: $overlay-color;
-        z-index: 99999;
-    }
-
     %igx-dialog--hidden {
         display: none;
     }
@@ -96,6 +83,14 @@
         background: --var($theme, 'background');
         box-shadow: igx-elevation($elevations, 24);
         overflow: hidden;
+
+        .igx-calendar {
+            width: rem(320px);
+        }
+
+        .igx-calendar--vertical {
+            width: rem(496px);
+        }
     }
 
     %igx-dialog-title {

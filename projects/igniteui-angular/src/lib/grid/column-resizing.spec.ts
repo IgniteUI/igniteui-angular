@@ -541,7 +541,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
     it('should update grid after resizing a column to be bigger.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
-
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector('igx-display-container');
@@ -581,7 +580,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         colsRendered = rowsRendered[0].children;
 
         expect(hScrollVisible).toBe(true);
-        expect(colsRendered.length).toEqual(1);
+        expect(colsRendered.length).toEqual(4);
 
         discardPeriodicTasks();
     }));
@@ -592,9 +591,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector('igx-display-container');
         const expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height;
+            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height;
 
         expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.columns[0].width).toEqual('100px');

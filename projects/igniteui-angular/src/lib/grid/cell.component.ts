@@ -3,17 +3,14 @@
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     ElementRef,
-    forwardRef,
     HostBinding,
     HostListener,
     Input,
     OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild,
-    ViewContainerRef
+    ViewChild
 } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
@@ -22,16 +19,16 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
-import { IGridCellEventArgs, IGridEditEventArgs } from './grid.component';
+import { IGridEditEventArgs } from './grid.component';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     preserveWhitespaces: false,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
+export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public column: IgxColumnComponent;
 
@@ -90,7 +87,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     get unpinnedColumnIndex(): number {
-        return this.grid.unpinnedColumns.indexOf(this.column);
+        return this.grid.unpinnedColumns.filter(c => !c.columnGroup).indexOf(this.column);
     }
 
     public get cellID() {
@@ -104,20 +101,24 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     get inEditMode(): boolean {
-        return this._inEditMode;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editableCell) {
+            return this.cellID.rowID === editableCell.cellID.rowID &&
+            this.cellID.columnID === editableCell.cellID.columnID;
+        } else {
+            return false;
+        }
     }
 
-    @autoWire(true)
-    set inEditMode(value: boolean) {
-        const originalValue = this._inEditMode;
-
-        this._inEditMode = value;
-
-        if (this._inEditMode) {
-            this.grid.cellInEditMode = this;
-        } else if (!originalValue) {
-            this.grid.cellInEditMode = null;
+     set inEditMode(value: boolean) {
+        if (this.column.editable && value) {
+            this.editValue = this.value;
+            this.gridAPI.set_cell_inEditMode(this.gridID, this, value);
+        } else {
+            this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }
+
+        this.cdr.detectChanges();
     }
 
     @HostBinding('attr.tabindex')
@@ -151,17 +152,28 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     @HostBinding('class.igx-grid__td--fw')
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const isPercentageWidth = this.column.width && typeof this.column.width === 'string' && this.column.width.indexOf('%') !== -1;
-        return this.isLastUnpinned && hasVerticalScroll && !!this.column.width && !isPercentageWidth ?
-            (parseInt(this.column.width, 10) - 18) + 'px' : this.column.width;
+        const colWidth = this.column.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+
+        if (colWidth && !isPercentageWidth) {
+            let cellWidth = this.isLastUnpinned && hasVerticalScroll ?
+                            parseInt(colWidth, 10) - 18 + '' : colWidth;
+
+            if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
+                cellWidth += 'px';
+            }
+
+            return cellWidth;
+        } else {
+            return colWidth;
+        }
     }
 
     @HostBinding('class.igx-grid__td--editing')
     get editModeCSS() {
-        return this._inEditMode;
+        return this.inEditMode;
     }
 
-    @autoWire(true)
     get focused(): boolean {
         return this.isFocused;
     }
@@ -197,7 +209,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-grid__td--selected')
-    @autoWire(true)
     set selected(val: boolean) {
         this.isSelected = val;
     }
@@ -211,13 +222,15 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
     private highlight: IgxTextHighlightDirective;
 
+    public editValue;
     protected defaultCssClass = 'igx-grid__td';
     protected isFocused = false;
     protected isSelected = false;
-    protected _inEditMode = false;
     protected chunkLoadedHor;
     protected chunkLoadedVer;
     private cellSelectionID: string;
+    private previousCellEditMode = false;
+    private updateCell = true;
 
     constructor(
         public gridAPI: IgxGridAPIService,
@@ -225,9 +238,13 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
-    private _updateCellSelectionStatus() {
+    public _updateCellSelectionStatus() {
         this._clearCellSelection();
         this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+        if (this.column.editable && this.previousCellEditMode) {
+            this.inEditMode = true;
+        }
+        this.cdr.detectChanges();
     }
 
     private _clearCellSelection() {
@@ -235,6 +252,22 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         if (cell) {
             cell.selected = false;
             cell.focused = false;
+        }
+        const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editCell && this.updateCell) {
+            if (editCell.cell.column.field === this.gridAPI.get(this.gridID).primaryKey) {
+                if (editCell.cellID.rowIndex === this.cellID.rowIndex && editCell.cellID.columnID === this.cellID.columnID) {
+                    this.previousCellEditMode = false;
+                } else {
+                    this.previousCellEditMode = true;
+                }
+            } else {
+                this.previousCellEditMode = true;
+            }
+            this.gridAPI.submit_value(this.gridID);
+            this.cdr.markForCheck();
+        } else {
+            this.previousCellEditMode = false;
         }
         this.selectionApi.set_selection(this.cellSelectionID, []);
     }
@@ -249,7 +282,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     public isCellSelected() {
         const selection = this.selectionApi.get_selection(this.cellSelectionID);
-        if (selection) {
+        if (selection && selection.length > 0) {
             const selectedCellID = selection[0];
             return this.cellID.rowID === selectedCellID.rowID &&
                 this.cellID.columnID === selectedCellID.columnID;
@@ -257,7 +290,6 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         return false;
     }
 
-    @autoWire(true)
     public ngOnInit() {
         this.cellSelectionID = this.gridID + '-cells';
         this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
@@ -276,6 +308,16 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
             });
     }
 
+    public update(val: any) {
+        let rowSelector = this.cellID.rowIndex;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            rowSelector = this.cellID.rowID;
+        }
+        this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
+        this.cdr.markForCheck();
+        this.gridAPI.get(this.gridID).refreshSearch();
+    }
+
     public ngOnDestroy() {
         if (this.chunkLoadedHor) {
             this.chunkLoadedHor.unsubscribe();
@@ -292,50 +334,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         }
     }
 
-    @autoWire(true)
-    public update(val: any) {
-        const args: IGridEditEventArgs = { row: this.row, cell: this, currentValue: this.value, newValue: val };
-        this.grid.onEditDone.emit(args);
-        this.value = args.newValue;
-        this.gridAPI.update(this.gridID, this);
-
-        this.grid.refreshSearch();
-    }
-
-    private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
-        virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
-            next: (e: any) => {
-                callback(e);
-            }
-        });
-    }
-
-    private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {
-        const virtualDir = dir !== undefined ? this.row.virtDirRow : this.row.grid.verticalScrollContainer;
-        this.subscribeNext(virtualDir, () => {
-            let target;
-            target = this.gridAPI.get_cell_by_visible_index(
-                this.gridID,
-                rowIndex,
-                columnIndex);
-            if (!target) {
-                if (dir) {
-                    target = dir === 'left' ? this.row.cells.first : this.row.cells.last;
-                } else {
-                    target = this.gridAPI.get_cell_by_visible_index(
-                        this.gridID,
-                        this.rowIndex,
-                        this.visibleColumnIndex
-                    );
-                }
-            }
-            target.nativeElement.focus();
-        });
+    focusCell() {
+        this.nativeElement.focus();
     }
 
     @HostListener('dblclick', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {
+            this.focused = true;
             this.inEditMode = true;
         }
 
@@ -362,16 +368,29 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     @HostListener('focus', ['$event'])
-    @autoWire()
     public onFocus(event) {
         this.isFocused = true;
         this.selected = true;
+        const elementClassList = event.srcElement ? event.srcElement.classList : [];
+        const classList = (event.composedPath && event.composedPath().length > 0) ?
+            event.composedPath()[0].classList : elementClassList;
+
+        if (this.gridAPI.get_cell_inEditMode(this.gridID) && classList.length > 0 && event.relatedTarget) {
+            const targetEditMode = classList.toLocaleString().indexOf('igx-grid__td--editing') !== -1;
+            if (targetEditMode) {
+                if (classList.length > 0 && event.relatedTarget.classList.length > 0) {
+                    if ((event.relatedTarget.classList.toLocaleString().indexOf('igx-checkbox__input') !== -1 ||
+                    event.relatedTarget.classList.toLocaleString().indexOf('igx-calendar') !== -1)
+                    && classList[0] === 'igx-grid__td') {
+                        this.updateCell = false;
+                    }
+                }
+            } else {
+                this.updateCell = true;
+            }
+        }
         this._updateCellSelectionStatus();
         this.row.focused = true;
-        if (this.grid.cellInEditMode && this.grid.cellInEditMode !== this) {
-            this.grid.cellInEditMode.inEditMode = false;
-        }
-
         this.grid.onSelection.emit({
             cell: this,
             event
@@ -379,12 +398,12 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
     }
 
     @HostListener('blur', ['$event'])
-    @autoWire()
     public onBlur(event) {
         this.isFocused = false;
         this.row.focused = false;
     }
 
+    @HostListener('keydown.shift.tab', ['$event'])
     @HostListener('keydown.arrowleft', ['$event'])
     public onKeydownArrowLeft(event) {
         if (this.inEditMode) {
@@ -420,7 +439,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                 if (!this.column.pinned) {
                     this.row.virtDirRow.scrollPrev();
                 } else {
-                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.length - 1);
+                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.filter(c => !c.columnGroup).length - 1);
                 }
             }
 
@@ -430,7 +449,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this._focusNextCell(this.rowIndex, columnIndex, 'left');
+                this.grid._focusNextCell(this.rowIndex, columnIndex, 'left');
             }
         }
     }
@@ -452,13 +471,14 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                 const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
                 horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(target.unpinnedColumnIndex);
 
-                this._focusNextCell(this.rowIndex, columnIndex, 'left');
+                this.grid._focusNextCell(this.rowIndex, columnIndex, 'left');
             } else {
                 target.nativeElement.focus();
             }
         }
     }
 
+    @HostListener('keydown.tab', ['$event'])
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event) {
         if (this.inEditMode) {
@@ -466,7 +486,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
         }
 
         event.preventDefault();
-        const visibleColumns = this.grid.visibleColumns;
+        const visibleColumns = this.grid.visibleColumns.filter(c => !c.columnGroup);
         const rowIndex = this.rowIndex;
         const columnIndex = this.visibleColumnIndex + 1;
 
@@ -523,7 +543,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this._focusNextCell(this.rowIndex, columnIndex, 'right');
+                this.grid._focusNextCell(this.rowIndex, columnIndex, 'right');
             }
         }
     }
@@ -558,7 +578,7 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
                     // There is nowhere to scroll more. Don't subscribe since there won't be triggered event.
                     target.nativeElement.focus();
                 } else {
-                    this._focusNextCell(this.rowIndex, columnIndex, 'right');
+                    this.grid._focusNextCell(this.rowIndex, columnIndex, 'right');
                 }
             } else {
                 target.nativeElement.focus();
@@ -568,86 +588,40 @@ export class IgxGridCellComponent implements IGridBus, OnInit, OnDestroy, AfterV
 
     @HostListener('keydown.arrowup', ['$event'])
     public onKeydownArrowUp(event) {
-        if (this.inEditMode) {
+        if (this.inEditMode || this.rowIndex === 0) {
             return;
         }
-
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
-        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
-        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-
-        if (!verticalScroll && !target) {
-            return;
-        }
-
-        if (target) {
-            const containerTopOffset =
-                parseInt(this.row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            if (this.grid.rowHeight > -containerTopOffset // not the entire row is visible, due to grid offset
-                && verticalScroll.scrollTop // the scrollbar is not at the first item
-                && target.row.element.nativeElement.offsetTop < this.grid.rowHeight) { // the target is in the first row
-
-                this.grid.verticalScrollContainer.addScrollTop(-this.grid.rowHeight);
-                this._focusNextCell(rowIndex, this.visibleColumnIndex);
-            }
-            target.nativeElement.focus();
-        } else {
-            const scrollOffset =
-                -parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const scrollAmount = this.grid.rowHeight + scrollOffset;
-            this.grid.verticalScrollContainer.addScrollTop(-scrollAmount);
-            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
-        }
+        this._clearCellSelection();
+        this.grid.navigateUp(rowIndex, this.visibleColumnIndex);
     }
 
     @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event) {
-        if (this.inEditMode) {
+        const virtDir = this.grid.verticalScrollContainer;
+        const count = virtDir.totalItemCount || virtDir.igxForOf.length;
+        if (this.inEditMode || this.rowIndex + 1 === count) {
             return;
         }
-
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
-        const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, this.visibleColumnIndex);
-        const verticalScroll = this.row.grid.verticalScrollContainer.getVerticalScroll();
-        if (!verticalScroll && !target) {
-            return;
-        }
-
-        if (target) {
-            const containerHeight = this.grid.calcHeight ?
-                Math.ceil(this.grid.calcHeight) :
-                null; // null when there is no vertical virtualization
-            const containerTopOffset =
-                parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const targetEndTopOffset = target.row.element.nativeElement.offsetTop + this.grid.rowHeight + containerTopOffset;
-            if (containerHeight && targetEndTopOffset > containerHeight) {
-                const scrollAmount = targetEndTopOffset - containerHeight;
-                this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
-
-                this._focusNextCell(rowIndex, this.visibleColumnIndex);
-            } else {
-                target.nativeElement.focus();
-            }
-        } else {
-            const containerHeight = this.grid.calcHeight;
-            const contentHeight = this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
-            const scrollOffset = parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const lastRowOffset = contentHeight + scrollOffset - this.grid.calcHeight;
-            const scrollAmount = this.grid.rowHeight + lastRowOffset;
-            this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
-            this._focusNextCell(this.rowIndex, this.visibleColumnIndex);
-        }
+        this._clearCellSelection();
+        this.grid.navigateDown(rowIndex, this.visibleColumnIndex);
     }
 
     @HostListener('keydown.enter')
     @HostListener('keydown.f2')
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
-            this.inEditMode = !this.inEditMode;
+            if (this.inEditMode) {
+                this.gridAPI.submit_value(this.gridID);
+            } else {
+                this.focused = true;
+                this.inEditMode = true;
+            }
             this.nativeElement.focus();
         }
     }

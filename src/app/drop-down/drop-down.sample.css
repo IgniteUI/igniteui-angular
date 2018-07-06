@@ -9,3 +9,7 @@
     white-space: nowrap;
     width: 100%
 }
+
+button {
+    margin: 5px;
+}

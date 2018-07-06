@@ -5,9 +5,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 
-import { By } from '@angular/platform-browser';
-
-import { IgxTextHighlightDirective} from './text-highlight.directive';
+import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
 describe('IgxHighlight', () => {
     beforeEach(async(() => {
@@ -226,8 +224,6 @@ class HighlightLoremIpsumComponent {
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     public highlight: IgxTextHighlightDirective;
 
-    constructor(private element: ElementRef) {}
-
     public highlightText(text: string, caseSensitive?: boolean) {
         return this.highlight.highlight(text, caseSensitive);
     }
@@ -241,6 +237,12 @@ class HighlightLoremIpsumComponent {
     }
 
     public activate(index: number) {
-        IgxTextHighlightDirective.setActiveHighlight(this.groupName, 0, 0, index, 0);
+        const activeHighlightInfo: IActiveHighlightInfo = {
+            rowIndex: 0,
+            columnIndex: 0,
+            page: 0,
+            index: index
+        };
+        IgxTextHighlightDirective.setActiveHighlight(this.groupName, activeHighlightInfo);
     }
 }

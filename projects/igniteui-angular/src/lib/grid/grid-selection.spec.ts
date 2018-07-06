@@ -145,9 +145,9 @@ describe('IgxGrid - Row Selection', () => {
         grid.updateRow({ ID: 7, Name: 'Gilberto Todd', JobTitle: 'Vice President' }, 2);
         fix.whenStable().then(() => {
             fix.detectChanges();
-            expect(grid.getRowByKey(2)).toBeDefined();
+            expect(grid.getRowByKey(7)).toBeDefined();
             expect(grid.getRowByIndex(1)).toBeDefined();
-            expect(grid.getRowByIndex(1).rowData[grid.primaryKey]).toEqual(2);
+            expect(grid.getRowByIndex(1).rowData[grid.primaryKey]).toEqual(7);
         });
     }));
 
@@ -158,10 +158,10 @@ describe('IgxGrid - Row Selection', () => {
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-        const targetCell = grid.getCellByColumn(2, 'Name');
-        const targetCellElement: HTMLElement = grid.getCellByColumn(2, 'Name').nativeElement;
-        spyOn(grid.getCellByColumn(2, 'Name'), 'onFocus').and.callThrough();
-        expect(grid.getCellByColumn(2, 'Name').focused).toEqual(false);
+        const targetCell = grid.getCellByKey(2, 'Name');
+        const targetCellElement: HTMLElement = grid.getCellByKey(2, 'Name').nativeElement;
+        spyOn(grid.getCellByKey(2, 'Name'), 'onFocus').and.callThrough();
+        expect(grid.getCellByKey(2, 'Name').focused).toEqual(false);
         targetCellElement.focus();
         spyOn(targetCell.gridAPI, 'get_cell_by_visible_index').and.callThrough();
         fix.whenStable().then(() => {
@@ -178,7 +178,7 @@ describe('IgxGrid - Row Selection', () => {
         }).then(() => {
             fix.detectChanges();
             expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(1);
-            expect(grid.getCellByColumn(3, 'Name').focused).toEqual(true);
+            expect(grid.getCellByKey(3, 'Name').focused).toEqual(true);
             expect(targetCell.focused).toEqual(false);
             expect(grid.selectedCells.length).toEqual(1);
             expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
@@ -221,8 +221,8 @@ describe('IgxGrid - Row Selection', () => {
 
     it('Should persist through paging', async(() => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
+        fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const nextBtn: HTMLElement = fix.nativeElement.querySelector('.nextPageBtn');
         const prevBtn: HTMLElement = fix.nativeElement.querySelector('.prevPageBtn');
@@ -360,7 +360,7 @@ describe('IgxGrid - Row Selection', () => {
             expect(grid.selectedRows()).toBeDefined();
             expect(grid.rowList.first).toBeDefined();
             expect(grid.rowList.first.isSelected).toBeTruthy();
-            selectedCell = grid.getCellByColumn('2_0', 'Column2');
+            selectedCell = grid.getCellByKey('2_0', 'Column2');
             const scrollBar = gridElement.querySelector('.igx-vhelper--vertical');
             scrollBar.scrollTop = 500;
             setTimeout(() => {
@@ -771,7 +771,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
-        grid.sort('Column1', SortingDirection.Desc, true);
+        grid.sort({fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true});
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
@@ -873,7 +873,7 @@ describe('IgxGrid - Row Selection', () => {
         const oldCellID = oldCell.cellID;
         oldCell.nativeElement.focus();
         oldCell.nativeElement.click();
-        grid.sort('UnitsInStock', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
         const cellAfterSorting = fixture.debugElement.query(By.css('.igx-grid__td--selected'));
         expect(grid.selectedCells).toBeDefined();
@@ -914,6 +914,28 @@ describe('IgxGrid - Row Selection', () => {
             expect(firstRow.isSelected).toBeFalsy();
             expect(secondRow.isSelected).toBeFalsy();
             expect(thirdRow.isSelected).toBeFalsy();
+        });
+    }));
+
+    it('Should be able to correctly select all rows programatically', async(() => {
+        const fixture = TestBed.createComponent(GridWithSelectionComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.gridSelection3;
+        const gridElement: HTMLElement = fixture.nativeElement.querySelector('.igx-grid');
+        const firstRow = grid.getRowByIndex(0);
+        const secondRow = grid.getRowByIndex(1);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
+        expect(firstRow.isSelected).toBeFalsy();
+        grid.selectAllRows();
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeTruthy();
+            expect(secondRow.isSelected).toBeTruthy();
+            firstRowCheckbox.dispatchEvent(new Event('click', {}));
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(firstRow.isSelected).toBeFalsy();
         });
     }));
 
@@ -1009,7 +1031,7 @@ export class GridWithPrimaryKeyComponent {
 
 @Component({
     template: `
-        <igx-grid #gridSelection2 [data]="data" [primaryKey]="'ID'"
+        <igx-grid #gridSelection2 [height]="'600px'" [data]="data" [primaryKey]="'ID'"
         [autoGenerate]="true" [rowSelectable]="true" [paging]="true" [perPage]="50">
         </igx-grid>
         <button class="prevPageBtn" (click)="ChangePage(-1)">Prev page</button>

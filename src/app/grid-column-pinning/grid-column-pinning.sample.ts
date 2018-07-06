@@ -65,7 +65,7 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
-        col.pinned ? col.unpin() : col.pin();
+        col.pinned = !col.pinned;
     }
 
     toggleVisibility(name: string) {

@@ -56,6 +56,11 @@ export class AppComponent implements OnInit {
             name: 'Carousel'
         },
         {
+            link: '/combo',
+            icon: 'arrow_drop_down_circle',
+            name: 'Combo'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'
@@ -71,9 +76,19 @@ export class AppComponent implements OnInit {
             name: 'DropDown'
         },
         {
+            link: '/drag-drop',
+            icon: 'view_column',
+            name: 'Drag and Drop'
+        },
+        {
             link: '/grid',
             icon: 'view_column',
             name: 'Grid'
+        },
+        {
+            link: '/gridColumnMoving',
+            icon: 'view_column',
+            name: 'Grid Column Moving'
         },
         {
             link: '/gridColumnPinning',
@@ -81,9 +96,19 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Pinning'
         },
         {
+            link: '/gridGroupBy',
+            icon: 'view_column',
+            name: 'Grid GroupBy'
+        },
+        {
             link: '/gridColumnResizing',
             icon: 'view_column',
             name: 'Grid Column Resizing'
+        },
+        {
+            link: '/gridColumnGroups',
+            icon: 'view_column',
+            name: 'Grid Column Groups'
         },
         {
             link: '/gridPerformance',
@@ -101,9 +126,19 @@ export class AppComponent implements OnInit {
             name: 'Grid Summary'
         },
         {
+            link: '/gridCellEditing',
+            icon: 'view_column',
+            name: 'Grid Cell Editing'
+        },
+        {
             link: '/gridSelection',
             icon: 'view_column',
             name: 'Grid Selection'
+        },
+        {
+            link: '/gridToolbar',
+            icon: 'view_column',
+            name: 'Grid Toolbar'
         },
         {
             link: '/dialog',
@@ -141,9 +176,19 @@ export class AppComponent implements OnInit {
             name: 'Navdrawer'
         },
         {
+            link: '/overlay',
+            icon: 'overlay',
+            name: 'Overlay'
+        },
+        {
             link: '/progressbar',
             icon: 'poll',
             name: 'Progress Indicators'
+        },
+        {
+            link: '/radio',
+            icon: 'pol',
+            name: 'Radio Group'
         },
         {
             link: '/slider',
@@ -169,6 +214,11 @@ export class AppComponent implements OnInit {
             link: '/toast',
             icon: 'android',
             name: 'Toast'
+        },
+        {
+            link: '/chip',
+            icon: 'android',
+            name: 'Chips'
         }
     ];
 

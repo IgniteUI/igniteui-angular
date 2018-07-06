@@ -13,7 +13,9 @@ import {
     Output,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    AfterViewInit,
+    DoCheck
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -60,15 +62,28 @@ export interface IgxTimePickerValidationFailedEventArgs {
     selector: 'igx-time-picker',
     templateUrl: 'time-picker.component.html'
 })
-export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, DoCheck {
 
     private _value: Date;
 
-    /** ID of the component */
+    /**
+     * An @Input property that sets the value of the `id` attribute.
+     * ```html
+     * <igx-time-picker [id]="'igx-time-picker-5'" format="h:mm tt" ></igx-time-picker>
+     * ```
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-time-picker-${NEXT_ID++}`;
 
+    /**
+     * An accessor that allows you to set a time using the `value` input.
+     * ```html
+     *public date: Date = new Date(Date.now());
+     *  //...
+     *<igx-time-picker [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
+     */
     @Input()
     set value(value: Date) {
         if (this._isValueValid(value)) {
@@ -84,70 +99,197 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         }
     }
 
+    /**
+     * An accessor that returns the value of `igx-time-picker` component.
+     * ```html
+     *@ViewChild("MyPick")
+     *public pick: IgxTimePickerComponent;
+     *ngAfterViewInit(){
+     *    let pickSelect = this.pick.value;
+     * }
+     * ```
+     */
     get value(): Date {
         return this._value;
     }
 
+    /**
+     * An @Input property that allows you to disable the `igx-time-picker` component. By default `disabled` is set to false.
+     * ```html
+     * <igx-time-picker [disabled]="'true'" [vertical]="true" format="h:mm tt" ></igx-time-picker>
+     * ```
+     */
     @Input()
     public disabled = false;
 
+    /**
+     * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
+     * ```html
+     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
+     */
     @Input()
     public okButtonLabel = 'OK';
 
+    /**
+     * An @Input property that renders cancel button with custom text.
+     * By default `cancelButtonLabel` is set to Cancel.
+     * ```html
+     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
+     */
     @Input()
     public cancelButtonLabel = 'Cancel';
 
+    /**
+     * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>
+     * when the user presses the Up/Down keys.
+     * By default `itemsDelta` is set to `{hours: 1, minutes:1}`
+     * ```html
+     *<igx-time-picker [itemsDelta]="{hours:3, minutes:5}" id="time-picker"></igx-time-picker>
+     *```
+     */
     @Input()
     public itemsDelta = { hours: 1, minutes: 1 };
 
+    /**
+     * An @Input property that allows you to set the `minValue` to limit the user input.
+     *```html
+     *public min: string = "09:00";
+     *  //..
+     *<igx-time-picker format="HH:mm" [vertical]="true" [minValue]="min"></igx-time-picker>
+     *```
+     */
     @Input()
     public minValue: string;
 
+    /**
+     * An @Input property that allows you to set the `maxValue` to limit the user input.
+     *```html
+     *public max: string = "18:00";
+     *  //..
+     *<igx-time-picker format="HH:mm" [vertical]="true" [maxValue]="max"></igx-time-picker>
+     *```
+     */
     @Input()
     public maxValue: string;
 
+    /**
+     * An @Input property that determines the spin behavior. By default `isSpinLoop` is set to true.
+     *The minutes and hour spinning will wrap around by default.
+     *```html
+     *<igx-time-picker [isSpinLoop]="false" id="time-picker"></igx-time-picker>
+     *```
+     */
     @Input()
     public isSpinLoop = true;
 
+    /**
+     * An @Input property that Gets/Sets the orientation of the `igxTimePicker`. By default `vertical` is set to false.
+     * ```html
+     *<igx-time-picker [vertical]="true" id="time-picker"></igx-time-picker>
+     * ```
+     */
     @Input()
     public vertical = false;
 
+    /**
+     * An @Input property that Gets/Sets format of time while `igxTimePicker` does not have focus. <br>
+     * By default `format` is set to hh:mm tt. <br>
+     * List of time-flags: <br>
+     * `h` : hours field in 12-hours format without leading zero <br>
+     * `hh` : hours field in 12-hours format with leading zero <br>
+     * `H` : hours field in 24-hours format without leading zero <br>
+     * `HH` : hours field in 24-hours format with leading zero <br>
+     * `m` : minutes field without leading zero <br>
+     * `mm` : minutes field with leading zero <br>
+     * `tt` : 2 character string which represents AM/PM field <br>
+     * ```html
+     *<igx-time-picker format="HH:m" id="time-picker"></igx-time-picker>
+     * ```
+     */
     @Input()
     public format = 'hh:mm tt';
 
+    /**
+     * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
+     *```typescript
+     * @ViewChild("toast")
+     *private toast: IgxToastComponent;
+     *public onValueChanged(timepicker){
+     *    this.toast.show()
+     *}
+     * //...
+     * ```
+     * ```html
+     *<igx-time-picker (onValueChanged)="onValueChanged($event)"></igx-time-picker>
+     *<igx-toast #toast message="The value has been changed!"></igx-toast>
+     *```
+     */
     @Output()
     public onValueChanged = new EventEmitter<IgxTimePickerValueChangedEventArgs>();
 
+    /**
+     * Emitted when an invalid value is being set. Returns {`timePicker`: `any`, `currentValue`: `Date`, `setThroughUI`: `boolean`}
+     * ```typescript
+     *public min: string = "09:00";
+     *public max: string = "18:00";
+     *@ViewChild("toast")
+     *private toast: IgxToastComponent;
+     *public onValidationFailed(timepicker){
+     *    this.toast.show();
+     *}
+     * //...
+     * ```
+     * ```html
+     *<igx-time-picker [minValue]="min" [maxValue]="max" (onValidationFailed)="onValidationFailed($event)"></igx-time-picker>
+     *<igx-toast #toast message="Value must be between 09:00 and 18:00!"></igx-toast>
+     * ```
+     */
     @Output()
     public onValidationFailed = new EventEmitter<IgxTimePickerValidationFailedEventArgs>();
 
+    /**
+     * Emitted when a timePicker is being opened.
+     * ```html
+     *@ViewChild("toast")
+     *private toast: IgxToastComponent;
+     *public onOpen(timepicker){
+     *    this.toast.show();
+     *}
+     * //...
+     * ```
+     * ```html
+     *<igx-time-picker [minValue]="min" [maxValue]="max" (onOpen)="onOpen($event)"></igx-time-picker>
+     *<igx-toast #toast message="The time picker has been opened!"></igx-toast>
+     * ```
+     */
     @Output()
     public onOpen = new EventEmitter<IgxTimePickerComponent>();
 
+    /**
+     * @hidden
+     */
     @ViewChild('hourList')
     public hourList: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChild('minuteList')
     public minuteList: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChild('ampmList')
     public ampmList: ElementRef;
 
-    @ViewChild(IgxDialogComponent)
-    private _alert: IgxDialogComponent;
-
     /**
-     * The default css class applied to the component.
-     *
      * @hidden
      */
-    @HostBinding('class')
-    get styleClass(): string {
-        if (this.vertical) {
-            return 'igx-time-picker--vertical';
-        }
-        return 'igx-time-picker';
-    }
+    @ViewChild(IgxDialogComponent)
+    private _alert: IgxDialogComponent;
 
     /**
      * @hidden
@@ -186,6 +328,17 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     private _prevSelectedMinute: string;
     private _prevSelectedAmPm: string;
 
+    /**
+     * Returns the current time formatted as string using the `format` option.
+     * If there is no set time the return is an empty string.
+     *```typescript
+     *@ViewChild("MyChild")
+     *private picker: IgxTimePickerComponent;
+     *ngAfterViewInit(){
+     *    let time = this.picker.displayTime;
+     *}
+     *```
+     */
     public get displayTime(): string {
         if (this.value) {
             return this._formatTime(this.value, this.format);
@@ -194,18 +347,30 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         return '';
     }
 
+    /**
+     * @hidden
+     */
     get hourView(): string[] {
         return this._hourView;
     }
 
+    /**
+     * @hidden
+     */
     get minuteView(): string[] {
         return this._minuteView;
     }
 
+    /**
+     * @hidden
+     */
     get ampmView(): string[] {
         return this._ampmView;
     }
 
+    /**
+     * @hidden
+     */
     public onClick(): void {
         if (this.value) {
             const foramttedTime = this._formatTime(this.value, this.format);
@@ -257,6 +422,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.onOpen.emit(this);
     }
 
+    /**
+     * @hidden
+     */
     public ngOnInit(): void {
         this._generateHours();
         this._generateMinutes();
@@ -265,15 +433,38 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         }
     }
 
+    /**
+     * @hidden
+     */
     public ngOnDestroy(): void {
     }
 
+    // XXX - temporary fix related with issue #1660
+    public ngDoCheck(): void {
+        if (this.vertical && this._alert) {
+            this._alert.toggleRef.element.classList.remove('igx-time-picker');
+            this._alert.toggleRef.element.classList.add('igx-time-picker--vertical');
+        } else if (!this.vertical && this._alert) {
+            this._alert.toggleRef.element.classList.add('igx-time-picker');
+            this._alert.toggleRef.element.classList.remove('igx-time-picker--vertical');
+        }
+    }
+
+    /**
+     * @hidden
+     */
     public writeValue(value: Date) {
         this.value = value;
     }
 
+    /**
+     * @hidden
+     */
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
 
+    /**
+     * @hidden
+     */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
     private _onTouchedCallback: () => void = () => { };
@@ -552,7 +743,15 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      * Scrolls a hour item into view.
-     * @param item to be scrolled in view.
+     * ```typescript
+     *scrhintoView(tp) {
+     *tp.scrollHourIntoView('2');
+     *}
+     * ```
+     *```html
+     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrhintoView(tp)"></igx-time-picker>
+     *```
+     *@param item to be scrolled in view.
      */
     public scrollHourIntoView(item: string): void {
         const hourIntoView = this._scrollItemIntoView(item, this._hourItems, this.selectedHour, this._isHourListLoop, 'hour');
@@ -564,6 +763,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      * Scrolls a minute item into view.
+     * ```typescript
+     *scrMintoView(tp) {
+     *tp.scrollMinuteIntoView('3');
+     *}
+     * ```
+     *```html
+     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrMintoView(tp)"></igx-time-picker>
+     *```
      * @param item to be scrolled in view.
      */
     public scrollMinuteIntoView(item: string): void {
@@ -576,6 +783,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     /**
      * Scrolls an ampm item into view.
+     * ```typescript
+     *scrAmPmIntoView(tp) {
+     *tp.scrollAmPmIntoView('PM');
+     *}
+     * ```
+     *```html
+     *<igx-time-picker #tp format="h:mm tt" (onOpen)="scrAmPmIntoView(tp)"></igx-time-picker>
+     *```
      * @param item to be scrolled in view.
      */
     public scrollAmPmIntoView(item: string): void {
@@ -646,6 +861,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         }
     }
 
+    /**
+     * If current value is valid selects it, closes the dialog and returns true, otherwise returns false.
+     * ```html
+     * <igx-dialog class="igx-time-picker__dialog-popup" [rightButtonLabel]="okButtonLabel" (onRightButtonSelect)="okButtonClick()">
+     * //..
+     * </igx-dialog>
+     * ```
+     */
     public okButtonClick(): boolean {
         if (this._isValueValid(this._getSelectedTime())) {
             this._alert.close();
@@ -668,6 +891,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         }
     }
 
+    /**
+     * Closes the dialog without selecting the current value.
+     * ```html
+     * <igx-dialog class="igx-time-picker__dialog-popup" [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="cancelButtonClick()">
+     * //...
+     * </igx-dialog>
+     * ```
+     */
     public cancelButtonClick(): void {
         this._alert.close();
         this.selectedHour = this._prevSelectedHour;
@@ -675,19 +906,52 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.selectedAmPm = this._prevSelectedAmPm;
     }
 
+    /**
+     * Returns an array of the hours currently in view.
+     *```html
+     *@ViewChild("MyChild")
+     *private picker: IgxTimePickerComponent;
+     *ngAfterViewInit(){
+     *    let hInView = this.picker.hoursInView;
+     *}
+     *```
+     */
     public hoursInView(): string[] {
         return this._hourView.filter((hour) => hour !== '');
     }
 
+    /**
+     * Returns an array of the minutes currently in view.
+     *```html
+     *@ViewChild("MyChild")
+     *private picker: IgxTimePickerComponent;
+     *ngAfterViewInit(){
+     *    let minInView = this.picker.minutesInView;
+     *}
+     *```
+     */
     public minutesInView(): string[] {
         return this._minuteView.filter((minute) => minute !== '');
     }
 
+    /**
+     * Returns an array of the AM/PM currently in view.
+     *```html
+     *@ViewChild("MyChild")
+     *private picker: IgxTimePickerComponent;
+     *ngAfterViewInit(){
+     *    let ApInView = this.picker.ampmInView;
+     *}
+     *```
+     */
     public ampmInView(): string[] {
         return this._ampmView.filter((ampm) => ampm !== '');
     }
 }
 
+/**
+ * The IgxTimePickerModule provides the {@link IgxTimePickerComponent} inside your application.
+ */
 @NgModule({
     declarations: [
         IgxTimePickerComponent,

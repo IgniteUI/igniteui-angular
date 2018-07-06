@@ -17,9 +17,8 @@ import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
+import { IgxColumnMovingService } from './grid.common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +26,7 @@ import { autoWire, IGridBus } from './grid.common';
     selector: 'igx-grid-header',
     templateUrl: './grid-header.component.html'
 })
-export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterViewInit {
+export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     @Input()
     public column: IgxColumnComponent;
@@ -37,6 +36,9 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
 
     @HostBinding('class')
     get styleClasses() {
+        if (this.column.columnGroup) {
+            return `${this.column.headerClasses}`;
+        }
         return `igx-grid__th ${this.column.headerClasses}`;
     }
 
@@ -45,6 +47,14 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     @HostBinding('class.igx-grid__th--fw')
     get width() {
         return this.column.width;
+    }
+
+    @HostBinding('style.height.px')
+    get height() {
+        if (this.grid.hasColumnGroups) {
+            return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight;
+        }
+        return null;
     }
 
     @HostBinding('class.asc')
@@ -74,6 +84,11 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     @HostBinding('class.igx-grid__th--sorted')
     get sorted() {
         return this.sortDirection !== SortingDirection.None;
+    }
+
+    @HostBinding('class.igx-grid__drag-col-header')
+    get dragged() {
+        return this.column === this.column.grid.draggedColumn;
     }
 
     @HostBinding('style.z-index')
@@ -107,12 +122,18 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     protected sortDirection = SortingDirection.None;
     private _startResizePos;
     private _pinnedMaxWidth;
-    private _isResiznig = false;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef, public zone: NgZone) { }
+    constructor(
+        public gridAPI: IgxGridAPIService,
+        public cdr: ChangeDetectorRef,
+        public elementRef: ElementRef,
+        public zone: NgZone,
+        private cms: IgxColumnMovingService
+    ) { }
 
     public ngOnInit() {
-        this.cdr.markForCheck();
+        this.column.columnGroup ? this.zone.runTask(() => this.cdr.markForCheck()) :
+            this.cdr.markForCheck();
     }
 
     public ngDoCheck() {
@@ -121,22 +142,30 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     }
 
     ngAfterViewInit() {
-        this.zone.runOutsideAngular(() => {
-            this.resizeArea.nativeElement.addEventListener('mouseover', this.onResizeAreaMouseOver.bind(this));
-            this.resizeArea.nativeElement.addEventListener('mousedown', this.onResizeAreaMouseDown.bind(this));
-        });
+        if (!this.column.columnGroup) {
+            this.zone.runOutsideAngular(() => {
+                this.resizeArea.nativeElement.addEventListener('mouseover', this.onResizeAreaMouseOver.bind(this));
+                this.resizeArea.nativeElement.addEventListener('mousedown', this.onResizeAreaMouseDown.bind(this));
+            });
+        }
     }
 
     @HostListener('click', ['$event'])
-    @autoWire(true)
     public onClick(event) {
-        if (!this._isResiznig) {
+
+        if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.column.sortable) {
                 const grid = this.gridAPI.get(this.gridID);
-
-                this.sortDirection = ++this.sortDirection > SortingDirection.Desc ? SortingDirection.None
-                    : this.sortDirection;
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+                if (editableCell) {
+                    this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+                }
+                const groupingExpr = grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
+                const sortDir = groupingExpr ?
+                    this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc  : SortingDirection.Desc
+                    : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
+                this.sortDirection = sortDir;
                 this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
                 grid.onSortingDone.emit({
                     dir: this.sortDirection,
@@ -161,7 +190,8 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
         const actualWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
         if (this.column.pinned) {
-            const pinnedMaxWidth = this._pinnedMaxWidth = this.grid.calcPinnedContainerMaxWidth - this.grid.pinnedWidth + actualWidth;
+            const pinnedMaxWidth = this._pinnedMaxWidth =
+                this.grid.calcPinnedContainerMaxWidth - this.grid.getPinnedWidth(true) + actualWidth;
 
             if (this.column.maxWidth && parseFloat(this.column.maxWidth) < pinnedMaxWidth) {
                 this._pinnedMaxWidth = this.column.maxWidth;
@@ -213,7 +243,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
             this.showResizer = true;
-            this._isResiznig = true;
+            this.column.grid.isColumnResizing = true;
             this.resizerHeight = this.grid.calcResizerHeight;
             this._startResizePos = event.clientX;
         } else {
@@ -272,7 +302,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
             const size = Math.ceil(largestCell + largestCellPadding) + 'px';
 
             if (this.column.pinned) {
-                const newPinnedWidth = this.grid.pinnedWidth - currentColWidth + parseFloat(size);
+                const newPinnedWidth = this.grid.getPinnedWidth(true) - currentColWidth + parseFloat(size);
 
                 if (newPinnedWidth <= this.grid.calcPinnedContainerMaxWidth) {
                     this.column.width = size;
@@ -292,7 +322,7 @@ export class IgxGridHeaderComponent implements IGridBus, OnInit, DoCheck, AfterV
     }
 
     public onResize(event) {
-        this._isResiznig = false;
+        this.column.grid.isColumnResizing = false;
 
         this.showResizer = false;
         const diff = event.clientX - this._startResizePos;

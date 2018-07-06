@@ -1,4 +1,3 @@
-import {CommonModule} from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -13,7 +12,7 @@ import {
     Optional,
     Self
 } from '@angular/core';
-import { FormGroup, FormsModule, NgControl, NgModel } from '@angular/forms';
+import { AbstractControl, FormControlName, NgControl, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IgxInputGroupComponent } from '../../input-group/input-group.component';
 
@@ -36,13 +35,17 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         @Inject(forwardRef(() => IgxInputGroupComponent))
         public inputGroup: IgxInputGroupComponent,
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
+        @Optional() @Self() @Inject(FormControlName) protected formControl: FormControlName,
         protected element: ElementRef,
         protected cdr: ChangeDetectorRef) { }
+
+    private get ngControl(): NgControl {
+        return this.ngModel ? this.ngModel : this.formControl;
+    }
 
     @Input('value')
     set value(value: any) {
         this.nativeElement.value = value;
-        this.inputGroup.isFilled = value && value.length > 0;
     }
     get value() {
         return this.nativeElement.value;
@@ -73,8 +76,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public onBlur(event) {
         this.inputGroup.isFocused = false;
         this._valid = IgxInputState.INITIAL;
-        if (this.ngModel) {
-            if (!this.ngModel.valid) {
+        if (this.ngControl) {
+            if (!this.ngControl.valid) {
                 this._valid = IgxInputState.INVALID;
             }
         } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
@@ -82,33 +85,24 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
     }
 
-    @HostListener('input', ['$event'])
-    public onInput(event) {
-        const value: string = this.nativeElement.value;
-        this.inputGroup.isFilled = value && value.length > 0;
-        if (!this.ngModel && this._hasValidators()) {
+    @HostListener('input')
+    public onInput() {
+        if (!this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
 
     ngAfterViewInit() {
-        if (this.nativeElement.hasAttribute('placeholder')) {
-            this.inputGroup.hasPlaceholder = true;
+        this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute('placeholder');
+        this.inputGroup.disabled = this.nativeElement.hasAttribute('disabled');
+        this.inputGroup.isRequired = this.nativeElement.hasAttribute('required');
+
+        // Also check the control's validators for required
+        if (!this.inputGroup.isRequired && this.ngControl && this.ngControl.control.validator) {
+            const validation = this.ngControl.control.validator({} as AbstractControl);
+            this.inputGroup.isRequired = validation && validation.required;
         }
 
-        if (this.nativeElement.hasAttribute('required')) {
-            this.inputGroup.isRequired = true;
-        }
-
-        if (this.nativeElement.hasAttribute('disabled')) {
-            this.inputGroup.disabled = true;
-        }
-
-        if ((this.nativeElement.value && this.nativeElement.value.length > 0) ||
-            (this.ngModel && this.ngModel.model !== '' &&
-                this.ngModel.model !== undefined && this.ngModel.model !== null)) {
-            this.inputGroup.isFilled = true;
-        }
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
@@ -117,8 +111,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.isInput = true;
         }
 
-        if (this.ngModel) {
-            this._statusChanges$ = this.ngModel.statusChanges.subscribe(this.onStatusChanged.bind(this));
+        if (this.ngControl) {
+            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
 
         this.cdr.detectChanges();
@@ -138,9 +132,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         return this.element.nativeElement;
     }
 
-    protected onStatusChanged(status: string) {
-        if (!this.ngModel.control.pristine && (this.ngModel.validator || this.ngModel.asyncValidator)) {
-            this._valid = this.ngModel.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+    protected onStatusChanged() {
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
 
@@ -163,7 +158,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             }
         }
 
-        return false;
+        return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
     }
 
     public get focused() {

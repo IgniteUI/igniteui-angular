@@ -220,7 +220,7 @@ describe('Excel Exporter', () => {
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
 
-                grid.columns[1].unpin();
+                grid.columns[1].pinned = false;
                 fix.detectChanges();
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
@@ -234,7 +234,7 @@ describe('Excel Exporter', () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        grid.sort('Name', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -251,7 +251,7 @@ describe('Excel Exporter', () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        grid.sort('Name', SortingDirection.Asc, true);
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -259,7 +259,7 @@ describe('Excel Exporter', () => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridSortByName,
                     'Ascending sorted data should have been exported.');
 
-                grid.sort('Name', SortingDirection.Desc, true);
+                grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
 
                 fix.whenStable().then(() => {
                     fix.detectChanges();
@@ -268,7 +268,7 @@ describe('Excel Exporter', () => {
                         'Descending sorted data should have been exported.');
 
                         grid.clearSort();
-                        grid.sort('ID', SortingDirection.Asc, true);
+                        grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true});
 
                         fix.whenStable().then(() => {
                             fix.detectChanges();
@@ -446,7 +446,7 @@ describe('Excel Exporter', () => {
         const grid = fix.componentInstance.grid;
         grid.columns[1].header = 'My header';
         grid.columns[1].sortable = true;
-        grid.sort('Name');
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
         const sortField = grid.sortingExpressions[0].fieldName;
 
         fix.whenStable().then(() => {

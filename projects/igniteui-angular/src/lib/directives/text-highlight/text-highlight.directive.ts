@@ -65,14 +65,18 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     private container: any;
 
-    public static setActiveHighlight(groupName: string, column: number, row: number, index: number, page: number) {
-        const group = IgxTextHighlightDirective.highlightGroupsMap.get(groupName);
+    public static setActiveHighlight(groupName: string, highlight: IActiveHighlightInfo) {
+        IgxTextHighlightDirective.highlightGroupsMap.set(groupName, highlight);
+        IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
+    }
 
-        group.columnIndex = column;
-        group.rowIndex = row;
-        group.index = index;
-        group.page = page;
-
+    public static clearActiveHighlight(groupName) {
+        IgxTextHighlightDirective.highlightGroupsMap.set(groupName, {
+            rowIndex: -1,
+            columnIndex: -1,
+            page: -1,
+            index: -1
+        });
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
     }
 
@@ -81,14 +85,16 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
         const callback = (mutationList) => {
             mutationList.forEach((mutation) => {
-                mutation.removedNodes.forEach((n) => {
+                const removedNodes = new Array(... mutation.removedNodes);
+                removedNodes.forEach((n) => {
                     if (n === this.container) {
                         this._nodeWasRemoved = true;
                         this.clearChildElements(false);
                     }
                 });
 
-                mutation.addedNodes.forEach((n) => {
+                const addedNodes = new Array(... mutation.addedNodes);
+                addedNodes.forEach((n) => {
                     if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
                         this.container = this.parentElement.firstElementChild;
                         this._nodeWasRemoved = false;

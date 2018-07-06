@@ -59,35 +59,105 @@ export class IgxNavigationDrawerComponent implements
 
     @HostBinding('class') public cssClass = 'igx-nav-drawer';
 
-    /** ID of the component */
+    /**
+     * ID of the component
+     *
+     * ```typescript
+     * // get
+     * let myNavDrawerId = this.navdrawer.id;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     *  <igx-nav-drawer id='navdrawer'></igx-nav-drawer>
+     * ```
+     */
     @HostBinding('attr.id')
     @Input() public id = `igx-nav-drawer-${NEXT_ID++}`;
 
     /**
-     * Position of the Navigation Drawer. Can be "left"(default) or "right". Only has effect when not pinned.
+     * Position of the Navigation Drawer. Can be "left"(default) or "right".
+     * Only has effect when not pinned.
+     *
+     * ```typescript
+     * // get
+     * let myNavDrawerPosition = this.navdrawer.position;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [position]="'left'"></igx-nav-drawer>
+     * ```
      */
     @Input() public position = 'left';
 
     /**
-     * Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open,
-     * swipe toggle and pan drag.
+     * Enables the use of touch gestures to manipulate the drawer:
+     * - swipe/pan from edge to open, swipe-toggle and pan-drag.
+     *
+     * ```typescript
+     * // get
+     * let gesturesEnabled = this.navdrawer.enableGestures;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [enableGestures]='true'></igx-nav-drawer>
+     * ```
      */
     @Input() public enableGestures = true;
 
-    /** State of the drawer. */
+    /**
+     * State of the drawer.
+     *
+     * ```typescript
+     * // get
+     * let navDrawerIsOpen = this.navdrawer.isOpen;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [isOpen]='false'></igx-nav-drawer>
+     * ```
+     */
     @Input() public isOpen = false;
 
-    /** When pinned the drawer is relatively positioned instead of sitting above content. May require additional layout styling. */
+    /**
+     * When pinned the drawer is relatively positioned instead of sitting above content.
+     * May require additional layout styling.
+     *
+     * ```typescript
+     * // get
+     * let navDrawerIsPinned = this.navdrawer.pin;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [pin]='false'></igx-nav-drawer>
+     * ```
+     */
     @Input() public pin = false;
 
     /**
      * Minimum device width required for automatic pin to be toggled.
      * Default is 1024, can be set to a falsy value to disable this behavior.
+     *
+     * ```typescript
+     * // get
+     * let navDrawerPinTreshold = this.navdrawer.pinThreshold;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [pinTreshold]='1024'></igx-nav-drawer>
+     * ```
      */
     @Input() public pinThreshold = 1024;
 
     /**
      * Returns nativeElement of the component.
+     *
+     * @hidden
      */
     get element() {
         return this.elementRef.nativeElement;
@@ -95,25 +165,78 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Width of the drawer in its open state. Defaults to "280px".
+     *
+     * ```typescript
+     * // get
+     * let navDrawerWidth = this.navdrawer.width;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
+     * ```
      */
     @Input() public width = '280px';
 
     /**
      * Width of the drawer in its mini state. Defaults to 60px.
+     *
+     * ```typescript
+     * // get
+     * let navDrawerMiniWidth = this.navdrawer.miniWidth;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
+     * ```
      */
     @Input() public miniWidth = '60px';
 
-    /** Pinned state change output for two-way binding  */
+    /**
+     * Pinned state change output for two-way binding.
+     *
+     * ```html
+     * <igx-nav-drawer [(pin)]='isPinned'></igx-nav-drawer>
+     * ```
+     */
     @Output() public pinChange = new EventEmitter<boolean>(true);
-    /** Event fired as the Navigation Drawer is about to open. */
+    /**
+     * Event fired as the Navigation Drawer is about to open.
+     *
+     * ```html
+     *  <igx-nav-drawer (opening)='onOpening()'></igx-nav-drawer>
+     * ```
+     */
     @Output() public opening = new EventEmitter();
-    /** Event fired when the Navigation Drawer has opened. */
+    /**
+     * Event fired when the Navigation Drawer has opened.
+     *
+     * ```html
+     * <igx-nav-drawer (opened)='onOpened()'></igx-nav-drawer>
+     * ```
+     */
     @Output() public opened = new EventEmitter();
-    /** Event fired as the Navigation Drawer is about to close. */
+    /**
+     * Event fired as the Navigation Drawer is about to close.
+     *
+     * ```html
+     * <igx-nav-drawer (closing)='onClosing()'></igx-nav-drawer>
+     * ```
+     */
     @Output() public closing = new EventEmitter();
-    /** Event fired when the Navigation Drawer has closed. */
+    /**
+     * Event fired when the Navigation Drawer has closed.
+     *
+     * ```html
+     * <igx-nav-drawer (closed)='onClosed()'></igx-nav-drawer>
+     * ```
+     */
     @Output() public closed = new EventEmitter();
 
+    /**
+     * @hidden
+     */
     get template() {
         if (this.miniTemplate && !this.isOpen) {
             return this.miniTemplate.template;
@@ -123,9 +246,16 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private _miniTemplate: IgxNavDrawerMiniTemplateDirective;
+    /**
+     * @hidden
+     */
     public get miniTemplate(): IgxNavDrawerMiniTemplateDirective {
         return this._miniTemplate;
     }
+
+    /**
+     * @hidden
+     */
     @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
     public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
         if (!this.isOpen) {
@@ -134,9 +264,15 @@ export class IgxNavigationDrawerComponent implements
         this._miniTemplate = v;
     }
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
     protected contentTemplate: IgxNavDrawerTemplateDirective;
 
+    /**
+     * @hidden
+     */
     @HostBinding('style.flexBasis')
     get flexWidth() {
         if (!this.pin) {
@@ -166,14 +302,23 @@ export class IgxNavigationDrawerComponent implements
     @ViewChild('overlay') private _overlay: ElementRef;
     @ViewChild('dummy') private _styleDummy: ElementRef;
 
+    /**
+     *  @hidden
+     */
     get drawer() {
         return this._drawer.nativeElement;
     }
 
+    /**
+     * @hidden
+     */
     get overlay() {
         return this._overlay.nativeElement;
     }
 
+    /**
+     *  @hidden
+     */
     get styleDummy() {
         return this._styleDummy.nativeElement;
     }
@@ -186,6 +331,8 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
+     *
+     * @hidden
      */
     public get hasAnimateWidth(): boolean {
         return this.pin || !!this.miniTemplate;
@@ -195,32 +342,45 @@ export class IgxNavigationDrawerComponent implements
     /**
      * Used for touch gestures (swipe and pan).
      * Defaults to 50 (in px) and is extended to at least 110% of the mini template width if available.
-     * @protected set method
+     *
+     * @hidden
      */
     public get maxEdgeZone() {
         return this._maxEdgeZone;
     }
 
     /**
-     * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
+     * Gets the Drawer width for specific state.
+     * Will attempt to evaluate requested state and cache.
+     *
+     *
+     * @hidden
      */
     public get expectedWidth() {
         return this.getExpectedWidth(false);
     }
 
     /**
-     * Get the Drawer mini width for specific state. Will attempt to evaluate requested state and cache.
+     * Get the Drawer mini width for specific state.
+     * Will attempt to evaluate requested state and cache.
+     *
+     * @hidden
      */
     public get expectedMiniWidth() {
         return this.getExpectedWidth(true);
     }
 
+    /**
+     * @hidden
+     */
     public get touchManager() {
         return this._touchManager;
     }
 
     /**
      * Exposes optional navigation service
+     *
+     * @hidden
      */
     public get state() {
         return this._state;
@@ -234,6 +394,9 @@ export class IgxNavigationDrawerComponent implements
         private _touchManager: HammerGesturesManager) {
     }
 
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         // DOM and @Input()-s initialized
         if (this._state) {
@@ -244,6 +407,9 @@ export class IgxNavigationDrawerComponent implements
         }
     }
 
+    /**
+     * @hidden
+     */
     public ngAfterContentInit() {
         // wait for template and ng-content to be ready
         this.updateEdgeZone();
@@ -257,6 +423,9 @@ export class IgxNavigationDrawerComponent implements
         // (https://github.com/angular/angular/issues/6515), blocked by https://github.com/angular/angular/issues/6904
     }
 
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         this._touchManager.destroy();
         if (this._state) {
@@ -267,6 +436,9 @@ export class IgxNavigationDrawerComponent implements
         }
     }
 
+    /**
+     * @hidden
+     */
     public ngOnChanges(changes: { [propName: string]: SimpleChange }) {
         // simple settings can come from attribute set (rather than binding), make sure boolean props are converted
         if (changes.enableGestures && changes.enableGestures.currentValue !== undefined) {
@@ -288,9 +460,6 @@ export class IgxNavigationDrawerComponent implements
             if (this.pinThreshold) {
                 this.ensureEvents();
                 this.checkPinThreshold();
-            } else if (this._resizeObserver) {
-                this._resizeObserver.unsubscribe();
-                this._resizeObserver = null;
             }
         }
 
@@ -308,30 +477,34 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Toggle the open state of the Navigation Drawer.
-     * @param fireEvents Optional flag determining whether events should be fired or not.
+     *
+     * ```typescript
+     * this.navdrawer.toggle();
+     * ```
      */
-    public toggle(fireEvents?: boolean) {
+    public toggle() {
         if (this.isOpen) {
-            this.close(fireEvents);
+            this.close();
         } else {
-            this.open(fireEvents);
+            this.open();
         }
     }
 
     /**
      * Open the Navigation Drawer. Has no effect if already opened.
-     * @param fireEvents Optional flag determining whether events should be fired or not.
+     *
+     * ```typescript
+     * this.navdrawer.open();
+     * ```
      */
-    public open(fireEvents?: boolean) {
+    public open() {
         if (this._panning) {
             this.resetPan();
         }
         if (this.isOpen) {
             return;
         }
-        if (fireEvents) {
-            this.opening.emit();
-        }
+        this.opening.emit();
         this.isOpen = true;
 
         // TODO: Switch to animate API when available
@@ -347,39 +520,50 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Close the Navigation Drawer. Has no effect if already closed.
-     * @param fireEvents Optional flag determining whether events should be fired or not.
+     *
+     * ```typescript
+     * this.navdrawer.close();
+     * ```
      */
-    public close(fireEvents?: boolean) {
+    public close() {
         if (this._panning) {
             this.resetPan();
         }
         if (!this.isOpen) {
             return;
         }
-        if (fireEvents) {
-            this.closing.emit();
-        }
+        this.closing.emit();
 
         this.isOpen = false;
         this.setDrawerWidth(this.miniTemplate ? this.miniWidth : '');
         this.elementRef.nativeElement.addEventListener('transitionend', this.toggleClosedEvent, false);
     }
 
+    /**
+     * @hidden
+     */
     protected set_maxEdgeZone(value: number) {
         this._maxEdgeZone = value;
     }
 
+    /**
+     * @hidden
+     */
     protected ensureDrawerHeight() {
         if (this.pin) {
             // TODO: nested in content?
             // setElementStyle warning https://github.com/angular/angular/issues/6563
             this.renderer.setElementStyle(this.drawer, 'height', window.innerHeight + 'px');
+        } else {
+            this.renderer.setElementStyle(this.drawer, 'height', '');
         }
     }
 
     /**
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
-     * @param mini Request mini width instead
+     *
+     * @hidden
+     * @param [mini] - Request mini width instead
      */
     protected getExpectedWidth(mini?: boolean): number {
         if (mini) {
@@ -423,7 +607,6 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Sets the drawer width.
-     * @param width Width to set, must be valid CSS size string.
      */
     private setDrawerWidth(width: string) {
         window.requestAnimationFrame(() => {
@@ -456,9 +639,12 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (this.pinThreshold && !this._resizeObserver) {
+        if (!this._resizeObserver) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
-                .subscribe((value) => { this.checkPinThreshold(); });
+                .subscribe((value) => {
+                    this.checkPinThreshold();
+                    this.ensureDrawerHeight();
+                });
         }
     }
 
@@ -506,7 +692,7 @@ export class IgxNavigationDrawerComponent implements
         if ((this.isOpen && deltaX < 0) ||
             // positive deltaX from the edge:
             (deltaX > 0 && startPosition < this.maxEdgeZone)) {
-            this.toggle(true);
+            this.toggle();
         }
     }
 
@@ -584,9 +770,9 @@ export class IgxNavigationDrawerComponent implements
 
             // check if pan brought the drawer to 50%
             if (this.isOpen && visibleWidth <= this._panStartWidth / 2) {
-                this.close(true);
+                this.close();
             } else if (!this.isOpen && visibleWidth >= this._panLimit / 2) {
-                this.open(true);
+                this.open();
             }
             this._panStartWidth = null;
         }
@@ -621,7 +807,7 @@ export class IgxNavigationDrawerComponent implements
         });
     }
 
-    private toggleOpenedEvent = (evt?, fireEvents?) => {
+    private toggleOpenedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener('transitionend', this.toggleOpenedEvent, false);
         this.opened.emit();
     }

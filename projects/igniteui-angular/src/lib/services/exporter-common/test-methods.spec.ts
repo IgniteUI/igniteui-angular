@@ -28,7 +28,7 @@ export class TestMethods {
         filterParams = (filterParams.length === 0) ?
                         ['JobTitle', 'Senior', IgxStringFilteringOperand.instance().condition('contains'), true] : filterParams;
 
-        myGrid.filter(...filterParams);
+        myGrid.filter(filterParams[0], filterParams[1], filterParams[2], filterParams[3]);
         fix.detectChanges();
 
         return { fixture: fix, grid: myGrid };
@@ -43,7 +43,7 @@ export class TestMethods {
 
         // Pin columns
         colIndices.forEach((i) => {
-            myGrid.columns[i].pin();
+            myGrid.columns[i].pinned = true;
         });
 
         return { fixture: fix, grid: myGrid };

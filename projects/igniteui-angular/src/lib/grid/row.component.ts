@@ -9,8 +9,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnDestroy,
-    OnInit,
     QueryList,
     ViewChild,
     ViewChildren
@@ -22,7 +20,6 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
 import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
 
 @Component({
@@ -31,7 +28,7 @@ import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
     selector: 'igx-grid-row',
     templateUrl: './row.component.html'
 })
-export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck {
+export class IgxGridRowComponent implements DoCheck {
 
     @Input()
     public rowData: any;
@@ -63,7 +60,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
 
     @HostBinding('class')
     get styleClasses(): string {
-        return `${this.defaultCssClass} ${this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS}`;
+        const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
+        const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass}`;
     }
 
     get focused(): boolean {
@@ -91,7 +90,6 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     }
 
     @HostBinding('attr.aria-selected')
-    @HostBinding('class.igx-grid__tr--selected')
     public isSelected: boolean;
 
     get grid(): IgxGridComponent {
@@ -113,27 +111,12 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
     protected defaultCssClass = 'igx-grid__tr';
     protected _rowSelection = false;
     protected isFocused = false;
-    protected chunkLoaded$;
 
     constructor(public gridAPI: IgxGridAPIService,
                 private selectionAPI: IgxSelectionAPIService,
-                private element: ElementRef,
+                public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
-    @autoWire(true)
-    public ngOnInit() {
-        this.chunkLoaded$ = this.virtDirRow.onChunkLoad.subscribe(() => {
-            if (this.grid.cellInEditMode) {
-                this.grid.cellInEditMode.inEditMode = false;
-            }
-        });
-    }
-
-    public ngOnDestroy() {
-        if (this.chunkLoaded$) {
-            this.chunkLoaded$.unsubscribe();
-        }
-    }
 
     @HostListener('focus', ['$event'])
     public onFocus(event) {
@@ -152,6 +135,47 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         this.grid.triggerRowSelectionChange(newSelection, this, event);
     }
 
+    public update(value: any) {
+        let row;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            row = this.gridAPI.get_row_by_key(this.gridID, this.rowID);
+        } else {
+            row = this.gridAPI.get_row_by_index(this.gridID, this.index);
+        }
+        if (row) {
+            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
+                this.gridAPI.get(this.gridID).deselectRows([row.rowID]);
+                this.gridAPI.update_row(value, this.gridID, row);
+                this.gridAPI.get(this.gridID).selectRows([row.rowID]);
+            } else {
+                this.gridAPI.update_row(value, this.gridID, row);
+            }
+            this.cdr.markForCheck();
+            this.gridAPI.get(this.gridID).refreshSearch();
+        }
+
+    }
+
+    public delete() {
+        let row;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            row = this.gridAPI.get_row_by_key(this.gridID, this.rowID);
+        } else {
+            row = this.gridAPI.get_row_by_index(this.gridID, this.index);
+        }
+        if (row) {
+            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
+                this.gridAPI.get(this.gridID).deselectRows(row.rowID);
+            }
+            const index = this.gridAPI.get(this.gridID).data.indexOf(row.rowData);
+            this.gridAPI.get(this.gridID).data.splice(index, 1);
+            this.gridAPI.get(this.gridID).onRowDeleted.emit({ data: row.rowData });
+            (this.gridAPI.get(this.gridID) as any)._pipeTrigger++;
+            this.cdr.markForCheck();
+            this.gridAPI.get(this.gridID).refreshSearch();
+        }
+    }
+
     get rowCheckboxAriaLabel() {
         return this.grid.primaryKey ?
             this.isSelected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
@@ -166,5 +190,9 @@ export class IgxGridRowComponent implements IGridBus, OnInit, OnDestroy, DoCheck
         if (this.checkboxElement) {
             this.checkboxElement.checked = this.isSelected;
         }
+    }
+
+    notGroups(arr) {
+        return arr.filter(c => !c.columnGroup);
     }
 }
