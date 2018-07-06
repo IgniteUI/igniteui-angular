@@ -87,31 +87,6 @@ export class BasicGridSearchComponent extends BasicGridComponent {
     public activeClass = 'igx-highlight__active';
 }
 
-/* To be removed!!! */
-// @Component({
-//     template: GridTemplateStrings.declareGrid('',
-//         ` (onColumnInit)="init($event)"`,
-//         ColumnDefinitions.generatedWithDataType)
-// })
-// export class SummariesNxMComponent extends BasicGridComponent {
-//     public columns = [];
-
-//     constructor(rows: number, cols: number, colsType: string) {
-//         super();
-//         this.columns = SampleTestData.generateColumnsByType(cols, colsType);
-//         this.data = SampleTestData.generateDataForColumns(this.columns, rows);
-//     }
-
-//     init(column: IgxColumnComponent) {
-//         column.hasSummary = true;
-//     }
-
-//     public isHorizonatScrollbarVisible() {
-//         const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
-//         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
-//     }
-// }
-
 @Component({
     template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
         '', ColumnDefinitions.idNameJobTitle)
@@ -129,5 +104,20 @@ export class PagingComponent extends BasicGridComponent {
 })
 export class SelectionComponent extends BasicGridComponent {
     public rowSelectable = true;
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true" [showToolbar]="showToolbar" [columnHiding]="columnHiding"
+    [columnPinning]="columnPinning" [exportExcel]="exportExcel" [exportCsv]="exportCsv"`,
+        '', '')
+})
+export class GridWithToolbarComponent extends BasicGridComponent {
+    public showToolbar = true;
+    public columnHiding = true;
+    public columnPinning = true;
+    public exportExcel = true;
+    public exportCsv = true;
+
+    data = SampleTestData.contactInfoData;
 }
 

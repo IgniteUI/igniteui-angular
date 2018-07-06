@@ -1,5 +1,4 @@
 import { async, TestBed } from '@angular/core/testing';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grid';
 import { IgxGridComponent } from '../../grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
@@ -9,7 +8,7 @@ import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
-import { IgxStringFilteringOperand } from '../../../public_api';
+import { IgxStringFilteringOperand, SortingDirection } from '../../../public_api';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
