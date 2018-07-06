@@ -48,8 +48,8 @@ function css(element) {
     const sheets = document.styleSheets, ret = [];
     element.matches = element.matches || element.webkitMatchesSelector || element.mozMatchesSelector
         || element.msMatchesSelector || element.oMatchesSelector;
-        for (const key in sheets) {
-            if (sheets.hasOwnProperty(key)) {
+    for (const key in sheets) {
+        if (sheets.hasOwnProperty(key)) {
             const sheet = <CSSStyleSheet>sheets[key];
             const rules: any = sheet.rules || sheet.cssRules;
 
@@ -1732,73 +1732,126 @@ describe('igxOverlay', () => {
                     expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
                 });
             }));
-        // WIP
-        xit('The component is repositioned and rendered correctly in the window, even when the rendering options passed ' +
+
+        it('The component is repositioned and rendered correctly in the window, even when the rendering options passed ' +
             ' should result in otherwise a partially hidden component. No scrollbars should appear.', fakeAsync(() => {
-                let buttonRect: ClientRect;
-                let overlayWrapper: Element;
-                let wrapperRect: ClientRect;
                 const fix = TestBed.createComponent(EmptyPageComponent);
                 fix.detectChanges();
                 const button = fix.componentInstance.buttonElement.nativeElement;
                 const positionSettings: PositionSettings = {
-                    horizontalDirection: HorizontalAlignment.Left,
-                    verticalDirection: VerticalAlignment.Bottom,
-                    target: button,
-                    horizontalStartPoint: HorizontalAlignment.Center,
-                    verticalStartPoint: VerticalAlignment.Middle
+                    target: button
                 };
                 const overlaySettings: OverlaySettings = {
                     positionStrategy: new AutoPositionStrategy(positionSettings),
-                    scrollStrategy: new NoOpScrollStrategy(),
                     modal: false,
                     closeOnOutsideClick: false
                 };
-                // HA = Right HSP = Center VSP = Middle
-                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    buttonRect = button.getBoundingClientRect();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top + buttonRect.height / 2);
-                    expect(wrapperRect.left).toEqual(buttonRect.right);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
+                let hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+                let vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
-                    // HA = Right HSP = Center VSP = Top
-                    positionSettings.verticalStartPoint = VerticalAlignment.Top;
+                vAlignmentArray.forEach(function (vAlignment) {
+                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Bottom,
+                        HorizontalAlignment.Center, vAlignment);
+                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Bottom,
+                        HorizontalAlignment.Right, vAlignment);
+                });
+
+                hAlignmentArray.forEach(function (hAlignment) {
+                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Top,
+                        hAlignment, VerticalAlignment.Bottom);
+                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Top,
+                        hAlignment, VerticalAlignment.Middle);
+                });
+
+                hAlignmentArray = hAlignmentArray.filter(value => value !== 'Left');
+                vAlignmentArray = vAlignmentArray.filter(value => value !== 'Top');
+                hAlignmentArray.forEach(function (hAlignment) {
+                    vAlignmentArray.forEach(function (vAlignment) {
+                        verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Top,
+                            hAlignment, vAlignment);
+                    });
+                });
+
+                function verifyOverlayBoundingSizeAndPosition(horizontalDirection, verticalDirection,
+                    horizontalAlignment, verticalAlignment) {
+                    positionSettings.horizontalDirection = horizontalDirection;
+                    positionSettings.verticalDirection = verticalDirection;
+                    positionSettings.horizontalStartPoint = horizontalAlignment;
+                    positionSettings.verticalStartPoint = verticalAlignment;
                     overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
                     fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
                     tick();
                     fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top);
-                    expect(wrapperRect.left).toEqual(buttonRect.right);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
+                    const buttonRect = button.getBoundingClientRect();
+                    const overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                    const overlayRect = overlayElement.getBoundingClientRect();
+                    const expectedTop = (verticalDirection === VerticalAlignment.Bottom ||
+                                        (horizontalDirection === HorizontalAlignment.Right &&
+                                         verticalDirection === VerticalAlignment.Top)) ?
+                                        buttonRect.top :
+                                        buttonRect.top + buttonRect.height;
+                    let expectedLeft: number = buttonRect.left;
+                    if ( verticalDirection === VerticalAlignment.Bottom) {
+                        expectedLeft = horizontalAlignment === HorizontalAlignment.Right ?
+                        buttonRect.right : buttonRect.left + buttonRect.width / 2;
+                    }
+                    expect(overlayRect.top).toEqual(expectedTop);
+                    expect(overlayRect.bottom).toEqual(overlayRect.top + overlayRect.height);
+                    expect(overlayRect.left).toEqual(expectedLeft);
+                    expect(overlayRect.right).toEqual(overlayRect.left + overlayRect.width);
+                    expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
                     fix.componentInstance.overlay.hideAll();
+                }
+            }));
 
-                    // HA = Right HSP = Center VSP = Bottom
-                    positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.bottom);
-                    expect(wrapperRect.left).toEqual(buttonRect.right);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
+        it('igx-overlay margins should be rendered correctly', fakeAsync(() => {
+            const expectedMargin = '0px';
+            const fix = TestBed.createComponent(EmptyPageComponent);
+            fix.detectChanges();
+            const button = fix.componentInstance.buttonElement.nativeElement;
+            const positionSettings: PositionSettings = {
+                target: button
+            };
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new AutoPositionStrategy(positionSettings),
+                scrollStrategy: new NoOpScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+            const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+
+            hAlignmentArray.forEach(function (hDirection) {
+                vAlignmentArray.forEach(function (vDirection) {
+                    hAlignmentArray.forEach(function (hAlignment) {
+                        vAlignmentArray.forEach(function (vAlignment) {
+                            verifyOverlayMargins(hDirection, vDirection, hAlignment, vAlignment);
+                        });
+                    });
+                });
             });
-        }));
 
-        xit('igx-overlay margins should be rendered correctly', () => {
-            // TO DO
-        });
+            function verifyOverlayMargins(horizontalDirection, verticalDirection, horizontalAlignment, verticalAlignment) {
+                positionSettings.horizontalDirection = horizontalDirection;
+                positionSettings.verticalDirection = verticalDirection;
+                positionSettings.horizontalStartPoint = horizontalAlignment;
+                positionSettings.verticalStartPoint = verticalAlignment;
+                overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                tick();
+                fix.detectChanges();
+                const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+                const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                const overlayElement = overlayContent.children[0];
+                const wrapperMargin = window.getComputedStyle(overlayWrapper, null).getPropertyValue('margin');
+                const contentMargin = window.getComputedStyle(overlayContent, null).getPropertyValue('margin');
+                const elementMargin = window.getComputedStyle(overlayElement, null).getPropertyValue('margin');
+                expect(wrapperMargin).toEqual(expectedMargin);
+                expect(contentMargin).toEqual(expectedMargin);
+                expect(elementMargin).toEqual(expectedMargin);
+                fix.componentInstance.overlay.hideAll();
+            }
+        }));
 
         // When adding more than one component to show in igx-overlay:
         it('When the options used to fit the component in the window - adding a new instance of the component with the ' +
@@ -2249,8 +2302,8 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
-                 modal: true,
-                 positionStrategy: new GlobalPositionStrategy()
+                modal: true,
+                positionStrategy: new GlobalPositionStrategy()
             };
 
             const targetButton = 'Escape';
@@ -2278,8 +2331,8 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
-                 modal: true,
-                 positionStrategy: new GlobalPositionStrategy()
+                modal: true,
+                positionStrategy: new GlobalPositionStrategy()
             };
 
             const escEvent = new KeyboardEvent('keydown', {
@@ -2322,25 +2375,25 @@ describe('igxOverlay', () => {
                         'button { position: absolute; top: 90%; left: 100%; }'
                     ]
                 }
-             }).createComponent(EmptyPageComponent);
-             const overlay = fixture.componentInstance.overlay;
-             const overlaySettings: OverlaySettings = {
+            }).createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
                 modal: true,
                 closeOnOutsideClick: true,
                 positionStrategy: new GlobalPositionStrategy()
-             };
+            };
 
-             spyOn(overlay, 'show').and.callThrough();
-             spyOn(overlay, 'hide').and.callThrough();
+            spyOn(overlay, 'show').and.callThrough();
+            spyOn(overlay, 'hide').and.callThrough();
 
-             overlay.show(SimpleDynamicComponent, overlaySettings);
-             tick();
-             expect(overlay.show).toHaveBeenCalledTimes(1);
-             expect(overlay.hide).toHaveBeenCalledTimes(0);
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            expect(overlay.show).toHaveBeenCalledTimes(1);
+            expect(overlay.hide).toHaveBeenCalledTimes(0);
 
-             fixture.componentInstance.buttonElement.nativeElement.click();
-             tick();
-             expect(overlay.hide).toHaveBeenCalledTimes(0);
+            fixture.componentInstance.buttonElement.nativeElement.click();
+            tick();
+            expect(overlay.hide).toHaveBeenCalledTimes(0);
         }));
 
         // 3.2 Non - Modal
