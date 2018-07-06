@@ -12,7 +12,8 @@ import {
     OnInit,
     Output,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    HostListener
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -385,7 +386,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     public ngOnInit(): void {
         this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusTheDialog());
-        this.alert.onClose.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
+        this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
     }
 
     /**
@@ -436,13 +437,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *
      * @hidden
      */
-    public onOpenEvent(event): void {
-        if (!this.calendarRef) {
-            this.createCalendarRef();
-            this.alert.open();
-            this._onTouchedCallback();
-            this.onOpen.emit(this);
-        }
+    public onOpenEvent(): void {
+        this.createCalendarRef();
+        this.alert.open();
+        this._onTouchedCallback();
+        this.onOpen.emit(this);
     }
 
     private createCalendarRef(): void {
@@ -463,10 +462,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     public handleDialogCloseAction() {
         this.onClose.emit(this);
-        setTimeout(() => {
-            this.calendarRef.destroy();
-            this.calendarRef = null;
-        }, 350);
+        this.calendarRef.destroy();
     }
 
     /**
@@ -483,6 +479,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this._onChangeCallback(event);
         this.alert.close();
         this.onSelection.emit(event);
+    }
+
+    @HostListener('keydown.space')
+    public onSpaceClick() {
+        this.onOpenEvent();
     }
 
     private updateCalendarInstance() {
@@ -509,7 +510,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 
     // Focus the dialog element, after its appearence into DOM.
     private _focusTheDialog() {
-        requestAnimationFrame(() => this.alert.element.focus());
+        requestAnimationFrame(() => this.alert.toggleRef.element.focus());
     }
 
     private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
