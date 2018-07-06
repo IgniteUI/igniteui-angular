@@ -223,7 +223,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
             const elementToActivate = spans[index];
             this.renderer.addClass(elementToActivate, this.activeCssClass);
-            this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;font-weight:bold');
+            this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;font-weight:bold;color:black');
         }
     }
 
@@ -241,7 +241,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
         const elementToDeactivate = spans[this._activeElementIndex];
         this.renderer.removeClass(elementToDeactivate, this.activeCssClass);
-        this.renderer.setAttribute(elementToDeactivate, 'style', 'background:yellow;font-weight:bold');
+        this.renderer.setAttribute(elementToDeactivate, 'style', 'background:yellow;font-weight:bold;color:black');
         this._activeElementIndex = -1;
     }
 
@@ -275,7 +275,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
             this.appendText(stringValue.substring(previousMatchEnd, start));
             // tslint:disable-next-line:max-line-length
-            this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold">${stringValue.substring(start, end)}</span>`);
+            this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue.substring(start, end)}</span>`);
 
             previousMatchEnd = end;
             matchCount++;
