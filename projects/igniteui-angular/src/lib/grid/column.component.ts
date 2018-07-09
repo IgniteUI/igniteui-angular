@@ -368,7 +368,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public pin(index?) {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
-
+        this.gridAPI.submit_value(this.gridID);
         if (this._pinned) {
             return false;
         }
@@ -411,7 +411,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     public unpin(index?) {
-
+        this.gridAPI.submit_value(this.gridID);
         if (!this._pinned) {
             return false;
         }
