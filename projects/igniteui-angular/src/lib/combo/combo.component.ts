@@ -870,6 +870,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public set filteredData(val: any[]) {
         this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
+        this.checkMatch();
     }
 
     /**
@@ -909,15 +910,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public handleInputChange(event?) {
         if (event !== undefined) {
             this.dropdown.verticalScrollContainer.scrollTo(0);
+            this.onSearchInput.emit(event);
         }
         if (this.filterable) {
             this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
+        } else {
+            this.checkMatch();
         }
-        if (event !== undefined) {
-            this.onSearchInput.emit(event);
-        }
-        this.checkMatch();
     }
 
     /**
