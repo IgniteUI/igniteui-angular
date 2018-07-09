@@ -31,7 +31,10 @@ describe('IgxGrid - multi-column headers', () => {
                 ColumnGroupTwoGroupsTestComponent,
                 NestedColGroupsGridComponent,
                 StegosaurusGridComponent,
-                ColumnGroupGroupingTestComponent
+                ColumnGroupGroupingTestComponent,
+                EmptyColGridComponent,
+                OneColPerGroupGridComponent,
+                NestedColumnGroupsGridComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1217,6 +1220,98 @@ describe('IgxGrid - multi-column headers', () => {
          expect(firstGroupedRow.value).toEqual('Sales Representative');
          expect(firstGroupedRow.records.length).toEqual(3);
     });
+
+    it('Should not render empty column group.', () => {
+        const fixture = TestBed.createComponent(EmptyColGridComponent);
+        fixture.detectChanges();
+        const ci = fixture.componentInstance;
+        const grid = ci.grid;
+
+        // Empty column group should not be displayed
+        let emptyColGroup = fixture.debugElement.query(By.css(".emptyColGroup"));
+        expect(parseInt(ci.emptyColGroup.width, 10)).toBe(0);
+        expect(emptyColGroup).toBe(null);
+    });
+
+    it('Should render headers correctly when having a column per group.', () => {
+        const fixture = TestBed.createComponent(OneColPerGroupGridComponent);
+        fixture.detectChanges();
+        const ci = fixture.componentInstance;
+        const grid = ci.grid;
+
+        const addressColGroup = fixture.debugElement.query(By.css(".addressColGroup"));
+        const addressColGroupDepth = 2; // one-level children
+        const addressColGroupChildrenCount = 1;
+
+        testColumnGroupHeaderRendering(addressColGroup, parseInt(ci.columnWidth, 10),
+            addressColGroupDepth * grid.defaultRowHeight, ci.addressColGroupTitle,
+            "addressCol", addressColGroupChildrenCount);
+
+        const addressCol = fixture.debugElement.query(By.css(".addressCol"));
+
+        testColumnHeaderRendering(addressCol, parseInt(ci.columnWidth, 10),
+            grid.defaultRowHeight, ci.addressColTitle);
+
+        const phoneColGroup = fixture.debugElement.query(By.css(".phoneColGroup"));
+        const phoneColGroupDepth = 2; // one-level children
+        const phoneColGroupChildrenCount = 1;
+
+        testColumnGroupHeaderRendering(phoneColGroup, parseInt(ci.phoneColWidth, 10),
+            phoneColGroupDepth * grid.defaultRowHeight, ci.phoneColGroupTitle,
+            "phoneCol", phoneColGroupChildrenCount);
+
+        const phoneCol = fixture.debugElement.query(By.css(".phoneCol"));
+
+        testColumnHeaderRendering(phoneCol, parseInt(ci.phoneColWidth),
+            grid.defaultRowHeight, ci.phoneColTitle);
+
+        const faxColGroup = fixture.debugElement.query(By.css(".faxColGroup"));
+        const faxColGroupDepth = 2; // one-level children
+        const faxColGroupChildrenCount = 1;
+
+        testColumnGroupHeaderRendering(faxColGroup, parseInt(ci.faxColWidth, 10),
+            faxColGroupDepth * grid.defaultRowHeight, ci.faxColGroupTitle, "faxCol",
+            faxColGroupChildrenCount);
+
+        const faxCol = fixture.debugElement.query(By.css(".faxCol"));
+
+        testColumnHeaderRendering(faxCol, parseInt(ci.faxColWidth, 10),
+            grid.defaultRowHeight, ci.faxColTitle);
+    });
+
+    it('Should render headers correctly when having nested column groups.', () => {
+        const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
+        fixture.detectChanges();
+        const ci = fixture.componentInstance;
+        const grid = ci.grid;
+
+        const firstSlaveColGroup = fixture.debugElement.query(By.css(".firstSlaveColGroup"));
+        const firstSlaveColGroupDepth = 2; // one-level children
+        const firstSlaveColGroupChildrenCount = 2;
+        const firstSlaveColGroupWidth = parseInt(ci.columnWidth, 10) + parseInt(ci.phoneColWidth, 10);
+
+        testColumnGroupHeaderRendering(firstSlaveColGroup, firstSlaveColGroupWidth,
+            firstSlaveColGroupDepth * grid.defaultRowHeight,
+            ci.firstSlaveColGroupTitle, "firstSlaveChild", firstSlaveColGroupChildrenCount);
+
+        const secondSlaveColGroup = fixture.debugElement.query(By.css(".secondSlaveColGroup"));
+        const secondSlaveColGroupDepth = 2; // one-level children
+        const secondSlaveColGroupChildrenCount = 2;
+        const secondSlaveColGroupWidth = parseInt(ci.faxColWidth, 10) + parseInt(ci.cityColWidth, 10);
+
+        testColumnGroupHeaderRendering(secondSlaveColGroup, secondSlaveColGroupWidth,
+            secondSlaveColGroupDepth * grid.defaultRowHeight,
+            ci.secondSlaveColGroupTitle, "secondSlaveChild", secondSlaveColGroupChildrenCount);
+
+        const masterColGroup = fixture.debugElement.query(By.css(".masterColGroup"));
+        const masterColGroupWidth = firstSlaveColGroupWidth + secondSlaveColGroupWidth;
+        const masterSlaveColGroupDepth = 3;
+        const masterColGroupChildrenCount = 2;
+
+        testColumnGroupHeaderRendering(masterColGroup, masterColGroupWidth,
+            masterSlaveColGroupDepth * grid.defaultRowHeight, ci.masterColGroupTitle,
+            "slaveColGroup", masterColGroupChildrenCount);
+    });
 });
 
 @Component({
@@ -1735,6 +1830,96 @@ export class BlueWhaleGridComponent {
     personDetailsTitle = 'Person Details';
 }
 
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" [height]="gridHeight" columnWidth="100px">
+            <igx-column-group headerClasses="emptyColGroup" #emptyColGroup header="First Group">
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+export class EmptyColGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    @ViewChild('emptyColGroup', { read: IgxColumnGroupComponent })
+    emptyColGroup: IgxColumnGroupComponent;
+
+    data = DATASOURCE;
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
+            <igx-column-group headerClasses="addressColGroup" [header]="addressColGroupTitle">
+                <igx-column headerClasses="addressCol" field="Address" [header]="addressColTitle"></igx-column>
+            </igx-column-group>
+            <igx-column-group headerClasses="phoneColGroup" [header]="phoneColGroupTitle">
+                <igx-column headerClasses="phoneCol" field="Phone" [header]="phoneColTitle" [width]="phoneColWidth"></igx-column>
+            </igx-column-group>
+            <igx-column-group headerClasses="faxColGroup" [header]="faxColGroupTitle">
+                <igx-column headerClasses="faxCol" field="Fax" [header]="faxColTitle" [width]="faxColWidth"></igx-column>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+export class OneColPerGroupGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    columnWidth = "100px";
+    phoneColWidth = "200px";
+    faxColWidth = "300px";
+
+    addressColGroupTitle = "Address Group";
+    addressColTitle = "Address";
+
+    phoneColGroupTitle = "Phone Group";
+    phoneColTitle = "Phone";
+
+    faxColGroupTitle = "Fax Group";
+    faxColTitle = "Fax";
+
+    data = DATASOURCE;
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
+            <igx-column-group headerClasses="masterColGroup" [header]="masterColGroupTitle">
+                <igx-column-group headerClasses="firstSlaveColGroup slaveColGroup" [header]="firstSlaveColGroupTitle">
+                    <igx-column headerClasses="addressCol firstSlaveChild" field="Address" [header]="addressColTitle"></igx-column>
+                    <igx-column headerClasses="phoneCol firstSlaveChild" field="Phone" [header]="phoneColTitle" [width]="phoneColWidth"></igx-column>
+                </igx-column-group>
+                <igx-column-group headerClasses="secondSlaveColGroup slaveColGroup" [header]="secondSlaveColGroupTitle">
+                    <igx-column headerClasses="faxCol secondSlaveChild" field="Fax" [header]="faxColTitle" [width]="faxColWidth"></igx-column>
+                    <igx-column headerClasses="cityCol secondSlaveChild" field="City" [header]="cityColTitle" [width]="cityColWidth"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+export class NestedColumnGroupsGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    columnWidth = "100px";
+    phoneColWidth = "200px";
+    faxColWidth = "300px";
+    cityColWidth = "400px";
+
+    masterColGroupTitle = "Master";
+    firstSlaveColGroupTitle = "Slave 1"
+    secondSlaveColGroupTitle = "Slave 2";
+    
+    addressColTitle = "Address";    
+    phoneColTitle = "Phone";    
+    faxColTitle = "Fax";
+    cityColTitle = "City";
+
+    data = DATASOURCE;
+}
+
 export const DATASOURCE = [
     // tslint:disable:max-line-length
     { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
@@ -1888,4 +2073,3 @@ class PinningTests {
         expect(grid.unpinnedColumns.length).toEqual(18);
     }
 }
-
