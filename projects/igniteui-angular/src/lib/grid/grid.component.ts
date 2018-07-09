@@ -2340,7 +2340,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return arr.filter(c => !c.columnGroup);
     }
 
-    
     public onChipRemoved(event) {
         this.clearGrouping(event.owner.id);
     }
