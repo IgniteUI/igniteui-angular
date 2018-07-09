@@ -878,11 +878,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe((source) => {
-            const editableCell =  this.gridAPI.get_cell_inEditMode(this.id);
-            if (editableCell) {
-                this.gridAPI.submit_value(this.id);
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-            }
+            this.gridAPI.submit_value(this.id);
         });
     }
 
@@ -1142,7 +1138,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (column.level !== dropTarget.level) {
             return;
         }
-
+        this.gridAPI.submit_value(this.id);
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
         }
@@ -1260,10 +1256,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     public sort(...rest): void {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-        }
+        this.gridAPI.escape_editMode(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
@@ -1272,6 +1265,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
+        this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
         } else {
@@ -1312,10 +1306,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-        }
         const col = this.gridAPI.get_column_by_name(this.id, name);
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
@@ -2055,11 +2045,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowList) {
             return 0;
         }
-
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-        }
+        this.gridAPI.escape_editMode(this.id);
 
         if (this.collapsedHighlightedItem) {
             this.collapsedHighlightedItem = null;
