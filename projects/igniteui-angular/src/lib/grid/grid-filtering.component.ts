@@ -283,10 +283,6 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private _filter(): void {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-        }
         const grid = this.gridAPI.get(this.gridID);
         let expr = grid.filteringExpressionsTree.find(this.column.field) as FilteringExpressionsTree;
 
