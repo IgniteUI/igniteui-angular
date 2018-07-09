@@ -2181,8 +2181,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
-            map((c) => ({ name: c.field, searchable: c.searchable }));
+        const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
 
         const groupIndexData = this.getGroupIncrementData();
         const groupByRecords = this.getGroupByRecords();
@@ -2204,9 +2203,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 collapsedRowsCount++;
             }
 
-            columnItems.forEach((columnItem, j) => {
-                const value = dataRow[columnItem.name];
-                if (value !== undefined && value !== null && columnItem.searchable) {
+            columnItems.forEach((c, j) => {
+                const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
+                if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
                     let occurenceIndex = 0;
                     let searchIndex = searchValue.indexOf(searchText);
