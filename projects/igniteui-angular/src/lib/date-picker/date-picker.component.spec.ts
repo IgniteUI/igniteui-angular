@@ -276,7 +276,7 @@ describe('IgxDatePicker', () => {
         expect(overlayToggle.length).toEqual(0);
     }));
 
-    it('When select is selected and whenever the dialog disappear the focus should remain on the input of the datepicker',
+    it('When datepicker is closed and the dialog disappear the focus should remain on the input',
         fakeAsync(() => {
 
         const fix = TestBed.createComponent(IgxDatePickerTestComponent);
