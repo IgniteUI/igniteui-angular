@@ -24,8 +24,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef,
-    HostListener
+    ViewContainerRef
 } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
