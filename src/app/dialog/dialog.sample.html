@@ -32,8 +32,8 @@
             </div>
             <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#EC6F74" igRipple="white" (click)="form.open()">Trigger Custom</button>
 
-            <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In"
-                rightButtonBackgroundColor="#0375be" rightButtonColor="white" backgroundClick="true" closeOnOutsideSelect="true">
+            <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onClose)="closeDialog($event)" (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In"
+                rightButtonBackgroundColor="#0375be" rightButtonColor="white"  backgroundClick="true" [closeOnOutsideSelect]="true">
                 <div class="login-form">
                     <igx-input-group>
                         <igx-prefix>

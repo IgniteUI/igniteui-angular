@@ -1,0 +1,23 @@
+
+<div class="igx-column-hiding__header">
+    <h4 class="igx-column-hiding__header-title" *ngIf="title">{{ title }}</h4>
+
+    <igx-input-group class="igx-column-hiding__header-input">
+        <input igxInput
+            type="text"
+            [(ngModel)]="filterCriteria"
+            [placeholder]="filterColumnsPrompt"
+            autocomplete="off" />
+    </igx-input-group>
+</div>
+
+<div class="igx-column-hiding__columns"
+    [style.max-height]="columnsAreaMaxHeight">
+    <igx-checkbox igxColumnPinningItem
+        *ngFor="let columnItem of columnItems"
+        class="igx-column-hiding__columns-item"
+        (change)="checkboxValueChange($event, columnItem)"
+        [checked]="columnItem.value">
+        {{ columnItem.name }}
+    </igx-checkbox>
+</div>

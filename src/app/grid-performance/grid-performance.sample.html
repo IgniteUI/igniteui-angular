@@ -1,5 +1,5 @@
 <div class="sample-wrapper dark-grid">
-    <igx-grid #grid1 [data]="localData" [width]="'800px'" [height]="'600px'" [rowSelectable]="true">
+    <igx-grid #grid1 [data]="localData" [width]="'100%'" [height]="'800px'" [rowSelectable]="true">
         <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field" [header]="c.field" [width]="c.width">
         </igx-column>
     </igx-grid>

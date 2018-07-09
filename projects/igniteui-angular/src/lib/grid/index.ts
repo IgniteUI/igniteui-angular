@@ -7,4 +7,7 @@ export * from './grid.component';
 export * from './grid.common';
 export * from './grid-summary';
 export * from './grid.module';
+export { ColumnDisplayOrder } from './column-chooser-base';
+export { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 export * from './column-hiding.component';
+export * from './column-pinning.component';

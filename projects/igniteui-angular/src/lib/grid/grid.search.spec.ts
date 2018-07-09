@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../public_api';
 
 describe('IgxGrid - search API', () => {
@@ -22,7 +22,8 @@ describe('IgxGrid - search API', () => {
                 PagingGridComponent,
                 HiddenColumnsGridComponent,
                 GridWithAvatarComponent,
-                UnsearchableColumnsGridComponent
+                UnsearchableColumnsGridComponent,
+                GroupableGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
         }).compileComponents();
@@ -165,7 +166,7 @@ describe('IgxGrid - search API', () => {
         expect(spans.length).toBe(0);
     });
 
-    it('findNext scrolls to cells out of view', async(() => {
+    it('findNext scrolls to cells out of view', (done) => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
         fix.detectChanges();
 
@@ -177,11 +178,12 @@ describe('IgxGrid - search API', () => {
 
             findNext(component.gridSearch, '1887').then(() => {
                 expect(isInView(3, component.gridSearch.rowList.first.virtDirRow.state)).toBeTruthy();
+                done();
             });
         });
-    }));
+    });
 
-    it('findPrev scrolls to cells out of view', async(() => {
+    it('findPrev scrolls to cells out of view', (done) => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
         fix.detectChanges();
 
@@ -193,9 +195,10 @@ describe('IgxGrid - search API', () => {
 
             findPrev(component.gridSearch, '1887').then(() => {
                 expect(isInView(3, component.gridSearch.rowList.first.virtDirRow.state)).toBeTruthy();
+                done();
             });
         });
-    }));
+    });
 
     it('should keep the active highlight when active cell enters and exits edit mode', async(() => {
         const fix = TestBed.createComponent(ScrollableGridComponent);
@@ -238,7 +241,6 @@ describe('IgxGrid - search API', () => {
         const grid = fix.componentInstance.gridSearch;
         const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const cell = grid.getCellByColumn(0, 'ID');
-
         let activeHighlight = rv.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
         expect(activeHighlight !== null).toBeFalsy();
 
@@ -268,6 +270,7 @@ describe('IgxGrid - search API', () => {
             const inputElem: HTMLInputElement = rv.nativeElement.querySelector('input') as HTMLInputElement;
 
             cell.update(inputElem.value);
+            grid.cdr.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -317,6 +320,7 @@ describe('IgxGrid - search API', () => {
             const inputElem: HTMLInputElement = rv.nativeElement.querySelector('input') as HTMLInputElement;
 
             cell.update(inputElem.value);
+            grid.cdr.detectChanges();
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
@@ -338,7 +342,8 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSearch;
-        const rv = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        const rv = allCells[1];
         const cell = grid.getCellByColumn(0, 'Name');
 
         let activeHighlight = rv.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
@@ -362,6 +367,20 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
+            grid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
+            grid.findNext('casey');
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            const scrolledCell = grid.getCellByColumn(grid.data.length - 1, 'Name');
+
+            activeHighlight = scrolledCell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            const highlights = scrolledCell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
         });
     }));
 
@@ -421,9 +440,10 @@ describe('IgxGrid - search API', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
-            const highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-            expect(highlight != null).toBeTruthy();
+            requestAnimationFrame(() => {
+                const highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+                expect(highlight != null).toBeTruthy();
+            });
         });
     }));
 
@@ -444,11 +464,12 @@ describe('IgxGrid - search API', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
-            const activeHighlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-            const highlights = grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
-            expect(highlights.length).toBe(3);
-            expect(activeHighlight).toBe(highlights[1]);
+            requestAnimationFrame(() => {
+                const activeHighlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+                const highlights = grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+                expect(highlights.length).toBe(3);
+                expect(activeHighlight).toBe(highlights[1]);
+            });
         });
     }));
 
@@ -494,36 +515,35 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSearch;
-        const cellName = grid.getCellByColumn(0, 'Name');
+        let cellName = grid.getCellByColumn(0, 'Name');
         let activeHighlight: any;
         let highlights: any[];
 
         grid.findNext('casey');
-
         fix.whenStable().then(() => {
             fix.detectChanges();
-
+            cellName = grid.getCellByColumn(0, 'Name');
             activeHighlight = cellName.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = cellName.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
-            grid.columns[1].pin();
+            grid.columns[1].pinned = true;
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            cellName = grid.getCellByColumn(0, 'Name');
             activeHighlight = cellName.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = cellName.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.columns[1].unpin();
+            grid.columns[1].pinned = false;
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            cellName = grid.getCellByColumn(0, 'Name');
             activeHighlight = cellName.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = cellName.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -536,12 +556,11 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSearch;
-        const cellName = grid.getCellByColumn(0, 'Name');
+        let cellName = grid.getCellByColumn(0, 'Name');
         let activeHighlight: any;
         let highlights: any[];
 
         grid.findNext('casey');
-
         fix.whenStable().then(() => {
             fix.detectChanges();
 
@@ -554,7 +573,7 @@ describe('IgxGrid - search API', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            cellName = grid.getCellByColumn(0, 'Name');
             activeHighlight = cellName.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = cellName.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -565,7 +584,7 @@ describe('IgxGrid - search API', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            cellName = grid.getCellByColumn(0, 'Name');
             activeHighlight = cellName.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = cellName.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -578,8 +597,8 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSearch;
-        const gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle');
-        const tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle');
+        let gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle');
+        let tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle');
         let activeHighlight: any;
         let highlights: any[];
 
@@ -587,7 +606,7 @@ describe('IgxGrid - search API', () => {
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-
+            gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle');
             activeHighlight = gilbertoDirectorCell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = gilbertoDirectorCell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -599,7 +618,7 @@ describe('IgxGrid - search API', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            tanyaDirectorCell = grid.getCellByColumn(0, 'JobTitle');
             activeHighlight = tanyaDirectorCell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = tanyaDirectorCell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -610,7 +629,7 @@ describe('IgxGrid - search API', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle');
             activeHighlight = tanyaDirectorCell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = tanyaDirectorCell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -620,7 +639,7 @@ describe('IgxGrid - search API', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle');
             activeHighlight = gilbertoDirectorCell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = gilbertoDirectorCell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -633,10 +652,9 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSearch;
-        const jackSoftwareCell = grid.getCellByColumn(3, 'JobTitle');
-        const celiaSoftwareCell = grid.getCellByColumn(4, 'JobTitle');
-        const leslieSoftwareCell = grid.getCellByColumn(8, 'JobTitle');
-
+        let jackSoftwareCell = grid.getCellByColumn(3, 'JobTitle');
+        let celiaSoftwareCell = grid.getCellByColumn(4, 'JobTitle');
+        let leslieSoftwareCell = grid.getCellByColumn(8, 'JobTitle');
         let activeHighlight: any;
         let highlights: any[];
 
@@ -644,18 +662,19 @@ describe('IgxGrid - search API', () => {
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-
+            jackSoftwareCell = grid.getCellByColumn(3, 'JobTitle');
             activeHighlight = jackSoftwareCell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = jackSoftwareCell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.deleteRow(3);
+            grid.cdr.detectChanges();
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            celiaSoftwareCell = grid.getCellByColumn(3, 'JobTitle');
             activeHighlight = celiaSoftwareCell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = celiaSoftwareCell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -666,7 +685,7 @@ describe('IgxGrid - search API', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-
+            leslieSoftwareCell = grid.getCellByColumn(7, 'JobTitle');
             activeHighlight = leslieSoftwareCell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
             highlights = leslieSoftwareCell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             expect(highlights.length).toBe(1);
@@ -679,7 +698,6 @@ describe('IgxGrid - search API', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSearch;
-        const gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle');
         const tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle');
         let activeHighlight: any;
         let highlights: any[];
@@ -756,11 +774,271 @@ describe('IgxGrid - search API', () => {
         expect(activeSpan).toBe(spans[1]);
     });
 
-    function triggerKeyDownEvtUponElem(evtName, elem, fix) {
-        const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true};
-        elem.dispatchEvent(new KeyboardEvent('keydown', evtArgs));
+    it('Should be able to navigate through highlights with grouping enabled', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
         fix.detectChanges();
-    }
+
+        const grid = fix.componentInstance.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+
+        grid.findNext('Software');
+        fix.detectChanges();
+
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        expect(spans.length).toBe(5);
+        expect(highlight).toBe(spans[0]);
+
+        grid.findNext('Software');
+        grid.findNext('Software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        expect(spans.length).toBe(5);
+        expect(highlight).toBe(spans[2]);
+
+        grid.findPrev('Software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        expect(spans.length).toBe(5);
+        expect(highlight).toBe(spans[1]);
+
+        grid.findPrev('Software');
+        grid.findPrev('Software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        expect(spans.length).toBe(5);
+        expect(highlight).toBe(spans[4]);
+
+    });
+
+    it('Should be able to react to changes in grouping', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+
+        let cell = grid.getCellByColumn(1, 'JobTitle');
+        grid.findNext('software');
+
+        let highlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        expect(highlight !== null).toBeTruthy();
+
+        grid.clearGrouping();
+        fix.detectChanges();
+
+        cell = grid.getCellByColumn(6, 'JobTitle');
+        highlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        expect(highlight !== null).toBeTruthy();
+
+        grid.groupBy([{
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        }, {
+            fieldName: 'Company',
+            dir: SortingDirection.Desc
+        }]);
+
+        fix.detectChanges();
+
+        cell = grid.getCellByColumn(4, 'JobTitle');
+        highlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        expect(highlight !== null).toBeTruthy();
+
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Desc
+        });
+
+        grid.findNext('software');
+        fix.detectChanges();
+        cell = grid.getCellByColumn(5, 'JobTitle');
+        highlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+        expect(highlight !== null).toBeTruthy();
+    });
+
+    it('Should be able to navigate through highlights with grouping and paging enabled', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const component = fix.componentInstance;
+        const grid = component.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+        component.paging = true;
+
+        fix.detectChanges();
+
+        grid.findNext('Software');
+        fix.detectChanges();
+
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(2);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.page).toBe(0);
+
+        grid.findPrev('Software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[2]);
+        expect(grid.page).toBe(1);
+
+        grid.findPrev('Software');
+        grid.findPrev('Software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.page).toBe(1);
+    });
+
+    it('Should be able to properly handle perPage changes with gouping and paging', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const component = fix.componentInstance;
+        const grid = component.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+        component.paging = true;
+        component.perPage = 10;
+
+        grid.findNext('Software');
+        grid.findNext('Software');
+        grid.findNext('Software');
+        fix.detectChanges();
+
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(5);
+        expect(highlight).toBe(spans[2]);
+        expect(grid.page).toBe(0);
+
+        component.perPage = 5;
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(2);
+        expect(highlight).toBeNull();
+        expect(grid.page).toBe(0);
+
+        grid.page = 1;
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.page).toBe(1);
+    });
+
+    it('Should be able to properly handle navigating through collapsed rows', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const component = fix.componentInstance;
+        const grid = component.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+
+        grid.findNext('software');
+        grid.findNext('software');
+        grid.findNext('software');
+
+        grid.toggleGroup(grid.groupsRecords[0]);
+
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[0]);
+
+        grid.findNext('software');
+        grid.findNext('software');
+        grid.findNext('software');
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(5);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBeTruthy();
+    });
+
+    it('Should be able to properly handle navigating through collapsed rows with paging', () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+
+        const component = fix.componentInstance;
+        const grid = component.gridSearch;
+        grid.groupBy({
+            fieldName: 'JobTitle',
+            dir: SortingDirection.Asc
+        });
+
+        component.perPage = 5;
+        component.paging = true;
+        fix.detectChanges();
+
+        grid.findNext('software');
+        grid.findNext('software');
+
+        grid.toggleGroup(grid.groupsRecords[0]);
+        grid.findNext('software');
+
+        fix.detectChanges();
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        let highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(3);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.page).toBe(1);
+
+        grid.findNext('software');
+        grid.findNext('software');
+        grid.findNext('software');
+        fix.detectChanges();
+
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        highlight = fix.debugElement.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(spans.length).toBe(2);
+        expect(highlight).toBe(spans[0]);
+        expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBeTruthy();
+        expect(grid.page).toBe(0);
+
+    });
 
     function findNext(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
@@ -1024,3 +1302,38 @@ export class UnsearchableColumnsGridComponent {
     public highlightClass = 'igx-highlight';
     public activeClass = 'igx-highlight__active';
 }
+
+@Component({
+    template: `
+        <igx-grid #gridSearch [paging]="paging" [perPage]="perPage" [data]="data">
+            <igx-column [groupable]="true"  field="ID"></igx-column>
+            <igx-column [groupable]="true" field="Name" [searchable]='false'></igx-column>
+            <igx-column [groupable]="true" field="JobTitle"></igx-column>
+            <igx-column [groupable]="true" field="Company" [searchable]='false'></igx-column>
+        </igx-grid>
+    `
+})
+export class GroupableGridComponent {
+    public data = [
+        { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', Company: 'Company A' },
+        { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', Company: 'Company C' },
+        { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', Company: 'Company A' },
+        { ID: 4, Name: 'Jack Simon', JobTitle: 'Software Developer', Company: 'Company D' },
+        { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software DEVELOPER', Company: 'Company B' },
+        { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', Company: 'Company C' },
+        { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', Company: 'Company B' },
+        { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', Company: 'Company A' },
+        { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Company: 'Company D' },
+        { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Company: 'Company E' }
+    ];
+
+    @ViewChild('gridSearch', { read: IgxGridComponent })
+    public gridSearch: IgxGridComponent;
+
+    public highlightClass = 'igx-highlight';
+    public activeClass = 'igx-highlight__active';
+
+    public perPage = 6;
+    public paging = false;
+}
+

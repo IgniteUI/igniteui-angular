@@ -24,6 +24,20 @@
         }
     }
 
+    @include e(thead-title) {
+        @extend %grid-cell-display !optional;
+        @extend %grid-cell-header !optional;
+        @extend %grid-thead-title !optional;
+    }
+
+    @include e(thead-group) {
+        @extend %grid-thead-group !optional;
+    }
+
+    @include e(thead-title, $m: pinned-last) {
+        @extend %grid-thead-title--pinned !optional;
+    }
+
     @include e(tbody) {
         @extend %grid-tbody !optional;
     }
@@ -62,6 +76,14 @@
         igx-display-container {
             @extend %grid-display-container-tr !optional;
         }
+    }
+
+    @include e(tr, $m: odd) {
+        @extend %grid-row--odd !optional;
+    }
+
+    @include e(tr, $m: even) {
+        @extend %grid-row--even !optional;
     }
 
     @include e(tr, $m: selected) {
@@ -142,6 +164,10 @@
         @extend %grid-cell--fixed-width !optional;
     }
 
+    @include e(td-text) {
+        @extend %grid-cell-text !optional;
+    }
+
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
     }
@@ -198,6 +224,10 @@
         @extend %grid__drag-ghost-image-icon !optional;
     }
 
+    @include e(drag-ghost-image-icon-group) {
+        @extend %grid__drag-ghost-image-icon-group !optional;
+    }
+
     @include e(drag-col-header) {
         @extend %igx-grid__drag-col-header !optional;
     }
@@ -236,6 +266,18 @@
 
         @include e(td) {
             @extend %grid-cell-display--cosy !optional;
+        }
+
+        @include e(thead-title) {
+            @extend %grid-thead-title--cosy !optional;
+        }
+
+        @include e(th-title) {
+            @extend %grid-cell-header-title--cosy !optional;
+        }
+
+        @include e(th-icons) {
+            @extend %grid-cell-header-icons--cosy !optional;
         }
 
         @include e(group-content) {
@@ -289,6 +331,18 @@
 
         @include e(td) {
             @extend %grid-cell-display--compact !optional;
+        }
+
+        @include e(thead-title) {
+            @extend %grid-thead-title--compact !optional;
+        }
+
+        @include e(th-title) {
+            @extend %grid-cell-header-title--compact !optional;
+        }
+
+        @include e(th-icons) {
+            @extend %grid-cell-header-icons--compact !optional;
         }
 
         @include e(group-content) {

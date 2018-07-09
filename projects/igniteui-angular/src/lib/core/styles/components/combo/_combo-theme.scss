@@ -1,0 +1,137 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+///
+/// @param {Color} $add-icon-color [null] - The combo add new item icon color.
+/// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
+/// @param {Color} $search-background [null] - The combo search box background color.
+/// @param {Color} $search-background [null] - The combo search box background color.
+/// @param {Color} $search-background [null] - The combo search box background color.
+///
+/// @requires text-contrast
+/// @requires igx-color
+@function igx-combo-theme(
+    $palette: $default-palette,
+
+    $background-color: null,
+    $add-icon-color: null,
+    $search-separator-border-color: null,
+    $empty-list-placeholder-color: null,
+    $empty-list-background: null
+) {
+
+    $default-theme: (
+        name: 'igx-combo',
+        add-icon-color: igx-color($palette, 'primary', 500),
+        search-separator-border-color: igx-color($palette, 'grays', 300),
+        empty-list-placeholder-color: igx-color($palette, 'grays', 400),
+        empty-list-background: #fff
+    );
+
+
+    @return extend($default-theme,
+    (
+        pallete: $palette,
+        background-color: $background-color,
+        add-icon-color: $add-icon-color,
+        search-separator-border-color: $search-separator-border-color,
+        empty-list-placeholder-color: $empty-list-placeholder-color,
+        empty-list-background: $empty-list-background
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires igx-color
+/// @requires rem
+@mixin igx-combo($theme) {
+    @include igx-root-css-vars($theme);
+
+    %igx-combo {
+        position: relative;
+
+        %igx-button--icon {
+            width: rem(24px);
+            height: rem(24px);
+        }
+    }
+
+    %igx-combo__checkbox {
+        margin-right: rem(8);
+    }
+
+
+    [dir='rtl'] {
+        %igx-combo__checkbox {
+            margin-right: 0;
+            margin-left: rem(8);
+        }
+    }
+
+    %igx-combo__drop-down {
+        position: absolute;
+        width: 100%;
+
+        .igx-drop-down {
+            width: 100%;
+        }
+    }
+
+    %igx-combo__search {
+        padding: rem(8px) rem(16px);
+        margin: 0 !important;
+        z-index: 26;
+        border-bottom: 1px dashed  --var($theme, 'search-separator-border-color');
+    }
+
+    %igx-combo__content {
+        position: relative;
+        overflow: hidden;
+
+        &:focus {
+            outline: transparent;
+        }
+    }
+
+    %igx-combo__add {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: rem(16px);
+    }
+
+    %igx-combo__empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        color: --var($theme, 'empty-list-placeholder-color');
+        background-color: --var($theme, 'empty-list-background');
+        padding: 0 rem(24px);
+        font-size: rem(13px);
+    }
+
+
+    // TODO: make this part better
+    %igx-combo__add-item {
+        &%igx-drop-down__item {
+            width: auto !important;
+            padding: 0 !important;
+
+            &:hover {
+                background: transparent!important;
+            }
+        }
+
+        &%igx-drop-down__item--focused {
+            &:focus {
+                background: transparent!important;
+            }
+        }
+    }
+}
+

@@ -460,9 +460,6 @@ export class IgxNavigationDrawerComponent implements
             if (this.pinThreshold) {
                 this.ensureEvents();
                 this.checkPinThreshold();
-            } else if (this._resizeObserver) {
-                this._resizeObserver.unsubscribe();
-                this._resizeObserver = null;
             }
         }
 
@@ -482,17 +479,14 @@ export class IgxNavigationDrawerComponent implements
      * Toggle the open state of the Navigation Drawer.
      *
      * ```typescript
-     * let fireEvents = true;
-     * this.navdrawer.toggle(fireEvents);
+     * this.navdrawer.toggle();
      * ```
-     *
-     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
-    public toggle(fireEvents?: boolean) {
+    public toggle() {
         if (this.isOpen) {
-            this.close(fireEvents);
+            this.close();
         } else {
-            this.open(fireEvents);
+            this.open();
         }
     }
 
@@ -500,22 +494,17 @@ export class IgxNavigationDrawerComponent implements
      * Open the Navigation Drawer. Has no effect if already opened.
      *
      * ```typescript
-     * let fireEvents = true;
-     * this.navdrawer.open(fireEvents);
+     * this.navdrawer.open();
      * ```
-     *
-     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
-    public open(fireEvents?: boolean) {
+    public open() {
         if (this._panning) {
             this.resetPan();
         }
         if (this.isOpen) {
             return;
         }
-        if (fireEvents) {
-            this.opening.emit();
-        }
+        this.opening.emit();
         this.isOpen = true;
 
         // TODO: Switch to animate API when available
@@ -533,22 +522,17 @@ export class IgxNavigationDrawerComponent implements
      * Close the Navigation Drawer. Has no effect if already closed.
      *
      * ```typescript
-     * let fireEvents = true;
-     * this.navdrawer.close(fireEvents);
+     * this.navdrawer.close();
      * ```
-     *
-     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
-    public close(fireEvents?: boolean) {
+    public close() {
         if (this._panning) {
             this.resetPan();
         }
         if (!this.isOpen) {
             return;
         }
-        if (fireEvents) {
-            this.closing.emit();
-        }
+        this.closing.emit();
 
         this.isOpen = false;
         this.setDrawerWidth(this.miniTemplate ? this.miniWidth : '');
@@ -570,6 +554,8 @@ export class IgxNavigationDrawerComponent implements
             // TODO: nested in content?
             // setElementStyle warning https://github.com/angular/angular/issues/6563
             this.renderer.setElementStyle(this.drawer, 'height', window.innerHeight + 'px');
+        } else {
+            this.renderer.setElementStyle(this.drawer, 'height', '');
         }
     }
 
@@ -653,9 +639,12 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (this.pinThreshold && !this._resizeObserver) {
+        if (!this._resizeObserver) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
-                .subscribe((value) => { this.checkPinThreshold(); });
+                .subscribe((value) => {
+                    this.checkPinThreshold();
+                    this.ensureDrawerHeight();
+                });
         }
     }
 
@@ -703,7 +692,7 @@ export class IgxNavigationDrawerComponent implements
         if ((this.isOpen && deltaX < 0) ||
             // positive deltaX from the edge:
             (deltaX > 0 && startPosition < this.maxEdgeZone)) {
-            this.toggle(true);
+            this.toggle();
         }
     }
 
@@ -781,9 +770,9 @@ export class IgxNavigationDrawerComponent implements
 
             // check if pan brought the drawer to 50%
             if (this.isOpen && visibleWidth <= this._panStartWidth / 2) {
-                this.close(true);
+                this.close();
             } else if (!this.isOpen && visibleWidth >= this._panLimit / 2) {
-                this.open(true);
+                this.open();
             }
             this._panStartWidth = null;
         }
@@ -818,7 +807,7 @@ export class IgxNavigationDrawerComponent implements
         });
     }
 
-    private toggleOpenedEvent = (evt?, fireEvents?) => {
+    private toggleOpenedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener('transitionend', this.toggleOpenedEvent, false);
         this.opened.emit();
     }

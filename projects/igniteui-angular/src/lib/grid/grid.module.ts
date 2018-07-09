@@ -17,8 +17,8 @@ import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { IgxColumnHidingModule } from './column-hiding.component';
-import { IgxColumnComponent } from './column.component';
 import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridSummaryComponent } from './grid-summary.component';
@@ -50,11 +50,13 @@ import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
+import { IgxColumnPinningModule } from './column-pinning.component';
 
 @NgModule({
   declarations: [
     IgxGridCellComponent,
     IgxColumnComponent,
+    IgxColumnGroupComponent,
     IgxGridComponent,
     IgxGridRowComponent,
     IgxGridGroupByRowComponent,
@@ -80,7 +82,8 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
     IgxGridFilterExpressionComponent
   ],
   entryComponents: [
-    IgxColumnComponent
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
   ],
   exports: [
     IgxGridComponent,
@@ -88,6 +91,7 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
     IgxGridGroupByRowComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
+    IgxColumnGroupComponent,
     IgxGridHeaderComponent,
     IgxGridFilterComponent,
     IgxGridSummaryComponent,
@@ -121,7 +125,8 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
     IgxDragDropModule,
     IgxColumnHidingModule,
     IgxDropDownModule,
-    IgxButtonGroupModule
+    IgxButtonGroupModule,
+    IgxColumnPinningModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })

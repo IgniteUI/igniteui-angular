@@ -70,7 +70,8 @@
         </article>
 
         <article class="sample-column">
-            <h4 class="sample-title">Empty list
+            <h4 class="sample-title">
+                Empty list
                 <i class="light">w/ Default template</i>
             </h4>
 
@@ -85,8 +86,7 @@
             </igx-input-group>
 
             <div class="list-sample">
-                <igx-list [hidden]="fruitsFilteredItemsCount === 0" emptyListMessage="No fruits." emptyListImage="images/list/empty.png"
-                    (emptyListButtonClick)="addFruitDialog.open()" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
+                <igx-list [hidden]="fruitsFilteredItemsCount === 0" [igxFilter]="fruitsFilterOptions" (filtered)="fruitsFiltered($event)">
                     <igx-list-item *ngFor="let fruit of fruits">
                         <div class="item" [attr.data-fruit-id]="fruit.id">
                             <span>{{ fruit.name }}</span>
@@ -98,37 +98,51 @@
                     No filtered items.
                 </div>
                 <button igxButton="fab" igxButtonColor="white" igxButtonBackground="#0375be" igRipple="white" (click)="addFruitDialog.open()"
-                    [hidden]="fruits.length === 0" style="position: absolute; bottom: 24px; right: 24px">
+                        [hidden]="fruits.length === 0" style="position: absolute; bottom: 24px; right: 24px">
                     <igx-icon fontSet="material" name="add"></igx-icon>
                 </button>
             </div>
         </article>
 
         <article class="sample-column">
-            <h4 class="sample-title">Empty list
+            <igx-list [isLoading]="true">
+                <igx-list-item *ngFor="let fruit of fruits">
+                    {{ fruit.name }}
+                </igx-list-item>
+                <ng-template igxDataLoading>
+                    <p>Loading...</p>
+                </ng-template>
+            </igx-list>
+        </article>
+
+        <article class="sample-column">
+            <h4 class="sample-title">
+                Empty list
                 <i class="light">w/ Custom template</i>
             </h4>
             <div class="list-sample">
-                <igx-list hasNoItemsTemplate="true">
+                <igx-list #fruitList>
                     <igx-list-item *ngFor="let fruit of fruits">
                         {{ fruit.name }}
                     </igx-list-item>
-                    <div class="igx-list__empty--custom">
-                        No items, bruh.
-                    </div>
+                    <ng-template igxEmptyList>
+                        <div style="text-align: center">
+                            <button type="button" igxButton="flat" (click)="loadFruits()">Load data</button>
+                        </div>
+                    </ng-template>
                 </igx-list>
             </div>
         </article>
-
     </section>
 
 </div>
 
 <igx-dialog #addFruitDialog title="Add Fruit" leftButtonLabel="Cancel" (onLeftButtonSelect)="addFruitDialog.close()" rightButtonLabel="Add"
-    rightButtonBackgroundColor="#0375be" rightButtonColor="white" (onRightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
-    backgroundClick="true" closeOnOutsideSelect="true">
+            rightButtonBackgroundColor="#0375be" rightButtonColor="white" (onRightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
+            backgroundClick="true" closeOnOutsideSelect="true">
     <igx-input-group>
         <label for="newFruit">Fruit Name</label>
         <input id="newFruit" igxInput #newFruitName type="text" />
     </igx-input-group>
 </igx-dialog>
+

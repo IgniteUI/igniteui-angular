@@ -18,7 +18,6 @@ import { Subject } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { autoWire, IGridBus } from './grid.common';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
@@ -30,7 +29,7 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
     selector: 'igx-grid-filter-expression',
     templateUrl: './grid-filtering-expression.component.html'
 })
-export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDestroy, AfterViewInit {
+export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Input()
     get column() {
@@ -80,14 +79,13 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public cssClass = 'igx-filtering__expression';
 
     private _column: any;
-    public booleanFilterAll = 'All';
     public expression: IFilteringExpression;
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
     protected _value = null;
 
     protected UNARY_CONDITIONS = [
-        'true', 'false', 'null', 'notNull', 'empty', 'notEmpty',
+        'all', 'true', 'false', 'null', 'notNull', 'empty', 'notEmpty',
         'yesterday', 'today', 'thisMonth', 'lastMonth', 'nextMonth',
         'thisYear', 'lastYear', 'nextYear'
     ];
@@ -100,7 +98,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     public ngOnInit() {
         this.expression = {
             fieldName: this.column.field,
-            condition: this.conditions[0],
+            condition: this.getCondition(this.conditions[0]),
             searchVal: this.value,
             ignoreCase: this.column.filteringIgnoreCase
         };
@@ -114,7 +112,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
                 this.expression.condition = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).condition;
             } else {
                 this.value = null;
-                this.expression.condition = undefined;
+                this.expression.condition = this.getCondition(this.conditions[0]);
             }
         }
     }
@@ -136,14 +134,12 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         }
     }
 
-    @autoWire()
     public conditionChangedCallback(): void {
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
             this.onExpressionChanged.emit(this.expression);
         }
     }
 
-    @autoWire()
     public unaryConditionChangedCallback(): void {
         this.onExpressionChanged.emit(this.expression);
     }
@@ -177,7 +173,7 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
         return this.column.filters.instance().conditionList();
     }
 
-    protected getCondition(value: string): IFilteringOperation {
+    public getCondition(value: string): IFilteringOperation {
         return this.column.filters.instance().condition(value);
     }
 
@@ -192,11 +188,6 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
     }
 
     public selectionChanged(value): void {
-        if (value === this.booleanFilterAll) {
-            this.clearFiltering(true);
-            this.onExpressionChanged.emit(this.expression);
-            return;
-        }
         this.focusInput();
         this.expression.condition = this.getCondition(value);
         if (this.unaryCondition) {
@@ -229,11 +220,6 @@ export class IgxGridFilterExpressionComponent implements IGridBus, OnInit, OnDes
 
     public clearInput(): void {
         this.clearFiltering(false);
-    }
-
-    // XXX - Temp fix for (#1183, #1177) (Should be deleted)
-    onDatePickerClick() {
-        this.zone.run(() => { });
     }
 
     public onDatePickerValueChanged(): void {

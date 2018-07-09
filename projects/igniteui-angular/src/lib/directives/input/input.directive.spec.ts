@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
@@ -29,11 +29,14 @@ describe('IgxInput', () => {
                 DisabledInputComponent,
                 RequiredInputComponent,
                 RequiredTwoWayDataBoundInputComponent,
-                DataBoundDisabledInputComponent
+                DataBoundDisabledInputComponent,
+                ReactiveFormComponent,
+                InputsWithSameNameAttributesComponent
             ],
             imports: [
                 IgxInputGroupModule,
-                FormsModule
+                FormsModule,
+                ReactiveFormsModule
             ]
         })
         .compileComponents();
@@ -89,34 +92,38 @@ describe('IgxInput', () => {
         expect(igxInput.placeholder).toBe('Test');
     });
 
-    it('Should have an initial filled style when data bound.', () => {
+    it('Should have an initial filled style when data bound.', async(() => {
         const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
         fixture.detectChanges();
 
-        const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
-        expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
 
-        const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
-        expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+            const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
+            expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-        const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
-        expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+            const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
+            expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-        const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
-        expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+            const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
+            expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-        const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
-        expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+            const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
+            expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-        const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
-        expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+            const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
+            expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-        const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
-        expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+            const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
+            expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-        const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
-        expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
-    });
+            const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
+            expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+
+            const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
+            expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        });
+    }));
 
     it('Should have a filled style. Value API.', () => {
         const fixture = TestBed.createComponent(FilledInputComponent);
@@ -192,7 +199,65 @@ describe('IgxInput', () => {
         const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
         testRequiredValidation(inputElement, fixture);
     });
+
+    it('Should work properly with reactive forms validation.', () => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+
+        fixture.debugElement.componentInstance.markAsTouched();
+        fixture.detectChanges();
+
+        const invalidInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--invalid`);
+        expect(invalidInputGroups.length).toBe(4);
+
+        const requiredInputGroups = fixture.debugElement.nativeElement.querySelectorAll(`.igx-input-group--required`);
+        expect(requiredInputGroups.length).toBe(4);
+    });
+
+    it('When updating two inputs with same attribute names through ngModel, label should responds', async(() => {
+        const fix = TestBed.createComponent(InputsWithSameNameAttributesComponent);
+        fix.detectChanges();
+
+        let igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
+        igxInputGroups.forEach(element => {
+            const inputGroup = element.nativeElement;
+            expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(false);
+        });
+
+        fix.componentInstance.model.firstName = 'Mike';
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
+            igxInputGroups.forEach(element => {
+                const inputGroup = element.nativeElement;
+                expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(true);
+            });
+        });
+    }));
 });
+
+@Component({ template: `
+                    <form>
+                        <igx-input-group #igxInputGroup>
+                            <label for="firstName" #igxLabel igxLabel>Name</label>
+                            <input name="firstName" [(ngModel)]="model.firstName" type="text" igxInput />
+                        </igx-input-group>
+                        <igx-input-group #igxInputGroup>
+                            <label for="firstName" #igxLabel igxLabel>Name</label>
+                            <input name="firstName" [(ngModel)]="model.firstName"  type="text" igxInput />
+                        </igx-input-group>
+                    </form>` })
+class InputsWithSameNameAttributesComponent {
+    @ViewChildren('igxInputGroup') public igxInputGroup: QueryList<DebugElement>;
+    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+
+    model = {
+        firstName: null
+    };
+}
+
 
 @Component({ template: `<igx-input-group #igxInputGroup>
                             <label for="test" igxLabel>Test</label>
@@ -330,6 +395,55 @@ class DataBoundDisabledInputComponent {
     @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
 
     public disabled = false;
+}
+
+@Component({
+    template:
+    `<form class="wrapper" [formGroup]="form">
+        <section>
+        <igx-input-group>
+            <label igxLabel>single line</label>
+            <input type="text" formControlName="str" igxInput>
+        </igx-input-group>
+        <br>
+        <igx-input-group>
+            <label igxLabel>multi line</label>
+            <textarea type="text" formControlName="textarea" igxInput></textarea>
+        </igx-input-group>
+        <br>
+        <igx-input-group>
+            <label igxLabel>password</label>
+            <input type="password" formControlName="password" igxInput>
+        </igx-input-group>
+        </section>
+        <section>
+        <igx-input-group>
+            <label igxLabel>1000</label>
+            <input type="number" formControlName="num" igxInput igxMask="###">
+        </igx-input-group>
+        </section>
+    </form>`
+})
+class ReactiveFormComponent {
+    form = this.fb.group({
+        str: ['', Validators.required],
+        textarea: ['', Validators.required],
+        password: ['', Validators.required],
+        num: [null, Validators.required]
+    });
+
+    constructor(private fb: FormBuilder) { }
+
+    public markAsTouched() {
+        if (!this.form.valid) {
+            for (const key in this.form.controls) {
+                if (this.form.controls[key]) {
+                    this.form.controls[key].markAsTouched();
+                    this.form.controls[key].updateValueAndValidity();
+                }
+            }
+        }
+    }
 }
 
 function testRequiredValidation(inputElement, fixture) {

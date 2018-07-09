@@ -16,20 +16,13 @@
 
 <ng-template #defaultDateUI>
     <igx-datePicker
-        (click)="onDatePickerClick()"
         *ngIf="!unaryCondition"
         [(ngModel)]="value"
         (onSelection)="onDatePickerValueChanged()">
     </igx-datePicker>
 </ng-template>
 
-<select #select (change)="selectionChanged($event.target.value)">
-    <option
-        *ngIf="column.dataType === 'boolean'"
-        [value]="booleanFilterAll">
-        {{ booleanFilterAll | filterCondition | titlecase }}
-    </option>
-
+<select #select [attr.draggable]="false" (change)="selectionChanged($event.target.value)">
     <option
         [selected]="isActive(each)"
         *ngFor="let each of conditions"

@@ -104,14 +104,14 @@
         raised-text-color: igx-contrast-color($palette, 'secondary', 500),
         raised-background: igx-color($palette, 'secondary', 500),
         raised-hover-background: igx-color($palette, 'secondary', 600),
-        raised-hover-text-color: #fff,
+        raised-hover-text-color: igx-contrast-color($palette, 'secondary', 500),
         raised-focus-background: igx-color($palette, 'secondary', 500),
         raised-focus-text-color: igx-contrast-color($palette, 'secondary', 600),
 
         fab-text-color: igx-contrast-color($palette, 'secondary', 500),
         fab-background: igx-color($palette, 'secondary', 500),
-        fab-hover-text-color: null,
-        fab-hover-background: null,
+        fab-hover-text-color: igx-contrast-color($palette, 'secondary', 500),
+        fab-hover-background: igx-color($palette, 'secondary', 400),
         fab-focus-background: igx-color($palette, 'secondary', 500),
         fab-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
 

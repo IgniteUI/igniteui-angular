@@ -19,7 +19,7 @@
         (change)="columnItem.value = !columnItem.value"
         [checked]="columnItem.value"
         [disabled]="columnItem.disabled"
-        [style.margin-left]="columnItem.calcIndent">
+        [style.margin-left.px]="columnItem.calcIndent">
         {{ columnItem.name }}
     </igx-checkbox>
 </div>

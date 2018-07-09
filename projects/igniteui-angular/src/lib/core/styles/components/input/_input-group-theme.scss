@@ -484,6 +484,12 @@
         &:-webkit-autofill:active { -webkit-transition-delay: 99999s; }
     }
 
+    %edge-clear-icon-fix {
+        &::-ms-clear {
+            display: none;
+        }
+    }
+
     %form-group-input--box {
         transform: translateY(-25%);
     }
@@ -528,6 +534,7 @@
 
     %form-group-prefix,
     %form-group-suffix {
+        position: relative;
         display: inline-flex;
         align-items: center;
         line-height: 1;

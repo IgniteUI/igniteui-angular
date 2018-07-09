@@ -18,6 +18,7 @@
 @import '../components/checkbox/checkbox-theme';
 @import '../components/chip/chip-theme';
 @import '../components/column-hiding/column-hiding-theme';
+@import '../components/combo/combo-theme';
 @import '../components/date-picker/date-picker-theme';
 @import '../components/dialog/dialog-theme';
 @import '../components/drop-down/drop-down-theme';
@@ -142,6 +143,10 @@
 
     @if not(index($exclude, 'igx-column-hiding')) {
         @include igx-column-hiding($theme: igx-column-hiding-theme());
+    }
+
+    @if not(index($exclude, 'igx-combo')) {
+        @include igx-combo($theme: igx-combo-theme());
     }
 
     @if not(index($exclude, 'igx-date-picker')) {
