@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, HostBinding, Input,  OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, HostBinding, Input, OnDestroy } from '@angular/core';
 import { DataUtil } from '../data-operations/data-util';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -12,47 +12,103 @@ export enum ColumnDisplayOrder {
 }
 
 export abstract class ColumnChooserBase implements OnDestroy {
-    @Input()
+/**
+ * Gets the grid columns that are going to be manipulated.
+ * ```typescript
+ * let gridColumns = this.columnHiding.columns;
+ * ```
+ * @memberof ColumnChooserBase
+ */
+
+@Input()
     get columns() {
         return this._gridColumns;
     }
-
-    set columns(value) {
+/**
+ * Sets the the grid columns that are going to be manipulated.
+ * ```html
+ * <igx-column-hiding [columns]="grid.columns"></igx-column-hiding>
+ * ```
+ * @memberof ColumnChooserBase
+ */
+set columns(value) {
         if (value) {
             this._gridColumns = value;
             this.createColumnItems();
         }
     }
-
-    @Input()
+/**
+ * Sets/gets the title of the column chooser.
+ * ```typescript
+ * let title =  this.columnHiding.title;
+ * ```
+ * @memberof ColumnChooserBase
+ */
+@Input()
     get title() {
         return this._title;
     }
-
-    set title(value) {
+/**
+ * ```html
+ * <igx-column-hiding [title]="'IgxColumnHidingComponent Title'"></igx-column-hiding>
+ * ```
+ * @memberof ColumnChooserBase
+ */
+set title(value) {
         this._title = (value) ? value : '';
     }
-
-    @Input()
+/**
+ * Gets the prompt that is displayed in the filter input.
+ * ```typescript
+ * let filterColumnsPrompt =  this.columnHiding.filterColumnsPrompt;
+ * ```
+ * @memberof ColumnChooserBase
+ */
+@Input()
     get filterColumnsPrompt() {
         return this._filterColumnsPrompt;
     }
-
-    set filterColumnsPrompt(value) {
+/**
+ * Sets the prompt that is going to be displayed in the filter input.
+ * ```html
+ * <igx-column-hiding [filterColumnsPrompt]="'Type here to search'"></igx-column-hiding>
+ * ```
+ * @memberof ColumnChooserBase
+ */
+set filterColumnsPrompt(value) {
         this._filterColumnsPrompt = (value) ? value : '';
     }
-
-    @Input()
+/**
+ * Gets the items of the selected columns.
+ * ```typescript
+ * let columnItems =  this.columnHiding.columnItems;
+ * ```
+ * @memberof ColumnChooserBase
+ */
+@Input()
     get columnItems() {
         return this._currentColumns;
     }
-
-    @Input()
+/**
+ * Gets the value which filters the columns list.
+ * ```typescript
+ * let filterCriteria =  this.columnHiding.filterCriteria;
+ * ```
+ * @memberof ColumnChooserBase
+ */
+@Input()
     get filterCriteria() {
         return this._filterCriteria;
     }
 
-    set filterCriteria(value) {
+/**
+ * Sets the value which filters the columns list.
+ * ```html
+ *  <igx-column-hiding [filterCriteria]="'ID'"></igx-column-hiding>
+ * ```
+ * @memberof ColumnChooserBase
+ */
+set filterCriteria(value) {
         if (!value || value.length === 0) {
             this.clearFiltering();
             this._filterCriteria = '';
@@ -66,13 +122,25 @@ export abstract class ColumnChooserBase implements OnDestroy {
         this.filter();
         this.cdr.detectChanges();
     }
-
-    @Input()
+/**
+ * Gets the display order of the columns.
+ * ```typescript
+ * let columnDisplayOrder  =  this.columnsChooser.columnDisplayOrder;
+ * ```
+ * @memberof ColumnChooserBase
+ */
+@Input()
     get columnDisplayOrder() {
         return this._columnDisplayOrder;
     }
-
-    set columnDisplayOrder(value: ColumnDisplayOrder) {
+/**
+ * Sets the display order of the columns.
+ * ```typescript
+ * this.columnHiding.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
+ * ```
+ * @memberof ColumnChooserBase
+ */
+set columnDisplayOrder(value: ColumnDisplayOrder) {
         if (value !== undefined) {
             this.orderColumns(value);
             if (this._filterCriteria.length > 0) {
@@ -80,30 +148,70 @@ export abstract class ColumnChooserBase implements OnDestroy {
             }
         }
     }
-
-    @Input()
+/**
+ * Sets/gets the max height of the column area.
+ * ```typescript
+ * let columnsAreaMaxHeight =  this.columnHiding.columnsAreaMaxHeight;
+ * ```
+ *
+ * ```html
+ * <igx-column-hiding [columnsAreaMaxHeight]="200px"></igx-column-hiding>
+ * ```
+ * @memberof ColumnChooserBase
+ */
+@Input()
     public columnsAreaMaxHeight = '100%';
-
-    @HostBinding('attr.class')
+/**
+ * Gets the css class selector.
+ * ```
+ * let cssCLass =  this.columnHiding.cssClass;
+ * ```
+ * @memberof ColumnChooserBase
+ */
+@HostBinding('attr.class')
     public cssClass = 'igx-column-hiding';
-
+    /**
+     *@hidden
+     */
     private _currentColumns = [];
+    /**
+     *@hidden
+     */
     private _gridColumns = [];
+    /**
+     *@hidden
+     */
     private _rawColumns = [];
+    /**
+     *@hidden
+     */
     private _columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
+    /**
+     *@hidden
+     */
     private _filterCriteria = '';
+    /**
+     *@hidden
+     */
     private _filterColumnsPrompt = '';
+    /**
+     *@hidden
+     */
     private _title = '';
 
     constructor(public cdr: ChangeDetectorRef) {
     }
-
+    /**
+     *@hidden
+     */
     ngOnDestroy() {
         for (const item of this._currentColumns) {
             item.valueChanged.unsubscribe();
         }
     }
-
+    /**
+     *@hidden
+     */
     private createColumnItems() {
         if (this._gridColumns.length > 0) {
             this._rawColumns = [];
@@ -117,9 +225,13 @@ export abstract class ColumnChooserBase implements OnDestroy {
             this.orderColumns(this._columnDisplayOrder);
         }
     }
-
+    /**
+     *@hidden
+     */
     protected abstract createColumnItem(container: any, column: any);
-
+    /**
+     *@hidden
+     */
     private orderColumns(value) {
         this._columnDisplayOrder = value;
         if (value === ColumnDisplayOrder[ColumnDisplayOrder.Alphabetical] ||
@@ -131,7 +243,9 @@ export abstract class ColumnChooserBase implements OnDestroy {
             this._currentColumns = this._rawColumns;
         }
     }
-
+    /**
+     *@hidden
+     */
     protected filter() {
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or);
         filteringExpressionsTree.filteringOperands.push(this.createFilteringExpression('name'));
@@ -141,7 +255,9 @@ export abstract class ColumnChooserBase implements OnDestroy {
         const strategy = new CustomFilteringStrategy();
         this._currentColumns = strategy.filter(this._currentColumns, filteringExpressionsTree);
     }
-
+    /**
+     *@hidden
+     */
     protected createFilteringExpression(fieldName: string): IFilteringExpression {
         return {
             condition: IgxStringFilteringOperand.instance().condition('contains'),
@@ -150,7 +266,9 @@ export abstract class ColumnChooserBase implements OnDestroy {
             searchVal: this._filterCriteria
         };
     }
-
+    /**
+     *@hidden
+     */
     protected clearFiltering() {
         this.createColumnItems();
     }
@@ -166,7 +284,7 @@ class CustomFilteringStrategy extends FilteringStrategy {
                 if (item.column.allChildren.findIndex((child) =>
                     this.matchRecord(child, expressionsTree.filteringOperands[1] as IFilteringExpression) ||
                     this.matchRecord(child, expressionsTree.filteringOperands[2] as IFilteringExpression)) > -1) {
-                        res.push(item);
+                    res.push(item);
                 }
             }
         });
