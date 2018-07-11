@@ -274,4 +274,34 @@
     %switch-label--disabled {
         color: --var($theme, 'label-disabled-color');
     }
+
+    %switch-ripple--hover {
+        &::after {
+            position: absolute;
+            content: '';
+            opacity: .06;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    %switch-ripple--hover-unchecked {
+        &::after {
+            background-color: --var($theme, 'track-off-color');
+        }
+    }
+
+    %switch-ripple--hover-checked {
+        &::after {
+            background-color: --var($theme, 'thumb-on-color');
+        }
+    }
+
+    %switch-ripple--pressed {
+        &::after {
+            opacity: .12;
+        }
+    }
 }
