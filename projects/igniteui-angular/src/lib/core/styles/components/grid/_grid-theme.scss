@@ -1160,7 +1160,6 @@
         padding: map-get($drop-area-padding, 'comfortable');
         margin: rem(4px);
         flex: 1 0 0%;
-        transition: $transition;
         background: --var($theme, 'drop-area-background');
 
         %igx-drop-area__icon {
