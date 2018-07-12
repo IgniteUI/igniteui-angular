@@ -258,4 +258,34 @@
         transition: background-color .2s $ease-out-quad;
         opacity: .12;
     }
+
+    %cbx-ripple--hover {
+        &::after {
+            position: absolute;
+            content: '';
+            opacity: .06;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    %cbx-ripple--hover-unchecked {
+        &::after {
+            background-color: --var($theme, 'empty-color');
+        }
+    }
+
+    %cbx-ripple--hover-checked {
+        &::after {
+            background-color: --var($theme, 'fill-color');
+        }
+    }
+
+    %cbx-ripple--pressed {
+        &::after {
+            opacity: .12;
+        }
+    }
 }
