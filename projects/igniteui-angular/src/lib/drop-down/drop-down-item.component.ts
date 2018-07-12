@@ -15,13 +15,31 @@ import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component
  */
 
 export class IgxDropDownItemBase {
+    /**
+     * @hidden
+     */
     protected _isFocused = false;
+
+    /**
+     * Gets the selected item's id.
+     *
+     * ```typescript
+     *  let selectedItem = this.dropdown.selectedItem() as IgxDropDownItemBase;
+     *  let itemId = selectedItem.itemID;
+     * ```
+     */
     public get itemID() {
         return;
     }
 
+    /**
+     * @hidden
+     */
     public itemData: any;
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-drop-down__item')
     get itemStyle(): boolean {
         return !this.isHeader;
@@ -29,11 +47,19 @@ export class IgxDropDownItemBase {
 
     /**
      * Gets if the item is the currently selected one in the dropdown
+     *
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem() as IgxDropDownBase;
+     *  let isMyItemSelected = mySelectedItem.isSelected(); // true
+     * ```
      */
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-drop-down__item--selected')
     get selectedStyle(): boolean {
@@ -42,11 +68,27 @@ export class IgxDropDownItemBase {
 
     /**
      * Sets/gets if the given item is focused
+     *
+     * ```typescript
+     *  // get
+     *  let selectedItem = this.dropdown.selectedItem() as IgxDropDownItemBase;
+     *  let itemIsFocused = selectedItem.isFocused;
+     * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
     get isFocused() {
         return this._isFocused;
     }
+    /**
+     * ```html
+     *  <!--set-->
+     *  <igx-drop-down-item *ngFor="let item of items" isFocused={{item.isFocused}}>
+     *      <div>
+     *          {{item.field}}
+     *      </div>
+     *  </igx-drop-down-item>
+     * ```
+     */
     set isFocused(value: boolean) {
         if (this.disabled || this.isHeader) {
             this._isFocused = false;
@@ -61,6 +103,21 @@ export class IgxDropDownItemBase {
 
     /**
      * Sets/gets if the given item is header
+     *
+     * ```typescript
+     *  // get
+     *  let selecteItem = this.dropdown.selectdItem() as IgxDropDownItemBase;
+     *  let itemIsHeader = selectedItem.isHeader;
+     * ```
+     *
+     * ```html
+     *  <!--set-->
+     *  <igx-drop-down-item *ngFor="let item of items" isHeader={{item.header}}>
+     *      <div>
+     *          {{item.field}}
+     *      </div>
+        </igx-drop-down-item>
+     * ```
      */
     @Input()
     @HostBinding('class.igx-drop-down__header')
@@ -68,16 +125,34 @@ export class IgxDropDownItemBase {
 
     /**
      * Sets/gets if the given item is disabled
+     *
+     * ```typescript
+     *  // get
+     *  let selectedItem = this.dropdown.selectedItem() as IgxDropDownItemBase;
+     *  let isItemDisabled = selectedItem.disabled;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}}>
+     *      <div>
+     *          {{item.field}}
+     *      </div>
+     * </igx-drop-down-item>
+     * ```
      */
     @Input()
     @HostBinding('class.igx-drop-down__item--disabled')
     public disabled = false;
 
+
+    /**
+     * @hidden
+     */
     @HostBinding('attr.tabindex')
     get setTabIndex() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.disabled || this.isHeader);
         if (shouldSetTabIndex) {
-            return 0;
         } else {
             return null;
         }
@@ -85,6 +160,10 @@ export class IgxDropDownItemBase {
 
     /**
      * Gets item index
+     *
+     * ```typescript
+     *  let currentItemIndex = (<IgxDropDownItemBase>this.dropdown.selectedItem()).index;
+     * ```
      */
     public get index(): number {
         return this.dropDown.items.indexOf(this);
@@ -92,6 +171,10 @@ export class IgxDropDownItemBase {
 
     /**
      * Gets item element height
+     *
+     * ```typescript
+     *  let myElementHeight = this.dropdown.elementHeight;
+     * ```
      */
     public get elementHeight(): number {
         return this.elementRef.nativeElement.clientHeight;
@@ -99,6 +182,10 @@ export class IgxDropDownItemBase {
 
     /**
      * Get item html element
+     *
+     * ```typescript
+     *  let myItemHtmlElement = this.dropdown.element;
+     * ```
      */
     public get element() {
         return this.elementRef;
@@ -109,6 +196,9 @@ export class IgxDropDownItemBase {
         protected elementRef: ElementRef
     ) { }
 
+    /**
+     * @hidden
+     */
     @HostListener('click', ['$event'])
     clicked(event) {
         if (this.disabled || this.isHeader) {
@@ -120,6 +210,9 @@ export class IgxDropDownItemBase {
         this.dropDown.selectItem(this);
     }
 
+    /**
+     * @hidden
+     */
     markItemSelected() {
         this.dropDown.setSelectedItem(this.index);
         this.dropDown.close();

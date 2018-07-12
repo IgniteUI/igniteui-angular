@@ -275,9 +275,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * Get dropdown html element
      *
-     * ```typescript
-     * let myDropDownElement = this.dropdown.element;
-     * ```
+     * @hidden
      */
     public get element() {
         return this.elementRef.nativeElement;
@@ -285,6 +283,8 @@ export class IgxDropDownBase implements OnInit, IToggleView {
 
     /**
      * Get dropdown html element
+     *
+     * @hidden
      */
     protected get scrollContainer() {
         return this.toggleDirective.element;
@@ -297,6 +297,11 @@ export class IgxDropDownBase implements OnInit, IToggleView {
 
     /**
      * Select an item by index
+     *
+     * ```typescript
+     *  let newItemIndex = 3;
+     *  this.dropdown.setSelectedItem(3);
+     * ```
      * @param index of the item to select
      */
     setSelectedItem(index: number) {
@@ -349,14 +354,43 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
     }
 
+    /**
+     *  Returns the currently focused item.
+     *
+     * ```typescript
+     *  // get
+     *  let currentFocusedItem = this.dropdown.focusedItem;
+     * ```
+     */
     public get focusedItem() {
         return this._focusedItem;
     }
 
+    /**
+     * Sets focus to the passed item.
+     *
+     * ```typescript
+     *  // set
+     *  this.dropdown.focisedItem(itemToFocus);
+     * ```
+     */
     public set focusedItem(item) {
         this._focusedItem = item;
     }
 
+    /**
+     * Navigates to an item in the dropdown using a pre-defined direction and optional starting index.
+     *
+     * ```typescript
+     *  let nextItem = this.dropdown.navigate(Navigate.Down); // navigate to the next item in the dropdown
+     *
+     *  const currentItemIndex = 1;
+     *  let nextItemFromIndex = this.dropdown.navigate(Navigate.Down, currentItemIndex); // navigate to the third item in the dropdown
+     * ```
+     *
+     * @param direction
+     * @param [currentIndex]
+     */
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
@@ -366,18 +400,45 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.navigateItem(newIndex, direction);
     }
 
+    /**
+     *  Navigate to the first item in the dropdown.
+     *
+     * ```typescript
+     *  let firstItem = this.dropdown.navigateFirst();
+     * ```
+     */
     navigateFirst() {
         this.navigate(Navigate.Down, -1);
     }
 
+    /**
+     *  Navigate to the last item in the dropdown.
+     *
+     * ```typescript
+     *  let lastItem = this.dropdown.navigateLast();
+     * ```
+     */
     navigateLast() {
         this.navigate(Navigate.Up, this.items.length);
     }
-
+    /**
+     * Navigate to the next item in the dropdown.
+     *
+     * ```typescript
+     *  let nextItem = this.dropdown.navigateNext();
+     * ```
+     */
     navigateNext() {
         this.navigate(Navigate.Down);
     }
 
+    /**
+     * Navigate to the previous item in the dropdown.
+     *
+     * ```typescript
+     *  let previousItem = this.dropdown.navigatePrev();
+     * ```
+     */
     navigatePrev() {
         this.navigate(Navigate.Up);
     }
@@ -433,11 +494,18 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.onClosed.emit();
     }
 
+    /**
+     * @hidden
+     */
     protected scrollToItem(item: IgxDropDownItemBase) {
         const itemPosition = this.calculateScrollPosition(item);
         this.scrollContainer.scrollTop = (itemPosition);
     }
 
+    /**
+     * @hidden
+     * @param newItem
+     */
     public scrollToHiddenItem(newItem: IgxDropDownItemBase) {
         const elementRect = newItem.element.nativeElement.getBoundingClientRect();
         const parentRect = this.scrollContainer.getBoundingClientRect();
@@ -450,6 +518,9 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
     }
 
+    /**
+     * @hidden
+     */
     public selectItem(item: IgxDropDownItemBase) {
         if (item === null) {
             return;
@@ -458,6 +529,9 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.toggleDirective.close();
     }
 
+    /**
+     * @hidden
+     */
     protected changeSelectedItem(newSelection?: IgxDropDownItemBase) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
@@ -469,6 +543,11 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.onSelection.emit(args);
     }
 
+    /**
+     * Returns the position index of the scroll.
+     *
+     * @hidden
+     */
     protected calculateScrollPosition(item: IgxDropDownItemBase): number {
         if (!item) {
             return 0;
@@ -500,6 +579,9 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
     }
 
+    /**
+     * @hidden
+     */
     protected navigateItem(newIndex: number, direction?: Navigate) {
         if (newIndex !== -1) {
             const oldItem = this._focusedItem;
@@ -524,15 +606,24 @@ export class IgxDropDownItemNavigationDirective {
     constructor(private element: ElementRef,
         @Inject(forwardRef(() => IgxDropDownComponent)) @Self() @Optional() public dropdown: IgxDropDownComponent) { }
 
+    /**
+     * @hidden
+     */
     get target() {
         return this._target;
     }
 
+    /**
+     * @hidden
+     */
     @Input('igxDropDownItemNavigation')
     set target(target: IgxDropDownBase) {
         this._target = target ? target : this.dropdown;
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Escape', ['$event'])
     @HostListener('keydown.Tab', ['$event'])
     onEscapeKeyDown(event) {
@@ -540,18 +631,27 @@ export class IgxDropDownItemNavigationDirective {
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Space', ['$event'])
     onSpaceKeyDown(event) {
         this.target.selectItem(this.target.focusedItem);
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Spacebar', ['$event'])
     onSpaceKeyDownIE(event) {
         this.target.selectItem(this.target.focusedItem);
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
         if (!(this.target instanceof IgxDropDownComponent)) {
@@ -568,6 +668,9 @@ export class IgxDropDownItemNavigationDirective {
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.ArrowDown', ['$event'])
     onArrowDownKeyDown(event) {
         this.target.navigateNext();
@@ -575,6 +678,9 @@ export class IgxDropDownItemNavigationDirective {
         event.stopPropagation();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.ArrowUp', ['$event'])
     onArrowUpKeyDown(event) {
         this.target.navigatePrev();
@@ -582,12 +688,18 @@ export class IgxDropDownItemNavigationDirective {
         event.stopPropagation();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.End', ['$event'])
     onEndKeyDown(event) {
         this.target.navigateLast();
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Home', ['$event'])
     onHomeKeyDown(event) {
         this.target.navigateFirst();
