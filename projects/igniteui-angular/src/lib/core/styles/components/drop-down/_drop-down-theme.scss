@@ -67,12 +67,12 @@
 
         selected-item-background: igx-color($palette, 'secondary', 500),
         selected-item-text-color: igx-contrast-color($palette, 'secondary', 500),
-      
-        selected-hover-item-background: igx-color($palette, 'secondary', 500),
-        selected-hover-item-text-color: igx-contrast-color($palette, 'secondary', 500),
 
-        selected-focus-item-background: igx-color($palette, 'secondary', 500),
-        selected-focus-item-text-color: igx-contrast-color($palette, 'secondary', 500),
+        selected-hover-item-background: igx-color($palette, 'secondary', 600),
+        selected-hover-item-text-color: igx-contrast-color($palette, 'secondary', 600),
+
+        selected-focus-item-background: igx-color($palette, 'secondary', 600),
+        selected-focus-item-text-color: igx-contrast-color($palette, 'secondary', 600),
 
         disabled-item-background: transparent,
         disabled-item-text-color: igx-color($palette, 'grays', 500)
@@ -257,12 +257,11 @@
             background: --var($theme, 'selected-hover-item-background');
             color: --var($theme, 'selected-hover-item-text-color');
         }
+    }
 
-        &%igx-drop-down__item--focused,
-        &:focus {
-            background: --var($theme, 'selected-focus-item-background');
-            color: --var($theme, 'selected-focus-item-text-color');
-        }
+    %igx-drop-down__item--selected--focused {
+        background: --var($theme, 'selected-focus-item-background');
+        color: --var($theme, 'selected-focus-item-text-color');
     }
 
     %igx-drop-down__item--disabled {
