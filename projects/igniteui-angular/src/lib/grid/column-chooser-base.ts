@@ -15,7 +15,7 @@ export abstract class ColumnChooserBase implements OnDestroy {
 /**
  * Gets the grid columns that are going to be manipulated.
  * ```typescript
- * let gridColumns = this.columnHiding.columns;
+ * let gridColumns = this.columnHidingUI.columns;
  * ```
  * @memberof ColumnChooserBase
  */
@@ -40,7 +40,7 @@ set columns(value) {
 /**
  * Sets/gets the title of the column chooser.
  * ```typescript
- * let title =  this.columnHiding.title;
+ * let title =  this.columnHidingUI.title;
  * ```
  * @memberof ColumnChooserBase
  */
@@ -60,7 +60,7 @@ set title(value) {
 /**
  * Gets the prompt that is displayed in the filter input.
  * ```typescript
- * let filterColumnsPrompt =  this.columnHiding.filterColumnsPrompt;
+ * let filterColumnsPrompt =  this.columnHidingUI.filterColumnsPrompt;
  * ```
  * @memberof ColumnChooserBase
  */
@@ -81,7 +81,7 @@ set filterColumnsPrompt(value) {
 /**
  * Gets the items of the selected columns.
  * ```typescript
- * let columnItems =  this.columnHiding.columnItems;
+ * let columnItems =  this.columnHidingUI.columnItems;
  * ```
  * @memberof ColumnChooserBase
  */
@@ -92,7 +92,7 @@ set filterColumnsPrompt(value) {
 /**
  * Gets the value which filters the columns list.
  * ```typescript
- * let filterCriteria =  this.columnHiding.filterCriteria;
+ * let filterCriteria =  this.columnHidingUI.filterCriteria;
  * ```
  * @memberof ColumnChooserBase
  */
@@ -125,7 +125,7 @@ set filterCriteria(value) {
 /**
  * Gets the display order of the columns.
  * ```typescript
- * let columnDisplayOrder  =  this.columnsChooser.columnDisplayOrder;
+ * let columnDisplayOrder  =  this.columnHidingUI.columnDisplayOrder;
  * ```
  * @memberof ColumnChooserBase
  */
@@ -136,7 +136,7 @@ set filterCriteria(value) {
 /**
  * Sets the display order of the columns.
  * ```typescript
- * this.columnHiding.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
+ * this.columnHidingUI.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
  * ```
  * @memberof ColumnChooserBase
  */
@@ -149,9 +149,14 @@ set columnDisplayOrder(value: ColumnDisplayOrder) {
         }
     }
 /**
+ * Access to the columnHidingUI:
+ * ```typescript
+ * @ViewChild('column-hiding-component')
+ *  public columnHidingUI: IgxColumnHidingComponent;
+ * ```
  * Sets/gets the max height of the column area.
  * ```typescript
- * let columnsAreaMaxHeight =  this.columnHiding.columnsAreaMaxHeight;
+ * let columnsAreaMaxHeight =  this.columnHidingUI.columnsAreaMaxHeight;
  * ```
  *
  * ```html
@@ -162,9 +167,13 @@ set columnDisplayOrder(value: ColumnDisplayOrder) {
 @Input()
     public columnsAreaMaxHeight = '100%';
 /**
- * Gets the css class selector.
+ * Sets/Gets the css class selector.
+ * By default the value of the `class` attribute is `"igx-column-hiding"`.
+ * ```typescript
+ * let cssCLass =  this.columnHidingUI.cssClass;
  * ```
- * let cssCLass =  this.columnHiding.cssClass;
+ * ```typescript
+ * this.columnHidingUI.cssClass = 'column-chooser';
  * ```
  * @memberof ColumnChooserBase
  */
