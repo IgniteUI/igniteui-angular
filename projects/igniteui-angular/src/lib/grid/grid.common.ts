@@ -526,7 +526,8 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         const column: IgxColumnComponent = drag.column;
-        if (column.groupable) {
+        const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+        if (column.groupable && !isGrouped) {
             drag.icon.innerText = 'group_work';
             this.hovered = true;
         } else {
@@ -544,7 +545,8 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         if (drag instanceof IgxColumnMovingDragDirective) {
             const column: IgxColumnComponent = drag.column;
-            if (column.groupable) {
+            const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+            if (column.groupable && !isGrouped) {
                 column.grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
             }
         }
