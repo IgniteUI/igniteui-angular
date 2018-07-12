@@ -652,7 +652,7 @@ describe('Column Hiding UI', () => {
             expect(columnChooserElement.query(By.css('div.igx-column-hiding__buttons'))).not.toBe(null);
         });
 
-        fit('height can be controlled via columnsAreaMaxHeight input.', () => {
+        it('height can be controlled via columnsAreaMaxHeight input.', () => {
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
             expect(columnChooser.columnsAreaMaxHeight).toBe('100%');
             expect(columnChooserElement.nativeElement.offsetHeight).toBe(362);
