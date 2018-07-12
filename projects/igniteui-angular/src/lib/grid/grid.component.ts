@@ -324,15 +324,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public set displayDensity(val: DisplayDensity | string) {
         switch (val) {
             case 'compact':
+                this.nativeElement.setAttribute('class', 'igx-grid--compact');
                 this._displayDensity = DisplayDensity.compact;
                 break;
             case 'cosy':
+                this.nativeElement.setAttribute('class', 'igx-grid--cosy');
                 this._displayDensity = DisplayDensity.cosy;
                 break;
             case 'comfortable':
             default:
+                this.nativeElement.setAttribute('class', 'igx-grid');
                 this._displayDensity = DisplayDensity.comfortable;
         }
+        this.rowHeight = this.defaultRowHeight;
+        this.summariesHeight = 0;
+        this.onDensityChanged.emit();
     }
 
     @Input()
@@ -512,6 +518,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
+    @Output()
+    protected onDensityChanged = new EventEmitter<any>();
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -572,17 +581,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
-    @HostBinding('attr.class')
-    get hostClass(): string {
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
-                return 'igx-grid--cosy';
-            case DisplayDensity.compact:
-                return 'igx-grid--compact';
-            default:
-                return 'igx-grid';
-        }
-    }
 
     get groupAreaHostClass(): string {
         switch (this._displayDensity) {
@@ -879,6 +877,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe((source) => {
             this.gridAPI.submit_value(this.id);
+        });
+        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.reflow();
         });
     }
 
