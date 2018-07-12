@@ -99,7 +99,7 @@ export class IgxDropDownItemBase {
      * Sets/gets if the given item is header
      * ```typescript
      *  // get
-     *  let mySelectedItem = this.dropdown.selectedItem();
+     *  let mySelectedItem = this.dropdown.selectedItem;
      *  let isMyItemHeader = mySelectedItem.isHeader;
      * ```
      *

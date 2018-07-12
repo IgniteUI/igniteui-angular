@@ -477,7 +477,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
     }
 
-	/**
+    /**
      * @hidden
      */
     public selectItem(item: IgxDropDownItemBase) {
