@@ -652,16 +652,16 @@ describe('Column Hiding UI', () => {
             expect(columnChooserElement.query(By.css('div.igx-column-hiding__buttons'))).not.toBe(null);
         });
 
-        it('height can be controlled via columnsAreaMaxHeight input.', () => {
+        fit('height can be controlled via columnsAreaMaxHeight input.', () => {
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
             expect(columnChooser.columnsAreaMaxHeight).toBe('100%');
-            expect(columnChooserElement.nativeElement.offsetHeight).toBe(378);
+            expect(columnChooserElement.nativeElement.offsetHeight).toBe(362);
 
             columnChooser.columnsAreaMaxHeight = '150px';
             fix.detectChanges();
             const columnsAreaDiv = columnChooserElement.query(By.css('div.igx-column-hiding__columns'));
             expect(JSON.stringify(columnsAreaDiv.styles)).toBe('{"max-height":"150px"}');
-            expect(columnChooserElement.nativeElement.offsetHeight).toBe(268);
+            expect(columnChooserElement.nativeElement.offsetHeight).toBe(252);
         });
 
         it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', () => {
