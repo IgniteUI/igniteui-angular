@@ -11,6 +11,21 @@
 
     @extend %cbx-display !optional;
 
+    &:hover {
+        @include e(ripple) {
+            @extend %cbx-ripple--hover !optional;
+            @extend %cbx-ripple--hover-unchecked !optional;
+        }
+    }
+
+    &:active {
+        @include e(ripple) {
+            @extend %cbx-ripple--hover !optional;
+            @extend %cbx-ripple--hover-unchecked !optional;
+            @extend %cbx-ripple--pressed !optional;
+        }
+    }
+
     @include e(input) {
         @extend %cbx-input !optional;
     }
@@ -51,6 +66,21 @@
         @include e(composite-mark) {
             @extend %cbx-composite-mark--in !optional;
         }
+
+        &:hover {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-checked !optional;
+            }
+        }
+
+        &:active {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-checked !optional;
+                @extend %cbx-ripple--pressed !optional;
+            }
+        }
     }
 
     @include m(checked) {
@@ -60,6 +90,21 @@
 
         @include e(composite-mark) {
             @extend %cbx-composite-mark--x !optional;
+        }
+
+        &:hover {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-checked !optional;
+            }
+        }
+
+        &:active {
+            @include e(ripple) {
+                @extend %cbx-ripple--hover !optional;
+                @extend %cbx-ripple--hover-checked !optional;
+                @extend %cbx-ripple--pressed !optional;
+            }
         }
     }
 

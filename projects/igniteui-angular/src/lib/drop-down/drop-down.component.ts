@@ -477,14 +477,14 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
     }
 
-    /**
+	/**
      * @hidden
      */
-    public selectItem(item?) {
-        if (!item) {
-            item = this._focusedItem;
+    public selectItem(item: IgxDropDownItemBase) {
+        if (item === null) {
+            return;
         }
-        this.setSelectedItem(this._focusedItem.index);
+        this.setSelectedItem(item.index);
         this.toggleDirective.close();
     }
 
@@ -621,7 +621,7 @@ export class IgxDropDownItemNavigationDirective {
             event.preventDefault();
             return;
         }
-        this.target.selectItem();
+        this.target.selectItem(this.target.focusedItem);
         event.preventDefault();
     }
 
