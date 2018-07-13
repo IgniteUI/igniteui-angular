@@ -130,41 +130,49 @@ describe('IgxTabs', () => {
         expect(tab2.isSelected).toBeFalsy();
     });
 
-    fit('check select selection when tabs collection is modified', fakeAsync(() => {
+    it('check select selection when tabs collection is modified', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTest2Component);
+        tick();
+
         const tabs = fixture.componentInstance.tabs;
         let tabItems;
         let tab1: IgxTabItemComponent;
         let tab2: IgxTabItemComponent;
         let tab3: IgxTabItemComponent;
 
+
         expect(tabs.selectedIndex).toBe(-1);
+
         fixture.componentInstance.tabSelectedHandler = () => {
             expect(tabs.selectedIndex).toBe(0);
             expect(tabs.selectedTabItem).toBe(tab1);
         };
 
+        tick();
         fixture.detectChanges();
 
         tabItems = tabs.tabs.toArray();
         tab1 = tabItems[0];
         tab2 = tabItems[1];
         tab3 = tabItems[2];
-
-        fixture.componentInstance.tabSelectedHandler = () => { };
+        tick();
 
         tab3.select();
+
+        tick(100);
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(2);
         expect(tabs.selectedTabItem).toBe(tab3);
         expect(tab3.isSelected).toBeTruthy();
 
-        const button = fixture.debugElement.queryAll(By.css('button'))[2];
-        button.triggerEventHandler('click', {});
-        fixture.detectChanges();
+        fixture.componentInstance.resetCollectionOneTab();
 
-        // expect(tabs.selectedIndex).toBe(0);
+        fixture.detectChanges();
+        tick(100)
+        fixture.detectChanges();
+        expect(tabs.selectedIndex).toBe(0);
+
     }));
 
     it('should initialize igx-tab custom template', () => {
@@ -299,8 +307,6 @@ class TabsTestComponent {
             <igx-tabs>
                 <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
             </igx-tabs>
-            <button name="button1" (click)="resetCollectionOneTab()">Reset to one</button>
-            <button name="button2" (click)="resetCollectionTwoTabs()">Reset to two</button>
         </div>`
 })
 class TabsTest2Component {
@@ -321,13 +327,6 @@ class TabsTest2Component {
         this.collection =
             [
                 { name: 'Tab 3' }
-            ];
-    }
-    public resetCollectionTwoTabs() {
-        this.collection =
-            [
-                { name: 'Tab 1' },
-                { name: 'Tab 2' }
             ];
     }
 }
