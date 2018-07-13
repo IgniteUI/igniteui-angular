@@ -42,3 +42,5 @@ $exclude: (
 @include igx-theme($default-palette, $exclude, $legacy-support: true);
 
 @include igx-color-classes('background-color');
+
+@include igx-typography-2();

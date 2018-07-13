@@ -258,3 +258,121 @@
         }
     }
 }
+
+@function igx-font-style(
+    $font-family: 'Titillium Web',
+    $font-weight: 400,
+    $font-size: 1rem,
+    $letter-spacing: normal,
+    $text-transform: none
+) {
+    @return (
+        font-family: $font-family,
+        font-weight: $font-weight,
+        font-size: $font-size,
+        letter-spacing: $letter-spacing,
+        text-transform: $text-transform
+    );
+}
+
+@function igx-type-scale(
+    $h1: null,
+    $h2: null,
+    $h3: null,
+    $h4: null,
+    $h5: null,
+    $h6: null,
+    $subtitle-1: null,
+    $subtitle-2: null,
+    $body-1: null,
+    $body-2: null,
+    $button: null,
+    $caption: null,
+    $overline: null
+) {
+    $default-scale: (
+        h1: igx-font-style(
+            $font-size: rem(96px),
+            $font-weight: 300,
+            $letter-spacing: -1.5
+        ),
+        h2: igx-font-style(
+            $font-size: rem(60px),
+            $font-weight: 300,
+            $letter-spacing: -.5
+        ),
+        h3: igx-font-style(
+            $font-size: rem(48px),
+            $letter-spacing: 0
+        ),
+        h4: igx-font-style(
+            $font-size: rem(34px),
+            $letter-spacing: .25
+        ),
+        h5: igx-font-style(
+            $font-size: rem(24px),
+            $letter-spacing: 0,
+            $font-weight: 600
+        ),
+        h6: igx-font-style(
+            $font-size: rem(20px),
+            $letter-spacing: .15
+        ),
+        subtitle-1: igx-font-style(
+            $font-size: rem(16px),
+            $letter-spacing: .15
+        ),
+        subtitle-2: igx-font-style(
+            $font-size: rem(14px),
+            $letter-spacing: .1,
+            $font-weight: 600
+        ),
+        body-1: igx-font-style(
+            $font-size: rem(16px),
+            $letter-spacing: .5
+        ),
+        body-2: igx-font-style(
+            $font-size: rem(14px),
+            $letter-spacing: .25
+        ),
+        button: igx-font-style(
+            $font-size: rem(14px),
+            $letter-spacing: .75,
+            $font-weight: 600,
+            $text-transform: uppercase
+        ),
+        caption: igx-font-style(
+            $font-size: rem(12px),
+            $letter-spacing: .4
+        ),
+        overline: igx-font-style(
+            $font-size: rem(10px),
+            $letter-spacing: 1.5
+        )
+    );
+
+    @return extend($default-scale, (
+        h1: $h1,
+        h2: $h2,
+        h3: $h3,
+        h4: $h4,
+        h5: $h5,
+        h6: $h6,
+        subtitle-1: $subtitle-1,
+        subtitle-2: $subtitle-2,
+        body-1: $body-1,
+        body-2: $body-2,
+        button: $button,
+        caption: $caption,
+        overline: $overline
+    ));
+}
+
+@mixin igx-typography-2(
+    $font-family: 'Titillium Web',
+    $type-scale: igx-type-scale()
+) {
+    @each $scale, $styles in $type-scale {
+        @debug $scale, $styles;
+    }
+}
