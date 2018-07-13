@@ -223,7 +223,7 @@
     }
 
     @if not($row-hover-text-color) and $row-hover-background {
-        $row-hover-text-color: text-contrast(mix($row-hover-background, $content-background));
+        $row-hover-text-color: text-contrast($row-hover-background);
     }
 
     @if not($cell-selected-text-color) and $cell-selected-background {
