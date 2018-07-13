@@ -1,0 +1,18 @@
+<div class="sample-wrapper">
+    <app-page-header title="Carousel">
+        Displays a collection of slides or page-based interfaces. It can be used as a separate full screen element or inside another
+        component.
+    </app-page-header>
+    <div class="sample-content">
+        <section style="width: 100%">
+            <article>
+                <h4 class="sample-title">Desktop</h4>
+                <igx-carousel [interval]="interval" [pause]="pause" [loop]="loop">
+                    <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
+                        <img [src]="slide.image">
+                    </igx-slide>
+                </igx-carousel>
+            </article>
+        </section>
+    </div>
+</div>

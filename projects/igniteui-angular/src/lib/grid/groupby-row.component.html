@@ -1,0 +1,22 @@
+<ng-container #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
+    <div (click)="toggle()" igxRipple class="igx-grid__grouping-indicator" [tabIndex]="tabindex">
+        <igx-icon *ngIf="!expanded" fontSet="material" name="chevron_right"></igx-icon>
+        <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
+    </div>
+
+    <div [tabIndex]="tabindex" class="igx-grid__group-content" #groupContent (focus)="onFocus()" (blur)="onBlur()">
+        <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
+        </ng-container>
+    </div>
+
+    <ng-template #defaultGroupByTemplate>
+        <div class="igx-group-label">
+            <igx-icon fontSet="material" name="group_work" class="igx-group-label__icon"></igx-icon>
+            <span class="igx-group-label__column-name">
+            {{ groupRow.expression.fieldName }}:
+            </span>
+            <span class="igx-group-label__text">{{ groupRow.value }}</span>
+            <igx-badge [value]="groupRow.records.length" class='igx-group-label__count-badge'></igx-badge>
+        </div>
+    </ng-template>
+</ng-container>

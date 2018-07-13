@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
+
+@import '../../dist/igniteui-angular/lib/core/styles/themes/index';
+@import 'app-palettes';
+@import 'app-layout';
+
+$exclude: (
+    // igx-avatar,
+    // igx-badge,
+    // igx-button,
+    // igx-button-group,
+    // igx-calendar,
+    // igx-card,
+    // igx-carousel,
+    // igx-checkbox,
+    // igx-date-picker,
+    // igx-dialog,
+    // igx-grid,
+    // igx-filtering,
+    // igx-icon,
+    // igx-form-group,
+    // igx-input-group,
+    // igx-list,
+    // igx-navbar,
+    // igx-overlay,
+    // igx-nav-drawer,
+    // igx-paginator,
+    // progress-linear,
+    // progress-circular,
+    // igx-radio,
+    // igx-ripple,
+    // igx-slider,
+    // igx-snackbar,
+    // igx-switch,
+    // igx-bottom-nav,
+    // igx-toast
+);
+
+// Generating a theme
+@include igx-core();
+@include igx-theme($default-palette, $exclude, $legacy-support: true);
+
+@include igx-color-classes('background-color');

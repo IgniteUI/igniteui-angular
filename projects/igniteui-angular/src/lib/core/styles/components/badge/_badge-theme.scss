@@ -1,0 +1,154 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
+///
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $icon-color [#fff] - The icon color used.
+/// @param {Color} $text-color [#fff] - The text color used.
+/// @param {Color} $border-color [#fff] - The border color used.
+/// @param {Color} $background-color [primary 500] - The background color used.
+/// @param {Bool} $disable-shadow [true] - Sets the badge shadow visibility.
+/// @param {Bool} $disable-border [true] - Sets the badge border visibility.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires igx-elevation
+/// @requires text-contrast
+/// @requires rem
+/// @requires {variable} $elevations
+///
+/// @example scss Change the text and icon colors in a badge
+///   $my-badge-theme: igx-badge-theme($icon-color: black, $background-color: white);
+///   // IE Supported theme - Pass the theme to the igx-badge component mixin
+///   @include igx-badge($my-badge-theme);
+///
+///   // Theming using css variables (not supported in IE11):
+///   @include igx-css-vars($my-badge-theme);
+@function igx-badge-theme(
+    $palette: $default-palette,
+
+    $icon-color: null,
+    $text-color: null,
+    $border-color: null,
+    $background-color: null,
+
+    $disable-shadow: true,
+    $disable-border: true
+) {
+    $default-theme: (
+        name: 'igx-badge',
+        icon-color: #fff,
+        text-color: #fff,
+        border-color: #fff,
+        background-color: igx-color($palette, 'primary', 500),
+        badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1)),
+        border-width: if($disable-border == true, 0, rem(1px)),
+    );
+
+    @if not($icon-color) and $background-color {
+        $icon-color: text-contrast($background-color);
+    }
+
+    @if not($text-color) and $background-color {
+        $text-color: text-contrast($background-color);
+    }
+
+    @return extend($default-theme, (
+        palette: $palette,
+        icon-color: $icon-color,
+        text-color: $text-color,
+        border-color: $border-color,
+        background-color: $background-color
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires igx-color
+/// @requires rem
+/// @requires --var
+@mixin igx-badge($theme) {
+    @include igx-root-css-vars($theme);
+
+    $palette: map-get($theme, 'palette');
+
+    $badge-width: 22px;
+    $badge-height: $badge-width;
+
+    $badge-border-radius-circle: $badge-width / 2;
+
+    $badge-font-size: rem(11px);
+    $badge-font-weight: normal;
+
+    $badge-icon-font-size: rem(12px);
+
+    $badge-value-padding: rem(4px);
+    $border-type: solid;
+
+    %igx-badge-display {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: $badge-width;
+        height: $badge-height;
+        font-size: $badge-font-size;
+        font-weight: $badge-font-weight;
+        color: --var($theme, 'text-color');
+        line-height: 1;
+
+        igx-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: $badge-width - 2px;
+            height: $badge-width - 2px;
+            font-size: $badge-icon-font-size;
+            font-weight: $badge-font-weight;
+            color: --var($theme, 'icon-color');
+        }
+    }
+
+    %igx-badge-value {
+        white-space: nowrap;
+        padding: $badge-value-padding;
+    }
+
+    %igx-badge--circle {
+        border-radius: $badge-border-radius-circle;
+        box-shadow: --var($theme, 'badge-shadow');
+        border-width: --var($theme, 'border-width');
+        border-color: --var($theme, 'border-color');
+        border-style: $border-type;
+        overflow: hidden;
+    }
+
+    %igx-badge--default {
+        background-color: --var($theme, 'background-color');
+    }
+
+    %igx-circle--success {
+        background-color: igx-color($palette, 'success');
+    }
+
+    %igx-badge--info {
+        background-color: igx-color($palette, 'info');
+    }
+
+    %igx-circle--warn {
+        background-color: igx-color($palette, 'warn');
+    }
+
+    %igx-circle--error {
+        background-color: igx-color($palette, 'error');
+    }
+
+    %igx-badge--hidden {
+        visibility: hidden;
+    }
+}

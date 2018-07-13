@@ -1,0 +1,104 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// If you specify a background color, but do not specify colors for either the
+/// button or the text, their colors will be set automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $background [#323232] - The background color used in the snackbar.
+/// @param {Color} $text-color [#fff] - The text color used in the snackbar.
+/// @param {Color} $button-color [secondary 500] - The button color used in the snackbar.
+///
+/// @requires extend
+/// @requires text-contrast
+/// @requires igx-color
+///
+/// @todo Add light option
+///
+/// @example scss Set a custom background color
+///   $my-snackbar-theme: igx-snackbar-theme($background: white);
+///   // Pass the theme to the igx-bottom-nav component mixin
+///   @include igx-snackbar($my-snackbar-theme);
+@function igx-snackbar-theme(
+    $palette: $default-palette,
+    $background: null,
+    $text-color: null,
+    $button-color: null
+) {
+    $default-theme: (
+        name: 'igx-snackbar',
+        background: #323232,
+        text-color: #fff,
+        button-color: igx-color($palette, 'secondary')
+    );
+
+    @if not($button-color) and $background {
+        $button-color: text-contrast($background);
+    }
+
+    @if not($text-color) and $background {
+        $text-color: text-contrast($background);
+    }
+
+    @return extend($default-theme, (
+        palette: $palette,
+        background: $background,
+        text-color: $text-color,
+        button-color: $button-color
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-snackbar($theme) {
+    @include igx-root-css-vars($theme);
+
+    // @debug $theme;
+
+    $snackbar-min-height: rem(48px);
+    $snackbar-padding: rem(7px) rem(24px);
+    $snackbar-button-left-margin: rem(24px);
+    $snackbar-font-size: rem(14px);
+    $snackbar-button-line-height: rem(16px);
+    $snackbar-button-font-weight: 600;
+
+    %igx-snackbar-display {
+        position: relative;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+        min-height: $snackbar-min-height;
+        padding: $snackbar-padding;
+        color: --var($theme, 'text-color');
+        background: --var($theme, 'background');
+        backface-visibility: hidden;
+    }
+
+    %igx-snackbar-message {
+        font-size: $snackbar-font-size;
+    }
+
+    %igx-snackbar-button {
+        background: transparent;
+        color: --var($theme, 'button-color');
+        border: 0;
+        line-height: $snackbar-button-line-height;
+        margin-left: $snackbar-button-left-margin;
+        text-transform: uppercase;
+        user-select: none;
+        font-weight: $snackbar-button-font-weight;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        transition: color .2s ease;
+
+        &:hover {
+            color: --var($theme, 'button-color');
+        }
+    }
+}

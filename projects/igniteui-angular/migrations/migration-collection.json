@@ -1,0 +1,25 @@
+{
+    "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "schematics": {
+        "migration-01": {
+            "version": "6.0.0",
+            "description": "Updates Ignite UI for Angular from v5 to v6",
+            "factory": "./update-6"
+        },
+        "migration-02": {
+            "version": "6.0.1",
+            "description": "Updates Ignite UI for Angular from v6 to v6.0.1",
+            "factory": "./update-6_01"
+        },
+        "migration-03": {
+            "version": "6.0.2",
+            "description": "Updates Ignite UI for Angular to v6.0.2",
+            "factory": "./update-6_02"
+        },
+        "migration-04": {
+            "version": "6.1.0",
+            "description": "Updates Ignite UI for Angular from v6.0.x to v6.1.0",
+            "factory": "./update-6_1"
+        }
+    }
+}

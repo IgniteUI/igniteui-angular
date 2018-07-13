@@ -1,0 +1,92 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// If only background color is specified,
+/// the text-color will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $background [rgba(0, 0, 0, .54)] - The background color used for the toast.
+/// @param {Color} $text-color [#fff] - The text-color used for the toast.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires text-contrast
+///
+/// @example scss Set a custom background color
+///   $my-toast-theme: igx-toast-theme($background: green);
+///   // Pass the theme to the igx-toast component mixin
+///   @include igx-toast($my-toast-theme);
+@function igx-toast-theme(
+    $palette: $default-palette,
+    $background: null,
+    $text-color: null
+) {
+    $default-theme: (
+        name: 'igx-toast',
+        background: igx-color($palette, 'grays', 600),
+        text-color: #fff
+    );
+
+    @if not($text-color) and $background {
+        $text-color: text-contrast($background);
+    }
+
+    @return extend($default-theme, (
+        palette: $palette,
+        background: $background,
+        text-color: $text-color
+    ));
+}
+
+/// Toast Component
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-toast($theme) {
+    @include igx-root-css-vars($theme);
+
+    $toast-width: 52px;
+    $toast-padding: rem(16px) rem(24px);
+    $toast-margin: rem(42px) auto;
+    $toast-border-radius: ($toast-width / 2);
+    $toast-font-size: rem(14px);
+    $toast-line-height: rem(24px);
+
+    // @debug $theme;
+
+    %igx-toast-display {
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        left: 50%;
+        transform: translate3d(-50%, 0, 0);
+        margin: $toast-margin;
+        padding: $toast-padding;
+        min-width: $toast-width;
+        font-size: $toast-font-size;
+        line-height: $toast-line-height;
+        color: --var($theme, 'text-color');
+        background-color: --var($theme, 'background');
+        border-radius: $toast-border-radius;
+        opacity: 0;
+        z-index: 999999;
+    }
+
+    %igx-toast--top {
+        top: 0;
+    }
+
+    %igx-toast--middle {
+        top: 50%;
+        transform: translate3d(-50%, -50%, 0);
+    }
+
+    %igx-toast--bottom {
+        bottom: 0;
+    }
+}
