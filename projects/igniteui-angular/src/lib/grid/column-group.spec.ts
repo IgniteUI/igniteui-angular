@@ -531,7 +531,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
     });
 
-    it('Should render column group headers correctly.', ((done) => {
+    it('Should render column group headers correctly.', fakeAsync(() => {
         const fixture = TestBed.createComponent(BlueWhaleGridComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
@@ -544,60 +544,53 @@ describe('IgxGrid - multi-column headers', () => {
         const secondGroupChildrenCount = 2;
         const secondSubGroupChildrenCount = 50;
         const secondSubGroupHeadersDepth = 2;
-        fixture.whenStable().then(() => {
-            const firstGroup = fixture.debugElement.query(By.css('.firstGroup'));
-            testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
-                gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
-                'firstGroupColumn', firstGroupChildrenCount);
 
-            const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
-            const scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
-            horizontalScroll.scrollLeft = scrollToNextGroup;
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            setTimeout(() => {
-                const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
-                testColumnGroupHeaderRendering(secondGroup,
-                    secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
-                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
-                    'secondSubGroup', secondGroupChildrenCount);
+        const firstGroup = fixture.debugElement.query(By.css('.firstGroup'));
+        testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
+            gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
+            'firstGroupColumn', firstGroupChildrenCount);
 
-                const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
-                testColumnGroupHeaderRendering(secondSubGroups[0],
-                    secondSubGroupChildrenCount * columnWidthPx,
-                    secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
-                    'secondSubGroupColumn', secondSubGroupChildrenCount);
+        const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+        let scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
+        horizontalScroll.scrollLeft = scrollToNextGroup;
 
-                testColumnGroupHeaderRendering(secondSubGroups[1],
-                    secondSubGroupChildrenCount * columnWidthPx,
-                    secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
-                    'secondSubGroupColumn', secondSubGroupChildrenCount);
+        tick(200);
+        fixture.detectChanges();
+        const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
+        testColumnGroupHeaderRendering(secondGroup,
+            secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
+            gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
+            'secondSubGroup', secondGroupChildrenCount);
 
-                const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
-                const scrollToNextGroup = horizontalScroll.scrollLeft +
-                    secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
-                horizontalScroll.scrollLeft = scrollToNextGroup;
-                return fixture.whenStable();
-            }, 100);
-        }).then(() => {
-            fixture.detectChanges();
-            setTimeout(() => {
-                const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
-                testColumnHeaderRendering(idColumn, columnWidthPx,
-                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.idHeaderTitle);
+        const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
+        testColumnGroupHeaderRendering(secondSubGroups[0],
+            secondSubGroupChildrenCount * columnWidthPx,
+            secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+            'secondSubGroupColumn', secondSubGroupChildrenCount);
 
-                const companyNameColumn = fixture.debugElement.query(By.css('.companyName'));
-                testColumnHeaderRendering(companyNameColumn, columnWidthPx,
-                    2 * grid.defaultRowHeight, componentInstance.companyNameTitle);
+        testColumnGroupHeaderRendering(secondSubGroups[1],
+            secondSubGroupChildrenCount * columnWidthPx,
+            secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+            'secondSubGroupColumn', secondSubGroupChildrenCount);
 
-                const personDetailsColumn = fixture.debugElement.query(By.css('.personDetails'));
-                testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
-                    2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
-                    'personDetailsColumn', 2);
-                done();
-            }, 200);
-        });
+        scrollToNextGroup = horizontalScroll.scrollLeft +
+            secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
+        horizontalScroll.scrollLeft = scrollToNextGroup;
+
+        tick(200);
+        fixture.detectChanges();
+        const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
+        testColumnHeaderRendering(idColumn, columnWidthPx,
+            gridHeadersDepth * grid.defaultRowHeight, componentInstance.idHeaderTitle);
+
+        const companyNameColumn = fixture.debugElement.query(By.css('.companyName'));
+        testColumnHeaderRendering(companyNameColumn, columnWidthPx,
+            2 * grid.defaultRowHeight, componentInstance.companyNameTitle);
+
+        const personDetailsColumn = fixture.debugElement.query(By.css('.personDetails'));
+        testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
+            2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
+            'personDetailsColumn', 2);
     }));
 
     it('column pinning - Pin a column in a group using property.', () => {
@@ -715,7 +708,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(0, 'City').value).toEqual('Berlin');
     });
 
-    xit('Should pin column groups using indexes correctly.', () => {
+    fit('Should pin column groups using indexes correctly.', () => {
         const fixture = TestBed.createComponent(StegosaurusGridComponent);
         fixture.detectChanges();
 
@@ -840,7 +833,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.rowList.first.cells.toArray()[3].value).toMatch('ALFKI');
     });
 
-    xit('Should move column group correctly. One level column groups.', () => {
+    it('Should move column group correctly. One level column groups.', () => {
         const fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -883,7 +876,7 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
     });
 
-    xit('Should move columns within column groups. One level column groups.', () => {
+    it('Should move columns within column groups. One level column groups.', () => {
         const fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -935,7 +928,7 @@ describe('IgxGrid - multi-column headers', () => {
         ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
     });
 
-    xit('Should move columns and groups. Two level column groups.', () => {
+    it('Should move columns and groups. Two level column groups.', () => {
         const fixture = TestBed.createComponent(NestedColGroupsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -978,7 +971,7 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnsOrder(colsOrder);
     });
 
-    xit('Should move columns and groups. Pinning enabled.', () => {
+    it('Should move columns and groups. Pinning enabled.', () => {
         const fixture = TestBed.createComponent(StegosaurusGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1006,14 +999,15 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnPinning(ci.regionCol, false);
 
         // moving pinned group as firstly unpinned
-        ci.grid.moveColumn(ci.idCol, ci.countryColGroup);
+        ci.grid.moveColumn(ci.idCol, ci.cityColGroup);
+        ci.idCol.pinned = false;
         postMovingOrder = ci.phoneColList.concat(ci.genInfoColList)
             .concat(ci.postalCodeColList).concat(ci.cityColList).concat([ci.idCol])
             .concat(ci.countryColList).concat(ci.regionColList)
             .concat(ci.addressColList).concat(ci.faxColList);
         testColumnsVisibleIndexes(postMovingOrder);
-        testColumnPinning(ci.idCol, true);
-        testColumnPinning(ci.countryColGroup, true);
+        testColumnPinning(ci.idCol, false);
+        testColumnPinning(ci.countryColGroup, false);
 
         // moving column to different parent, shound not be allowed
         ci.grid.moveColumn(ci.postalCodeCol, ci.cityCol);
@@ -1687,34 +1681,34 @@ export class NestedColGroupsGridComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="600px" width="1000px" columnWidth="100px">
-        <igx-column #idCol field="ID"></igx-column>
+        <igx-column #idCol field="ID" header="Id"></igx-column>
         <igx-column-group #genInfoColGroup header="General Information">
-            <igx-column #companyNameCol field="CompanyName"></igx-column>
+            <igx-column #companyNameCol field="CompanyName" header="Company Name"></igx-column>
             <igx-column-group #pDetailsColGroup header="Person Details">
-                <igx-column #contactNameCol field="ContactName"></igx-column>
-                <igx-column #contactTitleCol field="ContactTitle"></igx-column>
+                <igx-column #contactNameCol field="ContactName" header="Contact Name"></igx-column>
+                <igx-column #contactTitleCol field="ContactTitle" header="Contact Title"></igx-column>
             </igx-column-group>
         </igx-column-group>
         <igx-column-group #postalCodeColGroup header="Postal Code">
-            <igx-column #postalCodeCol field="PostalCode"></igx-column>
+            <igx-column #postalCodeCol field="PostalCode" header="Postal Code"></igx-column>
         </igx-column-group>
         <igx-column-group #cityColGroup header="City Group">
-            <igx-column #cityCol field="City"></igx-column>
+            <igx-column #cityCol field="City" header="City"></igx-column>
         </igx-column-group>
         <igx-column-group #countryColGroup header="Country Group">
-            <igx-column #countryCol field="Country"></igx-column>
+            <igx-column #countryCol field="Country" header="Country"></igx-column>
         </igx-column-group>
         <igx-column-group #regionColGroup header="Region Group">
-            <igx-column #regionCol field="Region"></igx-column>
+            <igx-column #regionCol field="Region" header="Region"></igx-column>
         </igx-column-group>
         <igx-column-group #addressColGroup header="Address Group">
-            <igx-column #addressCol field="Address"></igx-column>
+            <igx-column #addressCol field="Address" header="Address"></igx-column>
         </igx-column-group>
         <igx-column-group #phoneColGroup header="Phone Group">
-            <igx-column #phoneCol field="Phone"></igx-column>
+            <igx-column #phoneCol field="Phone" header="Phone"></igx-column>
         </igx-column-group>
         <igx-column-group #faxColGroup header="Fax Group">
-            <igx-column #faxCol field="Fax"></igx-column>
+            <igx-column #faxCol field="Fax" header="Fax"></igx-column>
         </igx-column-group>
     </igx-grid>
     `
