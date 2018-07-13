@@ -141,9 +141,6 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        // initial selection
-        this.resetSelectionOnCollectionChanged();
-
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });
