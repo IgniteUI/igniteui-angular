@@ -180,7 +180,7 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
         const group = selectableGroups[selectedIndex];
 
         if (group) {
-            group.select(50, true);
+            group.select(0, true);
         }
     }
 

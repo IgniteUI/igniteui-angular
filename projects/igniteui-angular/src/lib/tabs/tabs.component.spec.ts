@@ -1,15 +1,14 @@
-import { AfterContentChecked, AfterViewChecked, Component, ContentChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, QueryList, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
-import { IgxTabItemTemplateDirective } from './tabs.directives';
+import { By } from '@angular/platform-browser';
 
 describe('IgxTabs', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [TabsTestComponent, TemplatedTabsTestComponent],
+            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent],
             imports: [IgxTabsModule]
         })
             .compileComponents();
@@ -130,6 +129,43 @@ describe('IgxTabs', () => {
         expect(tab1.isSelected).toBeTruthy();
         expect(tab2.isSelected).toBeFalsy();
     });
+
+    fit('check select selection when tabs collection is modified', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TabsTest2Component);
+        const tabs = fixture.componentInstance.tabs;
+        let tabItems;
+        let tab1: IgxTabItemComponent;
+        let tab2: IgxTabItemComponent;
+        let tab3: IgxTabItemComponent;
+
+        expect(tabs.selectedIndex).toBe(-1);
+        fixture.componentInstance.tabSelectedHandler = () => {
+            expect(tabs.selectedIndex).toBe(0);
+            expect(tabs.selectedTabItem).toBe(tab1);
+        };
+
+        fixture.detectChanges();
+
+        tabItems = tabs.tabs.toArray();
+        tab1 = tabItems[0];
+        tab2 = tabItems[1];
+        tab3 = tabItems[2];
+
+        fixture.componentInstance.tabSelectedHandler = () => { };
+
+        tab3.select();
+        fixture.detectChanges();
+
+        expect(tabs.selectedIndex).toBe(2);
+        expect(tabs.selectedTabItem).toBe(tab3);
+        expect(tab3.isSelected).toBeTruthy();
+
+        const button = fixture.debugElement.queryAll(By.css('button'))[2];
+        button.triggerEventHandler('click', {});
+        fixture.detectChanges();
+
+        // expect(tabs.selectedIndex).toBe(0);
+    }));
 
     it('should initialize igx-tab custom template', () => {
         const fixture = TestBed.createComponent(TemplatedTabsTestComponent);
@@ -254,6 +290,45 @@ class TabsTestComponent {
     @ViewChild('wrapperDiv') public wrapperDiv: any;
 
     public tabSelectedHandler(args) {
+    }
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-tabs>
+                <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
+            </igx-tabs>
+            <button name="button1" (click)="resetCollectionOneTab()">Reset to one</button>
+            <button name="button2" (click)="resetCollectionTwoTabs()">Reset to two</button>
+        </div>`
+})
+class TabsTest2Component {
+    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv') public wrapperDiv: any;
+
+    public collection =
+        [
+            { name: 'Tab 1' },
+            { name: 'Tab 2' },
+            { name: 'Tab 3' }
+        ];
+
+    public tabSelectedHandler(args) {
+    }
+
+    public resetCollectionOneTab() {
+        this.collection =
+            [
+                { name: 'Tab 3' }
+            ];
+    }
+    public resetCollectionTwoTabs() {
+        this.collection =
+            [
+                { name: 'Tab 1' },
+                { name: 'Tab 2' }
+            ];
     }
 }
 
