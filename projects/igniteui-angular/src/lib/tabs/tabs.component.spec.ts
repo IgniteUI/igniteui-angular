@@ -169,7 +169,7 @@ describe('IgxTabs', () => {
         fixture.componentInstance.resetCollectionOneTab();
 
         fixture.detectChanges();
-        tick(100)
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
 
