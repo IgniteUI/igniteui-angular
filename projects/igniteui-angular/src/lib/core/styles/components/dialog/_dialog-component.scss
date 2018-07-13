@@ -9,6 +9,8 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
+    @extend %igx-dialog-display !optional;
+
     @include e(window) {
         @extend %igx-dialog-window !optional;
     }
