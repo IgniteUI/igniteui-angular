@@ -207,7 +207,7 @@ describe('IgxChipsArea', () => {
         });
     }));
 
-    it('should be able to drag and drop when chip is draggable', async(() => {
+    it('should be able to drag when chip is draggable', async(() => {
         const xDragDifference = 200;
         const yDragDifference = 100;
         const fix = TestBed.createComponent(TestChipComponent);
@@ -280,7 +280,8 @@ describe('IgxChipsArea', () => {
             fix.detectChanges();
 
             setTimeout(() => {
-                expect(secondChipElem.style.visibility).toEqual('hidden');
+                const firstChip = chipComponents[0];
+                expect(firstChip.nativeElement.children[1].style.visibility).toEqual('hidden');
             });
         });
 
@@ -306,6 +307,8 @@ describe('IgxChipsArea', () => {
         const startingX = (startingLeft + startingRight) / 2;
         const startingY = (startingTop + startingBottom) / 2;
 
+        const firstChip = chipComponents[0];
+
         simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
         fix.detectChanges();
 
@@ -321,11 +324,11 @@ describe('IgxChipsArea', () => {
 
             return fix.whenRenderingDone();
         }).then(() => {
-            expect(secondChipElem.style.visibility).toEqual('hidden');
+            expect(firstChip.nativeElement.children[1].style.visibility).toEqual('hidden');
             simulatePointerEvent('pointerup', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
             return fix.whenRenderingDone();
         }).then(() => {
-            expect(secondChipElem.style.visibility).toEqual('visible');
+            expect(firstChip.nativeElement.children[1].style.visibility).toEqual('visible');
         });
     }));
 
@@ -469,7 +472,7 @@ describe('IgxChipsArea', () => {
 
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
-        spyOn( secondChipComp.onSelection, 'emit');
+        spyOn(secondChipComp.onSelection, 'emit');
         secondChipComp.chipArea.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
@@ -478,6 +481,15 @@ describe('IgxChipsArea', () => {
         secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
+
+        let chipsSelectionStates = fix.componentInstance.chips.toArray().filter(c => c.selected);
+        expect(chipsSelectionStates.length).toEqual(1);
+        expect(secondChipComp.selected).toBeTruthy();
+
+        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        chipsSelectionStates = fix.componentInstance.chips.toArray().filter(c => c.selected);
+        expect(chipsSelectionStates.length).toEqual(0);
+        expect(secondChipComp.selected).not.toBeTruthy();
     });
 
     it('should not fire onSelection event when selectable is false', () => {
@@ -514,9 +526,12 @@ describe('IgxChipsArea', () => {
         chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
         fix.detectChanges();
         expect(selChips).toEqual(2);
+
+        const selectedChips = chipAreaComponent.chipsArea.chipsList.toArray().filter(c => c.selected);
+        expect(selectedChips.length).toEqual(2);
     });
 
-    it('should focus on chip corectly', () => {
+    it('should focus on chip correctly', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
@@ -680,7 +695,7 @@ describe('IgxChipsArea', () => {
         expect(chipComponents.length).toEqual(3);
     });
 
-    it('should delete chip when delete button is pressed', () => {
+    it('should delete chip when delete button is clicked', () => {
         const fix = TestBed.createComponent(TestChipReorderComponent);
         fix.detectChanges();
 
@@ -722,6 +737,8 @@ describe('IgxChipsArea', () => {
         const startingX = (startingLeft + startingRight) / 2;
         const startingY = (startingTop + startingBottom) / 2;
 
+        expect(secondChip.selected).toBeTruthy();
+
         simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
         fix.detectChanges();
 
@@ -741,6 +758,9 @@ describe('IgxChipsArea', () => {
         })
         .then(() => {
             expect(secondChip.selected).toBeTruthy();
+
+            const firstChip = chipComponents[0].componentInstance;
+            expect(firstChip.selected).not.toBeTruthy();
         });
     });
 

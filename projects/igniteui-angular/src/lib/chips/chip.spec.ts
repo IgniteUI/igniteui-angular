@@ -330,7 +330,7 @@ describe('IgxChip', () => {
         expect(firstComponent.componentInstance.color).toEqual(chipColor);
     });
 
-    it('should delete chip when space button is pressed and chip delete button is focussed', () => {
+    it('should delete chip when space button is pressed after chip delete button is focused', () => {
         const spaceKeyEvent = new KeyboardEvent('keydown', {
             'key': ' '
         });
@@ -358,7 +358,7 @@ describe('IgxChip', () => {
         expect(chipComponentsIds).not.toContain('City');
     });
 
-    it('should delete chip when enter button is pressed and chip delete button is focussed', () => {
+    it('should delete chip when enter button is pressed after chip delete button is focused', () => {
         const enterKeyEvent = new KeyboardEvent('keydown', {
             'key': 'Enter'
         });
