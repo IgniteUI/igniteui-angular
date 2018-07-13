@@ -324,16 +324,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public set displayDensity(val: DisplayDensity | string) {
         switch (val) {
             case 'compact':
-                this.nativeElement.setAttribute('class', 'igx-grid--compact');
                 this._displayDensity = DisplayDensity.compact;
                 break;
             case 'cosy':
-                this.nativeElement.setAttribute('class', 'igx-grid--cosy');
                 this._displayDensity = DisplayDensity.cosy;
                 break;
             case 'comfortable':
             default:
-                this.nativeElement.setAttribute('class', 'igx-grid');
                 this._displayDensity = DisplayDensity.comfortable;
         }
         this.rowHeight = this.defaultRowHeight;
@@ -581,6 +578,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-grid--cosy';
+            case DisplayDensity.compact:
+                return 'igx-grid--compact';
+            default:
+                return 'igx-grid';
+        }
+    }
 
     get groupAreaHostClass(): string {
         switch (this._displayDensity) {
@@ -878,9 +886,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe((source) => {
             this.gridAPI.submit_value(this.id);
         });
-        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.reflow();
-        });
     }
 
     public ngAfterContentInit() {
@@ -937,6 +942,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._derivePossibleWidth();
         this.initPinning();
         this.calculateGridSizes();
+        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            requestAnimationFrame(() => this.reflow());
+        });
         this._ngAfterViewInitPaassed = true;
     }
 
@@ -1573,11 +1581,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
 
-        return gridHeight - toolbarHeight -
+        return Math.abs(gridHeight - toolbarHeight -
             this.theadRow.nativeElement.offsetHeight -
             this.summariesHeight - pagingHeight - groupAreaHeight -
             footerBordersAndScrollbars -
-            this.scr.nativeElement.clientHeight;
+            this.scr.nativeElement.clientHeight);
     }
 
     protected getPossibleColumnWidth() {
