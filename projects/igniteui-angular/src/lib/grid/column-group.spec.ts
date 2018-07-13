@@ -708,7 +708,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(0, 'City').value).toEqual('Berlin');
     });
 
-    fit('Should pin column groups using indexes correctly.', () => {
+    it('Should pin column groups using indexes correctly.', () => {
         const fixture = TestBed.createComponent(StegosaurusGridComponent);
         fixture.detectChanges();
 
