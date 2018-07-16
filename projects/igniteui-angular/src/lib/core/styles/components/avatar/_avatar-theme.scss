@@ -8,11 +8,11 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $icon-background [null]- The background color used for avatars of type icon.
-/// @param {Color} $icon-color [null] - The icon color used for avatars of type icon.
-/// @param {Color} $initials-background [null] - The background color used for avatars of type initials.
-/// @param {Color} $initials-color [null] - The text color used for avatars of type initials.
-/// @param {Color} $image-background [null] - The background color used for avatars of type image.
+/// @param {Color} $icon-background [rgba(0, 0, 0, .26)]- The background color used for avatars of type icon.
+/// @param {Color} $icon-color [rgba(0, 0, 0, .74)] - The icon color used for avatars of type icon.
+/// @param {Color} $initials-background [rgba(0, 0, 0, .26)] - The background color used for avatars of type initials.
+/// @param {Color} $initials-color [rgba(0, 0, 0, .74)] - The text color used for avatars of type initials.
+/// @param {Color} $image-background [transparent] - The background color used for avatars of type image.
 /// @requires text-contrast
 /// @requires igx-color
 /// @requires extend
@@ -59,7 +59,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-avatar($theme) {
     @include igx-root-css-vars($theme);
 

@@ -333,6 +333,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
+        this.rowHeight = this.defaultRowHeight;
+        this.summariesHeight = 0;
+        this.onDensityChanged.emit();
     }
 
     @Input()
@@ -511,6 +514,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
+    @Output()
+    protected onDensityChanged = new EventEmitter<any>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
@@ -936,6 +942,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._derivePossibleWidth();
         this.initPinning();
         this.calculateGridSizes();
+        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            requestAnimationFrame(() => this.reflow());
+        });
         this._ngAfterViewInitPaassed = true;
     }
 
@@ -1572,11 +1581,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
 
-        return gridHeight - toolbarHeight -
+        return Math.abs(gridHeight - toolbarHeight -
             this.theadRow.nativeElement.offsetHeight -
             this.summariesHeight - pagingHeight - groupAreaHeight -
             footerBordersAndScrollbars -
-            this.scr.nativeElement.clientHeight;
+            this.scr.nativeElement.clientHeight);
     }
 
     protected getPossibleColumnWidth() {
