@@ -417,7 +417,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public rowHeight: number;
 
     @Input()
-    public columnWidth: string = null;
+    public get columnWidth(): string {
+        return this._columnWidth;
+    }
+    public set columnWidth(value: string) {
+        this._columnWidth = value;
+        this._columnWidthSetByUser = true;
+    }
 
     @Input()
     public primaryKey;
@@ -666,6 +672,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._pinnedColumnsText = value;
     }
 
+    /**
+     * @hidden
+    */
+    public columnsWithNoSetWidths = null;
+
     /* Toolbar related definitions */
     private _showToolbar = false;
     private _exportExcel = false;
@@ -851,6 +862,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _width = '100%';
     private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
+
+    private _columnWidth: string;
+    private _columnWidthSetByUser = false;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -1520,9 +1534,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     protected _derivePossibleWidth() {
-        if (!this.columnWidth) {
-            this.columnWidth = this.getPossibleColumnWidth();
-            this.initColumns(this.columnList);
+        if (!this._columnWidthSetByUser) {
+            this._columnWidth = this.getPossibleColumnWidth();
+            this.initColumns(this.columnList, null);
         }
         this.calculateGridWidth();
     }
@@ -1596,17 +1610,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             ...this.visibleColumns.map((col) => parseInt(col.width, 10))
                 .filter((width) => !isNaN(width))
         );
-        const sumExistingWidths = this.visibleColumns
-            .filter((col) => col.width !== null)
-            .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
-        const visibleColsWithNoWidth = this.visibleColumns.filter((col) => col.width === null);
+
+        if (this.columnsWithNoSetWidths === null) {
+            this.columnsWithNoSetWidths = this.visibleColumns.filter((col) => col.width === null);
+        }
+
+        const sumExistingWidths = this.visibleColumns
+            .filter((col) => this.columnsWithNoSetWidths.indexOf(col) === -1)
+            .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
+
         maxColumnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / visibleColsWithNoWidth.length, MINIMUM_COLUMN_WIDTH) :
-            Math.max((computedWidth - sumExistingWidths) / visibleColsWithNoWidth.length, MINIMUM_COLUMN_WIDTH);
+            Math.max(computedWidth / this.columnsWithNoSetWidths.length, MINIMUM_COLUMN_WIDTH) :
+            Math.max((computedWidth - sumExistingWidths) / this.columnsWithNoSetWidths.length, MINIMUM_COLUMN_WIDTH);
 
         return maxColumnWidth.toString();
     }
@@ -1616,7 +1635,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
-            this.calcWidth = parseInt(computed.getPropertyValue('width'), 10);
+            const width = parseInt(computed.getPropertyValue('width'), 10);
+            if (width !== this.calcWidth) {
+                this.calcWidth = width;
+
+                this._derivePossibleWidth();
+            }
             return;
         }
         this.calcWidth = parseInt(this._width, 10);
@@ -1765,16 +1789,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         // XXX: Deprecate index
         this._columns = this.columnList.toArray();
+        const _columnsWithNoSetWidths = [];
 
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
-            if (!column.width) {
+            if ((this.columnsWithNoSetWidths === null && !column.width) ||
+                (this.columnsWithNoSetWidths !== null && this.columnsWithNoSetWidths.indexOf(column) !== -1)) {
                 column.width = this.columnWidth;
+                _columnsWithNoSetWidths.push(column);
             }
             if (cb) {
                 cb(column);
             }
         });
+
+        this.columnsWithNoSetWidths = _columnsWithNoSetWidths;
         this.reinitPinStates();
     }
 
