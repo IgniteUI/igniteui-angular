@@ -333,6 +333,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
+        this.rowHeight = this.defaultRowHeight;
+        this.summariesHeight = 0;
+        this.onDensityChanged.emit();
     }
 
     @Input()
@@ -511,6 +514,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
+    @Output()
+    protected onDensityChanged = new EventEmitter<any>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
@@ -878,11 +884,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe((source) => {
-            const editableCell =  this.gridAPI.get_cell_inEditMode(this.id);
-            if (editableCell) {
-                this.gridAPI.submit_value(this.id);
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-            }
+            this.gridAPI.submit_value(this.id);
         });
     }
 
@@ -940,6 +942,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._derivePossibleWidth();
         this.initPinning();
         this.calculateGridSizes();
+        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            requestAnimationFrame(() => this.reflow());
+        });
         this._ngAfterViewInitPaassed = true;
     }
 
@@ -1142,7 +1147,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (column.level !== dropTarget.level) {
             return;
         }
-
+        this.gridAPI.submit_value(this.id);
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
         }
@@ -1260,10 +1265,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     public sort(...rest): void {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-        }
+        this.gridAPI.escape_editMode(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
@@ -1272,6 +1274,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
+        this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
         } else {
@@ -1312,10 +1315,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-        }
         const col = this.gridAPI.get_column_by_name(this.id, name);
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
@@ -1582,11 +1581,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
 
-        return gridHeight - toolbarHeight -
+        return Math.abs(gridHeight - toolbarHeight -
             this.theadRow.nativeElement.offsetHeight -
             this.summariesHeight - pagingHeight - groupAreaHeight -
             footerBordersAndScrollbars -
-            this.scr.nativeElement.clientHeight;
+            this.scr.nativeElement.clientHeight);
     }
 
     protected getPossibleColumnWidth() {
@@ -2055,11 +2054,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowList) {
             return 0;
         }
-
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-        }
+        this.gridAPI.escape_editMode(this.id);
 
         if (this.collapsedHighlightedItem) {
             this.collapsedHighlightedItem = null;
@@ -2195,8 +2190,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const caseSensitive = this.lastSearchInfo.caseSensitive;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
-        const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).
-            map((c) => ({ name: c.field, searchable: c.searchable }));
+        const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
 
         const groupIndexData = this.getGroupIncrementData();
         const groupByRecords = this.getGroupByRecords();
@@ -2218,9 +2212,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 collapsedRowsCount++;
             }
 
-            columnItems.forEach((columnItem, j) => {
-                const value = dataRow[columnItem.name];
-                if (value !== undefined && value !== null && columnItem.searchable) {
+            columnItems.forEach((c, j) => {
+                const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
+                if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
                     let occurenceIndex = 0;
                     let searchIndex = searchValue.indexOf(searchText);
