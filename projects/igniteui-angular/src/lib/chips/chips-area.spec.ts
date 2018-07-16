@@ -471,22 +471,35 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
 
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
+        const chipAreaComp = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent))[0].componentInstance;
+        spyOn(chipAreaComp.onSelection, 'emit');
 
-        spyOn(secondChipComp.onSelection, 'emit');
         secondChipComp.chipArea.nativeElement.focus();
+        fix.detectChanges();
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': ' '
         });
         secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
-        expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
+
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            owner: chipAreaComp,
+            newSelection: [secondChipComp]
+        });
 
         let chipsSelectionStates = fix.componentInstance.chips.toArray().filter(c => c.selected);
         expect(chipsSelectionStates.length).toEqual(1);
         expect(secondChipComp.selected).toBeTruthy();
 
         secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        fix.detectChanges();
+
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            owner: chipAreaComp,
+            newSelection: []
+        });
+
         chipsSelectionStates = fix.componentInstance.chips.toArray().filter(c => c.selected);
         expect(chipsSelectionStates.length).toEqual(0);
         expect(secondChipComp.selected).not.toBeTruthy();
@@ -512,6 +525,9 @@ describe('IgxChipsArea', () => {
     it('should be able to have multiple chips selected', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
+
+        const chipAreaComp = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent))[0].componentInstance;
+
         let selChips = 0;
         const chipAreaComponent = fix.componentInstance;
 
@@ -525,10 +541,16 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
         chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
         fix.detectChanges();
+
         expect(selChips).toEqual(2);
 
-        const selectedChips = chipAreaComponent.chipsArea.chipsList.toArray().filter(c => c.selected);
-        expect(selectedChips.length).toEqual(2);
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+        const thirdChipComp = fix.componentInstance.chips.toArray()[2];
+
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            owner: chipAreaComp,
+            newSelection: [secondChipComp, thirdChipComp]
+        });
     });
 
     it('should focus on chip correctly', () => {
