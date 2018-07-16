@@ -665,6 +665,21 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
     }
 
+    private _compareFunc(itemID, equalCheck?: boolean) {
+        let compareFunc;
+        const key = this.valueKey;
+
+        // When there is remote data we need to compare valueKey values,
+        // instead of comparing entire itemID objects, because in that case they are not equal by reference.
+        if (this.totalItemCount > 0 && this.valueKey && this.dataType === DataTypes.COMPLEX) {
+            compareFunc = function(selectedItemID) {
+                return equalCheck ? selectedItemID[key] === itemID[key] :
+                                    selectedItemID[key] !== itemID[key];
+            };
+        }
+        return compareFunc;
+    }
+
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
@@ -979,8 +994,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             return;
         }
         const newSelection = select ?
-            this.selectionAPI.select_item(this.id, newItem) :
-            this.selectionAPI.deselect_item(this.id, newItem);
+            this.selectionAPI.select_item(this.id, newItem, this._compareFunc.apply(this, [newItem, true])) :
+            this.selectionAPI.deselect_item(this.id, newItem, this._compareFunc.apply(this, [newItem, false]));
         this.triggerSelectionChange(newSelection);
     }
 
@@ -1013,16 +1028,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isItemSelected(item) {
-        const dropDown = this.dropdown;
-        let selectedItemsIDs, itemID;
-        if (this.totalItemCount > 0) {
-            selectedItemsIDs = this.selectionAPI.get_all_ids(dropDown.selectedItem, this.valueKey);
-            itemID = item[this.valueKey];
-        } else {
-            selectedItemsIDs = dropDown.selectedItem;
-            itemID = item;
-        }
-        return selectedItemsIDs.indexOf(itemID) > -1;
+        return this.selectionAPI.is_item_selected(this.id, item, this._compareFunc.apply(this, [item, true]));
     }
 
     /**
