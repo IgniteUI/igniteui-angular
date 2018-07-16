@@ -6,17 +6,17 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null] - The navigation drawer background color.
-/// @param {Color} $border-color [null] - The navigation drawer right border color.
-/// @param {Color} $item-header-text-color [null] - The header's idle text color.
-/// @param {Color} $item-text-color [null] - The item's idle text color.
-/// @param {Color} $item-icon-color [null] - The item's icon color.
-/// @param {Color} $item-active-text-color [null] - The item's active text color.
-/// @param {Color} $item-active-background [null] - The item's active background color.
-/// @param {Color} $item-active-icon-color [null] - The item's icon active color.
-/// @param {Color} $item-hover-background [null] - The item's hover background color.
-/// @param {Color} $item-hover-text-color [null] - The item's hover text color.
-/// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
+/// @param {Color} $background [#fff] - The navigation drawer background color.
+/// @param {Color} $border-color [rgba(0, 0, 0, .14)] - The navigation drawer right border color.
+/// @param {Color} $item-header-text-color [rgba(0, 0, 0, .54)] - The header's idle text color.
+/// @param {Color} $item-text-color [rgba(0, 0, 0, .62)] - The item's idle text color.
+/// @param {Color} $item-icon-color [rgba(0, 0, 0, .62)] - The item's icon color.
+/// @param {Color} $item-active-text-color [rgba(0, 0, 0, .38)] - The item's active text color.
+/// @param {Color} $item-active-background [rgba(0, 0, 0, .04)] - The item's active background color.
+/// @param {Color} $item-active-icon-color [rgba(0, 0, 0, .38)] - The item's icon active color.
+/// @param {Color} $item-hover-background [rgba(0, 0, 0, .08)] - The item's hover background color.
+/// @param {Color} $item-hover-text-color [rgba(0, 0, 0, .74)] - The item's hover text color.
+/// @param {Color} $item-hover-icon-color [rgba(0, 0, 0, .74)] - The item's hover icon color.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -118,6 +118,7 @@
 /// @requires $elevations
 /// @requires $overlay-color
 /// @requires rem
+/// @requires --var
 @mixin igx-navdrawer($theme) {
     @include igx-root-css-vars($theme);
 
