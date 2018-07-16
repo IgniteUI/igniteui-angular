@@ -41,37 +41,129 @@ import { IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteri
     template: ``
 })
 export class IgxColumnComponent implements AfterContentInit {
-
-    @Input()
+/**
+ * Sets/gets the `field` value.
+ * ```typescript
+ * let columnField = this.column.field;
+ * ```
+ * ```html
+ * <igx-column [field] = "'ID'"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public field: string;
-
-    @Input()
+/**
+ * Sets/gets the `header` value.
+ * ```typescript
+ * let columnHeader = this.column.header;
+ * ```
+ * ```html
+ * <igx-column [header] = "'ID'"></igx-column>
+ * ```
+ *
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public header = '';
-
-    @Input()
+/**
+ * Sets/gets whether the column is sortable.
+ * Default value is `false`.
+ * ```typescript
+ * let isSortable = this.column.sortable;
+ * ```
+ * ```html
+ * <igx-column [soratble] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public sortable = false;
-
-    @Input()
+/**
+ * Sets/gets whether the column is groupable.
+ * Default value is `false`.
+ * ```typescript
+ * let isGroupable = this.column.groupable;
+ * ```
+ * ```html
+ * <igx-column [groupable] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public groupable = false;
-
-    @Input()
+/**
+ * Sets/gets whether the column is editable.
+ * Default value is `false`.
+ * ```typescript
+ * let isEditable = this.column.editable;
+ * ```
+ * ```html
+ * <igx-column [editable] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public editable = false;
-
-    @Input()
+/**
+ * Sets/gets whether the column is filterable.
+ * Default value is `false`.
+ * ```typescript
+ * let isFilterable = this.column.filterable;
+ * ```
+ * ```html
+ * <igx-column [filterable] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public filterable = false;
-
-    @Input()
+/**
+ * Sets/gets whether the column is resizable.
+ * Default value is `false`.
+ * ```typescript
+ * let isResizable = this.column.resizable;
+ * ```
+ * ```html
+ * <igx-column [resizable] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public resizable = false;
-
-    @Input()
+/**
+ * Sets/gets whether the column has summary.
+ * Default value is `false`.
+ * ```typescript
+ * let hasSummary = this.column.hasSummary;
+ * ```
+ * ```html
+ * <igx-column [hasSummary] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public hasSummary = false;
-
-    @Input()
+/**
+ * Gets whether the column is hidden.
+ * ```typescript
+ * let isHidden = this.column.hidden;
+ * ```
+ *@memberof IgxColumnComponent
+ */
+@Input()
     get hidden(): boolean {
         return this._hidden;
     }
-
-    set hidden(value: boolean) {
+/**
+ * Sets the whether the column will be hidden.
+ * Default value is `false`.
+ * ```typescript
+ * <igx-column [hidden] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
             const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
@@ -97,59 +189,187 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
     }
-
-    @Input()
+/**
+ * Gets whether the hiding is disabled.
+ * ```typescript
+ * let isHidingDisabled =  this.column.disableHiding;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     get disableHiding(): boolean {
         return this._disableHiding;
     }
-
-    set disableHiding(value: boolean) {
+/**
+ * Sets whether the hiding should be disabled.
+ * Default value is `false`.
+ * ```typescript
+ * <igx-column [hidden] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+set disableHiding(value: boolean) {
         if (this._disableHiding !== value) {
             this._disableHiding = value;
             this.check();
         }
     }
-
-    @Input()
+/**
+ * Sets/gets whether the column is movable.
+ * Default value is `false`.
+ * ```typescript
+ * let isMovable = this.column.movable;
+ * ```
+ * ```html
+ * <igx-column [movable] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public movable = false;
-
-    @Input()
+/**
+ * Sets/gets the `width` of the column.
+ * ```typescript
+ * let columnWidth = this.column.width;
+ * ```
+ * ```html
+ * <igx-column [width] = "'25%'"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public width: string;
-
-    @Input()
+/**
+ * Sets/gets the maximum `width` of the column.
+ * ```typescript
+ * let columnMaxWidth = this.column.width;
+ * ```
+ * ```html
+ * <igx-column [maxWidth] = "'75%'"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public maxWidth: string;
-
-    @Input()
+/**
+ * Sets/gets the minimum `width` of the column.
+ * Default value is `88`;
+ * ```typescript
+ * let columnMinWidth = this.column.minWidth;
+ * ```
+ * ```html
+ * <igx-column [minWidth] = "'15%'"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public minWidth = this.defaultMinWidth;
-
-    @Input()
+/**
+ * Sets/gets the class selector of the column header.
+ * ```typescript
+ * let columnHeaderClass = this.column.headerClasses;
+ * ```
+ * ```html
+ * <igx-column [headerClasses] = "'column-header'"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public headerClasses = '';
-
-    @Input()
+/**
+ * Sets/gets the class selector of the column cells.
+ * ```typescript
+ * let columnCellsClass = this.column.cellClasses;
+ * ```
+ * ```html
+ * <igx-column [cellClasses] = "'column-cell'"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public cellClasses = '';
-
-    get index(): number {
+/**
+ * Gets the `index` od the column.
+ * ```typescript
+ * let columnIndex = this.column.index;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get index(): number {
         return this.grid.columns.indexOf(this);
     }
-
-    @Input()
+/**
+ * Sets/gets formatter for the column.
+ * ```typescript
+ * let columnFormatter = this.column.formatter;
+ * ```
+ * ```typescript
+ * this.column.formatter = (val: Date) => {
+ * return new Intl.DateTimeFormat("en-US").format(val);
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public formatter: (value: any) => any;
-
-    @Input()
+/**
+ * Sets/gets whether the column filtering should be case sensitive.
+ * Default value is `true`.
+ * ```typescript
+ * let filteringIgnoreCase = this.column.filteringIgnoreCase;
+ * ```
+ * ```html
+ * <igx-column [filteringIgnoreCase] = "false"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public filteringIgnoreCase = true;
-
-    @Input()
+/**
+ * Sets/gets whether the column sorting should be case sensitive.
+ * Default value is `true`.
+ * ```typescript
+ * let sortingIgnoreCase = this.column.sortingIgnoreCase;
+ * ```
+ * ```html
+ * <igx-column [sortingIgnoreCase] = "false"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public sortingIgnoreCase = true;
-
-    @Input()
+/**
+ * Sets/gets the data type of the column values.
+ * Default value is `string`.
+ * ```typescript
+ * let columnDataType = this.column.dataType;
+ * ```
+ * ```html
+ * <igx-column [dataType] = "'number'"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public dataType: DataType = DataType.String;
-
-    @Input()
+/**
+ * Gets whether the column is `pinned`.
+ * ```typescript
+ * let isPinned = this.column.pinned;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public get pinned(): boolean {
         return this._pinned;
     }
-
-    public set pinned(value: boolean) {
+/**
+ * Sets whether the column is pinned.
+ * Default value is `false`.
+ * ```html
+ * <igx-column [pinned] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+public set pinned(value: boolean) {
         if (this._pinned !== value) {
             if (this.grid && this.width && !isNaN(parseInt(this.width, 10))) {
                 value ? this.pin() : this.unpin();
@@ -161,80 +381,205 @@ export class IgxColumnComponent implements AfterContentInit {
             this._pinned = value;
         }
     }
-
-    public gridID: string;
-
-    @Input()
+/**
+ * Gets/Sets the `id` of the `igx-grid`.
+ * ```typescript
+ * let columnGridId = this.column.gridID;
+ * ```
+ * ```typescript
+ * this.column.gridID = 'grid-1';
+ * ```
+ * @memberof IgxColumnComponent
+ */
+public gridID: string;
+/**
+ * Gets the column `summaries`.
+ * ```typescript
+ * let columnSummaries = this.column.summaries;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public get summaries(): any {
         return this._summaries;
     }
-
-    public set summaries(classRef: any) {
+/**
+ * Sets the column `summaries`.
+ * ```typescript
+ * this.column.summaries = IgxNumberSummaryOperand;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+public set summaries(classRef: any) {
         this._summaries = new classRef();
     }
-
-    @Input()
+/**
+ * Sets/gets whether the column is `searchable`.
+ * Default value is `true`.
+ * ```typescript
+ * let isSearchable =  this.column.searchable';
+ * ```
+ * ```html
+ *  <igx-column [searchable] = "false"></igx-column>
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public searchable = true;
-
-    @Input()
+/**
+ * Gets the column `filters`.
+ * ```typescript
+ * let columnFilters = this.column.filters'
+ * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
     public get filters(): any {
         return this._filters;
     }
-    public set filters(classRef: any) {
+/**
+ * Sets the column `filters`.
+ * ```typescript
+ * this.column.filters = IgxBooleanFilteringOperand.
+ * ```
+ * @memberof IgxColumnComponent
+ */
+public set filters(classRef: any) {
         this._filters = classRef;
     }
-
-    get defaultMinWidth(): string {
+/**
+ * Gets the default minimum `width` of the column.
+ * ```typescript
+ * let defaultMinWidth =  this.column.defaultMinWidth;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get defaultMinWidth(): string {
         return this._defaultMinWidth;
     }
-
-    get grid(): IgxGridComponent {
+/**
+ * Returns reference to the `igx-grid`.
+ * ```typescript
+ * let gridComponent = this.column.grid;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
-
-    get bodyTemplate(): TemplateRef<any> {
+/**
+ * Returns a reference to the `bodyTemplate`.
+ * ```typescript
+ * let bodyTemplate = this.column.bodyTemplate;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
-
-    set bodyTemplate(template: TemplateRef<any>) {
+/**
+ * Sets the body template.
+ * ```typescript
+ * @ViewChild("'bodyTemplate'", {read: TemplateRef })
+ * public bodyTemplate: TemplateRef<any>;
+ * this.column.bodyTemplate(bodyTemplate);
+ * ```
+ * @memberof IgxColumnComponent
+ */
+set bodyTemplate(template: TemplateRef<any>) {
         this._bodyTemplate = template;
         this.grid.markForCheck();
     }
-
-    get headerTemplate(): TemplateRef<any> {
+/**
+ * Returns a reference to the header template.
+ * ```typescript
+ * let headerTemplate = this.column.headerTemplate;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get headerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
-
-    set headerTemplate(template: TemplateRef<any>) {
+/**
+ * Sets the header template.
+ * ```typescript
+ * @ViewChild("'headerTemplate'", {read: TemplateRef })
+ * public headerTemplate: TemplateRef<any>;
+ * this.column.headerTemplate(headerTemplate);
+ * ```
+ * @memberof IgxColumnComponent
+ */
+set headerTemplate(template: TemplateRef<any>) {
         this._headerTemplate = template;
         this.grid.markForCheck();
     }
-
-    get footerTemplate(): TemplateRef<any> {
+/**
+ * Returns a reference to the footer template.
+ * ```typescript
+ * let footerTemplate = this.column.footerTemplate;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get footerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
-
-    set footerTemplate(template: TemplateRef<any>) {
+/**
+ * Sets the footer template.
+ * ```typescript
+ * @ViewChild("'footerTemplate'", {read: TemplateRef })
+ * public footerTemplate: TemplateRef<any>;
+ * this.column.footerTemplate(footerTemplate);
+ * ```
+ * @memberof IgxColumnComponent
+ */
+set footerTemplate(template: TemplateRef<any>) {
         this._footerTemplate = template;
         this.grid.markForCheck();
     }
-
-    get inlineEditorTemplate(): TemplateRef<any> {
+/**
+ * Returns a reference to the inline editor template.
+ * ```typescript
+ * let inlineEditorTemplate = this.column.inlineEditorTemplate;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
     }
-
-    set inlineEditorTemplate(template: TemplateRef<any>) {
+/**
+ * Sets the inline editor template.
+ * ```typescript
+ * @ViewChild("'inlineEditorTemplate'", {read: TemplateRef })
+ * public inlineEditorTemplate: TemplateRef<any>;
+ * this.column.inlineEditorTemplate(inlineEditorTemplate);
+ * ```
+ * @memberof IgxColumnComponent
+ */
+set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
         this.grid.markForCheck();
     }
-
-    get cells(): IgxGridCellComponent[] {
+/**
+ * Gets the cells of the column.
+ * ```typescript
+ * let columnCells =  this.column.cells;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get cells(): IgxGridCellComponent[] {
         return this.grid.rowList.filter((row) => row instanceof IgxGridRowComponent)
             .map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
                 .reduce((a, b) => a.concat(b), []);
     }
-
-    get visibleIndex(): number {
+/**
+ * Gets the index of the non hidden column.
+ * If the column is not visible, returns `-1`.
+ * ```typescript
+ * let visibleColumnIndex =  this.column.visibleIndex;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get visibleIndex(): number {
         const grid = this.gridAPI.get(this.gridID);
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
@@ -253,16 +598,36 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         return vIndex;
     }
-
-    get columnGroup() {
+/**
+ * Gets whether the column contains other columns.
+ * ```typescript
+ * let columnGroup =  this.column.columnGroup;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get columnGroup() {
         return false;
     }
-
-    get allChildren(): IgxColumnComponent[] {
+/**
+ * Returns the children columns that the current column contains.
+ * If it doesn't have children, returns an empty array.
+ * ```typescript
+ * let childrenColumns =  this.column.allChildren;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get allChildren(): IgxColumnComponent[] {
         return [];
     }
-
-    get level() {
+/**
+ * Returns the level of the column in a column group.
+ * Returns `0` if the column doesn't have a `parent`.
+ * ```typescript
+ * let columnLevel =  this.column.level;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get level() {
         let ptr = this.parent;
         let lvl = 0;
 
@@ -272,39 +637,102 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         return lvl;
     }
-
-    parent = null;
-    children;
-
-    protected _unpinnedIndex;
-    protected _pinned = false;
-    protected _bodyTemplate: TemplateRef<any>;
-    protected _headerTemplate: TemplateRef<any>;
-    protected _footerTemplate: TemplateRef<any>;
-    protected _inlineEditorTemplate: TemplateRef<any>;
-    protected _summaries = null;
-    protected _filters = null;
-    protected _hidden = false;
-    protected _index: number;
-    protected _disableHiding = false;
-
-    protected _defaultMinWidth = '88';
-
-    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
+/**
+ * Sets/gets the parent column.
+ * ```typescript
+ * let parentColumn = this.column.parent;
+ * ```
+ * ```typescript
+ * this.column.parent = higherLevelColumn;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+parent = null;
+/**
+ * Sets/gets the children columns.
+ * ```typescript
+ * let columnChildren = this.column.children;
+ * ```
+ * ```typescript
+ * this.column.children = childrenColumns;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+children;
+/**
+ *@hidden
+ */
+protected _unpinnedIndex;
+/**
+ *@hidden
+ */
+protected _pinned = false;
+/**
+ *@hidden
+ */
+protected _bodyTemplate: TemplateRef<any>;
+/**
+ *@hidden
+ */
+protected _headerTemplate: TemplateRef<any>;
+/**
+ *@hidden
+ */
+protected _footerTemplate: TemplateRef<any>;
+/**
+ *@hidden
+ */
+protected _inlineEditorTemplate: TemplateRef<any>;
+/**
+ *@hidden
+ */
+protected _summaries = null;
+/**
+ *@hidden
+ */
+protected _filters = null;
+/**
+ *@hidden
+ */
+protected _hidden = false;
+/**
+ *@hidden
+ */
+protected _index: number;
+/**
+ *@hidden
+ */
+protected _disableHiding = false;
+/**
+ *@hidden
+ */
+protected _defaultMinWidth = '88';
+/**
+ *@hidden
+ */
+@ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
-
-    @ContentChild(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective })
+/**
+ *@hidden
+ */
+@ContentChild(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective })
     protected headTemplate: IgxCellHeaderTemplateDirective;
-
-    @ContentChild(IgxCellFooterTemplateDirective, { read: IgxCellFooterTemplateDirective })
+/**
+ *@hidden
+ */
+@ContentChild(IgxCellFooterTemplateDirective, { read: IgxCellFooterTemplateDirective })
     protected footTemplate: IgxCellFooterTemplateDirective;
-
-    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
+/**
+ *@hidden
+ */
+@ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
-
-    public ngAfterContentInit(): void {
+/**
+ *@hidden
+ */
+public ngAfterContentInit(): void {
         if (this.cellTemplate) {
             this._bodyTemplate = this.cellTemplate.template;
         }
@@ -349,23 +777,36 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
     }
+/**
+ * Updates the highlights when a column index is changed.
+ * ```typescript
+ * this.column.updateHighlights(1, 3);
+ * ```
+ * @memberof IgxColumnComponent
+ */
+public updateHighlights(oldIndex: number, newIndex: number) {
+    const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
 
-    public updateHighlights(oldIndex: number, newIndex: number) {
-        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
+    if (activeInfo && activeInfo.columnIndex === oldIndex) {
+        IgxTextHighlightDirective.setActiveHighlight(this.grid.id, {
+            columnIndex: newIndex,
+            rowIndex: activeInfo.rowIndex,
+            index: activeInfo.index,
+            page: activeInfo.page,
+        });
 
-        if (activeInfo && activeInfo.columnIndex === oldIndex) {
-            IgxTextHighlightDirective.setActiveHighlight(this.grid.id, {
-                columnIndex: newIndex,
-                rowIndex: activeInfo.rowIndex,
-                index: activeInfo.index,
-                page: activeInfo.page,
-            });
-
-            this.grid.refreshSearch(true);
-        }
+        this.grid.refreshSearch(true);
     }
-
-    public pin(index?) {
+}
+/**
+ * Pins the column.
+ * The provided index specifies where the column should be pinned in the pinned area.
+ * ```typescript
+ * this.column.pin();
+ * ```
+ * @memberof IgxColumnComponent
+ */
+public pin(index?) {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
 
@@ -409,8 +850,15 @@ export class IgxColumnComponent implements AfterContentInit {
         this.updateHighlights(oldIndex, newIndex);
         return true;
     }
-
-    public unpin(index?) {
+/**
+ * Unpins the column.
+ * The provided index specifies where the column should be placed in the unpinned area.
+ * ```typescript
+ * this.column.unpin();
+ * ```
+ * @memberof IgxColumnComponent
+ */
+public unpin(index?) {
 
         if (!this._pinned) {
             return false;
@@ -441,16 +889,24 @@ export class IgxColumnComponent implements AfterContentInit {
         this.updateHighlights(oldIndex, newIndex);
         return true;
     }
-
-    get topLevelParent() {
+/**
+ * Returns a reference to the top level parent.
+ * ```typescript
+ * let topLevelParent =  this.column.topLevelParent;
+ * ```
+ * @memberof IgxColumnComponent
+ */
+get topLevelParent() {
         let parent = this.parent;
         while (parent && parent.parent) {
             parent = parent.parent;
         }
         return parent;
     }
-
-    protected check() {
+/**
+ *@hidden
+ */
+protected check() {
         if (this.grid) {
             this.grid.markForCheck();
         }
@@ -469,66 +925,183 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     children = new QueryList<IgxColumnComponent>();
-
-    @Input()
+/**
+ * Gets the column group `summaries`.
+ * ```typescript
+ * let columnGroupSummaries = this.columnGroup.summaries;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+@Input()
     public get summaries(): any {
         return this._summaries;
     }
-
-    public set summaries(classRef: any) {}
-
-    @Input()
+/**
+ * Sets the column group `summaries`.
+ * ```typescript
+ * this.columnGroup.summaries = IgxNumberSummaryOperand;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+public set summaries(classRef: any) {}
+/**
+ * Sets/gets whether the column group is `searchable`.
+ * Default value is `true`.
+ * ```typescript
+ * let isSearchable =  this.columnGroup.searchable;
+ * ```
+ * ```html
+ *  <igx-column-group [searchable] = "false"></igx-column-group>
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+@Input()
     public searchable = true;
-
-    @Input()
+/**
+ * Gets the column group `filters`.
+ * ```typescript
+ * let columnGroupFilters = this.columnGroup.filters;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+@Input()
     public get filters(): any {
         return this._filters;
     }
-    public set filters(classRef: any) {}
-
-    get defaultMinWidth(): string {
+/**
+ * Sets the column group `filters`.
+ * ```typescript
+ * this.columnGroup.filters = IgxStringFilteringOperand;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+public set filters(classRef: any) {}
+/**
+ * Gets the default minimum `width` of the column group.
+ * ```typescript
+ * let defaultMinWidth = this.columnGroup.defaultMinWidth;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get defaultMinWidth(): string {
         return this._defaultMinWidth;
     }
-
-    get bodyTemplate(): TemplateRef<any> {
+/**
+ * Returns a reference to the body template.
+ * ```typescript
+ * let bodyTemplate = this.columnGroup.bodyTemplate;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
-
-    set bodyTemplate(template: TemplateRef<any>) {}
-
-    get headerTemplate(): TemplateRef<any> {
+/**
+ * Sets the body template.
+ * ```typescript
+ * @ViewChild("'bodyTemplate'", {read: TemplateRef })
+ * public bodyTemplate: TemplateRef<any>;
+ * this.columnGroup.bodyTemplate(bodyTemplate);
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+set bodyTemplate(template: TemplateRef<any>) {}
+/**
+ * Returns a reference to the header template.
+ * ```typescript
+ * let headerTemplate = this.columnGroup.headerTemplate;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get headerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
-
-    set headerTemplate(template: TemplateRef<any>) {}
-
-    get footerTemplate(): TemplateRef<any> {
+/**
+ * Sets the header template.
+ * ```typescript
+ * @ViewChild('"headerTemplate"', {read: TemplateRef })
+ * public headerTemplate: TemplateRef<any>;
+ * this.columnGroup.headerTemplate(headerTemplate);
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+set headerTemplate(template: TemplateRef<any>) {}
+/**
+ * Returns a reference to the header template.
+ * ```typescript
+ * let footerTemplate = this.columnGroup.footerTemplate;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get footerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
-
-    set footerTemplate(template: TemplateRef<any>) {}
-
-    get inlineEditorTemplate(): TemplateRef<any> {
+/**
+ * Sets the footer template.
+ * ```typescript
+ * @ViewChild("'footerTemplate'", {read: TemplateRef })
+ * public footerTemplate: TemplateRef<any>;
+ * this.columnGroup.footerTemplate(footerTemplate);
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+set footerTemplate(template: TemplateRef<any>) {}
+/**
+ * Returns a reference to the inline editor template.
+ * ```typescript
+ * let inlineEditorTemplate = this.columnGroup.inlineEditorTemplate;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
     }
-
-    set inlineEditorTemplate(template: TemplateRef<any>) {}
-
-    get cells(): IgxGridCellComponent[] {
+/**
+ * Sets the inline editor template.
+ * ```typescript
+ * @ViewChild("'inlineEditorTemplate'", {read: TemplateRef })
+ * public inlineEditorTemplate: TemplateRef<any>;
+ * this.columnGroup.inlineEditorTemplate(inlineEditorTemplate);
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+set inlineEditorTemplate(template: TemplateRef<any>) {}
+/**
+ * Gets the cells of the column group.
+ * ```typescript
+ * let columnCells = this.columnGroup.cells;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get cells(): IgxGridCellComponent[] {
         return [];
     }
-
-    @Input()
-    get hidden() {
-        return this.allChildren.every(c => c.hidden);
-    }
-
-    set hidden(value: boolean) {
-        this._hidden = value;
-        this.children.forEach(child => child.hidden = value);
-    }
-
-    ngAfterContentInit() {
+/**
+ * Gets whether the column group is hidden.
+ * ```typescript
+ * let isHidden = this.columnGroup.hidden;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+@Input()
+get hidden() {
+    return this.allChildren.every(c => c.hidden);
+}
+/**
+ * Sets whether the column group should be hidden.
+ * ```typescript
+ * <igx-column [hidden] = "true"></igx-column>
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+set hidden(value: boolean) {
+    this._hidden = value;
+    this.children.forEach(child => child.hidden = value);
+}
+/**
+ *@hidden
+ */
+ngAfterContentInit() {
         /*
             @ContentChildren with descendants still returns the `parent`
             component in the query list.
@@ -538,16 +1111,34 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             child.parent = this;
         });
     }
-
-    get allChildren(): IgxColumnComponent[] {
+/**
+ * Returns all the columns in the column group.
+ * ```typescript
+ * let columns =  this.columnGroup.allChilren;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get allChildren(): IgxColumnComponent[] {
         return flatten(this.children.toArray());
     }
-
-    get columnGroup() {
+/**
+ * Indicates that there is a column group.
+ * ```typescript
+ * let isColumnGroup =  this.columnGroup.columnGroup
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get columnGroup() {
         return true;
     }
-
-    get width() {
+/**
+ * Gets the width of the column group.
+ * ```typescript
+ * let columnGroupWidth = this.columnGroup.width;
+ * ```
+ * @memberof IgxColumnGroupComponent
+ */
+get width() {
         let isChildrenWidthInPercent = false;
         const width = `${this.children.reduce((acc, val) => {
             if (val.hidden) {
