@@ -82,9 +82,11 @@ export class IgxGridAPIService {
     public escape_editMode(gridId, cellId?) {
         const editableCell = this.get_cell_inEditMode(gridId);
         if (editableCell) {
-            if (cellId && cellId.rowID === editableCell.cellID.rowID &&
-                cellId.columnID === editableCell.cellID.columnID) {
-                    this.editCellState.delete(gridId);
+            if (cellId) {
+                if (cellId.rowID === editableCell.cellID.rowID &&
+                    cellId.columnID === editableCell.cellID.columnID) {
+                        this.editCellState.delete(gridId);
+                }
             } else {
                 this.editCellState.delete(gridId);
             }
