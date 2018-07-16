@@ -137,23 +137,16 @@ describe('IgxTabs', () => {
         const tabs = fixture.componentInstance.tabs;
         let tabItems;
         let tab1: IgxTabItemComponent;
-        let tab2: IgxTabItemComponent;
         let tab3: IgxTabItemComponent;
 
-
         expect(tabs.selectedIndex).toBe(-1);
-
-        fixture.componentInstance.tabSelectedHandler = () => {
-            expect(tabs.selectedIndex).toBe(0);
-            expect(tabs.selectedTabItem).toBe(tab1);
-        };
+        expect(tabs.selectedTabItem).toBe(tab1);
 
         tick();
         fixture.detectChanges();
 
         tabItems = tabs.tabs.toArray();
         tab1 = tabItems[0];
-        tab2 = tabItems[1];
         tab3 = tabItems[2];
         tick();
 
@@ -166,6 +159,12 @@ describe('IgxTabs', () => {
         expect(tabs.selectedTabItem).toBe(tab3);
         expect(tab3.isSelected).toBeTruthy();
 
+        fixture.componentInstance.resetCollectionFourTabs();
+        fixture.detectChanges();
+        tick(100);
+        fixture.detectChanges();
+        expect(tabs.selectedIndex).toBe(2);
+
         fixture.componentInstance.resetCollectionOneTab();
 
         fixture.detectChanges();
@@ -173,6 +172,20 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
 
+        fixture.componentInstance.resetCollectionTwoTabs();
+
+        fixture.detectChanges();
+        tick(100);
+        fixture.detectChanges();
+        expect(tabs.selectedIndex).toBe(0);
+
+        fixture.componentInstance.resetToEmptyCollection();
+
+        fixture.detectChanges();
+        tick(100);
+        fixture.detectChanges();
+        expect(tabs.groups.length).toBe(0);
+        expect(tabs.selectedTabItem).toBe(undefined);
     }));
 
     it('should initialize igx-tab custom template', () => {
@@ -312,22 +325,43 @@ class TabsTestComponent {
 class TabsTest2Component {
     @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv') public wrapperDiv: any;
+    public collection: any[];
 
-    public collection =
-        [
-            { name: 'Tab 1' },
-            { name: 'Tab 2' },
-            { name: 'Tab 3' }
-        ];
-
-    public tabSelectedHandler(args) {
+    public constructor() {
+        this.resetCollectionThreeTabs();
     }
-
     public resetCollectionOneTab() {
         this.collection =
             [
                 { name: 'Tab 3' }
             ];
+    }
+    public resetCollectionTwoTabs() {
+        this.collection =
+            [
+                { name: 'Tab 1' },
+                { name: 'Tab 3' }
+            ];
+    }
+    public resetCollectionThreeTabs() {
+        this.collection =
+            [
+                { name: 'Tab 1' },
+                { name: 'Tab 2' },
+                { name: 'Tab 3' }
+            ];
+    }
+    public resetCollectionFourTabs() {
+        this.collection =
+            [
+                { name: 'Tab 1' },
+                { name: 'Tab 2' },
+                { name: 'Tab 3' },
+                { name: 'Tab 4' }
+            ];
+    }
+    public resetToEmptyCollection() {
+        this.collection = [];
     }
 }
 
