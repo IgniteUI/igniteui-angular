@@ -40,6 +40,12 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         return Math.floor(scrollTop + this.verticalScrollContainer.igxForContainerSize) === scrollHeight;
     }
 
+    protected get lastVisibleIndex(): number {
+        return this.parentElement.totalItemCount ?
+        Math.floor(this.parentElement.itemsMaxHeight / this.parentElement.itemHeight) :
+        this.items.length - 1;
+    }
+
     /**
      *  Event emitter overrides
      *
@@ -214,9 +220,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
         if (newIndex === -1) {
             this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
-        } else if (newIndex === this.items.length - 1 && !this.isScrolledToLast) {
+        } else if (newIndex === this.lastVisibleIndex && !this.isScrolledToLast) {
             this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
-        } else if (newIndex === this.items.length - 1 && this.isScrolledToLast) {
+        } else if (newIndex === this.lastVisibleIndex && this.isScrolledToLast) {
             // When initially scrolling to the last item, a pseudo element is present in the children list
             // We need to check if the element we're on is an actual element or an empty 'igx-combo-item' child
             if (this.items[newIndex].element && this.items[newIndex].element.nativeElement.clientHeight) {
