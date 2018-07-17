@@ -25,9 +25,15 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
         return this.parentElement.parentElement.itemHeight;
     }
 
+    /**
+     * @hidden
+     */
     @Input()
     public itemData;
 
+    /**
+     * @hidden
+     */
     public get itemID() {
         return this.itemData;
     }
@@ -40,6 +46,9 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
         super(parentElement, elementRef);
     }
 
+    /**
+     * @hidden
+     */
     get isSelected() {
         return this.parentElement.parentElement.isItemSelected(this.itemID);
     }
