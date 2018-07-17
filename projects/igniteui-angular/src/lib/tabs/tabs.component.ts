@@ -153,6 +153,16 @@ export class IgxTabsComponent implements AfterViewInit {
 
     @HostListener('onTabItemSelected', ['$event'])
     public _selectedGroupHandler(args) {
+        const prevSelectedIndex = this.selectedIndex;
+
+        if (prevSelectedIndex !== -1) {
+            this.onTabItemDeselected.emit(
+                {
+                    tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
+                    group: this.groups.toArray()[prevSelectedIndex]
+                });
+        }
+
         this.selectedIndex = args.group.index;
 
         this.groups.forEach((p) => {
@@ -170,7 +180,6 @@ export class IgxTabsComponent implements AfterViewInit {
 
         group.isSelected = false;
         group.relatedTab.tabindex = -1;
-        this.onTabItemDeselected.emit({ tab: this.tabs[group.index], group });
     }
 }
 
