@@ -1120,6 +1120,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.filteringExpressions = newArray;
     }
 
+    /**
+     * @hidden
+     */
     protected onStatusChanged() {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
@@ -1158,6 +1161,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
