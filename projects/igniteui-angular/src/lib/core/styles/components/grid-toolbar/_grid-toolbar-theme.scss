@@ -2,21 +2,22 @@
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
-/// @param {Color} $background-color [null] - The toolbar background color.
-/// @param {Color} $title-text-color [null] - The toolbar title text color.
-/// @param {Color} $button-background [null] - The toolbar button background color.
-/// @param {Color} $button-text-color [null] - The toolbar button text color.
-/// @param {Color} $button-hover-background [null] - The toolbar button hover background color.
-/// @param {Color} $button-hover-text-color [null] - The toolbar button hover text color.
-/// @param {Color} $button-focus-background [null] - The toolbar button focus background color.
-/// @param {Color} $button-focus-text-color [null] - The toolbar button focus text color.
-/// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
-/// @param {Color} $item-text-color [null] - The toolbar drop-down item text color.
-/// @param {Color} $item-hover-background [null] - The toolbar drop-down item hover background color.
-/// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
-/// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
-/// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
+/// @param {Color} $background-color [rgba(0, 0, 0, .02)] - The toolbar background color.
+/// @param {Color} $title-text-color [rgba(0, 0, 0, .54)] - The toolbar title text color.
+/// @param {Color} $button-background [#f0f0f0] - The toolbar button background color.
+/// @param {Color} $button-text-color [rgba(0, 0, 0, .54)] - The toolbar button text color.
+/// @param {Color} $button-hover-background [rgba(0, 0, 0, .04)] - The toolbar button hover background color.
+/// @param {Color} $button-hover-text-color [rgba(0, 0, 0, .54)] - The toolbar button hover text color.
+/// @param {Color} $button-focus-background [rgba(0, 0, 0, .04)] - The toolbar button focus background color.
+/// @param {Color} $button-focus-text-color [rgba(0, 0, 0, .54)] - The toolbar button focus text color.
+/// @param {Color} $dropdown-background [#fff] - The toolbar drop-down background color.
+/// @param {Color} $item-text-color [rgba(0, 0, 0, .54)] - The toolbar drop-down item text color.
+/// @param {Color} $item-hover-background [rgba(0, 0, 0, .04)] - The toolbar drop-down item hover background color.
+/// @param {Color} $item-hover-text-color [rgba(0, 0, 0, .54)] - The toolbar drop-down item hover text color.
+/// @param {Color} $item-focus-background [rgba(0, 0, 0, .04)] - The toolbar drop-down item focus background color.
+/// @param {Color} $item-focus-text-color [rgba(0, 0, 0, .54)] - The toolbar drop-down item focus text color.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -88,6 +89,8 @@
     }
 
     @return extend($default-theme, (
+        palette: $palette,
+
         background-color: $background-color,
         button-background: $button-background,
         title-text-color: $title-text-color,
@@ -111,11 +114,11 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires igx-color
 /// @requires {mixin} ellipsis
-/// @requires --var
 /// @requires rem
-@mixin igx-grid-toolbar($theme, $palette: $default-palette) {
+/// @requires em
+/// @requires --var
+@mixin igx-grid-toolbar($theme) {
     @include igx-root-css-vars($theme);
-
 
     // Caption
     $grid-toolbar-fs: rem(16px);
@@ -139,7 +142,7 @@
         grid-row: 1;
         font-size: $grid-toolbar-fs;
         padding: map-get($grid-toolbar-padding, 'cosy');
-        border-bottom: 1px solid igx-color($palette, 'grays', 300);
+        border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
         min-height: map-get($grid-toolbar-height, 'comfortable');
 
@@ -183,7 +186,7 @@
             justify-content: space-between;
             align-items: center;
 
-            > *{
+            > * {
                 margin-left: rem(8px);
 
                 &:first-child {
@@ -201,17 +204,16 @@
                 margin-right: rem(8);
             }
 
-            %igx-grid-toolbar__button-space
-            {
+            %igx-grid-toolbar__button-space {
                 text-align: right;
 
-                > *{
+                > * {
                     margin-left: 0;
                     margin-right: rem(8px);
+                }
 
-                    &:last-child {
-                        margin-left: 0;
-                    }
+                > *:last-child {
+                    margin-left: 0;
                 }
             }
         }
@@ -234,20 +236,19 @@
             %igx-button--flat,
             %igx-button--icon {
                 margin-left: 0;
-                margin-right: rem(8);
+                margin-right: rem(8px);
             }
 
-            %igx-grid-toolbar__button-space
-            {
+            %igx-grid-toolbar__button-space {
                 text-align: right;
 
-                > *{
+                > * {
                     margin-left: 0;
                     margin-right: rem(8px);
+                }
 
-                    &:last-child {
-                        margin-left: 0;
-                    }
+                > *:last-child {
+                    margin-left: 0;
                 }
             }
         }

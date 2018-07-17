@@ -6,9 +6,9 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $color [null] - The icon color.
-/// @param {String} $size [null] - The icon size.
-/// @param {Color} $disabled-color [null] - The disabled icon color.
+/// @param {Color} $color [currentColor] - The icon color.
+/// @param {String} $size [24px] - The icon size.
+/// @param {Color} $disabled-color [rgba(0, 0, 0, .38)] - The disabled icon color.
 ///
 /// @requires igx-color
 /// @requires extend
@@ -42,7 +42,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-icon($theme) {
     @include igx-root-css-vars($theme);
 

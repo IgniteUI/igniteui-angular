@@ -6,10 +6,10 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $track-color [null] - The color of the track.
-/// @param {Color} $thumb-color [null] - The color of the thumb.
-/// @param {Color} $label-background-color [null] - The background color of the bubble label.
-/// @param {Color} $label-text-color [null] - The text color of the bubble label.
+/// @param {Color} $track-color [secondary 500] - The color of the track.
+/// @param {Color} $thumb-color [secondary 500] - The color of the thumb.
+/// @param {Color} $label-background-color [secondary 500] - The background color of the bubble label.
+/// @param {Color} $label-text-color [igx-contrast-color of secondary 500] - The text color of the bubble label.
 /// @param {Bool} $variant ['dark'] - Determines the default color scheme - can be 'light' or 'dark'.
 ///
 /// @requires extend
@@ -43,6 +43,7 @@
         disabled-thumb-color: hexrgba(igx-color($palette, 'grays', 400)),
 
         label-background-color: igx-color($palette, 'secondary'),
+        label-text-color: igx-contrast-color($palette, 'secondary'),
 
         base-track-color: igx-color($palette, 'grays'),
         disabled-base-track-color: igx-color($palette, 'grays', 400)
@@ -66,10 +67,6 @@
         light: $light-theme
     ), $variant);
 
-    @if not($label-text-color) and not($label-background-color) {
-        $label-text-color: text-contrast(map-get($default-theme, 'label-background-color'));
-    }
-
     @if not($label-text-color) and $label-background-color {
         $label-text-color: text-contrast($label-background-color);
     }
@@ -87,7 +84,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-slider($theme) {
     @include igx-root-css-vars($theme);
 
