@@ -73,7 +73,7 @@ export class IgxColumnComponent implements AfterContentInit {
  * let isSortable = this.column.sortable;
  * ```
  * ```html
- * <igx-column [soratble] = "true"></igx-column>
+ * <igx-column [sortable] = "true"></igx-column>
  * ```
  * @memberof IgxColumnComponent
  */
@@ -132,7 +132,7 @@ export class IgxColumnComponent implements AfterContentInit {
 @Input()
     public resizable = false;
 /**
- * Sets/gets whether the column has summary.
+ * Enables/disables summary for the column.
  * Default value is `false`.
  * ```typescript
  * let hasSummary = this.column.hasSummary;
@@ -156,7 +156,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return this._hidden;
     }
 /**
- * Sets the whether the column will be hidden.
+ * Sets the column hidden property.
  * Default value is `false`.
  * ```typescript
  * <igx-column [hidden] = "true"></igx-column>
@@ -201,7 +201,7 @@ set hidden(value: boolean) {
         return this._disableHiding;
     }
 /**
- * Sets whether the hiding should be disabled.
+ * Enables/disables hiding for the column.
  * Default value is `false`.
  * ```typescript
  * <igx-column [hidden] = "true"></igx-column>
@@ -289,7 +289,7 @@ set disableHiding(value: boolean) {
 @Input()
     public cellClasses = '';
 /**
- * Gets the `index` od the column.
+ * Gets the column index.
  * ```typescript
  * let columnIndex = this.column.index;
  * ```
@@ -479,10 +479,17 @@ get bodyTemplate(): TemplateRef<any> {
     }
 /**
  * Sets the body template.
+ * ```html
+ * <ng-template #bodyTemplate igxCell let-val>
+ *    <div style = "background-color: yellowgreen" (click) = "changeColor(cell)">
+ *       <span> {{val}} </span>
+ *    </div>
+ * </ng-template>
+ * ```
  * ```typescript
  * @ViewChild("'bodyTemplate'", {read: TemplateRef })
  * public bodyTemplate: TemplateRef<any>;
- * this.column.bodyTemplate(bodyTemplate);
+ * this.column.bodyTemplate = this.bodyTemplate;
  * ```
  * @memberof IgxColumnComponent
  */
@@ -502,10 +509,17 @@ get headerTemplate(): TemplateRef<any> {
     }
 /**
  * Sets the header template.
+ * ```html
+ * <ng-template #headerTemplate>
+ *   <div style = "background-color:black" (click) = "changeColor(column)">
+ *       <span style="color:red" >{{column.field}}</span>
+ *   </div>
+ * </ng-template>
+ * ```
  * ```typescript
  * @ViewChild("'headerTemplate'", {read: TemplateRef })
  * public headerTemplate: TemplateRef<any>;
- * this.column.headerTemplate(headerTemplate);
+ * this.column.headerTemplate = this.headerTemplate;
  * ```
  * @memberof IgxColumnComponent
  */
@@ -514,23 +528,13 @@ set headerTemplate(template: TemplateRef<any>) {
         this.grid.markForCheck();
     }
 /**
- * Returns a reference to the footer template.
- * ```typescript
- * let footerTemplate = this.column.footerTemplate;
- * ```
- * @memberof IgxColumnComponent
+ *@hidden
  */
 get footerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
 /**
- * Sets the footer template.
- * ```typescript
- * @ViewChild("'footerTemplate'", {read: TemplateRef })
- * public footerTemplate: TemplateRef<any>;
- * this.column.footerTemplate(footerTemplate);
- * ```
- * @memberof IgxColumnComponent
+ *@hidden
  */
 set footerTemplate(template: TemplateRef<any>) {
         this._footerTemplate = template;
@@ -548,10 +552,15 @@ get inlineEditorTemplate(): TemplateRef<any> {
     }
 /**
  * Sets the inline editor template.
+ * ```html
+ * <ng-template #inlineEditorTemplate igxCellEditor let-cell="cell">
+ *     <input type="string" [(ngModel)]="cell.value"/>
+ * </ng-template>
+ * ```
  * ```typescript
  * @ViewChild("'inlineEditorTemplate'", {read: TemplateRef })
  * public inlineEditorTemplate: TemplateRef<any>;
- * this.column.inlineEditorTemplate(inlineEditorTemplate);
+ * this.column.inlineEditorTemplate = this.inlineEditorTemplate;
  * ```
  * @memberof IgxColumnComponent
  */
@@ -572,7 +581,7 @@ get cells(): IgxGridCellComponent[] {
                 .reduce((a, b) => a.concat(b), []);
     }
 /**
- * Gets the index of the non hidden column.
+ * Gets the column visible index.
  * If the column is not visible, returns `-1`.
  * ```typescript
  * let visibleColumnIndex =  this.column.visibleIndex;
@@ -599,7 +608,7 @@ get visibleIndex(): number {
         return vIndex;
     }
 /**
- * Gets whether the column contains other columns.
+ * Returns a boolean indicating if the column is a `ColumnGroup`.
  * ```typescript
  * let columnGroup =  this.column.columnGroup;
  * ```
@@ -609,8 +618,8 @@ get columnGroup() {
         return false;
     }
 /**
- * Returns the children columns that the current column contains.
- * If it doesn't have children, returns an empty array.
+ * Returns the children columns collection.
+ * Returns an empty array if the column does not contain children columns.
  * ```typescript
  * let childrenColumns =  this.column.allChildren;
  * ```
@@ -799,8 +808,7 @@ public updateHighlights(oldIndex: number, newIndex: number) {
     }
 }
 /**
- * Pins the column.
- * The provided index specifies where the column should be pinned in the pinned area.
+ * Pins the column at the provided index in the pinned area. Defaults to index `0` if not provided.
  * ```typescript
  * this.column.pin();
  * ```
@@ -851,8 +859,7 @@ public pin(index?) {
         return true;
     }
 /**
- * Unpins the column.
- * The provided index specifies where the column should be placed in the unpinned area.
+ * Unpins the column and place it at the provided index in the unpinned area. Defaults to index `0` if not provided.
  * ```typescript
  * this.column.unpin();
  * ```
@@ -890,7 +897,7 @@ public unpin(index?) {
         return true;
     }
 /**
- * Returns a reference to the top level parent.
+ * Returns a reference to the top level parent column.
  * ```typescript
  * let topLevelParent =  this.column.topLevelParent;
  * ```
@@ -997,13 +1004,7 @@ get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
 /**
- * Sets the body template.
- * ```typescript
- * @ViewChild("'bodyTemplate'", {read: TemplateRef })
- * public bodyTemplate: TemplateRef<any>;
- * this.columnGroup.bodyTemplate(bodyTemplate);
- * ```
- * @memberof IgxColumnGroupComponent
+ * @hidden
  */
 set bodyTemplate(template: TemplateRef<any>) {}
 /**
@@ -1017,33 +1018,18 @@ get headerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
 /**
- * Sets the header template.
- * ```typescript
- * @ViewChild('"headerTemplate"', {read: TemplateRef })
- * public headerTemplate: TemplateRef<any>;
- * this.columnGroup.headerTemplate(headerTemplate);
- * ```
+ * @hidden
  * @memberof IgxColumnGroupComponent
  */
 set headerTemplate(template: TemplateRef<any>) {}
 /**
- * Returns a reference to the header template.
- * ```typescript
- * let footerTemplate = this.columnGroup.footerTemplate;
- * ```
- * @memberof IgxColumnGroupComponent
+ *@hidden
  */
 get footerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
 /**
- * Sets the footer template.
- * ```typescript
- * @ViewChild("'footerTemplate'", {read: TemplateRef })
- * public footerTemplate: TemplateRef<any>;
- * this.columnGroup.footerTemplate(footerTemplate);
- * ```
- * @memberof IgxColumnGroupComponent
+ * @hidden
  */
 set footerTemplate(template: TemplateRef<any>) {}
 /**
@@ -1057,17 +1043,11 @@ get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
     }
 /**
- * Sets the inline editor template.
- * ```typescript
- * @ViewChild("'inlineEditorTemplate'", {read: TemplateRef })
- * public inlineEditorTemplate: TemplateRef<any>;
- * this.columnGroup.inlineEditorTemplate(inlineEditorTemplate);
- * ```
- * @memberof IgxColumnGroupComponent
+ * @hidden
  */
 set inlineEditorTemplate(template: TemplateRef<any>) {}
 /**
- * Gets the cells of the column group.
+ * Gets the column group cells.
  * ```typescript
  * let columnCells = this.columnGroup.cells;
  * ```
@@ -1088,7 +1068,7 @@ get hidden() {
     return this.allChildren.every(c => c.hidden);
 }
 /**
- * Sets whether the column group should be hidden.
+ * Sets the column group hidden property.
  * ```typescript
  * <igx-column [hidden] = "true"></igx-column>
  * ```
@@ -1112,9 +1092,9 @@ ngAfterContentInit() {
         });
     }
 /**
- * Returns all the columns in the column group.
+ * Returns the children columns collection.
  * ```typescript
- * let columns =  this.columnGroup.allChilren;
+ * let columns =  this.columnGroup.allChildren;
  * ```
  * @memberof IgxColumnGroupComponent
  */
@@ -1122,7 +1102,7 @@ get allChildren(): IgxColumnComponent[] {
         return flatten(this.children.toArray());
     }
 /**
- * Indicates that there is a column group.
+ * Returns a boolean indicating if the column is a `ColumnGroup`.
  * ```typescript
  * let isColumnGroup =  this.columnGroup.columnGroup
  * ```
