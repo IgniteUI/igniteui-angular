@@ -1,6 +1,5 @@
 import {
     AfterContentInit,
-    AfterViewInit,
     Component,
     ContentChild,
     ElementRef,
@@ -18,7 +17,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { fromEvent, interval, Observable, Subscription } from 'rxjs';
+import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
@@ -54,11 +53,8 @@ export class IgxNavigationDrawerComponent implements
     IToggleView,
     OnInit,
     AfterContentInit,
-    AfterViewInit,
     OnDestroy,
     OnChanges {
-
-    private _transitionDuration = '0s';
 
     @HostBinding('class') public cssClass = 'igx-nav-drawer';
 
@@ -326,13 +322,6 @@ export class IgxNavigationDrawerComponent implements
         return this._styleDummy.nativeElement;
     }
 
-    /**
-     *  @hidden
-     */
-    get transionDuration() {
-        return this._transitionDuration;
-    }
-
     /** Pan animation properties */
     private _panning = false;
     private _panStartWidth: number;
@@ -430,10 +419,6 @@ export class IgxNavigationDrawerComponent implements
 
         // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
         // (https://github.com/angular/angular/issues/6515), blocked by https://github.com/angular/angular/issues/6904
-    }
-
-    public ngAfterViewInit() {
-        this._transitionDuration = undefined;
     }
 
     /**
