@@ -1793,13 +1793,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
+            if (cb) {
+                cb(column);
+            }
             if ((this.columnsWithNoSetWidths === null && !column.width) ||
                 (this.columnsWithNoSetWidths !== null && this.columnsWithNoSetWidths.indexOf(column) !== -1)) {
                 column.width = this.columnWidth;
                 _columnsWithNoSetWidths.push(column);
-            }
-            if (cb) {
-                cb(column);
             }
         });
 
