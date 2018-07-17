@@ -586,3 +586,47 @@ export class ReorderedColumnsComponent extends BasicGridComponent {
 export class GridIDNameJobTitleComponent extends PagingComponent {
     data = SampleTestData.personJobDataFull;
 }
+
+@Component({
+    template: `<div style="margin: 50px;">
+            ${GridTemplateStrings.declareGrid(`[height]="height" [width]="width" [rowSelectable]="enableRowSelection" [autoGenerate]="autoGenerate"`, '', ColumnDefinitions.movableColumns)}</div>`
+})
+export class MovableColumnsComponent extends BasicGridComponent {
+    data = SampleTestData.personIDNameRegionData;
+    autoGenerate = false;
+    enableRowSelection = false;
+    isFilterable = false;
+    isSortable = false;
+    isResizable = false;
+    width = '500px';
+    height = '300px';
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px"`, '', ColumnDefinitions.movableColumns)}`
+})
+export class MovableTemplatedColumnsComponent extends BasicGridComponent {
+    data = SampleTestData.personIDNameRegionData;
+    isFilterable = false;
+    isSortable = false;
+    isResizable = false;
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate"`, EventSubscriptions.onColumnInit, '')}`
+})
+export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
+    data = SampleTestData.contactInfoData;
+    width = '500px';
+    height = '400px';
+
+    public columnInit(column: IgxColumnComponent) {
+        column.movable = true;
+        column.width = '100px';
+    }
+
+    pinColumn(name: string) {
+        const col = this.grid.getColumnByName(name);
+        col.pinned = !col.pinned;
+    }
+}

@@ -278,6 +278,29 @@ export class ColumnDefinitions {
                     [sortable]="true" [resizable]="true" [editable]="true">
         </igx-column>
     `;
+
+    public static movableColumns = `
+        <igx-column [movable]="true" field="ID" width="150px"
+                    [resizable]="isResizable"
+                    [sortable]="isSortable"
+                    [filterable]="isFilterable">
+        </igx-column>
+        <igx-column [movable]="true" field="Name" width="150px"
+                    [resizable]="isResizable"
+                    [sortable]="isSortable"
+                    [filterable]="isFilterable">
+        </igx-column>
+        <igx-column [movable]="false" field="LastName" width="150px"
+                    [resizable]="isResizable"
+                    [sortable]="isSortable"
+                    [filterable]="isFilterable">
+        </igx-column>
+        <igx-column [movable]="true" field="Region" width="150px"
+                    [resizable]="isResizable"
+                    [sortable]="isSortable"
+                    [filterable]="isFilterable">
+        </igx-column>
+    `;
 }
 
 export class EventSubscriptions {
