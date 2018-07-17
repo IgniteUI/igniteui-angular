@@ -5,12 +5,10 @@ import {
     Component,
     DoCheck,
     ElementRef,
-    EventEmitter,
     HostBinding,
     HostListener,
     Input,
     NgZone,
-    OnInit,
     ViewChild
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
@@ -26,7 +24,7 @@ import { IgxColumnMovingService } from './grid.common';
     selector: 'igx-grid-header',
     templateUrl: './grid-header.component.html'
 })
-export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
+export class IgxGridHeaderComponent implements DoCheck, AfterViewInit {
 
     @Input()
     public column: IgxColumnComponent;
@@ -131,11 +129,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         private cms: IgxColumnMovingService
     ) { }
 
-    public ngOnInit() {
-        this.column.columnGroup ? this.zone.runTask(() => this.cdr.markForCheck()) :
-            this.cdr.markForCheck();
-    }
-
     public ngDoCheck() {
         this.getSortDirection();
         this.cdr.markForCheck();
@@ -166,6 +159,9 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
                     fieldName: this.column.field,
                     ignoreCase: this.column.sortingIgnoreCase
                 });
+                if (!NgZone.isInAngularZone()) {
+                    this.zone.run(() => this.cdr.markForCheck());
+                }
             }
         }
     }

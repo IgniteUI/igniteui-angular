@@ -122,10 +122,6 @@ export class IgxGridAPIService {
         }
     }
 
-    public notify(id: string) {
-        this.get(id).eventBus.next(true);
-    }
-
     public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
         const row = this.get_row_by_index(id, rowIndex);
         if (row && row.cells) {
