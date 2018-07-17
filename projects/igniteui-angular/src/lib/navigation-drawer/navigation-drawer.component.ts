@@ -1,5 +1,6 @@
 import {
     AfterContentInit,
+    AfterViewInit,
     Component,
     ContentChild,
     ElementRef,
@@ -19,7 +20,6 @@ import {
 } from '@angular/core';
 import { fromEvent, interval, Observable, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
-import { BaseComponent } from '../core/base';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
@@ -54,6 +54,7 @@ export class IgxNavigationDrawerComponent implements
     IToggleView,
     OnInit,
     AfterContentInit,
+    AfterViewInit,
     OnDestroy,
     OnChanges {
 
@@ -336,7 +337,6 @@ export class IgxNavigationDrawerComponent implements
     private _panning = false;
     private _panStartWidth: number;
     private _panLimit: number;
-    private _previousDeltaX: number;
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
@@ -428,12 +428,12 @@ export class IgxNavigationDrawerComponent implements
         this.ensureDrawerHeight();
         this.ensureEvents();
 
-        setTimeout(() => {
-            this._transitionDuration = undefined;
-        });
-
         // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
         // (https://github.com/angular/angular/issues/6515), blocked by https://github.com/angular/angular/issues/6904
+    }
+
+    public ngAfterViewInit() {
+        this._transitionDuration = undefined;
     }
 
     /**

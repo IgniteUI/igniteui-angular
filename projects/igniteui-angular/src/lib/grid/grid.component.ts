@@ -1616,11 +1616,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         if (this.columnsWithNoSetWidths === null) {
-            this.columnsWithNoSetWidths = this.visibleColumns.filter((col) => col.width === null);
+            this.columnsWithNoSetWidths = this.visibleColumns.filter((col) => !col.columnGroup && col.width === null);
         }
 
         const sumExistingWidths = this.visibleColumns
-            .filter((col) => this.columnsWithNoSetWidths.indexOf(col) === -1)
+            .filter((col) => !col.columnGroup && this.columnsWithNoSetWidths.indexOf(col) === -1)
             .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
         maxColumnWidth = !Number.isFinite(sumExistingWidths) ?
