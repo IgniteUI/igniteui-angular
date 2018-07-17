@@ -184,8 +184,7 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     @HostListener('onTabItemSelected', ['$event'])
     public _selectedGroupHandler(args) {
         const prevSelectedIndex = this.selectedIndex;
-
-        if (prevSelectedIndex !== -1) {
+        if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
             this.onTabItemDeselected.emit(
                 {
                     tab: this.groups.toArray()[prevSelectedIndex].relatedTab,

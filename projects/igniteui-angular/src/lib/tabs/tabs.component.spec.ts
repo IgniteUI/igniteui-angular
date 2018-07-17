@@ -3,7 +3,6 @@ import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
-import { By } from '@angular/platform-browser';
 
 describe('IgxTabs', () => {
     beforeEach(async(() => {
@@ -150,6 +149,8 @@ describe('IgxTabs', () => {
         tab3 = tabItems[2];
         tick();
 
+        fixture.componentInstance.tabSelectedHandler = () => { };
+
         tab3.select();
 
         tick(100);
@@ -166,21 +167,18 @@ describe('IgxTabs', () => {
         expect(tabs.selectedIndex).toBe(2);
 
         fixture.componentInstance.resetCollectionOneTab();
-
         fixture.detectChanges();
         tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
 
         fixture.componentInstance.resetCollectionTwoTabs();
-
         fixture.detectChanges();
         tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
 
         fixture.componentInstance.resetToEmptyCollection();
-
         fixture.detectChanges();
         tick(100);
         fixture.detectChanges();
@@ -317,7 +315,7 @@ class TabsTestComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs>
+            <igx-tabs (onTabSelected)="tabSelectedHandler($event)">
                 <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
             </igx-tabs>
         </div>`
@@ -326,6 +324,9 @@ class TabsTest2Component {
     @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv') public wrapperDiv: any;
     public collection: any[];
+
+    public tabSelectedHandler(args) {
+    }
 
     public constructor() {
         this.resetCollectionThreeTabs();
