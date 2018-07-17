@@ -589,7 +589,9 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
 
 @Component({
     template: `<div style="margin: 50px;">
-            ${GridTemplateStrings.declareGrid(`[height]="height" [width]="width" [rowSelectable]="enableRowSelection" [autoGenerate]="autoGenerate"`, '', ColumnDefinitions.movableColumns)}</div>`
+            ${GridTemplateStrings.declareGrid(
+                `[height]="height" [width]="width" [rowSelectable]="enableRowSelection" [autoGenerate]="autoGenerate"`,
+                '', ColumnDefinitions.movableColumns)}</div>`
 })
 export class MovableColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData;
@@ -613,7 +615,8 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate"`, EventSubscriptions.onColumnInit, '')}`
+    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate"`,
+        EventSubscriptions.onColumnInit, '')}`
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
     data = SampleTestData.contactInfoData;
