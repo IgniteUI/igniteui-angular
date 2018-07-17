@@ -665,16 +665,16 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
     }
 
-    private _compareFunc(itemID, equalCheck?: boolean) {
+    private _compareFunc(itemToSearch, equalCheck?: boolean) {
         let compareFunc;
         const key = this.valueKey;
 
         // When there is remote data we need to compare valueKey values,
         // instead of comparing entire itemID objects, because in that case they are not equal by reference.
-        if (this.totalItemCount > 0 && this.valueKey && this.dataType === DataTypes.COMPLEX) {
-            compareFunc = function(selectedItemID) {
-                return equalCheck ? selectedItemID[key] === itemID[key] :
-                                    selectedItemID[key] !== itemID[key];
+        if (this.totalItemCount > 0 && key && this.dataType === DataTypes.COMPLEX) {
+            compareFunc = function(selectedItem) {
+                return equalCheck ? selectedItem[key] === itemToSearch[key] :
+                                    selectedItem[key] !== itemToSearch[key];
             };
         }
         return compareFunc;
