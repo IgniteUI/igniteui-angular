@@ -16,11 +16,9 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
     templateUrl: 'combo-item.component.html'
 })
 export class IgxComboItemComponent extends IgxDropDownItemBase {
-    /**
-     * Gets if the item is the currently selected one in the dropdown
-     */
-
-    private combo;
+    private get combo() {
+        return this.dropDown.combo;
+    }
 
     @HostBinding('style.height.px')
     get itemHeight() {
@@ -40,9 +38,11 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
         protected selectionAPI: IgxSelectionAPIService
     ) {
         super(dropDown, elementRef);
-        this.combo = this.dropDown.combo;
     }
 
+    /**
+     * Gets if the item is the currently selected
+     */
     get isSelected() {
         return this.dropDown.selectedItem.indexOf(this.itemID) > -1;
     }
