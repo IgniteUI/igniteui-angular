@@ -25,9 +25,15 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
         return this.combo.itemHeight;
     }
 
+    /**
+     * @hidden
+     */
     @Input()
     public itemData;
 
+    /**
+     * @hidden
+     */
     public get itemID() {
         return this.itemData;
     }

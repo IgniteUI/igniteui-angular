@@ -34,6 +34,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         return this.verticalScrollContainer.dc.location.nativeElement;
     }
 
+    /**
+     * @hidden
+     */
     protected get isScrolledToLast(): boolean {
         const scrollTop = this.verticalScrollContainer.getVerticalScroll().scrollTop;
         const scrollHeight = this.verticalScrollContainer.getVerticalScroll().scrollHeight;
