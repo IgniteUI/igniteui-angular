@@ -141,6 +141,13 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
+        setTimeout(() => {
+            if (this.selectedIndex === -1) {
+                // if nothing is selected - select the first tabs group
+                this._selectGroupByIndex(0);
+            }
+        });
+
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });
@@ -154,12 +161,6 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
 
     private resetSelectionOnCollectionChanged() {
         setTimeout(() => {
-            if (this.selectedIndex === -1) {
-                // if nothing is selected - select the first tabs group
-                this._selectGroupByIndex(0);
-                return;
-            }
-
             if (this.groups.toArray()[this.selectedIndex] !== undefined) {
                 // persist the selected index and applied it to the new collection
                 this._selectGroupByIndex(this.selectedIndex);
