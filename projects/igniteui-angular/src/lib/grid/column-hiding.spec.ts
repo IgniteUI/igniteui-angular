@@ -542,53 +542,51 @@ describe('Column Hiding UI', () => {
         }));
 
         it('- Show All button operates over the filtered in columns only', fakeAsync(() => {
-            fix.whenStable().then(() => {
-                grid.columns[1].disableHiding = false;
-                columnChooser.hideAllColumns();
-                columnChooser.filterCriteria = 're';
-                tick();
-                fix.detectChanges();
+            grid.columns[1].disableHiding = false;
+            columnChooser.hideAllColumns();
+            columnChooser.filterCriteria = 're';
+            tick();
+            fix.detectChanges();
 
-                const btnShowAll = getButtonElement('Show All');
-                expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
-                expect(getButtonDisabledState('Hide All')).toBe(true, 'Hide All is not disabled!');
-                expect(columnChooser.columnItems.length).toBe(2);
+            const btnShowAll = getButtonElement('Show All');
+            expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
+            expect(getButtonDisabledState('Hide All')).toBe(true, 'Hide All is not disabled!');
+            expect(columnChooser.columnItems.length).toBe(2);
 
-                btnShowAll.click();
-                fix.detectChanges();
+            btnShowAll.click();
+            fix.detectChanges();
 
-                expect(getCheckboxInput('Released').checked).toBe(false, 'Released is not unchecked!');
-                expect(getCheckboxInput('ReleaseDate').checked).toBe(false, 'ReleaseDate is not unchecked!');
-                expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
-                expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
+            expect(getCheckboxInput('Released').checked).toBe(false, 'Released is not unchecked!');
+            expect(getCheckboxInput('ReleaseDate').checked).toBe(false, 'ReleaseDate is not unchecked!');
+            expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
+            expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
 
-                columnChooser.filterCriteria = 'r';
-                tick(100);
-                fix.detectChanges();
+            columnChooser.filterCriteria = 'r';
+            tick(100);
+            fix.detectChanges();
 
-                expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
-                expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
+            expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
+            expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
 
-                expect(getCheckboxInput('ProductName').checked).toBe(true, 'ProductName is not checked!');
+            expect(getCheckboxInput('ProductName').checked).toBe(true, 'ProductName is not checked!');
 
-                btnShowAll.click();
-                fix.detectChanges();
+            btnShowAll.click();
+            fix.detectChanges();
 
-                columnChooser.filterCriteria = '';
-                tick(100);
-                fix.detectChanges();
+            columnChooser.filterCriteria = '';
+            tick(100);
+            fix.detectChanges();
 
-                expect(columnChooser.filterCriteria).toBe('', 'Filter criteria is not empty string!');
-                expect(getCheckboxInput('ID').checked).toBe(true, 'ID is not checked!');
-                expect(getCheckboxInput('ProductName').checked).toBe(false, 'ProductName is not unchecked!');
+            expect(columnChooser.filterCriteria).toBe('', 'Filter criteria is not empty string!');
+            expect(getCheckboxInput('ID').checked).toBe(true, 'ID is not checked!');
+            expect(getCheckboxInput('ProductName').checked).toBe(false, 'ProductName is not unchecked!');
 
-                expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
-                expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
-            });
+            expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
+            expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
         }));
 
         it('hides the proper columns after filtering and clearing the filter', (done) => {
-            fix.whenStable().then(() => {
+            // fix.whenStable().then(() => {
                 const filterInput = getFilterInput();
 
                 sendInput(filterInput, 'a', fix).then(() => {
@@ -612,7 +610,7 @@ describe('Column Hiding UI', () => {
                         done();
                     });
                 });
-            });
+            // });
         });
 
         it('fires onColumnVisibilityChanged event after filtering and clearing the filter.', (done) => {
@@ -842,7 +840,7 @@ describe('Column Hiding UI', () => {
         });
     });
 
-    describe('dropdown', () => {
+    fdescribe('dropdown', () => {
         let showButton;
         let dropDown;
         beforeEach(async(() => {
@@ -861,10 +859,10 @@ describe('Column Hiding UI', () => {
         });
 
         it('is opened and closed by executing dropdown\'s toggle() method.', fakeAsync(() => {
-            fix.whenStable().then(() => {
+            // fix.whenStable().then(() => {
                 dropDown.toggle();
                 tick(100);
-                fix.whenStable().then(() => {
+                // fix.whenStable().then(() => {
                     fix.detectChanges();
                     expect(getDropdownDiv()).toBeDefined();
                     expect(getDropdownDivHidden()).toBeUndefined();
@@ -873,33 +871,33 @@ describe('Column Hiding UI', () => {
 
                     dropDown.toggle();
                     tick(100);
-                    fix.whenStable().then(() => {
+                    // fix.whenStable().then(() => {
                         fix.detectChanges();
                         expect(getDropdownDiv()).toBeUndefined();
                         expect(getDropdownDivHidden()).toBeDefined();
 
                         dropDown.toggle();
                         tick(100);
-                        fix.whenStable().then(() => {
+                        // fix.whenStable().then(() => {
                             fix.detectChanges();
                             expect(getDropdownDiv()).toBeDefined();
                             expect(getDropdownDivHidden()).toBeUndefined();
 
                             dropDown.toggle();
                             tick(100);
-                            fix.whenStable().then(() => {
+                            // fix.whenStable().then(() => {
                                 fix.detectChanges();
                                 expect(getDropdownDiv()).toBeUndefined();
                                 expect(getDropdownDivHidden()).toBeDefined();
-                            });
-                        });
-                    });
-                });
-            });
+                            // });
+                        // });
+                    // });
+                // });
+            // });
         }));
 
         it('onOpened and onOpening events are fired.', fakeAsync(() => {
-            fix.whenStable().then(() => {
+            // fix.whenStable().then(() => {
                 let opening = 0;
                 let opened = 0;
                 dropDown.onOpening.subscribe(() => {
@@ -911,32 +909,32 @@ describe('Column Hiding UI', () => {
 
                 dropDown.toggle();
                 tick(100);
-                fix.whenStable().then(() => {
+                // fix.whenStable().then(() => {
                     fix.detectChanges();
                     expect(opening).toBe(1);
                     expect(opened).toBe(1);
 
                     dropDown.toggle();
                     tick(100);
-                    fix.whenStable().then(() => {
+                    // fix.whenStable().then(() => {
                         fix.detectChanges();
                         expect(opening).toBe(1);
                         expect(opened).toBe(1);
 
                         dropDown.toggle();
                         tick(100);
-                        fix.whenStable().then(() => {
+                        // fix.whenStable().then(() => {
                             fix.detectChanges();
                             expect(opening).toBe(2);
                             expect(opened).toBe(2);
-                        });
-                    });
-                });
-            });
+                        // });
+                    // });
+                // });
+            // });
         }));
 
         it('onClosing and onClosed events are fired.', fakeAsync(() => {
-            fix.whenStable().then(() => {
+            // fix.whenStable().then(() => {
                 let closing = 0;
                 let closed = 0;
                 dropDown.onClosing.subscribe(() => {
@@ -947,37 +945,37 @@ describe('Column Hiding UI', () => {
                 });
                 dropDown.toggle();
                 tick(100);
-                fix.whenStable().then(() => {
+                // fix.whenStable().then(() => {
                     fix.detectChanges();
                     expect(closing).toBe(0);
                     expect(closed).toBe(0);
 
                     dropDown.toggle();
                     tick(100);
-                    fix.whenStable().then(() => {
+                    // fix.whenStable().then(() => {
                         fix.detectChanges();
                         expect(closing).toBe(1);
                         expect(closed).toBe(1);
 
                         dropDown.toggle();
                         tick(100);
-                        fix.whenStable().then(() => {
+                        // fix.whenStable().then(() => {
                             fix.detectChanges();
                             expect(closing).toBe(1);
                             expect(closed).toBe(1);
 
                             dropDown.toggle();
                             tick(100);
-                            fix.whenStable().then(() => {
+                            // fix.whenStable().then(() => {
                             // TODO: Click outside and verify the drop down is closed (after Overlay)
-                            // grid.nativeElement.click();
-                            // expect(closing).toBe(2);
-                            // expect(closed).toBe(2);
-                            });
-                        });
-                    });
-                });
-            });
+                            grid.nativeElement.click();
+                            expect(closing).toBe(2);
+                            expect(closed).toBe(2);
+                            // });
+                        // });
+                    // });
+                // });
+            // });
         }));
 
         function getDropdownDiv() {
@@ -994,7 +992,7 @@ describe('Column Hiding UI', () => {
     });
 
     describe('toolbar button', () => {
-        beforeEach(async(() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(GridWithColumnChooserComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1002,8 +1000,7 @@ describe('Column Hiding UI', () => {
 
             grid.cdr.detectChanges();
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        }));
-
+        });
 
         it('is shown when columnHiding is true and hidden - when false.', () => {
             expect(grid.toolbar.columnHidingUI).toBeDefined();
