@@ -16,43 +16,52 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
     templateUrl: 'combo-item.component.html'
 })
 export class IgxComboItemComponent extends IgxDropDownItemBase {
-    /**
-     * Gets if the item is the currently selected one in the dropdown
-     */
+    private get combo() {
+        return this.dropDown.combo;
+    }
 
     @HostBinding('style.height.px')
     get itemHeight() {
-        return this.parentElement.parentElement.itemHeight;
+        return this.combo.itemHeight;
     }
 
+    /**
+     * @hidden
+     */
     @Input()
     public itemData;
 
+    /**
+     * @hidden
+     */
     public get itemID() {
         return this.itemData;
     }
 
     constructor(
-        @Inject(forwardRef(() => IgxComboDropDownComponent)) public parentElement: IgxComboDropDownComponent,
+        @Inject(forwardRef(() => IgxComboDropDownComponent)) public dropDown: IgxComboDropDownComponent,
         protected elementRef: ElementRef,
         protected selectionAPI: IgxSelectionAPIService
     ) {
-        super(parentElement, elementRef);
+        super(dropDown, elementRef);
     }
 
+    /**
+     * @hidden
+     */
     get isSelected() {
-        return this.parentElement.selectedItem.indexOf(this.itemID) > -1;
+        return this.combo.isItemSelected(this.itemID);
     }
 
     @HostListener('click', ['$event'])
     clicked(event) {
         if (this.disabled || this.isHeader) {
-            const focusedItem = this.parentElement.focusedItem;
+            const focusedItem = this.dropDown.focusedItem;
             if (focusedItem) {
                 focusedItem.element.nativeElement.focus({ preventScroll: true });
             }
             return;
         }
-        this.parentElement.selectItem(this, event);
+        this.dropDown.selectItem(this, event);
     }
 }
