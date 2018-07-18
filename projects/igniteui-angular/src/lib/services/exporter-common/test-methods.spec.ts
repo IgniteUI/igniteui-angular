@@ -1,16 +1,16 @@
 
 import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from '../../grid/grid.component';
-import { GridDeclarationComponent } from './components-declarations';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { IgxStringFilteringOperand } from '../../../public_api';
+import { GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 
 export class TestMethods {
 
     public static async testRawData(myGrid: IgxGridComponent, action: (grid) => void) {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        myGrid = fix.componentInstance.grid1;
+        myGrid = fix.componentInstance.grid;
 
         fix.whenStable().then(() => {
             expect(myGrid.rowList.length).toEqual(10, 'Invalid number of rows initialized!');
@@ -21,9 +21,9 @@ export class TestMethods {
     /* Creates an instance of GridDeclarationComponent; If filterParams is not specified,
     applies the following filter: ["JobTitle", "Senior", IgxStringFilteringOperand.instance().condition('contains'), true]. */
     public static createGridAndFilter(...filterParams: any[]) {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        const myGrid = fix.componentInstance.grid1;
+        const myGrid = fix.componentInstance.grid;
 
         filterParams = (filterParams.length === 0) ?
                         ['JobTitle', 'Senior', IgxStringFilteringOperand.instance().condition('contains'), true] : filterParams;
@@ -36,10 +36,10 @@ export class TestMethods {
 
     /* Creates an instance of GridDeclarationComponent and pins the columns with the specified indices. */
     public static createGridAndPinColumn(...colIndices: any[]) {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
-        const myGrid = fix.componentInstance.grid1;
+        const myGrid = fix.componentInstance.grid;
 
         // Pin columns
         colIndices.forEach((i) => {
