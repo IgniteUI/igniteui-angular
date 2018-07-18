@@ -37,6 +37,10 @@
         @extend %aside--mini !optional;
     }
 
+    @include e(aside, normal) {
+        @extend %aside--normal !optional;
+    }
+
     @include e(aside, pinned) {
         @extend %aside--pinned !optional;
 
