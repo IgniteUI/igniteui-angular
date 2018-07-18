@@ -44,8 +44,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     }
 
     protected get lastVisibleIndex(): number {
-        return this.parentElement.totalItemCount ?
-        Math.floor(this.parentElement.itemsMaxHeight / this.parentElement.itemHeight) :
+        return this.combo.totalItemCount ?
+        Math.floor(this.combo.itemsMaxHeight / this.combo.itemHeight) :
         this.items.length - 1;
     }
 
@@ -142,7 +142,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     navigateLast() {
         const vContainer = this.verticalScrollContainer;
-        const scrollTarget = this.parentElement.totalItemCount ? this.parentElement.totalItemCount - 1 : this.items.length - 1;
+        const scrollTarget = this.combo.totalItemCount ? this.combo.totalItemCount - 1 : this.items.length - 1;
         vContainer.scrollTo(scrollTarget);
         this.subscribeNext(vContainer, () => {
             this.focusItem(scrollTarget);
@@ -153,7 +153,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     private navigateRemoteItem(direction) {
-        this.verticalScrollContainer.addScrollTop(direction * this.parentElement.itemHeight);
+        this.verticalScrollContainer.addScrollTop(direction * this.combo.itemHeight);
         this.subscribeNext(this.verticalScrollContainer, () => {
             if (direction === Navigate.Up) {
                 this.focusItem(0);
