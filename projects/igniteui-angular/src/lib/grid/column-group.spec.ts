@@ -13,7 +13,7 @@ const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
-xdescribe('IgxGrid - multi-column headers', () => {
+describe('IgxGrid - multi-column headers', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -591,6 +591,7 @@ xdescribe('IgxGrid - multi-column headers', () => {
         testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
             2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
             'personDetailsColumn', 2);
+        discardPeriodicTasks();
     }));
 
     it('column pinning - Pin a column in a group using property.', () => {
