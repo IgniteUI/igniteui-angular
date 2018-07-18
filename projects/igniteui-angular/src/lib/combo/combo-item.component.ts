@@ -47,7 +47,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
     }
 
     /**
-     * Gets if the item is the currently selected
+     * @hidden
      */
     get isSelected() {
         return this.combo.isItemSelected(this.itemID);
