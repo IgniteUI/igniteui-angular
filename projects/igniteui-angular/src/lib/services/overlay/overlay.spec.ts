@@ -73,6 +73,42 @@ function addScrollDivToElement(parent) {
     parent.appendChild(scrollDiv);
 
 }
+function getExpectedTopPosition(verticalAlignment: VerticalAlignment, elementRect: DOMRect): number {
+    let expectedTop: number;
+    switch (verticalAlignment) {
+        case VerticalAlignment.Bottom: {
+            expectedTop = elementRect.top + elementRect.height;
+            break;
+        }
+        case VerticalAlignment.Middle: {
+            expectedTop = elementRect.top + elementRect.height / 2;
+            break;
+        }
+        default: {
+            expectedTop = elementRect.top;
+            break;
+        }
+    }
+    return expectedTop;
+}
+function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, elementRect: DOMRect): number {
+    let expectedLeft: number;
+    switch (horizontalAlignment) {
+        case HorizontalAlignment.Right: {
+            expectedLeft = elementRect.left + elementRect.width;
+            break;
+        }
+        case HorizontalAlignment.Center: {
+            expectedLeft = elementRect.left + elementRect.width / 2;
+            break;
+        }
+        default: {
+            expectedLeft = elementRect.left;
+            break;
+        }
+    }
+    return expectedLeft;
+}
 
 describe('igxOverlay', () => {
     beforeEach(async () => {
@@ -87,7 +123,7 @@ describe('igxOverlay', () => {
         clearOverlay();
     });
 
-    describe('Unit Tests: ', () => {
+    fdescribe('Unit Tests: ', () => {
 
         it('OverlayElement should return a div attached to Document\'s body', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -651,7 +687,7 @@ describe('igxOverlay', () => {
         }));
     });
 
-    describe('Integration tests: ', () => {
+    fdescribe('Integration tests: ', () => {
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).
         it('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', fakeAsync(() => {
@@ -1541,196 +1577,52 @@ describe('igxOverlay', () => {
                 expect(wrapperLeft).toEqual(expectedLeft);
             });
         });
-        // WIP
-        xit('igx-overlay displays each shown component based on the options specified if the component fits into the visible window.',
+        it('igx-overlay displays each shown component based on the options specified if the component fits into the visible window.',
             fakeAsync(() => {
-                let buttonRect: ClientRect;
-                let overlayWrapper: Element;
-                let wrapperRect: ClientRect;
                 const fix = TestBed.createComponent(EmptyPageComponent);
                 fix.detectChanges();
                 const button = fix.componentInstance.buttonElement.nativeElement;
                 const positionSettings: PositionSettings = {
-                    horizontalDirection: HorizontalAlignment.Right,
-                    verticalDirection: VerticalAlignment.Bottom,
-                    target: button,
-                    horizontalStartPoint: HorizontalAlignment.Left,
-                    verticalStartPoint: VerticalAlignment.Top
+                    target: button
                 };
                 const overlaySettings: OverlaySettings = {
                     positionStrategy: new AutoPositionStrategy(positionSettings),
-                    scrollStrategy: new NoOpScrollStrategy(),
                     modal: false,
                     closeOnOutsideClick: false
                 };
-                // HA = Right HSP = Left VSP = Top
-                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    buttonRect = button.getBoundingClientRect();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top);
-                    expect(wrapperRect.left).toEqual(buttonRect.left);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Right HSP = Center VSP = Top
-                    positionSettings.horizontalStartPoint = HorizontalAlignment.Center;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top);
-                    expect(wrapperRect.left).toEqual(buttonRect.left + buttonRect.width / 2);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Right HSP = Right VSP = Top
-                    positionSettings.horizontalStartPoint = HorizontalAlignment.Right;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top);
-                    expect(wrapperRect.left).toEqual(buttonRect.right);
-                    expect(wrapperRect.right).toEqual(buttonRect.right + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Right HSP = Right VSP = Middle
-                    positionSettings.verticalStartPoint = VerticalAlignment.Middle;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top + buttonRect.height / 2);
-                    expect(wrapperRect.left).toEqual(buttonRect.right);
-                    expect(wrapperRect.right).toEqual(buttonRect.right + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Right HSP = Right VSP = Bottom
-                    positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.bottom);
-                    expect(wrapperRect.left).toEqual(buttonRect.right);
-                    expect(wrapperRect.right).toEqual(buttonRect.right + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Right HSP = Center VSP = Bottom
-                    positionSettings.horizontalStartPoint = HorizontalAlignment.Center;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.bottom);
-                    expect(wrapperRect.left).toEqual(buttonRect.left + buttonRect.width / 2);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Right HSP = Left VSP = Bottom
-                    positionSettings.horizontalStartPoint = HorizontalAlignment.Left;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top + buttonRect.height);
-                    expect(wrapperRect.left).toEqual(buttonRect.left);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Right HSP = Left VSP = Middle
-                    positionSettings.verticalStartPoint = VerticalAlignment.Middle;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top + buttonRect.height / 2);
-                    expect(wrapperRect.left).toEqual(buttonRect.left);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Right HSP = Center VSP = Middle
-                    positionSettings.horizontalStartPoint = HorizontalAlignment.Center;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top + buttonRect.height / 2);
-                    expect(wrapperRect.left).toEqual(buttonRect.left + buttonRect.width / 2);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Left HSP = Left VSP = Right
-                    positionSettings.horizontalDirection = HorizontalAlignment.Left;
-                    positionSettings.horizontalStartPoint = HorizontalAlignment.Right;
-                    positionSettings.verticalStartPoint = VerticalAlignment.Top;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top);
-                    expect(wrapperRect.left).toEqual(buttonRect.right - wrapperRect.width);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Left HSP = Left VSP = Middle
-                    positionSettings.verticalStartPoint = VerticalAlignment.Middle;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top + buttonRect.height / 2);
-                    expect(wrapperRect.left).toEqual(buttonRect.right - wrapperRect.width);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
-                    fix.componentInstance.overlay.hideAll();
-
-                    // HA = Left HSP = Left VSP = Bottom
-                    positionSettings.verticalStartPoint = VerticalAlignment.Bottom;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    wrapperRect = overlayWrapper.getBoundingClientRect();
-                    expect(wrapperRect.top).toEqual(buttonRect.top + buttonRect.height);
-                    expect(wrapperRect.left).toEqual(buttonRect.right - wrapperRect.width);
-                    expect(wrapperRect.right).toEqual(wrapperRect.left + wrapperRect.width);
-                    expect(wrapperRect.bottom).toEqual(wrapperRect.top + wrapperRect.height);
+                const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+                const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
+                vAlignmentArray.forEach(function (vAlignment) {
+                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Bottom,
+                        HorizontalAlignment.Right, VerticalAlignment[vAlignment]);
+                    hAlignmentArray.forEach(function (hAlignment) {
+                        verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Bottom,
+                            HorizontalAlignment[hAlignment], VerticalAlignment[vAlignment]);
+                    });
                 });
+
+                function verifyOverlayBoundingSizeAndPosition(horizontalDirection, verticalDirection,
+                    horizontalAlignment, verticalAlignment) {
+                    positionSettings.horizontalDirection = horizontalDirection;
+                    positionSettings.verticalDirection = verticalDirection;
+                    positionSettings.horizontalStartPoint = horizontalAlignment;
+                    positionSettings.verticalStartPoint = verticalAlignment;
+                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                    tick();
+                    const buttonRect = button.getBoundingClientRect();
+                    const overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                    const overlayRect = overlayElement.getBoundingClientRect();
+                    const expectedTop = getExpectedTopPosition(verticalAlignment, buttonRect);
+                    const expectedLeft = horizontalDirection === HorizontalAlignment.Left ?
+                        buttonRect.right - overlayRect.width :
+                        getExpectedLeftPosition(horizontalAlignment, buttonRect);
+                    expect(overlayRect.top).toEqual(expectedTop);
+                    expect(overlayRect.bottom).toEqual(overlayRect.top + overlayRect.height);
+                    expect(overlayRect.left).toEqual(expectedLeft);
+                    expect(overlayRect.right).toEqual(overlayRect.left + overlayRect.width);
+                    fix.componentInstance.overlay.hideAll();
+                }
             }));
 
         it('The component is repositioned and rendered correctly in the window, even when the rendering options passed ' +
@@ -1746,32 +1638,24 @@ describe('igxOverlay', () => {
                     modal: false,
                     closeOnOutsideClick: false
                 };
-                let hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
-                let vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-
-                vAlignmentArray.forEach(function (vAlignment) {
-                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Bottom,
-                        HorizontalAlignment.Center, vAlignment);
-                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Bottom,
-                        HorizontalAlignment.Right, vAlignment);
-                });
-
-                hAlignmentArray.forEach(function (hAlignment) {
-                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Top,
-                        hAlignment, VerticalAlignment.Bottom);
-                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Top,
-                        hAlignment, VerticalAlignment.Middle);
-                });
-
-                hAlignmentArray = hAlignmentArray.filter(value => value !== 'Left');
-                vAlignmentArray = vAlignmentArray.filter(value => value !== 'Top');
+                const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
+                const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
                 hAlignmentArray.forEach(function (hAlignment) {
                     vAlignmentArray.forEach(function (vAlignment) {
-                        verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Top,
-                            hAlignment, vAlignment);
+                        if (hAlignment === 'Center') {
+                            verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Bottom,
+                                HorizontalAlignment.Center, VerticalAlignment[vAlignment]);
+                        }
+                        if (vAlignment !== 'Top') {
+                            verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Top,
+                                HorizontalAlignment[hAlignment], VerticalAlignment[vAlignment]);
+                                if (hAlignment !== 'Left') {
+                                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Top,
+                                        HorizontalAlignment[hAlignment], VerticalAlignment[vAlignment]);
+                                }
+                        }
                     });
                 });
-
                 function verifyOverlayBoundingSizeAndPosition(horizontalDirection, verticalDirection,
                     horizontalAlignment, verticalAlignment) {
                     positionSettings.horizontalDirection = horizontalDirection;
@@ -1785,16 +1669,17 @@ describe('igxOverlay', () => {
                     const buttonRect = button.getBoundingClientRect();
                     const overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
                     const overlayRect = overlayElement.getBoundingClientRect();
-                    const expectedTop = (verticalDirection === VerticalAlignment.Bottom ||
-                                        (horizontalDirection === HorizontalAlignment.Right &&
-                                         verticalDirection === VerticalAlignment.Top)) ?
-                                        buttonRect.top :
-                                        buttonRect.top + buttonRect.height;
-                    let expectedLeft: number = buttonRect.left;
-                    if ( verticalDirection === VerticalAlignment.Bottom) {
-                        expectedLeft = horizontalAlignment === HorizontalAlignment.Right ?
-                        buttonRect.right : buttonRect.left + buttonRect.width / 2;
-                    }
+                    const expectedTop = verticalDirection === VerticalAlignment.Top ?
+                        buttonRect.top + buttonRect.height :
+                        getExpectedTopPosition(verticalAlignment, buttonRect);
+                    const expectedLeft = (horizontalDirection === HorizontalAlignment.Left &&
+                        verticalDirection === VerticalAlignment.Top &&
+                        horizontalAlignment === HorizontalAlignment.Right) ?
+                        buttonRect.right - overlayRect.width :
+                        (horizontalDirection === HorizontalAlignment.Right &&
+                            verticalDirection === VerticalAlignment.Top) ?
+                            getExpectedLeftPosition(horizontalAlignment, buttonRect) :
+                            buttonRect.right;
                     expect(overlayRect.top).toEqual(expectedTop);
                     expect(overlayRect.bottom).toEqual(overlayRect.top + overlayRect.height);
                     expect(overlayRect.left).toEqual(expectedLeft);
