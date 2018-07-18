@@ -84,10 +84,7 @@ export class IgxComboGroupingPipe implements PipeTransform {
         let currentHeader = null;
         for (let i = 0; i < collection.length; i++) {
             let insertFlag = 0;
-            if (!collection[i][groupKey] && currentHeader !== this.combo.defaultFallbackGroup) {
-                currentHeader = this.combo.defaultFallbackGroup;
-                insertFlag = 1;
-            } else if (currentHeader !== collection[i][groupKey]) {
+            if (currentHeader !== collection[i][groupKey]) {
                 currentHeader = collection[i][groupKey];
                 insertFlag = 1;
             }

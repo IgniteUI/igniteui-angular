@@ -180,7 +180,7 @@ set hidden(value: boolean) {
                 if (this.grid.lastSearchInfo.searchText) {
                     if (this.index <= oldIndex) {
                         const newIndex = this.hidden ? oldIndex - 1 : oldIndex + 1;
-                        this.updateHighlights(oldIndex, newIndex);
+                        IgxColumnComponent.updateHighlights(oldIndex, newIndex, this.grid);
                     } else if (oldIndex === -1 && !this.hidden) {
                         this.grid.refreshSearch();
                     }
@@ -737,6 +737,21 @@ protected _defaultMinWidth = '88';
 @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
+    public static updateHighlights(oldIndex: number, newIndex: number, grid: IgxGridComponent) {
+        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(grid.id);
+
+        if (activeInfo && activeInfo.columnIndex === oldIndex) {
+            IgxTextHighlightDirective.setActiveHighlight(grid.id, {
+                columnIndex: newIndex,
+                rowIndex: activeInfo.rowIndex,
+                index: activeInfo.index,
+                page: activeInfo.page,
+            });
+
+            grid.refreshSearch(true);
+        }
+    }
+
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 /**
  *@hidden
@@ -817,7 +832,7 @@ public updateHighlights(oldIndex: number, newIndex: number) {
 public pin(index?) {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
-
+        this.gridAPI.submit_value(this.gridID);
         if (this._pinned) {
             return false;
         }
@@ -855,7 +870,7 @@ public pin(index?) {
 
         grid.markForCheck();
         const newIndex = this.visibleIndex;
-        this.updateHighlights(oldIndex, newIndex);
+        IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
     }
 /**
@@ -866,7 +881,7 @@ public pin(index?) {
  * @memberof IgxColumnComponent
  */
 public unpin(index?) {
-
+        this.gridAPI.submit_value(this.gridID);
         if (!this._pinned) {
             return false;
         }
@@ -893,7 +908,7 @@ public unpin(index?) {
 
         grid.markForCheck();
         const newIndex = this.visibleIndex;
-        this.updateHighlights(oldIndex, newIndex);
+        IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
     }
 /**
