@@ -63,7 +63,10 @@ export class IgxDropEventArgs {
 export class IgxDragDirective implements OnInit, OnDestroy {
 
     /**
-     * @hidden
+     * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
+     * ```html
+     * <div [igxDrag]="{ source: myElement }"></div>
+     * ```
      */
     @Input('igxDrag')
     public data: any;
@@ -81,7 +84,12 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public dragTolerance = 5;
 
     /**
-     * @hidden
+     * Sets a custom class that will be added to the `dragGhost` element.
+     * ```html
+     * <div igxDrag [ghostImageClass]="'dragGhost'">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
      */
     @Input()
     public ghostImageClass = '';
@@ -112,7 +120,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public animateOnRelease = false;
 
     /**
-     * Emits an event when the draggable element drag starts.
+     * Event triggered when the draggable element drag starts.
      * ```html
      * <div igxDrag [animateOnRelease]="'true'" (dragStart)="onDragStart()">
      *         <span>Drag Me!</span>
@@ -128,7 +136,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public dragStart = new EventEmitter<any>();
 
     /**
-     * Emits an event when the draggable element drag ends.
+     * Event triggered when the draggable element is released.
      * ```html
      * <div igxDrag [animateOnRelease]="'true'" (dragEnd)="onDragEnd()">
      *         <span>Drag Me!</span>
@@ -144,7 +152,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public dragEnd = new EventEmitter<any>();
 
     /**
-     * Emits an event when the draggable element move ends.
+     * Event triggered after the draggable element is released and after its animation has finished.
      * ```html
      * <div igxDrag [animateOnRelease]="'true'" (returnMoveEnd)="onMoveEnd()">
      *         <span>Drag Me!</span>
@@ -160,7 +168,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public returnMoveEnd = new EventEmitter<any>();
 
     /**
-     * Emits an event when the draggable element is clicked.
+     * Event triggered when the draggable element is clicked.
      * ```html
      * <div igxDrag [animateOnRelease]="'true'" (dragClicked)="dragClicked()">
      *         <span>Drag Me!</span>
