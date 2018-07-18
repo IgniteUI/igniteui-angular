@@ -1378,7 +1378,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportCsvText: string = null;
 
     /**
-     * @hidden
+     * Provides access to the `IgxToolbarComponent`.
+     * ```typescript
+     * const gridToolbar = this.grid.toolbar;
+     * ```
      */
     @ViewChild('toolbar', { read: IgxGridToolbarComponent })
     public toolbar: IgxGridToolbarComponent = null;
@@ -1771,18 +1774,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
-        this.rowHeight = this.rowHeight ? this.rowHeight : this.defaultRowHeight;
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe((source) => {
-            const editableCell =  this.gridAPI.get_cell_inEditMode(this.id);
-            if (editableCell) {
             this.gridAPI.submit_value(this.id);
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-            }
         });
     }
 
@@ -2538,10 +2536,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-        }
         const col = this.gridAPI.get_column_by_name(this.id, name);
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
