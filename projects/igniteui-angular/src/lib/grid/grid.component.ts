@@ -659,7 +659,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Input()
     public  get rowHeight()  {
-    return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
+        return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
     /**
@@ -669,7 +669,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      */
     public set rowHeight(value) {
-    this._rowHeight = parseInt(value, 10);
+        this._rowHeight = parseInt(value, 10);
     }
 
     /**
@@ -2354,7 +2354,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 const index = this.data.indexOf(row.rowData);
                 const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
                 if (editableCell && editableCell.cellID.rowID === row.rowID) {
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
                 }
                 if (this.rowSelectable === true) {
                     this.deselectRows([row.rowID]);
@@ -2385,8 +2385,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
                 const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
                 if (editableCell && editableCell.cellID.rowID === rowSelector &&
-                editableCell.cellID.columnID === columnId) {
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                    editableCell.cellID.columnID === columnId) {
+                        this.gridAPI.escape_editMode(this.id, editableCell.cellID);
                 }
                 this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
                 this.cdr.markForCheck();
@@ -2411,10 +2411,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
             const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
             if (row) {
-                 const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                 if (editableCell && editableCell.cellID.rowID === row.rowID) {
-                     this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-                 }
+                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                }
                 if (this.rowSelectable === true && row.isSelected) {
                     this.deselectRows([row.rowID]);
                     this.gridAPI.update_row(value, this.id, row);
@@ -2979,12 +2979,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
 
-            return Math.abs(gridHeight - toolbarHeight -
-                this.theadRow.nativeElement.offsetHeight -
-                this.summariesHeight - pagingHeight - groupAreaHeight -
-                footerBordersAndScrollbars -
-                this.scr.nativeElement.clientHeight);
-            }
+        return Math.abs(gridHeight - toolbarHeight -
+            this.theadRow.nativeElement.offsetHeight -
+            this.summariesHeight - pagingHeight - groupAreaHeight -
+            footerBordersAndScrollbars -
+            this.scr.nativeElement.clientHeight);
+    }
 
     /**
      * @hidden
