@@ -22,7 +22,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService,
         @Inject(forwardRef(() => IgxComboComponent))
-        public parentElement: IgxComboComponent) {
+        public combo: IgxComboComponent) {
         super(elementRef, cdr, selectionAPI);
         this.allowItemsFocus = false;
     }
@@ -54,22 +54,22 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      *
      * @hidden
      */
-    public onOpened = this.parentElement.onOpened;
+    public onOpened = this.combo.onOpened;
 
     /**
      * @hidden
      */
-    public onOpening = this.parentElement.onOpening;
+    public onOpening = this.combo.onOpening;
 
     /**
      * @hidden
      */
-    public onClosing = this.parentElement.onClosing;
+    public onClosing = this.combo.onClosing;
 
     /**
      * @hidden
      */
-    public onClosed = this.parentElement.onClosed;
+    public onClosed = this.combo.onClosed;
 
     /**
      * @hidden
@@ -81,7 +81,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     protected get children(): QueryList<IgxDropDownItemBase> {
-        return this.parentElement.children;
+        return this.combo.children;
     }
 
     protected set children(list: QueryList<IgxDropDownItemBase>) {
@@ -112,7 +112,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     public get selectedItem(): any[] {
-        return this.selectionAPI.get_selection(this.parentElement.id) || [];
+        return this.selectionAPI.get_selection(this.combo.id) || [];
     }
 
     /**
@@ -120,7 +120,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     navigatePrev() {
         if (this._focusedItem.index === 0 && this.verticalScrollContainer.state.startIndex === 0) {
-            this.parentElement.searchInput.nativeElement.focus();
+            this.combo.searchInput.nativeElement.focus();
         } else {
             super.navigatePrev();
         }
@@ -167,7 +167,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     setSelectedItem(itemID: any, select = true) {
-        this.parentElement.setSelectedItem(itemID, select);
+        this.combo.setSelectedItem(itemID, select);
     }
 
     /**
@@ -176,7 +176,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     selectItem(item: IgxComboItemComponent, event?: Event) {
         if (item.itemData === 'ADD ITEM') {
             if (event) {
-                this.parentElement.addItemToCollection();
+                this.combo.addItemToCollection();
             }
         } else {
             this.setSelectedItem(item.itemID);
@@ -198,7 +198,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         // In that case the real item is not hidden, but not loaded at all by the virtualization,
         // and this is the same case as normal scroll up.
         const vContainer = this.verticalScrollContainer;
-        const extraScroll = this.parentElement.isAddButtonVisible();
+        const extraScroll = this.combo.isAddButtonVisible();
         if (direction) {
             if (direction === Navigate.Down && extraScroll) {
                 if (vContainer.igxForOf[vContainer.igxForOf.length - 1] === this.focusedItem.itemData) {
@@ -274,7 +274,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
             if (newScrollStartIndex < 0) { // If the next item loaded is a header and is also the very first item in the list.
                 vContainer.scrollTo(0); // Scrolls to the beginning of the list and switches focus to the searchInput
                 this.subscribeNext(vContainer, () => {
-                    this.parentElement.searchInput.nativeElement.focus();
+                    this.combo.searchInput.nativeElement.focus();
                     if (this.focusedItem) {
                         this.focusedItem.isFocused = false;
                     }
@@ -328,7 +328,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     onToggleOpening() {
-        this.parentElement.handleInputChange();
+        this.combo.handleInputChange();
         this.onOpening.emit();
     }
 
@@ -336,8 +336,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     onToggleOpened() {
-        this.parentElement.triggerCheck();
-        this.parentElement.searchInput.nativeElement.focus();
+        this.combo.triggerCheck();
+        this.combo.searchInput.nativeElement.focus();
         this.onOpened.emit();
     }
 
@@ -345,7 +345,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     onToggleClosed() {
-        this.parentElement.comboInput.nativeElement.focus();
+        this.combo.comboInput.nativeElement.focus();
         this.onClosed.emit();
     }
 
