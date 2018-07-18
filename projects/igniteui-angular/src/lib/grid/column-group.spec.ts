@@ -531,7 +531,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
     });
 
-    it('Should render column group headers correctly.', fakeAsync(() => {
+    xit('Should render column group headers correctly.', fakeAsync(() => {
         const fixture = TestBed.createComponent(BlueWhaleGridComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
@@ -1281,7 +1281,7 @@ describe('IgxGrid - multi-column headers', () => {
         NestedColGroupsTests.testHeadersRendering(fixture);
     });
 
-    it('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
+    xit('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
