@@ -1,4 +1,4 @@
-import { Component, ContentChildren, DebugElement, ViewChild, OnInit, ElementRef } from '@angular/core';
+import { Component, ContentChildren, DebugElement, ViewChild, OnInit } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,7 +35,6 @@ describe('IgxDropDown ', () => {
                 IgxDropDownTestEmptyListComponent,
                 IgxDropDownWithScrollComponent,
                 DoubleIgxDropDownComponent,
-                InputWithDropdownDirectiveComponent,
                 IgxDropDownInputTestComponent,
                 IgxDropDownImageTestComponent,
                 IgxDropDownTabsTestComponent
@@ -953,42 +952,6 @@ describe('IgxDropDown ', () => {
         expect(dropdown1.selectedItem).toEqual(dropdown1.items[5]);
         expect(dropdown2.selectedItem).toEqual(dropdown2.items[3]);
     }));
-
-    it('Should properly handle OnEnterKeyDown when the dropdown is not visible', fakeAsync(() => {
-        const fixture = TestBed.createComponent(InputWithDropdownDirectiveComponent);
-        fixture.detectChanges();
-        const dropdown = fixture.componentInstance.dropdown;
-        const inputElement = fixture.componentInstance.inputElement.nativeElement;
-        expect(dropdown).toBeDefined();
-        expect(inputElement).toBeDefined();
-        expect(dropdown.focusedItem).toEqual(null);
-        expect(dropdown.selectedItem).toEqual(null);
-        spyOn(dropdown, 'selectItem').and.callThrough();
-        expect(dropdown.selectItem).toHaveBeenCalledTimes(0);
-        expect(dropdown.collapsed).toEqual(true);
-        inputElement.click();
-        tick();
-        expect(dropdown.selectItem).toHaveBeenCalledTimes(0);
-        expect(dropdown.collapsed).toEqual(true);
-        expect(dropdown.focusedItem).toEqual(null);
-        inputElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
-        tick();
-        expect(dropdown.selectItem).toHaveBeenCalledTimes(1);
-        expect(dropdown.selectItem).toHaveBeenCalledWith(null);
-        expect(dropdown.selectedItem).toEqual(null);
-        expect(dropdown.collapsed).toEqual(true);
-        dropdown.toggle();
-        tick();
-        expect(dropdown.collapsed).toEqual(false);
-        expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
-        const dropdownItem = dropdown.items[0];
-        inputElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
-        tick();
-        expect(dropdown.selectItem).toHaveBeenCalledTimes(2);
-        expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem);
-        expect(dropdown.selectedItem).toEqual(dropdownItem);
-        expect(dropdown.collapsed).toEqual(true);
-    }));
 });
 
 @Component({
@@ -1377,27 +1340,4 @@ class IgxDropDownTabsTestComponent {
     public onToggleClosing() { }
 
     public onToggleClosed() { }
-}
-
-@Component({
-    template: ` <input #inputElement [igxDropDownItemNavigation]="dropdownElement" class='test-input' type='text' value='Focus Me!'/>
-    <igx-drop-down #dropdownElement [width]="'400px'" [height]="'400px'">
-        <igx-drop-down-item *ngFor="let item of items">
-            {{ item.field }}
-        </igx-drop-down-item>
-    </igx-drop-down>`
-})
-class InputWithDropdownDirectiveComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
-    public dropdown: IgxDropDownComponent;
-
-    @ViewChild(`inputElement`)
-    public inputElement: ElementRef;
-
-    public items: any[] = [
-        { field: 'Nav1' },
-        { field: 'Nav2' },
-        { field: 'Nav3' },
-        { field: 'Nav4' }
-    ];
 }

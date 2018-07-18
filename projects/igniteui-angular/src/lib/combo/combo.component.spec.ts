@@ -1983,7 +1983,7 @@ describe('igxCombo', () => {
                 const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
                 const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
 
-                expect(dropdownItems[0].innerText.trim()).toEqual('Product 1');
+                expect(dropdownItems[0].innerText).toEqual('Product 1');
             });
         }));
 
@@ -2177,37 +2177,6 @@ describe('igxCombo', () => {
                 expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
             });
         }));
-
-        it('Should properly add items to the defaultFallbackGroup', fakeAsync(() => {
-            const fix = TestBed.createComponent(IgxComboSampleComponent);
-            fix.detectChanges();
-            const combo = fix.componentInstance.combo;
-            combo.toggle();
-            tick();
-            const comboSearch = combo.searchInput.nativeElement;
-            const fallBackGroup = combo.defaultFallbackGroup;
-            const initialDataLength = combo.data.length + 0;
-            expect(combo.filteredData.filter((e) => e[combo.groupKey]  === undefined  )).toEqual([]);
-            combo.searchValue = 'My Custom Item 1';
-            tick();
-            combo.addItemToCollection();
-            tick();
-            combo.searchValue = 'My Custom Item 2';
-            combo.addItemToCollection();
-            tick();
-            combo.searchValue = 'My Custom Item 3';
-            combo.addItemToCollection();
-            tick();
-            combo.searchValue = 'My Custom Item';
-            comboSearch.value = 'My Custom Item';
-            comboSearch.dispatchEvent(new Event('input'));
-            fix.detectChanges();
-            tick();
-            expect(combo.data.length).toEqual(initialDataLength + 3);
-            expect(combo.dropdown.items.length).toEqual(4); // Add Item button is included
-            expect(combo.dropdown.headers.length).toEqual(1);
-            expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual(fallBackGroup);
-        }));
     });
 
     describe('Filtering tests: ', () => {
@@ -2378,8 +2347,7 @@ describe('igxCombo', () => {
             expect(combo.data.length).toEqual(initialData.length + 1);
             expect(combo.onAddition.emit).toHaveBeenCalledTimes(1);
             expect(combo.data[combo.data.length - 1]).toEqual({
-                field: 'myItem',
-                region: 'Other'
+                field: 'myItem'
             });
             combo.onAddition.subscribe((e) => {
                 e.addedItem.region = 'exampleRegion';
@@ -2741,7 +2709,7 @@ describe('igxCombo', () => {
                 fix.detectChanges();
                 return fix.whenStable();
             }).then(() => {
-                expect(combo.selectedItems()).toEqual([{ field: 'New', region: 'Other'}]);
+                expect(combo.selectedItems()).toEqual([{ field: 'New' }]);
                 expect(combo.comboInput.nativeElement.value).toEqual('New');
                 fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click(mockEvent);
                 return fix.whenStable();
@@ -2935,10 +2903,6 @@ describe('igxCombo', () => {
         expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
         vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
         expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
-
-        combo.searchInput.nativeElement.value = 'c';
-        combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
-        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
     }));
 
     it(`Should handle enter keydown on "Add Item" properly`, async(() => {
@@ -2977,31 +2941,6 @@ describe('igxCombo', () => {
                 });
             }, 500);
         });
-    }));
-
-    it(`Should properly display "Add Item" button when filtering is off`, fakeAsync(() => {
-        const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
-        fixture.detectChanges();
-        const combo = fixture.componentInstance.combo;
-        combo.filterable = false;
-        tick();
-        expect(combo).toBeDefined();
-        expect(combo.filterable).toEqual(false);
-        expect(combo.isAddButtonVisible()).toEqual(false);
-        combo.toggle();
-        tick();
-        expect(combo.collapsed).toEqual(false);
-        const comboInput = combo.searchInput.nativeElement;
-        comboInput.value = combo.data[2];
-        comboInput.dispatchEvent(new Event('input'));
-        fixture.detectChanges();
-        tick();
-        expect(combo.isAddButtonVisible()).toEqual(false);
-        comboInput.value = combo.searchValue.substring(0, 2);
-        comboInput.dispatchEvent(new Event('input'));
-        fixture.detectChanges();
-        tick();
-        expect(combo.isAddButtonVisible()).toEqual(true);
     }));
 
     it(`Should handle click on "Add Item" properly`, async(() => {

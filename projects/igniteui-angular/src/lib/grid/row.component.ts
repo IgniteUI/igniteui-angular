@@ -136,15 +136,13 @@ export class IgxGridRowComponent implements DoCheck {
     }
 
     public update(value: any) {
-        const primaryKey = this.gridAPI.get(this.gridID).primaryKey;
-        const row = (primaryKey !== null && primaryKey !== undefined) ?
-            this.gridAPI.get_row_by_key(this.gridID, this.rowID) :
-            this.gridAPI.get_row_by_index(this.gridID, this.index);
+        let row;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            row = this.gridAPI.get_row_by_key(this.gridID, this.rowID);
+        } else {
+            row = this.gridAPI.get_row_by_index(this.gridID, this.index);
+        }
         if (row) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-            if (editableCell && editableCell.cellID.rowID === row.rowID) {
-                this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-            }
             if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
                 this.gridAPI.get(this.gridID).deselectRows([row.rowID]);
                 this.gridAPI.update_row(value, this.gridID, row);
@@ -159,15 +157,13 @@ export class IgxGridRowComponent implements DoCheck {
     }
 
     public delete() {
-        const primaryKey = this.gridAPI.get(this.gridID).primaryKey;
-        const row = (primaryKey !== null && primaryKey !== undefined) ?
-            this.gridAPI.get_row_by_key(this.gridID, this.rowID) :
-            this.gridAPI.get_row_by_index(this.gridID, this.index);
+        let row;
+        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
+            row = this.gridAPI.get_row_by_key(this.gridID, this.rowID);
+        } else {
+            row = this.gridAPI.get_row_by_index(this.gridID, this.index);
+        }
         if (row) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-            if (editableCell && editableCell.cellID.rowID === row.rowID) {
-                this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-            }
             if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
                 this.gridAPI.get(this.gridID).deselectRows(row.rowID);
             }

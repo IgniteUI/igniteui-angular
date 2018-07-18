@@ -130,7 +130,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
     private overlayClosed = () => {
         this._collapsed = true;
-        this.cdr.detectChanges();
         this.onClosed.emit();
     }
 

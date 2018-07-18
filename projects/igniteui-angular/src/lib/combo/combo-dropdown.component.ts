@@ -336,6 +336,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     onToggleOpened() {
+        this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
         this.combo.triggerCheck();
         this.combo.searchInput.nativeElement.focus();
         this.onOpened.emit();
@@ -352,9 +353,5 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     onToggleClosing() {
         super.onToggleClosing();
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
-    }
-
-    updateScrollPosition() {
-        this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
     }
 }

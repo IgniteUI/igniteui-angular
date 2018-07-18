@@ -209,6 +209,7 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
 
         group.isSelected = false;
         group.relatedTab.tabindex = -1;
+        this.onTabItemDeselected.emit({ tab: this.tabs[group.index], group });
     }
 }
 

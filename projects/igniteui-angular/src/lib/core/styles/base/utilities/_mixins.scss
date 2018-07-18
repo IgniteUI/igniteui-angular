@@ -10,16 +10,15 @@
 ///     @include hide-default();
 ///   }
 @mixin hide-default {
+    margin: 0;
     position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    border: none;
-    clip: rect(0, 0, 0, 0);
-    outline: 0;
-    pointer-events: none;
+    opacity: 0;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    left: 0;
     overflow: hidden;
-    appearance: none;
+    pointer-events: none;
 }
 
 /// Generates a linear gradient.
@@ -169,7 +168,7 @@
 /// @example scss Generate css variables for the `$default-palette`.
 ///   @include css-vars-from-palette($default-palette, ':root');
 ///
-/// @requires {mixin} css-vars-from-palette
+/// @requires css-vars-from-palette
 @mixin igx-palette-vars($palette, $scope: null) {
     @if $scope == null {
         @include css-vars-from-palette($palette);

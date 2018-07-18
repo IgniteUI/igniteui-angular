@@ -1,6 +1,6 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, DoCheck, HostBinding, Input
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, DoCheck, HostBinding, Input, OnInit
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -12,7 +12,7 @@ import { IgxColumnComponent } from './column.component';
     selector: 'igx-grid-summary',
     templateUrl: './grid-summary.component.html'
 })
-export class IgxGridSummaryComponent implements  DoCheck {
+export class IgxGridSummaryComponent implements OnInit, DoCheck, AfterContentInit {
 
     fieldName: string;
 
@@ -73,14 +73,20 @@ export class IgxGridSummaryComponent implements  DoCheck {
     }
     public summaryItemHeight;
     public itemClass = 'igx-grid-summary__item';
+    private hiddenItemClass = 'igx-grid-summary__item--inactive';
+    private summaryResultClass = 'igx-grid-summary-item__result--left-align';
+    private numberSummaryResultClass = 'igx-grid-summary-item__result';
     private displayDensity: DisplayDensity | string;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
 
     ngDoCheck() {
+        this.cdr.detectChanges();
+    }
+
+    ngAfterContentInit() {
         this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;
         this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
-        this.cdr.detectChanges();
     }
 
     get resolveSummaries(): any[] {

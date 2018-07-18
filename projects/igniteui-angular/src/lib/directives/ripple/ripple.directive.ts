@@ -32,7 +32,10 @@ export class IgxRippleDirective {
         { opacity: 0.5, transform: 'scale(.3)' },
         { opacity: 0, transform: 'scale(2)' }
     ];
-
+    private animationOptions = {
+        duration: this.rippleDuration,
+        fill: 'forwards'
+    };
 
     private _centered = false;
     private animationQueue = [];
@@ -88,7 +91,7 @@ export class IgxRippleDirective {
         this.renderer.addClass(target, this.rippleHostClass);
         this.renderer.appendChild(target, rippleElement);
 
-        const animation = rippleElement.animate(this.animationFrames, { duration: this.rippleDuration, fill: 'forwards'});
+        const animation = rippleElement.animate(this.animationFrames, this.animationOptions);
         this.animationQueue.push(animation);
 
         animation.onfinish = () => {

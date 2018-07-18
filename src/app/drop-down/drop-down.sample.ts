@@ -123,9 +123,9 @@ export class DropDownSampleComponent implements OnInit {
         this.igxDropDown.toggle(overlaySettings);
     }
 
-    onSelection(event) {
+    onSelection() {
     }
 
-    onOpening(event) {
+    onOpening() {
     }
 }

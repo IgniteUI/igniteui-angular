@@ -287,33 +287,6 @@ describe('IgxGrid - CRUD operations', () => {
         });
     }));
 
-    it('should delete row through row object when PK is defined and there is cell in edit mode', async(() => {
-        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
-        fixture.detectChanges();
-
-
-        const grid = fixture.componentInstance.instance;
-        const indexColumn = grid.getColumnByName('index');
-        indexColumn.editable = true;
-        fixture.detectChanges();
-        const cell = grid.getCellByKey(1, 'index');
-        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            cellDom.triggerEventHandler('dblclick', {});
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(cell.inEditMode).toBe(true);
-            grid.deleteRow(1);
-        }).then(() => {
-            fixture.detectChanges();
-            const firstRow = grid.getRowByKey(1);
-            expect(firstRow).toBeUndefined();
-            expect(grid.rowList.length).toBe(0);
-        });
-    }));
-
     it('should delete row through row object when PK is NOT defined', async(() => {
         const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
         fixture.detectChanges();
@@ -331,37 +304,6 @@ describe('IgxGrid - CRUD operations', () => {
             expect(grid.rowList.length).toBe(0);
         });
     }));
-
-    it('should delete row through row object when PK is NOT defined and there is cell in edit mode', async(() => {
-        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.instance;
-        const indexColumn = grid.getColumnByName('index');
-        indexColumn.editable = true;
-        grid.primaryKey = null;
-        fixture.detectChanges();
-        expect(grid.primaryKey).toBeNull();
-        const cell = grid.getCellByColumn(0, 'index');
-        const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-        let firstRow;
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            cellDom.triggerEventHandler('dblclick', {});
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(cell.inEditMode).toBe(true);
-            firstRow = grid.getRowByIndex(0);
-            firstRow.delete();
-        }).then(() => {
-            fixture.detectChanges();
-            firstRow = grid.getRowByIndex(0);
-            expect(firstRow).toBeUndefined();
-            expect(grid.rowList.length).toBe(0);
-        });
-    }));
-
 });
 
 @Component({

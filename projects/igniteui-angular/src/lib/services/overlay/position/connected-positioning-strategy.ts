@@ -19,7 +19,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   }
 
   // we no longer use the element inside the position() as its dimensions are cached in rect
-  position(contentElement: HTMLElement, size: { width: number, height: number}, document?: Document, initialCall?: boolean): void {
+  position(contentElement, size): void {
     const eWidth = size.width;
     const eHeight = size.height;
 

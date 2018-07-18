@@ -397,8 +397,8 @@ describe('IgxGrid - Cell component', () => {
             expect(cell.inEditMode).toBe(false);
             expect(parseFloat(cell.value)).toBe(expectedValue);
         });
-    }));
 
+    }));
     it('edit template should be accourding column data type --boolean', async(() => {
         const fixture = TestBed.createComponent(CellEditingTestComponent);
         fixture.detectChanges();
@@ -499,41 +499,38 @@ describe('IgxGrid - Cell component', () => {
         });
     }));
 
-    it('edit mode - exit edit mode and submit when pin/unpin unpin column', async(() => {
+    it('edit mode - leaves cell in edit mode on pinning', async(() => {
         const fixture = TestBed.createComponent(CellEditingScrollTestComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
-        let cell = grid.getCellByColumn(0, 'firstName');
+        const cell = grid.getCellByColumn(0, 'firstName');
         const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
         fixture.whenStable().then(() => {
             fixture.detectChanges();
+
             cellDom.triggerEventHandler('dblclick', {});
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeDefined();
-            const editTemplate = cellDom.query(By.css('input'));
-            sendInput(editTemplate, 'Gary Martin', fixture);
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
             grid.pinColumn('firstName');
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeNull();
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
             expect(grid.pinnedColumns.length).toBe(1);
-            cell = grid.getCellByColumn(0, 'firstName');
-            expect(cell.value).toBe('Gary Martin');
-            cell = grid.getCellByColumn(1, 'firstName');
-            cell.inEditMode = true;
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeDefined();
             grid.unpinColumn('firstName');
             return fixture.whenStable();
         }).then(() => {
+            fixture.detectChanges();
+            expect(cell.gridAPI.get_cell_inEditMode).toBeDefined();
             expect(grid.pinnedColumns.length).toBe(0);
-            expect(cell.gridAPI.get_cell_inEditMode(grid.id)).toBeNull();
+            cellDom.triggerEventHandler('keydown.enter', null);
+            fixture.detectChanges();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(cell.inEditMode).toBe(false);
         });
     }));
 

@@ -15,8 +15,7 @@ describe('IgxGrid - Grid Paging', () => {
                 GridMarkupPagingDeclarationComponent,
                 GridDeclarationComponent,
                 IgxGridMarkupEditingDeclarationComponent,
-                IgxGridPageChangeComponent,
-                IgxGridPageInPercentHeightComponent
+                IgxGridPageChangeComponent
             ],
             imports: [IgxGridModule.forRoot(), IgxButtonModule, IgxRippleModule]
         })
@@ -45,7 +44,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(1);
 
         // Go to next page
-        gridElement.querySelectorAll('.igx-paginator > button')[2].dispatchEvent(new Event('click'));
+        gridElement.querySelectorAll('.igx-paginator > button')[2]. dispatchEvent(new Event('click'));
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -265,13 +264,6 @@ describe('IgxGrid - Grid Paging', () => {
         paginator = grid.nativeElement.querySelector('.igx-paginator');
         expect(paginator).toBeNull();
     }));
-
-    it('should not throw when initialized in a grid with % height', () => {
-        const fix = TestBed.createComponent(IgxGridPageInPercentHeightComponent);
-        expect(() => {
-            fix.detectChanges();
-        }).not.toThrow();
-    });
 });
 
 const data = [
@@ -360,32 +352,15 @@ export class IgxGridPageChangeComponent {
 
     public GoToPage(val) {
         switch (val) {
-            case -2:
-                this.grid1.previousPage();
-                break;
-            case -1:
-                this.grid1.nextPage();
-                break;
-            default:
-                this.grid1.paginate(val);
-                break;
-        }
+        case -2:
+            this.grid1.previousPage();
+            break;
+        case -1:
+            this.grid1.nextPage();
+            break;
+        default:
+            this.grid1.paginate(val);
+            break;
     }
 }
-
-@Component({
-    template: `
-    <div class="wrapper" style="height: 400px;">
-        <igx-grid #grid1 [data]="data" [paging]="true" [width]="'900px'" [height]="'100%'">
-            <igx-column field="ID"></igx-column>
-            <igx-column field="Name" [editable]="true"></igx-column>
-            <igx-column field="JobTitle" [editable]="true"></igx-column>
-        </igx-grid>
-    </div>
-    `
-})
-export class IgxGridPageInPercentHeightComponent {
-    public data = data;
-    @ViewChild('grid1', { read: IgxGridComponent })
-    public grid1: IgxGridComponent;
 }

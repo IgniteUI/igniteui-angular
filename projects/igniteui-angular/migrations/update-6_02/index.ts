@@ -7,8 +7,6 @@ import {
 import { UpdateChanges } from '../common/UpdateChanges';
 import { getProjects, getWorkspace } from '../common/util';
 
-const version = '6.0.2';
-
 export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {
         let globalStyleExt: string;
@@ -17,7 +15,7 @@ export default function(): Rule {
         const config = getWorkspace(host);
         const projects = getProjects(config);
 
-        context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
+        context.logger.info('Applying migration for Ignite UI for Angular to version 6.0.1');
 
         if (config.schematics && config.schematics['@schematics/angular:component']) {
             // updated projects have global prefix rather than per-project:

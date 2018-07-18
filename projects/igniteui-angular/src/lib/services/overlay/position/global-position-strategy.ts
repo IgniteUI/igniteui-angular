@@ -17,7 +17,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
 
-    position(contentElement: HTMLElement, size?: { width: number, height: number}, document?: Document, initialCall?: boolean): void {
+    position(contentElement: HTMLElement): void {
         switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
                 contentElement.parentElement.style.justifyContent = 'flex-start';

@@ -79,17 +79,11 @@ export class IgxGridAPIService {
         }
     }
 
-    public escape_editMode(gridId, cellId?) {
+    public escape_editMode(gridId, cellId) {
         const editableCell = this.get_cell_inEditMode(gridId);
-        if (editableCell) {
-            if (cellId) {
-                if (cellId.rowID === editableCell.cellID.rowID &&
-                    cellId.columnID === editableCell.cellID.columnID) {
-                        this.editCellState.delete(gridId);
-                }
-            } else {
-                this.editCellState.delete(gridId);
-            }
+        if (editableCell && cellId.rowID === editableCell.cellID.rowID &&
+            cellId.columnID === editableCell.cellID.columnID) {
+            this.editCellState.delete(gridId);
         }
     }
 
@@ -160,14 +154,17 @@ export class IgxGridAPIService {
         }
     }
 
-    public update_cell(id: string, rowID, columnID, editValue) {
+    public update_cell(id: string, rowSelector, columnID, editValue) {
         let cellObj;
+        let rowID;
+        const row = this.get(id).primaryKey ? this.get_row_by_key(id, rowSelector) : this.get_row_by_index(id, rowSelector);
         const editableCell = this.get_cell_inEditMode(id);
-        const row = this.get(id).rowList.find((r) => r.rowID === rowID);
-        if (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) {
+        if (editableCell) {
             cellObj = editableCell.cell;
+            rowID = editableCell.cellID.rowID;
         } else if (row) {
-            cellObj = this.get(id).columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
+            rowID = row.rowID;
+            cellObj = this.get(id).columnList.toArray()[columnID].cells[row.index];
         }
         if (cellObj) {
             const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
@@ -175,7 +172,7 @@ export class IgxGridAPIService {
             this.get(id).onEditDone.emit(args);
             const column =  this.get(id).columnList.toArray()[columnID];
             if (this.get(id).primaryKey) {
-                const index =  this.get(id).data.map((record) => record[this.get(id).primaryKey]).indexOf(rowID);
+                const index =  this.get(id).data.map((record) => record[this.get(id).primaryKey]).indexOf(rowSelector);
                 this.get(id).data[index][column.field] = args.newValue;
             } else {
                 this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
@@ -301,8 +298,6 @@ export class IgxGridAPIService {
         ignoreCase: boolean) {
         const grid = this.get(id);
         const filteringTree = grid.filteringExpressionsTree;
-        this.escape_editMode(id);
-
         if (grid.paging) {
             grid.page = 0;
         }

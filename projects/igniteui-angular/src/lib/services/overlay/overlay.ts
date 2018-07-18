@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent } from 'rxjs';
-import { take, filter } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 
 @Injectable({ providedIn: 'root' })
@@ -243,10 +243,13 @@ export class IgxOverlayService {
 
     private setupModalWrapper(info: OverlayInfo) {
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
-        fromEvent(wrapperElement, 'keydown').pipe(
-            filter((ev: KeyboardEvent) => ev.key === 'Escape'),
-            take(1)
-        ).subscribe(() => this.hide(info.id));
+        fromEvent(wrapperElement, 'keydown')
+            .pipe(take(1))
+            .subscribe((ev: KeyboardEvent) => {
+                if (ev.key === 'Escape') {
+                    this.hide(info.id);
+                }
+            });
         wrapperElement.classList.remove('igx-overlay__wrapper');
         this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
         wrapperElement.classList.add('igx-overlay__wrapper--modal');
@@ -268,6 +271,12 @@ export class IgxOverlayService {
         if (info.hook) {
             info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
             info.hook.parentElement.removeChild(info.hook);
+        }
+
+        if (info.settings.closeOnOutsideClick) {
+            if (this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
+                this._document.removeEventListener('click', this.documentClicked, true);
+            }
         }
 
         const index = this._overlayInfos.indexOf(info);

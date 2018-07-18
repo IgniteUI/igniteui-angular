@@ -75,8 +75,7 @@ List of time-flags:
 |:--:|:---|
 | `onValueChanged` | Fired when selection is made. The event contains the selected value. |
 | `onInvalidValueSelected ` | Emitted when the user try to commit invalid value. The event contains the timePicker |
-| `onOpen` | Emitted when a timePicker is being opened. |
-| `onClose` | Emitted when a timePicker is being closed. |
+| `onOpen` | Emitted when a timePicker is being opened.  |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |

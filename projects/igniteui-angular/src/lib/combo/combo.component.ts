@@ -27,20 +27,6 @@ import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPip
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 
-export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
-    private _callback: () => void;
-    constructor(callback: () => void) {
-        super();
-        this._callback = callback;
-    }
-
-    position(contentElement, size, document?, initialCall?) {
-        if (initialCall) {
-            this._callback();
-        }
-        super.position(contentElement, size);
-    }
-}
 export enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
@@ -123,9 +109,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _valid = IgxComboState.INITIAL;
     private _statusChanges$: Subscription;
     private _width = '250px';
-    private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
+        positionStrategy: new ConnectedPositioningStrategy(),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
@@ -139,11 +125,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService,
         @Self() @Optional() public ngControl: NgControl) {
-        if (this.ngControl) {
-            // Note: we provide the value accessor through here, instead of
-            // the `providers` to avoid running into a circular import.
-            this.ngControl.valueAccessor = this;
-        }
+            if (this.ngControl) {
+                // Note: we provide the value accessor through here, instead of
+                // the `providers` to avoid running into a circular import.
+                this.ngControl.valueAccessor = this;
+            }
     }
 
     /**
@@ -877,7 +863,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public get filteredData(): any[] {
-        return this.filterable ? this._filteredData : this.data;
+        return this._filteredData;
     }
 
     /**
@@ -923,15 +909,13 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public handleInputChange(event?) {
-        if (event !== undefined) {
-            this.dropdown.verticalScrollContainer.scrollTo(0);
-            this.onSearchInput.emit(event);
-        }
         if (this.filterable) {
             this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
                 true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
-        } else {
-            this.checkMatch();
+            // this.isHeaderChecked();
+        }
+        if (event !== undefined) {
+            this.onSearchInput.emit(event);
         }
     }
 
@@ -1059,8 +1043,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isAddButtonVisible(): boolean {
-        // This should always return a boolean value. If this.searchValue was '', it returns '' instead of false;
-        return this.searchValue !== '' && this.customValueFlag;
+        return this.searchValue && this.customValueFlag;
     }
 
     /**
@@ -1086,9 +1069,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             [this.valueKey]: newValue,
             [this.displayKey]: newValue
         } : newValue;
-        if (this.groupKey || this.groupKey === 0) {
-            Object.assign(addedItem, { [this.groupKey] : this.defaultFallbackGroup});
-        }
         const oldCollection = this.data;
         const newCollection = [...this.data];
         newCollection.push(addedItem);
@@ -1097,9 +1077,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         };
         this.onAddition.emit(args);
         this.data.push(addedItem);
-        // If you mutate the array, no pipe is invoked and the display isn't updated;
-        // if you replace the array, the pipe executes and the display is updated.
-        this.data = cloneArray(this.data);
         this.changeSelectedItem(addedItem, true);
         this.customValueFlag = false;
         if (this.searchInput) {
@@ -1156,8 +1133,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public ngOnInit() {
-        this._positionCallback =  () => this.dropdown.updateScrollPosition();
-        this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
 
         if (this.ngControl && this.ngControl.value) {
