@@ -8,9 +8,9 @@
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null] - The background color used for the toast.
-/// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
-/// @param {Color} $active-item-color [null] - The text-color used for the active color.
+/// @param {Color} $background [#fff] - The background color used for the toast.
+/// @param {Color} $idle-item-color [rgba(0, 0, 0, .62)] - The text-color used for the idle color.
+/// @param {Color} $active-item-color [primary 500] - The text-color used for the active color.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -47,16 +47,16 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires igx-bottom-nav-theme
 /// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} ellipsis
+/// @requires igx-bottom-nav-theme
 /// @requires igx-color
 /// @requires igx-elevation
 /// @requires extend
-/// @requires {mixin} ellipsis
 /// @requires rem
-/// @requires var
 /// @requires $ease-in-out-quad
 /// @requires $elevations
+/// @requires --var
 @mixin igx-bottom-nav($theme) {
     @include igx-root-css-vars($theme);
 

@@ -6,48 +6,51 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $header-background [null] - The table header background color.
-/// @param {Color} $header-text-color [null] - The table header text color.
-/// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
-/// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
-/// @param {Color} $ghost-header-background [null] - The dragged header background color.
-/// @param {Color} $content-background [null] - The table body background color.
-/// @param {Color} $content-text-color [null] - The table body text color.
-/// @param {Color} $row-odd-background [null] - The background color of odd rows.
-/// @param {Color} $row-even-background [null] - The background color of even rows.
-/// @param {Color} $row-odd-text-color [null] - The text color of odd rows.
-/// @param {Color} $row-even-text-color [null] - The text color of even rows.
-/// @param {Color} $row-selected-background [null] - The selected row background color.
-/// @param {Color} $row-selected-text-color [null] - The selected row text color.
-/// @param {Color} $row-hover-background [null] - The hover row background color.
-/// @param {Color} $row-hover-text-color [null] - The hover row text color.
-/// @param {Color} $row-border-color [null] - The row bottom border color.
-/// @param {Color} $pinned-border-width [null] - The border width of the pinned border.
-/// @param {Color} $pinned-border-style [null] - The CSS border style of the pinned border.
-/// @param {Color} $pinned-border-color [null] - The color of the pinned border.
-/// @param {Color} $cell-selected-background [null] - The selected cell background color.
-/// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
-/// @param {Color} $resize-line-color [null] - The table header resize line color.
+/// @param {Color} $header-background [#fefefe] - The table header background color.
+/// @param {Color} $header-text-color [rgba(0, 0, 0, .54)] - The table header text color.
+/// @param {String} $header-border-width [1px] - The border width used for header borders.
+/// @param {String} $header-border-style [dotted] - The border style used for header borders.
+/// @param {Color} $header-border-color [rgba(0, 0, 0, .24)] - The color used for header borders.
+/// @param {Color} $ghost-header-text-color [rgba(0, 0, 0, .54)] - The dragged header text color.
+/// @param {Color} $ghost-header-icon-color [rgba(0, 0, 0, .38)] - The dragged header icon color.
+/// @param {Color} $ghost-header-background [#fff] - The dragged header background color.
+/// @param {Color} $content-background [#fff] - The table body background color.
+/// @param {Color} $content-text-color [rgba(0, 0, 0, .74)] - The table body text color.
+/// @param {Color} $row-odd-background [#fff] - The background color of odd rows.
+/// @param {Color} $row-even-background [#fff] - The background color of even rows.
+/// @param {Color} $row-odd-text-color [rgba(0, 0, 0, .74)] - The text color of odd rows.
+/// @param {Color} $row-even-text-color [rgba(0, 0, 0, .74)] - The text color of even rows.
+/// @param {Color} $row-selected-background [rgba(0, 0, 0, .74)] - The selected row background color.
+/// @param {Color} $row-selected-text-color [igx-contrast-color of rgba(0, 0, 0, .74)] - The selected row text color.
+/// @param {Color} $row-hover-background [#eaeaea] - The hover row background color.
+/// @param {Color} $row-hover-text-color [igx-contrast-color of rgba(0, 0, 0, .08)] - The hover row text color.
+/// @param {Color} $row-border-color [rgba(0, 0, 0, .12)] - The row bottom border color.
+/// @param {String} $pinned-border-width [2px] - The border width of the pinned border.
+/// @param {String} $pinned-border-style [solid] - The CSS border style of the pinned border.
+/// @param {Color} $pinned-border-color [rgba(0, 0, 0, .24)] - The color of the pinned border.
+/// @param {Color} $cell-selected-background [primary 500] - The selected cell background color.
+/// @param {Color} $cell-selected-text-color [igx-contrast-color of primary 500] - The selected cell text color.
+/// @param {Color} $resize-line-color [secondary 500] - The table header resize line color.
 ///
-/// @param {Color} $grouparea-background [null] - The grid group area background color.
+/// @param {Color} $grouparea-background [#fefefe] - The grid group area background color.
 ///
-/// @param {Color} $group-row-background [null] - The grid group row background color.
-/// @param {Color} $group-label-column-name-text [null] - The grid group row column name text color.
-/// @param {Color} $group-label-icon [null] - The grid group row icon color.
-/// @param {Color} $group-label-text [null] - The grid group row text color.
-/// @param {Color} $expand-all-icon-color [null] - The grid header expand all group rows icon color.
-/// @param {Color} $expand-all-icon-hover-color [null] - The grid header expand all group rows icon hover color.
-/// @param {Color} $expand-icon-color [null] - The grid row expand icon color.
-/// @param {Color} $expand-icon-hover-color [null] - The grid row expand icon hover color.
-/// @param {Color} $group-count-background [null] - The grid group row cont badge background color.
-/// @param {Color} $group-count-text-color [null] - The grid group row cont badge text color.
-/// @param {Color} $drop-area-text-color [null] - The drop area text color.
-/// @param {Color} $drop-area-icon-color [null] - The drop area icon color.
-/// @param {Color} $drop-area-background [null] - The drop area background color.
-/// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
-/// @param {Color} $grouping-indicator-hover-background [null] - grouping indicator hover background color.
-/// @param {Color} $grouping-indicator-focus-background [null] - grouping indicator focus background color.
-/// @param {Color} $row-content-focus-background [null] - grouping row background color on focus.
+/// @param {Color} $group-row-background [#fefefe] - The grid group row background color.
+/// @param {Color} $group-label-column-name-text [primary 500] - The grid group row column name text color.
+/// @param {Color} $group-label-icon [primary 500] - The grid group row icon color.
+/// @param {Color} $group-label-text [rgba(0, 0, 0, .74)] - The grid group row text color.
+/// @param {Color} $expand-all-icon-color [rgba(0, 0, 0, .54)] - The grid header expand all group rows icon color.
+/// @param {Color} $expand-all-icon-hover-color [rgba(0, 0, 0, .74)] - The grid header expand all group rows icon hover color.
+/// @param {Color} $expand-icon-color [rgba(0, 0, 0, .54)] - The grid row expand icon color.
+/// @param {Color} $expand-icon-hover-color [primary 500] - The grid row expand icon hover color.
+/// @param {Color} $group-count-background [rgba(0, 0, 0, .08)] - The grid group row cont badge background color.
+/// @param {Color} $group-count-text-color [rgba(0, 0, 0, .54)] - The grid group row cont badge text color.
+/// @param {Color} $drop-area-text-color [rgba(0, 0, 0, .54)] - The drop area text color.
+/// @param {Color} $drop-area-icon-color [rgba(0, 0, 0, .38)] - The drop area icon color.
+/// @param {Color} $drop-area-background [rgba(0, 0, 0, .04)] - The drop area background color.
+/// @param {Color} $drop-area-on-drop-background [rgba(0, 0, 0, .08)] - The drop area background on drop color.
+/// @param {Color} $grouping-indicator-hover-background [#fefefe] - grouping indicator hover background color.
+/// @param {Color} $grouping-indicator-focus-background [rgba(0, 0, 0, .04)] - grouping indicator focus background color.
+/// @param {Color} $row-content-focus-background [rgba(0, 0, 0, .04)] - grouping row background color on focus.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -59,6 +62,9 @@
 
     $header-background: null,
     $header-text-color: null,
+    $header-border-width: null,
+    $header-border-style: null,
+    $header-border-color: null,
 
     $content-background: null,
     $content-text-color: null,
@@ -89,22 +95,28 @@
     $drop-indicator-color: null,
 
     $grouparea-background: null,
+
     $group-row-background: null,
     $row-content-focus-background: null,
     $row-indentation-background: null,
     $group-label-column-name-text: null,
     $group-label-icon: null,
     $group-label-text: null,
+
     $expand-all-icon-color: null,
     $expand-all-icon-hover-color: null,
+
     $expand-icon-color: null,
     $expand-icon-hover-color: null,
+
     $group-count-background: null,
     $group-count-text-color: null,
+
     $drop-area-text-color: null,
     $drop-area-icon-color: null,
     $drop-area-background: null,
     $drop-area-on-drop-background: null,
+
     $grouping-indicator-hover-background: null,
     $grouping-indicator-focus-background: null
 ) {
@@ -113,6 +125,9 @@
 
         header-background: hexrgba(igx-color($palette, 'grays', 100)),
         header-text-color: igx-color($palette, 'grays', 600),
+        header-border-width: 1px,
+        header-border-style: dotted,
+        header-border-color: igx-color($palette, 'grays', 400),
 
         content-background: #fff,
         content-text-color: igx-color($palette, 'grays', 800),
@@ -126,9 +141,9 @@
         row-odd-text-color: inherit,
         row-even-text-color: inherit,
         row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
-        row-selected-text-color: igx-contrast-color($palette, 'grays', 900),
+        row-selected-text-color: igx-contrast-color($palette, 'grays', 800),
         row-hover-background: hexrgba(igx-color($palette, 'grays', 200)),
-        row-hover-text-color: igx-color($palette, 'grays', 800),
+        row-hover-text-color: igx-contrast-color($palette, 'grays', 200),
         row-border-color: igx-color($palette, 'grays', 300),
 
         pinned-border-width: 2px,
@@ -154,13 +169,15 @@
         expand-icon-hover-color: igx-color($palette, 'primary'),
         group-count-background: igx-color($palette, 'grays', 200),
         group-count-text-color: igx-color($palette, 'grays', 600),
+
         drop-area-text-color: igx-color($palette, 'grays', 600),
-        group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
-        row-content-focus-background: igx-color($palette, grays, 100),
-        row-indentation-background: hexrgba(igx-color($palette, 'grays', 100)),
         drop-area-icon-color: igx-color($palette, 'grays'),
         drop-area-background: igx-color($palette, grays, 100),
         drop-area-on-drop-background: igx-color($palette, grays, 200),
+
+        group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
+        row-content-focus-background: igx-color($palette, grays, 100),
+        row-indentation-background: hexrgba(igx-color($palette, 'grays', 100)),
         grouping-indicator-hover-background: hexrgba(igx-color($palette, 'grays', 100)),
         grouping-indicator-focus-background: igx-color($palette, grays, 100)
     );
@@ -175,6 +192,10 @@
 
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
+    }
+
+    @if not($header-border-color) and $header-background {
+        $header-border-color: rgba(text-contrast($header-background), .24);
     }
 
     @if not($content-text-color) and $content-background {
@@ -197,6 +218,10 @@
         $row-even-text-color: text-contrast($row-even-background);
     }
 
+    @if not($row-hover-background) and $content-background {
+        $row-hover-background: rgba(text-contrast($content-background), .08)
+    }
+
     @if not($row-hover-text-color) and $row-hover-background {
         $row-hover-text-color: text-contrast($row-hover-background);
     }
@@ -207,10 +232,6 @@
 
     @if not($row-selected-text-color) and $row-selected-background {
         $row-selected-text-color: $row-selected-background;
-    }
-
-    @if not($row-hover-background) and $content-background {
-        $row-hover-background: rgba(text-contrast($content-background), .08)
     }
 
     @if not($row-border-color) and $content-background {
@@ -225,12 +246,40 @@
         $group-row-background: $header-background
     }
 
+    @if not($expand-all-icon-color) and $header-background {
+        $expand-all-icon-color: rgba(text-contrast($header-background), .87);
+    }
+
+    @if not($expand-all-icon-hover-color) and $header-background {
+        $expand-all-icon-hover-color: text-contrast($header-background);
+    }
+
+    @if not($grouping-indicator-hover-background) and $group-row-background {
+        $grouping-indicator-hover-background: $group-row-background;
+    }
+
+    @if not($grouping-indicator-focus-background) and $group-row-background {
+        $grouping-indicator-focus-background: $group-row-background;
+    }
+
     @if not($expand-icon-color) and $group-row-background {
+        $expand-icon-color: text-contrast($group-row-background)
+    }
+
+    @if not($expand-icon-hover-color) and $group-row-background {
         $expand-icon-color: text-contrast($group-row-background)
     }
 
     @if not($group-label-text) and $group-row-background {
         $group-label-text: text-contrast($group-row-background)
+    }
+
+    @if not($group-count-background) and $group-row-background {
+        $group-count-background: text-contrast($group-row-background);
+    }
+
+    @if not($group-count-text-color) and $group-count-background {
+        $group-count-text-color: text-contrast($group-count-background);
     }
 
     @if not($row-indentation-background) and $group-row-background {
@@ -239,6 +288,14 @@
 
     @if not($grouparea-background) and $header-background {
         $grouparea-background: $header-background
+    }
+
+    @if not($drop-area-background) and $grouparea-background {
+        $drop-area-background: text-contrast($grouparea-background);
+    }
+
+    @if not($drop-area-on-drop-background) and $drop-area-background {
+        $drop-area-on-drop-background: $drop-area-background;
     }
 
     @if not($drop-area-text-color) and $drop-area-background {
@@ -250,6 +307,9 @@
 
         header-background: $header-background,
         header-text-color: $header-text-color,
+        header-border-width: $header-border-width,
+        header-border-style: $header-border-style,
+        header-border-color: $header-border-color,
 
         ghost-header-text-color: $ghost-header-text-color,
         ghost-header-icon-color: $ghost-header-icon-color,
@@ -284,19 +344,26 @@
         group-label-column-name-text: $group-label-column-name-text,
         group-label-icon: $group-label-icon,
         group-label-text: $group-label-text,
+
         expand-all-icon-color: $expand-all-icon-color,
         expand-all-icon-hover-color: $expand-all-icon-hover-color,
+
         expand-icon-color: $expand-icon-color,
         expand-icon-hover-color: $expand-icon-hover-color,
+
         group-count-background: $group-count-background,
         group-count-text-color: $group-count-text-color,
-        drop-area-text-color: $drop-area-text-color,
+
         group-row-background: $group-row-background,
+
         row-content-focus-background: $row-content-focus-background,
         row-indentation-background: $row-indentation-background,
+
+        drop-area-text-color: $drop-area-text-color,
         drop-area-icon-color: $drop-area-icon-color,
         drop-area-on-drop-background: $drop-area-on-drop-background,
         drop-area-background: $drop-area-background,
+
         grouping-indicator-hover-background: $grouping-indicator-hover-background,
         grouping-indicator-focus-background: $grouping-indicator-focus-background,
     ));
@@ -336,6 +403,8 @@
     $grid-cell-lh: rem(16px);
     $grid-cell-pinned-style: 1px solid;
     $grid-cell-pinned-border-color: igx-color($palette, 'grays', 300);
+
+    $grid-header-border: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
 
     $cell-pin: (
         style: --var($theme, 'pinned-border-width') --var($theme, 'pinned-border-style'),
@@ -439,7 +508,7 @@
     %grid-thead {
         position: relative;
         grid-row: 3;
-        border-bottom: 1px dotted igx-color($palette, 'grays', 400);
+        border-bottom: $grid-header-border;
         z-index: 2;
 
         %grid__group-indentation {
@@ -452,7 +521,7 @@
     %grid-thead-title {
         flex-basis: auto !important;
         align-items: center !important;
-        border-bottom: 1px dotted igx-color($palette, 'grays', 400);
+        border-bottom: $grid-header-border;
         height: map-get($grid-header-height, 'comfortable');
     }
 
@@ -477,7 +546,7 @@
 
     %grid-tfoot {
         grid-row: 5;
-        border-top: 1px dotted igx-color($palette, 'grays', 400);
+        border-top: $grid-header-border;
     }
 
     %grid-display-container-thead {
@@ -613,7 +682,7 @@
 
         igx-input-group {
             width: 100%;
-            margin-top: 0;
+            margin-top: -16px;
         }
     }
 
@@ -640,7 +709,7 @@
         font-weight: $grid-head-fw;
         min-width: 0;
         padding: map-get($grid-header-padding, 'comfortable');
-        border-right: 1px dotted igx-color($palette, 'grays', 400);
+        border-right: $grid-header-border;
         outline-style: none;
     }
 
@@ -716,10 +785,10 @@
     }
 
     %grid__cbx-selection {
-        padding: map-get($grid-header-padding, 'comfortable');
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: map-get($grid-header-padding, 'comfortable');
         background: inherit;
         z-index: 1;
     }
@@ -1059,7 +1128,7 @@
         align-items: center;
         justify-content: flex-start;
         flex-wrap: wrap;
-        border-bottom: 1px solid --var($theme, 'row-border-color');
+        border-bottom: $grid-header-border;
         background: --var($theme, 'grouparea-background');
         min-height: map-get($grouparea-min-height, 'comfortable');
         padding: map-get($grouparea-padding, 'comfortable');
@@ -1091,7 +1160,6 @@
         padding: map-get($drop-area-padding, 'comfortable');
         margin: rem(4px);
         flex: 1 0 0%;
-        transition: $transition;
         background: --var($theme, 'drop-area-background');
 
         %igx-drop-area__icon {
@@ -1127,19 +1195,19 @@
     }
 
     %igx-grid__grouping-indicator {
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: $grouping-padding-right;
-        position: relative;
         min-height: map-get($grid-header-height, 'comfortable');
         background-color: --var($theme, 'group-row-background');
 
         %igx-icon-display {
             color: --var($theme, 'expand-icon-color');
-            min-width: $indicator-icon-width;
+            width: $indicator-icon-width;
         }
 
         &:hover,
