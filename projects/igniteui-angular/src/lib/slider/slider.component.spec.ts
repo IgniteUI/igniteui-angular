@@ -608,7 +608,7 @@ describe('IgxSlider', () => {
         expect(ticks.style.background).toBeTruthy();
     });
 
-    fit(`When setting min and max value for range slider,
+    it(`When setting min and max value for range slider,
         max value should be applied firstly, due correct appliement of the min value.`, () => {
 
         const fix = TestBed.createComponent(SliderMinMaxComponent);
