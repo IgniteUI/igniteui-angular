@@ -34,10 +34,19 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         return this.verticalScrollContainer.dc.location.nativeElement;
     }
 
+    /**
+     * @hidden
+     */
     protected get isScrolledToLast(): boolean {
         const scrollTop = this.verticalScrollContainer.getVerticalScroll().scrollTop;
         const scrollHeight = this.verticalScrollContainer.getVerticalScroll().scrollHeight;
         return Math.floor(scrollTop + this.verticalScrollContainer.igxForContainerSize) === scrollHeight;
+    }
+
+    protected get lastVisibleIndex(): number {
+        return this.parentElement.totalItemCount ?
+        Math.floor(this.parentElement.itemsMaxHeight / this.parentElement.itemHeight) :
+        this.items.length - 1;
     }
 
     /**
@@ -133,9 +142,24 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     navigateLast() {
         const vContainer = this.verticalScrollContainer;
-        vContainer.scrollTo(vContainer.igxForOf.length - 1);
+        const scrollTarget = this.parentElement.totalItemCount ? this.parentElement.totalItemCount - 1 : this.items.length - 1;
+        vContainer.scrollTo(scrollTarget);
         this.subscribeNext(vContainer, () => {
-            this.focusItem(this.items.length - 1);
+            this.focusItem(scrollTarget);
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    private navigateRemoteItem(direction) {
+        this.verticalScrollContainer.addScrollTop(direction * this.parentElement.itemHeight);
+        this.subscribeNext(this.verticalScrollContainer, () => {
+            if (direction === Navigate.Up) {
+                this.focusItem(0);
+            } else {
+                this.focusItem(this.focusedItem.index);
+            }
         });
     }
 
@@ -199,9 +223,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         }
         if (newIndex === -1) {
             this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
-        } else if (newIndex === this.items.length - 1 && !this.isScrolledToLast) {
+        } else if (newIndex === this.lastVisibleIndex && !this.isScrolledToLast) {
             this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
-        } else if (newIndex === this.items.length - 1 && this.isScrolledToLast) {
+        } else if (newIndex === this.lastVisibleIndex && this.isScrolledToLast) {
             // When initially scrolling to the last item, a pseudo element is present in the children list
             // We need to check if the element we're on is an actual element or an empty 'igx-combo-item' child
             if (this.items[newIndex].element && this.items[newIndex].element.nativeElement.clientHeight) {
@@ -215,6 +239,11 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
 
     private navigateVirtualItem(direction: Navigate, extraScroll?: number) {
         const vContainer = this.verticalScrollContainer;
+        // If the data is vitualized, data.length === vContainer.chunkSize, so the below checks are no-longer valid
+        if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) {
+            this.navigateRemoteItem(direction);
+            return;
+        }
         let state = vContainer.state;
         if (this.isScrolledToLast && direction === Navigate.Down) { // If on the bottom most item, do not subscribe
             return;
