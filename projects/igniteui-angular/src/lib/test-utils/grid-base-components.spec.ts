@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { IgxColumnComponent } from '../grid/column.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IgxGridComponent } from '../grid/grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
@@ -12,7 +11,6 @@ import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec'
     `
 })
 export class BasicGridComponent {
-    @Input()
     public data = [];
 
     @ViewChild(IgxGridComponent)
@@ -28,7 +26,6 @@ export class BasicGridComponent {
     `
 })
 export class GridAutoGenerateComponent extends BasicGridComponent {
-    @Input()
     public autoGenerate = true;
 }
 
@@ -42,33 +39,27 @@ export class GridAutoGenerateComponent extends BasicGridComponent {
     `
 })
 export class GridWithSizeComponent extends GridAutoGenerateComponent {
-    @Input()
-    public width: string;
-
-    @Input()
-    public height: string;
+    public width = '100%';
+    public height = '100%';
 }
 
 @Component({
-    template: `
-        <igx-grid
-            [data]="data"
-            [autoGenerate]="autoGenerate"
-            [height]="height" [width]="width">
-        </igx-grid>
-    `
+    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.generatedEditable)
 })
 export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
     public colsCount: number;
     public rowsCount: number;
     public columnsType = 'string';
-    public hasEditableColumns = false;
+    public hasEditableColumns = true;
     public startFromOne = false;
     public columnNamePrefix = 'col';
     public columns = [];
 
+    autoGenerate = false;
+
     ngOnInit() {
-        this.columns = (this.hasEditableColumns) ? SampleTestData.generateEditableColumns(this.colsCount, this.columnNamePrefix)
+        this.columns = (this.hasEditableColumns) ?
+                                SampleTestData.generateEditableColumns(this.colsCount, this.columnsType, this.columnNamePrefix)
                                 : SampleTestData.generateColumnsByType(this.colsCount, this.columnsType, this.columnNamePrefix);
         this.data = SampleTestData.generateDataForColumns(this.columns, this.rowsCount, this.startFromOne);
     }
@@ -95,7 +86,7 @@ export class PagingComponent extends BasicGridComponent {
     public paging = true;
     public perPage = 3;
 
-    data = SampleTestData.personJobData;
+    data = SampleTestData.personJobDataFull;
 }
 
 @Component({
@@ -104,6 +95,8 @@ export class PagingComponent extends BasicGridComponent {
 })
 export class SelectionComponent extends BasicGridComponent {
     public rowSelectable = true;
+
+    data = SampleTestData.generateBigValuesData(100);
 }
 
 @Component({

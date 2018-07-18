@@ -278,7 +278,7 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.onColumnInit, '')
+        EventSubscriptions.onColumnInit, ColumnDefinitions.generatedWithDataType)
 })
 export class NxMWithSummaryComponent extends GridNxMComponent {
     columnsType = 'number';
@@ -289,7 +289,7 @@ export class NxMWithSummaryComponent extends GridNxMComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.onColumnInit, '')
+        EventSubscriptions.onColumnInit, ColumnDefinitions.generatedEditable)
 })
 export class NxMWithSummaryEditableComponent extends NxMWithSummaryComponent {
     hasEditableColumns = true;

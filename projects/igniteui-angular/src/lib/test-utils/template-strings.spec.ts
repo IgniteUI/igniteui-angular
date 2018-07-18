@@ -19,7 +19,7 @@ export class GridTemplateStrings {
     </igx-grid>`;
 
     public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``) {
-        return `<igx-grid [data]="data"
+        return `<igx-grid [data]="data" [height]="height" [width]="width"
         ${ attributes }
         ${ events }
         >

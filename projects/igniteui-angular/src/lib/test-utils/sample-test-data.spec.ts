@@ -682,7 +682,8 @@ export class SampleTestData {
             } else {
                 cols.push({
                     key: namePrefix + i,
-                    dataType: columnsType
+                    dataType: columnsType,
+                    editable: false
                 });
             }
         }
