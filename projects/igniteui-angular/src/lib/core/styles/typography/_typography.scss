@@ -4,277 +4,63 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-
-/// Defines the typography used in
-/// the application.
-/// @param {Map} $config
-@mixin igx-typography($config) {
-    $font-family: map-get($config, 'font-family');
-    $font-weight: 400;
-    $font-weight-headings: 600;
-    $link-color: igx-color($default-palette, 'secondary');
-
-    // paragraph
-    $paragraph-margin-top: 0;
-    $paragraph-margin-bottom: rem(27px);
-    $paragraph-line-height-desktop: rem(27px);
-    $paragraph-line-height-phone: rem(22px);
-    // H1
-    $h1-margin-top: rem(27px);
-    $h1-margin-bottom: rem(54px);
-    $h1-font-size-desktop: rem(48px);
-    $h1-line-height-desktop: rem(54px);
-    $h1-font-size-tablet: rem(40px);
-    $h1-line-height-tablet: rem(45px);
-    $h1-font-size-phone: rem(32px);
-    $h1-line-height-phone: rem(40px);
-    // H2
-    $h2-margin-top: rem(27px);
-    $h2-margin-bottom: rem(27px);
-    $h2-font-size-desktop: rem(36px);
-    $h2-line-height-desktop: rem(45px);
-    $h2-font-size-tablet: rem(32px);
-    $h2-line-height-tablet: rem(40px);
-    $h2-font-size-phone: rem(26px);
-    $h2-line-height-phone: rem(30px);
-    // H3
-    $h3-margin-top: rem(27px);
-    $h3-margin-bottom: 0;
-    $h3-font-size-desktop: rem(28px);
-    $h3-line-height-desktop: rem(35px);
-    $h3-font-size-tablet: rem(24px);
-    $h3-line-height-tablet: rem(30px);
-    $h3-font-size-phone: rem(22px);
-    $h3-line-height-phone: rem(27px);
-    // H4
-    $h4-margin-top: rem(27px);
-    $h4-margin-bottom: 0;
-    $h4-font-size-desktop: rem(18px);
-    $h4-line-height-desktop: rem(22px);
-    $h4-font-size-tablet: rem(18px);
-    $h4-line-height-tablet: rem(22px);
-    $h4-font-size-phone: rem(22px);
-    $h4-line-height-phone: rem(27px);
-    // Blockquote
-    $blockquote-font-size-desktop: rem(24px);
-    $blockquote-line-height-desktop: rem(35px);
-    $blockquote-font-size-tablet: rem(24px);
-    $blockquote-line-height-tablet: rem(35px);
-    $blockquote-font-size-phone: rem(20px);
-    $blockquote-line-height-phone: rem(27px);
-
-
-    $medium-screen: 768px;
-    $large-screen: 1024px;
-
-    a {
-        text-decoration: none;
-        color: $link-color;
-    }
-
-    html {
-        font-size: $browser-context;
-        line-height: $browser-line-height;
-        font-size-adjust: 100%;
-        font-family: $font-family, sans-serif;
-        font-weight: $font-weight;
-        color: igx-color($default-palette, 'grays', 800);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        font-weight: $font-weight-headings;
-    }
-
-    ul,
-    ol,
-    pre,
-    table,
-    blockquote {
-        margin-top: 0;
-        margin-bottom: 1.6875rem;
-    }
-
-    ul ul,
-    ol ol,
-    ul ol,
-    ol ul {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-    blockquote {
-        font-size: $blockquote-font-size-desktop;
-        line-height: $blockquote-line-height-tablet;
-        font-style: italic;
-
-        &::before,
-        &::after {
-            content: '\'';
-        }
-    }
-
-    /* Let's make sure all's aligned */
-    hr {
-        margin: -1px 0;
-        border: 1px solid;
-    }
-
-    a,
-    b,
-    i,
-    strong,
-    em,
-    small,
-    code {
-        line-height: 0;
-    }
-
-    sub,
-    sup {
-        line-height: 0;
-        position: relative;
-        vertical-align: baseline;
-    }
-
-    sup {
-        top: -.5em;
-    }
-
-    sub {
-        bottom: -.25em;
-    }
-
-    @media only screen and (min-width: 0) {
-        h1 {
-            font-size: $h1-font-size-phone;
-            line-height: $h1-line-height-phone;
-            margin-top: $h1-margin-top;
-            margin-bottom: $h1-margin-bottom;
-        }
-
-        h2 {
-            font-size: $h2-font-size-phone;
-            line-height: $h2-line-height-phone;
-            margin-top: $h2-margin-top;
-            margin-bottom: $h2-margin-bottom;
-        }
-
-        h3 {
-            font-size: $h3-font-size-phone;
-            line-height: $h3-line-height-phone;
-            margin-top: $h3-margin-top;
-            margin-bottom: $h3-margin-bottom;
-        }
-
-        h4 {
-            font-size: $h4-font-size-phone;
-            line-height: $h4-line-height-phone;
-            margin-top: $h4-margin-top;
-            margin-bottom: $h4-margin-bottom;
-        }
-
-        p {
-            line-height: $paragraph-line-height-phone;
-            margin-top: $paragraph-margin-top;
-            margin-bottom: $paragraph-margin-bottom;
-        }
-    }
-
-    @media only screen and (min-width: $medium-screen) {
-        h1 {
-            font-size: $h1-font-size-tablet;
-            line-height: $h1-line-height-tablet;
-            margin-top: $h1-margin-top;
-            margin-bottom: $h1-margin-bottom;
-        }
-
-        h2 {
-            font-size: $h2-font-size-tablet;
-            line-height: $h2-line-height-tablet;
-            margin-top: $h2-margin-top;
-            margin-bottom: $h2-margin-bottom;
-        }
-
-        h3 {
-            font-size: $h3-font-size-tablet;
-            line-height: $h3-line-height-tablet;
-            margin-top: $h3-margin-top;
-            margin-bottom: $h3-margin-bottom;
-        }
-
-        h4 {
-            font-size: $h4-font-size-tablet;
-            line-height: $h4-line-height-tablet;
-            margin-top: $h4-margin-top;
-            margin-bottom: $h4-margin-bottom;
-        }
-
-        p {
-            line-height: $paragraph-line-height-desktop;
-            margin-top: $paragraph-margin-top;
-            margin-bottom: $paragraph-margin-bottom;
-        }
-    }
-
-    @media only screen and (min-width: $large-screen) {
-        h1 {
-            font-size: $h1-font-size-desktop;
-            line-height: $h1-line-height-desktop;
-            margin-top: $h1-margin-top;
-            margin-bottom: $h1-margin-bottom;
-        }
-
-        h2 {
-            font-size: $h2-font-size-desktop;
-            line-height: $h2-line-height-desktop;
-            margin-top: $h2-margin-top;
-            margin-bottom: $h2-margin-bottom;
-        }
-
-        h3 {
-            font-size: $h3-font-size-desktop;
-            line-height: $h3-line-height-desktop;
-            margin-top: $h3-margin-top;
-            margin-bottom: $h3-margin-bottom;
-        }
-
-        h4 {
-            font-size: $h4-font-size-desktop;
-            line-height: $h4-line-height-desktop;
-            margin-top: $h4-margin-top;
-            margin-bottom: $h4-margin-bottom;
-        }
-
-        p {
-            margin-top: $paragraph-margin-top;
-            margin-bottom: $paragraph-margin-bottom;
-        }
-    }
-}
-
-@function igx-font-style(
-    $font-family: 'Titillium Web',
-    $font-weight: 400,
-    $font-size: 1rem,
-    $letter-spacing: normal,
-    $text-transform: none
+/// In interface-like type style map.
+/// @access public
+/// @param {String} $font-family [null] - The font size of the type style.
+/// @param {String} $font-size [null] - The font size of the type style.
+/// @param {Number|String} $font-weight [null] - The font weight of the type style.
+/// @param {Number|string} $line-height [null] - The line height of the type style.
+/// @param {Number|String} $letter-spacing [null] - The letter spacing of the type style.
+/// @param {String} $text-transform [null] - The text-transform property of the type style.
+/// @returns {Map} - A map of all defined type style properties.
+@function igx-type-style(
+    $font-family: null,
+    $font-size: null,
+    $font-weight: null,
+    $line-height: null,
+    $letter-spacing: null,
+    $text-transform: null
 ) {
     @return (
         font-family: $font-family,
         font-weight: $font-weight,
         font-size: $font-size,
         letter-spacing: $letter-spacing,
-        text-transform: $text-transform
+        text-transform: $text-transform,
+        line-height: $line-height
     );
 }
 
+/// Creates a type scale map containing type style definitions for:
+/// - h1
+/// - h2
+/// - h3
+/// - h4
+/// - h5
+/// - h6
+/// - subtitle-1
+/// - subtitle-2
+/// - body-1
+/// - body-2
+/// - button
+/// - caption
+/// - overline
+/// @access public
+/// @param {Map} $h1 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h1 elements and elements with `igx-font-h1` class.
+/// @param {Map} $h2 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h2 elements and elements with `igx-font-h2` class.
+/// @param {Map} $h3 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h3 elements and elements with `igx-font-h3` class.
+/// @param {Map} $h4 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h4 elements and elements with `igx-font-h4` class.
+/// @param {Map} $h5 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h5 elements and elements with `igx-font-h5` class.
+/// @param {Map} $h6 [null] - A map containing type style properties as produced by the igx-type-style function. This type scale styles h6 elements and elements with `igx-font-h6` class.
+/// @param {Map} $subtitle-1 [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-subtitle-1` class.
+/// @param {Map} $subtitle-2 [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-subtitle-2` class.
+/// @param {Map} $body-1 [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-body-1` class.
+/// @param {Map} $body-2 [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-body-2` class.
+/// @param {Map} $button [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-button` class.
+/// @param {Map} $caption [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-caption` class.
+/// @param {Map} $overline [null] - A map containing type style properties as produces by the igx-type-style function. This type scale styles elements with `igx-font-overline` class.
+/// @requires igx-type-style
+/// @returns {Map} - A map of all defined type scales.
 @function igx-type-scale(
     $h1: null,
     $h2: null,
@@ -291,63 +77,97 @@
     $overline: null
 ) {
     $default-scale: (
-        h1: igx-font-style(
+        h1: igx-type-style(
             $font-size: rem(96px),
             $font-weight: 300,
-            $letter-spacing: -1.5
+            $letter-spacing: rem(-1.5px),
+            $line-height: rem(112px),
+            $text-transform: none
         ),
-        h2: igx-font-style(
+        h2: igx-type-style(
             $font-size: rem(60px),
             $font-weight: 300,
-            $letter-spacing: -.5
+            $letter-spacing: rem(-.5px),
+            $line-height: rem(71px),
+            $text-transform: none
         ),
-        h3: igx-font-style(
+        h3: igx-type-style(
             $font-size: rem(48px),
-            $letter-spacing: 0
-        ),
-        h4: igx-font-style(
-            $font-size: rem(34px),
-            $letter-spacing: .25
-        ),
-        h5: igx-font-style(
-            $font-size: rem(24px),
+            $font-weight: 400,
             $letter-spacing: 0,
-            $font-weight: 600
+            $line-height: rem(57px),
+            $text-transform: none
         ),
-        h6: igx-font-style(
+        h4: igx-type-style(
+            $font-size: rem(34px),
+            $font-weight: 400,
+            $letter-spacing: rem(.25px),
+            $line-height: rem(40px),
+            $text-transform: none
+        ),
+        h5: igx-type-style(
+            $font-size: rem(24px),
+            $font-weight: 400,
+            $letter-spacing: 0,
+            $line-height: rem(28px),
+            $text-transform: none
+        ),
+        h6: igx-type-style(
             $font-size: rem(20px),
-            $letter-spacing: .15
-        ),
-        subtitle-1: igx-font-style(
-            $font-size: rem(16px),
-            $letter-spacing: .15
-        ),
-        subtitle-2: igx-font-style(
-            $font-size: rem(14px),
-            $letter-spacing: .1,
-            $font-weight: 600
-        ),
-        body-1: igx-font-style(
-            $font-size: rem(16px),
-            $letter-spacing: .5
-        ),
-        body-2: igx-font-style(
-            $font-size: rem(14px),
-            $letter-spacing: .25
-        ),
-        button: igx-font-style(
-            $font-size: rem(14px),
-            $letter-spacing: .75,
             $font-weight: 600,
+            $letter-spacing: rem(.15px),
+            $line-height: rem(24px),
             $text-transform: uppercase
         ),
-        caption: igx-font-style(
-            $font-size: rem(12px),
-            $letter-spacing: .4
+        subtitle-1: igx-type-style(
+            $font-size: rem(16px),
+            $font-weight: 400,
+            $letter-spacing: rem(.15px),
+            $line-height: rem(24px),
+            $text-transform: none
         ),
-        overline: igx-font-style(
+        subtitle-2: igx-type-style(
+            $font-size: rem(14px),
+            $letter-spacing: rem(.1px),
+            $font-weight: 600,
+            $line-height: rem(24px),
+            $text-transform: none
+        ),
+        body-1: igx-type-style(
+            $font-size: rem(16px),
+            $font-weight: 400,
+            $letter-spacing: rem(.5px),
+            $line-height: rem(28px),
+            $text-transform: none
+        ),
+        body-2: igx-type-style(
+            $font-size: rem(14px),
+            $font-weight: 400,
+            $letter-spacing: rem(.25px),
+            $line-height: rem(20px),
+            $text-transform: none
+        ),
+        button: igx-type-style(
+            $font-size: rem(14px),
+            $font-weight: 600,
+            $letter-spacing: rem(.75px),
+            $line-height: rem(16px),
+            $text-transform: uppercase
+        ),
+        caption: igx-type-style(
+            $font-size: rem(12px),
+            $font-weight: 400,
+            $letter-spacing: rem(.4px),
+            $line-height: rem(16px),
+            $text-transform: none
+        ),
+        overline: igx-type-style(
             $font-size: rem(10px),
-            $letter-spacing: 1.5
+            $font-weight: 400,
+            $letter-spacing: rem(1.5px),
+            $line-height: rem(16px),
+            $text-transform: uppercase
+
         )
     );
 
@@ -368,11 +188,174 @@
     ));
 }
 
-@mixin igx-typography-2(
-    $font-family: 'Titillium Web',
-    $type-scale: igx-type-scale()
+/// Get type scale category config.
+/// @param {Map} $scale - A type scale map reference as produces by igx-type-scale.
+/// @param {String} $category - The scale category you want config for. For instance - 'h1';
+/// @example scss Get the type scale category config for the `h1` scale.
+///   $h1-type-scale: igx-type-scale-category($default-type-scale, 'h1');
+/// @returns {Map} - The config map for the selected category in the type scale.
+@function igx-type-scale-category($scale, $category) {
+    @return map-get($scale, $category);
+}
+
+/// @type Map - The default type scale.
+/// @link https://material.io/design/typography/the-type-system.html Material Type System.
+/// @prop h1
+/// @prop {String} h1.font-size [rem(96px)]
+/// @prop {Number} h1.font-weight [300]
+/// @prop {String} h1.letter-spacing [rem(-1.5px)]
+/// @prop {String} h1.line-height [rem(112px)]
+/// @prop {String} h1.text-transform [none]
+/// @prop h2
+/// @prop {String} h2.font-size [rem(60px)]
+/// @prop {Number} h2.font-weight [300]
+/// @prop {String} h2.letter-spacing [rem(-.5px)]
+/// @prop {String} h2.line-height [rem(71px)]
+/// @prop {String} h2.text-transform [none]
+/// @prop h3
+/// @prop {String} h3.font-size [rem(48px)]
+/// @prop {Number} h3.font-weight [400]
+/// @prop {String} h3.letter-spacing [normal]
+/// @prop {String} h3.line-height [rem(57px)]
+/// @prop {String} h3.text-transform [none]
+/// @prop h4
+/// @prop {String} h4.font-size [rem(34px)]
+/// @prop {Number} h4.font-weight [400]
+/// @prop {String} h4.letter-spacing [rem(.25px)]
+/// @prop {String} h4.line-height [rem(40px)]
+/// @prop {String} h4.text-transform [none]
+/// @prop h5
+/// @prop {String} h5.font-size [rem(24px)]
+/// @prop {Number} h5.font-weight [600]
+/// @prop {String} h5.letter-spacing [normal]
+/// @prop {String} h5.line-height [rem(28px)]
+/// @prop {String} h5.text-transform [none]
+/// @prop h6
+/// @prop {String} h6.font-size [rem(20px)]
+/// @prop {Number} h6.font-weight [400]
+/// @prop {String} h6.letter-spacing [rem(.15px)]
+/// @prop {String} h6.line-height [rem(24px)]
+/// @prop {String} h6.text-transform [none]
+/// @prop subtitle-1
+/// @prop {String} subtitle-1.font-size [rem(16px)]
+/// @prop {Number} subtitle-1.font-weight [400]
+/// @prop {String} subtitle-1.letter-spacing [rem(.15px)]
+/// @prop {String} subtitle-1.line-height [rem(24px)]
+/// @prop {String} subtitle-1.text-transform [none]
+/// @prop subtitle-2
+/// @prop {String} subtitle-2.font-size [rem(14px)]
+/// @prop {Number} subtitle-2.font-weight [600]
+/// @prop {String} subtitle-2.letter-spacing [rem(-.1px)]
+/// @prop {String} subtitle-2.line-height [rem(28px)]
+/// @prop {String} subtitle-2.text-transform [none]
+/// @prop body-1
+/// @prop {String} body-1.font-size [rem(16px)]
+/// @prop {Number} body-1.font-weight [400]
+/// @prop {String} body-1.letter-spacing [rem(.5px)]
+/// @prop {String} body-1.line-height [rem(28px)]
+/// @prop {String} body-1.text-transform [none]
+/// @prop body-2
+/// @prop {String} body-2.font-size [rem(14px)]
+/// @prop {Number} body-2.font-weight [400]
+/// @prop {String} body-2.letter-spacing [rem(.25px)]
+/// @prop {String} body-2.line-height [rem(20px)]
+/// @prop {String} body-2.text-transform [none]
+/// @prop button
+/// @prop {String} button.font-size [rem(14px)]
+/// @prop {Number} button.font-weight [600]
+/// @prop {String} button.letter-spacing [rem(.4px)]
+/// @prop {String} button.line-height [rem(16px)]
+/// @prop {String} button.text-transform [uppercase]
+/// @prop caption
+/// @prop {String} caption.font-size [rem(12px)]
+/// @prop {Number} caption.font-weight [400]
+/// @prop {String} caption.letter-spacing [rem(.4px)]
+/// @prop {String} caption.line-height [rem(16px)]
+/// @prop {String} caption.text-transform [none]
+/// @prop overline
+/// @prop {String} overline.font-size [rem(10px)]
+/// @prop {Number} overline.font-weight [400]
+/// @prop {String} overline.letter-spacing [rem(1.5px)]
+/// @prop {String} overline.line-height [rem(16px)]
+/// @prop {String} overline.text-transform [uppercase]
+/// @requires igx-type-scale
+$default-type-scale: igx-type-scale() !default;
+
+/// Assigns type scale category config properties
+/// as style rules wherever this mixin is included.
+/// @param {Map} $scale - A type scale map reference as produces by igx-type-scale.
+/// @param {String} $category - The type scale category config you want to use as CSS style rules.
+/// @example scss Add the `h1` styles to custom CSS selector.
+///   .fancy-h1 {
+///      @include igx-type-style($default-type-scale, 'h1');
+///      font-family: 'GT Walsheim';
+///      color: mediumvioletred;
+///   }
+@mixin igx-type-style($scale , $category) {
+    $type-category: map-get($scale, $category);
+    @each $key, $value in $type-category {
+        #{$key}: #{$value};
+    }
+    @content;
+}
+
+/// Adds typography styles for h1-h6, paragraph and creates
+/// custom typography class selectors. The produces styles
+/// are based on the passed type scale. If omitted the
+/// default-type-scale will be used.
+/// @param {String} $font-family ["'Titillium Web', sans-serif"] - The font family to be used across all typographic elements.
+/// @param {Map} $type-scale [$default-type-scale] - A type scale map as produced by igx-type-scale.
+/// @param {String} $base-color [rgba(0, 0, 0, .74)] - The default color used across all typographic elements (Components define their own text colors).
+@mixin igx-typography(
+    $font-family: "'Titillium Web', sans-serif",
+    $type-scale: $default-type-scale,
+    $base-color: igx-color($default-palette, 'grays', 900)
 ) {
-    @each $scale, $styles in $type-scale {
-        @debug $scale, $styles;
+    @include b(igx-typography) {
+        font-family: unquote($font-family);
+        font-size: $browser-context;
+        line-height: $browser-line-height;
+        color: $base-color;
+        font-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+
+        h1 {
+            @include igx-type-style($type-scale, 'h1');
+        }
+
+        h2 {
+            @include igx-type-style($type-scale, 'h2');
+        }
+
+        h3 {
+            @include igx-type-style($type-scale, 'h3');
+        }
+
+        h4 {
+            @include igx-type-style($type-scale, 'h4');
+        }
+
+        h5 {
+            @include igx-type-style($type-scale, 'h5');
+        }
+
+        h6 {
+            @include igx-type-style($type-scale, 'h6');
+        }
+
+        p {
+            @include igx-type-style($type-scale, 'body-1');
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        @each $category, $type-style in $type-scale {
+            @include e(#{$category}) {
+                @include igx-type-style($type-scale, $category);
+            }
+        }
     }
 }
