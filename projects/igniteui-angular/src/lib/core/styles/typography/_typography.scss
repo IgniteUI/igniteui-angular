@@ -320,38 +320,6 @@ $default-type-scale: igx-type-scale() !default;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
 
-        h1 {
-            @include igx-type-style($type-scale, 'h1');
-        }
-
-        h2 {
-            @include igx-type-style($type-scale, 'h2');
-        }
-
-        h3 {
-            @include igx-type-style($type-scale, 'h3');
-        }
-
-        h4 {
-            @include igx-type-style($type-scale, 'h4');
-        }
-
-        h5 {
-            @include igx-type-style($type-scale, 'h5');
-        }
-
-        h6 {
-            @include igx-type-style($type-scale, 'h6');
-        }
-
-        p {
-            @include igx-type-style($type-scale, 'body-1');
-        }
-
-        a {
-            text-decoration: none;
-        }
-
         @each $category, $type-style in $type-scale {
             @include e(#{$category}) {
                 @include igx-type-style($type-scale, $category);
