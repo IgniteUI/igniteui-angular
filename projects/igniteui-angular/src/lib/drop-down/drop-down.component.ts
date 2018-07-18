@@ -349,14 +349,23 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
     }
 
+    /**
+     * @hidden
+     */
     public get focusedItem() {
         return this._focusedItem;
     }
 
+    /**
+     * @hidden
+     */
     public set focusedItem(item) {
         this._focusedItem = item;
     }
 
+    /**
+     * @hidden
+     */
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
@@ -366,18 +375,30 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.navigateItem(newIndex, direction);
     }
 
+    /**
+     * @hidden
+     */
     navigateFirst() {
         this.navigate(Navigate.Down, -1);
     }
 
+    /**
+     * @hidden
+     */
     navigateLast() {
         this.navigate(Navigate.Up, this.items.length);
     }
 
+    /**
+     * @hidden
+     */
     navigateNext() {
         this.navigate(Navigate.Down);
     }
 
+    /**
+     * @hidden
+     */
     navigatePrev() {
         this.navigate(Navigate.Up);
     }
@@ -433,11 +454,17 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.onClosed.emit();
     }
 
+    /**
+     * @hidden
+     */
     protected scrollToItem(item: IgxDropDownItemBase) {
         const itemPosition = this.calculateScrollPosition(item);
         this.scrollContainer.scrollTop = (itemPosition);
     }
 
+    /**
+     * @hidden
+     */
     public scrollToHiddenItem(newItem: IgxDropDownItemBase) {
         const elementRect = newItem.element.nativeElement.getBoundingClientRect();
         const parentRect = this.scrollContainer.getBoundingClientRect();
@@ -450,6 +477,9 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
     }
 
+    /**
+     * @hidden
+     */
     public selectItem(item: IgxDropDownItemBase) {
         if (item === null) {
             return;
@@ -458,6 +488,9 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.toggleDirective.close();
     }
 
+    /**
+     * @hidden
+     */
     protected changeSelectedItem(newSelection?: IgxDropDownItemBase) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
@@ -469,6 +502,9 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.onSelection.emit(args);
     }
 
+    /**
+     * @hidden
+     */
     protected calculateScrollPosition(item: IgxDropDownItemBase): number {
         if (!item) {
             return 0;
@@ -500,6 +536,9 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
     }
 
+    /**
+     * @hidden
+     */
     protected navigateItem(newIndex: number, direction?: Navigate) {
         if (newIndex !== -1) {
             const oldItem = this._focusedItem;
@@ -524,15 +563,24 @@ export class IgxDropDownItemNavigationDirective {
     constructor(private element: ElementRef,
         @Inject(forwardRef(() => IgxDropDownComponent)) @Self() @Optional() public dropdown: IgxDropDownComponent) { }
 
+    /**
+     * @hidden
+     */
     get target() {
         return this._target;
     }
 
+    /**
+     * @hidden
+     */
     @Input('igxDropDownItemNavigation')
     set target(target: IgxDropDownBase) {
         this._target = target ? target : this.dropdown;
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Escape', ['$event'])
     @HostListener('keydown.Tab', ['$event'])
     onEscapeKeyDown(event) {
@@ -540,24 +588,33 @@ export class IgxDropDownItemNavigationDirective {
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Space', ['$event'])
     onSpaceKeyDown(event) {
         this.target.selectItem(this.target.focusedItem);
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Spacebar', ['$event'])
     onSpaceKeyDownIE(event) {
         this.target.selectItem(this.target.focusedItem);
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
         if (!(this.target instanceof IgxDropDownComponent)) {
             if (this.target.focusedItem.itemData === 'ADD ITEM') {
                 const targetC = this.target as IgxComboDropDownComponent;
-                targetC.parentElement.addItemToCollection();
+                targetC.combo.addItemToCollection();
             } else {
                 this.target.close();
             }
@@ -568,6 +625,9 @@ export class IgxDropDownItemNavigationDirective {
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.ArrowDown', ['$event'])
     onArrowDownKeyDown(event) {
         this.target.navigateNext();
@@ -575,6 +635,9 @@ export class IgxDropDownItemNavigationDirective {
         event.stopPropagation();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.ArrowUp', ['$event'])
     onArrowUpKeyDown(event) {
         this.target.navigatePrev();
@@ -582,12 +645,18 @@ export class IgxDropDownItemNavigationDirective {
         event.stopPropagation();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.End', ['$event'])
     onEndKeyDown(event) {
         this.target.navigateLast();
         event.preventDefault();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.Home', ['$event'])
     onHomeKeyDown(event) {
         this.target.navigateFirst();
