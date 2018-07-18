@@ -651,6 +651,21 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
     }
 
+    private _compareFunc(itemToSearch, equalCheck?: boolean) {
+        let compareFunc;
+        const key = this.valueKey;
+
+        // When there is remote data we need to compare valueKey values,
+        // instead of comparing entire itemID objects, because in that case they are not equal by reference.
+        if (this.totalItemCount > 0 && key && this.dataType === DataTypes.COMPLEX) {
+            compareFunc = function(selectedItem) {
+                return equalCheck ? selectedItem[key] === itemToSearch[key] :
+                                    selectedItem[key] !== itemToSearch[key];
+            };
+        }
+        return compareFunc;
+    }
+
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
@@ -963,8 +978,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             return;
         }
         const newSelection = select ?
-            this.selectionAPI.select_item(this.id, newItem) :
-            this.selectionAPI.deselect_item(this.id, newItem);
+            this.selectionAPI.select_item(this.id, newItem, this._compareFunc.apply(this, [newItem, true])) :
+            this.selectionAPI.deselect_item(this.id, newItem, this._compareFunc.apply(this, [newItem, false]));
         this.triggerSelectionChange(newSelection);
     }
 
@@ -997,7 +1012,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isItemSelected(item) {
-        return this.selectionAPI.is_item_selected(this.id, item);
+        return this.selectionAPI.is_item_selected(this.id, item, this._compareFunc.apply(this, [item, true]));
     }
 
     /**

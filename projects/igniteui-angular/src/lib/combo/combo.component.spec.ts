@@ -1,6 +1,7 @@
-import { Component, Injectable, ViewChild } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component, Injectable, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, NgModule } from '@angular/core';
 import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { BrowserModule, By} from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectionAPIService } from '../core/selection';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -11,6 +12,7 @@ import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.compon
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { RemoteService } from 'src/app/shared/remote.combo.service';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -50,6 +52,7 @@ describe('igxCombo', () => {
                 IgxComboInputTestComponent,
                 IgxComboScrollTestComponent,
                 IgxComboBindingTestComponent,
+                IgxComboRemoteBindingTestComponent,
                 IgxComboEmptyTestComponent,
                 IgxComboInContainerTestComponent,
                 IgxComboInContainerFixedWidthComponent,
@@ -59,7 +62,8 @@ describe('igxCombo', () => {
                 IgxComboModule,
                 NoopAnimationsModule,
                 IgxToggleModule,
-                ReactiveFormsModule
+                ReactiveFormsModule,
+                DynamicTestModule
             ]
         }).compileComponents();
     }));
@@ -1957,7 +1961,7 @@ describe('igxCombo', () => {
             const comboData = combo.data;
             expect(comboData).toEqual(data);
         });
-        it('Combo data binding - remote service', fakeAsync(() => {
+        it('Combo data binding', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboBindingTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
@@ -1980,6 +1984,88 @@ describe('igxCombo', () => {
                 const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
 
                 expect(dropdownItems[0].innerText).toEqual('Product 1');
+            });
+        }));
+
+        it('Combo data binding - remote service', async(() => {
+            const fixture = TestBed.createComponent(IgxComboRemoteBindingTestComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            let selectedItem, itemCheckbox, dropdownList, dropdownItems;
+
+            fixture.whenStable().then(() => {
+                setTimeout(() => {
+                    combo.toggle();
+
+                    dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+                    dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+                    selectedItem = dropdownItems[0];
+                    itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+                    itemCheckbox.click();
+                    fixture.detectChanges();
+
+                    expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
+                    combo.toggle();
+                    combo.toggle();
+
+                    expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
+                    selectedItem = dropdownItems[1];
+                    itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+                    itemCheckbox.click();
+                    selectedItem = dropdownItems[2];
+                    itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+                    itemCheckbox.click();
+
+                    let selItems = combo.selectedItems();
+                    const dataItems = combo.data;
+                    expect(selItems.length).toEqual(3);
+                    expect(selItems[0][combo.valueKey]).toEqual(dataItems[0][combo.valueKey]);
+                    expect(selItems[1][combo.valueKey]).toEqual(dataItems[1][combo.valueKey]);
+                    expect(selItems[2][combo.valueKey]).toEqual(dataItems[2][combo.valueKey]);
+
+                    combo.dropdown.verticalScrollContainer.scrollTo(20);
+                    setTimeout(() => {
+                        combo.dropdown.verticalScrollContainer.scrollTo(0);
+                        setTimeout(() => {
+                            fixture.detectChanges();
+                            expect(selItems.length).toEqual(3);
+                            expect(selItems[0][combo.valueKey]).toEqual(dataItems[0][combo.valueKey]);
+                            expect(selItems[1][combo.valueKey]).toEqual(dataItems[1][combo.valueKey]);
+                            expect(selItems[2][combo.valueKey]).toEqual(dataItems[2][combo.valueKey]);
+
+                            selectedItem = dropdownItems[0];
+                            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+                            itemCheckbox.click();
+                            fixture.detectChanges();
+                            selItems = combo.selectedItems();
+                            expect(selItems.length).toEqual(2);
+                            expect(selItems[0][combo.valueKey]).toEqual(dataItems[1][combo.valueKey]);
+                            expect(selItems[1][combo.valueKey]).toEqual(dataItems[2][combo.valueKey]);
+
+                            selectedItem = dropdownItems[2];
+                            itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
+                            itemCheckbox.click();
+                            fixture.detectChanges();
+                            selItems = combo.selectedItems();
+                            expect(selItems.length).toEqual(1);
+                            expect(selItems[0][combo.valueKey]).toEqual(dataItems[1][combo.valueKey]);
+
+                            combo.selectItems([dataItems[0]]);
+                            fixture.detectChanges();
+                            selItems = combo.selectedItems();
+                            expect(selItems.length).toEqual(2);
+                            expect(selItems[0][combo.valueKey]).toEqual(dataItems[1][combo.valueKey]);
+                            expect(selItems[1][combo.valueKey]).toEqual(dataItems[0][combo.valueKey]);
+
+                            combo.close();
+                            fixture.detectChanges();
+                            selItems = combo.selectedItems();
+                            expect(selItems.length).toEqual(2);
+                            expect(selItems[0][combo.valueKey]).toEqual(dataItems[1][combo.valueKey]);
+                            expect(selItems[1][combo.valueKey]).toEqual(dataItems[0][combo.valueKey]);
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
             });
         }));
         it('The empty template should be rendered when combo data source is not set', fakeAsync(() => {
@@ -3195,6 +3281,57 @@ export class IgxComboBindingTestComponent {
 @Component({
     template: `
         <label id="mockID">Combo Label</label>
+        <igx-combo #combo class="input-container" width="300px" [itemsMaxHeight]="250"
+            [data]="rData | async" [valueKey]="'ID'" [displayKey]="'ProductName'"
+            (onDataPreLoad)="dataLoading($event)" (onSearchInput)="searchInput($event)" (onOpening)="searchInput('')"
+            placeholder="Location(s)" searchPlaceholder="Search..." [filterable]="false">
+        </igx-combo>
+`,
+    providers: [RemoteService, HttpClient]
+})
+export class IgxComboRemoteBindingTestComponent implements OnInit, AfterViewInit {
+
+    @ViewChild('combo', { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+    public rData: any;
+    public prevRequest: any;
+
+    constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) {
+
+    }
+
+    public ngOnInit() {
+        this.rData = this.remoteService.remoteData;
+    }
+
+    public ngAfterViewInit() {
+        this.remoteService.getData(this.combo.virtualizationState, null, (data) => {
+            this.combo.totalItemCount = data.Count;
+            this.cdr.detectChanges();
+        });
+    }
+
+    public dataLoading(evt) {
+        if (this.prevRequest) {
+            this.prevRequest.unsubscribe();
+        }
+
+        this.prevRequest = this.remoteService.getData(this.combo.virtualizationState, null, () => {
+            this.cdr.detectChanges();
+            this.combo.triggerCheck();
+        });
+    }
+
+    public searchInput(searchText) {
+        this.remoteService.getData(this.combo.virtualizationState, searchText, (data) => {
+            this.combo.totalItemCount = searchText ? data.Results.length : data.Count;
+        });
+    }
+}
+
+@Component({
+    template: `
+        <label id="mockID">Combo Label</label>
         <igx-combo #combo [height]="'400px'" [itemsMaxHeight]='400'
         [itemHeight]='40' [width]="'400px'">
         </igx-combo>
@@ -3276,5 +3413,10 @@ class IgxComboInContainerFixedWidthComponent {
         'Palma de Mallorca'];
 
 }
+
+@NgModule({
+    imports: [BrowserModule, HttpClientModule]
+})
+export class DynamicTestModule { }
 
 

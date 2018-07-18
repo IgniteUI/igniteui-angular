@@ -22,23 +22,6 @@ export class IgxGridSummaryComponent implements OnInit, DoCheck, AfterContentIni
     @Input()
     public gridID: string;
 
-    get dataType(): DataType {
-        return this.column.dataType;
-    }
-
-    @HostBinding('attr.class')
-    get defaultClass(): string {
-        switch (this.displayDensity) {
-            case DisplayDensity.compact:
-                return 'igx-grid-summary--compact';
-            case DisplayDensity.cosy:
-                return 'igx-grid-summary--cosy';
-            case DisplayDensity.comfortable:
-            default:
-                return 'igx-grid-summary';
-        }
-    }
-
     @HostBinding('class.igx-grid-summary--fw')
     get widthPersistenceClass(): boolean {
         return this.column.width !== null;
@@ -70,6 +53,24 @@ export class IgxGridSummaryComponent implements OnInit, DoCheck, AfterContentIni
         return this.column.width;
     }
 
+    @HostBinding('class.igx-grid-summary--compact')
+    get compactCSS() {
+        return this.displayDensity === DisplayDensity.compact;
+    }
+
+    @HostBinding('class.igx-grid-summary--cosy')
+    get cosyCSS() {
+        return this.displayDensity === DisplayDensity.cosy;
+    }
+
+    @HostBinding('class.igx-grid-summary')
+    get defaultCSS() {
+        return this.displayDensity === DisplayDensity.comfortable;
+    }
+
+    get dataType(): DataType {
+        return this.column.dataType;
+    }
     public summaryItemHeight;
     public itemClass = 'igx-grid-summary__item';
     private hiddenItemClass = 'igx-grid-summary__item--inactive';
@@ -78,9 +79,6 @@ export class IgxGridSummaryComponent implements OnInit, DoCheck, AfterContentIni
     private displayDensity: DisplayDensity | string;
 
     constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
-
-    public ngOnInit() {
-    }
 
     ngDoCheck() {
         this.cdr.detectChanges();
@@ -107,7 +105,4 @@ export class IgxGridSummaryComponent implements OnInit, DoCheck, AfterContentIni
         }
     }
 
-    protected get hostClassPrefix() {
-        return 'igx-grid-summary';
-    }
 }

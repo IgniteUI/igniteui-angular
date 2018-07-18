@@ -1,4 +1,17 @@
+
 <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [autoGenerate]="false" displayDensity="cosy" width="800px" height="550px" [paging]="true">
+<h3>Grid with primary key ProductID</h3>
+
+<div class="density-chooser" style="margin-bottom: 16px">
+    <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+</div>
+<igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [autoGenerate]="false" [displayDensity]="density" width="800px" height="550px" [paging]="true">
+    <igx-column [pinned]="true">
+        <ng-template igxCell let-cell="cell" let-val >
+            <button (click)="deleteRow(cell.cellID.rowID)">Delete</button>
+            <button (click)="updateRow(cell.cellID.rowID)">Update</button>
+        </ng-template>
+    </igx-column>
     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true" [editable]="true">
         <ng-template igxCell let-cell="cell" let-val>
         <button (click)="viewRecord(grid1.data)">{{val}}</button>

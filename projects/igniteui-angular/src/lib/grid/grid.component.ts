@@ -333,6 +333,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
+        this.onDensityChanged.emit();
     }
 
     @Input()
@@ -411,7 +412,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public oddRowCSS = 'igx-grid__tr--odd';
 
     @Input()
-    public rowHeight: number;
+    public  get rowHeight()  {
+        return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
+    }
+
+    public set rowHeight(value) {
+        this._rowHeight = parseInt(value, 10);
+    }
 
     @Input()
     public columnWidth: string = null;
@@ -511,6 +518,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
+    @Output()
+    protected onDensityChanged = new EventEmitter<any>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
@@ -843,6 +853,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _pinnedColumnsText = '';
     private _height = '100%';
     private _width = '100%';
+    private _rowHeight;
     private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
 
@@ -871,7 +882,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
-        this.rowHeight = this.rowHeight ? this.rowHeight : this.defaultRowHeight;
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
@@ -940,6 +950,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._derivePossibleWidth();
         this.initPinning();
         this.calculateGridSizes();
+        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            requestAnimationFrame(() => {
+                this.summariesHeight = 0;
+                this.reflow();
+            });
+        });
         this._ngAfterViewInitPaassed = true;
     }
 
@@ -1607,13 +1623,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
         });
-
-        let summariesHeight = this.defaultRowHeight;
-        if (this.summaries && this.summaries.nativeElement.clientHeight) {
-            summariesHeight = this.summaries.nativeElement.clientHeight;
-        }
-
-        return maxSummaryLength * summariesHeight;
+        return maxSummaryLength * this.defaultRowHeight;
     }
 
     protected calculateGridSizes() {
