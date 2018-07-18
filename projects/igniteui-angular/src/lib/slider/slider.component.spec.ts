@@ -9,7 +9,8 @@ describe('IgxSlider', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                SliderInitializeTestComponent
+                SliderInitializeTestComponent,
+                SliderMinMaxComponent
             ],
             imports: [
                 IgxSliderModule
@@ -606,6 +607,21 @@ describe('IgxSlider', () => {
 
         expect(ticks.style.background).toBeTruthy();
     });
+
+    fit(`When setting min and max value for range slider,
+        max value should be applied firstly, due correct appliement of the min value.`, () => {
+
+        const fix = TestBed.createComponent(SliderMinMaxComponent);
+        fix.detectChanges();
+
+        const slider = fix.componentInstance.slider;
+        slider.type = SliderType.RANGE;
+
+        fix.detectChanges();
+
+        expect(slider.minValue).toEqual(fix.componentInstance.minValue);
+        expect(slider.maxValue).toEqual(fix.componentInstance.maxValue);
+    });
 });
 @Component({
     selector: 'igx-slider-test-component',
@@ -614,4 +630,16 @@ describe('IgxSlider', () => {
 })
 class SliderInitializeTestComponent {
     @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+}
+
+@Component({
+    template: `
+        <igx-slider [minValue]='minValue' [maxValue]='maxValue'></igx-slider>
+    `
+})
+export class SliderMinMaxComponent {
+    @ViewChild(IgxSliderComponent) public slider: IgxSliderComponent;
+
+    public minValue = 150;
+    public maxValue = 300;
 }
