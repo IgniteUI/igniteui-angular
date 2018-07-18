@@ -130,7 +130,6 @@
 
     %aside {
         position: fixed;
-        width: rem(242px);
         height: 100%;
         max-width: 90%;
         min-height: 100%;
@@ -141,7 +140,6 @@
         left: 0;
         z-index: 999;
         transition: width, transform;
-        transition-duration: .3s, .3s;
         transition-timing-function: $ease-out-quad, $ease-out-quad;
         box-shadow: igx-elevation($elevations, 5);
         border-right: 1px solid --var($theme, 'border-color');
@@ -185,6 +183,11 @@
     %aside--mini {
         width: rem(60px);
         transition-duration: .2s, .2s;
+    }
+
+    %aside--normal {
+        width: rem(242px);
+        transition-duration: .3s, .3s;
     }
 
     %overlay {
