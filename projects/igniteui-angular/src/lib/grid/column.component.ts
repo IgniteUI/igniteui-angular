@@ -481,7 +481,7 @@ get bodyTemplate(): TemplateRef<any> {
  * Sets the body template.
  * ```html
  * <ng-template #bodyTemplate igxCell let-val>
- *    <div style = "background-color: yellowgreen" (click) = "changeColor(cell)">
+ *    <div style = "background-color: yellowgreen" (click) = "changeColor(val)">
  *       <span> {{val}} </span>
  *    </div>
  * </ng-template>
@@ -511,7 +511,7 @@ get headerTemplate(): TemplateRef<any> {
  * Sets the header template.
  * ```html
  * <ng-template #headerTemplate>
- *   <div style = "background-color:black" (click) = "changeColor(column)">
+ *   <div style = "background-color:black" (click) = "changeColor(val)">
  *       <span style="color:red" >{{column.field}}</span>
  *   </div>
  * </ng-template>
