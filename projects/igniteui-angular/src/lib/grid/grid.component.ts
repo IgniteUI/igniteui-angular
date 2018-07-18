@@ -545,7 +545,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild('emptyFilteredGrid', { read: TemplateRef })
     public emptyFilteredGridTemplate: TemplateRef<any>;
-    
+
     @ViewChild('defaultEmptyGrid', { read: TemplateRef })
     public emptyGridDefaultTemplate: TemplateRef<any>;
 
@@ -1840,11 +1840,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
-            return this.emptyGridTemplate? this.emptyGridTemplate: this.emptyFilteredGridTemplate;
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
-        if (this.data && this.data.length === 0){
-            return this.emptyGridTemplate? this.emptyGridTemplate: this.emptyGridDefaultTemplate;
+        if (this.data && this.data.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
     }
 
