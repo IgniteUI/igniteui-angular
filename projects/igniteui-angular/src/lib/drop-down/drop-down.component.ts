@@ -557,7 +557,7 @@ export class IgxDropDownItemNavigationDirective {
         if (!(this.target instanceof IgxDropDownComponent)) {
             if (this.target.focusedItem.itemData === 'ADD ITEM') {
                 const targetC = this.target as IgxComboDropDownComponent;
-                targetC.parentElement.addItemToCollection();
+                targetC.combo.addItemToCollection();
             } else {
                 this.target.close();
             }
