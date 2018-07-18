@@ -22,7 +22,14 @@ import { ColumnChooserBase } from './column-chooser-base';
 export class IgxColumnHidingComponent extends ColumnChooserBase {
     /**
      * Returns a boolean indicating whether the `HIDE ALL` button is disabled.
+     * ```html
+     * <igx-column-hiding #columnHidingUI
+     *     [columns]="grid.columns" [title]="'Column Hiding'">
+     * </igx-column-hiding>
+     * ```
      * ```typescript
+     * @ViewChild("'columnHidingUI'")
+     * public columnHiding: IgxColumnHidingComponent;
      * let isHideAlldisabled =  this.columnHiding.disableHideAll;
      * ```
      *@memberof IgxColumnHidingComponent
@@ -150,11 +157,7 @@ export class IgxColumnHidingComponent extends ColumnChooserBase {
         }
     }
     /**
-     * Emits an event when а column visibility has changed.
-     * ```typescript
-     * this.columnHiding.onVisibilityChanged({column:firstColumn, newValue:true});
-     * ```
-     * @memberof IgxColumnHidingComponent
+     * @hidden
      */
     public onVisibilityChanged(args: IColumnVisibilityChangedEventArgs) {
         this.onColumnVisibilityChanged.emit(args);
