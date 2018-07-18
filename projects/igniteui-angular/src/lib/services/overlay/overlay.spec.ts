@@ -123,7 +123,7 @@ describe('igxOverlay', () => {
         clearOverlay();
     });
 
-    fdescribe('Unit Tests: ', () => {
+    describe('Unit Tests: ', () => {
 
         it('OverlayElement should return a div attached to Document\'s body', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -687,7 +687,7 @@ describe('igxOverlay', () => {
         }));
     });
 
-    fdescribe('Integration tests: ', () => {
+    describe('Integration tests: ', () => {
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).
         it('igx-overlay is rendered on top of all other views/components (any previously existing html on the page) etc.', fakeAsync(() => {
