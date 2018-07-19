@@ -2454,13 +2454,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event) {
         event.preventDefault();
-        this.verticalScrollContainer.scrollNext();
+        const vScroll = this.verticalScrollContainer.getVerticalScroll();
+        vScroll.scrollTop += this.rowHeight;
     }
 
     @HostListener('keydown.arrowup', ['$event'])
     public onKeydownArrowUp(event) {
         event.preventDefault();
-        this.verticalScrollContainer.scrollPrev();
+        const vScroll = this.verticalScrollContainer.getVerticalScroll();
+        vScroll.scrollTop -= this.rowHeight;
     }
 
     @HostListener('keydown.arrowleft', ['$event'])
