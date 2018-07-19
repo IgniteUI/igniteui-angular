@@ -17,7 +17,8 @@ export class IgxColumnPinningItemDirective extends ColumnChooserItemBase {
     }
 
     /**
-     * Returns whether a pinnable column could be pinned.
+     * Returns whether a column could be pinned.
+     * It's not possible to pin a column if there is not enough space for the unpinned area.
      * ```typescript
      * const columnItem: IgxColumnPinningItemDirective;
      * this.columnItem.pinnable;
