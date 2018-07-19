@@ -21,7 +21,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
