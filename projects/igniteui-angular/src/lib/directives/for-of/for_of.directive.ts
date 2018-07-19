@@ -68,7 +68,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         const scrollTop = this.getVerticalScroll().scrollTop;
         const scrollHeight = this.getVerticalScroll().scrollHeight;
-        return Math.floor(scrollTop + this.igxForContainerSize) >= scrollHeight;
+        return Math.floor(scrollTop + this.igxForContainerSize) === scrollHeight;
     }
 
     private get _isAtBottomIndex() {
