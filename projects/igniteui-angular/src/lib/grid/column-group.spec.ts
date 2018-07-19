@@ -1281,11 +1281,10 @@ describe('IgxGrid - multi-column headers', () => {
         NestedColGroupsTests.testHeadersRendering(fixture);
     });
 
-    xit('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
+    it('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
-        const grid = ci.grid;
 
         const title = 'Lorem Ipsum is simply dummy text of the printing and typesetting' +
             ' industry.Lorem Ipsum has been the industry\'s standard dummy text ever since' +
