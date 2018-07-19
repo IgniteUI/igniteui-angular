@@ -4,14 +4,14 @@ language: node_js
 node_js:
 - '8.9.4'
 before_install:
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libappindicator1 fonts-liberation
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome*.deb
-  - sleep 3
+- export CHROME_BIN=/usr/bin/google-chrome
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- sudo apt-get -qq update
+- sudo apt-get install -y libappindicator1 fonts-liberation
+- wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+- sudo dpkg -i google-chrome*.deb
+- sleep 3
 before_script:
 - npm install -g gulp
 script:
@@ -35,11 +35,11 @@ before_deploy:
 
 deploy:
   provider: npm
-  tag: ${NPM_TAG}
+  tag: "${NPM_TAG}"
   skip_cleanup: true
   email: igniteui@infragistics.com
   api_key:
-    secure: UvQG2jKbNOUsKoN2XEj1zMhehq14ZUtXnSFGFH7XcryVo5GNVfzeqzTouRmbEAxn9XvfwyZP+QLwQAFBggIdfXhld/CDrxJ6mTTl+b3kp055XVIJuRwgYfs2w+VusUxZlJpkq5t1sdPa19q/Xd6ITiUgVllymZu3udFe/3LP29UPvg4V5iAIOxUCBkIWvAcvygt9NvBe1B51PbfhBemiK4LvV88t8AGipF3dd5YTjs0M4f6+P97ehdjJUkr8WG2VcIui7ER9fGrkc/KmybglxygWV65WPJC6vsqxIpB0QSLGSSbvbDoagnbuxOmizrvFabZFO7hfwcEUR/1VneiRjjLNUeMiIF/1WVGAcPVVJKm8ABIzRtk8Vuj8QR79SAhXNdF2wvd/lVnb0CkcWjJhpRwq1dKIh7CX+/tmGzhubKUYaDCqKeNIAPVZIiehcELsTizW/99RoJq03IIbbNJnAD1qUO7PCW9dCWIGgF7p5UNPb7Mo7x/vVcEgh/NHLorVx+p7dqAWi2OGiSdq+ZU6ZtCgNKNYJHaJXaYdwALGktKfJkiuNYJ+3/o7tM8ruXhimmZ5h5olzlyk4kPK9OCfWPR7HLzWpjy5BFiQS+ZPgIL0z1/6I/qqs59bXGHAE9UABTyvc4mM32mSnJ7xsnKxuxefHayOdRvVB/CeJmA14rk=
+    secure: DzxT8e3ryMBPMgx+6toU7+O+1nBLzjCAO4vyDQbze9Fi1jJ23PUUXuG9UmXqnzPUJ64uK4qzi40QiPdk4P0AsOiBr66fQtn02f/Yo1F42r13X9jKuqOdJlRl3dTWPGt5HOBO4YUq6BYA1HAh09/nsgLt670Wk2I8PMNpUiuTFI1F6vhGFsrjEaKbknrZhrQzfAxbTkbZe3RJmrEJQzU5CfFkZzoqsqpS20tFSSNiiPVy6G5OmAMW5f26klq5T0BZ0xBAf2AlXEmGo+LS+65Mbe+yQb1v/IUPk+YY4gwzQQEEh9d+MNU+tMOIVfkqyj5MIdILEIoLMlHKTtaqh8GsxOr2sFw6a4tTKpTqr4yBwuGspa/KjexC/41QVHQjaG0wAekuZluUOL+5I2jYzmVPAFSeiXhor4DFcp+Eh7uwEMaw1paX5DW8UiI8r2FU8RcHE75MN/EOSLE1+9He+RfxnHZW3MyOhOnvZt08+/WoFR6l1OpMM8mVVfHFFVvSk/QVbjFobbvzl5ecNMCS2H8EAJx8mYhwMgTxgf9Sw2AHKh0mgOlRBC9Ox17Hk2VKMcL7sgGY+7btP5mgqW1P/HHxXSAWaqS2e01L+GK5EG618R3Gz+Fphr6ZIyNqQ6BCc1UpJQZFJVVsPAJMMBg7Or5vcYJlxYPXOM5jLm8lzo9hSxA=
   on:
     tags: true
     repo: IgniteUI/igniteui-angular

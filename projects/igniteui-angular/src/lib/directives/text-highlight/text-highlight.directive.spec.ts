@@ -30,6 +30,7 @@ describe('IgxHighlight', () => {
         expect(component.highlight.row).toBe(0);
         expect(component.highlight.column).toBe(0);
         expect(component.highlight.page).toBe(0);
+        expect(component.highlight.containerClass).toBe('test');
     });
 
     it('Should highlight all instances of text', () => {
@@ -204,12 +205,37 @@ describe('IgxHighlight', () => {
         const spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
     });
+
+    it('Should properly handle empty or null values', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+
+        component.html = null;
+        component.highlightText('z', true);
+        fix.detectChanges();
+        expect(component.textContent).toBe('');
+
+        component.clearHighlight();
+        fix.detectChanges();
+        expect(component.textContent).toBe('');
+
+        component.html = undefined;
+        component.highlightText('z', true);
+        fix.detectChanges();
+        expect(component.textContent).toBe('');
+
+        component.clearHighlight();
+        fix.detectChanges();
+        expect(component.textContent).toBe('');
+    });
 });
 
 @Component({
     template:
         // tslint:disable-next-line:max-line-length
-        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [page]="0">
+        `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [page]="0" [containerClass]="'test'">
             {{html}}
         </div>`
 })

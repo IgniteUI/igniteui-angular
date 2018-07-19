@@ -818,14 +818,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _updateScrollOffset() {
         let scrollOffset = 0;
         if (this.igxForScrollOrientation === 'horizontal') {
-            scrollOffset = this.hScroll ? this.hScroll.scrollLeft - this.hCache[this.state.startIndex] : 0;
+            scrollOffset = this.hScroll && parseInt(this.hScroll.children[0].style.width, 10) ?
+            this.hScroll.scrollLeft - this.hCache[this.state.startIndex] : 0;
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         } else {
             const count = this.isRemote ?
                 this.totalItemCount :
                 this.igxForOf ? this.igxForOf.length : 0;
             const vScroll = this.vh.instance.elementRef.nativeElement;
-            scrollOffset = vScroll ? vScroll.scrollTop - this.state.startIndex * (this._virtHeight / count) : 0;
+            scrollOffset = vScroll && parseInt(vScroll.style.height, 10) ?
+            vScroll.scrollTop - this.state.startIndex * (this._virtHeight / count) : 0;
             scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
             this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         }
