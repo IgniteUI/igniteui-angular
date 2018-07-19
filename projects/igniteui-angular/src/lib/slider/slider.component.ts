@@ -200,36 +200,6 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         return isRange;
     }
 
-    /**
-     *Returns the minimal value of the `IgxSliderComponent`.
-     *```typescript
-     *@ViewChild("slider2")
-     *public slider: IgxSliderComponent;
-     *ngAfterViewInit(){
-     *    let sliderMin = this.slider.minValue;
-     *}
-     *```
-     */
-    public get minValue(): number {
-        return this._minValue;
-    }
-
-    /**
-     * Sets the minimal value for the `IgxSliderComponent`.
-     * The default minimal value is 0.
-     * ```html
-     * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="100">
-     * ```
-     */
-    @Input()
-    public set minValue(value: number) {
-        if (value >= this.maxValue) {
-            this._minValue = this.maxValue - 1;
-            return;
-        }
-
-        this._minValue = value;
-    }
 
     /**
      * Returns the maximum value for the `IgxSliderComponent`.
@@ -261,6 +231,37 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         }
 
         this._maxValue = value;
+    }
+
+    /**
+     *Returns the minimal value of the `IgxSliderComponent`.
+     *```typescript
+     *@ViewChild("slider2")
+     *public slider: IgxSliderComponent;
+     *ngAfterViewInit(){
+     *    let sliderMin = this.slider.minValue;
+     *}
+     *```
+     */
+    public get minValue(): number {
+        return this._minValue;
+    }
+
+    /**
+     * Sets the minimal value for the `IgxSliderComponent`.
+     * The default minimal value is 0.
+     * ```html
+     * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="100">
+     * ```
+     */
+    @Input()
+    public set minValue(value: number) {
+        if (value >= this.maxValue) {
+            this._minValue = this.maxValue - 1;
+            return;
+        }
+
+        this._minValue = value;
     }
 
     /**
