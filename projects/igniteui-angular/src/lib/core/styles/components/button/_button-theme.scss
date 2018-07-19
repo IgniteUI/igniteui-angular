@@ -247,20 +247,15 @@
     $button-icon-padding: 0;
 
     %igx-button-display {
+        position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        position: relative;
         min-width: $button-width;
         height: $button-height;
         padding: $button-padding;
-        font-size: $button-font-size;
-        font-weight: $button-font-weight;
-        line-height: $button-line-height;
-        text-align: center;
         border: $button-border;
         border-radius: --var($theme, 'button-roundness');
-        text-transform: uppercase;
         cursor: pointer;
         user-select: none;
         outline: none;
@@ -375,3 +370,10 @@
     }
 }
 
+@mixin igx-button-typography($type-scale) {
+    %igx-button-display {
+        @include igx-type-style($type-scale, 'button') {
+            text-align: center
+        }
+    }
+}
