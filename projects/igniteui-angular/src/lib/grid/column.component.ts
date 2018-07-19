@@ -93,6 +93,9 @@ export class IgxColumnComponent implements AfterContentInit {
                         this.grid.refreshSearch();
                     }
                 }
+                if (this.hasSummary) {
+                    this.grid.summariesHeight = 0;
+                }
                 this.grid.reflow();
             }
         }
