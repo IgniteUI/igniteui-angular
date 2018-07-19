@@ -102,10 +102,10 @@ List of exported values by the `igxForOf` that can be aliased to local variables
 
 | Signature        | Description                                                                            |
 | :--------------- | :------------------------------------------------------------------------------------- |
-| scrollNext()     | Scrolls by one item into the  appropriate  next direction                              |
-| scrollPrev()     | Scrolls by one item into the  appropriate  previous direction                          |
-| scrollNextPage() | Scrolls by one page in a downward direction                                            |
-| scrollPrevPage() | Scrolls by one page in an upward direction                                             |
+| scrollNext()     | Scrolls by one item into the appropriate next direction                                |
+| scrollPrev()     | Scrolls by one item into the appropriate previous direction                            |
+| scrollNextPage() | Scrolls by one page into the appropriate next direction                                |
+| scrollPrevPage() | Scrolls by one page into the appropriate previous direction                            |
 | scrollTo(index)  | Scrolls to the specified index. Current index can be obtained from `state.startIndex`. |
 
 

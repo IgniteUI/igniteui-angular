@@ -315,11 +315,19 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     public scrollNextPage() {
-        this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxForContainerSize, 10);
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.hvh.instance.elementRef.nativeElement.scrollLeft += parseInt(this.igxForContainerSize, 10);
+        } else {
+            this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxForContainerSize, 10);
+        }
     }
 
     public scrollPrevPage() {
-        this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxForContainerSize, 10);
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.hvh.instance.elementRef.nativeElement.scrollLeft -= parseInt(this.igxForContainerSize, 10);
+        } else {
+            this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxForContainerSize, 10);
+        }
     }
 
     public getColumnScrollLeft(colIndex) {
