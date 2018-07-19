@@ -16,7 +16,8 @@ describe('IgxGrid - input properties', () => {
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
                 IgGridTest30x1000Component, IgGridTest150x200Component,
                 IgxGridTestDefaultWidthHeightComponent,
-                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent
+                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent,
+                IgxGridDensityTestComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -88,11 +89,13 @@ describe('IgxGrid - input properties', () => {
 
         gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
             - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
-        console.log(gridBodyHeight);
-        console.log(window.getComputedStyle(gridBody.nativeElement).height);
-        console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
+
+        // The scrollbar is no longer visible
+        //    - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+        // console.log(gridBodyHeight);
+        // console.log(window.getComputedStyle(gridBody.nativeElement).height);
+        // console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
         expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
     }));
 
@@ -468,6 +471,37 @@ describe('IgxGrid - input properties', () => {
             }, 100);
         });
     });
+    it('should change displayDensity runtime correctly', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxGridDensityTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const headerHight = fixture.debugElement.query(By.css('.igx-grid__thead')).query(By.css('.igx-grid__tr')).nativeElement;
+        const rowHeight = fixture.debugElement.query(By.css('.igx-grid__tbody')).query(By.css('.igx-grid__tr')).nativeElement;
+        const summaryItemHeigh = fixture.debugElement.query(By.css('.igx-grid__tfoot'))
+        .query(By.css('.igx-grid-summary__item')).nativeElement;
+
+        expect(grid.defaultRowHeight).toBe(50);
+        expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+        grid.displayDensity = 'cosy';
+        fixture.detectChanges();
+        tick(100);
+        expect(grid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
+        expect(grid.defaultRowHeight).toBe(40);
+        expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+        grid.displayDensity = 'compact';
+        fixture.detectChanges();
+        tick(100);
+        expect(grid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
+        expect(grid.defaultRowHeight).toBe(32);
+        expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+    }));
 });
 
 @Component({
@@ -828,4 +862,38 @@ export class IgxGridTestPercentWidthHeightComponent {
         }
         return data;
     }
+}
+
+@Component({
+    template:
+        `
+        <igx-grid #grid [data]="data" height="400px" width="600px">
+            <igx-column field="ProductID" header="Product ID">
+            </igx-column>
+            <igx-column field="ProductName" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true">
+            </igx-column>
+            <igx-column field="OrderDate" [dataType]="'date'" [sortable]="true" [hasSummary]="true">
+            </igx-column>
+        </igx-grid>
+        `
+})
+export class IgxGridDensityTestComponent {
+    public data = [
+        { ProductID: 1, ProductName: 'Chai', UnitsInStock: 2760, OrderDate: new Date('2005-03-21') },
+        { ProductID: 2, ProductName: 'Aniseed Syrup', UnitsInStock: 198, OrderDate: new Date('2008-01-15') },
+        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', UnitsInStock: 52, OrderDate: new Date('2010-11-20') },
+        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', UnitsInStock: 0, OrderDate: new Date('2007-10-11') },
+        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', UnitsInStock: 0, OrderDate: new Date('2001-07-27') },
+        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', UnitsInStock: 1098, OrderDate: new Date('1990-05-17') },
+        { ProductID: 7, ProductName: 'Queso Cabrales', UnitsInStock: 0, OrderDate: new Date('2005-03-03') },
+        { ProductID: 8, ProductName: 'Tofu', UnitsInStock: 7898, OrderDate: new Date('2017-09-09') },
+        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', UnitsInStock: 6998, OrderDate: new Date('2025-12-25') },
+        { ProductID: 10, ProductName: 'Pie', UnitsInStock: 1000, OrderDate: new Date('2017-05-07') }
+    ];
+
+    @ViewChild('grid', { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
 }

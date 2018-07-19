@@ -57,5 +57,6 @@
 
 /// Includes the base for each theme.
 @mixin igx-core() {
+    @include normalize();
     @include igx-typography();
 }
