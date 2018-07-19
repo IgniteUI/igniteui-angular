@@ -448,4 +448,16 @@
         position: absolute;
         z-index: 10;
     }
+
+    %igx-chip__ghost--cosy {
+        border-radius: map-get($chip-height, 'cosy') / 2;
+        height: map-get($chip-height, 'cosy');
+        padding: map-get($chip-padding, 'cosy');
+    }
+
+    %igx-chip__ghost--compact {
+        border-radius: map-get($chip-height, 'compact') / 2;
+        height: map-get($chip-height, 'compact');
+        padding: map-get($chip-padding, 'compact');
+    }
 }
