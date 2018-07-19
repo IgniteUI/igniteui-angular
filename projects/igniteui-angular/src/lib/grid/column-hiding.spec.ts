@@ -13,6 +13,7 @@ import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
 import { ColumnDisplayOrder } from './column-chooser-base';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 describe('Column Hiding UI', () => {
     let fix;
@@ -41,11 +42,11 @@ describe('Column Hiding UI', () => {
     });
 
     beforeAll(() => {
-        clearOverlay();
+        HelperUtils.clearOverlay();
     });
 
-    afterAll(() => {
-        clearOverlay();
+    afterEach(() => {
+        HelperUtils.clearOverlay();
     });
 
     describe('', () => {
@@ -1147,15 +1148,6 @@ describe('Column Hiding UI', () => {
         expect(chkInput.type).toBe('checkbox');
         expect(chkInput.disabled).toBe(isDisabled);
         expect(chkInput.checked).toBe(isChecked);
-    }
-
-    function clearOverlay() {
-        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
-        Array.from(overlays).forEach(element => {
-            element.remove();
-        });
-        document.documentElement.scrollTop = 0;
-        document.documentElement.scrollLeft = 0;
     }
 });
 
