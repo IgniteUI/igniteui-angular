@@ -507,7 +507,7 @@ export class IgxChipComponent implements AfterViewInit {
     // -----------------------------
     // Start chip igxDrop behaviour
     public onChipDragEnterHandler(event) {
-        if (this.dragDir === event.drag) {
+        if (this.dragDir === event.drag || !event.dragData || !event.dragData.chip) {
             return;
         }
 
