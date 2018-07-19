@@ -1,4 +1,4 @@
-import { async, TestBed, ComponentFixture, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, fakeAsync, tick, discardPeriodicTasks, flush } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
@@ -531,7 +531,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
     });
 
-    xit('Should render column group headers correctly.', fakeAsync(() => {
+    it('Should render column group headers correctly.', fakeAsync(() => {
         const fixture = TestBed.createComponent(BlueWhaleGridComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
@@ -554,7 +554,7 @@ describe('IgxGrid - multi-column headers', () => {
         let scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
         horizontalScroll.scrollLeft = scrollToNextGroup;
 
-        tick(200);
+        flush();
         fixture.detectChanges();
         const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
         testColumnGroupHeaderRendering(secondGroup,
@@ -577,7 +577,7 @@ describe('IgxGrid - multi-column headers', () => {
             secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
         horizontalScroll.scrollLeft = scrollToNextGroup;
 
-        tick(200);
+        flush();
         fixture.detectChanges();
         const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
         testColumnHeaderRendering(idColumn, columnWidthPx,
