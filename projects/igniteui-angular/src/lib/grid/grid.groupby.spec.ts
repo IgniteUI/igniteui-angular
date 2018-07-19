@@ -7,6 +7,7 @@ import { IgxStringFilteringOperand } from '../data-operations/filtering-conditio
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
+import { IgxColumnMovingDragDirective } from './grid.common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
@@ -1747,6 +1748,38 @@ describe('IgxGrid - GroupBy', () => {
 
             return fix.whenStable();
         }).then(() => {
+            done();
+        });
+    });
+
+    it('should not throw an error when moving a column over a chip when there is grouped columns', (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        const firstColumn = fix.debugElement.query(By.directive(IgxColumnMovingDragDirective));
+        const directiveInstance = firstColumn.injector.get(IgxColumnMovingDragDirective);
+
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
+        simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
+
+        fix.whenStable().then(() => {
+            expect(() => {
+                fix.detectChanges();
+                simulatePointerEvent('pointermove', directiveInstance['_dragGhost'], 250, 30);
+            }).not.toThrow();
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointerup', directiveInstance['_dragGhost'], 250, 30);
+
+            fix.detectChanges();
             done();
         });
     });

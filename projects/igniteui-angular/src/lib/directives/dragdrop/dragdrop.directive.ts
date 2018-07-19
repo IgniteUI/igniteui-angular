@@ -416,6 +416,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._destroy.next(true);
         this._destroy.unsubscribe();
+
+        if (this._dragGhost) {
+            this._dragGhost.parentNode.removeChild(this._dragGhost);
+            this._dragGhost = null;
+        }
     }
 
     /**
