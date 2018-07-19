@@ -13,12 +13,9 @@ const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
-const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-
 describe('IgxGrid - multi-column headers', () => {
 
     beforeEach(async(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             declarations: [
                 OneGroupOneColGridComponent,
@@ -44,9 +41,6 @@ describe('IgxGrid - multi-column headers', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
-    });
 
     it('should initialize a grid with column groups', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
@@ -597,6 +591,7 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
             2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
             'personDetailsColumn', 2);
+        flushMicrotasks();
         discardPeriodicTasks();
     }));
 
