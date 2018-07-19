@@ -1,3 +1,5 @@
+@import '../components/button/button-theme';
+
 ////
 /// @group typography
 /// @access public
@@ -311,6 +313,21 @@ $default-type-scale: igx-type-scale() !default;
     $type-scale: $default-type-scale,
     $base-color: igx-color($default-palette, 'grays', 900)
 ) {
+    // Maps type scale typographic categories
+    // to native elements.
+    $category-element-map: (
+        h1: 'h1',
+        h2: 'h2',
+        h3: 'h3',
+        h4: 'h4',
+        h5: 'h5',
+        h6: 'h6',
+        body-1: 'p'
+    );
+
+    // Use the BEM notation to create a link
+    // between the igx-typography class selector
+    // and all typographic elements.
     @include b(igx-typography) {
         font-family: unquote($font-family);
         font-size: $browser-context;
@@ -321,9 +338,33 @@ $default-type-scale: igx-type-scale() !default;
         -moz-osx-font-smoothing: grayscale;
 
         @each $category, $type-style in $type-scale {
-            @include e(#{$category}) {
+            // Get the native element that uses typographic styles directly
+            // as mapped in the $category-element-map
+            $e: map-get($category-element-map, $category);
+
+            // Create a placeholder selector with styles for each
+            // typographic style to be able to easily extend it
+            // elsewhere.
+            %#{$category} {
                 @include igx-type-style($type-scale, $category);
+            }
+
+            // Add native element typographic styles.
+            @if $e != null {
+                #{$e} {
+                    @extend %#{$category};
+                }
+            }
+
+            // Add class selector typographic styles.
+            @include e(#{$category}) {
+                $selector: bem--selector-to-string(&);
+
+                @extend %#{$category};
             }
         }
     }
+
+    // Call the individual component styles with the type scale
+    @include igx-button-typography($type-scale);
 }
