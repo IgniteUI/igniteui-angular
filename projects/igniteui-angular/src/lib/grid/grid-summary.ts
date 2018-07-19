@@ -12,7 +12,8 @@ export interface IgxSummaryResult {
 
 export class IgxSummaryOperand {
 /**
- * Counts the records in the data source.
+ * Counts all the records in the data source.
+ * If filtering is applied, counts only the filtered records.
  * ```typescript
  * IgxSummaryOperand.count(dataSource);
  * ```
@@ -22,26 +23,31 @@ public static count(data: any[]): any {
         return data.length;
     }
 /**
- * Executes the the static `count` method and returns `IgxSummaryResult[]`.
- * Can be overridden in children classes to provide customization for the `summary`.
+ * Executes the static `count` method and returns `IgxSummaryResult[]`.
  * ```typescript
- *     class MySummary extends IgxSummaryOperand {
- *
+ * interface IgxSummaryResult {
+ *   key: string;
+ *   label: string;
+ *   summaryResult: any;
+ * }
+ * ```
+ * Can be overridden in the inherited classes to provide customization for the `summary`.
+ * ```typescript
+ * class CustomSummary extends IgxSummaryOperand {
  *   constructor() {
  *     super();
  *   }
- *
  *   public operate(data?: any[]): IgxSummaryResult[] {
- *     const result = super.operate(data);
+ *     const result = [];
  *     result.push({
  *       key: "test",
  *       label: "Test",
- *       summaryResult: data.filter((rec) => rec > 10 && rec < 30).length
+ *       summaryResult: IgxSummaryOperand.count(data)
  *     });
- *
  *     return result;
  *   }
  * }
+ * this.grid.getColumnByName('ColumnName').summaries = CustomSummary;
  * ```
  * @memberof IgxSummaryOperand
  */
@@ -58,6 +64,7 @@ public operate(data: any[] = []): IgxSummaryResult[] {
 export class IgxNumberSummaryOperand extends IgxSummaryOperand {
 /**
  * Returns the minimum numeric value in the provided data records.
+ * If filtering is applied, returns the minimum value in the filtered data records.
  * ```typescript
  * IgxNumberSummaryOperand.min(data);
  * ```
@@ -68,6 +75,7 @@ public static min(data: any[]): any {
     }
 /**
  * Returns the maximum numeric value in the provided data records.
+ * If filtering is applied, returns the maximum value in the filtered data records.
  * ```typescript
  * IgxNumberSummaryOperand.max(data);
  * ```
@@ -78,6 +86,7 @@ public static max(data: any[]): any {
     }
 /**
  * Returns the sum of the numeric values in the provided data records.
+ * If filtering is applied, returns the sum of the numeric values in the data records.
  * ```typescript
  * IgxNumberSummaryOperand.sum(data);
  * ```
@@ -88,16 +97,46 @@ public static sum(data: any[]): any {
     }
 /**
  * Returns the average numeric value in the data provided data records.
+ * If filtering is applied, returns the average numeric value in the filtered data records.
+ * ```typescript
+ * IgxSummaryOperand.average(data);
+ * ```
  * @memberof IgxNumberSummaryOperand
  */
 public static average(data: any[]): any {
         return data.length ? this.sum(data) / this.count(data) : [];
     }
 /**
- * Returns the results of the static operations.
+ * Executes the static methods and returns `IgxSummaryResult[]`.
  * ```typescript
- * let mySummary = new IgxNumberSummary;
- * let summmaryResults = mySummary.operate(data);
+ * interface IgxSummaryResult {
+ *   key: string;
+ *   label: string;
+ *   summaryResult: any;
+ * }
+ * ```
+ * Can be overridden in the inherited classes to provide customization for the `summary`.
+ * ```typescript
+ * class CustomNumberSummary extends IgxNumberSummaryOperand {
+ *   constructor() {
+ *     super();
+ *   }
+ *   public operate(data?: any[]): IgxSummaryResult[] {
+ *     const result = [];
+ *     result.push({
+ *       key: "avg",
+ *       label: "Avg",
+ *       summaryResult: IgxNumberSummaryOperand.average(data)
+ *     });
+ *     result.push({
+ *       key: "max",
+ *       label: "Max",
+ *       summaryResult: IgxNumberSummaryOperand.max(data)
+ *     });
+ *     return result;
+ *   }
+ * }
+ * this.grid.getColumnByName('ColumnName').summaries = CustomNumberSummary;
  * ```
  * @memberof IgxNumberSummaryOperand
  */
@@ -126,7 +165,8 @@ public operate(data: any[] = []): IgxSummaryResult[] {
 // @dynamic
 export class IgxDateSummaryOperand extends IgxSummaryOperand {
 /**
- * Returns the latest date value of the data records.
+ * Returns the latest date value in the data records.
+ * If filtering is applied, returns the latest date value in the filtered data records.
  * ```typescript
  * IgxDateSummaryOperand.latest(data);
  * ```
@@ -136,7 +176,8 @@ public static latest(data: any[]) {
         return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[0];
     }
 /**
- * Returns the earliest date value of the data records.
+ * Returns the earliest date value in the data records.
+ * If filtering is applied, returns the latest date value in the filtered data records.
  * ```typescript
  * IgxDateSummaryOperand.earliest(data);
  * ```
@@ -146,10 +187,31 @@ public static earliest(data: any[]) {
         return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[data.length - 1];
     }
 /**
- * Returns the results of the static operations;
+ * Executes the static methods and returns `IgxSummaryResult[]`.
  * ```typescript
- * let mySummary = new IgxDateSummaryOperand;
- * let summmaryResults = mySummary.operate(data);
+ * interface IgxSummaryResult {
+ *   key: string;
+ *   label: string;
+ *   summaryResult: any;
+ * }
+ * ```
+ * Can be overridden in the inherited classes to provide customization for the `summary`.
+ * ```typescript
+ * class CustomDateSummary extends IgxDateSummaryOperand {
+ *   constructor() {
+ *     super();
+ *   }
+ *   public operate(data?: any[]): IgxSummaryResult[] {
+ *     const result = [];
+ *     result.push({
+ *       key: "latest",
+ *       label: "Latest Date",
+ *       summaryResult: IgxDateSummaryOperand.latest(data)
+ *     });
+ *     return result;
+ *   }
+ * }
+ * this.grid.getColumnByName('ColumnName').summaries = CustomDateSummary;
  * ```
  * @memberof IgxDateSummaryOperand
  */
