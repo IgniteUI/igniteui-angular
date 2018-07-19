@@ -36,10 +36,11 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     @HostBinding('class')
     get styleClasses() {
-        if (this.column.columnGroup) {
-            return `${this.column.headerClasses}`;
-        }
-        return `igx-grid__th ${this.column.headerClasses}`;
+        return[
+            this.column.columnGroup ? '' : 'igx-grid__th',
+            this.column.headerClasses,
+            this.column.dataType === DataType.Number ? 'igx-grid__th--number' : ''
+        ].join(' ');
     }
 
     @HostBinding('style.min-width')
@@ -74,11 +75,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             return this.sortDirection === SortingDirection.Asc ? 'arrow_upward' : 'arrow_downward';
         }
         return 'none';
-    }
-
-    @HostBinding('class.igx-grid__th--number')
-    get columnType() {
-        return this.column.dataType === DataType.Number;
     }
 
     @HostBinding('class.igx-grid__th--sorted')
