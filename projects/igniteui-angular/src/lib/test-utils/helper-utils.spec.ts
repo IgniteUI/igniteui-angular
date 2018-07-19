@@ -1,5 +1,5 @@
 export class HelperUtils {
-    
+
     public static clearOverlay() {
         const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
         Array.from(overlays).forEach(element => {
