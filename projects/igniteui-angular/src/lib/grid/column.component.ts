@@ -117,7 +117,19 @@ export class IgxColumnComponent implements AfterContentInit {
     public movable = false;
 
     @Input()
-    public width: string;
+    public get width(): string {
+        return this._width;
+    }
+    public set width(value: string) {
+        this._width = value;
+
+        if (this.grid && this.grid.columnsWithNoSetWidths !== null) {
+            const index = this.grid.columnsWithNoSetWidths.indexOf(this);
+            if (index !== -1) {
+                this.grid.columnsWithNoSetWidths.splice(index, 1);
+            }
+        }
+    }
 
     @Input()
     public maxWidth: string;
@@ -290,6 +302,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _hidden = false;
     protected _index: number;
     protected _disableHiding = false;
+    protected _width: string;
 
     protected _defaultMinWidth = '88';
 
