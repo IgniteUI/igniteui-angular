@@ -16,6 +16,13 @@ export class IgxColumnPinningItemDirective extends ColumnChooserItemBase {
         super('pinned');
     }
 
+    /**
+     * Returns whether a pinnable column could be pinned.
+     * ```typescript
+     * const columnItem: IgxColumnPinningItemDirective;
+     * this.columnItem.pinnable;
+     * ```
+     */
     get pinnable() {
         if (this.column.grid.getUnpinnedWidth(true) - this.column.width < this.column.grid.unpinnedAreaMinWidth) {
             return false;
@@ -35,6 +42,9 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
         super(cdr);
     }
 
+    /**
+     * @hidden
+     */
     createColumnItem(container: any, column: any) {
         if (column.level !== 0) {
             return null;
@@ -45,6 +55,15 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
         return item;
     }
 
+    /**
+     * Checks whether the checkbox value should be changed,
+     * depending if the selected column could be pinned.
+     * ```typescript
+     * checkboxValueChange($event, columnItem);
+     * ```
+     * @param event
+     * @param columnItem a PinningItemDirective
+     */
     public checkboxValueChange(event, columnItem: IgxColumnPinningItemDirective) {
         if (event.checked && !columnItem.pinnable) {
             event.checkbox.checked = false;
@@ -54,6 +73,9 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
     }
 }
 
+/**
+ * The IgxColumnPinningModule provides the {@link IgxColumnPinningComponent}, {@link IgxColumnPinningItemDirective} inside your application.
+ */
 @NgModule({
     declarations: [IgxColumnPinningComponent, IgxColumnPinningItemDirective],
     exports: [IgxColumnPinningComponent],
