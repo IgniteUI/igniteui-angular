@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
+﻿import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import {
     async,
     TestBed
@@ -80,6 +80,22 @@ class TestChipsLabelAndSuffixComponent {
 describe('IgxChip', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item';
     const CHIP_CONNECTOR = 'igx-chip__connector';
+
+    function simulatePointerEvent(eventName: string, element, x, y) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1
+        };
+        const pointerEvent = new PointerEvent(eventName, options);
+        Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
+        Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(pointerEvent);
+            resolve();
+        });
+    }
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -383,5 +399,42 @@ describe('IgxChip', () => {
 
         expect(chipComponentsIds.length).toEqual(3);
         expect(chipComponentsIds).not.toContain('City');
+    });
+
+    it('should affect the dragGhost density when chip has it set to compact', (done) => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const thirdChip = fix.componentInstance.chips.toArray()[2];
+        const thirdChipElem = thirdChip.chipArea.nativeElement;
+
+        const startingTop = thirdChipElem.getBoundingClientRect().top;
+        const startingLeft = thirdChipElem.getBoundingClientRect().left;
+        const startingBottom = thirdChipElem.getBoundingClientRect().bottom;
+        const startingRight = thirdChipElem.getBoundingClientRect().right;
+
+        const startingX = (startingLeft + startingRight) / 2;
+        const startingY = (startingTop + startingBottom) / 2;
+
+        simulatePointerEvent('pointerdown', thirdChipElem, startingX, startingY);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointermove', thirdChipElem, startingX + 10, startingY + 10);
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+
+            expect(thirdChip.dragDir['_dragGhost'].className).toEqual('igx-chip__item chip-area igx-chip__ghost--compact');
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointerup', thirdChip.dragDir['_dragGhost'], startingX + 10, startingY + 10);
+
+            done();
+        });
     });
 });

@@ -274,6 +274,20 @@ export class IgxChipComponent implements AfterViewInit {
     public removeBtn: ElementRef;
 
     /**
+     * @hidden
+     */
+    public get ghostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-chip__ghost--cosy';
+            case DisplayDensity.compact:
+                return 'igx-chip__ghost--compact';
+            default:
+                return 'igx-chip__ghost';
+        }
+    }
+
+    /**
      * Returns if the `IgxChipComponent` is selected.
      * ```typescript
      * @ViewChild('myChip')
