@@ -37,6 +37,7 @@ export class IgxGridToolbarComponent {
     public gridID: string;
 
     /**
+     * Gets the default text shown in the filtering box.
      * ```typescript
      * const filterPrompt = this.grid.toolbar.filterColumnsPrompt;
      * ```
@@ -47,6 +48,7 @@ export class IgxGridToolbarComponent {
     }
 
     /**
+     * Sets the default text shown in the filtering box.
      * ```typescript
      * this.grid.toolbar.filterColumnsPrompt('Filter columns ...');
      * ```
@@ -308,7 +310,7 @@ export class IgxGridToolbarComponent {
     }
 
     /**
-     * Toggles the dropdown menu.
+     * Toggles the export button's dropdown menu.
      * ```typescript
      * this.igxGrid1.toolbar.exportClicked();
      * ```
