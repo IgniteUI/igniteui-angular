@@ -11,11 +11,41 @@ export interface IgxSummaryResult {
 }
 
 export class IgxSummaryOperand {
-    public static count(data: any[]): any {
+/**
+ * Counts the records in the data source.
+ * ```typescript
+ * IgxSummaryOperand.count(dataSource);
+ * ```
+ * @memberof IgxSummaryOperand
+ */
+public static count(data: any[]): any {
         return data.length;
     }
-
-    public operate(data: any[] = []): IgxSummaryResult[] {
+/**
+ * Executes the the static `count` method and returns `IgxSummaryResult[]`.
+ * Can be overridden in children classes to provide customization for the `summary`.
+ * ```typescript
+ *     class MySummary extends IgxSummaryOperand {
+ *
+ *   constructor() {
+ *     super();
+ *   }
+ *
+ *   public operate(data?: any[]): IgxSummaryResult[] {
+ *     const result = super.operate(data);
+ *     result.push({
+ *       key: "test",
+ *       label: "Test",
+ *       summaryResult: data.filter((rec) => rec > 10 && rec < 30).length
+ *     });
+ *
+ *     return result;
+ *   }
+ * }
+ * ```
+ * @memberof IgxSummaryOperand
+ */
+public operate(data: any[] = []): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',
@@ -26,21 +56,52 @@ export class IgxSummaryOperand {
 
 // @dynamic
 export class IgxNumberSummaryOperand extends IgxSummaryOperand {
-
-    public static min(data: any[]): any {
+/**
+ * Returns the minimum numeric value in the provided data records.
+ * ```typescript
+ * IgxNumberSummaryOperand.min(data);
+ * ```
+ * @memberof IgxNumberSummaryOperand
+ */
+public static min(data: any[]): any {
         return data.length ? data.reduce((a, b) => Math.min(a, b)) : [];
     }
-    public static max(data: any[]): any {
+/**
+ * Returns the maximum numeric value in the provided data records.
+ * ```typescript
+ * IgxNumberSummaryOperand.max(data);
+ * ```
+ * @memberof IgxNumberSummaryOperand
+ */
+public static max(data: any[]): any {
         return data.length ? data.reduce((a, b) => Math.max(a, b)) : [];
     }
-    public static sum(data: any[]): any {
+/**
+ * Returns the sum of the numeric values in the provided data records.
+ * ```typescript
+ * IgxNumberSummaryOperand.sum(data);
+ * ```
+ * @memberof IgxNumberSummaryOperand
+ */
+public static sum(data: any[]): any {
         return data.length ? data.reduce((a, b) => +a + +b) : [];
     }
-    public static average(data: any[]): any {
+/**
+ * Returns the average numeric value in the data provided data records.
+ * @memberof IgxNumberSummaryOperand
+ */
+public static average(data: any[]): any {
         return data.length ? this.sum(data) / this.count(data) : [];
     }
-
-    public operate(data: any[] = []): IgxSummaryResult[] {
+/**
+ * Returns the results of the static operations.
+ * ```typescript
+ * let mySummary = new IgxNumberSummary;
+ * let summmaryResults = mySummary.operate(data);
+ * ```
+ * @memberof IgxNumberSummaryOperand
+ */
+public operate(data: any[] = []): IgxSummaryResult[] {
         const result = super.operate(data);
         result.push({
             key: 'min',
@@ -64,14 +125,35 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
 
 // @dynamic
 export class IgxDateSummaryOperand extends IgxSummaryOperand {
-    public static latest(data: any[]) {
+/**
+ * Returns the latest date value of the data records.
+ * ```typescript
+ * IgxDateSummaryOperand.latest(data);
+ * ```
+ * @memberof IgxDateSummaryOperand
+ */
+public static latest(data: any[]) {
         return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[0];
     }
-    public static earliest(data: any[]) {
+/**
+ * Returns the earliest date value of the data records.
+ * ```typescript
+ * IgxDateSummaryOperand.earliest(data);
+ * ```
+ * @memberof IgxDateSummaryOperand
+ */
+public static earliest(data: any[]) {
         return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[data.length - 1];
     }
-
-    public operate(data: any[] = []): IgxSummaryResult[] {
+/**
+ * Returns the results of the static operations;
+ * ```typescript
+ * let mySummary = new IgxDateSummaryOperand;
+ * let summmaryResults = mySummary.operate(data);
+ * ```
+ * @memberof IgxDateSummaryOperand
+ */
+public operate(data: any[] = []): IgxSummaryResult[] {
         const result = super.operate(data);
         result.push({
             key: 'earliest',
