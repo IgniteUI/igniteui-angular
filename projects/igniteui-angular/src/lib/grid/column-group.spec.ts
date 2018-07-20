@@ -765,7 +765,6 @@ describe('IgxGrid - multi-column headers', () => {
         // Pin a column
         const colID = grid.getColumnByName('ID');
         colID.pinned = true;
-        fixture.detectChanges();
 
         expect(grid.pinnedColumns.length).toEqual(1);
         expect(grid.unpinnedColumns.length).toEqual(15);
@@ -780,12 +779,10 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.pinnedColumns.length).toEqual(1);
         expect(grid.unpinnedColumns.length).toEqual(15);
         expect(grid.rowList.first.cells.first.value).toMatch('ALFKI');
-        fixture.detectChanges();
 
         // pin grouped column to the pinned area
         const genGroup = getColGroup(grid, 'General Information');
         genGroup.pinned = true;
-        fixture.detectChanges();
 
         expect(grid.pinnedColumns.length).toEqual(6);
         expect(grid.unpinnedColumns.length).toEqual(10);
@@ -805,7 +802,6 @@ describe('IgxGrid - multi-column headers', () => {
         grid.moveColumn(colID, genGroup);
         grid.moveColumn(compName, persDetails);
         grid.moveColumn(contName, contTitle);
-        fixture.detectChanges();
 
         expect(grid.rowList.first.cells.first.value).toMatch('Sales Representative');
         expect(grid.rowList.first.cells.toArray()[1].value).toMatch('Maria Anders');
@@ -827,32 +823,26 @@ describe('IgxGrid - multi-column headers', () => {
 
         // moving last to be first
         grid.moveColumn(ci.contactInfoColGroup, ci.genInfoColGroup);
-        fixture.detectChanges();
         testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
 
         // moving first to be last
         grid.moveColumn(ci.contactInfoColGroup, ci.locationColGroup);
-        fixture.detectChanges();
         testColumnsOrder(genInfoCols.concat(locCols).concat(contactInfoCols));
 
         // moving inner to be last
         grid.moveColumn(ci.locationColGroup, ci.contactInfoColGroup);
-        fixture.detectChanges();
         testColumnsOrder(genInfoCols.concat(contactInfoCols).concat(locCols));
 
         // moving inner to be first
         grid.moveColumn(ci.contactInfoColGroup, ci.genInfoColGroup);
-        fixture.detectChanges();
         testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
 
         // moving to the same spot, no change expected
         grid.moveColumn(ci.genInfoColGroup, ci.genInfoColGroup);
-        fixture.detectChanges();
         testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
 
         // moving column group to the place of a column, no change expected
         grid.moveColumn(ci.genInfoColGroup, ci.countryCol);
-        fixture.detectChanges();
         testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
     });
 
@@ -867,43 +857,36 @@ describe('IgxGrid - multi-column headers', () => {
 
         // moving last to be first
         grid.moveColumn(ci.postalCodeCol, ci.phoneCol);
-        fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
         ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
         // moving first to be last
         grid.moveColumn(ci.postalCodeCol, ci.faxCol);
-        fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
         ci.phoneCol, ci.faxCol, ci.postalCodeCol]));
 
         // moving inner to be last
         grid.moveColumn(ci.faxCol, ci.postalCodeCol);
-        fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
         ci.phoneCol, ci.postalCodeCol, ci.faxCol]));
 
         // moving inner to be first
         grid.moveColumn(ci.postalCodeCol, ci.phoneCol);
-        fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
         ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
         // moving to the sample spot, no change expected
         grid.moveColumn(ci.postalCodeCol, ci.postalCodeCol);
-        fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
         ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
         // moving column to the place of its column group, no change expected
         grid.moveColumn(ci.postalCodeCol, ci.contactInfoColGroup);
-        fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
         ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
         //// moving column to the place of a column group, no change expected
         grid.moveColumn(ci.postalCodeCol, ci.genInfoColGroup);
-        fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
         ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
     });
@@ -916,38 +899,31 @@ describe('IgxGrid - multi-column headers', () => {
 
         // moving a two-level col
         grid.moveColumn(ci.phoneCol, ci.locationColGroup);
-        fixture.detectChanges();
         testColumnsOrder([ci.contactInfoColGroup, ci.phoneCol, ci.locationColGroup, ci.countryCol,
         ci.genInfoColGroup, ci.companyNameCol, ci.cityCol]);
 
         // moving a three-level col
         grid.moveColumn(ci.cityCol, ci.contactInfoColGroup);
-        fixture.detectChanges();
         const colsOrder = [ci.cityCol, ci.contactInfoColGroup, ci.phoneCol,
         ci.locationColGroup, ci.countryCol, ci.genInfoColGroup, ci.companyNameCol];
         testColumnsOrder(colsOrder);
 
         // moving between different groups, hould stay the same
         grid.moveColumn(ci.locationColGroup, ci.companyNameCol);
-        fixture.detectChanges();
         testColumnsOrder(colsOrder);
 
         // moving between different levels, should stay the same
         grid.moveColumn(ci.countryCol, ci.phoneCol);
-        fixture.detectChanges();
         testColumnsOrder(colsOrder);
 
         // moving between different levels, should stay the same
         grid.moveColumn(ci.cityCol, ci.phoneCol);
-        fixture.detectChanges();
         testColumnsOrder(colsOrder);
 
         grid.moveColumn(ci.genInfoColGroup, ci.companyNameCol);
-        fixture.detectChanges();
         testColumnsOrder(colsOrder);
 
         grid.moveColumn(ci.locationColGroup, ci.contactInfoColGroup);
-        fixture.detectChanges();
         testColumnsOrder(colsOrder);
     });
 
@@ -960,7 +936,6 @@ describe('IgxGrid - multi-column headers', () => {
         ci.genInfoColGroup.pinned = true;
         ci.postalCodeColGroup.pinned = true;
         ci.cityColGroup.pinned = true;
-        fixture.detectChanges();
 
         // moving group from unpinned to pinned
         ci.grid.moveColumn(ci.phoneColGroup, ci.idCol);
@@ -1276,6 +1251,7 @@ describe('IgxGrid - multi-column headers', () => {
 
         fixture.detectChanges();
         tick(50);
+
         NestedColGroupsTests.testHeadersRendering(fixture);
         discardPeriodicTasks();
     }));
