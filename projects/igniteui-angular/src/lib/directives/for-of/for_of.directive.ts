@@ -462,7 +462,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.scrollTo(this.state.startIndex - 1);
     }
 
-<<<<<<< HEAD
     public scrollNextPage() {
         if (this.igxForScrollOrientation === 'horizontal') {
             this.hvh.instance.elementRef.nativeElement.scrollLeft += parseInt(this.igxForContainerSize, 10);
@@ -480,11 +479,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-=======
     /**
      * @hidden
      */
->>>>>>> origin/6.1.x
     public getColumnScrollLeft(colIndex) {
         return this.hCache[colIndex];
     }
