@@ -161,6 +161,15 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
         this.virtDirHorizontal.scrollPrev();
     }
 
+    horizontalVisibleItemCount() {
+        const count = this.virtDirHorizontal.getItemCountInView();
+        console.log(count);
+    }
+    verticalVisibleItemCount() {
+        const count = this.virtDirVertical.getItemCountInView();
+        console.log(count);
+    }
+
     scrHorizontalScrollTo(index) {
         this.virtDirHorizontal.scrollTo(index);
     }

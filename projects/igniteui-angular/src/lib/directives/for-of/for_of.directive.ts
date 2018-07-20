@@ -325,6 +325,31 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return null;
     }
 
+    public getItemCountInView() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            const scrLeft = this.hScroll.scrollLeft;
+            let startIndex = this.getHorizontalIndexAt(
+                scrLeft,
+                this.hCache,
+                0
+            );
+            if (scrLeft - this.hCache[startIndex] > 0 ) {
+                // fisrt item is not fully in view
+                startIndex++;
+            }
+            const endIndex = this.getHorizontalIndexAt(
+                scrLeft + parseInt(this.igxForContainerSize, 10),
+                this.hCache,
+                0
+            );
+            return endIndex - startIndex;
+        } else {
+          return  Math.floor(parseInt(this.igxForContainerSize, 10) /
+          parseInt(this.igxForItemSize, 10));
+
+        }
+    }
+
     public getHorizontalScroll() {
         return this.getElement(this._viewContainer, 'igx-horizontal-virtual-helper');
     }
