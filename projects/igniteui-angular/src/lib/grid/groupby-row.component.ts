@@ -70,7 +70,7 @@ export class IgxGridGroupByRowComponent {
     public gridID: string;
 
     /**
-     * An @Input property that sets a group by row.
+     * An @Input property that specifies the group record the component renders for.
      * ```typescript
      * <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row></igx-grid-groupby-row>
      * ```
@@ -104,10 +104,7 @@ export class IgxGridGroupByRowComponent {
     public tabindex = 0;
 
     /**
-     * Returns the category the row is grouped by.
-     * ```typescript
-     * const groupDesc = this.grid1.rowList.first.describedBy;
-     * ```
+     * @hidden
      */
     @HostBinding('attr.aria-describedby')
     get describedBy(): string {
