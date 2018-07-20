@@ -641,7 +641,6 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Try to pin top group
         ci.addrInfoColGroup.pinned = true;
-        fixture.detectChanges();
 
         // Verify group and all its children are not pinned
         testColumnPinning(ci.addrInfoColGroup, false);
@@ -652,7 +651,6 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Try to pin a column
         ci.faxCol.pinned = true;
-        fixture.detectChanges();
 
         // Verify group and all its children are not pinned
         testColumnPinning(ci.addrInfoColGroup, false);
@@ -663,7 +661,6 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Try to pin child group
         ci.contactInfoColGroup.pinned = true;
-        fixture.detectChanges();
 
         // Verify group and all its children are not pinned
         testColumnPinning(ci.addrInfoColGroup, false);
@@ -684,7 +681,6 @@ describe('IgxGrid - multi-column headers', () => {
         // Pin a Group which is not fully visble
         const grAdressInf = getColGroup(grid, 'Address Information');
         grAdressInf.pinned = true;
-        fixture.detectChanges();
 
         // Verify group and all its children are not pinned
         testColumnPinning(grAdressInf, true);
@@ -709,7 +705,6 @@ describe('IgxGrid - multi-column headers', () => {
         ci.genInfoColGroup.pinned = true;
         ci.postalCodeColGroup.pinned = true;
         ci.cityColGroup.pinned = true;
-        fixture.detectChanges();
 
         testColumnsVisibleIndexes([ci.idCol].concat(ci.genInfoColList)
             .concat(ci.postalCodeColList).concat(ci.cityColList).concat(ci.countryColList)
@@ -718,7 +713,6 @@ describe('IgxGrid - multi-column headers', () => {
 
         // unpinning with index
         expect(grid.unpinColumn(ci.genInfoColGroup, 2)).toBe(true);
-        fixture.detectChanges();
         const postUnpinningColList = [ci.idCol].concat(ci.postalCodeColList).concat(ci.cityColList)
             .concat(ci.countryColList).concat(ci.regionColList).concat(ci.genInfoColList)
             .concat(ci.addressColList).concat(ci.phoneColList).concat(ci.faxColList);
@@ -727,7 +721,6 @@ describe('IgxGrid - multi-column headers', () => {
 
         // pinning to non-existent index
         expect(grid.pinColumn(ci.genInfoColGroup, 15)).toBe(false);
-        fixture.detectChanges();
         testColumnsVisibleIndexes(postUnpinningColList);
         testColumnPinning(ci.genInfoColGroup, false);
 
@@ -739,7 +732,6 @@ describe('IgxGrid - multi-column headers', () => {
 
         // pinning with index
         expect(grid.pinColumn(ci.genInfoColGroup, 2)).toBe(true);
-        fixture.detectChanges();
         const postPinningColList = [ci.idCol].concat(ci.postalCodeColList).concat(ci.genInfoColList)
             .concat(ci.cityColList).concat(ci.countryColList).concat(ci.regionColList)
             .concat(ci.addressColList).concat(ci.phoneColList).concat(ci.faxColList);
@@ -748,13 +740,11 @@ describe('IgxGrid - multi-column headers', () => {
 
         // unpinning to non-existent index
         expect(grid.unpinColumn(ci.genInfoColGroup, 15)).toBe(false);
-        fixture.detectChanges();
         testColumnsVisibleIndexes(postPinningColList);
         testColumnPinning(ci.genInfoColGroup, true);
 
         // unpinning to negative index
         expect(grid.unpinColumn(ci.genInfoColGroup, -15)).toBe(false);
-        fixture.detectChanges();
         testColumnsVisibleIndexes(postPinningColList);
         testColumnPinning(ci.genInfoColGroup, true);
     });
@@ -2070,7 +2060,6 @@ class PinningTests {
 
         // Pin a column in a group
         pinGenInfoColFunc(ci);
-        fixture.detectChanges();
 
         // Verify the topParent group is pinned
         testColumnPinning(ci.genInfoColGroup, true);
@@ -2084,7 +2073,6 @@ class PinningTests {
 
         // Unpin a column
         unpinGenInfoColFunc(ci);
-        fixture.detectChanges();
 
         // Verify the topParent group is not pinned
         testColumnPinning(ci.genInfoColGroup, false);
