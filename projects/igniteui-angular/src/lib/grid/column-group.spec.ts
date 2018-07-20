@@ -1,4 +1,4 @@
-import { async, TestBed, ComponentFixture, fakeAsync, tick, discardPeriodicTasks, flush, flushMicrotasks } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
@@ -14,7 +14,6 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
 describe('IgxGrid - multi-column headers', () => {
-
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -531,9 +530,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
     });
 
-    // Xit-ing since it causes random tests to throw the following error:
-    // "Error: Timeout - Async callback was not invoked within timeout specified by jasmine.DEFAULT_TIMEOUT_INTERVAL"
-    xit('Should render column group headers correctly.', fakeAsync(() => {
+    it('Should render column group headers correctly.', fakeAsync(() => {
         const fixture = TestBed.createComponent(BlueWhaleGridComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
@@ -556,7 +553,7 @@ describe('IgxGrid - multi-column headers', () => {
         let scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
         horizontalScroll.scrollLeft = scrollToNextGroup;
 
-        flush();
+        tick(200);
         fixture.detectChanges();
         const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
         testColumnGroupHeaderRendering(secondGroup,
@@ -579,7 +576,7 @@ describe('IgxGrid - multi-column headers', () => {
             secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
         horizontalScroll.scrollLeft = scrollToNextGroup;
 
-        flush();
+        tick(200);
         fixture.detectChanges();
         const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
         testColumnHeaderRendering(idColumn, columnWidthPx,
@@ -593,8 +590,6 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
             2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
             'personDetailsColumn', 2);
-        flushMicrotasks();
-        discardPeriodicTasks();
     }));
 
     it('column pinning - Pin a column in a group using property.', () => {
@@ -979,7 +974,6 @@ describe('IgxGrid - multi-column headers', () => {
         const fixture = TestBed.createComponent(StegosaurusGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
-        const grid = ci.grid;
 
         ci.idCol.pinned = true;
         ci.genInfoColGroup.pinned = true;
@@ -1153,7 +1147,7 @@ describe('IgxGrid - multi-column headers', () => {
         testGroupsAndColumns(18, 11);
     });
 
-    it('summaries - verify summaries when there are grouped columns', () => {
+    it('summaries - verify summaries when there are grouped columns', async(() => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1183,7 +1177,7 @@ describe('IgxGrid - multi-column headers', () => {
                 }
             });
         });
-    });
+    }));
 
     it('grouping - verify grouping when there are grouped columns', () => {
         const fixture = TestBed.createComponent(ColumnGroupGroupingTestComponent);
@@ -1223,7 +1217,6 @@ describe('IgxGrid - multi-column headers', () => {
         const fixture = TestBed.createComponent(EmptyColGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
-        const grid = ci.grid;
 
         // Empty column group should not be displayed
         const emptyColGroup = fixture.debugElement.query(By.css('.emptyColGroup'));
@@ -1280,7 +1273,6 @@ describe('IgxGrid - multi-column headers', () => {
     it('Should render headers correctly when having nested column groups.', () => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
-        const ci = fixture.componentInstance;
         NestedColGroupsTests.testHeadersRendering(fixture);
     });
 
