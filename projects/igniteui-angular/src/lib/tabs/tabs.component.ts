@@ -13,9 +13,10 @@ import {
     Output,
     QueryList,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    OnDestroy
 } from '@angular/core';
-
+import { Subscription } from 'rxjs';
 import { IgxBadgeModule } from '../badge/badge.component';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/index';
@@ -33,7 +34,7 @@ export enum TabsType {
     templateUrl: 'tabs.component.html'
 })
 
-export class IgxTabsComponent implements AfterViewInit {
+export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     @ViewChildren(forwardRef(() => IgxTabItemComponent)) public tabs: QueryList<IgxTabItemComponent>;
     @ContentChildren(forwardRef(() => IgxTabsGroupComponent)) public groups: QueryList<IgxTabsGroupComponent>;
 
@@ -92,6 +93,8 @@ export class IgxTabsComponent implements AfterViewInit {
     public visibleItemsWidth: number;
     public offset = 0;
 
+    private _groupChanges$: Subscription;
+
     public scrollLeft(event) {
         this._scroll(false);
     }
@@ -138,23 +141,59 @@ export class IgxTabsComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        // initial selection
         setTimeout(() => {
             if (this.selectedIndex === -1) {
-                const selectableGroups = this.groups.filter((p) => !p.disabled);
-                const group = selectableGroups[0];
+                // if nothing is selected - select the first tabs group
+                this._selectGroupByIndex(0);
+            }
+        });
 
-                if (group) {
-                    group.select(50, true);
+        this._groupChanges$ = this.groups.changes.subscribe(() => {
+            this.resetSelectionOnCollectionChanged();
+        });
+    }
+
+    public ngOnDestroy(): void {
+        if (this._groupChanges$) {
+            this._groupChanges$.unsubscribe();
+        }
+    }
+
+    private resetSelectionOnCollectionChanged() {
+        setTimeout(() => {
+            if (this.groups.toArray()[this.selectedIndex] !== undefined) {
+                // persist the selected index and applied it to the new collection
+                this._selectGroupByIndex(this.selectedIndex);
+            } else {
+                if (this.selectedIndex >= this.groups.length) {
+                    // in case the selected index is no longer valid, select the last group in the new collection
+                    this._selectGroupByIndex(this.groups.length - 1);
                 }
             }
         }, 0);
     }
 
+    private _selectGroupByIndex(selectedIndex: number) {
+        const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
+        const group = selectableGroups[selectedIndex];
+
+        if (group) {
+            group.select(0, true);
+        }
+    }
+
     @HostListener('onTabItemSelected', ['$event'])
     public _selectedGroupHandler(args) {
-        this.selectedIndex = args.group.index;
+        const prevSelectedIndex = this.selectedIndex;
+        if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
+            this.onTabItemDeselected.emit(
+                {
+                    tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
+                    group: this.groups.toArray()[prevSelectedIndex]
+                });
+        }
 
+        this.selectedIndex = args.group.index;
         this.groups.forEach((p) => {
             if (p.index !== this.selectedIndex) {
                 this._deselectGroup(p);
@@ -170,7 +209,6 @@ export class IgxTabsComponent implements AfterViewInit {
 
         group.isSelected = false;
         group.relatedTab.tabindex = -1;
-        this.onTabItemDeselected.emit({ tab: this.tabs[group.index], group });
     }
 }
 

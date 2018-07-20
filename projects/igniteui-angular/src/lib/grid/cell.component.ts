@@ -19,8 +19,6 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { IGridEditEventArgs } from './grid.component';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -309,9 +307,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public update(val: any) {
-        let rowSelector = this.cellID.rowIndex;
-        if (this.gridAPI.get(this.gridID).primaryKey !== undefined && this.gridAPI.get(this.gridID).primaryKey !== null) {
-            rowSelector = this.cellID.rowID;
+        const rowSelector = this.cellID.rowID;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editableCell && editableCell.cellID.rowID === this.cellID.rowID
+            && editableCell.cellID.columnID === this.cellID.columnID) {
+            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
         this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
         this.cdr.markForCheck();
@@ -335,6 +335,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     focusCell() {
+        this.updateCell = false;
         this.nativeElement.focus();
     }
 
@@ -385,8 +386,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.updateCell = false;
                     }
                 }
-            } else {
-                this.updateCell = true;
             }
         }
         this._updateCellSelectionStatus();
@@ -399,6 +398,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostListener('blur', ['$event'])
     public onBlur(event) {
+        this.updateCell = true;
         this.isFocused = false;
         this.row.focused = false;
     }
@@ -410,6 +410,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
+        event.stopPropagation();
         event.preventDefault();
         const rowIndex = this.rowIndex;
         const columnIndex = this.visibleColumnIndex - 1;
@@ -485,6 +486,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
+        event.stopPropagation();
         event.preventDefault();
         const visibleColumns = this.grid.visibleColumns.filter(c => !c.columnGroup);
         const rowIndex = this.rowIndex;
@@ -591,6 +593,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.inEditMode || this.rowIndex === 0) {
             return;
         }
+
+        event.stopPropagation();
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
@@ -605,6 +609,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.inEditMode || this.rowIndex + 1 === count) {
             return;
         }
+
+        event.stopPropagation();
         event.preventDefault();
         const lastCell = this._getLastSelectedCell();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;

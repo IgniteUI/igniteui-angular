@@ -1,3 +1,6 @@
+@import '../ripple/ripple-theme';
+@import '../ripple/ripple-component';
+
 ////
 /// @group themes
 /// @access public
@@ -6,12 +9,12 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
-/// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
-/// @param {Color} $thumb-off-color [null] - The color of the thumb when the switch is off.
-/// @param {Color} $track-off-color [null] - The color of the track when the switch is off.
-/// @param {Color} $thumb-disabled-color [null] - The color of the thumb when the switch is disabled.
-/// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
+/// @param {Color} $thumb-on-color [secondary 500] - The color of the thumb when the switch is on.
+/// @param {Color} $track-on-color [50% of secondary 500] - The color of the track when the switch is on.
+/// @param {Color} $thumb-off-color [#fafafa] - The color of the thumb when the switch is off.
+/// @param {Color} $track-off-color [rgba(0, 0, 0, .5)] - The color of the track when the switch is off.
+/// @param {Color} $thumb-disabled-color [rgba(0, 0, 0, .26)] - The color of the thumb when the switch is disabled.
+/// @param {Color} $track-disabled-color [rgba(0, 0, 0, .12)] - The color of the track when the switch is disabled.
 /// @param {String} $variant ['dark'] - Determines the default color scheme - could be 'light' or 'dark'.
 ///
 /// @requires extend
@@ -110,7 +113,7 @@
 /// @requires em
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
-/// @requires var
+/// @requires --var
 @mixin igx-switch($theme) {
     @include igx-root-css-vars($theme);
 
@@ -273,5 +276,35 @@
 
     %switch-label--disabled {
         color: --var($theme, 'label-disabled-color');
+    }
+
+    %switch-ripple--hover {
+        &::after {
+            position: absolute;
+            content: '';
+            opacity: .06;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    %switch-ripple--hover-unchecked {
+        &::after {
+            background-color: --var($theme, 'track-off-color');
+        }
+    }
+
+    %switch-ripple--hover-checked {
+        &::after {
+            background-color: --var($theme, 'thumb-on-color');
+        }
+    }
+
+    %switch-ripple--pressed {
+        &::after {
+            opacity: .12;
+        }
     }
 }

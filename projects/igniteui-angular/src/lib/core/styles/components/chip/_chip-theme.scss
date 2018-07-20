@@ -6,29 +6,29 @@
 
 /// Chip Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $chip-background [null] - The chip background color.
-/// @param {Color} $chip-hover-background [null] - The chip hover background color.
-/// @param {Color} $text-color [null] - The chip text color.
-/// @param {Color} $text-hover-color [null] - The chip text hover color.
-/// @param {Color} $order-icon-color [null] - The chip order icon color.
-/// @param {Color} $order-icon-hover-color [null] - The chip order icon hover color.
-/// @param {Color} $dir-icon-color [null] - The chip direction icon color.
-/// @param {Color} $remove-icon-color [null] - The chip remove icon color.
-/// @param {Color} $remove-icon-hover-color [null] - The chip remove icon hover color.
-/// @param {color} $chip-focus-border-color: The chip focus border color.
+/// @param {Color} $chip-background [rgba(0, 0, 0, .04)] - The chip background color.
+/// @param {Color} $chip-hover-background [rgba(0, 0, 0, .08)] - The chip hover background color.
+/// @param {Color} $text-color [rgba(0, 0, 0, .74)] - The chip text color.
+/// @param {Color} $text-hover-color [rgba(0, 0, 0, .74)] - The chip text hover color.
+/// @param {Color} $order-icon-color [rgba(0, 0, 0, .54)] - The chip order icon color.
+/// @param {Color} $order-icon-hover-color [rgba(0, 0, 0, .54)] - The chip order icon hover color.
+/// @param {Color} $dir-icon-color [rgba(0, 0, 0, .12)] - The chip direction icon color.
+/// @param {Color} $remove-icon-color [rgba(0, 0, 0, .74)] - The chip remove icon color.
+/// @param {Color} $remove-icon-hover-color [rgba(0, 0, 0, .74)] - The chip remove icon hover color.
+/// @param {color} $chip-focus-border-color [primary 300] The chip focus border color.
 ///
-/// @param {color} $selected-chip-background: The selected chip background colopr.
-/// @param {color} $selected-chip-text-color: The selected chip text color.
-/// @param {color} $selected-chip-icon-color: The selected chip icon color.
-/// @param {color} $selected-chip-hover-background: The selected chip hover background color.
-/// @param {color} $selected-chip-text-hover-color: The selected chip hover text color.
-/// @param {color} $selected-chip-icon-hover-color: The selected chip hover icon color.
-/// @param {color} $selected-chip-hover-border-color: The selected chip hover border color.
-/// @param {color} $selected-chip-focus-border-color: The selected chip focus border color.
-/// @param {color} $selected-chip-text-focus-color: The selected chip text focus color.
-/// @param {color} $selected-remove-icon-hover-color: The selected chip remove icon hover color.
-/// @param {color} $selected-remove-icon-color: The selected chip remove icon color.
-/// @param {color} $selected-chip-focus-background: The selected chip focus background color.
+/// @param {color} $selected-chip-background [secondary 500] - The selected chip background color.
+/// @param {color} $selected-chip-text-color [igx-contrast-color of secondary 500] - The selected chip text color.
+/// @param {color} $selected-chip-icon-color [igx-contrast-color of secondary 500] - The selected chip icon color.
+/// @param {color} $selected-chip-hover-background [secondary 300] - The selected chip hover background color.
+/// @param {color} $selected-chip-text-hover-color [igx-contrast-color of secondary 300] - The selected chip hover text color.
+/// @param {color} $selected-chip-icon-hover-color [igx-contrast-color of secondary 300] - The selected chip hover icon color.
+/// @param {color} $selected-chip-hover-border-color [secondary 900] - The selected chip hover border color.
+/// @param {color} $selected-chip-focus-border-color [secondary 900] - The selected chip focus border color.
+/// @param {color} $selected-chip-text-focus-color [igx-contrast-color of secondary 300] - The selected chip text focus color.
+/// @param {color} $selected-remove-icon-hover-color [igx-contrast-color of secondary 300] - The selected chip remove icon hover color.
+/// @param {color} $selected-remove-icon-color [igx-contrast-color of secondary 300] - The selected chip remove icon color.
+/// @param {color} $selected-chip-focus-background [secondary 300] - The selected chip focus background color.
 ///
 /// @requires extend
 /// @requires text-contrast
@@ -95,8 +95,8 @@
         chip-focus-border-color: igx-color($palette, primary, 300),
 
         selected-chip-background: igx-color($palette, secondary),
-        selected-chip-text-color: igx-contrast-color($palette, 'secondary', 300),
-        selected-chip-icon-color: igx-contrast-color($palette, 'secondary', 300),
+        selected-chip-text-color: igx-contrast-color($palette, 'secondary', 500),
+        selected-chip-icon-color: igx-contrast-color($palette, 'secondary', 500),
 
         selected-chip-hover-background: igx-color($palette, secondary, 300),
         selected-chip-focus-background: igx-color($palette, secondary, 300),
@@ -174,8 +174,6 @@
         $selected-chip-icon-hover-color: text-contrast($selected-chip-hover-background);
     }
 
-
-
     @return extend($default-theme, (
         palette: $palette,
         chip-background: $chip-background,
@@ -210,7 +208,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-chip($theme) {
     @include igx-root-css-vars($theme);
 
@@ -253,6 +251,10 @@
     }
 
     %igx-chip {
+        position: relative;
+        transition-property: top, left;
+        touch-action: none;
+
         &:focus {
             outline: transparent;
 
@@ -266,7 +268,6 @@
     %igx-chip__label {
         justify-content: space-between;
         max-width: $chip-max-width;
-        min-width: $chip-min-width;
     }
 
     %igx-chip__item {
@@ -421,14 +422,14 @@
         }
     }
 
-    .igx-grid--cosy {
+    %igx-chip--cosy {
         %igx-chip__item {
             border-radius: map-get($chip-height, 'cosy') / 2;
             height: map-get($chip-height, 'cosy');
         }
     }
 
-    .igx-grid--compact {
+    %igx-chip--compact {
         %igx-chip__item {
             border-radius: map-get($chip-height, 'compact') / 2;
             height: map-get($chip-height, 'compact');
@@ -449,5 +450,17 @@
     %igx-chip__ghost {
         position: absolute;
         z-index: 10;
+    }
+
+    %igx-chip__ghost--cosy {
+        border-radius: map-get($chip-height, 'cosy') / 2;
+        height: map-get($chip-height, 'cosy');
+        padding: map-get($chip-padding, 'cosy');
+    }
+
+    %igx-chip__ghost--compact {
+        border-radius: map-get($chip-height, 'compact') / 2;
+        height: map-get($chip-height, 'compact');
+        padding: map-get($chip-padding, 'compact');
     }
 }
