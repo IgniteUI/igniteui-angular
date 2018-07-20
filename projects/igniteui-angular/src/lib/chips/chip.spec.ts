@@ -427,7 +427,7 @@ describe('IgxChip', () => {
         }).then(() => {
             fix.detectChanges();
 
-            expect(thirdChip.dragDir['_dragGhost'].className).toEqual('igx-chip__item chip-area igx-chip__ghost--compact');
+            expect(thirdChip.dragDir['_dragGhost'].className).toEqual('igx-chip__item igx-chip__ghost--compact');
 
             return fix.whenStable();
         }).then(() => {

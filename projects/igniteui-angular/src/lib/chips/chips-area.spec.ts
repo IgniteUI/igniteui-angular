@@ -136,6 +136,8 @@ describe('IgxChipsArea', () => {
 
         const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
         const chipAreaComponent = fix.componentInstance;
+
+        expect(chipArea[0].nativeElement.className).toEqual('igx-chips-area');
         expect(chipArea[0].nativeElement.children.length).toEqual(2);
 
         chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });

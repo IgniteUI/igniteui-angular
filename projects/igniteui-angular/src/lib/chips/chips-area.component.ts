@@ -38,6 +38,12 @@ import { IgxConnectorDirective } from './connector.directive';
 export class IgxChipsAreaComponent implements DoCheck {
 
     /**
+     * @hidden
+     */
+    @HostBinding('attr.class')
+    public cssClass = 'igx-chips-area';
+
+    /**
      * An @Input property that sets the width of the `IgxChipsAreaComponent`.
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
