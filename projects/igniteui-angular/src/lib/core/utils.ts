@@ -13,7 +13,7 @@ export function cloneArray(array, deep?: boolean) {
     return arr;
 }
 /**
- *@hidde
+ *@hidden
  */
 export function cloneObject(object: any) {
     return JSON.parse(JSON.stringify(object));
