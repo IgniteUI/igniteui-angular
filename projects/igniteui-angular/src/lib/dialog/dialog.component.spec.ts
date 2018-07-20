@@ -2,7 +2,7 @@ import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
@@ -32,6 +32,10 @@ describe('Dialog', () => {
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
+
+    afterEach(() => {
+        HelperUtils.clearOverlay();
+    });
 
     it('Initialize a datepicker component with id', () => {
         const fixture = TestBed.createComponent(AlertComponent);
