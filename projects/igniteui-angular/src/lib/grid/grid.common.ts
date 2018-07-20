@@ -544,7 +544,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
 
-    
+
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         const column: IgxColumnComponent = drag.column;
