@@ -11,6 +11,7 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Inject,
     Input,
     IterableChangeRecord,
@@ -23,8 +24,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef,
-    HostListener
+    ViewContainerRef
 } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
@@ -156,6 +156,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @HostBinding('attr.id')
     @Input()
     public id = `igx-grid-${NEXT_ID++}`;
+
+    @Input()
+    public emptyGridTemplate: TemplateRef<any>;
 
     @Input()
     public get filteringLogic() {
@@ -433,7 +436,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public primaryKey;
 
     @Input()
-    public emptyGridMessage = 'No records found.';
+    public emptyGridMessage = 'Grid has no data.';
+
+    @Input()
+    public emptyFilteredGridMessage = 'No records found.';
 
     @Input()
     public columnHidingTitle = '';
@@ -543,8 +549,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     public groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
-    @ViewChild('emptyGrid', { read: TemplateRef })
-    public emptyGridTemplate: TemplateRef<any>;
+    @ViewChild('emptyFilteredGrid', { read: TemplateRef })
+    public emptyFilteredGridTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultEmptyGrid', { read: TemplateRef })
+    public emptyGridDefaultTemplate: TemplateRef<any>;
 
     @ViewChild('scrollContainer', { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
@@ -1862,7 +1871,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
-            return this.emptyGridTemplate;
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.data && this.data.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
     }
 
@@ -2438,4 +2451,45 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.markForCheck();
         }
     }
+
+    @HostListener('keydown.pagedown', ['$event'])
+    public onKeydownPageDown(event) {
+        event.preventDefault();
+        this.verticalScrollContainer.scrollNextPage();
+        this.nativeElement.focus();
+    }
+
+    @HostListener('keydown.pageup', ['$event'])
+    public onKeydownPageUp(event) {
+        event.preventDefault();
+        this.verticalScrollContainer.scrollPrevPage();
+        this.nativeElement.focus();
+    }
+
+    @HostListener('keydown.arrowdown', ['$event'])
+    public onKeydownArrowDown(event) {
+        event.preventDefault();
+        this.verticalScrollContainer.addScrollTop(this.rowHeight);
+    }
+
+    @HostListener('keydown.arrowup', ['$event'])
+    public onKeydownArrowUp(event) {
+        event.preventDefault();
+        this.verticalScrollContainer.addScrollTop(-(this.rowHeight));
+    }
+
+    @HostListener('keydown.arrowleft', ['$event'])
+    public onKeydownArrowLeft(event) {
+        event.preventDefault();
+        const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
+        horVirtScroll.scrollLeft -= MINIMUM_COLUMN_WIDTH;
+    }
+
+    @HostListener('keydown.arrowright', ['$event'])
+    public onKeydownArrowRight(event) {
+        event.preventDefault();
+        const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
+        horVirtScroll.scrollLeft += MINIMUM_COLUMN_WIDTH;
+    }
+
 }
