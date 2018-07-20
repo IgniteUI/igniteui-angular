@@ -10,50 +10,50 @@ enum IgxHintPosition {
 })
 export class IgxHintDirective implements OnInit {
     private _position: IgxHintPosition = IgxHintPosition.START;
-/**
- * Sets/gets whether the hint position is at the start.
- * Default value is `false`.
- * ```typescript
- * @ViewChild('hint', {read: IgxHintDirective})
- * public igxHint: IgxHintDirective;
- * this.igxHint.isPositionStart = true;
- * ```
- * ```typescript
- * let isHintPositionStart = this.igxHint.isPositionStart;
- * ```
- * @memberof IgxHintDirective
- */
-@HostBinding('class.igx-input-group__hint-item--start')
+    /**
+     * Sets/gets whether the hint position is at the start.
+     * Default value is `false`.
+     * ```typescript
+     * @ViewChild('hint', {read: IgxHintDirective})
+     * public igxHint: IgxHintDirective;
+     * this.igxHint.isPositionStart = true;
+     * ```
+     * ```typescript
+     * let isHintPositionStart = this.igxHint.isPositionStart;
+     * ```
+     * @memberof IgxHintDirective
+     */
+    @HostBinding('class.igx-input-group__hint-item--start')
     public isPositionStart = false;
-/**
- * Sets/gets whether the hint position is at the end.
- * Default value is `false`.
- * ```typescript
- * @ViewChild('hint', {read: IgxHintDirective})
- * public igxHint: IgxHintDirective;
- * this.igxHint.isPositionEnd = true;
- * ```
- * ```typescript
- * let isHintPositionEnd = this.igxHint.isPositionEnd;
- * ```
- * @memberof IgxHintDirective
- */
-@HostBinding('class.igx-input-group__hint-item--end')
+    /**
+     * Sets/gets whether the hint position is at the end.
+     * Default value is `false`.
+     * ```typescript
+     * @ViewChild('hint', {read: IgxHintDirective})
+     * public igxHint: IgxHintDirective;
+     * this.igxHint.isPositionEnd = true;
+     * ```
+     * ```typescript
+     * let isHintPositionEnd = this.igxHint.isPositionEnd;
+     * ```
+     * @memberof IgxHintDirective
+     */
+    @HostBinding('class.igx-input-group__hint-item--end')
     public isPositionEnd = false;
 
     constructor(private _element: ElementRef) {
     }
-/**
- * Sets the position of the hint.
- * ```html
- * <igx-input-group>
- *  <input igxInput type="text"/>
- *  <igx-hint #hint [position]="'start'">IgxHint displayed at the start</igx-hint>
- * </igx-input-group>
- * ```
- * @memberof IgxHintDirective
- */
-@Input('position')
+    /**
+     * Sets the position of the hint.
+     * ```html
+     * <igx-input-group>
+     *  <input igxInput type="text"/>
+     *  <igx-hint #hint [position]="'start'">IgxHint displayed at the start</igx-hint>
+     * </igx-input-group>
+     * ```
+     * @memberof IgxHintDirective
+     */
+    @Input('position')
     set position(value: string) {
         const position: IgxHintPosition = (IgxHintPosition as any)[value.toUpperCase()];
         if (position !== undefined) {
@@ -61,22 +61,22 @@ export class IgxHintDirective implements OnInit {
             this._applyPosition(this._position);
         }
     }
-/**
- * Gets the position of the hint.
- * ```typescript
- * @ViewChild('hint', {read: IgxHintDirective})
- * public igxHint: IgxHintDirective;
- * let hintPosition =  this.igxHint.position;
- * ```
- * @memberof IgxHintDirective
- */
-get position() {
+    /**
+     * Gets the position of the hint.
+     * ```typescript
+     * @ViewChild('hint', {read: IgxHintDirective})
+     * public igxHint: IgxHintDirective;
+     * let hintPosition =  this.igxHint.position;
+     * ```
+     * @memberof IgxHintDirective
+     */
+    get position() {
         return this._position.toString();
     }
-/**
- *@hidden
- */
-ngOnInit() {
+    /**
+     *@hidden
+     */
+    ngOnInit() {
         this._applyPosition(this._position);
     }
 
