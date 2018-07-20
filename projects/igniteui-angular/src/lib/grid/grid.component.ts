@@ -439,7 +439,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public emptyGridMessage = 'Grid has no data.';
 
     @Input()
-    public emptyFilterdGridMessage = 'No records found.';
+    public emptyFilteredGridMessage = 'No records found.';
 
     @Input()
     public columnHidingTitle = '';

@@ -17,7 +17,7 @@ describe('IgxGrid - input properties', () => {
                 IgGridTest30x1000Component, IgGridTest150x200Component,
                 IgxGridTestDefaultWidthHeightComponent,
                 IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent,
-                IgxGridDensityTestComponent
+                IgxGridDensityTestComponent, IgxGridWithEmptyDataComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -502,6 +502,42 @@ describe('IgxGrid - input properties', () => {
         expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
         expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
     }));
+    fit('Should render empty message', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxGridWithEmptyDataComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
+
+        // Check for loaded rows in grid's container
+        fixture.componentInstance.generateData(4, 30);
+        fixture.detectChanges();
+        tick(100);
+        expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+
+        // Check for empty filter grid message and body less than 100px
+        const columns = fixture.componentInstance.grid.columns;
+        grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
+        fixture.detectChanges();
+        tick(100);
+        expect(gridBody.nativeElement.innerText.substr(0,
+            gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyFilteredGridMessage);
+        expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeLessThan(100);
+
+        // Clear filter and check if grid's body height is restored based on all loaded rows
+        grid.clearFilter(columns[0].field);
+        fixture.detectChanges();
+        tick(100);
+        expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+
+        // Clearing grid's data and check for empty grid message
+        fixture.componentInstance.clearData();
+        fixture.detectChanges();
+        tick(100);
+        expect(gridBody.nativeElement.innerText.substr(0,
+            gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyGridMessage);
+    }));
+
 });
 
 @Component({
@@ -896,4 +932,46 @@ export class IgxGridDensityTestComponent {
     @ViewChild('grid', { read: IgxGridComponent })
     public grid: IgxGridComponent;
 
+}
+
+@Component({
+    template:
+        `<igx-grid #grid [data]="data" [width]="'700px'">
+            <igx-column [filterable]="true" [field]="'col0'" [header]="'col0'"
+                [dataType]="'number'">
+            </igx-column>
+            <igx-column [filterable]="true" [field]="'col1'" [header]="'col1'"
+                [dataType]="'number'">
+            </igx-column>
+            <igx-column [filterable]="true" [field]="'col2'" [header]="'col2'"
+                [dataType]="'number'">
+            </igx-column>
+            <igx-column [filterable]="true" [field]="'col3'" [header]="'col3'"
+                [dataType]="'number'">
+            </igx-column>
+        </igx-grid>
+        `
+})
+export class IgxGridWithEmptyDataComponent {
+    public data = [];
+
+    @ViewChild('grid', { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
+    constructor(private _cdr: ChangeDetectorRef) {
+    }
+
+    public generateData(columns, rows) {
+        for (let r = 0; r < rows; r++) {
+            const record = {};
+            for (let c = 0; c < columns; c++) {
+                record['col' + c] = c * r;
+            }
+            this.data.push(record);
+        }
+    }
+
+    public clearData() {
+        this.data = [];
+    }
 }
