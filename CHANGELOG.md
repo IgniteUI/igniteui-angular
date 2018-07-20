@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 
     For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
 
+**General**
+- Added `jsZip` as a Dependency.
 ## 6.1.1
 - `igxTimePicker` changes
     - `onClose` event added.
