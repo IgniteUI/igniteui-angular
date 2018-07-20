@@ -502,7 +502,7 @@ describe('IgxGrid - input properties', () => {
         expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
         expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
     }));
-    fit('Should render empty message', fakeAsync(() => {
+    it('Should render empty message', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxGridWithEmptyDataComponent);
         fixture.detectChanges();
 
