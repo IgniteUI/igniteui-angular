@@ -59,7 +59,6 @@ describe('IgxGrid - multi-column headers', () => {
         const addressGroup = grid.columnList.filter(c => c.header === 'Address Information')[0];
 
         addressGroup.hidden = true;
-        fixture.detectChanges();
 
         expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
     });
@@ -71,7 +70,6 @@ describe('IgxGrid - multi-column headers', () => {
         const addressGroup = grid.columnList.filter(c => c.header === 'Address')[0];
 
         addressGroup.children.first.hidden = true;
-        fixture.detectChanges();
 
         expect(document.querySelectorAll('igx-grid-header').length).toEqual(5);
         expect(addressGroup.children.first.hidden).toBe(true);
@@ -86,18 +84,15 @@ describe('IgxGrid - multi-column headers', () => {
 
         // Hide individual column
         grid.getColumnByName('ID').hidden = true;
-        fixture.detectChanges();
 
         testGroupsAndColumns(17, 10);
 
         // Hide column in goup
         grid.getColumnByName('CompanyName').hidden = true;
-        fixture.detectChanges();
         expect(document.querySelectorAll('igx-grid-header').length).toEqual(16);
         expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(9);
 
         grid.getColumnByName('Address').hidden = true;
-        fixture.detectChanges();
 
         testGroupsAndColumns(15, 8);
     });
@@ -111,14 +106,12 @@ describe('IgxGrid - multi-column headers', () => {
         // Hide 2 columns in the group
         grid.getColumnByName('ContactName').hidden = true;
         grid.getColumnByName('ContactTitle').hidden = true;
-        fixture.detectChanges();
 
         testGroupsAndColumns(15, 9);
         expect(getColGroup(grid, 'Person Details').hidden).toEqual(true);
 
         // Show one of the columns
         grid.getColumnByName('ContactName').hidden = false;
-        fixture.detectChanges();
 
         testGroupsAndColumns(17, 10);
         expect(getColGroup(grid, 'Person Details').hidden).toEqual(false);
@@ -133,14 +126,12 @@ describe('IgxGrid - multi-column headers', () => {
         // Hide 2 columns in the group
         grid.getColumnByName('CompanyName').hidden = true;
         getColGroup(grid, 'Person Details').hidden = true;
-        fixture.detectChanges();
 
         testGroupsAndColumns(13, 8);
         expect(getColGroup(grid, 'General Information').hidden).toEqual(true);
 
         // Show the group
         getColGroup(grid, 'Person Details').hidden = false;
-        fixture.detectChanges();
         testGroupsAndColumns(17, 10);
         expect(getColGroup(grid, 'General Information').hidden).toEqual(false);
     });
