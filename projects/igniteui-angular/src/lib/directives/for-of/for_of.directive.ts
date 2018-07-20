@@ -44,7 +44,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * An @Input property that specifies the scroll orientation.
-     * Scroll orientation can be "`vertical`" or "`horizontal`".
+     * Scroll orientation can be "vertical" or "horizontal".
      * ```html
      * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
      * ```
@@ -76,7 +76,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * An @Input property that sets the px-affixed size of the container along the axis of scrolling.
-     * For "`horizontal`" orientation this value is the width of the container and for "`vertical`" is the height.
+     * For "horizontal" orientation this value is the width of the container and for "vertical" is the height.
      * ```html
      * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
      * ```
@@ -86,7 +86,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * An @Input property that sets the px-affixed size of the item along the axis of scrolling.
-     * For "`horizontal`" orientation this value is the width of the column and for "`vertical`" is the height or the row.
+     * For "horizontal" orientation this value is the width of the column and for "vertical" is the height or the row.
      * ```html
      * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" [igxForItemSize]="'50px'"></ng-template>
      * ```
@@ -438,6 +438,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * Scrolls by one item into the appropriate next direction.
+     * For "horizontal" orientation that will be the the left column and for "vertical" that is the upper row.
      * ```typescript
      * this.parentVirtDir.scrollNext();
      * ```
@@ -449,7 +450,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * Scrolls by one item into the appropriate previous direction.
-     * For "`horizontal`" orientation that will be the the left column and for "`vertical`" that is the upper row.
+     * For "horizontal" orientation that will be the the left column and for "vertical" that is the upper row.
      * ```typescript
      * this.parentVirtDir.scrollPrev();
      * ```
@@ -753,10 +754,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * Gets the function used to track changes in the items collection.
-     * The trackBy function takes the index and the current item as arguments and needs to return the unique identifier for this item.
-     * By default the object references are compared,
-     * however this can be optimized if you have unique identifier value that can be used for the comparison instead of the object ref
-     * or if you have some other property values in the item object that should be tracked for changes.
+     * By default the object references are compared. However this can be optimized if you have unique identifier
+     * value that can be used for the comparison instead of the object ref or if you have some other property values
+     * in the item object that should be tracked for changes.
      * This option is similar to ngForTrackBy.
      * ```typescript
      * const trackFunc = this.parentVirtDir.igxForTrackBy;
@@ -769,6 +769,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * Sets the function used to track changes in the items collection.
      * This function can be set in scenarios where you want to optimize or
      * customize the tracking of changes for the items in the collection.
+     * The igxForTrackBy function takes the index and the current item as arguments and needs to return the unique identifier for this item.
      * ```typescript
      * this.parentVirtDir.igxForTrackBy = (index, item) => {
      *      return item.id + item.width;
