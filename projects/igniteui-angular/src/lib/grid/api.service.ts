@@ -11,7 +11,9 @@ import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
-
+/**
+ *@hidden
+ */
 @Injectable()
 export class IgxGridAPIService {
 
