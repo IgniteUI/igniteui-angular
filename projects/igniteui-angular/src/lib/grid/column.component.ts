@@ -228,17 +228,33 @@ set disableHiding(value: boolean) {
 @Input()
     public movable = false;
 /**
- * Sets/gets the `width` of the column.
+ * Gets the `width` of the column.
  * ```typescript
  * let columnWidth = this.column.width;
  * ```
+ * @memberof IgxColumnComponent
+ */
+@Input()
+    public get width(): string {
+        return this._width;
+    }
+/**
+ * Sets the `width` of the column.
  * ```html
  * <igx-column [width] = "'25%'"></igx-column>
  * ```
  * @memberof IgxColumnComponent
  */
-@Input()
-    public width: string;
+public set width(value: string) {
+        this._width = value;
+
+        if (this.grid && this.grid.columnsWithNoSetWidths !== null) {
+            const index = this.grid.columnsWithNoSetWidths.indexOf(this);
+            if (index !== -1) {
+                this.grid.columnsWithNoSetWidths.splice(index, 1);
+            }
+        }
+    }
 /**
  * Sets/gets the maximum `width` of the column.
  * ```typescript
@@ -712,6 +728,10 @@ protected _index: number;
  *@hidden
  */
 protected _disableHiding = false;
+/**
+ *@hidden
+ */
+protected _width: string;
 /**
  *@hidden
  */

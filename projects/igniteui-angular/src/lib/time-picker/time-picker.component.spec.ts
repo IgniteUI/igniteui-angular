@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 describe('IgxTimePicker', () => {
     beforeEach(async(() => {
@@ -23,6 +24,10 @@ describe('IgxTimePicker', () => {
         })
         .compileComponents();
     }));
+
+    afterEach(() => {
+        HelperUtils.clearOverlay();
+    });
 
     it('Initialize a timepicker component', () => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
