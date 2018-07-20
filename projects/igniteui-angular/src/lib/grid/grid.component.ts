@@ -2478,7 +2478,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * this.grid.clearGrouping();
      * this.grid.clearGrouping("ID");
      * ```
-     * @param name 
+     * @param name
      */
     public clearGrouping(name?: string): void {
         this.gridAPI.clear_groupby(this.id, name);
