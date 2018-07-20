@@ -57,13 +57,7 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
     }
 
     /**
-     * Checks whether the checkbox value should be changed,
-     * depending if the selected column could be pinned.
-     * ```typescript
-     * checkboxValueChange($event, columnItem);
-     * ```
-     * @param event
-     * @param columnItem a PinningItemDirective
+     * @hidden
      */
     public checkboxValueChange(event, columnItem: IgxColumnPinningItemDirective) {
         if (event.checked && !columnItem.pinnable) {
