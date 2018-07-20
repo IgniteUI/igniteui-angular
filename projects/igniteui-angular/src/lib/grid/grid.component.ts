@@ -158,6 +158,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public id = `igx-grid-${NEXT_ID++}`;
 
     @Input()
+    public emptyGridTemplate: TemplateRef<any>;
+
+    @Input()
     public get filteringLogic() {
         return this._filteringExpressionsTree.operator;
     }
@@ -433,7 +436,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public primaryKey;
 
     @Input()
-    public emptyGridMessage = 'No records found.';
+    public emptyGridMessage = 'Grid has no data.';
+
+    @Input()
+    public emptyFilteredGridMessage = 'No records found.';
 
     @Input()
     public columnHidingTitle = '';
@@ -543,8 +549,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     public groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
-    @ViewChild('emptyGrid', { read: TemplateRef })
-    public emptyGridTemplate: TemplateRef<any>;
+    @ViewChild('emptyFilteredGrid', { read: TemplateRef })
+    public emptyFilteredGridTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultEmptyGrid', { read: TemplateRef })
+    public emptyGridDefaultTemplate: TemplateRef<any>;
 
     @ViewChild('scrollContainer', { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
@@ -1860,7 +1869,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
-            return this.emptyGridTemplate;
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.data && this.data.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
     }
 
