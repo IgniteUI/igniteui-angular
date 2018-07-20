@@ -11,6 +11,7 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Inject,
     Input,
     IterableChangeRecord,
@@ -23,8 +24,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef,
-    HostListener
+    ViewContainerRef
 } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
@@ -2449,4 +2449,45 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.markForCheck();
         }
     }
+
+    @HostListener('keydown.pagedown', ['$event'])
+    public onKeydownPageDown(event) {
+        event.preventDefault();
+        this.verticalScrollContainer.scrollNextPage();
+        this.nativeElement.focus();
+    }
+
+    @HostListener('keydown.pageup', ['$event'])
+    public onKeydownPageUp(event) {
+        event.preventDefault();
+        this.verticalScrollContainer.scrollPrevPage();
+        this.nativeElement.focus();
+    }
+
+    @HostListener('keydown.arrowdown', ['$event'])
+    public onKeydownArrowDown(event) {
+        event.preventDefault();
+        this.verticalScrollContainer.addScrollTop(this.rowHeight);
+    }
+
+    @HostListener('keydown.arrowup', ['$event'])
+    public onKeydownArrowUp(event) {
+        event.preventDefault();
+        this.verticalScrollContainer.addScrollTop(-(this.rowHeight));
+    }
+
+    @HostListener('keydown.arrowleft', ['$event'])
+    public onKeydownArrowLeft(event) {
+        event.preventDefault();
+        const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
+        horVirtScroll.scrollLeft -= MINIMUM_COLUMN_WIDTH;
+    }
+
+    @HostListener('keydown.arrowright', ['$event'])
+    public onKeydownArrowRight(event) {
+        event.preventDefault();
+        const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
+        horVirtScroll.scrollLeft += MINIMUM_COLUMN_WIDTH;
+    }
+
 }
