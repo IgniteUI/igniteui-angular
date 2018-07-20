@@ -318,7 +318,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === 'horizontal') {
             this.hvh.instance.elementRef.nativeElement.scrollLeft += parseInt(this.igxForContainerSize, 10);
         } else {
-            this.vh.instance.elementRef.nativeElement.scrollTop += parseInt(this.igxForContainerSize, 10);
+            this.addScrollTop(parseInt(this.igxForContainerSize, 10));
         }
     }
 
@@ -326,7 +326,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === 'horizontal') {
             this.hvh.instance.elementRef.nativeElement.scrollLeft -= parseInt(this.igxForContainerSize, 10);
         } else {
-            this.vh.instance.elementRef.nativeElement.scrollTop -= parseInt(this.igxForContainerSize, 10);
+            const containerSize = (parseInt(this.igxForContainerSize, 10));
+            this.addScrollTop(-containerSize);
         }
     }
 
