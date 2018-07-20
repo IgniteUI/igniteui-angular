@@ -42,37 +42,94 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private get ngControl(): NgControl {
         return this.ngModel ? this.ngModel : this.formControl;
     }
-
-    @Input('value')
+/**
+ * Sets the `value` property.
+ * ```html
+ * <input-group>
+ *  <input igxInput #igxInput [value]="'IgxInput Value'">
+ * </input-group>
+ * ```
+ * @memberof IgxInputDirective
+ */
+@Input('value')
     set value(value: any) {
         this.nativeElement.value = value;
     }
-    get value() {
+/**
+ * Gets the `value` propery.
+ * ```typescript
+ * @ViewChild('igxInput', {read: IgxInputDirective})
+ *  public igxInput: IgxInputDirective;
+ * let inputValue = this.igxInput.value;
+ * ```
+ * @memberof IgxInputDirective
+ */
+get value() {
         return this.nativeElement.value;
     }
-
-    @Input()
+/**
+ * Sets the `disabled` property.
+ * ```html
+ * <input-group>
+ *  <input igxInput #igxInput [disabled]="true">
+ * </input-group>
+ * ```
+ * @memberof IgxInputDirective
+ */
+@Input()
     public set disabled(value: boolean) {
         this.nativeElement.disabled = value;
         this.inputGroup.disabled = value;
     }
-
-    public get disabled() {
+/**
+ * Gets the `disabled` property
+ * ```typescript
+ * @ViewChild('igxInput', {read: IgxInputDirective})
+ *  public igxInput: IgxInputDirective;
+ * let isDisabled = this.igxInput.disabled;
+ * ```
+ * @memberof IgxInputDirective
+ */
+public get disabled() {
         return this.nativeElement.hasAttribute('disabled');
     }
-
-    @HostBinding('class.igx-input-group__input')
+/**
+ * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
+ * Default value is `false`.
+ * ```typescript
+ * this.igxInput.isInput = true;
+ * ```
+ * ```typescript
+ * let isCLassAdded = this.igxInput.isInput;
+ * ```
+ * @memberof IgxInputDirective
+ */
+@HostBinding('class.igx-input-group__input')
     public isInput = false;
-
-    @HostBinding('class.igx-input-group__textarea')
+/**
+ * Sets/gets whether the `"class.igx-input-group__textarea"` class is added to the host element.
+ * Default value is `false`.
+ * ```typescript
+ * this.igxInput.isTextArea = true;
+ * ```
+ * ```typescript
+ * let isCLassAdded = this.igxInput.isTextArea;
+ * ```
+ * @memberof IgxInputDirective
+ */
+@HostBinding('class.igx-input-group__textarea')
     public isTextArea = false;
-
-    @HostListener('focus', ['$event'])
+/**
+ *@hidden
+ */
+@HostListener('focus', ['$event'])
     public onFocus(event) {
         this.inputGroup.isFocused = true;
     }
-
-    @HostListener('blur', ['$event'])
+/**
+ *@hidden
+ */
+@HostListener('blur', ['$event'])
     public onBlur(event) {
         this.inputGroup.isFocused = false;
         this._valid = IgxInputState.INITIAL;
@@ -84,15 +141,19 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this._valid = IgxInputState.INVALID;
         }
     }
-
-    @HostListener('input')
+/**
+ *@hidden
+ */
+@HostListener('input')
     public onInput() {
         if (!this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
-
-    ngAfterViewInit() {
+/**
+ *@hidden
+ */
+ngAfterViewInit() {
         this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute('placeholder');
         this.inputGroup.disabled = this.nativeElement.hasAttribute('disabled');
         this.inputGroup.isRequired = this.nativeElement.hasAttribute('required');
@@ -117,37 +178,71 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
         this.cdr.detectChanges();
     }
-
-    ngOnDestroy() {
+/**
+ *@hidden
+ */
+ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
     }
-
-    public focus() {
+/**
+ * Sets a focus on the igxInput.
+ * ```typescript
+ * this.igxInput.focus();
+ * ```
+ * @memberof IgxInputDirective
+ */
+public focus() {
         this.nativeElement.focus();
     }
-
-    public get nativeElement() {
+/**
+ * Gets the `nativeElement` of the igxInput.
+ * ```typescript
+ * let igxInputNativeElement = this.igxInput.nativeElement;
+ * ```
+ * @memberof IgxInputDirective
+ */
+public get nativeElement() {
         return this.element.nativeElement;
     }
-
-    protected onStatusChanged() {
+/**
+ *@hidden
+ */
+protected onStatusChanged() {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
             this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
-
-    public get required() {
+/**
+ * Gets whether the igxInput is required.
+ * ```typescript
+ * let isRequired = this.igxInput.required;
+ * ```
+ * @memberof IgxInputDirective
+ */
+public get required() {
         return this.nativeElement.hasAttribute('required');
     }
-
-    public get hasPlaceholder() {
+/**
+ * Gets whether the igxInput has a placeholder.
+ * ```typescript
+ * let hasPlaceholder = this.igxInput.hasPlaceholder;
+ * ```
+ * @memberof IgxInputDirective
+ */
+public get hasPlaceholder() {
         return this.nativeElement.hasAttribute('placeholder');
     }
-
-    public get placeholder() {
+/**
+ * Gets the placeholder element of the igxInput.
+ * ```typescript
+ * let igxInputPlaceholder = this.igxInput.placeholder;
+ * ```
+ * @memberof IgxInputDirective
+ */
+public get placeholder() {
         return this.nativeElement.placeholder;
     }
 
@@ -160,16 +255,34 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
         return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
     }
-
-    public get focused() {
+/**
+ * Gets whether the igxInput is focused.
+ * ```typescript
+ * let isFocused = this.igxInput.focused;
+ * ```
+ * @memberof IgxInputDirective
+ */
+public get focused() {
         return this.inputGroup.isFocused;
     }
-
-    public get valid(): IgxInputState {
+/**
+ * Gets the state of the igxInput.
+ * ```typescript
+ * let igxInputState = this.igxInput.valid;
+ * ```
+ * @memberof IgxInputDirective
+ */
+public get valid(): IgxInputState {
         return this._valid;
     }
-
-    public set valid(value: IgxInputState) {
+/**
+ * Sets the state of the igxInput.
+ * ```typescript
+ * this.igxInput.valid = IgxInputState.INVALID;
+ * ```
+ * @memberof IgxInputDirective
+ */
+public set valid(value: IgxInputState) {
         this._valid = value;
     }
 }
