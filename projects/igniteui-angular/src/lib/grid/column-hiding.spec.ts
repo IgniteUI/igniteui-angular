@@ -18,7 +18,7 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
-fdescribe('Column Hiding UI', () => {
+describe('Column Hiding UI', () => {
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;
