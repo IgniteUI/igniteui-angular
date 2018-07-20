@@ -78,7 +78,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * An @Input property that sets the px-affixed size of the container along the axis of scrolling.
      * For "horizontal" orientation this value is the width of the container and for "vertical" is the height.
      * ```html
-     * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForContainerSize]="'500px'"
+     *      [igxForScrollOrientation]="'horizontal'">
+     * </ng-template>
      * ```
      */
     @Input()
