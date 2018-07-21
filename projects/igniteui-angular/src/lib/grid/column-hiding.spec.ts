@@ -1120,7 +1120,7 @@ export class GridData {
     template: `
     <div>
         <igx-column-hiding [columns]="grid1.columns"></igx-column-hiding>
-        ${GridTemplateStrings.declareGrid(`#grid1`, ``, ColumnDefinitions.productFilterable)}
+        ${GridTemplateStrings.declareGrid(`#grid1 [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
     </div>`
 })
 export class ColumnHidingInlineComponent extends GridData implements AfterViewInit {
@@ -1146,7 +1146,7 @@ export class ColumnHidingInlineComponent extends GridData implements AfterViewIn
 
 @Component({
     template: `<div>
-    ${GridTemplateStrings.declareGrid(`#grid1`, ``, ColumnDefinitions.productFilterable)}
+    ${GridTemplateStrings.declareGrid(`#grid1 [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
     <button igxButton (click)="hidingUI.toggle()">Show Column Hiding UI</button>
     <igx-drop-down #hidingUI>
         <igx-column-hiding [columns]="grid1.columns"></igx-column-hiding>
@@ -1160,7 +1160,8 @@ export class ColumnHidingToggleComponent extends ColumnHidingInlineComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         `[showToolbar]="true" toolbarTitle="Grid Toolbar Title"
-        [columnHiding]="true" hiddenColumnsText="Hidden"`,
+        [columnHiding]="true" hiddenColumnsText="Hidden"
+        [height]="height" [width]="width"`,
         ``,
         ColumnDefinitions.productFilterable)
 })
