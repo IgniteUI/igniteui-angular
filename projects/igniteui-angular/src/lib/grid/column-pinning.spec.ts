@@ -26,7 +26,6 @@ describe('Column Pinning UI', () => {
             declarations: [
                 GridWithColumnChooserComponent,
                 ColumnPinningComponent,
-                GridWithoutColumnChooserComponent,
                 ColumnPinningToggleComponent,
                 GridWithGroupColumnsComponent
             ],
@@ -283,7 +282,7 @@ export class GridData {
 @Component({
     template: `<div>
         <igx-column-pinning [columns]="grid1.columns"></igx-column-pinning>
-        ${GridTemplateStrings.declareGrid(`#grid1`, ``, ColumnDefinitions.productFilterable)}
+        ${GridTemplateStrings.declareGrid(`#grid1 [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
     </div>`
 })
 export class ColumnPinningComponent extends GridData implements AfterViewInit {
@@ -309,7 +308,7 @@ export class ColumnPinningComponent extends GridData implements AfterViewInit {
 
 @Component({
     template: `<div>
-    ${GridTemplateStrings.declareGrid(`#grid1`, ``, ColumnDefinitions.productFilterable)}
+    ${GridTemplateStrings.declareGrid(`#grid1 [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
     <button igxButton (click)="pinningUI.toggle()">Show Column Pinning UI</button>
     <igx-drop-down #pinningUI>
         <igx-column-pinning [columns]="grid1.columns"></igx-column-pinning>
@@ -322,7 +321,7 @@ export class ColumnPinningToggleComponent extends ColumnPinningComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        `[showToolbar]="true"`,
+        `[showToolbar]="true" [height]="height" [width]="width"`,
         ``,
         ColumnDefinitions.productFilterable)
 })
@@ -343,14 +342,6 @@ export class GridWithColumnChooserComponent extends GridData implements AfterVie
         downloadsColumn.hidden = true;
         productNameCol.disableHiding = true;
     }
-}
-
-@Component({
-    template: GridTemplateStrings.declareGrid(`#grid1`, ``, ColumnDefinitions.productFilterable)
-})
-export class GridWithoutColumnChooserComponent extends GridData {
-
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 }
 
 @Component({
