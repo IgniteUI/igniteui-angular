@@ -442,6 +442,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public emptyFilteredGridMessage = 'No records found.';
 
     @Input()
+    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+
+    @Input()
+    public dropAreaTemplate: TemplateRef<any>;
+
+    @Input()
     public columnHidingTitle = '';
 
     @Input()
@@ -554,6 +560,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild('defaultEmptyGrid', { read: TemplateRef })
     public emptyGridDefaultTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultDropArea', { read: TemplateRef })
+    public defaultDropAreaTemplate: TemplateRef<any>;
 
     @ViewChild('scrollContainer', { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
@@ -1874,6 +1883,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (this.data && this.data.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    public get dropAreaTemplateResolved(): TemplateRef<any> {
+        if (this.dropAreaTemplate) {
+            return this.dropAreaTemplate;
+        } else {
+            return this.defaultDropAreaTemplate;
         }
     }
 
