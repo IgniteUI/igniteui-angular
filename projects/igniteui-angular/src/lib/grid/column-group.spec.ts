@@ -13,7 +13,7 @@ const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
-xdescribe('IgxGrid - multi-column headers', () => {
+describe('IgxGrid - multi-column headers', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -377,7 +377,6 @@ xdescribe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
         grid.getColumnByName('Fax').hidden = true;
         getColGroup(grid, 'Person Details').hidden = true;
-        fixture.detectChanges();
 
         expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
@@ -408,7 +407,6 @@ xdescribe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
         grid.getColumnByName('Fax').hidden = true;
         getColGroup(grid, 'Person Details').hidden = true;
-        fixture.detectChanges();
 
         expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
         // Get columnGroup of column
@@ -430,7 +428,6 @@ xdescribe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
         grid.getColumnByName('Fax').hidden = true;
         getColGroup(grid, 'Person Details').hidden = true;
-        fixture.detectChanges();
 
         expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
         // Get allChildren of column
@@ -469,7 +466,6 @@ xdescribe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
         grid.getColumnByName('Fax').hidden = true;
         getColGroup(grid, 'Person Details').hidden = true;
-        fixture.detectChanges();
 
         expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
@@ -494,7 +490,6 @@ xdescribe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
         grid.getColumnByName('Fax').hidden = true;
         getColGroup(grid, 'Person Details').hidden = true;
-        fixture.detectChanges();
 
         expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
@@ -726,7 +721,6 @@ xdescribe('IgxGrid - multi-column headers', () => {
 
         // pinning to negative index
         expect(grid.pinColumn(ci.genInfoColGroup, -15)).toBe(false);
-        fixture.detectChanges();
         testColumnsVisibleIndexes(postUnpinningColList);
         testColumnPinning(ci.genInfoColGroup, false);
 
@@ -1118,8 +1112,9 @@ xdescribe('IgxGrid - multi-column headers', () => {
             }
         });
 
+        fixture.detectChanges();
+
         fixture.whenStable().then(() => {
-            fixture.detectChanges();
             const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
             expect(summaries.length).toBe(7);
             let index = 0;
@@ -1146,10 +1141,8 @@ xdescribe('IgxGrid - multi-column headers', () => {
         grid.getColumnByName('ContactTitle').groupable = true;
         grid.getColumnByName('Country').groupable = true;
         grid.getColumnByName('Phone').groupable = true;
-        fixture.detectChanges();
 
         grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false });
-        fixture.detectChanges();
 
         // verify grouping expressions
         const grExprs = grid.groupingExpressions;
