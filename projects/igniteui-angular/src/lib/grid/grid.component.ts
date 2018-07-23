@@ -178,16 +178,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * An @Input property that sets a custom template when the `IgxGridComponent` is empty.
+     * ```html
+     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [emptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
+     * ```
      */
     @Input()
     public emptyGridTemplate: TemplateRef<any>;
 
-    /**
-     * Returns the filtering logic of the `IgxGridComponent`.
-     * ```typescript
-     * let filteringLogic = this.grid.filteringLogic;
-     * ```
-     */
     @Input()
     public get filteringLogic() {
         return this._filteringExpressionsTree.operator;
