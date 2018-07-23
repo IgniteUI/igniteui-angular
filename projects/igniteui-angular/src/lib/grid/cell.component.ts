@@ -143,7 +143,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostBinding('class')
     get styleClasses(): string {
         if (this.column.dataType === DataType.Number) {
-            return `${this.defaultCssClass} ${this.column.cellClasses} igx-grid__td--number`;
+            return `${this.defaultCssClass} ${this.column.cellClasses} ${this.numberCssClass}`;
         } else {
             return `${this.defaultCssClass} ${this.column.cellClasses}`;
         }
@@ -221,6 +221,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public editValue;
     protected defaultCssClass = 'igx-grid__td';
+    protected numberCssClass = 'igx-grid__td--number';
     protected isFocused = false;
     protected isSelected = false;
     protected chunkLoadedHor;

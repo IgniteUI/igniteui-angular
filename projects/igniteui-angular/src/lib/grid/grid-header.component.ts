@@ -37,9 +37,9 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     @HostBinding('class')
     get styleClasses() {
         return[
-            this.column.columnGroup ? '' : 'igx-grid__th',
+            this.column.columnGroup ? '' : `${this.defaultCssClass}`,
             this.column.headerClasses,
-            this.column.dataType === DataType.Number ? 'igx-grid__th--number' : ''
+            this.column.dataType === DataType.Number ? `${this.numberCssClass}` : ''
         ].join(' ');
     }
 
@@ -116,6 +116,9 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public resizeEndTimeout = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent) ? 200 : 0;
 
     protected sortDirection = SortingDirection.None;
+    protected defaultCssClass = 'igx-grid__th';
+    protected numberCssClass = 'igx-grid__th--number';
+
     private _startResizePos;
     private _pinnedMaxWidth;
 
