@@ -715,7 +715,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @Input()
+     @Input()
     public emptyFilteredGridMessage = 'No records found.';
 
     /**
