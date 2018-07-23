@@ -1,9 +1,37 @@
 .sample-holder {
     padding: 30px;
     border: 1px dotted #ddd;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+}
+
+.wrapperAreaTo {
+    border-bottom: 1px solid black;
+    min-height: 45px;
+    width: 600px;
+}
+
+.wrapperAreaCc {
+    border-bottom: 1px solid black;
+    min-height: 45px;
+    width: 600px;
+}
+
+.dropAreaTo {
+    visibility: hidden;
+}
+
+.dropAreaCc {
+
+    visibility: hidden;
+}
+
+.dropAreaCc.dragOver {
+    background-color: #1fc960b5;
+}
+
+.dropAreaTo.dragOver {
+    background-color: #1fc960b5;
 }
