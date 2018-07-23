@@ -194,7 +194,6 @@ describe('IgxGrid - Column properties', () => {
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
         expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
-     
         grid.parentVirtDir.getHorizontalScroll().scrollLeft = 200;
         setTimeout(() => {
             fix.detectChanges();
@@ -357,7 +356,7 @@ export class ColumnCellFormatterComponent {
             <igx-column field="Number7" dataType="number" width="100px"></igx-column>
         </igx-grid>
     `,
-    styles:[`.headerAlignSyle {text-align: right !important;}`]
+    styles: [`.headerAlignSyle {text-align: right !important;}`]
 })
 export class ColumnHaederClassesComponent {
     public data = [
