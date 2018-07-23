@@ -1,5 +1,5 @@
-﻿<div #chipArea class="igx-chip__item chip-area" [tabindex]="chipTabindex" igxDrop (onEnter)="onChipDragEnterHandler($event)"
-    (onDrop)="onChipDrop($event)" [igxDrag]="{ chip: this }" [hideBaseOnDrag]="true" [animateOnRelease]="true" [ghostImageClass]="'igx-chip__ghost'"
+﻿<div #chipArea class="igx-chip__item" [tabindex]="chipTabindex" igxDrop (onEnter)="onChipDragEnterHandler($event)" (onDrop)="onChipDrop($event)"
+    [igxDrag]="{ chip: this }" [hideBaseOnDrag]="true" [animateOnRelease]="true" [ghostImageClass]="ghostClass"
     (dragStart)="onChipDragStart($event)" (dragEnd)="onChipDragEnd($event)" (returnMoveEnd)="onChipMoveEnd($event)" (dragClicked)="onChipDragClicked()">
     <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
 

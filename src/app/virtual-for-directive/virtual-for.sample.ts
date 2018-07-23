@@ -151,6 +151,12 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     scrPrevRow() {
         this.virtDirVertical.scrollPrev();
     }
+    scrNextPage() {
+        this.virtDirVertical.scrollNextPage();
+    }
+    scrPrevPage() {
+        this.virtDirVertical.scrollPrevPage();
+    }
     scrScrollTo(index) {
         this.virtDirVertical.scrollTo(index);
     }
@@ -160,7 +166,12 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     scrPrevCol() {
         this.virtDirHorizontal.scrollPrev();
     }
-
+    scrNextHorizontalPage() {
+        this.virtDirHorizontal.scrollNextPage();
+    }
+    scrPrevHorizontalPage() {
+        this.virtDirHorizontal.scrollPrevPage();
+    }
     scrHorizontalScrollTo(index) {
         this.virtDirHorizontal.scrollTo(index);
     }
