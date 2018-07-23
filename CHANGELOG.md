@@ -1,6 +1,10 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 6.1.3
+- `igxGrid`
+    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
+
 ## 6.1.1
 - `igxTimePicker` changes
     - `onClose` event added.
