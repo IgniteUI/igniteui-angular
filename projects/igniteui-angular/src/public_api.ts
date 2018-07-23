@@ -62,7 +62,6 @@ export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/drop-down.component';
 export * from './lib/grid/index';
 export * from './lib/icon/index';
-export * from './lib/icon/icon.service';
 export * from './lib/input-group/index';
 export * from './lib/list/index';
 export * from './lib/navbar/navbar.component';

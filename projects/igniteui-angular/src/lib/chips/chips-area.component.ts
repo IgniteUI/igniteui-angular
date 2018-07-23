@@ -34,14 +34,14 @@ import { IgxConnectorDirective } from './connector.directive';
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
-    styles: [
-        `:host {
-            display: flex;
-        }
-        `
-    ]
 })
 export class IgxChipsAreaComponent implements DoCheck {
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.class')
+    public cssClass = 'igx-chips-area';
 
     /**
      * An @Input property that sets the width of the `IgxChipsAreaComponent`.
