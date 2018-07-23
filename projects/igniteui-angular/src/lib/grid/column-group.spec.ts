@@ -41,7 +41,7 @@ describe('IgxGrid - multi-column headers', () => {
     }));
 
 
-    it('should initialize a grid with column groups', () => {
+    xit('should initialize a grid with column groups', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -52,7 +52,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getColumnByName('ContactName').level).toEqual(expectedLevel);
     });
 
-    it('column hiding - parent level', () => {
+    xit('column hiding - parent level', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -63,7 +63,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
     });
 
-    it('column hiding - child level', () => {
+    xit('column hiding - child level', () => {
         const fixture = TestBed.createComponent(ColumnGroupChildLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -76,7 +76,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(addressGroup.children.first.children.toArray().every(c => c.hidden === true)).toEqual(true);
     });
 
-    it('column hiding - Verify column hiding of Individual column and Child column', () => {
+    xit('column hiding - Verify column hiding of Individual column and Child column', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -97,7 +97,7 @@ describe('IgxGrid - multi-column headers', () => {
         testGroupsAndColumns(15, 8);
     });
 
-    it('column hiding - Verify when 2 of 2 child columns are hidden, the Grouped column would be hidden as well.', () => {
+    xit('column hiding - Verify when 2 of 2 child columns are hidden, the Grouped column would be hidden as well.', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -117,7 +117,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').hidden).toEqual(false);
     });
 
-    it('column hiding - Verify when 1 child column and 1 group are hidden, the Grouped column would be hidden as well.', () => {
+    xit('column hiding - Verify when 1 child column and 1 group are hidden, the Grouped column would be hidden as well.', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -371,7 +371,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(cityColumn.width).toBe(columnWidth);
     });
 
-    it('API method level should return correct values', () => {
+    xit('API method level should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -401,7 +401,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').level).toEqual(1);
     });
 
-    it('API method columnGroup should return correct values', () => {
+    xit('API method columnGroup should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -422,7 +422,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').columnGroup).toEqual(true);
     });
 
-    it('API method allChildren should return correct values', () => {
+    xit('API method allChildren should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -460,7 +460,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(addressGroupedColumnAllChildren.indexOf(getColGroup(grid, 'General Information'))).toEqual(-1);
     });
 
-    it('API method children should return correct values', () => {
+    xit('API method children should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -484,7 +484,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(addressGroupedColumnAllChildren.length).toEqual(3);
     });
 
-    it('API method topLevelParent should return correct values', () => {
+    xit('API method topLevelParent should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -516,7 +516,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
     });
 
-    it('Should render column group headers correctly.', fakeAsync(() => {
+    xit('Should render column group headers correctly.', fakeAsync(() => {
         const fixture = TestBed.createComponent(BlueWhaleGridComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
