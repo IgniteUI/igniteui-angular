@@ -192,7 +192,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Sets the filtering logic of the `IgxGridComponent`.
-     * By default is AND.
+     * The default is AND.
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true" [filteringLogic]="filtering"></igx-grid>
      * ```
@@ -306,7 +306,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Returns a list of expansion states for group rows.
-     * Includes only states that differ from the default one (controlled through groupsExpanded and states that the user have changed.
+     * Includes only states that differ from the default one (controlled through groupsExpanded and states that the user has changed.
      * Contains the expansion state (expanded: boolean) and the unique identifier for the group row (Array).
      * ```typescript
      * const groupExpState = this.grid.groupingExpansionState;
@@ -377,7 +377,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public groupsExpanded = true;
 
     /**
-     * All groups in hierarchy reflecting the current groups state.
+     * A hierarchical representation of the group by records.
      * ```typescript
      * let groupRecords = this.grid.groupsRecords;
      * ```
@@ -386,7 +386,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Returns whether the paging feature is enabled/disabled.
-     * The default state is false.
+     * The default state is disabled (false).
      * ```
      * const paging = this.grid.paging;
      * ```
@@ -467,7 +467,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * You can provide a custom `ng-template` for the pagination part of the grid.
+     * You can provide a custom `ng-template` for the pagination UI of the grid.
      * ```html
      * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
      * ```
@@ -477,7 +477,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Return the display density currently applied to the grid.
-     * The default theme is `comfortable`.
+     * The default value is `comfortable`.
      * Available options are `comfortable`, `cosy`, `compact`.
      * ```typescript
      * let gridTheme = this.grid.displayDensity;
@@ -511,7 +511,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Returns whether the column hiding UI for the `IgxGridComponent` is enabled.
-     * By default it is set to `false`.
+     * By default it is disabled (false).
      * ```typescript
      * let gridColHiding = this.grid.columnHiding;
      * ```
@@ -924,7 +924,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Emitted when a `IgxGridRowComponent` is deleted through the `IgxGridComponent` API.
-     * Returns the `IRowDataEventArgs` object being removed.
+     * Returns an `IRowDataEventArgs` object.
      * ```typescript
      * rowDeleted(event: IRowDataEventArgs){
      *    const rowInfo = event;
@@ -952,7 +952,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onGroupingDone = new EventEmitter<any>();
 
     /**
-     * Emitted when new when a new chunk fo data is loaded from virtualization.
+     * Emitted when a new chunk fo data is loaded from virtualization.
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
@@ -962,7 +962,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Emitted when `IgxColumnComponent` is resized.
-     * Returns the `IgxColumnComponent` object old and new `IgxColumnComponent` width.
+     * Returns the `IgxColumnComponent` object's old and new width.
      * ```typescript
      * resizing(event: IColumnResizeEventArgs){
      *     const grouping = event;
@@ -2131,7 +2131,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Returns an `IgxGridCellComponent` object by the specified primary key.
+     * Returns an `IgxGridCellComponent` object by the specified primary key and column field.
      * Requires that the primaryKey property is set.
      * ```typescript
      * grid.getCellByKey(1, 'index');
@@ -2158,7 +2158,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Returns the total number of records.
-     * Paging must be enabled.
+     * Only functions when paging is enabled.
      * ```typescript
      * const totalRecords = this.grid.totalRecords;
      * ```
@@ -2170,7 +2170,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Returns if the pages is the first page.
+     * Returns if the current page is the first page.
      * ```typescript
      * const firstPage = this.grid.isFirstPage;
      * ```
@@ -2180,7 +2180,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Returns if the pages is the last page.
+     * Returns if the current page is the last page.
      * ```typescript
      * const lastPage = this.grid.isLastPage;
      * ```
@@ -2305,7 +2305,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Goes to the next previous.
+     * Goes to the previous page of the `IgxGridComponent`, if the grid is not already at the first page.
      * ```typescript
      * this.grid1.previousPage();
      * ```
@@ -2331,7 +2331,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Manually triggers a change detection cycle for the `IgxGridComponent` and its children.
+     * Manually marks the `IgxGridComponent` for change detection.
      * ```typescript
      * this.grid1.markForCheck();
      * ```
@@ -2494,7 +2494,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Clears all grouping in the grid, if no parameter is passed.
-     * If a parameter is provided clears grouping from a particular column
+     * If a parameter is provided clears grouping for a particular column
      * ```typescript
      * this.grid.clearGrouping();
      * this.grid.clearGrouping("ID");
@@ -3089,7 +3089,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Gets calculated width of the start pinned area.
+     * Gets calculated width of the pinned area.
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth();
      * ```
@@ -3424,7 +3424,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Get current selection state.
-     * Returns an array with selected rows' ID (primaryKey or rowData)
+     * Returns an array with selected rows' IDs (primaryKey or rowData)
      * ```typescript
      * const selectedRows = this.grid.selectedRows();
      * ```
@@ -3459,7 +3459,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Select all rows
+     * Selects all rows
      * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      * ```typescript
      * this.grid.selectAllRows();
