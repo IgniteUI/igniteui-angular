@@ -4050,7 +4050,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         horVirtScroll.scrollLeft -= MINIMUM_COLUMN_WIDTH;
     }
 
-
+    /**
+     * @hidden
+     */
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event) {
         event.preventDefault();
