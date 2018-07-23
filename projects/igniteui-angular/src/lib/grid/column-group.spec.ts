@@ -41,7 +41,7 @@ describe('IgxGrid - multi-column headers', () => {
     }));
 
 
-    xit('should initialize a grid with column groups', () => {
+    it('should initialize a grid with column groups', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -52,7 +52,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getColumnByName('ContactName').level).toEqual(expectedLevel);
     });
 
-    xit('column hiding - parent level', () => {
+    it('column hiding - parent level', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -63,7 +63,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
     });
 
-    xit('column hiding - child level', () => {
+    it('column hiding - child level', () => {
         const fixture = TestBed.createComponent(ColumnGroupChildLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -76,7 +76,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(addressGroup.children.first.children.toArray().every(c => c.hidden === true)).toEqual(true);
     });
 
-    xit('column hiding - Verify column hiding of Individual column and Child column', () => {
+    it('column hiding - Verify column hiding of Individual column and Child column', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -97,7 +97,7 @@ describe('IgxGrid - multi-column headers', () => {
         testGroupsAndColumns(15, 8);
     });
 
-    xit('column hiding - Verify when 2 of 2 child columns are hidden, the Grouped column would be hidden as well.', () => {
+    it('column hiding - Verify when 2 of 2 child columns are hidden, the Grouped column would be hidden as well.', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -117,7 +117,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').hidden).toEqual(false);
     });
 
-    xit('column hiding - Verify when 1 child column and 1 group are hidden, the Grouped column would be hidden as well.', () => {
+    it('column hiding - Verify when 1 child column and 1 group are hidden, the Grouped column would be hidden as well.', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
