@@ -53,6 +53,13 @@ export class IgxDropDownItemBase {
     get isSelected() {
         return this.dropDown.selectedItem === this;
     }
+    set isSelected(value: boolean) {
+        if (this.isFocused === value) {
+            return;
+        }
+
+        this.dropDown.selectItem(this);
+    }
 
     /**
      * @hidden
