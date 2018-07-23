@@ -734,11 +734,6 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellFooterTemplateDirective, { read: IgxCellFooterTemplateDirective })
-    protected footTemplate: IgxCellFooterTemplateDirective;
-    /**
-     *@hidden
-     */
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
