@@ -371,7 +371,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(cityColumn.width).toBe(columnWidth);
     });
 
-    xit('API method level should return correct values', () => {
+    it('API method level should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -401,7 +401,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').level).toEqual(1);
     });
 
-    xit('API method columnGroup should return correct values', () => {
+    it('API method columnGroup should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -422,7 +422,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').columnGroup).toEqual(true);
     });
 
-    xit('API method allChildren should return correct values', () => {
+    it('API method allChildren should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -460,7 +460,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(addressGroupedColumnAllChildren.indexOf(getColGroup(grid, 'General Information'))).toEqual(-1);
     });
 
-    xit('API method children should return correct values', () => {
+    it('API method children should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -484,7 +484,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(addressGroupedColumnAllChildren.length).toEqual(3);
     });
 
-    xit('API method topLevelParent should return correct values', () => {
+    it('API method topLevelParent should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
