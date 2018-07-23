@@ -78,7 +78,7 @@ class TestChipsLabelAndSuffixComponent {
 }
 
 describe('IgxChip', () => {
-    const CHIP_ITEM_AREA = 'igx-chip__item chip-area';
+    const CHIP_ITEM_AREA = 'igx-chip__item';
     const CHIP_CONNECTOR = 'igx-chip__connector';
 
     function simulatePointerEvent(eventName: string, element, x, y) {
@@ -427,7 +427,7 @@ describe('IgxChip', () => {
         }).then(() => {
             fix.detectChanges();
 
-            expect(thirdChip.dragDir['_dragGhost'].className).toEqual('igx-chip__item chip-area igx-chip__ghost--compact');
+            expect(thirdChip.dragDir['_dragGhost'].className).toEqual('igx-chip__item igx-chip__ghost--compact');
 
             return fix.whenStable();
         }).then(() => {
