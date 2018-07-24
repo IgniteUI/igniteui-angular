@@ -183,7 +183,7 @@
         display: flex;
         flex-flow: row nowrap;
 
-        .igx-button--icon {
+        %igx-button--icon {
             color: --var($theme, 'actions-text-color');
         }
     }
