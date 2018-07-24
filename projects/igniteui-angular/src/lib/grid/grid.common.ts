@@ -22,6 +22,9 @@ import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragd
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxResizer]'
 })
@@ -115,7 +118,9 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCell]'
 })
@@ -123,7 +128,9 @@ export class IgxCellTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxHeader]'
 })
@@ -132,7 +139,9 @@ export class IgxCellHeaderTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxGroupByRow]'
 })
@@ -141,7 +150,9 @@ export class IgxGroupByRowTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxFooter]'
 })
@@ -149,7 +160,9 @@ export class IgxCellFooterTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCellEditor]'
 })
@@ -158,7 +171,9 @@ export class IgxCellEditorTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
-
+/**
+ * @hidden
+ */
 @Injectable()
 export class IgxColumnMovingService {
     private _icon: any;
@@ -198,7 +213,9 @@ export class IgxColumnMovingService {
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxColumnMovingDrag]'
 })
@@ -352,7 +369,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxColumnMovingDrop]'
 })
@@ -510,7 +529,9 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxGroupAreaDrop]'
 })
@@ -523,10 +544,12 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
 
+
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         const column: IgxColumnComponent = drag.column;
-        if (column.groupable) {
+        const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+        if (column.groupable && !isGrouped) {
             drag.icon.innerText = 'group_work';
             this.hovered = true;
         } else {
@@ -544,7 +567,8 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         if (drag instanceof IgxColumnMovingDragDirective) {
             const column: IgxColumnComponent = drag.column;
-            if (column.groupable) {
+            const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+            if (column.groupable && !isGrouped) {
                 column.grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
             }
         }

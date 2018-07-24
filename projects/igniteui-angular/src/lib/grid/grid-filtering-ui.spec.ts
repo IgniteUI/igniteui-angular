@@ -8,6 +8,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxFilteringOperand, IgxStringFilteringOperand } from '../../public_api';
 import { IgxButtonDirective } from '../directives/button/button.directive';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
@@ -23,6 +24,10 @@ describe('IgxGrid - Filtering actions', () => {
         })
         .compileComponents();
     }));
+
+    afterEach(() => {
+        HelperUtils.clearOverlay();
+    });
 
     // UI tests string column, empty input
     it('UI tests on string column', async(() => {

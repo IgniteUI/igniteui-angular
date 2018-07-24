@@ -606,7 +606,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        const mockEvent = { preventDefault: () => { } };
+        const mockEvent = { preventDefault: () => { }, stopPropagation: () => { } };
 
         let topLeft;
         let topRight;
