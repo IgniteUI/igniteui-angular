@@ -499,6 +499,8 @@ export class IgxDropDownBase implements OnInit, IToggleView {
 
         const args: ISelectionEventArgs = { oldSelection, newSelection };
         this.onSelection.emit(args);
+
+        // this.selectionAPI.set_selection(this.id, [newSelection]);
     }
 
     /**

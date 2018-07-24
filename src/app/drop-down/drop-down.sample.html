@@ -1,6 +1,7 @@
 <div class="sample-wrapper">
     <app-page-header title="Dropdown menu" description="description for dropdown menu"></app-page-header>
     <section class="sample-content">
+        <button igxButton="raised" igxRipple (click)="WTF()">Toggle dropdown</button>
         <button #button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle dropdown</button>
         <igx-drop-down #dropdown1 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
             <igx-drop-down-item [igxDropDownItemNavigation]="dropdown1" *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
