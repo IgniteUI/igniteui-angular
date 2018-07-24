@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 6.1.3
+- `igxGrid` improvement
+    - Added `label` property to `IFilteringOperation`, so users can localize the filtering operands.
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
