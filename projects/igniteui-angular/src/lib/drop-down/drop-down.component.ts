@@ -284,7 +284,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
-     * Get dropdown html element
+     * Get dropdown's html element of it scroll container
      */
     protected get scrollContainer() {
         return this.toggleDirective.element;

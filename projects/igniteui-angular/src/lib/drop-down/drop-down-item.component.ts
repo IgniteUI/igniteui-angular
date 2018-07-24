@@ -219,7 +219,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase {
     }
 
     /**
-     * Gets if the item is the currently selected one in the dropdown
+     * Sets/Gets if the item is the currently selected one in the dropdown
      *
      * ```typescript
      *  let mySelectedItem = this.dropdown.selectedItem;
