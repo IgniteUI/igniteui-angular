@@ -135,11 +135,12 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
-    @HostListener('keydown.enter', ['$event'])
-    @HostListener('keydown.space', ['$event'])
+    @HostListener('keydown', ['$event'])
     public onClick(event) {
-        event.preventDefault();
-        this.grid.toggleGroup(this.groupRow);
+        if (event.key === 'Spacebar' || event.key === 'Enter') {
+            event.preventDefault();
+            this.grid.toggleGroup(this.groupRow);
+        }
     }
 
     /**
