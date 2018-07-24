@@ -1251,6 +1251,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.cdr.markForCheck();
 
                 this.refreshSearch();
+
+                if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+                    this.page--;
+                }
             }
         }
     }
