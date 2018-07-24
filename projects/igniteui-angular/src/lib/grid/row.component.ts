@@ -177,6 +177,11 @@ export class IgxGridRowComponent implements DoCheck {
             (this.gridAPI.get(this.gridID) as any)._pipeTrigger++;
             this.cdr.markForCheck();
             this.gridAPI.get(this.gridID).refreshSearch();
+
+            const grid = this.gridAPI.get(this.gridID);
+            if (grid.data.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0) {
+                grid.page--;
+            }
         }
     }
 
