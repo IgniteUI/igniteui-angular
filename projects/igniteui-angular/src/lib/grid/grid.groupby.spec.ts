@@ -597,7 +597,7 @@ describe('IgxGrid - GroupBy', () => {
             key: 'Enter'
         });
         const evtSpace = new KeyboardEvent('keydown', {
-            code: 'Spacebar',
+            code: 'Space',
             key: 'Spacebar'
         });
         gRow.element.nativeElement.dispatchEvent(evtEnter);

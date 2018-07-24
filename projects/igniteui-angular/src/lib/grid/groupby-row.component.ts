@@ -137,7 +137,7 @@ export class IgxGridGroupByRowComponent {
      */
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
-        if (event.key === 'Spacebar' || event.key === 'Enter') {
+        if (event.code === 'Space' || event.code === 'Enter' || event.key === 'Spacebar' || event.key === 'Enter') {
             event.preventDefault();
             this.grid.toggleGroup(this.groupRow);
         }
