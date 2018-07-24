@@ -440,11 +440,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * Scrolls by one item into the appropriate next direction.
-     * For "horizontal" orientation that will be the the left column and for "vertical" that is the upper row.
+     * For "horizontal" orientation that will be the right column and for "vertical" that is the lower row.
      * ```typescript
      * this.parentVirtDir.scrollNext();
      * ```
-     * @param index
      */
     public scrollNext() {
         this.scrollTo(this.state.startIndex + 1);
@@ -452,14 +451,44 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * Scrolls by one item into the appropriate previous direction.
-     * For "horizontal" orientation that will be the the left column and for "vertical" that is the upper row.
+     * For "horizontal" orientation that will be the left column and for "vertical" that is the upper row.
      * ```typescript
      * this.parentVirtDir.scrollPrev();
      * ```
-     * @param index
      */
     public scrollPrev() {
         this.scrollTo(this.state.startIndex - 1);
+    }
+
+    /**
+     * Scrolls by one page into the appropriate next direction.
+     * For "horizontal" orientation that will be one view to the right and for "vertical" that is one view to the bottom.
+     * ```typescript
+     * this.parentVirtDir.scrollNextPage();
+     * ```
+     */
+    public scrollNextPage() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.hvh.instance.elementRef.nativeElement.scrollLeft += parseInt(this.igxForContainerSize, 10);
+        } else {
+            this.addScrollTop(parseInt(this.igxForContainerSize, 10));
+        }
+    }
+
+    /**
+     * Scrolls by one page into the appropriate previous direction.
+     * For "horizontal" orientation that will be one view to the left and for "vertical" that is one view to the top.
+     * ```typescript
+     * this.parentVirtDir.scrollPrevPage();
+     * ```
+     */
+    public scrollPrevPage() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.hvh.instance.elementRef.nativeElement.scrollLeft -= parseInt(this.igxForContainerSize, 10);
+        } else {
+            const containerSize = (parseInt(this.igxForContainerSize, 10));
+            this.addScrollTop(-containerSize);
+        }
     }
 
     /**
