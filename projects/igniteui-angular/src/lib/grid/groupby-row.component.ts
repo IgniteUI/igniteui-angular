@@ -136,7 +136,7 @@ export class IgxGridGroupByRowComponent {
      * @hidden
      */
     @HostListener('keydown', ['$event'])
-    public onClick(event) {
+    public onKeydown(event) {
         if (event.key === 'Spacebar' || event.key === 'Enter') {
             event.preventDefault();
             this.grid.toggleGroup(this.groupRow);
