@@ -17,9 +17,8 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { fromEvent, interval, Observable, Subscription } from 'rxjs';
+import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
-import { BaseComponent } from '../core/base';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
@@ -327,7 +326,6 @@ export class IgxNavigationDrawerComponent implements
     private _panning = false;
     private _panStartWidth: number;
     private _panLimit: number;
-    private _previousDeltaX: number;
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
@@ -479,17 +477,14 @@ export class IgxNavigationDrawerComponent implements
      * Toggle the open state of the Navigation Drawer.
      *
      * ```typescript
-     * let fireEvents = true;
-     * this.navdrawer.toggle(fireEvents);
+     * this.navdrawer.toggle();
      * ```
-     *
-     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
-    public toggle(fireEvents?: boolean) {
+    public toggle() {
         if (this.isOpen) {
-            this.close(fireEvents);
+            this.close();
         } else {
-            this.open(fireEvents);
+            this.open();
         }
     }
 
@@ -497,22 +492,17 @@ export class IgxNavigationDrawerComponent implements
      * Open the Navigation Drawer. Has no effect if already opened.
      *
      * ```typescript
-     * let fireEvents = true;
-     * this.navdrawer.open(fireEvents);
+     * this.navdrawer.open();
      * ```
-     *
-     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
-    public open(fireEvents?: boolean) {
+    public open() {
         if (this._panning) {
             this.resetPan();
         }
         if (this.isOpen) {
             return;
         }
-        if (fireEvents) {
-            this.opening.emit();
-        }
+        this.opening.emit();
         this.isOpen = true;
 
         // TODO: Switch to animate API when available
@@ -530,22 +520,17 @@ export class IgxNavigationDrawerComponent implements
      * Close the Navigation Drawer. Has no effect if already closed.
      *
      * ```typescript
-     * let fireEvents = true;
-     * this.navdrawer.close(fireEvents);
+     * this.navdrawer.close();
      * ```
-     *
-     * @param [fireEvents] - Optional flag determining whether events should be fired or not.
      */
-    public close(fireEvents?: boolean) {
+    public close() {
         if (this._panning) {
             this.resetPan();
         }
         if (!this.isOpen) {
             return;
         }
-        if (fireEvents) {
-            this.closing.emit();
-        }
+        this.closing.emit();
 
         this.isOpen = false;
         this.setDrawerWidth(this.miniTemplate ? this.miniWidth : '');
@@ -705,7 +690,7 @@ export class IgxNavigationDrawerComponent implements
         if ((this.isOpen && deltaX < 0) ||
             // positive deltaX from the edge:
             (deltaX > 0 && startPosition < this.maxEdgeZone)) {
-            this.toggle(true);
+            this.toggle();
         }
     }
 
@@ -783,9 +768,9 @@ export class IgxNavigationDrawerComponent implements
 
             // check if pan brought the drawer to 50%
             if (this.isOpen && visibleWidth <= this._panStartWidth / 2) {
-                this.close(true);
+                this.close();
             } else if (!this.isOpen && visibleWidth >= this._panLimit / 2) {
-                this.open(true);
+                this.open();
             }
             this._panStartWidth = null;
         }
@@ -820,7 +805,7 @@ export class IgxNavigationDrawerComponent implements
         });
     }
 
-    private toggleOpenedEvent = (evt?, fireEvents?) => {
+    private toggleOpenedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener('transitionend', this.toggleOpenedEvent, false);
         this.opened.emit();
     }

@@ -200,122 +200,122 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
      *@hidden
      */
     private _itemStyle = 'igx-tab-panel';
-/**
- * Sets/gets the `label` of the tab panel.
- * ```html
- * <igx-tab-panel [label] = "'Tab panel label'"><igx-tab-panel>
- * ```
- * ```typescript
- * let tabPanelLabel = this.tabPanel.label;
- * ```
- * @memberof IgxTabPanelComponent
- */
-@Input() public label: string;
-/**
- * Sets/gets  the `icon` of the tab panel.
- * ```html
- * <igx-tab-panel [icon] = "panel_icon"><igx-tab-panel>
- * ```
- * ```typescript
- * let tabPanelIcon =  this.tabPanel.icon;
- * ```
- * @memberof IgxTabPanelComponent
- */
-@Input() public icon: string;
-/**
- * Sets/gets whether the tab panel is disabled.
- * ```html
- * <igx-tab-panel [disabled] = "true"><igx-tab-panel>
- * ```
- * ```typescript
- * let isDisabled = this.tabPanel.disabled;
- * ```
- * @memberof IgxTabPanelComponent
- */
-@Input() public disabled: boolean;
-/**
- * Gets the role of the tab panel.
- * ```typescript
- * let tabPanelRole = this.tabPanel.role;
- * ```
- * @memberof IgxTabPanelComponent
- */
-@HostBinding('attr.role') public role = 'tabpanel';
-/**
- * Gets whether a tab panel will have `igx-bottom-nav__panel` class.
- * ```typescript
- * let styleClass = this.tabPanel.styleClass;
- * ```
- * @memberof IgxTabPanelComponent
- */
-@HostBinding('class.igx-bottom-nav__panel')
+    /**
+     * Sets/gets the `label` of the tab panel.
+     * ```html
+     * <igx-tab-panel [label] = "'Tab panel label'"><igx-tab-panel>
+     * ```
+     * ```typescript
+     * let tabPanelLabel = this.tabPanel.label;
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    @Input() public label: string;
+    /**
+     * Sets/gets  the `icon` of the tab panel.
+     * ```html
+     * <igx-tab-panel [icon] = "panel_icon"><igx-tab-panel>
+     * ```
+     * ```typescript
+     * let tabPanelIcon =  this.tabPanel.icon;
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    @Input() public icon: string;
+    /**
+     * Sets/gets whether the tab panel is disabled.
+     * ```html
+     * <igx-tab-panel [disabled] = "true"><igx-tab-panel>
+     * ```
+     * ```typescript
+     * let isDisabled = this.tabPanel.disabled;
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    @Input() public disabled: boolean;
+    /**
+     * Gets the role of the tab panel.
+     * ```typescript
+     * let tabPanelRole = this.tabPanel.role;
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    @HostBinding('attr.role') public role = 'tabpanel';
+    /**
+     * Gets whether a tab panel will have `igx-bottom-nav__panel` class.
+     * ```typescript
+     * let styleClass = this.tabPanel.styleClass;
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    @HostBinding('class.igx-bottom-nav__panel')
     get styleClass(): boolean {
         return (!this.isSelected);
     }
-/**
- * Sets/gets whether a tab panel is selected.
- * ```typescript
- * this.tabPanel.isSelected = true;
- * ```
- * ```typescript
- * let isSelected =  this.tabPanelIsSelected;
- * ```
- * @memberof IgxTabPanelComponent
- */
-@HostBinding('class.igx-bottom-nav__panel--selected')
+    /**
+     * Sets/gets whether a tab panel is selected.
+     * ```typescript
+     * this.tabPanel.isSelected = true;
+     * ```
+     * ```typescript
+     * let isSelected =  this.tabPanelIsSelected;
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    @HostBinding('class.igx-bottom-nav__panel--selected')
     public isSelected = false;
-/**
- * Gets the `itemStyle` of the tab panel.
- * ```typescript
- * let itemStyle = this.tabPanel.itemStyle;
- * ```
- * @memberof IgxTabPanelComponent
- */
-public get itemStyle(): string {
+    /**
+     * Gets the `itemStyle` of the tab panel.
+     * ```typescript
+     * let itemStyle = this.tabPanel.itemStyle;
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    public get itemStyle(): string {
         return this._itemStyle;
     }
-/**
- * Gets the tab associated with the panel.
- * ```typescript
- * let tab = this.tabPanel.relatedTab;
- * ```
- * @memberof IgxTabPanelComponent
- */
-get relatedTab(): IgxTabComponent {
+    /**
+     * Gets the tab associated with the panel.
+     * ```typescript
+     * let tab = this.tabPanel.relatedTab;
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    get relatedTab(): IgxTabComponent {
         if (this._tabBar.tabs) {
             return this._tabBar.tabs.toArray()[this.index];
         }
     }
-/**
- * Gets the index of a panel in the panels collection.
- * ```typescript
- * let panelIndex =  this.tabPanel.index
- * ```
- * @memberof IgxTabPanelComponent
- */
-get index() {
+    /**
+     * Gets the index of a panel in the panels collection.
+     * ```typescript
+     * let panelIndex =  this.tabPanel.index
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    get index() {
         if (this._tabBar.panels) {
             return this._tabBar.panels.toArray().indexOf(this);
         }
     }
-/**
- * Gets the tab template.
- * ```typescript
- * let tabTemplate = this.tabPanel.customTabTemplate
- * ```
- * @memberof IgxTabPanelComponent
- */
-get customTabTemplate(): TemplateRef<any> {
+    /**
+     * Gets the tab template.
+     * ```typescript
+     * let tabTemplate = this.tabPanel.customTabTemplate
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    get customTabTemplate(): TemplateRef<any> {
         return this._tabTemplate;
     }
-/**
- * Sets the tab template.
- * ```typescript
- * this.tabPanel.customTabTemplate(tabTemplate);
- * ```
- * @memberof IgxTabPanelComponent
- */
-set customTabTemplate(template: TemplateRef<any>) {
+    /**
+     * Sets the tab template.
+     * ```typescript
+     * this.tabPanel.customTabTemplate(tabTemplate);
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
     }
     /**
@@ -345,14 +345,14 @@ set customTabTemplate(template: TemplateRef<any>) {
         this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-${this.index}`);
         this._element.nativeElement.setAttribute('id', `igx-bottom-nav__panel-${this.index}`);
     }
-/**
- * Selects the current tab and the tab panel.
- * ```typescript
- * this.tabPanel.select();
- * ```
- * @memberof IgxTabPanelComponent
- */
-public select() {
+    /**
+     * Selects the current tab and the tab panel.
+     * ```typescript
+     * this.tabPanel.select();
+     * ```
+     * @memberof IgxTabPanelComponent
+     */
+    public select() {
         if (this.disabled || this._tabBar.selectedIndex === this.index) {
             return;
         }
@@ -370,83 +370,83 @@ public select() {
 })
 
 export class IgxTabComponent {
-/**
- * Gets the `role` attribute.
- * ```typescript
- * let tabRole = this.tab.role;
- * ```
- * @memberof IgxTabComponent
- */
-@HostBinding('attr.role') public role = 'tab';
-/**
- * Gets the panel associated with the tab.
- * ```typescript
- * let tabPanel =  this.tab.relatedPanel;
- * ```
- * @memberof IgxTabComponent
- */
-@Input() public relatedPanel: IgxTabPanelComponent;
+    /**
+     * Gets the `role` attribute.
+     * ```typescript
+     * let tabRole = this.tab.role;
+     * ```
+     * @memberof IgxTabComponent
+     */
+    @HostBinding('attr.role') public role = 'tab';
+    /**
+     * Gets the panel associated with the tab.
+     * ```typescript
+     * let tabPanel =  this.tab.relatedPanel;
+     * ```
+     * @memberof IgxTabComponent
+     */
+    @Input() public relatedPanel: IgxTabPanelComponent;
     /**
      *@hidden
      */
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
-/**
- * Gets the changes and updates accordingly applied to the tab.
- *
- * @memberof IgxTabComponent
- */
-get changesCount(): number {
+    /**
+     * Gets the changes and updates accordingly applied to the tab.
+     *
+     * @memberof IgxTabComponent
+     */
+    get changesCount(): number {
         return this._changesCount;
     }
-/**
- * Gets whether the tab is disabled.
- * ```typescript
- * let isDisabled = this.tab.disabled;
- * ```
- * @memberof IgxTabComponent
- */
-get disabled(): boolean {
+    /**
+     * Gets whether the tab is disabled.
+     * ```typescript
+     * let isDisabled = this.tab.disabled;
+     * ```
+     * @memberof IgxTabComponent
+     */
+    get disabled(): boolean {
         const panel = this.relatedPanel;
 
         if (panel) {
             return panel.disabled;
         }
     }
-/**
- * Gets whether the tab is selected.
- * ```typescript
- * let isSelected  = this.tab.isSelected;
- * ```
- * @memberof IgxTabComponent
- */
-get isSelected(): boolean {
+    /**
+     * Gets whether the tab is selected.
+     * ```typescript
+     * let isSelected  = this.tab.isSelected;
+     * ```
+     * @memberof IgxTabComponent
+     */
+    get isSelected(): boolean {
         const panel = this.relatedPanel;
 
         if (panel) {
             return panel.isSelected;
         }
     }
-/**
- * Gets the `index` of the tab.
- * ```typescript
- * let tabIndex = this.tab.index;
- * ```
- * @memberof IgxTabComponent
- */
-get index(): number {
+    /**
+     * Gets the `index` of the tab.
+     * ```typescript
+     * let tabIndex = this.tab.index;
+     * ```
+     * @memberof IgxTabComponent
+     */
+    get index(): number {
         return this._tabBar.tabs.toArray().indexOf(this);
     }
 
     constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
     }
-/**
- * Selects the current tab and the associated panel.
- * ```typescript
- * this.tab.select();
- * ```
- * @memberof IgxTabComponent
- */
-public select() {
+    /**
+     * Selects the current tab and the associated panel.
+     * ```typescript
+     * this.tab.select();
+     * ```
+     * @memberof IgxTabComponent
+     */
+    public select() {
         this.relatedPanel.select();
     }
 }

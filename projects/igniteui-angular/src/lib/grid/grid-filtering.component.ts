@@ -102,8 +102,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     public ngOnInit() {
         const collapse = () => {
             if (!this.toggleDirective.collapsed) {
-                this.dialogShowing = false;
-                this.toggleDirective.close(false);
+                this.toggleDirective.close();
             }
         };
 
@@ -202,6 +201,9 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 grid.onFilteringDone.emit(expr);
             }
         }
+        requestAnimationFrame(() => {
+            this.cdr.detectChanges();
+        });
     }
 
     public onUnSelectLogicOperator(event): void {
@@ -243,7 +245,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
             }
             this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
-            this.toggleDirective.toggle(true, this._overlaySettings);
+            this.toggleDirective.toggle(this._overlaySettings);
         });
     }
 
@@ -281,10 +283,6 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private _filter(): void {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-        }
         const grid = this.gridAPI.get(this.gridID);
         let expr = grid.filteringExpressionsTree.find(this.column.field) as FilteringExpressionsTree;
 

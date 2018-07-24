@@ -3,7 +3,7 @@ The igx-combo component provides a powerful input, combining the features of the
 The combo component provides easy filtering and selection of multiple items, grouping and adding custom values to the dropdown list.
 Custom templates could be provided in order to customize different areas of the components, such as items, header, footer, etc.
 The combo component is integrated with the Template Driven and Reactive Forms.
-The igx-combo exposes intiutive keyboard navigation and it is accessibility compliant.
+The igx-combo exposes intuitive keyboard navigation and it is accessibility compliant.
 Drop Down items are virtualized, which guarantees smooth work, even if the igx-combo is bound to data source with a lot of items.
 
 
@@ -46,7 +46,7 @@ public dataLoading(evt) {
     }
 ```
 
-> Note: In order to have combo with remote data, what you need is to have a service that retrives data chunks from a server. 
+> Note: In order to have combo with remote data, what you need is to have a service that retrieves data chunks from a server. 
 What the combo exposes is a `virtualizationState` property that gives state of the combo - first index and the number of items that needs to be loaded.
 The service, should inform the combo for the total items that are on the server - using the `totalItemCount` property.
 
@@ -77,7 +77,7 @@ set values(newValues: Array<any>) {
 By default filtering in the combo is enabled. However you can disable it using the following code:
 
 ```html
-<igx-combo [filaterable]="false"></igx-combo>
+<igx-combo [filterable]="false"></igx-combo>
 ```
 
 <div class="divider--half"></div>
@@ -113,7 +113,7 @@ Defining a combo's groupKey option will group the items, according to that key.
 
 ### Templates
 Templates for different parts of the control can be defined, including items, header and footer, etc.
-When defining one of the them, you need to reference list of predifined names, as follows:
+When defining one of the them, you need to reference list of predefined names, as follows:
 
 #### Defining item template:
 ```html
@@ -180,7 +180,7 @@ When igxCombo is opened and search input is focused:
 - `ArrowDown` will move focus from the search input to the first list item.If list is empty and custom values are enabled will move it to the Add new item button.
   > Note: Any other key stroke will be handled by the input.
 
-When igxCombo is opened and list item is focued:
+When igxCombo is opened and list item is focused:
 - `ArrowDown` will move to next list item. If the active item is the last one in hte list and custom values are enabled then focus will be moved to the Add item button.
 
 - `ArrowUp` will move to previous list item. If the active item is the first one in the list then focus will be moved back to the search input.
@@ -211,14 +211,15 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 |  `id`                    | combo id                                          | string                      |
 |  `data`                  | combo data source                                 | any                         |
 |  `value`                 | combo value                                       | string                      |
-|  `allowCustomValue`      | enable/disables combo custom value                | boolean                     |
+|  `allowCustomValue`      | enables/disables combo custom value                | boolean                     |
+|  `filterable`            | enables/disables combo drop down filtering - enabled by default                  | boolean                     |
 |  `valueKey`              | combo value data source property                  | string                      |
-|  `displayKey`            | combo dispaly data source property                | string                      |
+|  `displayKey`            | combo display data source property                | string                      |
 |  `groupKey`              | combo item group                                  | string                      |
 |  `virtualizationState`   | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
 |  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
-|  `heigth`                | defines combo height                              | string                      |
+|  `height`                | defines combo height                              | string                      |
 |  `itemsMaxHeight `       | defines drop down height                          | string                      |
 |  `itemsMaxWidth `        | defines drop down width                           | string                      |
 |  `itemHeight `           | defines drop down item height                     | string                      |

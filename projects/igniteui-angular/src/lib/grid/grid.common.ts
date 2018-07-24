@@ -22,6 +22,9 @@ import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragd
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxResizer]'
 })
@@ -115,7 +118,9 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCell]'
 })
@@ -123,7 +128,9 @@ export class IgxCellTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxHeader]'
 })
@@ -132,7 +139,9 @@ export class IgxCellHeaderTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxGroupByRow]'
 })
@@ -141,7 +150,9 @@ export class IgxGroupByRowTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxFooter]'
 })
@@ -149,7 +160,9 @@ export class IgxCellFooterTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCellEditor]'
 })
@@ -158,7 +171,9 @@ export class IgxCellEditorTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
-
+/**
+ * @hidden
+ */
 @Injectable()
 export class IgxColumnMovingService {
     private _icon: any;
@@ -198,7 +213,9 @@ export class IgxColumnMovingService {
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxColumnMovingDrag]'
 })
@@ -275,10 +292,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     public onPointerMove(event) {
         event.preventDefault();
-
-        if (!this.draggable) {
-            return;
-        }
         super.onPointerMove(event);
 
         if (this._dragStarted && this._dragGhost && !this.column.grid.draggedColumn) {
@@ -300,20 +313,27 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerUp(event) {
+        // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
+        this.zone.run(() => {
+            super.onPointerUp(event);
 
-        if (!this.draggable) {
-            return;
-        }
-
-        super.onPointerUp(event);
-
-        this.column.grid.isColumnMoving = false;
-        this.column.grid.draggedColumn = null;
-        this.column.grid.cdr.detectChanges();
+            this.column.grid.isColumnMoving = false;
+            this.column.grid.draggedColumn = null;
+            this.column.grid.cdr.detectChanges();
+        });
     }
 
     protected createDragGhost(event) {
         super.createDragGhost(event);
+
+        let pageX, pageY;
+        if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
+            pageX = event.pageX;
+            pageY = event.pageY;
+        } else {
+            pageX = event.touches[0].pageX;
+            pageY = event.touches[0].pageY;
+        }
 
         this._dragGhost.style.height = null;
         this._dragGhost.style.minWidth = null;
@@ -333,8 +353,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
 
-            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         } else {
             this._dragGhost.removeChild(this._dragGhost.children[2]);
             this._dragGhost.removeChild(this._dragGhost.firstElementChild);
@@ -344,12 +364,14 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
             this._dragGhost.children[1].style.paddingLeft = '0px';
 
-            this.left = this._dragStartX = event.clientX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.top = this._dragStartY = event.clientY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
+            this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxColumnMovingDrop]'
 })
@@ -491,7 +513,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.moveColumn(this.cms.column, this.column);
 
-            if (this.cms.selection.column) {
+            if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
 
                 this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cells', [{
@@ -507,7 +529,9 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxGroupAreaDrop]'
 })
@@ -520,10 +544,12 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
 
+
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         const column: IgxColumnComponent = drag.column;
-        if (column.groupable) {
+        const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+        if (column.groupable && !isGrouped) {
             drag.icon.innerText = 'group_work';
             this.hovered = true;
         } else {
@@ -541,7 +567,8 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         if (drag instanceof IgxColumnMovingDragDirective) {
             const column: IgxColumnComponent = drag.column;
-            if (column.groupable) {
+            const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+            if (column.groupable && !isGrouped) {
                 column.grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
             }
         }

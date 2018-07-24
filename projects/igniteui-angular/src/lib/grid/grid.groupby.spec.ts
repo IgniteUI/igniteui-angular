@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,6 +7,7 @@ import { IgxStringFilteringOperand } from '../data-operations/filtering-conditio
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
+import { IgxColumnMovingDragDirective, IgxGroupAreaDropDirective } from './grid.common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
@@ -1065,7 +1066,8 @@ describe('IgxGrid - GroupBy', () => {
     });
 
     // GroupBy + Updating
-    it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', () => {
+    it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', fakeAsync(() => {
+        discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '500px';
@@ -1090,6 +1092,7 @@ describe('IgxGrid - GroupBy', () => {
             ReleaseDate: new Date(),
             Released: false
         });
+        tick();
         fix.detectChanges();
         groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
@@ -1097,7 +1100,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(dataRows.length).toEqual(9);
 
         // update records
-        grid.updateRow({ ProductName: 'Ignite UI for Angular' }, 1010);
+        grid.updateRow({ ID: 1010, ProductName: 'Ignite UI for Angular' }, 1010);
+        tick();
         fix.detectChanges();
 
         groupRows = grid.groupsRowList.toArray();
@@ -1106,14 +1110,20 @@ describe('IgxGrid - GroupBy', () => {
         expect(dataRows.length).toEqual(9);
 
         grid.deleteRow(1010);
+        tick();
+        fix.detectChanges();
         grid.deleteRow(3);
+        tick();
+        fix.detectChanges();
         grid.deleteRow(6);
+        tick();
         fix.detectChanges();
         groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(6);
-    });
+        discardPeriodicTasks();
+    }));
 
     it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group',
     async(() => {
@@ -1128,7 +1138,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         const rv = grid.getRowByKey(5).element.nativeElement.querySelectorAll(CELL_CSS_CLASS)[2];
-        const cell = grid.getCellByColumn(5, 'ProductName');
+        const cell = grid.getCellByKey(5, 'ProductName');
 
         cell.column.editable = true;
         rv.dispatchEvent(new Event('dblclick'));
@@ -1143,16 +1153,10 @@ describe('IgxGrid - GroupBy', () => {
             editCellDom.triggerEventHandler('keydown.enter', {});
             return fix.whenStable();
         }).then(() => {
-            let groupRows = grid.groupsRowList.toArray();
-            let dataRows = grid.dataRowList.toArray();
-
-            expect(groupRows.length).toEqual(5);
-            expect(dataRows.length).toEqual(8);
-            // re-apply grouping
-            grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
-            groupRows = grid.groupsRowList.toArray();
-            dataRows = grid.dataRowList.toArray();
+            const groupRows = grid.groupsRowList.toArray();
+            const dataRows = grid.dataRowList.toArray();
+
             expect(groupRows.length).toEqual(4);
             expect(dataRows.length).toEqual(8);
         });
@@ -1486,8 +1490,12 @@ describe('IgxGrid - GroupBy', () => {
         expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
-        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup', {}));
-        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup', {}));
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup'));
+        fix.detectChanges();
+
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup'));
 
         fix.detectChanges();
         grid.cdr.detectChanges();
@@ -1744,6 +1752,38 @@ describe('IgxGrid - GroupBy', () => {
         });
     });
 
+    it('should not throw an error when moving a column over a chip when there is grouped columns', (done) => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        const firstColumn = fix.debugElement.query(By.directive(IgxColumnMovingDragDirective));
+        const directiveInstance = firstColumn.injector.get(IgxColumnMovingDragDirective);
+
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
+        simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
+
+        fix.whenStable().then(() => {
+            expect(() => {
+                fix.detectChanges();
+                simulatePointerEvent('pointermove', directiveInstance['_dragGhost'], 250, 30);
+            }).not.toThrow();
+
+            return fix.whenStable();
+        }).then(() => {
+            fix.detectChanges();
+            simulatePointerEvent('pointerup', directiveInstance['_dragGhost'], 250, 30);
+
+            fix.detectChanges();
+            done();
+        });
+    });
+
     it('should throw an error when grouping more than 10 colunms', () => {
         const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
         const grid = fix.componentInstance.instance;
@@ -1935,6 +1975,50 @@ describe('IgxGrid - GroupBy', () => {
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
     });
 
+    it('should show horizontal scrollbar if column widths are equal to the grid width and a column is grouped.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+
+        const grid = fix.componentInstance.instance;
+
+        grid.columnWidth = '200px';
+        fix.componentInstance.width = '1000px';
+
+        fix.detectChanges();
+
+        const hScrBar = grid.scr.nativeElement;
+        expect(hScrBar.hidden).toBe(true);
+
+        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc});
+        fix.detectChanges();
+        expect(hScrBar.hidden).toBe(false);
+    });
+
+    it('should allow changing the text of the drop area', async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        fix.componentInstance.instance.dropAreaMessage = 'Drop area here!';
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const groupDropArea = fix.debugElement.query(By.directive(IgxGroupAreaDropDirective));
+            expect(groupDropArea.nativeElement.children[1].textContent).toEqual('Drop area here!');
+        });
+    }));
+
+    it('should allow templating the drop area by passing template reference', async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        fix.componentInstance.instance.dropAreaTemplate = fix.componentInstance.dropAreaTemplate;
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const groupDropArea = fix.debugElement.query(By.directive(IgxGroupAreaDropDirective));
+            expect(groupDropArea.nativeElement.textContent.trim()).toEqual('Custom template');
+        });
+    }));
+
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
@@ -2015,6 +2099,9 @@ export class DataParent {
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
+        <ng-template #dropArea>
+            <span> Custom template </span>
+        </ng-template>
     `
 })
 export class DefaultGridComponent extends DataParent {
@@ -2023,6 +2110,10 @@ export class DefaultGridComponent extends DataParent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
+
+    @ViewChild('dropArea', { read: TemplateRef })
+    public dropAreaTemplate: TemplateRef<any>;
+
     public enableSorting = false;
     public enableFiltering = false;
     public enableResizing = false;

@@ -37,8 +37,7 @@
             <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
         <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass">
-            <igx-icon fontSet="material" name="group_work" class="igx-drop-area__icon"></igx-icon>
-            <span class="igx-drop-area__text">Drag a column header and drop it here to group by that column</span>
+            <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
         </div>
     </igx-chips-area>
 </div>
@@ -70,7 +69,7 @@
     </div>
 </div>
 
-<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody>
+<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
     <ng-template igxFor let-rowData [igxForOf]="data | gridFiltering:filteringExpressionsTree:id:pipeTrigger
@@ -107,7 +106,7 @@
     </div>
 </div>
 
-<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="calcWidth - totalWidth >= 0">
+<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">
     <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxFor [igxForOf]='[]' #scrollContainer>
@@ -120,6 +119,16 @@
     </ng-container>
 </div>
 
-<ng-template #emptyGrid>
+<ng-template #emptyFilteredGrid>
+    <span class="igx-grid__tbody-message">{{emptyFilteredGridMessage}}</span>
+</ng-template>
+
+<ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
 </ng-template>
+
+<ng-template #defaultDropArea>
+    <igx-icon fontSet="material" name="group_work" class="igx-drop-area__icon"></igx-icon>
+    <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
+</ng-template>
+

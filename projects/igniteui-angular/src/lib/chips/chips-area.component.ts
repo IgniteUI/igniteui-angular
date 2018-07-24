@@ -34,35 +34,98 @@ import { IgxConnectorDirective } from './connector.directive';
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
-    styles: [
-        `:host {
-            display: flex;
-        }
-        `
-    ]
 })
 export class IgxChipsAreaComponent implements DoCheck {
 
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.class')
+    public cssClass = 'igx-chips-area';
+
+    /**
+     * An @Input property that sets the width of the `IgxChipsAreaComponent`.
+     * ```html
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
+     * ```
+     */
     @HostBinding('style.width.px')
     @Input()
     public width: number;
 
+    /**
+     * An @Input property that sets the height of the `IgxChipsAreaComponent`.
+     * ```html
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
+     * ```
+     */
     @HostBinding('style.height.px')
     @Input()
     public height: number;
 
+    /**
+     * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` are reordered.
+     * ```html
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder()"></igx-chips-area>
+     * ```
+     * ```typescript
+     * public changedOrder(){
+     *      alert("The order has been changed!");
+     * }
+     * ```
+     */
     @Output()
     public onReorder = new EventEmitter<any>();
 
+    /**
+     * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected.
+     * ```html
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onSelection)="selection()"></igx-chips-area>
+     * ```
+     * ```typescript
+     * public selection(){
+     *      alert("A chip has been selected!");
+     * }
+     */
     @Output()
     public onSelection = new EventEmitter<any>();
 
+    /**
+     * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
+     * ```html
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveStart)="moveStart()"></igx-chips-area>
+     * ```
+     * ```typescript
+     * moveStart(){
+     *      alert("A chip has started moving!");
+     * }
+     * ```
+     */
     @Output()
     public onMoveStart = new EventEmitter<any>();
 
+    /**
+     * Emits an event after an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
+     * ```html
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveEnd)="moveEnd()"></igx-chips-area>
+     * ```
+     * ```typescript
+     * moveEnd(){
+     *      alert("A chip has been moved!");
+     * }
+     * ```
+     */
     @Output()
     public onMoveEnd = new EventEmitter<any>();
 
+    /**
+     * Holds the `IgxChipComponent` in the `IgxChipsAreaComponent`.
+     * ```typescript
+     * ngAfterViewInit(){
+     *    let chips = this.chipsArea.chipsList;
+     * }
+     * ```
+     */
     @ContentChildren(IgxChipComponent)
     public chipsList: QueryList<IgxChipComponent>;
 
@@ -75,6 +138,9 @@ export class IgxChipsAreaComponent implements DoCheck {
         this._differ = this._iterableDiffers.find([]).create(null);
     }
 
+    /**
+     * @hidden
+     */
     public ngDoCheck(): void {
         if (this.chipsList) {
             const changes = this._differ.diff(this.chipsList.toArray());
@@ -103,6 +169,9 @@ export class IgxChipsAreaComponent implements DoCheck {
         }
     }
 
+    /**
+     * @hidden
+     */
     protected onChipKeyDown(event) {
         let orderChanged = false;
         const chipsArray = this.chipsList.toArray();
@@ -128,6 +197,9 @@ export class IgxChipsAreaComponent implements DoCheck {
         }
     }
 
+    /**
+     * @hidden
+     */
     protected onChipMoveStart() {
         this.chipsList.forEach((chip) => {
             chip.areaMovingPerforming = true;
@@ -136,6 +208,9 @@ export class IgxChipsAreaComponent implements DoCheck {
         this.onMoveStart.emit();
     }
 
+    /**
+     * @hidden
+     */
     protected onChipMoveEnd() {
         this.chipsList.forEach((chip) => {
             chip.areaMovingPerforming = false;
@@ -144,6 +219,9 @@ export class IgxChipsAreaComponent implements DoCheck {
         this.onMoveEnd.emit();
     }
 
+    /**
+     * @hidden
+     */
     protected onChipDragEnter(event) {
         const dropChipRect = event.targetChip.elementRef.nativeElement.getBoundingClientRect();
         const dropChipIndex = this.chipsList.toArray().findIndex((el) => el === event.targetChip);
@@ -157,6 +235,9 @@ export class IgxChipsAreaComponent implements DoCheck {
         }
     }
 
+    /**
+     * @hidden
+     */
     protected positionChipAtIndex(chipIndex, targetIndex, shiftRestLeft) {
         if (chipIndex < 0 || this.chipsList.length <= chipIndex ||
             targetIndex < 0 || this.chipsList.length <= targetIndex) {
@@ -193,6 +274,9 @@ export class IgxChipsAreaComponent implements DoCheck {
         return true;
     }
 
+    /**
+     * @hidden
+     */
     protected onChipSelectionChange(event) {
         if (event.nextStatus) {
             this.selectedChips.push(event.owner);

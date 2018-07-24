@@ -50,17 +50,17 @@ import {AutoPositionStrategy, GlobalPositionStrategy, ConnectedPositioningStrate
 ##### Methods
 | Position Strategy | Name                                         | Description                                     |
 |:------------------|:---------------------------------------------|:------------------------------------------------|
-| Global           | `position(contentElement)`                    | Positions the element, based on the horizontal and vertical directions. |
-| Connected        | `position(contentElement, size{})`            | Positions the element, based on the position strategy used and the size passed in.|
-| Auto             | `position(contentElement, size{}, document?)` | Positions the element, based on the position strategy used and the size passed in.|
+| Global            | `position(contentElement)`                   | Positions the element, based on the horizontal and vertical directions. |
+| Connected         | `position(contentElement, size{})`           | Positions the element, based on the position strategy used and the size passed in.|
+| Auto              | `position(contentElement, size{}, document?)`| Positions the element, based on the position strategy used and the size passed in.|
 
 ###### PositionSettings
-| Name | Type | Description |
-| :--- | :--- | :---------- |
-|target              | Point | HTMLElement                     | Attaching target for the component to show          |
-|horizontalDirection | HorizontalAlignment                     | Direction in which the component should show        |
-|verticalDirection   | VerticalAlignment                       | Direction in which the component should show        |
-|horizontalStartPoint| HorizontalAlignment                     | Target's starting point                             |
-|verticalStartPoint  | VerticalAlignment                       | Target's starting point                             |
-|openAnimation       | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay opens               |
-|closeAnimation      | AnimationMetadata | AnimationMetadata[] | Animation applied while overlay closes              |
+| Name               | Type                        | Description |
+| :----------------- | :-------------------------- | :---------- |
+|target              | Point | HTMLElement         | Attaching target for the component to show          |
+|horizontalDirection | HorizontalAlignment         | Direction in which the component should show        |
+|verticalDirection   | VerticalAlignment           | Direction in which the component should show        |
+|horizontalStartPoint| HorizontalAlignment         | Target's starting point                             |
+|verticalStartPoint  | VerticalAlignment           | Target's starting point                             |
+|openAnimation       | AnimationReferenceMetadata  | Animation applied while overlay opens               |
+|closeAnimation      | AnimationReferenceMetadata  | Animation applied while overlay closes              |

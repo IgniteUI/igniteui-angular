@@ -4,8 +4,8 @@
 export interface IToggleView {
     element;
 
-    open(fireEvents?: boolean);
-    close(fireEvents?: boolean);
-    toggle(fireEvents?: boolean);
+    open(...args);
+    close(...args);
+    toggle(...args);
 
 }

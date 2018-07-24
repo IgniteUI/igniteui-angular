@@ -60,7 +60,9 @@ export class IgxGridRowComponent implements DoCheck {
 
     @HostBinding('class')
     get styleClasses(): string {
-        return `${this.defaultCssClass} ${this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS}`;
+        const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
+        const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass}`;
     }
 
     get focused(): boolean {
@@ -88,7 +90,6 @@ export class IgxGridRowComponent implements DoCheck {
     }
 
     @HostBinding('attr.aria-selected')
-    @HostBinding('class.igx-grid__tr--selected')
     public isSelected: boolean;
 
     get grid(): IgxGridComponent {
@@ -132,6 +133,56 @@ export class IgxGridRowComponent implements DoCheck {
                             this.selectionAPI.select_item(this.gridID, this.rowID) :
                             this.selectionAPI.deselect_item(this.gridID, this.rowID);
         this.grid.triggerRowSelectionChange(newSelection, this, event);
+    }
+
+    public update(value: any) {
+        const primaryKey = this.gridAPI.get(this.gridID).primaryKey;
+        const row = (primaryKey !== null && primaryKey !== undefined) ?
+            this.gridAPI.get_row_by_key(this.gridID, this.rowID) :
+            this.gridAPI.get_row_by_index(this.gridID, this.index);
+        if (row) {
+            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+            if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+            }
+            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
+                this.gridAPI.get(this.gridID).deselectRows([row.rowID]);
+                this.gridAPI.update_row(value, this.gridID, row);
+                this.gridAPI.get(this.gridID).selectRows([row.rowID]);
+            } else {
+                this.gridAPI.update_row(value, this.gridID, row);
+            }
+            this.cdr.markForCheck();
+            this.gridAPI.get(this.gridID).refreshSearch();
+        }
+
+    }
+
+    public delete() {
+        const primaryKey = this.gridAPI.get(this.gridID).primaryKey;
+        const row = (primaryKey !== null && primaryKey !== undefined) ?
+            this.gridAPI.get_row_by_key(this.gridID, this.rowID) :
+            this.gridAPI.get_row_by_index(this.gridID, this.index);
+        if (row) {
+            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+            if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+            }
+            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
+                this.gridAPI.get(this.gridID).deselectRows(row.rowID);
+            }
+            const index = this.gridAPI.get(this.gridID).data.indexOf(row.rowData);
+            this.gridAPI.get(this.gridID).data.splice(index, 1);
+            this.gridAPI.get(this.gridID).onRowDeleted.emit({ data: row.rowData });
+            (this.gridAPI.get(this.gridID) as any)._pipeTrigger++;
+            this.cdr.markForCheck();
+            this.gridAPI.get(this.gridID).refreshSearch();
+
+            const grid = this.gridAPI.get(this.gridID);
+            if (grid.data.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0) {
+                grid.page--;
+            }
+        }
     }
 
     get rowCheckboxAriaLabel() {

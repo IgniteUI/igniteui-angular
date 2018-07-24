@@ -132,7 +132,8 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     ) { }
 
     public ngOnInit() {
-        this.cdr.markForCheck();
+        this.column.columnGroup ? this.zone.runTask(() => this.cdr.markForCheck()) :
+            this.cdr.markForCheck();
     }
 
     public ngDoCheck() {
@@ -151,22 +152,16 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     @HostListener('click', ['$event'])
     public onClick(event) {
-
         if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.column.sortable) {
-                const grid = this.gridAPI.get(this.gridID);
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-                if (editableCell) {
-                    this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-                }
-                const groupingExpr = grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
+                const groupingExpr = this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
                 const sortDir = groupingExpr ?
                     this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc  : SortingDirection.Desc
                     : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
                 this.sortDirection = sortDir;
-                this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
-                grid.onSortingDone.emit({
+                this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase});
+                this.grid.onSortingDone.emit({
                     dir: this.sortDirection,
                     fieldName: this.column.field,
                     ignoreCase: this.column.sortingIgnoreCase
