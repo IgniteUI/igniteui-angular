@@ -98,7 +98,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     public ngOnInit() {
         this.expression = {
             fieldName: this.column.field,
-            condition: this.getCondition(this.conditions[0]),
+            condition: this.getCondition(this.conditions[0].name),
             searchVal: this.value,
             ignoreCase: this.column.filteringIgnoreCase
         };
@@ -112,7 +112,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
                 this.expression.condition = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).condition;
             } else {
                 this.value = null;
-                this.expression.condition = this.getCondition(this.conditions[0]);
+                this.expression.condition = this.getCondition(this.conditions[0].name);
             }
         }
     }
@@ -170,7 +170,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     }
 
     get conditions() {
-        return this.column.filters.instance().conditionList();
+        return this.column.filters.instance().operations;
     }
 
     public getCondition(value: string): IFilteringOperation {
