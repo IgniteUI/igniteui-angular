@@ -177,6 +177,8 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     private _upperBound?: number;
     private _lowerValue: number;
     private _upperValue: number;
+    private _trackUpperBound: boolean;
+    private _trackLowerBound: boolean;
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -226,11 +228,14 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     public set maxValue(value: number) {
         if (value <= this._minValue) {
             this._maxValue = this._minValue + 1;
-
-            return;
+        } else {
+            this._maxValue = value;
         }
 
-        this._maxValue = value;
+        if (this._trackUpperBound) {
+            this._upperBound = this._maxValue;
+        }
+        this.resetValue();
     }
 
     /**
@@ -258,10 +263,14 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     public set minValue(value: number) {
         if (value >= this.maxValue) {
             this._minValue = this.maxValue - 1;
-            return;
+        } else {
+            this._minValue = value;
         }
 
-        this._minValue = value;
+        if (this._trackLowerBound) {
+            this._lowerBound = this._minValue;
+        }
+        this.resetValue();
     }
 
     /**
@@ -287,6 +296,10 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
      */
     @Input()
     public set lowerBound(value: number) {
+        if (this._trackLowerBound) {
+            this._trackLowerBound = false;
+        }
+
         if (value >= this.upperBound) {
             this._lowerBound = this.minValue;
             return;
@@ -318,6 +331,10 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
      */
     @Input()
     public set upperBound(value: number) {
+        if (this._trackUpperBound) {
+            this._trackUpperBound = false;
+        }
+
         if (value <= this.lowerBound) {
             this._upperBound = this.maxValue;
 
@@ -463,10 +480,12 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     public ngOnInit() {
         if (this.lowerBound === undefined) {
             this.lowerBound = this.minValue;
+            this._trackLowerBound = true;
         }
 
         if (this.upperBound === undefined) {
             this.upperBound = this.maxValue;
+            this._trackUpperBound = true;
         }
 
         if (this.isRange) {
@@ -698,6 +717,54 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
             () => this.isActiveLabel = false,
             this.thumbLabelVisibilityDuration
         );
+    }
+
+    private resetValue() {
+        if (!this.isRange) {
+            if (this.value >= this._lowerBound && this.value <= this._upperBound) {
+                this.value = this.value;
+            } else if (this.value < this._lowerBound) {
+                this.value = this._lowerBound;
+            } else if (this.value > this._upperBound) {
+                this.value = this._upperBound;
+            }
+        } else {
+            if ((this.value as IRangeSliderValue).lower >= this._lowerBound &&
+                (this.value as IRangeSliderValue).lower <= this._upperBound) {
+                    this.value = {
+                        lower: (this.value as IRangeSliderValue).lower,
+                        upper: (this.value as IRangeSliderValue).upper
+                    };
+            } else if ((this.value as IRangeSliderValue).lower < this._lowerBound) {
+                this.value = {
+                    lower: this._lowerBound,
+                    upper: (this.value as IRangeSliderValue).upper
+                };
+            } else if ((this.value as IRangeSliderValue).lower > this._upperBound) {
+                this.value = {
+                    lower: (this.value as IRangeSliderValue).lower,
+                    upper: this._upperBound
+                };
+            }
+
+            if ((this.value as IRangeSliderValue).upper >= this._lowerBound &&
+                (this.value as IRangeSliderValue).upper <= this._upperBound) {
+                    this.value = {
+                        lower: (this.value as IRangeSliderValue).lower,
+                        upper: (this.value as IRangeSliderValue).upper
+                    };
+            } else if ((this.value as IRangeSliderValue).upper < this._lowerBound) {
+                this.value = {
+                    lower: this._lowerBound,
+                    upper: (this.value as IRangeSliderValue).upper
+                };
+            } else if ((this.value as IRangeSliderValue).upper > this._upperBound) {
+                this.value = {
+                    lower: (this.value as IRangeSliderValue).lower,
+                    upper: this._upperBound
+                };
+            }
+        }
     }
 
     private generateTickMarks(color: string, interval: number) {
