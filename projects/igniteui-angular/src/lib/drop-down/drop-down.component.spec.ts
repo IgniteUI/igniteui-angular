@@ -995,7 +995,7 @@ describe('IgxDropDown ', () => {
 
             fixture.detectChanges();
             expect(componentInstance.dropdown.selectedItem).toBeNull();
-            const items = componentInstance.dropdown.items;
+            const items = componentInstance.dropdown.items as IgxDropDownItemComponent[];
             items[2].isSelected = true;
             expect(items[2].isSelected).toBeTruthy();
             expect(componentInstance.dropdown.selectedItem.index).toEqual(2);
@@ -1022,12 +1022,12 @@ describe('IgxDropDown ', () => {
 
             fixture.detectChanges();
             expect(componentInstance.dropdownDisabledAny.selectedItem).toBeNull();
-            const items = componentInstance.dropdownDisabledAny.items;
-            const headerItems = componentInstance.dropdownDisabledAny.headers;
+            const items = componentInstance.dropdownDisabledAny.items as IgxDropDownItemComponent[];
+            const headerItems = componentInstance.dropdownDisabledAny.headers as IgxDropDownItemComponent[];
 
             // try to select disabled item
-            items[0].isSelected = true;
-            expect(items[0].isSelected).toBeFalsy();
+            items[2].isSelected = true;
+            expect(items[2].isSelected).toBeFalsy();
             expect(componentInstance.dropdownDisabledAny.selectedItem).toBeNull();
 
             // try to select header item
@@ -1046,8 +1046,8 @@ describe('IgxDropDown ', () => {
             expect(componentInstance.dropdownDisabledAny.selectedItem.index).toEqual(1);
 
             // try to select header item
-            headerItems[1].isSelected = true;
-            expect(headerItems[1].isSelected).toBeFalsy();
+            headerItems[0].isSelected = true;
+            expect(headerItems[0].isSelected).toBeFalsy();
             expect(componentInstance.dropdownDisabledAny.selectedItem.index).toEqual(1);
 
             button.click();
