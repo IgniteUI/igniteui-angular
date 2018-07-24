@@ -8,6 +8,7 @@ import {
     Input
 } from '@angular/core';
 import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component';
+import { IgxSelectionAPIService } from '../core/selection';
 
 /**
  * The `<igx-drop-down-item> is a container intended for row items in
@@ -51,13 +52,6 @@ export class IgxDropDownItemBase {
      */
     get isSelected() {
         return this.dropDown.selectedItem === this;
-    }
-    set isSelected(value: boolean) {
-        if (this.isFocused === value) {
-            return;
-        }
-
-        this.dropDown.selectItem(this);
     }
 
     /**
@@ -211,10 +205,48 @@ export class IgxDropDownItemBase {
     templateUrl: 'drop-down-item.component.html'
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBase {
+    /**
+     * @hidden
+     */
+    protected _isSelected = false;
+
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
-        protected elementRef: ElementRef
+        protected elementRef: ElementRef,
+        protected selectionAPI: IgxSelectionAPIService
     ) {
         super(dropDown, elementRef);
+    }
+
+    /**
+     * Gets if the item is the currently selected one in the dropdown
+     *
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemSelected = mySelectedItem.isSelected; // true
+     * ```
+     */
+    get isSelected() {
+        return this._isSelected;
+    }
+    @Input()
+    set isSelected(value: boolean) {
+        if (this.isHeader || this.disabled) {
+            return;
+        }
+
+        this._isSelected = value;
+
+        const oldSelectedItem = this.dropDown.selectedItem;
+        if (value) {
+            this.selectionAPI.set_selection(this.dropDown.id, [this]);
+            if (oldSelectedItem && oldSelectedItem !== this) {
+                (<IgxDropDownItemComponent>oldSelectedItem)._isSelected = false;
+            }
+        } else {
+            if (oldSelectedItem && oldSelectedItem === this) {
+                this.selectionAPI.set_selection(this.dropDown.id, []);
+            }
+        }
     }
 }

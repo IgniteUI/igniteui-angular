@@ -497,9 +497,10 @@ export class IgxDropDownBase implements OnInit, IToggleView {
             newSelection = this._focusedItem;
         }
 
-        this.selectionAPI.set_selection(this.id, [newSelection]);
         const args: ISelectionEventArgs = { oldSelection, newSelection };
         this.onSelection.emit(args);
+
+        // this.selectionAPI.set_selection(this.id, [newSelection]);
     }
 
     /**
@@ -669,12 +670,26 @@ export class IgxDropDownItemNavigationDirective {
     templateUrl: './drop-down.component.html'
 })
 export class IgxDropDownComponent extends IgxDropDownBase {
-
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService) {
         super(elementRef, cdr, selectionAPI);
+    }
+
+    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent) {
+        const oldSelection = this.selectedItem;
+        super.changeSelectedItem(newSelection);
+
+        if (oldSelection) {
+            oldSelection.isSelected = false;
+        }
+        if (!newSelection) {
+            newSelection = this._focusedItem;
+        }
+        if (newSelection) {
+            newSelection.isSelected = true;
+        }
     }
 }
 @NgModule({
