@@ -1,6 +1,10 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 6.1.3
+- `igxDropDownItem`:
+    - isSelected property has Output setter and can be set both in markup and in code behind.
+
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
