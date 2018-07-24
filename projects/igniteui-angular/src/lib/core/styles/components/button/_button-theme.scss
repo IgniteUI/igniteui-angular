@@ -2,6 +2,7 @@
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// If only background color is specified, text/icon color
@@ -221,9 +222,6 @@
     @include igx-root-css-vars($theme);
 
     $button-border: none;
-    $button-font-size: rem(14px, 16px);
-    $button-line-height: 1;
-    $button-font-weight: 600;
     $button-width: rem(88px);
     $button-height: rem(36px);
     $button-padding: 0 rem(16px, 16px);
@@ -370,9 +368,15 @@
     }
 }
 
-@mixin igx-button-typography($type-scale) {
+/// Adds typography styles for the igx-button component.
+/// Uses the 'button' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {String} $category ['button'] - The category from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-button-typography($type-scale, $category: 'button') {
     %igx-button-display {
-        @include igx-type-style($type-scale, 'button') {
+        @include igx-type-style($type-scale, $category) {
             text-align: center
         }
     }

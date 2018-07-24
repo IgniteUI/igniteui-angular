@@ -684,6 +684,12 @@
             width: 100%;
             margin-top: -16px;
         }
+
+        %form-group-input {
+            // ignore global typography
+            font-size: $grid-cell-fs !important;
+            line-height: $grid-cell-lh !important;
+        }
     }
 
     %grid-cell--pinned {
