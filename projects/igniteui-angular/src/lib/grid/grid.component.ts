@@ -865,8 +865,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.setEventBusSubscription();
-        this.setVerticalScrollSubscription();
+        // this.setEventBusSubscription();
+        // this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
