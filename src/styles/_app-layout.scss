@@ -1,95 +1,80 @@
-.main {
-    position: absolute;
-    display: flex;
-    flex-flow: row nowrap;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    overflow: hidden;
-    width: 100%;
-}
+#igniteui-demo-app {
+    @include fade-in-fwd();
 
-.main > * {
-    width: 100%;
-}
-
-.content {
-    position: relative;
-    overflow-y: scroll;
-}
-
-.nav-header {
-    display: flex;
-    align-items: center;
-    padding: 24px 16px;
-    background: #eee;
-    height: 142px;
-}
-
-.logo {
-    width: 172px;
-    height: 56.666px;
-}
-
-.sample-wrapper {
-    width: inherit;
-    position: relative;
-    height: 100%;
-    margin: 0 auto;
-    background: #fff;
-}
-
-.sample-content {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    padding: 48px 8px;
-    -webkit-animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-    -moz-animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-    animation: fade-in .3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-}
-
-.sample-column {
-    display: flex;
-    flex-flow: column nowrap;
-    flex: 1 0 25%;
-    align-content: flex-start;
-    margin: 16px;
-    min-width: 280px;
-}
-
-.sample-title {
-    color: #0375be;
-    margin-bottom: 24px;
-}
-
-.sample-title .light {
-    font-weight: 400;
-}
-
-.sample-description {
-    font-size: 14px;
-    font-weight: 400;
-    color: #717171;
-}
-
-@-webkit-keyframes fade-in {
-    0% {
-        opacity: 0;
+    .logo {
+        width: 172px;
+        height: 56.666px;
     }
 
-    100% {
-        opacity: 1;
-    }
-}
+    .main {
+        position: absolute;
+        display: flex;
+        flex-flow: row nowrap;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
 
-@keyframes fade-in {
-    0% {
-        opacity: 0;
+        > * {
+            width: 100%;
+        }
     }
 
-    100% {
-        opacity: 1;
+    .content {
+        position: relative;
+        overflow-y: scroll;
+        perspective: 5000px;
+    }
+
+    .nav-header {
+        display: flex;
+        align-items: center;
+        padding: 24px 16px;
+        background: #eee;
+        height: 142px;
+    }
+
+    .sample {
+        &-wrapper {
+            width: inherit;
+            position: relative;
+            height: 100%;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        &-column {
+            display: flex;
+            flex-flow: column nowrap;
+            flex: 1 0 25%;
+            align-content: flex-start;
+            margin: 16px;
+            min-width: 280px;
+        }
+
+        &-title {
+            @include igx-type-style($default-type-scale, 'h6');
+            color: #0375be;
+            margin-bottom: 24px;
+
+            .light {
+                font-weight: 400;
+            }
+        }
+
+        &-description {
+            font-size: 14px;
+            font-weight: 400;
+            color: #717171;
+        }
+
+        &-content {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: center;
+            padding: 48px 8px;
+            @include animation(fade-in-fwd .3s $ease-out-quad);
+        }
     }
 }

@@ -1,7 +1,8 @@
-.wrapper {
-    margin: 24px;
+.sample-buttons,
+.sample-switches {
+    margin-top: 24px;
 }
 
 [igxButton]+[igxButton] {
-    margin: 4px;
+    margin-left: 8px;
 }
