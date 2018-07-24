@@ -26,8 +26,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { of, Subject } from 'rxjs';
-import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -442,6 +442,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public emptyFilteredGridMessage = 'No records found.';
 
     @Input()
+    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+
+    @Input()
+    public dropAreaTemplate: TemplateRef<any>;
+
+    @Input()
     public columnHidingTitle = '';
 
     @Input()
@@ -554,6 +560,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild('defaultEmptyGrid', { read: TemplateRef })
     public emptyGridDefaultTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultDropArea', { read: TemplateRef })
+    public defaultDropAreaTemplate: TemplateRef<any>;
 
     @ViewChild('scrollContainer', { read: IgxForOfDirective })
     public parentVirtDir: IgxForOfDirective<any>;
@@ -899,8 +908,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.setEventBusSubscription();
-        this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -1251,6 +1258,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.cdr.markForCheck();
 
                 this.refreshSearch();
+
+                if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+                    this.page--;
+                }
             }
         }
     }
@@ -1822,31 +1833,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
-    protected setEventBusSubscription() {
-        this.eventBus.pipe(
-            debounceTime(DEBOUNCE_TIME),
-            takeUntil(this.destroy$)
-        ).subscribe(() => this.cdr.detectChanges());
-    }
-
-    protected setVerticalScrollSubscription() {
-        /*
-            Until the grid component is destroyed,
-            Take the first event and unsubscribe
-            then merge with an empty observable after DEBOUNCE_TIME,
-            re-subscribe and repeat the process
-        */
-        this.verticalScrollContainer.onChunkLoad.pipe(
-            takeUntil(this.destroy$),
-            take(1),
-            merge(of({})),
-            delay(DEBOUNCE_TIME),
-            repeat()
-        ).subscribe(() => {
-            this.eventBus.next();
-        });
-    }
-
     public onHeaderCheckboxClick(event) {
         this.allRowsSelected = event.checked;
         const newSelection =
@@ -1874,6 +1860,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (this.data && this.data.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    public get dropAreaTemplateResolved(): TemplateRef<any> {
+        if (this.dropAreaTemplate) {
+            return this.dropAreaTemplate;
+        } else {
+            return this.defaultDropAreaTemplate;
         }
     }
 
