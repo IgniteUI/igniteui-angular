@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
@@ -353,7 +353,7 @@ describe('IgxGrid - Summaries', () => {
         expect(emptySummaries[1].summaryResult).toBe(undefined);
         expect(emptySummaries[2].summaryResult).toBe(undefined);
     });
-    it('should calculate summaries only over filteredData', (done) => {
+    it('should calculate summaries only over filteredData', async(() => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -385,9 +385,8 @@ describe('IgxGrid - Summaries', () => {
                 }
                 index++;
             });
-            done();
         });
-    });
+    }));
 
     it('When we have data which is undefined and enable summary per defined column, error should not be thrown', async(() => {
         const fix = TestBed.createComponent(UndefinedGridDataComponent);
@@ -542,6 +541,86 @@ describe('IgxGrid - Summaries', () => {
         });
     }));
 
+    it('should be able to change \'hasSummary\' property runtime and to recalculate grid sizes correctly', fakeAsync(() => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid1;
+        grid.columnList.forEach((col) => {
+            if (col.field !== 'ProductID') {
+                expect(grid.getColumnByName(col.field).hasSummary).toBe(true);
+            }
+        });
+        grid.getColumnByName('UnitsInStock').hasSummary = false;
+        grid.recalculateSummaries();
+        tick(100);
+        fixture.detectChanges();
+        expect(grid.getColumnByName('UnitsInStock').hasSummary).toBe(false);
+        const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary')).filter((el) =>
+            el.nativeElement.classList.contains('igx-grid-summary--empty') === false);
+        const tfootSize = +fixture.debugElement.query(By.css('.igx-grid__summaries'))
+            .nativeElement.getBoundingClientRect().height;
+        const expectedHeight = calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultRowHeight);
+        expect(tfootSize).toBe(expectedHeight);
+
+        grid.getColumnByName('ProductName').hasSummary = false;
+        grid.getColumnByName('InStock').hasSummary = false;
+        fixture.componentInstance.hasSummary = false;
+        grid.recalculateSummaries();
+        fixture.detectChanges();
+        tick(100);
+        expect(fixture.debugElement.query(By.css('.igx-grid__summaries'))).toBeNull();
+        expect(grid.hasSummarizedColumns).toBe(false);
+    }));
+
+    it('should recalculate summary area after column with enabled summary is hidden', fakeAsync(() => {
+        const fixture = TestBed.createComponent(SummaryColumnComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid1;
+
+        grid.getColumnByName('ProductName').hasSummary = false;
+        grid.getColumnByName('InStock').hasSummary = false;
+        fixture.componentInstance.hasSummary = false;
+        grid.recalculateSummaries();
+        fixture.detectChanges();
+        tick(100);
+        const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary')).filter((el) =>
+            el.nativeElement.classList.contains('igx-grid-summary--empty') === false);
+        const tfootSize = +fixture.debugElement.query(By.css('.igx-grid__summaries'))
+            .nativeElement.getBoundingClientRect().height;
+        const expectedHeight = calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultRowHeight);
+        expect(tfootSize).toBe(expectedHeight);
+        expect(grid.hasSummarizedColumns).toBe(true);
+
+        grid.getColumnByName('UnitsInStock').hidden = true;
+        tick();
+        fixture.detectChanges();
+
+        let summaryArea = fixture.debugElement.query(By.css('.igx-grid__summaries'));
+        expect(summaryArea).toBeNull();
+        expect(grid.hasSummarizedColumns).toBe(false);
+
+        grid.enableSummaries('InStock');
+        fixture.detectChanges();
+        summaryArea = fixture.debugElement.query(By.css('.igx-grid__summaries'));
+        expect(grid.hasSummarizedColumns).toBe(true);
+        expect(summaryArea).toBeDefined();
+
+        grid.disableSummaries('InStock');
+        fixture.detectChanges();
+        summaryArea = fixture.debugElement.query(By.css('.igx-grid__summaries'));
+        expect(grid.hasSummarizedColumns).toBe(false);
+        expect(summaryArea).toBeNull();
+
+        grid.getColumnByName('UnitsInStock').hidden = false;
+        tick();
+        fixture.detectChanges();
+        summaryArea = fixture.debugElement.query(By.css('.igx-grid__summaries'));
+        expect(summaryArea).toBeDefined();
+        expect(grid.hasSummarizedColumns).toBe(true);
+    }));
+
+
+
     function sendInput(element, text: string, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
@@ -652,7 +731,7 @@ export class NoActiveSummariesComponent {
             </igx-column>
             <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true">
             </igx-column>
-            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true">
+            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="hasSummary">
             </igx-column>
         </igx-grid>
     `
@@ -673,6 +752,7 @@ export class SummaryColumnComponent {
     ];
     @ViewChild('grid1', { read: IgxGridComponent })
     public grid1: IgxGridComponent;
+    public hasSummary = true;
 
     public numberSummary = new IgxNumberSummaryOperand();
     public dateSummary = new IgxDateSummaryOperand();
