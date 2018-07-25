@@ -26,8 +26,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { of, Subject } from 'rxjs';
-import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -1831,8 +1831,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.setEventBusSubscription();
-        this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
