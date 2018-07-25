@@ -26,8 +26,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { of, Subject } from 'rxjs';
-import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -1793,8 +1793,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.setEventBusSubscription();
-        this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -3279,40 +3277,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
-    /**
-     * @hidden
-     */
-    protected setEventBusSubscription() {
-        this.eventBus.pipe(
-            debounceTime(DEBOUNCE_TIME),
-            takeUntil(this.destroy$)
-        ).subscribe(() => this.cdr.detectChanges());
-    }
-
-    /**
-     * @hidden
-     */
-    protected setVerticalScrollSubscription() {
-        /*
-            Until the grid component is destroyed,
-            Take the first event and unsubscribe
-            then merge with an empty observable after DEBOUNCE_TIME,
-            re-subscribe and repeat the process
-        */
-        this.verticalScrollContainer.onChunkLoad.pipe(
-            takeUntil(this.destroy$),
-            take(1),
-            merge(of({})),
-            delay(DEBOUNCE_TIME),
-            repeat()
-        ).subscribe(() => {
-            this.eventBus.next();
-        });
-    }
-
-    /**
-     * @hidden
-     */
     public onHeaderCheckboxClick(event) {
         this.allRowsSelected = event.checked;
         const newSelection =
