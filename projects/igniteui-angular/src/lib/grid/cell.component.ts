@@ -142,7 +142,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostBinding('class')
     get styleClasses(): string {
-        return `${this.defaultCssClass} ${this.column.cellClasses}`;
+        if (this.column.dataType === DataType.Number) {
+            return `${this.defaultCssClass} ${this.column.cellClasses} ${this.numberCssClass}`;
+        } else {
+            return `${this.defaultCssClass} ${this.column.cellClasses}`;
+        }
     }
 
     @HostBinding('style.min-width')
@@ -178,11 +182,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     set focused(val: boolean) {
         this.isFocused = val;
-    }
-
-    @HostBinding('class.igx-grid__td--number')
-    get applyNumberCSSClass() {
-        return this.column.dataType === DataType.Number;
     }
 
     @HostBinding('class.igx-grid__th--pinned')
@@ -222,6 +221,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public editValue;
     protected defaultCssClass = 'igx-grid__td';
+    protected numberCssClass = 'igx-grid__td--number';
     protected isFocused = false;
     protected isSelected = false;
     protected chunkLoadedHor;
