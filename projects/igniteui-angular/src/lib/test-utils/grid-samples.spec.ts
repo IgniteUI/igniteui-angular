@@ -585,6 +585,8 @@ export class ReorderedColumnsComponent extends BasicGridComponent {
 })
 export class GridIDNameJobTitleComponent extends PagingComponent {
     data = SampleTestData.personJobDataFull;
+    width = '100%';
+    height = '100%';
 }
 
 @Component({
