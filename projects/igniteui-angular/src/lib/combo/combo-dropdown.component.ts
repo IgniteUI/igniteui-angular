@@ -349,11 +349,17 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this.onClosed.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleClosing() {
         super.onToggleClosing();
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }
 
+    /**
+     * @hidden
+     */
     updateScrollPosition() {
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
     }
