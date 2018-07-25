@@ -120,6 +120,11 @@
     </ng-container>
 </div>
 
-<ng-template #emptyGrid>
+<ng-template #emptyFilteredGrid>
+    <span class="igx-grid__tbody-message">{{emptyFilteredGridMessage}}</span>
+</ng-template>
+
+<ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
 </ng-template>
+

@@ -12,103 +12,103 @@ export enum ColumnDisplayOrder {
 }
 
 export abstract class ColumnChooserBase implements OnDestroy {
-/**
- * Gets the grid columns that are going to be manipulated.
- * ```typescript
- * let gridColumns = this.columnHidingUI.columns;
- * ```
- * @memberof ColumnChooserBase
- */
+    /**
+     * Gets the grid columns that are going to be manipulated.
+     * ```typescript
+     * let gridColumns = this.columnHidingUI.columns;
+     * ```
+     * @memberof ColumnChooserBase
+     */
 
-@Input()
+    @Input()
     get columns() {
         return this._gridColumns;
     }
-/**
- * Sets the the grid columns that are going to be manipulated.
- * ```html
- * <igx-column-hiding [columns]="grid.columns"></igx-column-hiding>
- * ```
- * @memberof ColumnChooserBase
- */
-set columns(value) {
+    /**
+     * Sets the the grid columns that are going to be manipulated.
+     * ```html
+     * <igx-column-hiding [columns]="grid.columns"></igx-column-hiding>
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    set columns(value) {
         if (value) {
             this._gridColumns = value;
             this.createColumnItems();
         }
     }
-/**
- * Sets/gets the title of the column chooser.
- * ```typescript
- * let title =  this.columnHidingUI.title;
- * ```
- * @memberof ColumnChooserBase
- */
-@Input()
+    /**
+     * Sets/gets the title of the column chooser.
+     * ```typescript
+     * let title =  this.columnHidingUI.title;
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    @Input()
     get title() {
         return this._title;
     }
-/**
- * ```html
- * <igx-column-hiding [title]="'IgxColumnHidingComponent Title'"></igx-column-hiding>
- * ```
- * @memberof ColumnChooserBase
- */
-set title(value) {
+    /**
+     * ```html
+     * <igx-column-hiding [title]="'IgxColumnHidingComponent Title'"></igx-column-hiding>
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    set title(value) {
         this._title = (value) ? value : '';
     }
-/**
- * Gets the prompt that is displayed in the filter input.
- * ```typescript
- * let filterColumnsPrompt =  this.columnHidingUI.filterColumnsPrompt;
- * ```
- * @memberof ColumnChooserBase
- */
-@Input()
+    /**
+     * Gets the prompt that is displayed in the filter input.
+     * ```typescript
+     * let filterColumnsPrompt =  this.columnHidingUI.filterColumnsPrompt;
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    @Input()
     get filterColumnsPrompt() {
         return this._filterColumnsPrompt;
     }
-/**
- * Sets the prompt that is going to be displayed in the filter input.
- * ```html
- * <igx-column-hiding [filterColumnsPrompt]="'Type here to search'"></igx-column-hiding>
- * ```
- * @memberof ColumnChooserBase
- */
-set filterColumnsPrompt(value) {
+    /**
+     * Sets the prompt that is going to be displayed in the filter input.
+     * ```html
+     * <igx-column-hiding [filterColumnsPrompt]="'Type here to search'"></igx-column-hiding>
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    set filterColumnsPrompt(value) {
         this._filterColumnsPrompt = (value) ? value : '';
     }
-/**
- * Gets the items of the selected columns.
- * ```typescript
- * let columnItems =  this.columnHidingUI.columnItems;
- * ```
- * @memberof ColumnChooserBase
- */
-@Input()
+    /**
+     * Gets the items of the selected columns.
+     * ```typescript
+     * let columnItems =  this.columnHidingUI.columnItems;
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    @Input()
     get columnItems() {
         return this._currentColumns;
     }
-/**
- * Gets the value which filters the columns list.
- * ```typescript
- * let filterCriteria =  this.columnHidingUI.filterCriteria;
- * ```
- * @memberof ColumnChooserBase
- */
-@Input()
+    /**
+     * Gets the value which filters the columns list.
+     * ```typescript
+     * let filterCriteria =  this.columnHidingUI.filterCriteria;
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    @Input()
     get filterCriteria() {
         return this._filterCriteria;
     }
 
-/**
- * Sets the value which filters the columns list.
- * ```html
- *  <igx-column-hiding [filterCriteria]="'ID'"></igx-column-hiding>
- * ```
- * @memberof ColumnChooserBase
- */
-set filterCriteria(value) {
+    /**
+     * Sets the value which filters the columns list.
+     * ```html
+     *  <igx-column-hiding [filterCriteria]="'ID'"></igx-column-hiding>
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    set filterCriteria(value) {
         if (!value || value.length === 0) {
             this.clearFiltering();
             this._filterCriteria = '';
@@ -122,25 +122,25 @@ set filterCriteria(value) {
         this.filter();
         this.cdr.detectChanges();
     }
-/**
- * Gets the display order of the columns.
- * ```typescript
- * let columnDisplayOrder  =  this.columnHidingUI.columnDisplayOrder;
- * ```
- * @memberof ColumnChooserBase
- */
-@Input()
+    /**
+     * Gets the display order of the columns.
+     * ```typescript
+     * let columnDisplayOrder  =  this.columnHidingUI.columnDisplayOrder;
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    @Input()
     get columnDisplayOrder() {
         return this._columnDisplayOrder;
     }
-/**
- * Sets the display order of the columns.
- * ```typescript
- * this.columnHidingUI.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
- * ```
- * @memberof ColumnChooserBase
- */
-set columnDisplayOrder(value: ColumnDisplayOrder) {
+    /**
+     * Sets the display order of the columns.
+     * ```typescript
+     * this.columnHidingUI.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    set columnDisplayOrder(value: ColumnDisplayOrder) {
         if (value !== undefined) {
             this.orderColumns(value);
             if (this._filterCriteria.length > 0) {
@@ -148,36 +148,36 @@ set columnDisplayOrder(value: ColumnDisplayOrder) {
             }
         }
     }
-/**
- * Access to the columnHidingUI:
- * ```typescript
- * @ViewChild('column-hiding-component')
- *  public columnHidingUI: IgxColumnHidingComponent;
- * ```
- * Sets/gets the max height of the column area.
- * ```typescript
- * let columnsAreaMaxHeight =  this.columnHidingUI.columnsAreaMaxHeight;
- * ```
- *
- * ```html
- * <igx-column-hiding [columnsAreaMaxHeight]="200px"></igx-column-hiding>
- * ```
- * @memberof ColumnChooserBase
- */
-@Input()
+    /**
+     * Access to the columnHidingUI:
+     * ```typescript
+     * @ViewChild('column-hiding-component')
+     *  public columnHidingUI: IgxColumnHidingComponent;
+     * ```
+     * Sets/gets the max height of the column area.
+     * ```typescript
+     * let columnsAreaMaxHeight =  this.columnHidingUI.columnsAreaMaxHeight;
+     * ```
+     *
+     * ```html
+     * <igx-column-hiding [columnsAreaMaxHeight]="200px"></igx-column-hiding>
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    @Input()
     public columnsAreaMaxHeight = '100%';
-/**
- * Sets/Gets the css class selector.
- * By default the value of the `class` attribute is `"igx-column-hiding"`.
- * ```typescript
- * let cssCLass =  this.columnHidingUI.cssClass;
- * ```
- * ```typescript
- * this.columnHidingUI.cssClass = 'column-chooser';
- * ```
- * @memberof ColumnChooserBase
- */
-@HostBinding('attr.class')
+    /**
+     * Sets/Gets the css class selector.
+     * By default the value of the `class` attribute is `"igx-column-hiding"`.
+     * ```typescript
+     * let cssCLass =  this.columnHidingUI.cssClass;
+     * ```
+     * ```typescript
+     * this.columnHidingUI.cssClass = 'column-chooser';
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    @HostBinding('attr.class')
     public cssClass = 'igx-column-hiding';
     /**
      *@hidden
