@@ -546,19 +546,6 @@ export class IgxColumnComponent implements AfterContentInit {
         this.grid.markForCheck();
     }
     /**
-     *@hidden
-     */
-    get footerTemplate(): TemplateRef<any> {
-        return this._headerTemplate;
-    }
-    /**
-     *@hidden
-     */
-    set footerTemplate(template: TemplateRef<any>) {
-        this._footerTemplate = template;
-        this.grid.markForCheck();
-    }
-    /**
      * Returns a reference to the inline editor template.
      * ```typescript
      * let inlineEditorTemplate = this.column.inlineEditorTemplate;
@@ -705,10 +692,6 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _footerTemplate: TemplateRef<any>;
-    /**
-     *@hidden
-     */
     protected _inlineEditorTemplate: TemplateRef<any>;
     /**
      *@hidden
@@ -751,11 +734,6 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellFooterTemplateDirective, { read: IgxCellFooterTemplateDirective })
-    protected footTemplate: IgxCellFooterTemplateDirective;
-    /**
-     *@hidden
-     */
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
@@ -784,9 +762,6 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.headTemplate) {
             this._headerTemplate = this.headTemplate.template;
-        }
-        if (this.footTemplate) {
-            this._footerTemplate = this.footTemplate.template;
         }
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
@@ -1059,16 +1034,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     set headerTemplate(template: TemplateRef<any>) { }
-    /**
-     *@hidden
-     */
-    get footerTemplate(): TemplateRef<any> {
-        return this._headerTemplate;
-    }
-    /**
-     * @hidden
-     */
-    set footerTemplate(template: TemplateRef<any>) { }
     /**
      * Returns a reference to the inline editor template.
      * ```typescript
