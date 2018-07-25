@@ -362,6 +362,37 @@ describe('IgxGrid - CRUD operations', () => {
         });
     }));
 
+    it('should switch to previous page when last row on last page is deleted', () => {
+        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+
+        for (let i = 2; i < 6; i++) {
+            fixture.componentInstance.data.push({ index: i, value: i});
+        }
+
+        grid.paging = true;
+        grid.perPage = 2;
+
+        grid.cdr.markForCheck();
+        fixture.detectChanges();
+
+        grid.paginate(2);
+        fixture.detectChanges();
+
+        grid.getRowByKey(5).delete();
+        fixture.detectChanges();
+
+        expect(grid.page).toBe(1);
+
+        grid.deleteRow(grid.getRowByKey(4).rowID);
+        grid.deleteRow(grid.getRowByKey(3).rowID);
+        fixture.detectChanges();
+
+        expect(grid.page).toBe(0);
+    });
+
 });
 
 @Component({
