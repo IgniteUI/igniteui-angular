@@ -409,31 +409,24 @@ describe('IgxGrid - input properties', () => {
     });
 
     it(`When edit a cell onto filtered data through grid method, the row should
-            disapear and the new value should not persist onto the next row`, async(() => {
-            const fix = TestBed.createComponent(IgGridTest5x5Component);
-            fix.detectChanges();
+            disapear and the new value should not persist onto the next row`, () => {
+        const fix = TestBed.createComponent(IgGridTest5x5Component);
+        fix.detectChanges();
 
-            const grid = fix.componentInstance.gridMinDefaultColWidth;
-            const cols = fix.componentInstance.cols;
-            const gridApi = fix.componentInstance.gridApi;
-            const editValue = 777;
+        const grid = fix.componentInstance.gridMinDefaultColWidth;
+        const cols = fix.componentInstance.cols;
+        const gridApi = fix.componentInstance.gridApi;
+        const editValue = 777;
 
-            fix.whenStable().then(() => {
-                grid.filter(cols[0].key, 1, IgxNumberFilteringOperand.instance().condition('equals'));
-                return fix.whenStable();
-            }).then(() => {
-                fix.detectChanges();
-                grid.updateCell(editValue, 0, cols[0].key);
-                grid.markForCheck();
-                return fix.whenStable();
-            }).then(() => {
-                fix.detectChanges();
-                const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
-                const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
-                const firstCellInputValue = firstRowCells[0].nativeElement.textContent.trim();
-                expect(firstCellInputValue).toEqual('1');
-            });
-        }));
+        grid.filter(cols[0].key, 1, IgxNumberFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        grid.getCellByColumn(0, cols[0].key).update(editValue);
+        fix.detectChanges();
+        const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+        const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
+        const firstCellInputValue = firstRowCells[0].nativeElement.textContent.trim();
+        expect(firstCellInputValue).toEqual('1');
+    });
 
     it('should render correct columns if after scrolling right container size changes so that all columns become visible.', (done) => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
@@ -442,34 +435,22 @@ describe('IgxGrid - input properties', () => {
         fix.componentInstance.generateColumns(5);
         fix.componentInstance.generateData(5);
 
-        fix.whenStable().then(() => {
+        fix.detectChanges();
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        const scrollbar = fix.componentInstance.grid2.parentVirtDir.getHorizontalScroll();
+        scrollbar.scrollLeft = 10000;
+        grid.width = '1500px';
+
+        setTimeout(() => {
             fix.detectChanges();
-            // scrollbar should be visible
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
-            const scrollbar = fix.componentInstance.grid2.parentVirtDir.getHorizontalScroll();
-
-            // scroll to the right
-            scrollbar.scrollLeft = 10000;
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            // change width so that all columns are visible
-            grid.width = '1500px';
-            return fix.whenStable();
-        }).then(() => {
-            setTimeout(() => {
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
-
-                // verify correct columns are rendered.
-                const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-                expect(headers.length).toEqual(5);
-                for (let i = 0; i < headers.length; i++) {
-                    expect(headers[i].context.column.field).toEqual(fix.componentInstance.grid2.columns[i].field);
-                }
-
-                done();
-            }, 100);
-        });
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            expect(headers.length).toEqual(5);
+            for (let i = 0; i < headers.length; i++) {
+                expect(headers[i].context.column.field).toEqual(fix.componentInstance.grid2.columns[i].field);
+            }
+            done();
+        }, 100);
     });
     it('Keyboard navigation - should allow horizontal navigation when the grid is focused', (done) => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
