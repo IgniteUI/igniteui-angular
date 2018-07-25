@@ -353,7 +353,7 @@ describe('IgxGrid - Summaries', () => {
         expect(emptySummaries[1].summaryResult).toBe(undefined);
         expect(emptySummaries[2].summaryResult).toBe(undefined);
     });
-    it('should calculate summaries only over filteredData', (done) => {
+    it('should calculate summaries only over filteredData', async(() => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -385,10 +385,8 @@ describe('IgxGrid - Summaries', () => {
                 }
                 index++;
             });
-            done();
         });
-        done();
-    });
+    }));
 
     it('When we have data which is undefined and enable summary per defined column, error should not be thrown', async(() => {
         const fix = TestBed.createComponent(UndefinedGridDataComponent);
@@ -552,11 +550,10 @@ describe('IgxGrid - Summaries', () => {
                 expect(grid.getColumnByName(col.field).hasSummary).toBe(true);
             }
         });
-
         grid.getColumnByName('UnitsInStock').hasSummary = false;
         grid.recalculateSummaries();
-        fixture.detectChanges();
         tick(100);
+        fixture.detectChanges();
         expect(grid.getColumnByName('UnitsInStock').hasSummary).toBe(false);
         const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary')).filter((el) =>
             el.nativeElement.classList.contains('igx-grid-summary--empty') === false);
@@ -573,7 +570,6 @@ describe('IgxGrid - Summaries', () => {
         tick(100);
         expect(fixture.debugElement.query(By.css('.igx-grid__summaries'))).toBeNull();
         expect(grid.hasSummarizedColumns).toBe(false);
-        discardPeriodicTasks();
     }));
 
     it('should recalculate summary area after column with enabled summary is hidden', fakeAsync(() => {
@@ -596,6 +592,7 @@ describe('IgxGrid - Summaries', () => {
         expect(grid.hasSummarizedColumns).toBe(true);
 
         grid.getColumnByName('UnitsInStock').hidden = true;
+        tick();
         fixture.detectChanges();
 
         let summaryArea = fixture.debugElement.query(By.css('.igx-grid__summaries'));
@@ -616,10 +613,10 @@ describe('IgxGrid - Summaries', () => {
 
         grid.getColumnByName('UnitsInStock').hidden = false;
         tick();
+        fixture.detectChanges();
         summaryArea = fixture.debugElement.query(By.css('.igx-grid__summaries'));
         expect(summaryArea).toBeDefined();
         expect(grid.hasSummarizedColumns).toBe(true);
-        discardPeriodicTasks();
     }));
 
 
