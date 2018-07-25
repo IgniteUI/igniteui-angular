@@ -46,6 +46,14 @@ export class ColumnDefinitions {
         <igx-column field="Name" [editable]="true"></igx-column>
         <igx-column field="JobTitle" [editable]="true"></igx-column>
     `;
+
+    public static idNameJobTitleCompany = `
+        <igx-column field="ID"></igx-column>
+        <igx-column field="Name"></igx-column>
+        <igx-column field="JobTitle"></igx-column>
+        <igx-column field="Company"></igx-column>
+    `;
+
     public static idNameJobHireDate = `
         <igx-column field="ID"></igx-column>
         <igx-column field="Name"></igx-column>
@@ -77,6 +85,17 @@ export class ColumnDefinitions {
         <igx-column field="FirstName" [editable]="true"></igx-column>
         <igx-column field="LastName"></igx-column>
         <igx-column field="age"></igx-column>
+    `;
+
+    public static nameAvatar = `
+    <igx-column [field]="'Name'" dataType="string"></igx-column>
+    <igx-column [field]="'Avatar'" header="Photo" [searchable]="false">
+        <ng-template igxCell let-cell="cell">
+            <div class="cell__inner avatar-cell">
+                <img [src]="cell.row.rowData.Avatar" width="30px" height="30px"/>
+            </div>
+        </ng-template>
+    </igx-column>
     `;
 
     public static idFirstLastNameSortable = `
