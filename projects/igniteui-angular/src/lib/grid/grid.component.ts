@@ -3079,6 +3079,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.calcWidth = width;
 
                 this._derivePossibleWidth();
+                this.cdr.markForCheck();
             }
             return;
         }
