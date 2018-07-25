@@ -630,10 +630,6 @@ describe('IgxSlider', () => {
 
         const slider = fixture.componentInstance.slider;
 
-        fixture.componentInstance.slider.value = 5;
-        fixture.detectChanges();
-
-        expect(slider.value).toBe(5);
         expect(slider.minValue).toBe(0);
         expect(slider.maxValue).toBe(10);
         expect(slider.lowerBound).toBe(0);
@@ -644,14 +640,13 @@ describe('IgxSlider', () => {
         fixture.componentInstance.changeMaxValue(8);
         fixture.detectChanges();
 
-        expect(slider.value).toBe(5);
         expect(slider.minValue).toBe(5);
         expect(slider.maxValue).toBe(8);
         expect(slider.lowerBound).toBe(5);
         expect(slider.upperBound).toBe(8);
     });
 
-    it('should track min/maxValue and reset the value if lower/upperBound are undefined (issue #920)', () => {
+    it('should track min/maxValue and invalidate the value if lower/upperBound are undefined (issue #920)', () => {
         const fixture = TestBed.createComponent(SliderTestComponent);
         fixture.detectChanges();
 
@@ -689,9 +684,6 @@ describe('IgxSlider', () => {
 
         const slider = fixture.componentInstance.slider;
 
-        fixture.componentInstance.slider.value = 5;
-        fixture.detectChanges();
-
         fixture.componentInstance.slider.lowerBound = 3;
         fixture.componentInstance.slider.upperBound = 8;
         fixture.detectChanges();
@@ -701,7 +693,6 @@ describe('IgxSlider', () => {
         fixture.componentInstance.changeMaxValue(9);
         fixture.detectChanges();
 
-        expect(slider.value).toBe(5);
         expect(slider.minValue).toBe(2);
         expect(slider.maxValue).toBe(9);
         expect(slider.lowerBound).toBe(3);
@@ -716,18 +707,10 @@ describe('IgxSlider', () => {
         fixture.componentInstance.type = SliderType.RANGE;
         fixture.detectChanges();
 
-        fixture.componentInstance.slider.value = {
-            lower: 6,
-            upper: 8
-        };
-        fixture.detectChanges();
-
         expect(slider.minValue).toBe(0);
         expect(slider.maxValue).toBe(10);
         expect(slider.lowerBound).toBe(0);
         expect(slider.upperBound).toBe(10);
-        expect((slider.value as IRangeSliderValue).lower).toBe(6);
-        expect((slider.value as IRangeSliderValue).upper).toBe(8);
 
         fixture.componentInstance.changeMinValue(5);
         fixture.detectChanges();
@@ -738,11 +721,9 @@ describe('IgxSlider', () => {
         expect(slider.maxValue).toBe(8);
         expect(slider.lowerBound).toBe(5);
         expect(slider.upperBound).toBe(8);
-        expect((slider.value as IRangeSliderValue).lower).toBe(6);
-        expect((slider.value as IRangeSliderValue).upper).toBe(8);
     });
 
-    it('should track min/maxValue and reset the value if lower/upperBound are undefined - range slider (issue #920)', () => {
+    it('should track min/maxValue and invalidate the value if lower/upperBound are undefined - range slider (issue #920)', () => {
         const fixture = TestBed.createComponent(SliderTestComponent);
         fixture.detectChanges();
 
