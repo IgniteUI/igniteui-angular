@@ -2220,12 +2220,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const start = state.startIndex;
         const isColumn = directive.igxForScrollOrientation === 'horizontal';
 
-        let size;
-        if (isColumn) {
-            size = directive.getItemCountInView();
-        } else {
-            size = state.chunkSize - 1;
-        }
+        const size = directive.getItemCountInView();
 
         if (start >= goal) {
             // scroll so that goal is at beggining of visible chunk
