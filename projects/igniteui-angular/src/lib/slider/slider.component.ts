@@ -235,7 +235,7 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         if (this._trackUpperBound) {
             this._upperBound = this._maxValue;
         }
-        this.resetValue();
+        this.invalidateValue();
     }
 
     /**
@@ -270,7 +270,7 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         if (this._trackLowerBound) {
             this._lowerBound = this._minValue;
         }
-        this.resetValue();
+        this.invalidateValue();
     }
 
     /**
@@ -719,48 +719,42 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         );
     }
 
-    private resetValue() {
+    private invalidateValue() {
         if (!this.isRange) {
             if (this.value >= this._lowerBound && this.value <= this._upperBound) {
-                this.value = this.value;
+                this.positionHandlesAndUpdateTrack();
             } else if (this.value < this._lowerBound) {
                 this.value = this._lowerBound;
             } else if (this.value > this._upperBound) {
                 this.value = this._upperBound;
             }
         } else {
-            if ((this.value as IRangeSliderValue).lower >= this._lowerBound &&
-                (this.value as IRangeSliderValue).lower <= this._upperBound) {
-                    this.value = {
-                        lower: (this.value as IRangeSliderValue).lower,
-                        upper: (this.value as IRangeSliderValue).upper
-                    };
-            } else if ((this.value as IRangeSliderValue).lower < this._lowerBound) {
+            const value = this.value as IRangeSliderValue;
+
+            if (value.lower >= this._lowerBound && value.lower <= this._upperBound) {
+                this.positionHandlesAndUpdateTrack();
+            } else if (value.lower < this._lowerBound) {
                 this.value = {
                     lower: this._lowerBound,
-                    upper: (this.value as IRangeSliderValue).upper
+                    upper: value.upper
                 };
-            } else if ((this.value as IRangeSliderValue).lower > this._upperBound) {
+            } else if (value.lower > this._upperBound) {
                 this.value = {
-                    lower: (this.value as IRangeSliderValue).lower,
+                    lower: value.lower,
                     upper: this._upperBound
                 };
             }
 
-            if ((this.value as IRangeSliderValue).upper >= this._lowerBound &&
-                (this.value as IRangeSliderValue).upper <= this._upperBound) {
-                    this.value = {
-                        lower: (this.value as IRangeSliderValue).lower,
-                        upper: (this.value as IRangeSliderValue).upper
-                    };
-            } else if ((this.value as IRangeSliderValue).upper < this._lowerBound) {
+            if (value.upper >= this._lowerBound && value.upper <= this._upperBound) {
+                this.positionHandlesAndUpdateTrack();
+            } else if (value.upper < this._lowerBound) {
                 this.value = {
                     lower: this._lowerBound,
-                    upper: (this.value as IRangeSliderValue).upper
+                    upper: value.upper
                 };
-            } else if ((this.value as IRangeSliderValue).upper > this._upperBound) {
+            } else if (value.upper > this._upperBound) {
                 this.value = {
-                    lower: (this.value as IRangeSliderValue).lower,
+                    lower: value.lower,
                     upper: this._upperBound
                 };
             }
