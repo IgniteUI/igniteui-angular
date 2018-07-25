@@ -4,6 +4,8 @@ All notable changes for each version of this project will be documented in this 
 ## 6.1.3
 - `igxDropDownItem`:
     - isSelected property has Output setter and can be set both in markup and in code behind.
+- `igxGrid`
+    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
 
 ## 6.1.2
 - `igxCombo` improvements
