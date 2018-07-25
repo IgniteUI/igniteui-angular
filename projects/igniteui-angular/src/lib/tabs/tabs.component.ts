@@ -76,7 +76,8 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
      * ```
      * ```typescript
      * itemSelected(e){
-     *      alert("Tab item was selected!");
+     *      const tabGroup = e.group;
+     *      const tabItem = e.tab;
      * }
      * ```
      */
@@ -92,7 +93,8 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
      * ```
      * ```typescript
      * itemDeselected(e){
-     *      alert("Tab item was deselected!");
+     *      const tabGroup = e.group;
+     *      const tabItem = e.tab;
      * }
      * ```
      */
