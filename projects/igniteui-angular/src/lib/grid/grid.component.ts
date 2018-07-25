@@ -26,8 +26,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { of, Subject } from 'rxjs';
-import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -908,8 +908,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.setEventBusSubscription();
-        this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -1457,6 +1455,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
     }
 
+    public recalculateSummaries() {
+        this.summariesHeight = 0;
+        requestAnimationFrame(() => this.calculateGridSizes());
+    }
+
     public findNext(text: string, caseSensitive?: boolean): number {
         return this.find(text, 1, caseSensitive);
     }
@@ -1521,7 +1524,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get hasSummarizedColumns(): boolean {
-        return this.columnList.some((col) => col.hasSummary);
+        const summarizedColumns = this.columnList.filter(col => col.hasSummary);
+        return summarizedColumns.length > 0 && summarizedColumns.some(col => !col.hidden);
     }
 
     get hasMovableColumns(): boolean {
@@ -1677,7 +1681,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     protected calcMaxSummaryHeight() {
         let maxSummaryLength = 0;
-        this.columnList.filter((col) => col.hasSummary).forEach((column) => {
+        this.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             this.gridAPI.set_summary_by_column_name(this.id, column.field);
             const getCurrentSummaryColumn = this.gridAPI.get_summaries(this.id).get(column.field);
             if (getCurrentSummaryColumn) {
@@ -1833,31 +1837,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected reinitPinStates() {
         this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
-    }
-
-    protected setEventBusSubscription() {
-        this.eventBus.pipe(
-            debounceTime(DEBOUNCE_TIME),
-            takeUntil(this.destroy$)
-        ).subscribe(() => this.cdr.detectChanges());
-    }
-
-    protected setVerticalScrollSubscription() {
-        /*
-            Until the grid component is destroyed,
-            Take the first event and unsubscribe
-            then merge with an empty observable after DEBOUNCE_TIME,
-            re-subscribe and repeat the process
-        */
-        this.verticalScrollContainer.onChunkLoad.pipe(
-            takeUntil(this.destroy$),
-            take(1),
-            merge(of({})),
-            delay(DEBOUNCE_TIME),
-            repeat()
-        ).subscribe(() => {
-            this.eventBus.next();
-        });
     }
 
     public onHeaderCheckboxClick(event) {
@@ -2050,7 +2029,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
 
-                this.performVerticalScroll(-this.rowHeight, rowIndex, columnIndex);
+                    this.performVerticalScroll(-this.rowHeight, rowIndex, columnIndex);
             }
             target.nativeElement.focus();
         } else {
