@@ -3962,16 +3962,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private checkIfGridIsAdded(node): boolean {
         if (node === this.nativeElement) {
             return true;
-        } else if (node.length) {
+        } else {
             for (const childNode of node.childNodes) {
                 const added = this.checkIfGridIsAdded(childNode);
                 if (added) {
                     return true;
                 }
             }
-        }
 
-        return false;
+            return false;
+        }
     }
 
     /**
