@@ -16,7 +16,8 @@ describe('IgxGrid - Column properties', () => {
                 ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,
                 ColumnHiddenFromMarkupComponent,
-                ColumnCellFormatterComponent
+                ColumnCellFormatterComponent,
+                ColumnHaederClassesComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -172,6 +173,52 @@ describe('IgxGrid - Column properties', () => {
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         expect(headers[0].nativeElement.style['min-width']).toEqual('200px');
     });
+
+    it('headers and cells classes should be correct after scroll horizontal', ((done) => {
+        // Use setTimeout because when scroll the grid whenStable does not work
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const CELL_CSS_CLASS = '.igx-grid__td';
+        const COLUMN_NUMBER_CLASS = 'igx-grid__th--number';
+        const CELL_NUMBER_CLASS = 'igx-grid__td--number';
+
+        // Verify haeder clases
+        let headers: DebugElement[];
+        let allCells: DebugElement[];
+
+        allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
+        expect(allCells[3].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+
+        headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
+        expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 200;
+        setTimeout(() => {
+            fix.detectChanges();
+            headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
+            expect(headers[1].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+
+            allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+            allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
+            expect(allCells[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+
+            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+            setTimeout(() => {
+                fix.detectChanges();
+                headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+                headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
+                expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+
+                allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
+                expect(allCells[3].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+                done();
+            }, 100);
+        }, 100);
+    }));
 });
 
 @Component({
@@ -294,4 +341,28 @@ export class ColumnCellFormatterComponent {
     public multiplier(value: number): string {
         return `${value * value}`;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" height="500px" width="400px">
+            <igx-column field="ProductId"  dataType="number" width="100px"></igx-column>
+            <igx-column field="Number1" dataType="number" width="100px"></igx-column>
+            <igx-column field="Number2" dataType="number" width="100px" [headerClasses]="'headerAlignSyle'"></igx-column>
+            <igx-column field="Number3" dataType="number" width="100px" [cellClasses]="'headerAlignSyle'"></igx-column>
+            <igx-column field="Number4" dataType="number" width="100px"></igx-column>
+            <igx-column field="Number5" dataType="number" width="100px"></igx-column>
+            <igx-column field="Number6" dataType="number" width="100px"></igx-column>
+            <igx-column field="Number7" dataType="number" width="100px"></igx-column>
+        </igx-grid>
+    `,
+    styles: [`.headerAlignSyle {text-align: right !important;}`]
+})
+export class ColumnHaederClassesComponent {
+    public data = [
+        { ProductId: 1, Number1: 11, Number2: 10, Number3: 5, Number4: 3, Number5: 4, Number6: 6, Number7: 7 }
+    ];
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid: IgxGridComponent;
 }
