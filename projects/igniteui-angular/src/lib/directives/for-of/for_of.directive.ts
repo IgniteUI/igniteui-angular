@@ -513,6 +513,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return null;
     }
 
+    /**
+     * Returns the total number of items that are fully visible.
+     * ```typescript
+     * this.parentVirtDir.getItemCountInView();
+     * ```
+     */
     public getItemCountInView() {
         if (this.igxForScrollOrientation === 'horizontal') {
             const scrLeft = this.hScroll.scrollLeft;
