@@ -4,11 +4,12 @@ All notable changes for each version of this project will be documented in this 
 ## 6.1.3
 - `igxGrid`
     - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
-
 - `igxColumn` changes
     - The footerTemplate property is removed.
 - `igxColumnGroup` changes
     - The footerTemplate property is removed.
+- `igxCombo`
+    - **Breaking change** igxCombo default width is set to 100%
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
@@ -105,7 +106,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
     ```html
     <igx-combo #combo [data]="towns" [displayKey]="'townName'" [valueKey]="'postCode'" [groupKey]="'province'"
-        [allowCustomValues]="true" placeholder="Town(s)" searchPlaceholder="Search town..." [width]="'100%'"></igx-combo>
+        [allowCustomValues]="true" placeholder="Town(s)" searchPlaceholder="Search town..."></igx-combo>
     ```
 
     igxCombo features:
