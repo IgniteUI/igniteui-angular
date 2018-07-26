@@ -29,7 +29,8 @@ describe('IgxGrid - search API', () => {
     describe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(BasicGridSearchComponent);
-            fix.componentInstance.data = SampleTestData.personJobDataFull;
+            const currentData = Object.assign([], SampleTestData.personJobDataFull);
+            fix.componentInstance.data = currentData;
             fix.detectChanges();
 
             component = fix.componentInstance;
@@ -501,6 +502,10 @@ describe('IgxGrid - search API', () => {
             const highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
+        });
+
+        afterAll(() => {
+            grid.getCellByColumn(4, 'JobTitle').update('Senior Software Developer');
         });
     });
 
