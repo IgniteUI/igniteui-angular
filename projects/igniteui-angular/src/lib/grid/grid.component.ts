@@ -26,8 +26,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { of, Subject } from 'rxjs';
-import { debounceTime, delay, merge, repeat, take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -719,6 +719,38 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public emptyFilteredGridMessage = 'No records found.';
 
     /**
+     * An @Input property that sets the message displayed inside the GroupBy drop area where columns can be dragged on.
+     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * ```html
+     * <igx-grid dropAreaMessage="Drop here to group!">
+     *      <igx-column [groupable]="true" field="ID"></igx-column>
+     * </igx-grid>
+     * ```
+     */
+    @Input()
+    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+
+    /**
+     * An @Input property that sets the template that will be rendered as a GroupBy drop area.
+     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * ```html
+     * <igx-grid [dropAreaTemplate]="dropAreaRef">
+     *      <igx-column [groupable]="true" field="ID"></igx-column>
+     * </igx-grid>
+     *
+     * <ng-template #myDropArea>
+     *      <span> Custom drop area! </span>
+     * </ng-template>
+     * ```
+     * ```ts
+     * @ViewChild('myDropArea', { read: TemplateRef })
+     * public dropAreaRef: TemplateRef<any>;
+     * ```
+     */
+    @Input()
+    public dropAreaTemplate: TemplateRef<any>;
+
+    /**
      * An @Input property that sets the title to be displayed in the built-in column hiding UI.
      * ```html
      * <igx-grid [showToolbar]="true" [columnHiding]="true" columnHidingTitle="Column Hiding"></igx-grid>
@@ -1123,6 +1155,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @ViewChild('defaultEmptyGrid', { read: TemplateRef })
     public emptyGridDefaultTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultDropArea', { read: TemplateRef })
+    public defaultDropAreaTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -1793,8 +1831,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public ngOnInit() {
         this.gridAPI.register(this);
-        this.setEventBusSubscription();
-        this.setVerticalScrollSubscription();
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -2743,6 +2779,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
     }
 
+    public recalculateSummaries() {
+        this.summariesHeight = 0;
+        requestAnimationFrame(() => this.calculateGridSizes());
+    }
+
     /**
      * Finds the next occurrence of a given string in the grid and scrolls to the cell if it isn't visible.
      * Returns how many times the grid contains the string.
@@ -2869,7 +2910,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      */
     get hasSummarizedColumns(): boolean {
-        return this.columnList.some((col) => col.hasSummary);
+        const summarizedColumns = this.columnList.filter(col => col.hasSummary);
+        return summarizedColumns.length > 0 && summarizedColumns.some(col => !col.hidden);
     }
 
     /**
@@ -3067,7 +3109,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected calcMaxSummaryHeight() {
         let maxSummaryLength = 0;
-        this.columnList.filter((col) => col.hasSummary).forEach((column) => {
+        this.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             this.gridAPI.set_summary_by_column_name(this.id, column.field);
             const getCurrentSummaryColumn = this.gridAPI.get_summaries(this.id).get(column.field);
             if (getCurrentSummaryColumn) {
@@ -3277,40 +3319,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
-    /**
-     * @hidden
-     */
-    protected setEventBusSubscription() {
-        this.eventBus.pipe(
-            debounceTime(DEBOUNCE_TIME),
-            takeUntil(this.destroy$)
-        ).subscribe(() => this.cdr.detectChanges());
-    }
-
-    /**
-     * @hidden
-     */
-    protected setVerticalScrollSubscription() {
-        /*
-            Until the grid component is destroyed,
-            Take the first event and unsubscribe
-            then merge with an empty observable after DEBOUNCE_TIME,
-            re-subscribe and repeat the process
-        */
-        this.verticalScrollContainer.onChunkLoad.pipe(
-            takeUntil(this.destroy$),
-            take(1),
-            merge(of({})),
-            delay(DEBOUNCE_TIME),
-            repeat()
-        ).subscribe(() => {
-            this.eventBus.next();
-        });
-    }
-
-    /**
-     * @hidden
-     */
     public onHeaderCheckboxClick(event) {
         this.allRowsSelected = event.checked;
         const newSelection =
@@ -3341,6 +3349,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (this.data && this.data.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public get dropAreaTemplateResolved(): TemplateRef<any> {
+        if (this.dropAreaTemplate) {
+            return this.dropAreaTemplate;
+        } else {
+            return this.defaultDropAreaTemplate;
         }
     }
 
@@ -3550,7 +3569,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
 
-                this.performVerticalScroll(-this.rowHeight, rowIndex, columnIndex);
+                    this.performVerticalScroll(-this.rowHeight, rowIndex, columnIndex);
             }
             target.nativeElement.focus();
         } else {
