@@ -34,7 +34,6 @@ describe('IgxGrid - Column properties', () => {
 
         grid.columnList.forEach((column) => expect(column.bodyTemplate).toBeDefined());
         grid.columnList.forEach((column) => expect(column.headerTemplate).toBeDefined());
-        grid.columnList.forEach((column) => expect(column.footerTemplate).toBeDefined());
 
         headerSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Header text'));
         cellSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Cell text'));
