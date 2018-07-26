@@ -136,7 +136,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _comboInput: ElementRef<HTMLInputElement> = null;
     private _valid = IgxComboState.INITIAL;
     private _statusChanges$: Subscription;
-    private _width = '250px';
+    private _width = '100%';
     private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
