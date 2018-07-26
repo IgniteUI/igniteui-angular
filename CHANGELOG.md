@@ -9,6 +9,8 @@ All notable changes for each version of this project will be documented in this 
     - The footerTemplate property is removed.
 - `igxColumnGroup` changes
     - The footerTemplate property is removed.
+- `IFilteringOperation`
+	- Added `label` property, so users can localize the filtering operands.
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.

@@ -24,10 +24,10 @@
 
 <select #select [attr.draggable]="false" (change)="selectionChanged($event.target.value)">
     <option
-        [selected]="isActive(each)"
+        [selected]="isActive(each.name)"
         *ngFor="let each of conditions"
-        [value]="each">
-        {{ each | filterCondition | titlecase }}
+        [value]="each.name">
+        {{ each.label | filterCondition | titlecase }}
     </option>
 </select>
 
