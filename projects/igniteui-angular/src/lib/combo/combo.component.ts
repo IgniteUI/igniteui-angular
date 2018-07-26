@@ -698,6 +698,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     @HostListener('keydown.ArrowDown', ['$event'])
+    @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
         evt.preventDefault();
         evt.stopPropagation();
