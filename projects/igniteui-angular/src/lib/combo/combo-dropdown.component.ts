@@ -350,6 +350,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     }
 
     onToggleClosing() {
+        this.combo.searchValue = '';
         super.onToggleClosing();
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }
