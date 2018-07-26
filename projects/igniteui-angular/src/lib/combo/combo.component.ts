@@ -27,10 +27,8 @@ import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPip
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 
-/**
- * @hidden
- */
-export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
+/** Custom strategy to provide the combo with callback on initial positioning */
+class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
     private _callback: () => void;
     constructor(callback: () => void) {
         super();
@@ -48,7 +46,7 @@ export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy
 /**
  * @hidden
  */
-export enum DataTypes {
+enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
     COMPLEX = 'complex',
@@ -699,8 +697,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    // @HostListener('keydown.ArrowDown', ['$event'])
-    // @HostListener('keydown.Alt.ArrowDown', ['$event'])
+    @HostListener('keydown.ArrowDown', ['$event'])
     onArrowDown(evt) {
         evt.preventDefault();
         evt.stopPropagation();
