@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxGridComponent } from './grid.component';
@@ -450,6 +450,58 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
+        it('Active highlight should be updated when filtering is applied', () => {
+            grid.findNext('developer');
+            fix.detectChanges();
+
+            grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            const activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            const highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(2);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+
+        it('Active highlight should be preserved when all rows are filtered out', () => {
+            grid.height = '500px';
+            fix.detectChanges();
+
+            grid.findNext('casey');
+            fix.detectChanges();
+
+            let highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+
+            grid.filter('Name', 'zxxz', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(0);
+            expect(activeHighlight).toBeNull();
+
+            grid.clearFilter('Name');
+            fix.detectChanges();
+            activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+
+        it('Active highlight should be preserved when a column is moved', () => {
+            grid.findNext('casey');
+            fix.detectChanges();
+
+            const columns = grid.columnList.toArray();
+            grid.moveColumn(columns[0], columns[1]);
+            fix.detectChanges();
+
+            const activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            const highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
     });
 
     /* ScrollableGrid */
@@ -601,7 +653,7 @@ describe('IgxGrid - search API', () => {
             const searchString = 'casey';
 
             grid.findNext(searchString);
-            findNext(grid, searchString).then(() => {
+            findNextWithPaging(grid, searchString).then(() => {
                 fix.detectChanges();
                 let highlight = grid.nativeElement.querySelector('.' + component.activeClass);
                 expect(highlight).not.toBeNull();
@@ -615,81 +667,8 @@ describe('IgxGrid - search API', () => {
 
                 grid.page = 1;
                 fix.detectChanges();
-                fix.whenStable().then(() => {
-                    highlight = grid.nativeElement.querySelector('.' + component.activeClass);
-                    expect(highlight).not.toBeNull();
-                    done();
-                });
-            });
-        });
-
-        it('Active highlight should be updated when filtering is applied', (done) => {
-            grid.findNext('casey');
-            grid.findNext('casey');
-            fix.detectChanges();
-
-            fix.whenStable().then(() => {
-                grid.filter('JobTitle', 'Vice', IgxStringFilteringOperand.instance().condition('contains'));
-                fix.detectChanges();
-                return fix.whenStable();
-            }).then(() => {
-                fix.detectChanges();
-                requestAnimationFrame(() => {
-                    const activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
-                    const highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
-                    expect(highlights.length).toBe(3);
-                    expect(activeHighlight).toBe(highlights[1]);
-                    done();
-                });
-            });
-        });
-
-        it('Active highlight should be preserved when all rows are filtered out', (done) => {
-            grid.height = '500px';
-            fix.detectChanges();
-
-            grid.findNext('casey');
-            grid.findNext('casey');
-            fix.whenStable().then(() => {
-                fix.detectChanges();
-
-                let highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
-                expect(highlights.length).toBe(1);
-
-                grid.filter('Name', 'zxxz', IgxStringFilteringOperand.instance().condition('contains'));
-                fix.detectChanges();
-
-                let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
-                highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
-                expect(highlights.length).toBe(0);
-                expect(activeHighlight).toBeNull();
-
-                grid.clearFilter('Name');
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-
-                    activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
-                    highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
-                    expect(highlights.length).toBe(1);
-                    expect(activeHighlight).toBe(highlights[0]);
-                    done();
-                });
-            });
-        });
-
-        it('Active highlight should be preserved when a column is moved', (done) => {
-            grid.height = '500px';
-            grid.findNext('casey');
-            fix.detectChanges();
-
-            const columns = grid.columnList.toArray();
-            grid.moveColumn(columns[0], columns[1]);
-            fix.whenStable().then(() => {
-                fix.detectChanges();
-                const activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
-                const highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
-                expect(highlights.length).toBe(1);
-                expect(activeHighlight).toBe(highlights[0]);
+                highlight = grid.nativeElement.querySelector('.' + component.activeClass);
+                expect(highlight).not.toBeNull();
                 done();
             });
         });
