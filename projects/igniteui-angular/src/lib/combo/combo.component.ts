@@ -27,6 +27,9 @@ import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPip
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 
+/**
+ * @hidden
+ */
 export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
     private _callback: () => void;
     constructor(callback: () => void) {
@@ -41,6 +44,10 @@ export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy
         super.position(contentElement, size);
     }
 }
+
+/**
+ * @hidden
+ */
 export enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
