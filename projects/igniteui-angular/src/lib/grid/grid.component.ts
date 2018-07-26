@@ -2741,6 +2741,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
     }
 
+    public recalculateSummaries() {
+        this.summariesHeight = 0;
+        requestAnimationFrame(() => this.calculateGridSizes());
+    }
+
     /**
      * Finds the next occurrence of a given string in the grid and scrolls to the cell if it isn't visible.
      * Returns how many times the grid contains the string.
@@ -2867,7 +2872,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      */
     get hasSummarizedColumns(): boolean {
-        return this.columnList.some((col) => col.hasSummary);
+        const summarizedColumns = this.columnList.filter(col => col.hasSummary);
+        return summarizedColumns.length > 0 && summarizedColumns.some(col => !col.hidden);
     }
 
     /**
@@ -3065,7 +3071,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected calcMaxSummaryHeight() {
         let maxSummaryLength = 0;
-        this.columnList.filter((col) => col.hasSummary).forEach((column) => {
+        this.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             this.gridAPI.set_summary_by_column_name(this.id, column.field);
             const getCurrentSummaryColumn = this.gridAPI.get_summaries(this.id).get(column.field);
             if (getCurrentSummaryColumn) {
@@ -3514,7 +3520,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
 
-                this.performVerticalScroll(-this.rowHeight, rowIndex, columnIndex);
+                    this.performVerticalScroll(-this.rowHeight, rowIndex, columnIndex);
             }
             target.nativeElement.focus();
         } else {
