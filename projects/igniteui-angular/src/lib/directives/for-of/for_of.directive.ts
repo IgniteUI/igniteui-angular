@@ -514,9 +514,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
-     * Returns a reference to the horizontal scrollbar DOM element.
+     * Returns the total number of items that are fully visible.
      * ```typescript
-     * this.parentVirtDir.getHorizontalScroll();
+     * this.parentVirtDir.getItemCountInView();
      * ```
      */
     public getItemCountInView() {
