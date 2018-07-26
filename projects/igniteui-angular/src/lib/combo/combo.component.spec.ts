@@ -106,6 +106,7 @@ describe('igxCombo', () => {
             expect(combo.filterable).toEqual(true);
             expect(combo.height).toEqual('400px');
             expect(combo.itemsMaxHeight).toEqual(400);
+            expect(combo.itemsWidth).toEqual('399px');
             expect(combo.itemHeight).toEqual(40);
             expect(combo.groupKey).toEqual('region');
             expect(combo.valueKey).toEqual('field');
@@ -3167,8 +3168,9 @@ class IgxComboSampleComponent {
     template: `
         <p>Change data to:</p>
         <label id="mockID">Combo Label</label>
-        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
-        [itemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'"
+        [itemsMaxHeight]='400' [itemsWidth]="'399px'" [itemHeight]='40'
+        [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
         [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `
