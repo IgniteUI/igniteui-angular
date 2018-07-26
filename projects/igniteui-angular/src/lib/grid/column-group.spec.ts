@@ -1,4 +1,4 @@
-import { async, TestBed, ComponentFixture, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
@@ -1243,11 +1243,10 @@ describe('IgxGrid - multi-column headers', () => {
             ci.secondSlaveColGroupTitle = ci.addressColTitle = ci.phoneColTitle =
             ci.faxColTitle = ci.cityColTitle = title;
 
-        fixture.detectChanges();
         tick(50);
+        fixture.detectChanges();
 
         NestedColGroupsTests.testHeadersRendering(fixture);
-        discardPeriodicTasks();
     }));
 
     it('Should emit "columnInit" event when having multi-column headers.', () => {
