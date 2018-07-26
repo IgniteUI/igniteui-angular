@@ -85,7 +85,7 @@ describe('IgxSnackbar', () => {
         expect(fixture.componentInstance.snackbar.isVisible).toBeTruthy();
     }));
 
-    it('should trigger on action', () => {
+    it('should trigger on action', fakeAsync(() => {
         fixture.componentInstance.text = 'Click';
         fixture.componentInstance.snackbar.isVisible = true;
         fixture.detectChanges();
@@ -93,11 +93,12 @@ describe('IgxSnackbar', () => {
         spyOn(fixture.componentInstance.snackbar.onAction, 'emit');
         fixture.debugElement.nativeElement.querySelector('button').click();
         fixture.detectChanges();
+        tick();
 
         expect(fixture.componentInstance.snackbar.onAction.emit)
             .toHaveBeenCalledWith(fixture.componentInstance.snackbar);
 
-    });
+    }));
 });
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">

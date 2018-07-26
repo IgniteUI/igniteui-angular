@@ -77,7 +77,6 @@ describe('IgxToast', () => {
         expect(element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_TOP] &&
             element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_MIDDLE] &&
             element.classes[fixture.componentInstance.toast.CSS_CLASSES.IGX_TOAST_BOTTOM]).toBeUndefined();
-
     });
 
     it('should auto hide 1 second after is open', fakeAsync(() => {
@@ -103,6 +102,7 @@ describe('IgxToast', () => {
         fixture.componentInstance.toast.autoHide = false;
 
         fixture.componentInstance.toast.show();
+        tick();
 
         expect(fixture.componentInstance.toast.isVisible).toBeTruthy();
         expect(fixture.componentInstance.toast.autoHide).toBeFalsy();
