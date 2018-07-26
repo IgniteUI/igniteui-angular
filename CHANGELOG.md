@@ -1,9 +1,16 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 6.2.0
-- `igxGrid` improvement
-    - Added `label` property to `IFilteringOperation`, so users can localize the filtering operands.
+## 6.1.3
+- `igxGrid`
+    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
+
+- `igxColumn` changes
+    - The footerTemplate property is removed.
+- `igxColumnGroup` changes
+    - The footerTemplate property is removed.
+- `IFilteringOperation`
+	- Added `label` property, so users can localize the filtering operands.
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
