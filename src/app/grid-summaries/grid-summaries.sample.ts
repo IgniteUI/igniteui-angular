@@ -52,22 +52,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 10,
         Discontinued: false,
-        OrderDate: new Date('2012-02-12'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(1)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(1)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(1)/Supplier'
-            }
-        }
+        OrderDate: new Date('2012-02-12')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(2)',
@@ -83,22 +68,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 40,
         ReorderLevel: 25,
         Discontinued: false,
-        OrderDate: new Date('2003-03-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(2)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(2)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(2)/Supplier'
-            }
-        }
+        OrderDate: new Date('2003-03-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(3)',
@@ -114,22 +84,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 70,
         ReorderLevel: 25,
         Discontinued: false,
-        OrderDate: new Date('2006-03-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(3)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(3)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(3)/Supplier'
-            }
-        }
+        OrderDate: new Date('2006-03-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(4)',
@@ -145,22 +100,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: false,
-        OrderDate: new Date('2020-03-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(4)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(4)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(4)/Supplier'
-            }
-        }
+        OrderDate: new Date('2020-03-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(5)',
@@ -176,22 +116,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: true,
-        OrderDate: new Date('2011-11-11'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(5)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(5)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(5)/Supplier'
-            }
-        }
+        OrderDate: new Date('2011-11-11')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(6)',
@@ -207,22 +132,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 25,
         Discontinued: false,
-        OrderDate: new Date('2017-12-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(6)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(6)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(6)/Supplier'
-            }
-        }
+        OrderDate: new Date('2017-12-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(7)',
@@ -238,22 +148,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 10,
         Discontinued: false,
-        OrderDate: new Date('2016-07-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(7)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(7)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(7)/Supplier'
-            }
-        }
+        OrderDate: new Date('2016-07-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(8)',
@@ -269,22 +164,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: false,
-        OrderDate: new Date('2025-01-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(8)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(8)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(8)/Supplier'
-            }
-        }
+        OrderDate: new Date('2025-01-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(9)',
@@ -300,22 +180,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: true,
-        OrderDate: new Date('2010-02-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(9)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(9)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(9)/Supplier'
-            }
-        }
+        OrderDate: new Date('2010-02-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(10)',
@@ -331,22 +196,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: false,
-        OrderDate: new Date('2008-05-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(10)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(10)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(10)/Supplier'
-            }
-        }
+        OrderDate: new Date('2008-05-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(11)',
@@ -362,22 +212,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 30,
         ReorderLevel: 30,
         Discontinued: false,
-        OrderDate: new Date('2009-01-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(11)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(11)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(11)/Supplier'
-            }
-        }
+        OrderDate: new Date('2009-01-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(12)',
@@ -393,22 +228,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: false,
-        OrderDate: new Date('2015-11-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(12)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(12)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(12)/Supplier'
-            }
-        }
+        OrderDate: new Date('2015-11-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(13)',
@@ -424,22 +244,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 5,
         Discontinued: false,
-        OrderDate: new Date('2025-03-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(13)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(13)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(13)/Supplier'
-            }
-        }
+        OrderDate: new Date('2025-03-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(14)',
@@ -455,22 +260,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: false,
-        OrderDate: new Date('2019-06-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(14)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(14)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(14)/Supplier'
-            }
-        }
+        OrderDate: new Date('2019-06-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(15)',
@@ -486,22 +276,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 5,
         Discontinued: false,
-        OrderDate: new Date('1995-03-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(15)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(15)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(15)/Supplier'
-            }
-        }
+        OrderDate: new Date('1995-03-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(16)',
@@ -517,22 +292,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 10,
         Discontinued: false,
-        OrderDate: new Date('2018-03-28'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(16)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(16)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(16)/Supplier'
-            }
-        }
+        OrderDate: new Date('2018-03-28')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(17)',
@@ -548,22 +308,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: true,
-        OrderDate: new Date('2015-08-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(17)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(17)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(17)/Supplier'
-            }
-        }
+        OrderDate: new Date('2015-08-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(18)',
@@ -579,22 +324,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: false,
-        OrderDate: new Date('2005-09-27'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(18)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(18)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(18)/Supplier'
-            }
-        }
+        OrderDate: new Date('2005-09-27')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(19)',
@@ -610,22 +340,7 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 5,
         Discontinued: false,
-        OrderDate: new Date('2001-03-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(19)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(19)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(19)/Supplier'
-            }
-        }
+        OrderDate: new Date('2001-03-17')
     }, {
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)',
@@ -641,31 +356,18 @@ export class GridSummaryComponent implements OnInit {
         UnitsOnOrder: 0,
         ReorderLevel: 0,
         Discontinued: false,
-        OrderDate: new Date('2005-03-17'),
-        Category: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Category'
-            }
-        },
-        Order_Details: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Order_Details'
-            }
-        },
-        Supplier: {
-            __deferred: {
-                uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier'
-            }
-        }
+        OrderDate: new Date('2005-03-17')
     }
     ];
+    public hasSummaryUnit = true;
+    public hashidden = false;
 
     constructor() {
         const date = new Date();
         for (let i = 0; i < 10; i++) {
             this.data = this.data.concat(this.data);
         }
-        this.data = this.data.slice(0, 15);
+        this.data = this.data.slice(0, 19);
     }
 
     ngOnInit() {
@@ -686,12 +388,18 @@ export class GridSummaryComponent implements OnInit {
     public enableSummary() {
         for (const name of ['ReorderLevel', 'ProductID']) {
             if (this.grid1.getColumnByName(name).hasSummary) {
-                this.grid1.disableSummaries(name);
+               // this.grid1.disableSummaries(name);
+                this.grid1.getColumnByName(name).hasSummary = false;
+                // this.grid1.disableSummaries(name);
             } else {
-                this.grid1.enableSummaries(name, this.mySummary);
+                // this.grid1.enableSummaries(name, this.mySummary);
+                // this.grid1.enableSummaries(name, this.mySummary);
+                this.grid1.getColumnByName(name).hasSummary = true;
             }
         }
+        this.grid1.recalculateSummaries();
     }
+
     public addRow() {
         this.grid1.addRow({
             __metadata: {
@@ -708,30 +416,15 @@ export class GridSummaryComponent implements OnInit {
             UnitsOnOrder: 0,
             ReorderLevel: 0,
             Discontinued: false,
-            OrderDate: new Date('1905-03-17'),
-            Category: {
-                __deferred: {
-                    uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Category'
-                }
-            },
-            Order_Details: {
-                __deferred: {
-                    uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Order_Details'
-                }
-            },
-            Supplier: {
-                __deferred: {
-                    uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier'
-                }
-            }
+            OrderDate: new Date('1905-03-17')
         });
     }
 
     public deleteRow() {
-        this.grid1.deleteRow(0);
+        this.grid1.deleteRow(1);
     }
     public updateCell() {
-        this.grid1.updateCell(70, 0, 'ReorderLevel');
+        this.grid1.updateCell(70, 1, 'ReorderLevel');
     }
     public updateRow() {
         this.grid1.updateRow({
@@ -749,23 +442,8 @@ export class GridSummaryComponent implements OnInit {
             UnitsOnOrder: 0,
             ReorderLevel: -12,
             Discontinued: false,
-            OrderDate: new Date('1905-03-17'),
-            Category: {
-                __deferred: {
-                    uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Category'
-                }
-            },
-            Order_Details: {
-                __deferred: {
-                    uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Order_Details'
-                }
-            },
-            Supplier: {
-                __deferred: {
-                    uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)/Supplier'
-                }
-            }
-        }, 0);
+            OrderDate: new Date('1905-03-17')
+        }, 1);
     }
     pin() {
         for (const name of ['UnitsInStock', 'Discontinued']) {
@@ -774,6 +452,19 @@ export class GridSummaryComponent implements OnInit {
             } else {
                 this.grid1.pinColumn(name);
             }
+        }
+    }
+
+    disableSummary() {
+        this.grid1.getColumnByName('UnitsInStock').hasSummary = false;
+        this.grid1.recalculateSummaries();
+    }
+
+    hide() {
+        if (this.grid1.getColumnByName('UnitsInStock').hidden) {
+            this.grid1.getColumnByName('UnitsInStock').hidden = false;
+        } else {
+            this.grid1.getColumnByName('UnitsInStock').hidden = true;
         }
     }
 }
