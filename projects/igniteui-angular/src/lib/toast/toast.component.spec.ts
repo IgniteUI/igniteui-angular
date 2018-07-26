@@ -23,7 +23,7 @@ describe('IgxToast', () => {
             fixture.detectChanges();
         }).catch((reason) => {
             return Promise.reject(reason);
-        });;
+        });
     }));
     afterEach(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
