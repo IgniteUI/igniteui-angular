@@ -544,6 +544,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
+    /**
+     * Returns a reference to the horizontal scrollbar DOM element.
+     * ```typescript
+     * this.parentVirtDir.getHorizontalScroll();
+     * ```
+     */
     public getHorizontalScroll() {
         return this.getElement(this._viewContainer, 'igx-horizontal-virtual-helper') || this.hScroll;
     }
