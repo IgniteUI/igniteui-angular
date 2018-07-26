@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
@@ -235,6 +235,57 @@ describe('IgxInput', () => {
                 expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(true);
             });
         });
+    }));
+
+    it('When value is changed only via ngModel', fakeAsync(() => {
+        const fix = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
+        fix.detectChanges();
+
+        const inputGroup = fix.debugElement.children[0];
+
+        fix.componentInstance.user.firstName = 'Bobby';
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--filled')).toBe(true);
+
+        fix.componentInstance.user.firstName = undefined;
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
+
+        fix.componentInstance.user.firstName = '';
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(true);
+    }));
+
+    it('When value is changed via reactive form', fakeAsync(() => {
+        const fix = TestBed.createComponent(ReactiveFormComponent);
+        fix.detectChanges();
+
+        const igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
+        const firstInputGroup = igxInputGroups[0];
+
+        fix.componentInstance.form.patchValue({ str: 'test' });
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--filled')).toBe(true);
+
+        fix.componentInstance.form.patchValue({ str: undefined });
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
+
+        fix.componentInstance.form.patchValue({ str: '' });
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(true);
     }));
 });
 
