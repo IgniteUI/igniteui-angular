@@ -28,6 +28,7 @@
     "exclude": "**/*.spec.ts",
     "theme": "default",
     "excludePrivate": true,
+    "excludeProtected": true,
     "excludeNotExported": true,
     "name": "Ignite UI for Angular",
     "target": "es2015",
