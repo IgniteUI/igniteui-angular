@@ -794,7 +794,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public get filteringExpressions() {
-        return this._filteringExpressions;
+        return this.filterable ? this._filteringExpressions : [];
     }
 
     /**
@@ -1260,7 +1260,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *```
      */
     public toggle() {
-        this.searchValue = '';
         this.dropdown.toggle(this.overlaySettings);
     }
 
@@ -1273,7 +1272,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *```
      */
     public open() {
-        this.searchValue = '';
         this.dropdown.open(this.overlaySettings);
     }
 
