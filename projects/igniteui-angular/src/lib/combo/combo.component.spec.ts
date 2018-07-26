@@ -2792,7 +2792,7 @@ describe('igxCombo', () => {
             });
         }));
 
-        fit('Disable/Enable filtering at runtime', fakeAsync(() => {
+        it('Disable/Enable filtering at runtime', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboInputTestComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
