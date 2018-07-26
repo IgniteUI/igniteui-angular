@@ -169,7 +169,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         const scrollTop = this.getVerticalScroll().scrollTop;
         const scrollHeight = this.getVerticalScroll().scrollHeight;
-        return Math.floor(scrollTop + this.igxForContainerSize) === scrollHeight;
+        // Use === and not >= because `scrollTop + container size` can't be bigger than `scrollHeight`, unless something isn't updated.
+        // Also use Math.round because Chrome has some inconsistencies and `scrollTop + container` can be float when zooming the page.
+        return Math.round(scrollTop + this.igxForContainerSize) === scrollHeight;
     }
 
     private get _isAtBottomIndex() {
@@ -562,7 +564,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const currIndex = Math.floor(ratio * count);
+        const currIndex = Math.round(ratio * count);
         let endingIndex = this.state.chunkSize + currIndex;
 
         // We update the startIndex before recalculating the chunkSize.
