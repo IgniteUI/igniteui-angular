@@ -2,12 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.3
-- `igxColumn` changes
-    - The footerTemplate property is removed.
-- `igxColumnGroup` changes
-    - The footerTemplate property is removed.
-- `igxCombo`
-    - **Breaking change** igxCombo default width is set to 100%
+- `igxGrid`
+    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed.
+    - `igxColumn`
+        - The footerTemplate property is removed.
+    - `igxColumnGroup`
+        - The footerTemplate property is removed.
+    - `igxCombo`
+        - **Breaking change** igxCombo default width is set to 100%
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
