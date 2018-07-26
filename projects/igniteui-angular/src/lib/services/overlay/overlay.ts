@@ -244,7 +244,7 @@ export class IgxOverlayService {
     private setupModalWrapper(info: OverlayInfo) {
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
         fromEvent(wrapperElement, 'keydown').pipe(
-            filter((ev: KeyboardEvent) => ev.key === 'Escape'),
+            filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
             take(1)
         ).subscribe(() => this.hide(info.id));
         wrapperElement.classList.remove('igx-overlay__wrapper');
