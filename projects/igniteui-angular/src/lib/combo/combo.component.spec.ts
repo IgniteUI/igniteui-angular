@@ -2791,6 +2791,47 @@ describe('igxCombo', () => {
                 expect(combo.children.length).toBeTruthy();
             });
         }));
+
+        it('Disable/Enable filtering at runtime', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboInputTestComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+
+            combo.dropdown.open();
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(9);
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+            combo.dropdown.close();
+            tick();
+            fix.detectChanges();
+            combo.filterable = false;
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open();
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(9);
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0);
+            combo.dropdown.close();
+            tick();
+            fix.detectChanges();
+            combo.filterable = true;
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open();
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(9);
+        }));
     });
 
     describe('Form control tests: ', () => {
