@@ -80,11 +80,13 @@ describe('IgxToast', () => {
 
     });
 
-    it('should auto hide 10 seconds after is open', fakeAsync(() => {
+    it('should auto hide 1 second after is open', fakeAsync(() => {
         const displayTime = 1000;
         fixture.componentInstance.toast.displayTime = displayTime;
+        fixture.componentInstance.toast.autoHide = true;
 
         fixture.componentInstance.toast.show();
+        tick();
 
         expect(fixture.componentInstance.toast.isVisible).toBeTruthy();
         expect(fixture.componentInstance.toast.autoHide).toBeTruthy();

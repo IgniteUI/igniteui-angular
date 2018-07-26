@@ -47,15 +47,17 @@ describe('IgxSnackbar', () => {
 
         expect(fixture.componentInstance.snackbar.id).toBe('customId');
         expect(domSnackbar.id).toBe('customId');
-
     });
 
     it('should auto hide 1 seconds after is open', fakeAsync(() => {
-
         const displayTime = 1000;
         fixture.componentInstance.snackbar.displayTime = displayTime;
 
+        fixture.componentInstance.snackbar.autoHide = true;
+
         fixture.componentInstance.snackbar.show();
+
+        tick();
 
         expect(fixture.componentInstance.snackbar.isVisible).toBeTruthy();
         expect(fixture.componentInstance.snackbar.autoHide).toBeTruthy();
@@ -64,17 +66,16 @@ describe('IgxSnackbar', () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.snackbar.isVisible).toBeFalsy();
-
-
     }));
 
     it('should not auto hide seconds after is open', fakeAsync(() => {
-
         const displayTime = 1000;
         fixture.componentInstance.snackbar.displayTime = displayTime;
         fixture.componentInstance.snackbar.autoHide = false;
 
         fixture.componentInstance.snackbar.show();
+
+        tick();
 
         expect(fixture.componentInstance.snackbar.isVisible).toBeTruthy();
         expect(fixture.componentInstance.snackbar.autoHide).toBeFalsy();
@@ -82,11 +83,9 @@ describe('IgxSnackbar', () => {
         tick(displayTime);
         fixture.detectChanges();
         expect(fixture.componentInstance.snackbar.isVisible).toBeTruthy();
-
     }));
 
     it('should trigger on action', () => {
-
         fixture.componentInstance.text = 'Click';
         fixture.componentInstance.snackbar.isVisible = true;
         fixture.detectChanges();
