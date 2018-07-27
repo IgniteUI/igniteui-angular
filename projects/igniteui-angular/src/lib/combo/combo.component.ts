@@ -470,16 +470,16 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *
      * ```typescript
      * // get
-     * let myComboItemsMaxWidth = this.combo.itemsMaxWidth;
+     * let myComboItemsWidth = this.combo.itemsWidth;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-combo [itemsMaxWidth] = '80'></igx-combo>
+     * <igx-combo [itemsWidth] = '"180px"'></igx-combo>
      * ```
      */
     @Input()
-    public itemsMaxWidth;
+    public itemsWidth: string;
 
     /**
      * Configures the drop down list item height
