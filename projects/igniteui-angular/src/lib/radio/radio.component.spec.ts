@@ -86,7 +86,6 @@ describe('IgxRadio', () => {
         fixture.detectChanges();
         tick();
 
-        fixture.detectChanges();
         expect(radios[0].checked).toBe(true);
         expect(fixture.componentInstance.selected).toEqual('Foo');
 
@@ -96,7 +95,6 @@ describe('IgxRadio', () => {
         fixture.detectChanges();
         tick();
 
-        fixture.detectChanges();
         expect(radios[1].checked).toBe(true);
         expect(fixture.componentInstance.selected).toEqual('Bar');
     }));
