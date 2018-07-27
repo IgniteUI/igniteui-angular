@@ -11,6 +11,7 @@ import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.compon
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { detectChanges } from '../../../../../node_modules/@angular/core/src/render3';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -144,20 +145,19 @@ describe('igxCombo', () => {
             expect(combo.data).toBeDefined();
             expect(combo.data.length).toEqual(0);
         });
-        it('Combo`s input textbox should be read-only', async () => {
+        it('Combo`s input textbox should be read-only', fakeAsync(() => {
             const inputText = 'text';
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
             const comboElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
             const inputElement = comboElement.nativeElement;
             expect(comboElement.attributes['readonly']).toBeDefined();
-            inputElement.value = inputText;
-            inputElement.dispatchEvent(new Event('input'));
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                expect(inputElement.value).toEqual('');
-            });
-        });
+            typeInInput(inputElement, inputText);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('');
+        }));
         it('Should properly handle getItemDataByValueKey calls', () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
@@ -627,7 +627,7 @@ describe('igxCombo', () => {
             expect(focusedItems.length).toEqual(0);
             expect(selectedItems.length).toEqual(0);
 
-            const focusItem = function (event: KeyboardEvent, itemIndex: number) {
+            const focusAndVerifyItem = function (event: KeyboardEvent, itemIndex: number) {
                 dropdownContent.dispatchEvent(event);
                 fixture.detectChanges();
                 focusedItems = dropdownList.querySelectorAll('.' + CSS_CLASS_FOCUSED);
@@ -635,7 +635,7 @@ describe('igxCombo', () => {
                 expect(focusedItems[0]).toEqual(dropdownItems[itemIndex]);
             };
 
-            const selectItem = function (itemIndex: number) {
+            const selectAndVerifyItem = function (itemIndex: number) {
                 dropdownContent.dispatchEvent(spaceEvent);
                 fixture.detectChanges();
                 selectedItems = dropdownList.querySelectorAll('.' + CSS_CLASS_SELECTED);
@@ -643,23 +643,35 @@ describe('igxCombo', () => {
                 expect(selectedItems).toContain(dropdownItems[itemIndex]);
             };
 
-            focusItem(arrowDownEvent, 0);
+            focusAndVerifyItem(arrowDownEvent, 0);
             selectedItemsCount++;
-            selectItem(0);
+            selectAndVerifyItem(0);
 
             for (let index = 1; index < 7; index++) {
-                focusItem(arrowDownEvent, index);
+                focusAndVerifyItem(arrowDownEvent, index);
             }
             selectedItemsCount++;
-            selectItem(6);
+            selectAndVerifyItem(6);
 
             for (let index = 5; index > 3; index--) {
-                focusItem(arrowUpEvent, index);
+                focusAndVerifyItem(arrowUpEvent, index);
             }
             selectedItemsCount++;
-            selectItem(4);
+            selectAndVerifyItem(4);
         }));
-        it('Should scroll up to the first item in the dropdown list with HOME key', async(() => {
+        it('Should properly close on click outside of the combo dropdown', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboSampleComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+            expect(combo).toBeDefined();
+            combo.toggle();
+            tick();
+            expect(combo.collapsed).toEqual(false);
+            document.documentElement.dispatchEvent(new Event('click'));
+            tick();
+            expect(combo.collapsed).toEqual(true);
+        }));
+        fit('Should scroll up to the first item in the dropdown list with HOME key', async(() => {
             let scrollbar: HTMLElement;
             let dropdownContainer: HTMLElement;
             let firstVisibleItem: Element;
@@ -672,47 +684,47 @@ describe('igxCombo', () => {
             const comboButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNBUTTON)).nativeElement;
             comboButton.click();
             fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+            scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
+            expect(scrollbar.scrollTop).toEqual(0);
+            dropdownContent.dispatchEvent(endEvent);
+            setTimeout(() => {
                 fixture.detectChanges();
-                const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
-                scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
-                expect(scrollbar.scrollTop).toEqual(0);
-                dropdownContent.dispatchEvent(endEvent);
+                expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
+                firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
+                lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
+                expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
+                dropdownContent.dispatchEvent(homeEvent);
                 setTimeout(() => {
                     fixture.detectChanges();
-                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                    expect(scrollbar.scrollTop).toEqual(0);
                     dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                     lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                    expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
-                    expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
-                    dropdownContent.dispatchEvent(homeEvent);
-                    setTimeout(() => {
+                    expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
+                    expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
+                    combo.dropdown.verticalScrollContainer.scrollTo(6);
+                    setTimeout(function () {
                         fixture.detectChanges();
-                        expect(scrollbar.scrollTop).toEqual(0);
                         dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                         firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
-                        lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                        expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
-                        expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
-                        combo.dropdown.verticalScrollContainer.scrollTo(6);
+                        expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[6]);
+                        dropdownContent.dispatchEvent(homeEvent);
                         setTimeout(function () {
                             fixture.detectChanges();
                             dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                             firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
-                            expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[6]);
-                            dropdownContent.dispatchEvent(homeEvent);
-                            setTimeout(function () {
-                                fixture.detectChanges();
-                                dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
-                                firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
-                                lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                                expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
-                                expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
-                                expect(scrollbar.scrollTop).toEqual(0);
-                            }, 20);
+                            lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                            expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
+                            expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
+                            expect(scrollbar.scrollTop).toEqual(0);
                         }, 20);
                     }, 20);
                 }, 20);
+            }, 20);
             });
         }));
         it('Should scroll down to the last item in the dropdown list with END key', async(() => {
@@ -764,6 +776,35 @@ describe('igxCombo', () => {
     });
 
     describe('Selection tests: ', () => {
+        function getCheckbox(dropdownElement: any, itemIndex: number): HTMLElement {
+            const dropdownItems = dropdownElement.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            return checkbox;
+        }
+        function clickItemCheckbox(dropdownElement: any, itemIndex: number) {
+            const dropdownItems = dropdownElement.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
+            const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            checkbox.click();
+        }
+        function verifyItemIsSelected(
+            combo: IgxComboComponent,
+            itemIndex: number,
+            selectedItemIndex: number,
+            checkbox?: HTMLElement) {
+            if (checkbox != null) {
+                expect(checkbox.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
+            }
+            expect(combo.isItemSelected(combo.data[itemIndex])).toBeTruthy();
+            expect(combo.selectedItems()[selectedItemIndex]).toEqual(combo.data[itemIndex]);
+        }
+        function verifyItemIsUnselected(
+            dropdownElement: any,
+            combo: IgxComboComponent,
+            itemIndex: number) {
+            const checkbox = getCheckbox(dropdownElement, itemIndex);
+            expect(checkbox.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
+            expect(combo.isItemSelected(combo.data[itemIndex])).toBeFalsy();
+        }
         it('Should properly return the selected value(s)', () => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
@@ -971,16 +1012,11 @@ describe('igxCombo', () => {
             const comboButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNBUTTON)).nativeElement;
 
             comboButton.click();
-            tick();
             fixture.detectChanges();
-
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
 
-            const selectAndVerifyDropdownItem = function (itemIndex: number) {
-                const selectedItem = dropdownItems[itemIndex];
-                const itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
-                itemCheckbox.click();
+            const verifySelectedItem = function (itemIndex: number) {
+                clickItemCheckbox(dropdownList, itemIndex);
                 fixture.detectChanges();
                 tick();
                 fixture.detectChanges();
@@ -988,18 +1024,15 @@ describe('igxCombo', () => {
             };
 
             expectedOutput = dropdown.items[3].itemData;
-            selectAndVerifyDropdownItem(3);
+            verifySelectedItem(3);
             expectedOutput += ', ' + dropdown.items[7].itemData;
-            selectAndVerifyDropdownItem(7);
+            verifySelectedItem(7);
             expectedOutput += ', ' + dropdown.items[1].itemData;
-            selectAndVerifyDropdownItem(1);
+            verifySelectedItem(1);
             expectedOutput = dropdown.items[3].itemData + ', ' + dropdown.items[1].itemData;
-            selectAndVerifyDropdownItem(7);
+            verifySelectedItem(7);
         }));
-        it('Should append selected items to the input in their selection order', async(() => {
-            let dropdownItems: NodeListOf<HTMLElement>;
-            let targetItem: HTMLElement;
-            let targetCheckbox: HTMLElement;
+        it('Should append selected items to the input in their selection order', () => {
             const event = new KeyboardEvent('keydown', { key: 'End' });
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -1007,42 +1040,28 @@ describe('igxCombo', () => {
             const expectedOutput = combo.data[3] + ', ' + combo.data[7] + ', ' + combo.data[1] + ', ' + combo.data[11];
             const comboButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNBUTTON)).nativeElement;
             comboButton.click();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
-                const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-                dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                targetItem = dropdownItems[3];
-                targetCheckbox = targetItem.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                targetCheckbox.click();
-                fixture.detectChanges();
+            fixture.detectChanges();
+            const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
 
-                targetItem = dropdownItems[7];
-                targetCheckbox = targetItem.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                targetCheckbox.click();
+            clickItemCheckbox(dropdownList, 3);
+            fixture.detectChanges();
+            clickItemCheckbox(dropdownList, 7);
+            fixture.detectChanges();
+            clickItemCheckbox(dropdownList, 1);
+            fixture.detectChanges();
+            dropdownContent.dispatchEvent(event);
+            setTimeout(function () {
                 fixture.detectChanges();
-
-                targetItem = dropdownItems[1];
-                targetCheckbox = targetItem.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                targetCheckbox.click();
+                clickItemCheckbox(dropdownList, 5);
                 fixture.detectChanges();
-
-                dropdownContent.dispatchEvent(event);
                 setTimeout(function () {
                     fixture.detectChanges();
-                    dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                    targetItem = dropdownItems[5];
-                    targetCheckbox = targetItem.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                    targetCheckbox.click();
-                    fixture.detectChanges();
-                    setTimeout(function () {
-                        fixture.detectChanges();
-                        const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-                        expect(input.nativeElement.value).toEqual(expectedOutput);
-                    }, 20);
+                    const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+                    expect(input.nativeElement.value).toEqual(expectedOutput);
                 }, 20);
-            });
-        }));
+            }, 20);
+        });
         it('Should remove deselected items from the input', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -1054,75 +1073,74 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
 
-            const clickItemCheckbox = function (itemIndex: number) {
-                const item = dropdownItems[itemIndex];
-                const checkbox = item.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox.click();
-                fixture.detectChanges();
-                tick();
-            };
-
-            clickItemCheckbox(3);
-            clickItemCheckbox(7);
-            clickItemCheckbox(1);
+            clickItemCheckbox(dropdownList, 3);
+            fixture.detectChanges();
+            tick();
+            clickItemCheckbox(dropdownList, 7);
+            fixture.detectChanges();
+            tick();
+            clickItemCheckbox(dropdownList, 1);
+            fixture.detectChanges();
+            tick();
             expect(inputElement.value).toEqual(
                 dropdown.items[3].itemData + ', ' +
                 dropdown.items[7].itemData + ', ' +
                 dropdown.items[1].itemData);
-            clickItemCheckbox(7);
+
+            clickItemCheckbox(dropdownList, 7);
+            fixture.detectChanges();
+            tick();
             expect(inputElement.value).toEqual(
                 dropdown.items[3].itemData + ', ' +
                 dropdown.items[1].itemData);
-            clickItemCheckbox(8);
+
+            clickItemCheckbox(dropdownList, 8);
+            fixture.detectChanges();
+            tick();
             expect(inputElement.value).toEqual(
                 dropdown.items[3].itemData + ', ' +
                 dropdown.items[1].itemData + ', ' +
                 dropdown.items[8].itemData);
-            clickItemCheckbox(1);
+
+            clickItemCheckbox(dropdownList, 1);
+            fixture.detectChanges();
+            tick();
             expect(inputElement.value).toEqual(
                 dropdown.items[3].itemData + ', ' +
                 dropdown.items[8].itemData);
-            clickItemCheckbox(3);
+
+            clickItemCheckbox(dropdownList, 3);
+            fixture.detectChanges();
+            tick();
             expect(inputElement.value).toEqual(dropdown.items[8].itemData);
-            clickItemCheckbox(8);
+
+            clickItemCheckbox(dropdownList, 8);
+            fixture.detectChanges();
+            tick();
             expect(inputElement.value).toEqual('');
         }));
         it('Clear button should dismiss all selected items', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
-            const dropdown = combo.dropdown;
             const inputElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']')).nativeElement;
-            let checkbox_1: HTMLElement;
-            let checkbox_2: HTMLElement;
-            let checkbox_3: HTMLElement;
             combo.dropdown.toggle();
             tick();
             fixture.detectChanges();
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-            let selectedItemIndex = 0;
+            let selectedItemIndex = -1;
 
-            const verifySelectedItem = function (itemIndex: number, checkbox: HTMLElement) {
-                checkbox.click();
+            const verifySelectedItem = function (itemIndex: number) {
+                clickItemCheckbox(dropdownList, itemIndex);
                 fixture.detectChanges();
-                expect(checkbox.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(combo.data[itemIndex])).toBeTruthy();
-                expect(combo.selectedItems()[selectedItemIndex]).toEqual(dropdown.items[itemIndex].itemData);
+                const checkbox = getCheckbox(dropdownList, itemIndex);
+                verifyItemIsSelected(combo, itemIndex, ++selectedItemIndex, checkbox);
             };
 
-            checkbox_1 = dropdownItems[3].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-            verifySelectedItem(3, checkbox_1);
-
-            checkbox_2 = dropdownItems[7].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-            selectedItemIndex++;
-            verifySelectedItem(7, checkbox_2);
-
-            checkbox_3 = dropdownItems[1].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-            selectedItemIndex++;
-            verifySelectedItem(1, checkbox_3);
+            verifySelectedItem(3);
+            verifySelectedItem(7);
+            verifySelectedItem(1);
 
             tick();
             fixture.detectChanges();
@@ -1133,20 +1151,63 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             expect(inputElement.value).toEqual('');
-            expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
-            expect(combo.isItemSelected(dropdownItems[3])).toBeFalsy();
-            expect(checkbox_2.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
-            expect(combo.isItemSelected(dropdownItems[7])).toBeFalsy();
-            expect(checkbox_3.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
-            expect(combo.isItemSelected(dropdownItems[1])).toBeFalsy();
+            verifyItemIsUnselected(dropdownList, combo, 3);
+            verifyItemIsUnselected(dropdownList, combo, 7);
+            verifyItemIsUnselected(dropdownList, combo, 1);
             expect(combo.selectedItems().length).toEqual(0);
         }));
-        it('Clear button should not throw exception when no items are selected', () => {
+        it('Should show/hide clear button after selecting/deselecting items', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
-            const clearButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON));
-            expect(clearButton).toBeNull();
-        });
+            const combo = fixture.componentInstance.combo;
+            // This is a workaround for issue https://github.com/angular/angular/issues/14235
+            // Expecting existing DebugElement toBeFalsy creates circular reference in Jasmine
+            expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toBeFalsy();
+
+            // Open dropdown and select an item
+            combo.dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            clickItemCheckbox(dropdownList, 8);
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toEqual(1);
+
+            // Close dropdown
+            combo.dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toEqual(1);
+
+            // Open dropdown and deselect an item
+            combo.dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            clickItemCheckbox(dropdownList, 8);
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toBeFalsy();
+
+            // Select some items from the dropdown
+            clickItemCheckbox(dropdownList, 7);
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toEqual(1);
+            clickItemCheckbox(dropdownList, 0);
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toEqual(1);
+
+            // Clear selected items
+            fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click();
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toBeFalsy();
+
+            // Close dropdown
+            combo.dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toBeFalsy();
+        }));
         it('Should select/deselect item by clicking its checkbox', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -1156,145 +1217,103 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-            const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             let selectedItemIndex = 0;
 
-            const clickAndVerifySelectedItem = function (itemIndex: number) {
-                const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox.click();
+            const verifySelectedItem = function (itemIndex: number) {
+                clickItemCheckbox(dropdownList, itemIndex);
                 fixture.detectChanges();
-                expect(checkbox.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(combo.data[itemIndex])).toBeTruthy();
-                expect(combo.selectedItems()[selectedItemIndex]).toEqual(dropdown.items[itemIndex].itemData);
+                const checkbox = getCheckbox(dropdownList, itemIndex);
+                verifyItemIsSelected(combo, itemIndex, selectedItemIndex, checkbox);
             };
 
-            clickAndVerifySelectedItem(3);
+            verifySelectedItem(3);
             selectedItemIndex++;
-            clickAndVerifySelectedItem(7);
+            verifySelectedItem(7);
             selectedItemIndex++;
-            clickAndVerifySelectedItem(1);
+            verifySelectedItem(1);
 
             // Deselect first item
-            const itemCheckbox = dropdownItems[3].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-            itemCheckbox.click();
+            clickItemCheckbox(dropdownList, 3);
             fixture.detectChanges();
-            expect(itemCheckbox.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
+            const deselectedItemCheckbox = getCheckbox(dropdownList, 3);
+            expect(deselectedItemCheckbox.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
             expect(combo.isItemSelected(combo.data[3])).toBeFalsy();
             expect(combo.selectedItems()[0]).toEqual(dropdown.items[7].itemData);
             expect(combo.selectedItems()[1]).toEqual(dropdown.items[1].itemData);
         }));
-        it('Item selection/deselection should trigger onSelectionChangeChange event ', fakeAsync(() => {
+        it('Should trigger onSelectionChange event when selecting/deselecting item', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
-            let selectedItem: HTMLElement;
-            let itemCheckbox: HTMLElement;
-            let result = 1;
+            const dropdown = combo.dropdown;
+            const eventParams = {
+                oldSelection: [],
+                newSelection: []
+            };
+            let timesFired = 1;
             spyOn(combo.onSelectionChange, 'emit').and.callThrough();
             combo.dropdown.toggle();
             tick();
-            fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            const verifyOnSelectionChangeEventIsFired = function (itemIndex: number) {
+                clickItemCheckbox(dropdownList, itemIndex);
                 fixture.detectChanges();
-                const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-                const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                selectedItem = dropdownItems[3];
-                itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
-                itemCheckbox.click();
-                fixture.detectChanges();
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [], newSelection: ['Paris'] });
-                result++;
+                expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(timesFired);
+                expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(eventParams);
+            };
 
-                selectedItem = dropdownItems[7];
-                itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
-                itemCheckbox.click();
-                fixture.detectChanges();
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: ['Paris'], newSelection: ['Paris', 'Oslo'] });
-                result++;
+            eventParams.newSelection.push(dropdown.items[3].itemData);
+            verifyOnSelectionChangeEventIsFired(3);
+            timesFired++;
 
-                selectedItem = dropdownItems[1];
-                itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
-                itemCheckbox.click();
-                fixture.detectChanges();
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
-                    oldSelection: ['Paris', 'Oslo'],
-                    newSelection: ['Paris', 'Oslo', 'Sofia']
-                });
-                result++;
+            eventParams.oldSelection.push(dropdown.items[3].itemData);
+            eventParams.newSelection.push(dropdown.items[7].itemData);
+            verifyOnSelectionChangeEventIsFired(7);
+            timesFired++;
 
-                // Deselecting an item
-                selectedItem = dropdownItems[7];
-                itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
-                itemCheckbox.click();
-                fixture.detectChanges();
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
-                    oldSelection: ['Paris', 'Oslo', 'Sofia'],
-                    newSelection: ['Paris', 'Sofia']
-                });
-                result++;
+            eventParams.oldSelection.push(dropdown.items[7].itemData);
+            eventParams.newSelection.push(dropdown.items[1].itemData);
+            verifyOnSelectionChangeEventIsFired(1);
+            timesFired++;
 
-                selectedItem = dropdownItems[1];
-                itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
-                itemCheckbox.click();
-                fixture.detectChanges();
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(result);
-                expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: ['Paris', 'Sofia'], newSelection: ['Paris'] });
-            });
+            // Deselecting an item
+            eventParams.oldSelection.push(dropdown.items[1].itemData);
+            eventParams.newSelection = eventParams.newSelection.filter(item => item !== dropdown.items[7].itemData);
+            verifyOnSelectionChangeEventIsFired(7);
+            timesFired++;
+
+            eventParams.oldSelection = eventParams.oldSelection.filter(item => item !== dropdown.items[7].itemData);
+            eventParams.newSelection = eventParams.newSelection.filter(item => item !== dropdown.items[1].itemData);
+            verifyOnSelectionChangeEventIsFired(1);
         }));
-        it('Grouped items should be selectable ', fakeAsync(() => {
-            const expectedOutput = 'Michigan, Tennessee, Illinois';
+        it('Should be able to select item when in grouped state', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
-            const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-            const inputElement = input.nativeElement;
-            let checkbox_1: HTMLElement;
-            let checkbox_2: HTMLElement;
-            let checkbox_3: HTMLElement;
-            let dropdownItem_1;
-            let dropdownItem_2;
-            let dropdownItem_3;
             combo.dropdown.toggle();
             tick();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-                const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                const item_1 = dropdownItems[3];
-                dropdownItem_1 = combo.data[9];
-                checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_1.click();
-                fixture.detectChanges();
-                expect(checkbox_1.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(dropdownItem_1)).toBeTruthy();
-                expect(combo.selectedItems()[0]).toEqual(dropdownItem_1);
+            fixture.detectChanges();
+            const dropdown = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            let selectedItemIndex = -1;
 
-                const item_2 = dropdownItems[7];
-                dropdownItem_2 = combo.data[33];
-                checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_2.click();
+            const verifySelectedItem = function (dropdownItemIndex: number, dataItemIndex: number) {
+                clickItemCheckbox(dropdown, dropdownItemIndex);
                 fixture.detectChanges();
-                expect(checkbox_2.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(dropdownItem_2)).toBeTruthy();
-                expect(combo.selectedItems()[1]).toEqual(dropdownItem_2);
+                const checkbox = getCheckbox(dropdown, dropdownItemIndex);
+                verifyItemIsSelected(combo, dataItemIndex, ++selectedItemIndex, checkbox);
+            };
 
-                const item_3 = dropdownItems[1];
-                dropdownItem_3 = combo.data[12];
-                checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_3.click();
-                fixture.detectChanges();
-                expect(checkbox_3.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(dropdownItem_3)).toBeTruthy();
-                expect(combo.selectedItems()[2]).toEqual(dropdownItem_3);
-                return fixture.whenStable();
-            }).then(() => {
-                expect(inputElement.value).toEqual(expectedOutput);
-            });
+            verifySelectedItem(3, 9);
+            verifySelectedItem(7, 33);
+            verifySelectedItem(1, 12);
+            tick();
+            fixture.detectChanges();
+            const expectedOutput = combo.data[9].field + ', ' + combo.data[33].field + ', ' + combo.data[12].field;
+            const inputElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']')).nativeElement;
+            expect(inputElement.value).toEqual(expectedOutput);
         }));
-        it('Grouped item headers should not be selectable ', async(() => {
+        it('Should not be able to select group header when in grouped state', async(() => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
             let scrollIndex = 0;
@@ -1330,60 +1349,43 @@ describe('igxCombo', () => {
             };
         }));
         it('Selecting items using the "selectItem" method should add the items to the previously selected items', fakeAsync(() => {
-            let expectedOutput = 'Paris, Oslo, Sofia, Madrid';
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
-            const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-            const inputElement = input.nativeElement;
-            let checkbox_1: HTMLElement;
-            let checkbox_2: HTMLElement;
-            let checkbox_3: HTMLElement;
+            const inputElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']')).nativeElement;
             combo.dropdown.toggle();
             tick();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-                const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                const item_1 = dropdownItems[3];
-                checkbox_1 = item_1.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_1.click();
-                fixture.detectChanges();
-                expect(combo.selectedItems()[0]).toEqual('Paris');
+            fixture.detectChanges();
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
+            let selectedItemIndex = 0;
 
-                const item_2 = dropdownItems[7];
-                checkbox_2 = item_2.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_2.click();
-                fixture.detectChanges();
-                expect(combo.selectedItems()[1]).toEqual('Oslo');
+            clickItemCheckbox(dropdownList, 3);
+            fixture.detectChanges();
+            expect(combo.selectedItems()[selectedItemIndex]).toEqual(combo.data[3]);
+            clickItemCheckbox(dropdownList, 7);
+            fixture.detectChanges();
+            expect(combo.selectedItems()[++selectedItemIndex]).toEqual(combo.data[7]);
+            clickItemCheckbox(dropdownList, 1);
+            fixture.detectChanges();
+            expect(combo.selectedItems()[++selectedItemIndex]).toEqual(combo.data[1]);
 
-                const item_3 = dropdownItems[1];
-                checkbox_3 = item_3.querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
-                checkbox_3.click();
-                fixture.detectChanges();
-                expect(combo.selectedItems()[2]).toEqual('Sofia');
+            let targetItem = combo.dropdown.items[10] as IgxComboItemComponent;
+            combo.dropdown.selectItem(targetItem);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            verifyItemIsSelected(combo, 10, ++selectedItemIndex);
+            let expectedOutput = combo.data[3] + ', ' + combo.data[7] + ', ' + combo.data[1] + ', ' + combo.data[10];
+            expect(inputElement.value).toEqual(expectedOutput);
 
-                const item_4 = combo.dropdown.items[10] as IgxComboItemComponent;
-                combo.dropdown.selectItem(item_4);
-                fixture.detectChanges();
-                return fixture.whenStable();
-            }).then(() => {
-                expect(combo.selectedItems()[3]).toEqual('Madrid');
-                // expect(checkbox_4.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(combo.data[10])).toBeTruthy();
-                expect(inputElement.value).toEqual(expectedOutput);
-
-                const item_5 = combo.dropdown.items[9] as IgxComboItemComponent;
-                combo.dropdown.selectItem(item_5);
-                fixture.detectChanges();
-                return fixture.whenStable();
-            }).then(() => {
-                expectedOutput += ', Rome';
-                expect(combo.selectedItems()[4]).toEqual('Rome');
-                // expect(checkbox_5.classList.contains(CSS_CLASS_CHECKED)).toBeTruthy();
-                expect(combo.isItemSelected(combo.data[9])).toBeTruthy();
-                expect(inputElement.value).toEqual(expectedOutput);
-            });
+            targetItem = combo.dropdown.items[9] as IgxComboItemComponent;
+            combo.dropdown.selectItem(targetItem);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            verifyItemIsSelected(combo, 9, ++selectedItemIndex);
+            expectedOutput += ', ' + combo.data[9];
+            expect(inputElement.value).toEqual(expectedOutput);
         }));
     });
 
@@ -1786,6 +1788,39 @@ describe('igxCombo', () => {
                 .nativeElement as HTMLElement;
             const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
             expect(hasScrollbar).toBeTruthy();
+        }));
+        it('Should restore position of dropdown scroll after opening', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboSampleComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+            expect(combo).toBeDefined();
+            spyOn(combo.dropdown, 'onToggleOpening').and.callThrough();
+            spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
+            spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
+            spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
+            combo.toggle();
+            tick();
+            expect(combo.collapsed).toEqual(false);
+            expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
+            expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
+            let vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
+            expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
+            expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
+            combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
+            tick(1000);
+            expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(0);
+            document.documentElement.dispatchEvent(new Event('click'));
+            tick(500);
+            expect(combo.collapsed).toEqual(true);
+            expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
+            expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
+            combo.toggle();
+            tick(500);
+            expect(combo.collapsed).toEqual(false);
+            expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
+            expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
+            vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
+            expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
         }));
     });
 
@@ -2236,7 +2271,7 @@ describe('igxCombo', () => {
             verifyOnSearchInputEventIsFired('Pal');
             verifyOnSearchInputEventIsFired('Pala');
         }));
-        it('Clearing the filter textbox should restore the initial combo dropdown list', fakeAsync(() => {
+        it('Should restore the initial combo dropdown list after clearing the search input', fakeAsync(() => {
             const event = new Event('input');
             let searchInputElement;
             let dropdownList;
@@ -2267,7 +2302,7 @@ describe('igxCombo', () => {
                 expect(combo.data).toContain(item);
             });
         }));
-        it('Escape key should clear the textbox input and close the dropdown list', fakeAsync(() => {
+        it('Should clear the search input and close the dropdown list on pressing ESC key', fakeAsync(() => {
             let searchInputElement;
             let dropdownList;
             let dropdownItems;
@@ -2353,7 +2388,7 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual('');
             expect(combo.selectedItems()).toEqual([]);
         }));
-        it('Custom values - clear button dismisses the input text', fakeAsync(() => {
+        it('Should dismiss the input text when clear button is being pressed and custom values are enabled', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -2386,42 +2421,107 @@ describe('igxCombo', () => {
             expect(combo.selectedItems()).toEqual([]);
             expect(combo.comboInput.nativeElement.value).toEqual('');
         }));
-        it('Custom values - typing a value that matches an already selected item should remove the ADD ITEM button', fakeAsync(() => {
+        it('Should remove ADD button when search value matches an already selected item and custom values are enabled ', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             let addItem;
             const combo = fix.componentInstance.combo;
             combo.dropdown.toggle();
             tick();
-            fix.whenStable().then(() => {
-                fix.detectChanges();
-                addItem = fix.debugElement.query(By.css('.igx-combo__add'));
-                expect(addItem).toEqual(null);
-                expect(combo.children.length).toBeTruthy();
-                combo.searchInput.nativeElement.value = 'New';
-                combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
-                tick();
-                return fix.whenStable();
-            }).then(() => {
-                fix.detectChanges();
-                expect(combo.searchValue).toEqual('New');
-                addItem = fix.debugElement.query(By.css('.igx-combo__add'));
-                expect(addItem === null).toBeFalsy();
-                expect(combo.children.length).toBeTruthy();
+            fix.detectChanges();
 
-                combo.searchInput.nativeElement.value = 'New York';
-                combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
-                tick();
-                return fix.whenStable();
+            addItem = fix.debugElement.query(By.css('.igx-combo__add'));
+            expect(addItem).toEqual(null);
+            expect(combo.children.length).toBeTruthy();
+            typeInInput(combo.searchInput.nativeElement, 'New');
+            tick();
+            fix.detectChanges();
+            expect(combo.searchValue).toEqual('New');
+            addItem = fix.debugElement.query(By.css('.igx-combo__add'));
+            expect(addItem === null).toBeFalsy();
+            expect(combo.children.length).toBeTruthy();
+
+            typeInInput(combo.searchInput.nativeElement, 'New York');
+            tick();
+            fix.detectChanges();
+            expect(combo.searchValue).toEqual('New York');
+            fix.detectChanges();
+            addItem = fix.debugElement.query(By.css('.igx-combo__add'));
+            expect(addItem).toEqual(null);
+            expect(combo.children.length).toBeTruthy();
+        }));
+        it(`Should handle enter keydown on "Add Item" properly`, async(() => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            expect(combo).toBeDefined();
+            combo.toggle();
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
+                combo.handleInputChange();
+                return fixture.whenStable();
             }).then(() => {
-                fix.detectChanges();
-                expect(combo.searchValue).toEqual('New York');
-                return fix.whenStable();
+                fixture.detectChanges();
+                expect(combo.collapsed).toBeFalsy();
+                expect(combo.value).toEqual('');
+                setTimeout(() => {
+                    expect(combo.isAddButtonVisible()).toBeTruthy();
+                    const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
+                    combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+                    fixture.whenStable().then(() => {
+                        fixture.detectChanges();
+                        dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+                        return fixture.whenStable();
+                    }).then(() => {
+                        fixture.detectChanges();
+                        expect(combo.collapsed).toBeFalsy();
+                        expect(combo.value).toEqual('');
+                        dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+                        return fixture.whenStable();
+                    }).then(() => {
+                        fixture.detectChanges();
+                        expect(combo.collapsed).toBeFalsy();
+                        expect(combo.value).toEqual('My New Custom Item');
+                    });
+                }, 500);
+            });
+        }));
+        it(`Should handle click on "Add Item" properly`, async(() => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            expect(combo).toBeDefined();
+            combo.toggle();
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
+                combo.handleInputChange();
+                return fixture.whenStable();
             }).then(() => {
-                fix.detectChanges();
-                addItem = fix.debugElement.query(By.css('.igx-combo__add'));
-                expect(addItem).toEqual(null);
-                expect(combo.children.length).toBeTruthy();
+                fixture.detectChanges();
+                expect(combo.collapsed).toBeFalsy();
+                expect(combo.value).toEqual('');
+                setTimeout(() => {
+                    expect(combo.isAddButtonVisible()).toBeTruthy();
+                    const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
+                    combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+                    fixture.whenStable().then(() => {
+                        fixture.detectChanges();
+                        dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+                        return fixture.whenStable();
+                    }).then(() => {
+                        fixture.detectChanges();
+                        expect(combo.collapsed).toBeFalsy();
+                        expect(combo.value).toEqual('');
+                        combo.dropdown.focusedItem.element.nativeElement.click();
+                        return fixture.whenStable();
+                    }).then(() => {
+                        fixture.detectChanges();
+                        expect(combo.collapsed).toBeFalsy();
+                        expect(combo.value).toEqual('My New Custom Item');
+                    });
+                }, 500);
             });
         }));
     });
@@ -2445,7 +2545,7 @@ describe('igxCombo', () => {
             combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
             expect(combo.valid).toEqual(IgxComboState.VALID);
         }));
-        it('Can be enabled/disabled when used as a form control', () => {
+        it('Should be possible to be enabled/disabled when used as a form control', () => {
             const fix = TestBed.createComponent(IgxComboFormComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -2519,129 +2619,6 @@ describe('igxCombo', () => {
             fix.debugElement.query(By.css('button')).nativeElement.click();
         });
     });
-
-    it('Should properly close on click outside of the combo dropdown', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxComboSampleComponent);
-        fix.detectChanges();
-        const combo = fix.componentInstance.combo;
-        expect(combo).toBeDefined();
-        combo.toggle();
-        tick();
-        expect(combo.collapsed).toEqual(false);
-        document.documentElement.dispatchEvent(new Event('click'));
-        tick();
-        expect(combo.collapsed).toEqual(true);
-    }));
-
-    it('Should restore position of dropdown scroll after opening', fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxComboSampleComponent);
-        fix.detectChanges();
-        const combo = fix.componentInstance.combo;
-        expect(combo).toBeDefined();
-        spyOn(combo.dropdown, 'onToggleOpening').and.callThrough();
-        spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
-        spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
-        spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
-        combo.toggle();
-        tick();
-        expect(combo.collapsed).toEqual(false);
-        expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
-        expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
-        let vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
-        expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
-        combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
-        tick(1000);
-        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(0);
-        document.documentElement.dispatchEvent(new Event('click'));
-        tick(500);
-        expect(combo.collapsed).toEqual(true);
-        expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
-        expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
-        combo.toggle();
-        tick(500);
-        expect(combo.collapsed).toEqual(false);
-        expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
-        expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
-        vContainerScrollHeight = combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
-    }));
-
-    it(`Should handle enter keydown on "Add Item" properly`, async(() => {
-        const fixture = TestBed.createComponent(IgxComboSampleComponent);
-        fixture.detectChanges();
-        const combo = fixture.componentInstance.combo;
-        expect(combo).toBeDefined();
-        combo.toggle();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
-            combo.handleInputChange();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(combo.collapsed).toBeFalsy();
-            expect(combo.value).toEqual('');
-            setTimeout(() => {
-                expect(combo.isAddButtonVisible()).toBeTruthy();
-                const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
-                combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-                fixture.whenStable().then(() => {
-                    fixture.detectChanges();
-                    dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
-                    return fixture.whenStable();
-                }).then(() => {
-                    fixture.detectChanges();
-                    expect(combo.collapsed).toBeFalsy();
-                    expect(combo.value).toEqual('');
-                    dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-                    return fixture.whenStable();
-                }).then(() => {
-                    fixture.detectChanges();
-                    expect(combo.collapsed).toBeFalsy();
-                    expect(combo.value).toEqual('My New Custom Item');
-                });
-            }, 500);
-        });
-    }));
-
-    it(`Should handle click on "Add Item" properly`, async(() => {
-        const fixture = TestBed.createComponent(IgxComboSampleComponent);
-        fixture.detectChanges();
-        const combo = fixture.componentInstance.combo;
-        expect(combo).toBeDefined();
-        combo.toggle();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
-            combo.handleInputChange();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(combo.collapsed).toBeFalsy();
-            expect(combo.value).toEqual('');
-            setTimeout(() => {
-                expect(combo.isAddButtonVisible()).toBeTruthy();
-                const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
-                combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-                fixture.whenStable().then(() => {
-                    fixture.detectChanges();
-                    dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
-                    return fixture.whenStable();
-                }).then(() => {
-                    fixture.detectChanges();
-                    expect(combo.collapsed).toBeFalsy();
-                    expect(combo.value).toEqual('');
-                    combo.dropdown.focusedItem.element.nativeElement.click();
-                    return fixture.whenStable();
-                }).then(() => {
-                    fixture.detectChanges();
-                    expect(combo.collapsed).toBeFalsy();
-                    expect(combo.value).toEqual('My New Custom Item');
-                });
-            }, 500);
-        });
-    }));
 });
 
 @Component({
