@@ -220,9 +220,9 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 |  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
 |  `height`                | defines combo height                              | string                      |
-|  `itemsMaxHeight `       | defines drop down height                          | string                      |
-|  `itemsMaxWidth `        | defines drop down width                           | string                      |
-|  `itemHeight `           | defines drop down item height                     | string                      |
+|  `itemsMaxHeight `       | defines drop down maximum height                  | number                      |
+|  `itemsWidth `           | defines drop down width                           | string                      |
+|  `itemHeight `           | defines drop down item height                     | number                      |
 |  `placeholder `          | defines the "empty value" text                    | string                      |
 |  `searchPlaceholder `    | defines the placeholder text for search input     | string                      |
 |  `collapsed`             | gets drop down state                              | boolean                     |
