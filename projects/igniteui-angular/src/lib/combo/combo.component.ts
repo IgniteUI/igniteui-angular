@@ -27,7 +27,8 @@ import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPip
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 
-export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
+/** Custom strategy to provide the combo with callback on initial positioning */
+class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
     private _callback: () => void;
     constructor(callback: () => void) {
         super();
@@ -41,7 +42,11 @@ export class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy
         super.position(contentElement, size);
     }
 }
-export enum DataTypes {
+
+/**
+ * @hidden
+ */
+enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
     COMPLEX = 'complex',
@@ -49,8 +54,17 @@ export enum DataTypes {
 }
 
 export enum IgxComboState {
+    /**
+     * Combo with initial state.
+     */
     INITIAL,
+    /**
+     * Combo with valid state.
+     */
     VALID,
+    /**
+     * Combo with invalid state.
+     */
     INVALID
 }
 
@@ -327,7 +341,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public onAddition = new EventEmitter<IComboItemAdditionEvent>();
 
     /**
-     * Emitted when an the search input's input event is triggered
+     * Emitted when the value of the search input changes (e.g. typing, pasting, clear, etc.)
      *
      * ```html
      * <igx-combo (onSearchInput)='handleSearchInputEvent()'></igx-combo>
@@ -579,7 +593,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
-     * Combo item group
+     * The item property by which items should be grouped inside the items list. Not usable if data is not of type Object[].
      *
      * ```html
      * <!--set-->
@@ -594,7 +608,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
-     * Combo item group
+     * The item property by which items should be grouped inside the items list. Not usable if data is not of type Object[].
      *
      * ```typescript
      * // get
@@ -680,6 +694,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return compareFunc;
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
@@ -1213,6 +1230,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public registerOnTouched(fn: any): void { }
 
+    /**
+     * @hidden
+     */
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
@@ -1252,7 +1272,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
-     * A method that opens/closes the dialog.
+     * A method that opens/closes the combo.
      *
      *```html
      *<button (click)="combo.toggle()>Toggle Combo</button>
@@ -1265,7 +1285,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
-     * A method that opens the dialog.
+     * A method that opens the combo.
      *
      *```html
      *<button (click)="combo.open()>Open Combo</button>
@@ -1278,7 +1298,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
-     * A method that closes the dialog.
+     * A method that closes the combo.
      *
      *```html
      *<button (click)="combo.close()>Close Combo</button>
