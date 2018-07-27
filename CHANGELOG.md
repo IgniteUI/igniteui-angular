@@ -10,6 +10,8 @@ All notable changes for each version of this project will be documented in this 
     - The footerTemplate property is removed.
 - `igxCombo`
     - **Breaking change** igxCombo default width is set to 100%
+    - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
+
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
