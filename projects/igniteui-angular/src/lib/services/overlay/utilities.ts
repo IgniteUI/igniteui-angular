@@ -17,10 +17,6 @@ export enum VerticalAlignment {
     Bottom = 0
 }
 
-export class Rectangle {
-    constructor(public x: number, public y: number, public w: number, public h: number) { }
-}
-
 export class Point {
     constructor(public x: number, public y: number) { }
 }
@@ -49,6 +45,7 @@ export interface OverlayEventArgs {
     componentRef?: ComponentRef<{}>;
 }
 
+/** @hidden */
 export function getPointFromPositionsSettings(settings: PositionSettings): Point {
     let result: Point = new Point(0, 0);
 
@@ -63,6 +60,7 @@ export function getPointFromPositionsSettings(settings: PositionSettings): Point
     return result;
 }
 
+/** @hidden */
 export interface OverlayInfo {
     id?: string;
     elementRef?: ElementRef;
