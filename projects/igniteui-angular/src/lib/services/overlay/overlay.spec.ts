@@ -110,7 +110,7 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
     return expectedLeft;
 }
 
-fdescribe('igxOverlay', () => {
+describe('igxOverlay', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -2232,36 +2232,6 @@ fdescribe('igxOverlay', () => {
             overlayWrapper.dispatchEvent(aEvent);
             overlayWrapper.dispatchEvent(arrowUpEvent);
             overlayWrapper.dispatchEvent(escEvent);
-        }));
-
-        //  TODO: check the intention of this test
-        xit('Clicking outside the dialog does not close it', fakeAsync(() => {
-            // TO DO replace Spies with css class and/or getBoundingClientRect.
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [
-                        'button { position: absolute; top: 90%; left: 100%; }'
-                    ]
-                }
-            }).createComponent(EmptyPageComponent);
-            const overlay = fixture.componentInstance.overlay;
-            const overlaySettings: OverlaySettings = {
-                modal: true,
-                closeOnOutsideClick: true,
-                positionStrategy: new GlobalPositionStrategy()
-            };
-
-            spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
-
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-            expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay.hide).toHaveBeenCalledTimes(0);
-
-            fixture.componentInstance.buttonElement.nativeElement.click();
-            tick();
-            expect(overlay.hide).toHaveBeenCalledTimes(0);
         }));
 
         // 3.2 Non - Modal
