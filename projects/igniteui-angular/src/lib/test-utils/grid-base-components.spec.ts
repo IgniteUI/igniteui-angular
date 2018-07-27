@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridComponent } from '../grid/grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
+import { IgxColumnHidingComponent } from 'projects/igniteui-angular/src/lib/grid/column-hiding.component';
 
 @Component({
     template: `
@@ -105,7 +106,7 @@ export class SelectionComponent extends BasicGridComponent {
     [columnPinning]="columnPinning" [exportExcel]="exportExcel" [exportCsv]="exportCsv"`,
         '', '')
 })
-export class GridWithToolbarComponent extends BasicGridComponent {
+export class GridWithToolbarComponent extends GridWithSizeComponent {
     public showToolbar = true;
     public columnHiding = true;
     public columnPinning = true;
@@ -113,5 +114,40 @@ export class GridWithToolbarComponent extends BasicGridComponent {
     public exportCsv = true;
 
     data = SampleTestData.contactInfoData;
+}
+
+@Component({
+    template: `<div>
+    <igx-column-hiding [columns]="grid.columns" *ngIf="showInline"></igx-column-hiding>
+    ${ GridTemplateStrings.declareGrid(` #grid `, ``, ColumnDefinitions.productHidable) }
+    </div>`
+})
+export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
+    @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
+    width = '500px';
+    height = '500px';
+    showInline = true;
+
+    constructor(private cdr: ChangeDetectorRef) {
+        super();
+    }
+
+    ngOnInit() {
+        this.data = SampleTestData.productInfoData;
+    }
+
+    ngAfterViewInit() {
+        this.cdr.detectChanges();
+    }
+}
+
+@Component({
+    template: `<div>
+    <igx-column-hiding [columns]="grid.columns" *ngIf="showInline"></igx-column-hiding>
+    ${ GridTemplateStrings.declareGrid(` #grid `, ``, ColumnDefinitions.contactInfoGroupableColumns) }
+    </div>`
+})
+export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
+    data = SampleTestData.contactInfoDataFull;
 }
 
