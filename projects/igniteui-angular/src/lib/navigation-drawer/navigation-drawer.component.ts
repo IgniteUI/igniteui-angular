@@ -301,8 +301,8 @@ export class IgxNavigationDrawerComponent implements
     @ViewChild('overlay') private _overlay: ElementRef;
     @ViewChild('dummy') private _styleDummy: ElementRef;
 
-    /**
-     *  @hidden
+   /**
+     * @hidden
      */
     get drawer() {
         return this._drawer.nativeElement;
@@ -316,7 +316,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     *  @hidden
+     * @hidden
      */
     get styleDummy() {
         return this._styleDummy.nativeElement;
