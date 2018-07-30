@@ -11,7 +11,9 @@ import {
     Input,
     NgZone,
     OnInit,
-    ViewChild
+    ViewChild,
+    QueryList,
+    ViewChildren
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -19,6 +21,7 @@ import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnMovingService } from './grid.common';
+import { isFirefox } from '../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -109,6 +112,9 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     @ViewChild('resizeArea')
     public resizeArea: ElementRef;
 
+    @ViewChildren(IgxGridHeaderComponent, { read: IgxGridHeaderComponent })
+    public children: QueryList<IgxGridHeaderComponent>;
+
     public resizeCursor = null;
     public showResizer = false;
     public resizerHeight;
@@ -145,6 +151,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             this.zone.runOutsideAngular(() => {
                 this.resizeArea.nativeElement.addEventListener('mouseover', this.onResizeAreaMouseOver.bind(this));
                 this.resizeArea.nativeElement.addEventListener('mousedown', this.onResizeAreaMouseDown.bind(this));
+                this.resizeArea.nativeElement.addEventListener('dblclick', this.onResizeAreaDblClick.bind(this));
             });
         }
     }
@@ -249,50 +256,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         if (this.column.resizable) {
             const currentColWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
-            const range = this.column.grid.document.createRange();
-            const valToPxls = (referenceNode) => {
-                range.selectNodeContents(referenceNode);
-                return range.getBoundingClientRect().width;
-            };
-
-            const largest = new Map<number, number>();
-
-            let cellsContentWidths = [];
-            if (this.column.cells[0].nativeElement.children.length > 0) {
-                this.column.cells.forEach((cell) => {
-                    cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children).map((child) => valToPxls(child))));
-                });
-            } else {
-                cellsContentWidths = this.column.cells.map((cell) => valToPxls(cell.nativeElement));
-            }
-
-            const ind = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
-            const cellStyle = this.grid.document.defaultView.getComputedStyle(this.column.cells[ind].nativeElement);
-            let cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
-            if (this.isLastPinned) {
-                cellPadding += parseFloat(cellStyle.borderRightWidth);
-            }
-            largest.set(Math.max(...cellsContentWidths), cellPadding);
-
-            let headerCell;
-            if (this.column.headerTemplate && this.elementRef.nativeElement.children[0].children.length > 0) {
-                headerCell =  Math.max(...Array.from(this.elementRef.nativeElement.children[0].children)
-                .map((child) => valToPxls(child)));
-            } else {
-                headerCell = valToPxls(this.elementRef.nativeElement.children[0]);
-            }
-            if (this.column.sortable || this.column.filterable) {
-                headerCell += this.elementRef.nativeElement.children[1].getBoundingClientRect().width;
-            }
-
-            const headerStyle = this.grid.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
-            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-                parseFloat(headerStyle.borderRightWidth);
-            largest.set(headerCell, headerPadding);
-
-            const largestCell = Math.max(...Array.from(largest.keys()));
-            const largestCellPadding = largest.get(largestCell);
-            const size = Math.ceil(largestCell + largestCellPadding) + 'px';
+            const size = this.grid.getLargestCellWidth(this.column);
 
             if (this.column.pinned) {
                 const newPinnedWidth = this.grid.getPinnedWidth(true) - currentColWidth + parseFloat(size);

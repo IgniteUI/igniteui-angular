@@ -2,6 +2,7 @@ import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAvatarModule } from '../avatar/avatar.component';
 import { Calendar } from '../calendar';
 import { IgxGridComponent } from './grid.component';
@@ -10,8 +11,9 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions, EventSubscriptions } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../test-utils/grid-interfaces.spec';
+import { MultiColumnHeadersComponent } from '../test-utils/grid-samples.spec';
 
-describe('IgxGrid - Deferred Column Resizing', () => {
+fdescribe('IgxGrid - Deferred Column Resizing', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
     beforeEach(async(() => {
@@ -21,11 +23,13 @@ describe('IgxGrid - Deferred Column Resizing', () => {
                 PinnedColumnsComponent,
                 GridFeaturesComponent,
                 LargePinnedColGridComponent,
-                NullColumnsComponent
+                NullColumnsComponent,
+                MultiColumnHeadersComponent
             ],
             imports: [
                 FormsModule,
                 IgxAvatarModule,
+                NoopAnimationsModule,
                 IgxGridModule.forRoot()
             ]
         })
@@ -632,6 +636,116 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         // Should 243 - 18, because the horizontal scrollbar has 18px height
         expect(grid.calcHeight).toEqual(expectedHeight - 18);
         expect(hScrollVisible).toBe(true);
+
+        discardPeriodicTasks();
+    }));
+
+    it('should autosize column programmatically.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(LargePinnedColGridComponent);
+        fixture.detectChanges();
+
+        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ID')[0];
+        expect(column.width).toEqual('100px');
+
+        column.autosize();
+        tick();
+        fixture.detectChanges();
+
+        expect(column.width).toEqual('63px');
+
+        discardPeriodicTasks();
+    }));
+
+    it('should autosize pinned column programmatically.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(LargePinnedColGridComponent);
+        fixture.detectChanges();
+
+        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ReleaseDate')[0];
+        expect(column.width).toEqual('100px');
+
+        column.autosize();
+        tick();
+        fixture.detectChanges();
+
+        expect(column.width).toEqual('468px');
+
+        discardPeriodicTasks();
+    }));
+
+    it('should autosize last pinned column programmatically.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(LargePinnedColGridComponent);
+        fixture.detectChanges();
+
+        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'Items')[0];
+        expect(column.width).toEqual('100px');
+
+        column.autosize();
+        tick();
+        fixture.detectChanges();
+
+        expect(column.width).toEqual('97px');
+
+        discardPeriodicTasks();
+    }));
+
+    it('should autosize templated column programmatically.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(GridFeaturesComponent);
+        fixture.detectChanges();
+
+        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'Category')[0];
+        expect(column.width).toEqual('150px');
+
+        column.autosize();
+        tick();
+        fixture.detectChanges();
+
+        expect(column.width).toEqual('89px');
+
+        discardPeriodicTasks();
+    }));
+
+    it('should autosize filtarable/sortable/resizable/movable column programmatically.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(MultiColumnHeadersComponent);
+        fixture.detectChanges();
+
+        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'Missing')[0];
+        expect(column.width).toEqual('100px');
+
+        column.autosize();
+        tick();
+        fixture.detectChanges();
+        expect(column.width).toEqual('133px');
+
+        discardPeriodicTasks();
+    }));
+
+    it('should autosize column programmatically when having MCHs.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(MultiColumnHeadersComponent);
+        fixture.detectChanges();
+
+        let column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'CompanyName')[0];
+        expect(column.width).toEqual('130px');
+
+        column.autosize();
+        tick();
+        fixture.detectChanges();
+        expect(column.width).toEqual('257px');
+
+        column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ContactName')[0];
+        expect(column.width).toEqual('100px');
+
+        column.autosize();
+        tick();
+        fixture.detectChanges();
+        expect(column.width).toEqual('159px');
+
+        column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'Region')[0];
+        expect(column.width).toEqual('150px');
+
+        column.autosize();
+        tick();
+        fixture.detectChanges();
+        expect(column.width).toEqual('90px');
 
         discardPeriodicTasks();
     }));

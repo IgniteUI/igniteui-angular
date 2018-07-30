@@ -621,7 +621,7 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
         EventSubscriptions.onColumnInit, '')}`
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
-    data = SampleTestData.contactInfoData;
+    data = SampleTestData.contactInfoDataFull;
     width = '500px';
     height = '400px';
 
@@ -634,4 +634,11 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
         const col = this.grid.getColumnByName(name);
         col.pinned = !col.pinned;
     }
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="800px"`, '', ColumnDefinitions.multuColHeadersColumns)}`
+})
+export class MultiColumnHeadersComponent extends BasicGridComponent {
+    data = SampleTestData.contactInfoDataFull;
 }

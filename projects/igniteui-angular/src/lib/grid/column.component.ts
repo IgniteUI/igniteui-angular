@@ -28,6 +28,7 @@ import {
     IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand
 } from '../../public_api';
+import { IgxGridHeaderComponent } from './grid-header.component';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -931,6 +932,38 @@ export class IgxColumnComponent implements AfterContentInit {
     protected check() {
         if (this.grid) {
             this.grid.markForCheck();
+        }
+    }
+
+    /**
+     * Returns a reference to the header of the column.
+     * ```typescript
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let headerCell = column.headerCell;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get headerCell(): IgxGridHeaderComponent {
+        return flatten(this.grid.headerList.toArray()).filter((h) => h.column.index === this.index)[0];
+    }
+
+    /**
+     * Autosize the column to the longest currently visible cell value, including the header cell.
+     * ```typescript
+     * @ViewChild('grid') grid: IgxGridComponent;
+     *
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * column.autosize();
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public autosize() {
+        if (!this.columnGroup) {
+
+            this.width = this.grid.getLargestCellWidth(this);
+
+            this.grid.markForCheck();
+            this.grid.reflow();
         }
     }
 

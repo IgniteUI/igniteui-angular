@@ -28,8 +28,7 @@
     </div>
 
     <span *ngIf="!column.columnGroup" [attr.draggable]="false" [style.cursor]="resizeCursor" #resizeArea
-        class="igx-grid__th-resize-handle"
-        (dblclick)="onResizeAreaDblClick()">
+        class="igx-grid__th-resize-handle">
 
         <div *ngIf="showResizer" igxResizer
             class="igx-grid__th-resize-line"
