@@ -6,7 +6,8 @@ import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec'
 @Component({
     template: `
         <igx-grid
-            [data]="data">
+            [data]="data"
+            [autoGenerate]="true">
         </igx-grid>
     `
 })
