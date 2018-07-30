@@ -25,20 +25,7 @@ import { DisplayDensity } from '../core/utils';
 
 @Component({
     selector: 'igx-chip',
-    templateUrl: 'chip.component.html',
-    styles: [
-        `:host {
-            display: flex;
-            align-items: center;
-            position: relative;
-            transition-property: top, left;
-            touch-action: none;
-        }
-        .item-selected {
-            background: lightblue;
-        }
-        `
-    ]
+    templateUrl: 'chip.component.html'
 })
 export class IgxChipComponent implements AfterViewInit {
 
@@ -287,6 +274,20 @@ export class IgxChipComponent implements AfterViewInit {
     public removeBtn: ElementRef;
 
     /**
+     * @hidden
+     */
+    public get ghostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-chip__ghost--cosy';
+            case DisplayDensity.compact:
+                return 'igx-chip__ghost--compact';
+            default:
+                return 'igx-chip__ghost';
+        }
+    }
+
+    /**
      * Returns if the `IgxChipComponent` is selected.
      * ```typescript
      * @ViewChild('myChip')
@@ -507,7 +508,7 @@ export class IgxChipComponent implements AfterViewInit {
     // -----------------------------
     // Start chip igxDrop behaviour
     public onChipDragEnterHandler(event) {
-        if (this.dragDir === event.drag) {
+        if (this.dragDir === event.drag || !event.dragData || !event.dragData.chip) {
             return;
         }
 

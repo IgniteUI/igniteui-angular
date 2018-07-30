@@ -17,9 +17,8 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { fromEvent, interval, Observable, Subscription } from 'rxjs';
+import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
-import { BaseComponent } from '../core/base';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
@@ -302,8 +301,8 @@ export class IgxNavigationDrawerComponent implements
     @ViewChild('overlay') private _overlay: ElementRef;
     @ViewChild('dummy') private _styleDummy: ElementRef;
 
-    /**
-     *  @hidden
+   /**
+     * @hidden
      */
     get drawer() {
         return this._drawer.nativeElement;
@@ -317,7 +316,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     *  @hidden
+     * @hidden
      */
     get styleDummy() {
         return this._styleDummy.nativeElement;
@@ -327,7 +326,6 @@ export class IgxNavigationDrawerComponent implements
     private _panning = false;
     private _panStartWidth: number;
     private _panLimit: number;
-    private _previousDeltaX: number;
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.

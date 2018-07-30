@@ -1,6 +1,28 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 6.1.3
+- `igxGrid`
+    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
+- `igxColumn` changes
+    - The footerTemplate property is removed.
+- `igxColumnGroup` changes
+    - The footerTemplate property is removed.
+- `igxCombo`
+    - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
+
+## 6.1.2
+- `igxCombo` improvements
+    - Remote Data Binding fixes - selection preserving and keyboard navigation.
+
+    For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
+
+**General**
+- Added `jsZip` as a Dependency.
+## 6.1.1
+- `igxTimePicker` changes
+    - `onClose` event added.
+
 ## 6.1.0
 - `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
 - Added **igxRadioGroup** directive. It allows better control over its child `igxRadio` components and support template-driven and reactive forms.
@@ -187,6 +209,25 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
   Currently these cover converting submodule imports as well as the deprecation of `igxForRemote` and rename of `igx-tab-bar` to `igx-bottom-nav` from 6.0.0.
 - **Breaking changes**:
     - Removed submodule imports. All imports are now resolved from the top level `igniteui-angular` package. You can use `ng update igniteui-angular` when updating to automatically convert existing submodule imports in the project.
+    - Summary functions for each IgxSummaryOperand class has been made `static`. So now you can use them in the following way:
+    ```typescript
+    import { IgxNumberSummaryOperand, IgxSummaryOperand } from "igniteui-angular";
+    class CustomSummary extends IgxSummaryOperand {
+    constructor() {
+      super();
+    }
+    public operate(data?: any[]) {
+      const result = super.operate(data);
+      result.push({
+        key: "Min",
+        label: "Min",
+        summaryResult: IgxNumberSummaryOperand.min(data)
+      });
+      return result;
+    }
+  }
+    ```
+
 
 ## 6.0.0
 - Theming - You can now use css variables to style the component instances you include in your project.
