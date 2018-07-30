@@ -25,7 +25,7 @@ import {
 } from '../calendar/index';
 import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -352,6 +352,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         year: false
     };
 
+    @ViewChild(IgxInputDirective) private input: IgxInputDirective;
+
     constructor(private resolver: ComponentFactoryResolver) { }
 
     /**
@@ -463,6 +465,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     public handleDialogCloseAction() {
         this.onClose.emit(this);
         this.calendarRef.destroy();
+        this.input.nativeElement.focus();
     }
 
     /**
@@ -481,9 +484,10 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.onSelection.emit(event);
     }
 
-    @HostListener('keydown.space')
-    public onSpaceClick() {
+    @HostListener('keydown.space', ['$event'])
+    public onSpaceClick(event) {
         this.onOpenEvent();
+        event.preventDefault();
     }
 
     private updateCalendarInstance() {

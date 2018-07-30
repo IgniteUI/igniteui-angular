@@ -5,6 +5,8 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
 import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxInputDirective } from '../directives/input/input.directive';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 describe('IgxDatePicker', () => {
     beforeEach(async(() => {
@@ -21,6 +23,10 @@ describe('IgxDatePicker', () => {
         })
         .compileComponents();
     }));
+
+    afterEach(() => {
+        HelperUtils.clearOverlay();
+    });
 
     it('Initialize a datepicker component', () => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
@@ -273,6 +279,38 @@ describe('IgxDatePicker', () => {
 
         overlayToggle = document.getElementsByClassName('igx-toggle');
         expect(overlayToggle.length).toEqual(0);
+    }));
+
+    it('When datepicker is closed and the dialog disappear the focus should remain on the input',
+        fakeAsync(() => {
+
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        fix.detectChanges();
+
+        const datePicker = fix.debugElement.query(By.css('igx-datepicker'));
+        let overlayToggle = document.getElementsByTagName('igx-toggle');
+        expect(overlayToggle.length).toEqual(0);
+
+        let args: KeyboardEventInit = { key: 'space', bubbles: false };
+
+        datePicker.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        flush();
+        fix.detectChanges();
+
+
+        overlayToggle = document.getElementsByClassName('igx-toggle');
+        expect(overlayToggle[0]).not.toBeNull();
+        expect(overlayToggle[0]).not.toBeUndefined();
+
+        args = { key: 'Escape', bubbles: true };
+        overlayToggle[0].dispatchEvent(new KeyboardEvent('keydown', args));
+        flush();
+        fix.detectChanges();
+
+        const input = fix.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        overlayToggle = document.getElementsByClassName('igx-toggle');
+        expect(overlayToggle[0]).toEqual(undefined);
+        expect(input).toEqual(document.activeElement);
     }));
 });
 

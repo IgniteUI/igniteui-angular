@@ -13,12 +13,15 @@
             </div>
             <button (click)="scrNextRow()">Scroll Next Row</button>
             <button (click)="scrPrevRow()">Scroll Prev Row</button>
+            <button (click)="scrNextPage()">Scroll Next Page</button>
+            <button (click)="scrPrevPage()">Scroll Prev Page</button>
             <input (input)="scrScrollTo($event.target.value)" placeholder="scroll to index"/>
+            <button (click)="verticalVisibleItemCount()">Get visible item count</button>
     </article>
     <article class="sample-column">
             <span>Horizontal Virtualization</span>
             <br/>
-            <table> 
+            <table>
                 <tbody style='display:grid;'>
                 <tr style='width:500px; height:100px;'>
                     <div style='position: relative; overflow: hidden'>
@@ -26,7 +29,7 @@
                             [igxForScrollOrientation]="'horizontal'"
                             [igxForContainerSize]='"500px"'
                             let-rowIndex="index">
-                                <td  [style.width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
+                                <td  [style.width.px]='item.width' [style.min-width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
                         </ng-template>
                     </div>
                 </tr>
@@ -34,7 +37,10 @@
             </table>
             <button (click)="scrNextCol()">Scroll Next Column</button>
             <button (click)="scrPrevCol()">Scroll Prev Column</button>
+            <button (click)="scrNextHorizontalPage()">Scroll Next Horizontal Page</button>
+            <button (click)="scrPrevHorizontalPage()">Scroll Prev Horizontal Page</button>
             <input (input)="scrHorizontalScrollTo($event.target.value)" placeholder="scroll to index"/>
+            <button (click)="horizontalVisibleItemCount()">Get visible item count</button>
     </article>
     <article class="sample-column">
             <span>Remote Virtualization</span>
