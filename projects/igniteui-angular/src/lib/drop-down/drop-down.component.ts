@@ -16,7 +16,9 @@ import {
     Optional,
     HostListener,
     Directive,
-    Inject
+    Inject,
+    AfterContentInit,
+    AfterContentChecked
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -205,6 +207,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     set id(value: string) {
+        this.selectionAPI.set_selection(value, this.selectionAPI.get_selection(this.id));
         this._id = value;
         this.toggleDirective.id = value;
     }
@@ -229,7 +232,14 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      */
     public get selectedItem(): any {
         const selection = this.selectionAPI.get_selection(this.id);
-        return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
+        const selectedItem = selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
+        if (selectedItem) {
+            if (selectedItem.isSelected) {
+                return selectedItem;
+            }
+            this.selectionAPI.set_selection(this.id, []);
+        }
+        return null;
     }
 
     /**
@@ -305,7 +315,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
 
         const newSelection = this.items.find((item) => item.index === index);
-        if (newSelection.disabled) {
+        if (newSelection.isHeader) {
             return;
         }
 
@@ -480,12 +490,15 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * @hidden
      */
-    public selectItem(item: IgxDropDownItemBase) {
+    public selectItem(item: IgxDropDownItemBase, event?) {
         if (item === null) {
             return;
         }
-        this.setSelectedItem(item.index);
-        this.toggleDirective.close();
+        this.changeSelectedItem(item);
+
+        if (event) {
+            this.toggleDirective.close();
+        }
     }
 
     /**
@@ -498,6 +511,8 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
 
         const args: ISelectionEventArgs = { oldSelection, newSelection };
+        this.selectionAPI.set_selection(this.id, [newSelection]);
+
         this.onSelection.emit(args);
     }
 
@@ -592,7 +607,7 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Space', ['$event'])
     onSpaceKeyDown(event) {
-        this.target.selectItem(this.target.focusedItem);
+        this.target.selectItem(this.target.focusedItem, event);
         event.preventDefault();
     }
 
@@ -601,7 +616,7 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Spacebar', ['$event'])
     onSpaceKeyDownIE(event) {
-        this.target.selectItem(this.target.focusedItem);
+        this.target.selectItem(this.target.focusedItem, event);
         event.preventDefault();
     }
 
@@ -620,7 +635,7 @@ export class IgxDropDownItemNavigationDirective {
             event.preventDefault();
             return;
         }
-        this.target.selectItem(this.target.focusedItem);
+        this.target.selectItem(this.target.focusedItem, event);
         event.preventDefault();
     }
 
@@ -681,9 +696,6 @@ export class IgxDropDownComponent extends IgxDropDownBase {
 
         if (oldSelection) {
             oldSelection.isSelected = false;
-        }
-        if (!newSelection) {
-            newSelection = this._focusedItem;
         }
         if (newSelection) {
             newSelection.isSelected = true;
