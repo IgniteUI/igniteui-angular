@@ -106,6 +106,7 @@ describe('igxCombo', () => {
             expect(combo.filterable).toEqual(true);
             expect(combo.height).toEqual('400px');
             expect(combo.itemsMaxHeight).toEqual(400);
+            expect(combo.itemsWidth).toEqual('399px');
             expect(combo.itemHeight).toEqual(40);
             expect(combo.groupKey).toEqual('region');
             expect(combo.valueKey).toEqual('field');
@@ -1554,7 +1555,6 @@ describe('igxCombo', () => {
             expect(inputElement.classList.contains('ng-pristine')).toBeTruthy();
             expect(inputElement.classList.contains('ng-valid')).toBeTruthy();
             expect(inputElement.attributes.getNamedItem('type').nodeValue).toEqual('text');
-            expect(inputElement.attributes.getNamedItem('width').nodeValue).toEqual('90%');
 
             const dropDownButton = inputGroupBundle.children[1];
             expect(dropDownButton.classList.contains(CSS_CLASS_DROPDOWNBUTTON)).toBeTruthy();
@@ -3167,8 +3167,9 @@ class IgxComboSampleComponent {
     template: `
         <p>Change data to:</p>
         <label id="mockID">Combo Label</label>
-        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
-        [itemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'"
+        [itemsMaxHeight]='400' [itemsWidth]="'399px'" [itemHeight]='40'
+        [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
         [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `
