@@ -4,7 +4,10 @@ All notable changes for each version of this project will be documented in this 
 ## 6.1.3
 - `igxDropDownItem`:
     - isSelected property has Output setter and can be set both in markup and in code behind.
-
+- `igxColumn` changes
+    - The footerTemplate property is removed.
+- `igxColumnGroup` changes
+    - The footerTemplate property is removed.    
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
