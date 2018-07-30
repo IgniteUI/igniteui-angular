@@ -191,6 +191,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
                 this.clearChildElements(true);
                 this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive);
             }
+        } else if (this._nodeWasRemoved) {
+            this._lastSearchInfo.searchedText = text;
+            this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
         }
 
         return this._lastSearchInfo.matchCount;
