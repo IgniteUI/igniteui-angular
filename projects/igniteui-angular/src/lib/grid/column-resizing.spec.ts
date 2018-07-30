@@ -660,14 +660,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
-        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ReleaseDate')[0];
+        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'Released')[0];
         expect(column.width).toEqual('100px');
 
         column.autosize();
         tick();
         fixture.detectChanges();
 
-        expect(column.width).toEqual('468px');
+        expect(column.width).toEqual('102px');
 
         discardPeriodicTasks();
     }));
