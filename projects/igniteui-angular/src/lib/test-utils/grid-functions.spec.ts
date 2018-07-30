@@ -1,4 +1,9 @@
-import { Calendar, ICalendarDate, IgxGridComponent, IgxColumnGroupComponent, SortingDirection } from '../../public_api';
+import { Calendar,
+    ICalendarDate,
+    IgxGridComponent,
+    IgxColumnGroupComponent,
+    SortingDirection,
+    IgxCheckboxComponent } from '../../public_api';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
@@ -322,3 +327,4 @@ export class GridFunctions {
         return (div) ? div.querySelectorAll('li') : null;
     }
 }
+
