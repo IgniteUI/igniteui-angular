@@ -43,6 +43,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.columnIndex === 0 || (this.isPinned && this.visibleColumnIndex === 0);
     }
 
+    private get isLastCell(): boolean {
+        return this.columnIndex === this.grid.columns.length - 1;
+    }
+
     public highlightClass = 'igx-highlight';
     public activeHighlightClass = 'igx-highlight__active';
 
@@ -495,7 +499,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostListener('keydown.tab', ['$event'])
     public onTabKey(event) {
-        if (this.columnIndex === this.grid.columns.length - 1) {
+        if (this.isLastCell) {
             this.selectionApi.set_selection(this.cellSelectionID, []);
             this.grid.markForCheck();
             return;
