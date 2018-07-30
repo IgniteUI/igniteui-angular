@@ -119,7 +119,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 @Component({
     template: `<div>
     <igx-column-hiding [columns]="grid.columns" *ngIf="showInline"></igx-column-hiding>
-    ${ GridTemplateStrings.declareGrid(` #grid `, ``, ColumnDefinitions.productHidable) }
+    ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productHidable) }
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
@@ -144,7 +144,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 @Component({
     template: `<div>
     <igx-column-hiding [columns]="grid.columns" *ngIf="showInline"></igx-column-hiding>
-    ${ GridTemplateStrings.declareGrid(` #grid `, ``, ColumnDefinitions.contactInfoGroupableColumns) }
+    ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
