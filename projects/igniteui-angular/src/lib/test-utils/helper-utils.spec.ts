@@ -13,7 +13,7 @@ export class HelperUtils {
 
 
     public static getCheckboxInput(name: string, element: DebugElement, fix) {
-        const checkboxEl = this.getCheckboxElement(name, element, fix);
+        const checkboxEl = HelperUtils.getCheckboxElement(name, element, fix);
         const chkInput = checkboxEl.query(By.css('input')).nativeElement as HTMLInputElement;
 
         return chkInput;
@@ -30,7 +30,7 @@ export class HelperUtils {
     }
 
     public static verifyCheckbox(name: string, isChecked: boolean, isDisabled: boolean, element: DebugElement, fix) {
-        const chkInput = this.getCheckboxInput(name, element, fix);
+        const chkInput = HelperUtils.getCheckboxInput(name, element, fix);
         expect(chkInput.type).toBe('checkbox');
         expect(chkInput.disabled).toBe(isDisabled);
         expect(chkInput.checked).toBe(isChecked);
