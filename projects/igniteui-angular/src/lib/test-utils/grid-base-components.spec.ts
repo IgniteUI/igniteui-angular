@@ -7,7 +7,8 @@ import { IgxColumnHidingComponent } from 'projects/igniteui-angular/src/lib/grid
 @Component({
     template: `
         <igx-grid
-            [data]="data">
+            [data]="data"
+            [autoGenerate]="true">
         </igx-grid>
     `
 })
