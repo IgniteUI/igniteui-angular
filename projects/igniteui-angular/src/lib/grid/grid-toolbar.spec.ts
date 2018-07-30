@@ -8,6 +8,7 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../core/utils';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Grid Toolbar', () => {
     let fixture;
@@ -35,7 +36,7 @@ describe('IgxGrid - Grid Toolbar', () => {
     }));
 
     afterEach(() => {
-        clearOverlay();
+        HelperUtils.clearOverlay();
     });
 
     it('testing toolbar visibility', () => {
@@ -531,15 +532,6 @@ describe('IgxGrid - Grid Toolbar', () => {
     function getExportOptions() {
         const div = getOverlay();
         return (div) ? div.querySelectorAll('li') : null;
-    }
-
-    function clearOverlay() {
-        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
-        Array.from(overlays).forEach(element => {
-            element.remove();
-        });
-        document.documentElement.scrollTop = 0;
-        document.documentElement.scrollLeft = 0;
     }
 });
 
