@@ -1555,7 +1555,6 @@ describe('igxCombo', () => {
             expect(inputElement.classList.contains('ng-pristine')).toBeTruthy();
             expect(inputElement.classList.contains('ng-valid')).toBeTruthy();
             expect(inputElement.attributes.getNamedItem('type').nodeValue).toEqual('text');
-            expect(inputElement.attributes.getNamedItem('width').nodeValue).toEqual('90%');
 
             const dropDownButton = inputGroupBundle.children[1];
             expect(dropDownButton.classList.contains(CSS_CLASS_DROPDOWNBUTTON)).toBeTruthy();
