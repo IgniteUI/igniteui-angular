@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
         - The footerTemplate property is removed.
     - `igxColumnGroup`
         - The footerTemplate property is removed.
+	- `IFilteringOperation`
+		- Added `label` property to, so users can localize the filtering operands.
     - `igxCombo`
         - **Breaking change** igxCombo default `width` is set to 100%
         - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
