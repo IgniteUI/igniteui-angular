@@ -2,6 +2,8 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.3
+- `igxDropDownItem`:
+    - isSelected property has Input setter and can be set both in markup and in code behind.
 - `igxGrid`
     - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed.
     -  isUnary property added to IFilteringOperation
