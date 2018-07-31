@@ -155,11 +155,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     }
 
     public isUnaryCondition(): boolean {
-        if (this.expression && this.expression.condition) {
-            return this.expression.condition.isUnary;
-        } else {
-            return false;
-        }
+        return this.expression && this.expression.condition && this.expression.condition.isUnary;
     }
 
     get conditions() {
