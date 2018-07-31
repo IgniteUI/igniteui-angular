@@ -1,7 +1,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, Injectable, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, NgModule } from '@angular/core';
 import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
-import { BrowserModule, By} from '@angular/platform-browser';
+import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectionAPIService } from '../core/selection';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -2187,7 +2187,7 @@ describe('igxCombo', () => {
             const comboSearch = combo.searchInput.nativeElement;
             const fallBackGroup = combo.defaultFallbackGroup;
             const initialDataLength = combo.data.length + 0;
-            expect(combo.filteredData.filter((e) => e[combo.groupKey]  === undefined  )).toEqual([]);
+            expect(combo.filteredData.filter((e) => e[combo.groupKey] === undefined)).toEqual([]);
             combo.searchValue = 'My Custom Item 1';
             tick();
             combo.addItemToCollection();
@@ -2741,7 +2741,7 @@ describe('igxCombo', () => {
                 fix.detectChanges();
                 return fix.whenStable();
             }).then(() => {
-                expect(combo.selectedItems()).toEqual([{ field: 'New', region: 'Other'}]);
+                expect(combo.selectedItems()).toEqual([{ field: 'New', region: 'Other' }]);
                 expect(combo.comboInput.nativeElement.value).toEqual('New');
                 fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click(mockEvent);
                 return fix.whenStable();
@@ -2790,6 +2790,49 @@ describe('igxCombo', () => {
                 expect(addItem).toEqual(null);
                 expect(combo.children.length).toBeTruthy();
             });
+        }));
+
+        it('Disable/Enable filtering at runtime', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboInputTestComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+
+            combo.dropdown.open(); // Open combo - all data items are in filteredData
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0); // No items are available because of filtering
+            combo.dropdown.close(); // Filter is cleared on close
+            tick();
+            fix.detectChanges();
+            combo.filterable = false; // Filtering is disabled
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open(); // All items are visible since filtering is disabled
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+            combo.dropdown.close(); // Filter is cleared on close
+            tick();
+            fix.detectChanges();
+            tick();
+            combo.filterable = true; // Filtering is re-enabled
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open(); // Filter is cleared on open
+            tick();
+            fix.detectChanges();
+            tick();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
         }));
     });
 
@@ -2941,42 +2984,36 @@ describe('igxCombo', () => {
         expect(combo.dropdown.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
     }));
 
-    it(`Should handle enter keydown on "Add Item" properly`, async(() => {
+    it(`Should handle enter keydown on "Add Item" properly`, fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         expect(combo).toBeDefined();
         combo.toggle();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
-            combo.handleInputChange();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(combo.collapsed).toBeFalsy();
-            expect(combo.value).toEqual('');
-            setTimeout(() => {
-                expect(combo.isAddButtonVisible()).toBeTruthy();
-                const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
-                combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-                fixture.whenStable().then(() => {
-                    fixture.detectChanges();
-                    dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
-                    return fixture.whenStable();
-                }).then(() => {
-                    fixture.detectChanges();
-                    expect(combo.collapsed).toBeFalsy();
-                    expect(combo.value).toEqual('');
-                    dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-                    return fixture.whenStable();
-                }).then(() => {
-                    fixture.detectChanges();
-                    expect(combo.collapsed).toBeFalsy();
-                    expect(combo.value).toEqual('My New Custom Item');
-                });
-            }, 500);
-        });
+
+        tick();
+        fixture.detectChanges();
+        spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
+        combo.handleInputChange();
+
+        tick();
+        fixture.detectChanges();
+        expect(combo.collapsed).toBeFalsy();
+        expect(combo.value).toEqual('');
+
+        tick();
+        expect(combo.isAddButtonVisible()).toBeTruthy();
+        const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
+        combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+
+        tick();
+        fixture.detectChanges();
+        dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+
+        tick();
+        fixture.detectChanges();
+        expect(combo.collapsed).toBeFalsy();
+        expect(combo.value).toEqual('My New Custom Item');
     }));
 
     it(`Should properly display "Add Item" button when filtering is off`, fakeAsync(() => {
@@ -3004,42 +3041,34 @@ describe('igxCombo', () => {
         expect(combo.isAddButtonVisible()).toEqual(true);
     }));
 
-    it(`Should handle click on "Add Item" properly`, async(() => {
+    it(`Should handle click on "Add Item" properly`, fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxComboSampleComponent);
         fixture.detectChanges();
         const combo = fixture.componentInstance.combo;
         expect(combo).toBeDefined();
         combo.toggle();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
-            combo.handleInputChange();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(combo.collapsed).toBeFalsy();
-            expect(combo.value).toEqual('');
-            setTimeout(() => {
-                expect(combo.isAddButtonVisible()).toBeTruthy();
-                const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
-                combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
-                fixture.whenStable().then(() => {
-                    fixture.detectChanges();
-                    dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
-                    return fixture.whenStable();
-                }).then(() => {
-                    fixture.detectChanges();
-                    expect(combo.collapsed).toBeFalsy();
-                    expect(combo.value).toEqual('');
-                    combo.dropdown.focusedItem.element.nativeElement.click();
-                    return fixture.whenStable();
-                }).then(() => {
-                    fixture.detectChanges();
-                    expect(combo.collapsed).toBeFalsy();
-                    expect(combo.value).toEqual('My New Custom Item');
-                });
-            }, 500);
-        });
+
+        tick();
+        fixture.detectChanges();
+        spyOnProperty(combo, 'searchValue', 'get').and.returnValue('My New Custom Item');
+        combo.handleInputChange();
+
+        tick();
+        fixture.detectChanges();
+        expect(combo.collapsed).toBeFalsy();
+        expect(combo.value).toEqual('');
+        expect(combo.isAddButtonVisible()).toBeTruthy();
+        const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
+        combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+
+        tick();
+        fixture.detectChanges();
+        dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+
+        tick();
+        fixture.detectChanges();
+        expect(combo.collapsed).toBeFalsy();
+        expect(combo.value).toEqual('My New Custom Item');
     }));
 });
 
