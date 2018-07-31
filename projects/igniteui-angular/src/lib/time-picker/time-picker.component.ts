@@ -941,9 +941,11 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * @hidden
      */
-    @HostListener('keydown.space')
-    public onKeydownSpace() {
+    @HostListener('keydown.spacebar', ['$event'])
+    @HostListener('keydown.space', ['$event'])
+    public onKeydownSpace(event) {
         this.onClick();
+        event.preventDefault();
     }
 
     /**
