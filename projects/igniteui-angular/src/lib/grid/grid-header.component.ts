@@ -36,10 +36,11 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     @HostBinding('class')
     get styleClasses() {
-        if (this.column.columnGroup) {
-            return `${this.column.headerClasses}`;
-        }
-        return `igx-grid__th ${this.column.headerClasses}`;
+        return[
+            this.column.columnGroup ? '' : `${this.defaultCssClass}`,
+            this.column.headerClasses,
+            this.column.dataType === DataType.Number ? `${this.numberCssClass}` : ''
+        ].join(' ');
     }
 
     @HostBinding('style.min-width')
@@ -74,11 +75,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             return this.sortDirection === SortingDirection.Asc ? 'arrow_upward' : 'arrow_downward';
         }
         return 'none';
-    }
-
-    @HostBinding('class.igx-grid__th--number')
-    get columnType() {
-        return this.column.dataType === DataType.Number;
     }
 
     @HostBinding('class.igx-grid__th--sorted')
@@ -120,6 +116,9 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public resizeEndTimeout = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent) ? 200 : 0;
 
     protected sortDirection = SortingDirection.None;
+    protected defaultCssClass = 'igx-grid__th';
+    protected numberCssClass = 'igx-grid__th--number';
+
     private _startResizePos;
     private _pinnedMaxWidth;
 

@@ -1,4 +1,4 @@
-﻿import { DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -26,8 +26,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -1102,7 +1102,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    @ContentChildren(IgxColumnComponent, {read: IgxColumnComponent, descendants: true})
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
     /**
@@ -1912,6 +1912,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             });
         });
         this._ngAfterViewInitPaassed = true;
+
+        // In some rare cases we get the AfterViewInit before the grid is added to the DOM
+        // and as a result we get 0 width and can't size ourselves properly.
+        // In order to prevent that add a mutation observer that watches if we have been added.
+        if (!this.calcWidth && this._width !== undefined) {
+            const config = { childList: true, subtree: true };
+            let observer: MutationObserver = null;
+            const callback = (mutationsList) => {
+                mutationsList.forEach((mutation) => {
+                    if (mutation.type === 'childList') {
+                        const addedNodes = new Array(... mutation.addedNodes);
+                        addedNodes.forEach((node) => {
+                            const added = this.checkIfGridIsAdded(node);
+                            if (added) {
+                                this.calculateGridWidth();
+                                observer.disconnect();
+                            }
+                        });
+                    }
+                });
+            };
+
+            observer = new MutationObserver(callback);
+            observer.observe(this.document.body, config);
+        }
     }
 
     /**
@@ -2304,9 +2329,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
-        if (column.level !== dropTarget.level) {
+        if ((column.level !== dropTarget.level) ||
+            (column.topLevelParent !== dropTarget.topLevelParent)) {
             return;
         }
+
         this.gridAPI.submit_value(this.id);
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
@@ -2318,11 +2345,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         if (dropTarget.pinned && !column.pinned) {
-            column.pin(dropTarget.index);
+            column.pin();
         }
 
         if (!dropTarget.pinned && column.pinned) {
-            column.pinned = false;
+            column.unpin();
         }
 
         this._moveColumns(column, dropTarget);
@@ -2779,6 +2806,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
     }
 
+    /**
+     * Recalculates grid summary area.
+     * Should be run for example when enabling or disabling summaries for a column.
+     * ```typescript
+     * this.grid.recalculateSummaries();
+     * ```
+     */
     public recalculateSummaries() {
         this.summariesHeight = 0;
         requestAnimationFrame(() => this.calculateGridSizes());
@@ -2789,7 +2823,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Returns how many times the grid contains the string.
      * ```typescript
      * this.grid.findNext("financial");
-     * ````
+     * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      */
@@ -3094,10 +3128,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             const width = parseInt(computed.getPropertyValue('width'), 10);
-            if (width !== this.calcWidth) {
+            if (Number.isFinite(width) && width !== this.calcWidth) {
                 this.calcWidth = width;
 
                 this._derivePossibleWidth();
+                this.cdr.markForCheck();
             }
             return;
         }
@@ -3319,6 +3354,40 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
+    /**
+     * @hidden
+     */
+    protected setEventBusSubscription() {
+        this.eventBus.pipe(
+            debounceTime(DEBOUNCE_TIME),
+            takeUntil(this.destroy$)
+        ).subscribe(() => this.cdr.detectChanges());
+    }
+
+    /**
+     * @hidden
+     */
+    protected setVerticalScrollSubscription() {
+        /*
+            Until the grid component is destroyed,
+            Take the first event and unsubscribe
+            then merge with an empty observable after DEBOUNCE_TIME,
+            re-subscribe and repeat the process
+        */
+        this.verticalScrollContainer.onChunkLoad.pipe(
+            takeUntil(this.destroy$),
+            take(1),
+            merge(of({})),
+            delay(DEBOUNCE_TIME),
+            repeat()
+        ).subscribe(() => {
+            this.eventBus.next();
+        });
+    }
+
+    /**
+     * @hidden
+     */
     public onHeaderCheckboxClick(event) {
         this.allRowsSelected = event.checked;
         const newSelection =
@@ -3773,12 +3842,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         const state = directive.state;
         const start = state.startIndex;
-        const size = state.chunkSize - 1;
+        const isColumn = directive.igxForScrollOrientation === 'horizontal';
+
+        const size = directive.getItemCountInView();
 
         if (start >= goal) {
+            // scroll so that goal is at beggining of visible chunk
             directive.scrollTo(goal);
         } else if (start + size <= goal) {
-            directive.scrollTo(goal - size + 1);
+            // scroll so that goal is at end of visible chunk
+            if (isColumn) {
+                 directive.getHorizontalScroll().scrollLeft =
+                    directive.getColumnScrollLeft(goal) -
+                    parseInt(directive.igxForContainerSize, 10) +
+                    parseInt(this.columns[goal].width, 10);
+            } else {
+                directive.scrollTo(goal - size + 1);
+            }
         }
     }
 
@@ -3838,32 +3918,32 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     // This method's idea is to get by how much each data row is offset by the group by rows before it.
     private getGroupIncrementData(): number[] {
         if (this.groupingExpressions && this.groupingExpressions.length) {
-                const groupsRecords = this.getGroupByRecords();
-                const groupByIncrements = [];
-                const values = [];
+            const groupsRecords = this.getGroupByRecords();
+            const groupByIncrements = [];
+            const values = [];
 
-                let prevHierarchy = null;
-                let increment = 0;
+            let prevHierarchy = null;
+            let increment = 0;
 
-                groupsRecords.forEach((gbr) => {
-                    if (values.indexOf(gbr) === -1) {
-                        let levelIncrement = 1;
+            groupsRecords.forEach((gbr) => {
+                if (values.indexOf(gbr) === -1) {
+                    let levelIncrement = 1;
 
-                        if (prevHierarchy !== null) {
-                            levelIncrement += this.getLevelIncrement(0, gbr.groupParent, prevHierarchy.groupParent);
-                        } else {
-                            // This is the first level we stumble upon, so we haven't accounted for any of its parents
-                            levelIncrement += gbr.level;
-                        }
-
-                        increment += levelIncrement;
-                        prevHierarchy = gbr;
-                        values.push(gbr);
+                    if (prevHierarchy !== null) {
+                        levelIncrement += this.getLevelIncrement(0, gbr.groupParent, prevHierarchy.groupParent);
+                    } else {
+                        // This is the first level we stumble upon, so we haven't accounted for any of its parents
+                        levelIncrement += gbr.level;
                     }
 
-                    groupByIncrements.push(increment);
-                });
-                return groupByIncrements;
+                    increment += levelIncrement;
+                    prevHierarchy = gbr;
+                    values.push(gbr);
+                }
+
+                groupByIncrements.push(increment);
+            });
+            return groupByIncrements;
         } else {
             return null;
         }
@@ -3950,6 +4030,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.lastSearchInfo.activeMatchIndex = 0;
                 this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
             }
+        }
+    }
+
+    private checkIfGridIsAdded(node): boolean {
+        if (node === this.nativeElement) {
+            return true;
+        } else {
+            for (const childNode of node.childNodes) {
+                const added = this.checkIfGridIsAdded(childNode);
+                if (added) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 
