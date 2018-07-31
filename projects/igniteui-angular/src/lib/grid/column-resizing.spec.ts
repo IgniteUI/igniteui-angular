@@ -11,7 +11,7 @@ import { GridTemplateStrings, ColumnDefinitions, EventSubscriptions } from '../t
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../test-utils/grid-interfaces.spec';
 
-fdescribe('IgxGrid - Deferred Column Resizing', () => {
+describe('IgxGrid - Deferred Column Resizing', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
     beforeEach(async(() => {
