@@ -13,6 +13,7 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { RemoteService } from 'src/app/shared/remote.combo.service';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -1641,26 +1642,27 @@ describe('igxCombo', () => {
             fix.detectChanges();
             fix.whenStable().then(() => {
                 expect(combo.collapsed).toBeFalsy();
-                // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines
                 expect(combo.itemHeight).toEqual(32); // Default value for itemHeight
                 expect(combo.itemsMaxHeight).toEqual(320); // Default value for itemsMaxHeight
                 const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
                 const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
                 expect(dropdownList.nativeElement.clientHeight).toEqual(320);
-                expect(dropdownItems[0].nativeElement.clientHeight).toEqual(32);
+                // NOTE: Minimum itemHeight is 3 rem, per Material Design Guidelines
+                const minItemHeight = HelperUtils.convertRemToPixels(3);
+                expect(dropdownItems[0].nativeElement.clientHeight).toEqual(minItemHeight);
 
-                combo.itemHeight = 47;
+                combo.itemHeight = 50;
                 tick();
                 fix.detectChanges();
                 return fix.whenStable();
             }).then(() => {
                 fix.detectChanges();
-                expect(combo.itemHeight).toEqual(47);
+                expect(combo.itemHeight).toEqual(50);
                 expect(combo.itemsMaxHeight).toEqual(320);
                 const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
                 const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
                 expect(dropdownList.nativeElement.clientHeight).toEqual(320);
-                expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+                expect(dropdownItems[0].nativeElement.clientHeight).toEqual(50);
 
                 combo.itemsMaxHeight = 438;
                 tick();
@@ -1668,12 +1670,12 @@ describe('igxCombo', () => {
                 return fix.whenStable();
             }).then(() => {
                 fix.detectChanges();
-                expect(combo.itemHeight).toEqual(47);
+                expect(combo.itemHeight).toEqual(50);
                 expect(combo.itemsMaxHeight).toEqual(438);
                 const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
                 const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
                 expect(dropdownList.nativeElement.clientHeight).toEqual(438);
-                expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+                expect(dropdownItems[0].nativeElement.clientHeight).toEqual(50);
 
                 combo.itemsMaxHeight = 1171;
                 tick();
@@ -1681,12 +1683,12 @@ describe('igxCombo', () => {
                 return fix.whenStable();
             }).then(() => {
                 fix.detectChanges();
-                expect(combo.itemHeight).toEqual(47);
+                expect(combo.itemHeight).toEqual(50);
                 expect(combo.itemsMaxHeight).toEqual(1171);
                 const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
                 const dropdownList = fix.debugElement.query(By.css('.igx-combo__content'));
                 expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
-                expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+                expect(dropdownItems[0].nativeElement.clientHeight).toEqual(50);
 
                 combo.itemHeight = 83;
                 tick();

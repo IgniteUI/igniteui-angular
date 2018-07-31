@@ -916,7 +916,13 @@ describe('IgxDropDown ', () => {
         button.click();
         igxDropDown.open();
         tick();
-        expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(44);
+
+        const scrollContainerElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN))[0];
+        const scrollContainerHeight = scrollContainerElement.nativeElement.clientHeight;
+        const dropDownItemElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED))[0];
+        const dropDownItemHeight = dropDownItemElement.nativeElement.clientHeight;
+        const expectedScrollTop = dropDownItemHeight * 4 + dropDownItemHeight / 2 - scrollContainerHeight / 2;
+        expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(expectedScrollTop);
     }));
 
     it('Should select item and close on Enter keydown', fakeAsync(() => {
@@ -971,7 +977,7 @@ describe('IgxDropDown ', () => {
         expect(dropdown.selectItem).toHaveBeenCalledTimes(0);
         expect(dropdown.collapsed).toEqual(true);
         expect(dropdown.focusedItem).toEqual(null);
-        inputElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+        inputElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         tick();
         expect(dropdown.selectItem).toHaveBeenCalledTimes(1);
         expect(dropdown.selectItem).toHaveBeenCalledWith(null);
@@ -982,7 +988,7 @@ describe('IgxDropDown ', () => {
         expect(dropdown.collapsed).toEqual(false);
         expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
         const dropdownItem = dropdown.items[0];
-        inputElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+        inputElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         tick();
         expect(dropdown.selectItem).toHaveBeenCalledTimes(2);
         expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem);

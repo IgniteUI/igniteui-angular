@@ -8,4 +8,8 @@ export class HelperUtils {
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
     }
+
+    public static convertRemToPixels(rem) {
+        return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    }
 }

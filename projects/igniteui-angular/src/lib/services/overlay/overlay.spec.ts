@@ -1969,8 +1969,8 @@ describe('igxOverlay', () => {
                     set: {
                         styles: [`button {
                             position: absolute;
-                            top: 98%;
-                            left:98%;
+                            top: 120%;
+                            left:120%;
                         }`]
                     }
                 }).createComponent(EmptyPageComponent);
@@ -1998,6 +1998,7 @@ describe('igxOverlay', () => {
                 document.dispatchEvent(new Event('scroll'));
                 tick();
 
+                debugger;
                 expect(elementRect).toEqual(element.getBoundingClientRect());
                 expect(document.documentElement.scrollTop).toEqual(40);
                 expect(document.documentElement.scrollLeft).toEqual(50);
