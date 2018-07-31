@@ -48,6 +48,11 @@ export abstract class BaseProgress {
     protected _animate = true;
 
     /**
+     * @hidden
+     */
+    protected _step;
+
+    /**
      *Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
      *```typescript
      *@ViewChild("MyProgressBar")
@@ -85,12 +90,12 @@ export abstract class BaseProgress {
     /**
      * @hidden
      */
-    protected runAnimation(val: number) {
-        const direction = this.directionFlow(this._value, val);
+    protected runAnimation(val: number, step: number) {
+        // const direction = this.directionFlow(this._value, val, step);
 
         if (!this.requestAnimationId) {
             this.requestAnimationId = requestAnimationFrame(
-                () => this.updateProgressSmoothly.call(this, val, direction));
+                () => this.updateProgressSmoothly.call(this, val, step));
         }
 
     }
@@ -98,16 +103,19 @@ export abstract class BaseProgress {
     /**
      * @hidden
      */
-    protected updateProgressSmoothly(val: number, direction: number) {
-        if (this._value === val) {
-            this.requestAnimationId = undefined;
-            return;
+    protected updateProgressSmoothly(val: number, step: number) {
+        const convertPassedValIntoPercent = convertInPercentage(val, this._max);
+        if (this.valueInPercent === convertPassedValIntoPercent ||
+            (this.valueInPercent > convertPassedValIntoPercent && step > 0) ||
+            (this.valueInPercent < convertPassedValIntoPercent && step < 0)) {
+                this.requestAnimationId = undefined;
+                return;
         }
 
-        this._value += direction;
+        this._value += step;
         this.valueInPercent = this._value;
 
-        requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, direction));
+        requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
     }
 
     /**
@@ -121,12 +129,12 @@ export abstract class BaseProgress {
     /**
      * @hidden
      */
-    protected directionFlow(currentValue: number, prevValue: number): number {
+    protected directionFlow(currentValue: number, prevValue: number, step: number): number {
         if (currentValue < prevValue) {
-            return 1;
+            return step;
         }
 
-        return -1;
+        return -step;
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -261,6 +269,19 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     }
 
 
+    @Input()
+    get step(): number {
+        if (this._step) {
+            return this._step;
+        }
+
+        return this._max * 0.01;
+    }
+
+    set step(val: number) {
+        this._step = val;
+    }
+
     /**
      *Returns value that indicates the current `IgxLinearProgressBarComponent` position.
      *```typescript
@@ -297,8 +318,9 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
             previousValue: this._value
         };
 
+        const updateValue = super.directionFlow(this._value, val, this.step);
         if (this._animate) {
-            super.runAnimation(valueInRange);
+            super.runAnimation(valueInRange, updateValue);
         } else {
             super.updateProgressDirectly(valueInRange);
         }
@@ -424,6 +446,19 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
         return this._max;
     }
 
+    @Input()
+    get step() {
+        if (this._step) {
+            return this._step;
+        }
+
+        return this._max * 0.02;
+    }
+
+    set step(val: number) {
+        this._step = val;
+    }
+
     /**
      *Returns value that indicates the current `IgxCircularProgressBarComponent` position.
      *```typescript
@@ -464,8 +499,9 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
             previousValue: this._value
         };
 
+        const updateValue = super.directionFlow(this._value, val, this.step);
         if (this.animate) {
-            super.runAnimation(valueInProperRange);
+            super.runAnimation(valueInProperRange, updateValue);
         } else {
             this.updateProgressDirectly(valueInProperRange);
         }
@@ -494,7 +530,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     /**
      * @hidden
      */
-    public updateProgressSmoothly(val: number, direction: number) {
+    public updateProgressSmoothly(val: number, step: number) {
         // Set frames for the animation
         const FRAMES = [{
             strokeDashoffset: this.getProgress(this._value),
@@ -508,7 +544,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
             fill: 'forwards'
         });
 
-        super.updateProgressSmoothly(val, direction);
+        super.updateProgressSmoothly(val, step);
     }
 
     /**
