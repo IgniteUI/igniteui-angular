@@ -2791,6 +2791,49 @@ describe('igxCombo', () => {
                 expect(combo.children.length).toBeTruthy();
             });
         }));
+
+        it('Disable/Enable filtering at runtime', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboInputTestComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+
+            combo.dropdown.open(); // Open combo - all data items are in filteredData
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0); // No items are available because of filtering
+            combo.dropdown.close(); // Filter is cleared on close
+            tick();
+            fix.detectChanges();
+            combo.filterable = false; // Filtering is disabled
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open(); // All items are visible since filtering is disabled
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+            combo.dropdown.close(); // Filter is cleared on close
+            tick();
+            fix.detectChanges();
+            tick();
+            combo.filterable = true; // Filtering is re-enabled
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open(); // Filter is cleared on open
+            tick();
+            fix.detectChanges();
+            tick();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+        }));
     });
 
     describe('Form control tests: ', () => {
