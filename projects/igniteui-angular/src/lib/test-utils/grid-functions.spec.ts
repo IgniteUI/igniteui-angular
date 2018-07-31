@@ -76,6 +76,14 @@ export class GridFunctions {
         expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
     }
 
+    public static  verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
+        expect(column.pinned).toBe(isPinned, 'Pinned is not ' + isPinned);
+
+        const pinnedColumns = column.grid.pinnedColumns;
+        expect(pinnedColumns.length).toBe(pinnedColumnsCount, 'Unexpected pinned columns count!');
+        expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
+    }
+
     /* Filtering-related methods */
     public static verifyFilterUIPosition(filterUIContainer, grid) {
         const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +

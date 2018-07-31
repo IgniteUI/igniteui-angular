@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { IgxGridComponent } from '../grid/grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
-import { IgxColumnHidingComponent } from 'projects/igniteui-angular/src/lib/grid/column-hiding.component';
+import { IgxColumnHidingComponent, IgxColumnPinningComponent, IgxGridComponent } from '../grid';
 
 @Component({
     template: `
@@ -88,7 +87,7 @@ export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
     public perPage = 3;
 
-    data = SampleTestData.personJobDataFull;
+    data = SampleTestData.personJobDataFull();
 }
 
 @Component({
@@ -113,7 +112,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
     public exportExcel = true;
     public exportCsv = true;
 
-    data = SampleTestData.contactInfoData;
+    data = SampleTestData.contactInfoData();
 }
 
 @Component({
@@ -133,7 +132,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     }
 
     ngOnInit() {
-        this.data = SampleTestData.productInfoData;
+        this.data = SampleTestData.productInfoData();
     }
 
     ngAfterViewInit() {
@@ -148,6 +147,41 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
+@Component({
+    template: `<div>
+        <igx-column-pinning [columns]="grid.columns" *ngIf="showInline"></igx-column-pinning>
+        ${GridTemplateStrings.declareGrid(`#grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
+    </div>`
+})
+export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
+    @ViewChild(IgxColumnPinningComponent) public chooser: IgxColumnPinningComponent;
+
+    height = '500px';
+    width = '500px';
+    showInline = true;
+
+    constructor(private cdr: ChangeDetectorRef) {
+        super();
+    }
+
+    ngOnInit() {
+        this.data = SampleTestData.productInfoData();
+    }
+
+    ngAfterViewInit() {
+        this.cdr.detectChanges();
+    }
+}
+
+@Component({
+    template: `<div>
+    <igx-column-pinning [columns]="grid.columns" *ngIf="showInline"></igx-column-pinning>
+    ${ GridTemplateStrings.declareGrid(` #grid [height]="height" `, ``, ColumnDefinitions.contactInfoGroupableColumns) }
+    </div>`
+})
+export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
+    data = SampleTestData.contactInfoDataFull();
+}
