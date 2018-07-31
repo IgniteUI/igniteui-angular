@@ -11,7 +11,7 @@ import { GridTemplateStrings, ColumnDefinitions, EventSubscriptions } from '../t
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../test-utils/grid-interfaces.spec';
 
-describe('IgxGrid - Deferred Column Resizing', () => {
+fdescribe('IgxGrid - Deferred Column Resizing', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
     beforeEach(async(() => {
@@ -368,13 +368,13 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('100px');
+        expect(grid.columns[0].width).toEqual('102px');
 
         headers[1].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[1].width).toEqual('207px');
+        expect(grid.columns[1].width).toEqual('195px');
 
         headers[2].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
         tick();
@@ -450,7 +450,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[2].width).toEqual('97px');
+        expect(grid.columns[2].width).toEqual('92px');
 
         discardPeriodicTasks();
     }));
