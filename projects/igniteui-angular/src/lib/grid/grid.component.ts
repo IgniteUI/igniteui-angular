@@ -2766,6 +2766,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public toggleAllGroupRows() {
         this.groupingExpansionState = [];
         this.groupsExpanded = !this.groupsExpanded;
+        this.cdr.detectChanges();
     }
 
 
