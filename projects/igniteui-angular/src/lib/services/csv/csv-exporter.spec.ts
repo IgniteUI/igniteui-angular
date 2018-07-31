@@ -5,6 +5,7 @@ import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { first } from '../../../../../../node_modules/rxjs/operators';
 
 describe('CSV exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -17,6 +18,10 @@ describe('CSV exporter', () => {
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
+    });
+    afterEach(() => {
+        exporter.onColumnExport.unsubscribe();
+        exporter.onRowExport.unsubscribe();
     });
 
     /* ExportData() tests */
@@ -31,43 +36,43 @@ describe('CSV exporter', () => {
         }));
 
         it(typeName + ' should export empty objects successfully.', async(() => {
-            getExportedData(SampleTestData.emptyObjectData, options).then((wrapper) => {
+            getExportedData(SampleTestData.emptyObjectData(), options).then((wrapper) => {
                 wrapper.verifyData('');
             });
         }));
 
         it(typeName + ' should export string data without headers successfully.', async(() => {
-            getExportedData(SampleTestData.stringArray, options).then((wrapper) => {
+            getExportedData(SampleTestData.stringArray(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersStringData);
             });
         }));
 
         it(typeName + ' should export number data without headers successfully.', async(() => {
-            getExportedData(SampleTestData.numbersArray, options).then((wrapper) => {
+            getExportedData(SampleTestData.numbersArray(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersNumberData);
             });
         }));
 
         it(typeName + ' should export date time data without headers successfully.', async(() => {
-            getExportedData(SampleTestData.dateArray, options).then((wrapper) => {
+            getExportedData(SampleTestData.dateArray(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersDateTimeData);
             });
         }));
 
         it(typeName + ' should export object data without headers successfully.', async(() => {
-            getExportedData(SampleTestData.noHeadersObjectArray, options).then((wrapper) => {
+            getExportedData(SampleTestData.noHeadersObjectArray(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersObjectData);
             });
         }));
 
         it(typeName + ' should export regular data successfully.', async(() => {
-            getExportedData(SampleTestData.contactsData, options).then((wrapper) => {
+            getExportedData(SampleTestData.contactsData(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.contactsData);
             });
         }));
 
         it(typeName + ' should export data with missing values successfully.', async(() => {
-            getExportedData(SampleTestData.contactsDataPartial, options).then((wrapper) => {
+            getExportedData(SampleTestData.contactsDataPartial(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.contactsPartialData);
             });
         }));
@@ -91,7 +96,7 @@ describe('CSV exporter', () => {
     it('CSV should use a default delimiter when given an invalid one.', async(() => {
         const options = new IgxCsvExporterOptions('InvalidDelimiter', CsvFileTypes.CSV);
         options.valueDelimiter = '';
-        getExportedData(SampleTestData.contactsData, options).then((wrapper) => {
+        getExportedData(SampleTestData.contactsData(), options).then((wrapper) => {
             expect(options.valueDelimiter).toBe(',');
         });
     }));
@@ -111,7 +116,7 @@ describe('CSV exporter', () => {
             cols.push({ header: value.header, index: value.columnIndex });
         });
 
-        getExportedData(SampleTestData.personJobData, options).then((wrapper) => {
+        getExportedData(SampleTestData.personJobData(), options).then((wrapper) => {
             expect(cols.length).toBe(3);
             expect(cols[0].header).toBe('ID');
             expect(cols[0].index).toBe(0);
@@ -129,18 +134,18 @@ describe('CSV exporter', () => {
             rows.push({ data: value.rowData, index: value.rowIndex });
         });
 
-        getExportedData(SampleTestData.personJobData, options).then(() => {
+        getExportedData(SampleTestData.personJobData(), options).then(() => {
             expect(rows.length).toBe(10);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].index).toBe(i);
-                expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(SampleTestData.personJobData[i]));
+                expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(SampleTestData.personJobData()[i]));
             }
         });
     }));
 
     function getExportedData(data: any[], csvOptions: IgxCsvExporterOptions) {
         const result = new Promise<CSVWrapper>((resolve) => {
-            exporter.onExportEnded.subscribe((value) => {
+            exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
                 resolve(wrapper);
             });
