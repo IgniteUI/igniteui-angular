@@ -2257,7 +2257,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
             activeColumnIndex = activeInfo.columnIndex;
 
-            if (activeInfo.columnIndex !== -1) {
+            if (activeColumnIndex !== -1) {
                 activeColumn = list[activeColumnIndex];
             }
         }
