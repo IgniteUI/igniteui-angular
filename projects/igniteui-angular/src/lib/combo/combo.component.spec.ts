@@ -106,6 +106,7 @@ describe('igxCombo', () => {
             expect(combo.filterable).toEqual(true);
             expect(combo.height).toEqual('400px');
             expect(combo.itemsMaxHeight).toEqual(400);
+            expect(combo.itemsWidth).toEqual('399px');
             expect(combo.itemHeight).toEqual(40);
             expect(combo.groupKey).toEqual('region');
             expect(combo.valueKey).toEqual('field');
@@ -2791,6 +2792,49 @@ describe('igxCombo', () => {
                 expect(combo.children.length).toBeTruthy();
             });
         }));
+
+        it('Disable/Enable filtering at runtime', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboInputTestComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+
+            combo.dropdown.open(); // Open combo - all data items are in filteredData
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0); // No items are available because of filtering
+            combo.dropdown.close(); // Filter is cleared on close
+            tick();
+            fix.detectChanges();
+            combo.filterable = false; // Filtering is disabled
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open(); // All items are visible since filtering is disabled
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+            combo.dropdown.close(); // Filter is cleared on close
+            tick();
+            fix.detectChanges();
+            tick();
+            combo.filterable = true; // Filtering is re-enabled
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open(); // Filter is cleared on open
+            tick();
+            fix.detectChanges();
+            tick();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+        }));
     });
 
     describe('Form control tests: ', () => {
@@ -3153,8 +3197,9 @@ class IgxComboSampleComponent {
     template: `
         <p>Change data to:</p>
         <label id="mockID">Combo Label</label>
-        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
-        [itemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'"
+        [itemsMaxHeight]='400' [itemsWidth]="'399px'" [itemHeight]='40'
+        [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
         [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `
