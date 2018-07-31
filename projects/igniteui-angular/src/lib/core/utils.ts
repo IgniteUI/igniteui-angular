@@ -88,7 +88,7 @@ export function valToPxlsUsingCanvas(canvas2dCtx: any, node: any): number {
 /**
  *@hidden
  */
-export const isIE = /internet explorer[\/\s](\d+\.\d+)/.test(navigator.userAgent);
+export const isIE = navigator.appVersion.indexOf('Trident/') > 0;
 /**
  *@hidden
  */
