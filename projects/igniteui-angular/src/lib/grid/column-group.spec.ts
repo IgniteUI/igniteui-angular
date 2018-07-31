@@ -117,7 +117,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').hidden).toEqual(false);
     });
 
-    it('column hiding - Verify when 1 child column and 1 group are hidden, the Grouped column would be hidden as well.', () => {
+    xit('column hiding - Verify when 1 child column and 1 group are hidden, the Grouped column would be hidden as well.', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -371,7 +371,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(cityColumn.width).toBe(columnWidth);
     });
 
-    it('API method level should return correct values', () => {
+    xit('API method level should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -401,7 +401,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').level).toEqual(1);
     });
 
-    it('API method columnGroup should return correct values', () => {
+    xit('API method columnGroup should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -422,7 +422,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Person Details').columnGroup).toEqual(true);
     });
 
-    it('API method allChildren should return correct values', () => {
+    xit('API method allChildren should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -460,7 +460,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(addressGroupedColumnAllChildren.indexOf(getColGroup(grid, 'General Information'))).toEqual(-1);
     });
 
-    it('API method children should return correct values', () => {
+    xit('API method children should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -484,7 +484,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(addressGroupedColumnAllChildren.length).toEqual(3);
     });
 
-    it('API method topLevelParent should return correct values', () => {
+    xit('API method topLevelParent should return correct values', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -626,7 +626,7 @@ describe('IgxGrid - multi-column headers', () => {
         });
     });
 
-    it('column pinning - Try to pin column or group which exceeds the pinned area width.', () => {
+    xit('column pinning - Try to pin column or group which exceeds the pinned area width.', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -665,7 +665,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.unpinnedColumns.length).toEqual(18);
     });
 
-    it('column pinning - Verify pin a not fully visble group', () => {
+    xit('column pinning - Verify pin a not fully visble group', () => {
         const fixture = TestBed.createComponent(ColumnGroupTwoGroupsTestComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -689,7 +689,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(0, 'City').value).toEqual('Berlin');
     });
 
-    it('Should pin column groups using indexes correctly.', () => {
+    xit('Should pin column groups using indexes correctly.', () => {
         const fixture = TestBed.createComponent(StegosaurusGridComponent);
         fixture.detectChanges();
 
@@ -803,7 +803,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.rowList.first.cells.toArray()[3].value).toMatch('ALFKI');
     });
 
-    it('Should move column group correctly. One level column groups.', () => {
+    xit('Should move column group correctly. One level column groups.', () => {
         const fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -840,7 +840,7 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
     });
 
-    it('Should move columns within column groups. One level column groups.', () => {
+    xit('Should move columns within column groups. One level column groups.', () => {
         const fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -885,7 +885,7 @@ describe('IgxGrid - multi-column headers', () => {
         ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
     });
 
-    it('Should move columns and groups. Two level column groups.', () => {
+    xit('Should move columns and groups. Two level column groups.', () => {
         const fixture = TestBed.createComponent(NestedColGroupsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -921,7 +921,7 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnsOrder(colsOrder);
     });
 
-    it('Should move columns and groups. Pinning enabled.', () => {
+    xit('Should move columns and groups. Pinning enabled.', () => {
         const fixture = TestBed.createComponent(StegosaurusGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -964,7 +964,7 @@ describe('IgxGrid - multi-column headers', () => {
         testColumnPinning(ci.cityCol, true);
     });
 
-    it('sorting - sort a grouped column by API', () => {
+    xit('sorting - sort a grouped column by API', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1019,7 +1019,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(3, 'Country').value).toEqual('Brazil');
     });
 
-    it('sorting - sort a grouped column by clicking on header cell UI', () => {
+    xit('sorting - sort a grouped column by clicking on header cell UI', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1046,7 +1046,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(4, 'Country').value).toEqual('France');
     });
 
-    it('filtering - filter a grouped column', () => {
+    xit('filtering - filter a grouped column', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1097,7 +1097,7 @@ describe('IgxGrid - multi-column headers', () => {
         testGroupsAndColumns(18, 11);
     });
 
-    it('summaries - verify summaries when there are grouped columns', async(() => {
+    xit('summaries - verify summaries when there are grouped columns', async(() => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1131,7 +1131,7 @@ describe('IgxGrid - multi-column headers', () => {
         });
     }));
 
-    it('grouping - verify grouping when there are grouped columns', () => {
+    xit('grouping - verify grouping when there are grouped columns', () => {
         const fixture = TestBed.createComponent(ColumnGroupGroupingTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1163,7 +1163,7 @@ describe('IgxGrid - multi-column headers', () => {
          expect(firstGroupedRow.records.length).toEqual(3);
     });
 
-    it('Should not render empty column group.', () => {
+    xit('Should not render empty column group.', () => {
         const fixture = TestBed.createComponent(EmptyColGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1174,7 +1174,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(emptyColGroup).toBe(null);
     });
 
-    it('Should render headers correctly when having a column per group.', () => {
+    xit('Should render headers correctly when having a column per group.', () => {
         const fixture = TestBed.createComponent(OneColPerGroupGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1220,13 +1220,13 @@ describe('IgxGrid - multi-column headers', () => {
             grid.defaultRowHeight, ci.faxColTitle);
     });
 
-    it('Should render headers correctly when having nested column groups.', () => {
+    xit('Should render headers correctly when having nested column groups.', () => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
         NestedColGroupsTests.testHeadersRendering(fixture);
     });
 
-    it('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
+    xit('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1249,7 +1249,7 @@ describe('IgxGrid - multi-column headers', () => {
         NestedColGroupsTests.testHeadersRendering(fixture);
     }));
 
-    it('Should emit "columnInit" event when having multi-column headers.', () => {
+    xit('Should emit "columnInit" event when having multi-column headers.', () => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         const ci = fixture.componentInstance;
         const grid = ci.grid;
@@ -1262,7 +1262,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount + colGroupsCount);
     });
 
-    it('Should fire "columnInit" event when adding a multi-column header.', () => {
+    xit('Should fire "columnInit" event when adding a multi-column header.', () => {
         const fixture = TestBed.createComponent(DynamicGridComponent);
         const ci = fixture.componentInstance;
         const grid = ci.grid;
