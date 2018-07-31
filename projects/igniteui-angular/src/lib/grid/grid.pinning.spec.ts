@@ -9,6 +9,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
+import { first } from '../../../../../node_modules/rxjs/operators';
 
 describe('IgxGrid - Column Pinning ', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -446,21 +447,24 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
         cell.triggerEventHandler('keydown.control.arrowright', null);
-        setTimeout(() => {
+        fix.detectChanges();
+
+        grid.onSelection.pipe(first()).subscribe(() => {
             cell.componentInstance.row.cdr.detectChanges();
             expect(fix.componentInstance.selectedCell.value).toEqual(null);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('Region');
 
-             cell = cells[cells.length - 1];
+            cell = cells[cells.length - 1];
+            cell.triggerEventHandler('keydown.control.arrowleft', null);
+            fix.detectChanges();
 
-             cell.triggerEventHandler('keydown.control.arrowleft', null);
-             grid.cdr.detectChanges();
-             setTimeout(() => {
+            // It won't scroll left since the next selected cell will be in the pinned area
+            fix.whenStable().then(() => {
                 expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
                 done();
-             }, 100);
-        }, 100);
+            });
+        });
     });
 
     it('should allow hiding/showing pinned column.', () => {
