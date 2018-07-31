@@ -298,6 +298,35 @@ describe('Navigation Drawer', () => {
             });
         }));
 
+        it('should set flex-basis and order when pinned', async(() => {
+            const template =  `<igx-nav-drawer [pin]="pin" pinThreshold="false"></igx-nav-drawer>`;
+            TestBed.overrideComponent(TestComponentPin, { set: { template }});
+            TestBed.compileComponents()
+            .then(() => {
+                const fixture = TestBed.createComponent(TestComponentPin);
+                const drawer = fixture.componentInstance.viewChild;
+                drawer.isOpen = true;
+                fixture.detectChanges();
+                const drawerElem = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'IGX-NAV-DRAWER').nativeElement;
+
+                expect(drawer.pin).toBeTruthy();
+                expect(drawerElem.style.flexBasis).toEqual(drawer.width);
+                expect(drawerElem.style.order).toEqual('0');
+
+                drawer.width = '345px';
+                drawer.position = 'right';
+                fixture.detectChanges();
+                expect(drawerElem.style.flexBasis).toEqual(drawer.width);
+                expect(drawerElem.style.order).toEqual('1');
+
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(drawer.pin).toBeFalsy();
+                expect(drawerElem.style.flexBasis).toEqual('0px');
+                expect(drawerElem.style.order).toEqual('0');
+            });
+        }));
+
         it('should toggle on edge swipe gesture', (done) => {
             let fixture: ComponentFixture<TestComponentDIComponent>;
 
