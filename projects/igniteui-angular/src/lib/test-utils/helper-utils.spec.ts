@@ -11,7 +11,6 @@ export class HelperUtils {
         return chkElement;
     }
 
-
     public static getCheckboxInput(name: string, element: DebugElement, fix) {
         const checkboxEl = HelperUtils.getCheckboxElement(name, element, fix);
         const chkInput = checkboxEl.query(By.css('input')).nativeElement as HTMLInputElement;

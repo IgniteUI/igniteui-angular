@@ -12,6 +12,7 @@ import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxStringFilteringOperand } from '../../../public_api';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { first } from '../../../../../../node_modules/rxjs/operators';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -36,6 +37,11 @@ describe('CSV Grid Exporter', () => {
             spyOn(ExportUtilities as any, 'saveBlobToFile');
         });
     }));
+
+    afterEach(() => {
+        exporter.onColumnExport.unsubscribe();
+        exporter.onRowExport.unsubscribe();
+    });
 
     it('should export grid as displayed.', async(() => {
         const currentGrid: IgxGridComponent = null;
@@ -452,7 +458,7 @@ describe('CSV Grid Exporter', () => {
 
     function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {
         const result = new Promise<CSVWrapper>((resolve) => {
-            exporter.onExportEnded.subscribe((value) => {
+            exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
                 resolve(wrapper);
             });
