@@ -12,7 +12,7 @@ import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { GridFunctions } from '../test-utils/grid-functions.spec';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
@@ -51,7 +51,7 @@ describe('Column Pinning UI', () => {
         });
 
         afterAll(() => {
-            UIInteractions.clearOverlay();
+            HelperUtils.clearOverlay();
         });
 
         it ('title is initially empty.', () => {
@@ -81,13 +81,13 @@ describe('Column Pinning UI', () => {
         });
 
         it('shows all checkboxes unchecked.', () => {
-            const checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
+            const checkboxes = HelperUtils.getCheckboxInputs(columnChooserElement);
             expect(checkboxes.filter((chk) => !chk.checked).length).toBe(5);
         });
 
         it('- toggling column checkbox checked state successfully changes the column\'s pinned state.', () => {
-            const checkbox = GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ReleaseDate', false, false, columnChooserElement, fix);
+            const checkbox = HelperUtils.getCheckboxInput('ReleaseDate', columnChooserElement, fix);
+            HelperUtils.verifyCheckbox('ReleaseDate', false, false, columnChooserElement, fix);
 
             const column = grid.getColumnByName('ReleaseDate');
             verifyColumnIsPinned(column, false, 0);
@@ -105,25 +105,25 @@ describe('Column Pinning UI', () => {
 
         it('reflects properly grid column pinned value changes.', () => {
             const name = 'ReleaseDate';
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox(name, false, false, columnChooserElement, fix);
             const column = grid.getColumnByName(name);
 
             column.pinned = true;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(name, true, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox(name, true, false, columnChooserElement, fix);
             verifyColumnIsPinned(column, true, 1);
 
             column.pinned = false;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox(name, false, false, columnChooserElement, fix);
             verifyColumnIsPinned(column, false, 0);
 
             column.pinned = undefined;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox(name, false, false, columnChooserElement, fix);
             verifyColumnIsPinned(column, false, 0);
 
             column.pinned = true;
@@ -133,7 +133,7 @@ describe('Column Pinning UI', () => {
             column.pinned = null;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox(name, false, false, columnChooserElement, fix);
             verifyColumnIsPinned(column, false, 0);
         });
 
@@ -145,31 +145,31 @@ describe('Column Pinning UI', () => {
                 currentArgs = args;
             });
 
-            GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
+            HelperUtils.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
 
             expect(counter).toBe(1);
             expect(currentArgs.column.field).toBe('ReleaseDate');
             expect(currentArgs.insertAtIndex).toBe(0);
 
-            GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
+            HelperUtils.getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
             expect(counter).toBe(2);
             expect(currentArgs.column.field).toBe('Downloads');
             expect(currentArgs.insertAtIndex).toBe(1);
 
-            GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
+            HelperUtils.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
             // TODO: Consider firing the event when unpinning!!!
             expect(counter).toBe(2);
             // expect(currentArgs.column.field).toBe('ReleaseDate');
             // expect(currentArgs.insertAtIndex).toBe(0);
 
-            GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
+            HelperUtils.getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
             expect(counter).toBe(2);
             // expect(currentArgs.column.field).toBe('Downloads');
             // expect(currentArgs.insertAtIndex).toBe(0);
 
-            GridFunctions.getCheckboxInput('ProductName', columnChooserElement, fix).click();
+            HelperUtils.getCheckboxInput('ProductName', columnChooserElement, fix).click();
 
             expect(counter).toBe(3);
             expect(currentArgs.column.field).toBe('ProductName');
@@ -177,7 +177,7 @@ describe('Column Pinning UI', () => {
         });
 
         it('doesn\'t pin columns if unpinned area width will become less than the defined minimum.', () => {
-            const checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
+            const checkboxes = HelperUtils.getCheckboxInputs(columnChooserElement);
             checkboxes[0].click();
             checkboxes[1].click();
             checkboxes[2].click();
@@ -189,7 +189,7 @@ describe('Column Pinning UI', () => {
         });
 
         it('doesn\'t pin columns if unpinned area width does not allow it even after hiding a pinned column.', () => {
-            const checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
+            const checkboxes = HelperUtils.getCheckboxInputs(columnChooserElement);
             checkboxes[0].click();
             checkboxes[1].click();
 
@@ -207,7 +207,7 @@ describe('Column Pinning UI', () => {
             grid.columns[1].hidden = false;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox('ProductName', true, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox('ProductName', true, false, columnChooserElement, fix);
             verifyColumnIsPinned(grid.columns[1], true, 1);
         });
 
@@ -233,10 +233,10 @@ describe('Column Pinning UI', () => {
 
         it('- pinning group column pins all children.', () => {
             const columnName = 'General Information';
-            GridFunctions.getCheckboxInput(columnName, columnChooserElement, fix).click();
+            HelperUtils.getCheckboxInput(columnName, columnChooserElement, fix).click();
 
             fix.detectChanges();
-            GridFunctions.verifyCheckbox(columnName, true, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox(columnName, true, false, columnChooserElement, fix);
             expect(grid.columns[1].allChildren.every((col) => col.pinned)).toBe(true);
         });
 
@@ -246,13 +246,13 @@ describe('Column Pinning UI', () => {
             grid.columns[1].pin();
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(columnName, true, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox(columnName, true, false, columnChooserElement, fix);
             expect(grid.columns[1].allChildren.every((col) => col.pinned)).toBe(true);
 
-            GridFunctions.getCheckboxInput(columnName, columnChooserElement, fix).click();
+            HelperUtils.getCheckboxInput(columnName, columnChooserElement, fix).click();
 
             fix.detectChanges();
-            GridFunctions.verifyCheckbox(columnName, false, false, columnChooserElement, fix);
+            HelperUtils.verifyCheckbox(columnName, false, false, columnChooserElement, fix);
             expect(grid.columns[1].allChildren.every((col) => !col.pinned)).toBe(true);
         });
     });
