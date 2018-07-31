@@ -302,7 +302,7 @@ export class ColumnDefinitions {
         </igx-column>
     `;
 
-    public static multuColHeadersColumns = `
+    public static multiColHeadersColumns = `
         <igx-column [width]="'100px'" [movable]="true" [resizable]="true"
                     [sortable]="true" [filterable]="true" field="Missing"></igx-column>
         <igx-column-group [movable]="true" header="General Information">
@@ -314,9 +314,12 @@ export class ColumnDefinitions {
         </igx-column-group>
         <igx-column [movable]="true" [resizable]="true" field="ID"></igx-column>
         <igx-column-group [movable]="true" header="Address Information">
-            <igx-column field="Country">
+            <igx-column field="Country" [width]="'90px'">
                 <ng-template igxHeader let-column>
-                    <div >{{ column.field }}</div>
+                    {{ column.field }}
+                </ng-template>
+                <ng-template igxCell let-cell="cell" let-val let-row>
+                    {{val}}
                 </ng-template>
             </igx-column>
             <igx-column [movable]="true" [width]="'150px'" field="Region"></igx-column>
