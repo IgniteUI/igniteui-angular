@@ -1912,6 +1912,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             });
         });
         this._ngAfterViewInitPaassed = true;
+
+        // In some rare cases we get the AfterViewInit before the grid is added to the DOM
+        // and as a result we get 0 width and can't size ourselves properly.
+        // In order to prevent that add a mutation observer that watches if we have been added.
+        if (!this.calcWidth && this._width !== undefined) {
+            const config = { childList: true, subtree: true };
+            let observer: MutationObserver = null;
+            const callback = (mutationsList) => {
+                mutationsList.forEach((mutation) => {
+                    if (mutation.type === 'childList') {
+                        const addedNodes = new Array(... mutation.addedNodes);
+                        addedNodes.forEach((node) => {
+                            const added = this.checkIfGridIsAdded(node);
+                            if (added) {
+                                this.calculateGridWidth();
+                                observer.disconnect();
+                            }
+                        });
+                    }
+                });
+            };
+
+            observer = new MutationObserver(callback);
+            observer.observe(this.document.body, config);
+        }
     }
 
     /**
@@ -3103,10 +3128,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             const width = parseInt(computed.getPropertyValue('width'), 10);
-            if (width !== this.calcWidth) {
+            if (Number.isFinite(width) && width !== this.calcWidth) {
                 this.calcWidth = width;
 
                 this._derivePossibleWidth();
+                this.cdr.markForCheck();
             }
             return;
         }
@@ -4004,6 +4030,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.lastSearchInfo.activeMatchIndex = 0;
                 this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
             }
+        }
+    }
+
+    private checkIfGridIsAdded(node): boolean {
+        if (node === this.nativeElement) {
+            return true;
+        } else {
+            for (const childNode of node.childNodes) {
+                const added = this.checkIfGridIsAdded(childNode);
+                if (added) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 
