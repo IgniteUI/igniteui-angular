@@ -194,6 +194,9 @@ export class IgxDropDownItemBase {
         this.dropDown.selectItem(this, event);
     }
 
+    /**
+     * @hidden
+     */
     markItemSelected() {
         this.dropDown.setSelectedItem(this.index);
         this.dropDown.close();

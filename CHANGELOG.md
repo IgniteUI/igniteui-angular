@@ -6,11 +6,13 @@ All notable changes for each version of this project will be documented in this 
     - isSelected property has Input setter and can be set both in markup and in code behind.
 - `igxGrid`
     - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
-
 - `igxColumn` changes
     - The footerTemplate property is removed.
 - `igxColumnGroup` changes
     - The footerTemplate property is removed.
+- `igxCombo`
+    - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
+
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
