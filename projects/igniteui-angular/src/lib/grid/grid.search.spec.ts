@@ -10,6 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../public_api';
+import { IForOfState } from '../directives/for-of/for_of.directive';
 
 describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -173,10 +174,12 @@ describe('IgxGrid - search API', () => {
         const component: ScrollableGridComponent = fix.debugElement.componentInstance;
         fix.detectChanges();
 
-        findNext(component.gridSearch, '30').then(() => {
-            expect(isInView(29, component.gridSearch.virtualizationState)).toBeTruthy();
+        find(component.gridSearch, '30', component.gridSearch.findNext).then(() => {
+            const verticalVirtDir = component.gridSearch.verticalScrollContainer;
+            expect(isInView(29, verticalVirtDir.state)).toBeTruthy();
 
-            findNext(component.gridSearch, '1887').then(() => {
+            find(component.gridSearch, '1887', component.gridSearch.findNext).then(() => {
+                component.gridSearch.cdr.detectChanges();
                 expect(isInView(3, component.gridSearch.rowList.first.virtDirRow.state)).toBeTruthy();
                 done();
             });
@@ -190,11 +193,13 @@ describe('IgxGrid - search API', () => {
         const component: ScrollableGridComponent = fix.debugElement.componentInstance;
         fix.detectChanges();
 
-        findPrev(component.gridSearch, '30').then(() => {
-            expect(isInView(29, component.gridSearch.virtualizationState)).toBeTruthy();
+        find(component.gridSearch, '30', component.gridSearch.findPrev).then(() => {
+            const verticalVirtDir = component.gridSearch.verticalScrollContainer;
+            expect(isInView(29, verticalVirtDir.state)).toBeTruthy();
 
-            findPrev(component.gridSearch, '1887').then(() => {
-                expect(isInView(3, component.gridSearch.rowList.first.virtDirRow.state)).toBeTruthy();
+            find(component.gridSearch, '1887', component.gridSearch.findPrev).then(() => {
+                const horizontalVirtDir = component.gridSearch.rowList.first.virtDirRow;
+                expect(isInView(3, horizontalVirtDir.state)).toBeTruthy();
                 done();
             });
         });
@@ -1119,34 +1124,31 @@ describe('IgxGrid - search API', () => {
         expect(cell.inEditMode).toBeFalsy();
         expect(highlights.length).toBe(1);
         expect(activeHighlight).toBe(highlights[0]);
-
     });
 
-    function findNext(grid: IgxGridComponent, text: string) {
+    function find(grid: IgxGridComponent, text: string, findFunc: Function) {
         const promise = new Promise((resolve) => {
-            grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
+            let horizontalSubscription, verticalSubsription = null;
+
+            verticalSubsription = grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
+                horizontalSubscription.unsubscribe();
+                verticalSubsription.unsubscribe();
                 resolve(state);
             });
 
-            grid.findNext(text);
+            horizontalSubscription = grid.rowList.first.virtDirRow.onChunkLoad.subscribe((state) => {
+                horizontalSubscription.unsubscribe();
+                verticalSubsription.unsubscribe();
+                resolve(state);
+            });
+
+            findFunc.call(grid, text);
         });
 
         return promise;
     }
 
-    function findPrev(grid: IgxGridComponent, text: string) {
-        const promise = new Promise((resolve) => {
-            grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-                resolve(state);
-            });
-
-            grid.findPrev(text);
-        });
-
-        return promise;
-    }
-
-    function isInView(index, state): boolean {
+    function isInView(index, state: IForOfState): boolean {
         return index > state.startIndex && index <= state.startIndex + state.chunkSize;
     }
 
