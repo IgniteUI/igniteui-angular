@@ -514,13 +514,44 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
+     * Returns the total number of items that are fully visible.
+     * ```typescript
+     * this.parentVirtDir.getItemCountInView();
+     * ```
+     */
+    public getItemCountInView() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            const scrLeft = this.hScroll.scrollLeft;
+            let startIndex = this.getHorizontalIndexAt(
+                scrLeft,
+                this.hCache,
+                0
+            );
+            if (scrLeft - this.hCache[startIndex] > 0 ) {
+                // fisrt item is not fully in view
+                startIndex++;
+            }
+            const endIndex = this.getHorizontalIndexAt(
+                scrLeft + parseInt(this.igxForContainerSize, 10),
+                this.hCache,
+                0
+            );
+            return endIndex - startIndex;
+        } else {
+          return  Math.floor(parseInt(this.igxForContainerSize, 10) /
+          parseInt(this.igxForItemSize, 10));
+
+        }
+    }
+
+    /**
      * Returns a reference to the horizontal scrollbar DOM element.
      * ```typescript
      * this.parentVirtDir.getHorizontalScroll();
      * ```
      */
     public getHorizontalScroll() {
-        return this.getElement(this._viewContainer, 'igx-horizontal-virtual-helper');
+        return this.getElement(this._viewContainer, 'igx-horizontal-virtual-helper') || this.hScroll;
     }
 
     /**
@@ -564,7 +595,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const currIndex = Math.floor(ratio * count);
+        const currIndex = Math.round(ratio * count);
         let endingIndex = this.state.chunkSize + currIndex;
 
         // We update the startIndex before recalculating the chunkSize.

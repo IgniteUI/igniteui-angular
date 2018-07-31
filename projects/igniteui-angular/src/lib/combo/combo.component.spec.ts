@@ -106,6 +106,7 @@ describe('igxCombo', () => {
             expect(combo.filterable).toEqual(true);
             expect(combo.height).toEqual('400px');
             expect(combo.itemsMaxHeight).toEqual(400);
+            expect(combo.itemsWidth).toEqual('399px');
             expect(combo.itemHeight).toEqual(40);
             expect(combo.groupKey).toEqual('region');
             expect(combo.valueKey).toEqual('field');
@@ -1507,7 +1508,7 @@ describe('igxCombo', () => {
 
     describe('Rendering tests: ', () => {
         it('All appropriate classes should be applied on combo initialization', () => {
-            const defaultComboWidth = '250px';
+            const defaultComboWidth = '100%';
             const defaultComboDDWidth = '100%';
             const fix = TestBed.createComponent(IgxComboScrollTestComponent);
             fix.detectChanges();
@@ -1554,7 +1555,6 @@ describe('igxCombo', () => {
             expect(inputElement.classList.contains('ng-pristine')).toBeTruthy();
             expect(inputElement.classList.contains('ng-valid')).toBeTruthy();
             expect(inputElement.attributes.getNamedItem('type').nodeValue).toEqual('text');
-            expect(inputElement.attributes.getNamedItem('width').nodeValue).toEqual('90%');
 
             const dropDownButton = inputGroupBundle.children[1];
             expect(dropDownButton.classList.contains(CSS_CLASS_DROPDOWNBUTTON)).toBeTruthy();
@@ -1814,7 +1814,7 @@ describe('igxCombo', () => {
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         }));
-        it('Should ajust combo width to the container element width when set to 100%', fakeAsync(() => {
+        it('Should adjust combo width to the container element width when set to 100%', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
 
@@ -2791,6 +2791,49 @@ describe('igxCombo', () => {
                 expect(combo.children.length).toBeTruthy();
             });
         }));
+
+        it('Disable/Enable filtering at runtime', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxComboInputTestComponent);
+            fix.detectChanges();
+            const combo = fix.componentInstance.combo;
+
+            combo.dropdown.open(); // Open combo - all data items are in filteredData
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toEqual(0); // No items are available because of filtering
+            combo.dropdown.close(); // Filter is cleared on close
+            tick();
+            fix.detectChanges();
+            combo.filterable = false; // Filtering is disabled
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open(); // All items are visible since filtering is disabled
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+            combo.searchInput.nativeElement.value = 'Not-available item';
+            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            tick();
+            fix.detectChanges();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
+            combo.dropdown.close(); // Filter is cleared on close
+            tick();
+            fix.detectChanges();
+            tick();
+            combo.filterable = true; // Filtering is re-enabled
+            tick();
+            fix.detectChanges();
+            combo.dropdown.open(); // Filter is cleared on open
+            tick();
+            fix.detectChanges();
+            tick();
+            expect(combo.dropdown.items.length).toBeGreaterThan(0);
+        }));
     });
 
     describe('Form control tests: ', () => {
@@ -3153,8 +3196,9 @@ class IgxComboSampleComponent {
     template: `
         <p>Change data to:</p>
         <label id="mockID">Combo Label</label>
-        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
-        [itemHeight]='40' [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+        <igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'"
+        [itemsMaxHeight]='400' [itemsWidth]="'399px'" [itemHeight]='40'
+        [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
         [ariaLabelledBy]="'mockID'">
         </igx-combo>
 `
@@ -3213,7 +3257,7 @@ class IgxComboInputTestComponent {
             </p>
             <p>
                 <igx-combo #comboReactive formControlName="townCombo"
-                    class="input-container" [filterable]="true" placeholder="Location(s)" [width]="'100%'"
+                    class="input-container" [filterable]="true" placeholder="Location(s)"
                     [data]="items" [displayKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
             </p>
             <p>
@@ -3396,7 +3440,7 @@ export class IgxComboEmptyTestComponent {
     <igx-combo #combo placeholder="Location(s)"
     [data]="citiesData"
     [allowCustomValues]="true"
-    [filterable]="true" [width]="'100%'">
+    [filterable]="true">
     >
     </igx-combo>
     </div>
