@@ -5,10 +5,10 @@ import {
     HostBinding,
     HostListener,
     Inject,
-    Input
+    Input,
+    DoCheck
 } from '@angular/core';
 import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component';
-import { IgxSelectionAPIService } from '../core/selection';
 
 /**
  * The `<igx-drop-down-item> is a container intended for row items in
@@ -191,7 +191,7 @@ export class IgxDropDownItemBase {
             return;
         }
         this.dropDown.navigateItem(this.index);
-        this.dropDown.selectItem(this);
+        this.dropDown.selectItem(this, event);
     }
 
     markItemSelected() {
@@ -204,7 +204,7 @@ export class IgxDropDownItemBase {
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html'
 })
-export class IgxDropDownItemComponent extends IgxDropDownItemBase {
+export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden
      */
@@ -213,7 +213,6 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase {
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
         protected elementRef: ElementRef,
-        protected selectionAPI: IgxSelectionAPIService
     ) {
         super(dropDown, elementRef);
     }
@@ -231,21 +230,18 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase {
     }
     @Input()
     set isSelected(value: boolean) {
-        if (this.isHeader || this.disabled) {
+        if (this.isHeader) {
             return;
         }
 
         this._isSelected = value;
+    }
 
-        const oldSelectedItem = this.dropDown.selectedItem;
-        if (value) {
-            this.selectionAPI.set_selection(this.dropDown.id, [this]);
-            if (oldSelectedItem && oldSelectedItem !== this) {
-                (<IgxDropDownItemComponent>oldSelectedItem)._isSelected = false;
-            }
-        } else {
-            if (oldSelectedItem && oldSelectedItem === this) {
-                this.selectionAPI.set_selection(this.dropDown.id, []);
+    ngDoCheck(): void {
+        if (this.isSelected) {
+            const dropDownSelectedItem = this.dropDown.selectedItem;
+            if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
+                this.dropDown.selectItem(this);
             }
         }
     }
