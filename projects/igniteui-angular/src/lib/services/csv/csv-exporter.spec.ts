@@ -5,6 +5,7 @@ import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { first } from '../../../../../../node_modules/rxjs/operators';
 
 describe('CSV exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -17,6 +18,10 @@ describe('CSV exporter', () => {
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
+    });
+    afterEach(() => {
+        exporter.onColumnExport.unsubscribe();
+        exporter.onRowExport.unsubscribe();
     });
 
     /* ExportData() tests */
@@ -133,14 +138,14 @@ describe('CSV exporter', () => {
             expect(rows.length).toBe(10);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].index).toBe(i);
-                expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(SampleTestData.personJobData[i]));
+                expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(SampleTestData.personJobData()[i]));
             }
         });
     }));
 
     function getExportedData(data: any[], csvOptions: IgxCsvExporterOptions) {
         const result = new Promise<CSVWrapper>((resolve) => {
-            exporter.onExportEnded.subscribe((value) => {
+            exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
                 resolve(wrapper);
             });
