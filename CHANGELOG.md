@@ -4,6 +4,7 @@ All notable changes for each version of this project will be documented in this 
 ## 6.1.3
 - `igxGrid`
     - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed.
+    -  isUnary property added to IFilteringOperation
     - `igxColumn`
         - The footerTemplate property is removed.
     - `igxColumnGroup`
