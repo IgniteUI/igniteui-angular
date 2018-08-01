@@ -130,7 +130,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         return !this.column.editable;
     }
 
-    @HostBinding('class.igx_grid__cell--edit')
     get cellInEditMode() {
         return this.inEditMode;
     }
@@ -142,16 +141,30 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostBinding('class')
     get styleClasses(): string {
-        if (this.column.dataType === DataType.Number) {
-            return `${this.defaultCssClass} ${this.column.cellClasses} ${this.numberCssClass}`;
-        } else {
-            return `${this.defaultCssClass} ${this.column.cellClasses}`;
-        }
+        const defaultClasses = [
+            'igx-grid__td igx-grid__td--fw',
+            this.column.cellClasses
+        ];
+
+        const classList = {
+            'igx_grid__cell--edit': this.inEditMode,
+            'igx-grid__td--number': this.column.dataType === DataType.Number,
+            'igx-grid__td--editing': this.inEditMode,
+            'igx-grid__th--pinned': this.column.pinned,
+            'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__td--selected': this.isSelected
+        };
+
+        Object.entries(classList).forEach(([klass, value]) => {
+            if (value) {
+                defaultClasses.push(klass);
+            }
+        });
+        return defaultClasses.join(' ');
     }
 
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
-    @HostBinding('class.igx-grid__td--fw')
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
         const colWidth = this.column.width;
@@ -171,7 +184,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    @HostBinding('class.igx-grid__td--editing')
     get editModeCSS() {
         return this.inEditMode;
     }
@@ -184,12 +196,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isFocused = val;
     }
 
-    @HostBinding('class.igx-grid__th--pinned')
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding('class.igx-grid__th--pinned-last')
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         return pinnedCols[pinnedCols.length - 1] === this.column;
@@ -205,7 +215,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostBinding('attr.aria-selected')
-    @HostBinding('class.igx-grid__td--selected')
     set selected(val: boolean) {
         this.isSelected = val;
     }
@@ -220,8 +229,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     private highlight: IgxTextHighlightDirective;
 
     public editValue;
-    protected defaultCssClass = 'igx-grid__td';
-    protected numberCssClass = 'igx-grid__td--number';
     protected isFocused = false;
     protected isSelected = false;
     protected chunkLoadedHor;
