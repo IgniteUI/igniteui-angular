@@ -412,7 +412,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostListener('keydown.shift.tab', ['$event'])
-    public onShilftTabKey(event) {
+    public onShiftTabKey(event) {
         if (this.isFirstCell) {
             this.selectionApi.set_selection(this.cellSelectionID, []);
             this.grid.markForCheck();
