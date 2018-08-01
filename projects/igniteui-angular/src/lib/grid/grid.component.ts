@@ -1,4 +1,4 @@
-﻿import { DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -1919,6 +1919,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             });
         });
         this._ngAfterViewInitPaassed = true;
+
+        // In some rare cases we get the AfterViewInit before the grid is added to the DOM
+        // and as a result we get 0 width and can't size ourselves properly.
+        // In order to prevent that add a mutation observer that watches if we have been added.
+        if (!this.calcWidth && this._width !== undefined) {
+            const config = { childList: true, subtree: true };
+            let observer: MutationObserver = null;
+            const callback = (mutationsList) => {
+                mutationsList.forEach((mutation) => {
+                    if (mutation.type === 'childList') {
+                        const addedNodes = new Array(... mutation.addedNodes);
+                        addedNodes.forEach((node) => {
+                            const added = this.checkIfGridIsAdded(node);
+                            if (added) {
+                                this.calculateGridWidth();
+                                observer.disconnect();
+                            }
+                        });
+                    }
+                });
+            };
+
+            observer = new MutationObserver(callback);
+            observer.observe(this.document.body, config);
+        }
     }
 
     /**
@@ -3110,10 +3135,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             const width = parseInt(computed.getPropertyValue('width'), 10);
-            if (width !== this.calcWidth) {
+            if (Number.isFinite(width) && width !== this.calcWidth) {
                 this.calcWidth = width;
 
                 this._derivePossibleWidth();
+                this.cdr.markForCheck();
             }
             return;
         }
@@ -3823,12 +3849,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         const state = directive.state;
         const start = state.startIndex;
-        const size = state.chunkSize - 1;
+        const isColumn = directive.igxForScrollOrientation === 'horizontal';
+
+        const size = directive.getItemCountInView();
 
         if (start >= goal) {
+            // scroll so that goal is at beggining of visible chunk
             directive.scrollTo(goal);
         } else if (start + size <= goal) {
-            directive.scrollTo(goal - size + 1);
+            // scroll so that goal is at end of visible chunk
+            if (isColumn) {
+                 directive.getHorizontalScroll().scrollLeft =
+                    directive.getColumnScrollLeft(goal) -
+                    parseInt(directive.igxForContainerSize, 10) +
+                    parseInt(this.columns[goal].width, 10);
+            } else {
+                directive.scrollTo(goal - size + 1);
+            }
         }
     }
 
@@ -3859,7 +3896,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
                 collapsedRowsCount++;
             }
-
             columnItems.forEach((c, j) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
@@ -3889,32 +3925,32 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     // This method's idea is to get by how much each data row is offset by the group by rows before it.
     private getGroupIncrementData(): number[] {
         if (this.groupingExpressions && this.groupingExpressions.length) {
-                const groupsRecords = this.getGroupByRecords();
-                const groupByIncrements = [];
-                const values = [];
+            const groupsRecords = this.getGroupByRecords();
+            const groupByIncrements = [];
+            const values = [];
 
-                let prevHierarchy = null;
-                let increment = 0;
+            let prevHierarchy = null;
+            let increment = 0;
 
-                groupsRecords.forEach((gbr) => {
-                    if (values.indexOf(gbr) === -1) {
-                        let levelIncrement = 1;
+            groupsRecords.forEach((gbr) => {
+                if (values.indexOf(gbr) === -1) {
+                    let levelIncrement = 1;
 
-                        if (prevHierarchy !== null) {
-                            levelIncrement += this.getLevelIncrement(0, gbr.groupParent, prevHierarchy.groupParent);
-                        } else {
-                            // This is the first level we stumble upon, so we haven't accounted for any of its parents
-                            levelIncrement += gbr.level;
-                        }
-
-                        increment += levelIncrement;
-                        prevHierarchy = gbr;
-                        values.push(gbr);
+                    if (prevHierarchy !== null) {
+                        levelIncrement += this.getLevelIncrement(0, gbr.groupParent, prevHierarchy.groupParent);
+                    } else {
+                        // This is the first level we stumble upon, so we haven't accounted for any of its parents
+                        levelIncrement += gbr.level;
                     }
 
-                    groupByIncrements.push(increment);
-                });
-                return groupByIncrements;
+                    increment += levelIncrement;
+                    prevHierarchy = gbr;
+                    values.push(gbr);
+                }
+
+                groupByIncrements.push(increment);
+            });
+            return groupByIncrements;
         } else {
             return null;
         }
@@ -4001,6 +4037,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.lastSearchInfo.activeMatchIndex = 0;
                 this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
             }
+        }
+    }
+
+    private checkIfGridIsAdded(node): boolean {
+        if (node === this.nativeElement) {
+            return true;
+        } else {
+            for (const childNode of node.childNodes) {
+                const added = this.checkIfGridIsAdded(childNode);
+                if (added) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

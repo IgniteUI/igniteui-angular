@@ -556,10 +556,20 @@ export class GridFeaturesComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` height="500px" width="500px" columnWidth="200" `,
+        ` columnWidth="200" `,
         '', ColumnDefinitions.idNameJobHireDate)
 })
 export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
+    data = SampleTestData.generateFromData(SampleTestData.personJobDataFull, 30);
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        ` columnWidth="200" `,
+        '', ColumnDefinitions.idNameJobTitleCompany)
+})
+export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
+    data = SampleTestData.personIDNameJobCompany;
 }
 
 @Component({
@@ -641,4 +651,12 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 })
 export class MultiColumnHeadersComponent extends BasicGridComponent {
     data = SampleTestData.contactInfoDataFull;
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameAvatar)}`
+})
+export class GridWithAvatarComponent extends GridWithSizeComponent {
+    data = SampleTestData.personAvatarData;
+    height = '500px';
 }

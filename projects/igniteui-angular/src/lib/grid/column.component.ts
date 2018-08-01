@@ -926,6 +926,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.columnGroup) {
             this.allChildren.forEach(child => child.unpin());
         }
+
         grid.reinitPinStates();
 
         grid.markForCheck();
