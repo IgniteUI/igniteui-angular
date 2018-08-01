@@ -5,13 +5,15 @@ All notable changes for each version of this project will be documented in this 
 - `igxDropDownItem`:
     - isSelected property has Input setter and can be set both in markup and in code behind.
 - `igxGrid`
-    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
-- `igxColumn` changes
-    - The footerTemplate property is removed.
-- `igxColumnGroup` changes
-    - The footerTemplate property is removed.
-- `igxCombo`
-    - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
+    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed.
+    - `isUnary` property added to IFilteringOperation
+    - `igxColumn`
+        - The footerTemplate property is removed.
+    - `igxColumnGroup`
+        - The footerTemplate property is removed.
+    - `igxCombo`
+        - **Breaking change** igxCombo default `width` is set to 100%
+        - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
 
 ## 6.1.2
 - `igxCombo` improvements
