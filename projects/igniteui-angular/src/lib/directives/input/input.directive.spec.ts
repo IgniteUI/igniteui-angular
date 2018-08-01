@@ -92,37 +92,36 @@ describe('IgxInput', () => {
         expect(igxInput.placeholder).toBe('Test');
     });
 
-    it('Should have an initial filled style when data bound.', async(() => {
+    it('Should have an initial filled style when data bound.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
 
-            const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
-            expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
+        expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-            const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
-            expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
+        expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-            const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
-            expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
+        expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-            const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
-            expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
+        expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-            const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
-            expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
+        expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-            const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
-            expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
+        expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-            const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
-            expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
+        expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-            const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
-            expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
-        });
+        const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
+        expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
     }));
 
     it('Should have a filled style. Value API.', () => {
@@ -214,7 +213,7 @@ describe('IgxInput', () => {
         expect(requiredInputGroups.length).toBe(4);
     });
 
-    it('When updating two inputs with same attribute names through ngModel, label should responds', async(() => {
+    it('When updating two inputs with same attribute names through ngModel, label should responds', fakeAsync(() => {
         const fix = TestBed.createComponent(InputsWithSameNameAttributesComponent);
         fix.detectChanges();
 
@@ -227,13 +226,13 @@ describe('IgxInput', () => {
         fix.componentInstance.model.firstName = 'Mike';
         fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
-            igxInputGroups.forEach(element => {
-                const inputGroup = element.nativeElement;
-                expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(true);
-            });
+        tick();
+        fix.detectChanges();
+
+        igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
+        igxInputGroups.forEach(element => {
+            const inputGroup = element.nativeElement;
+            expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(true);
         });
     }));
 

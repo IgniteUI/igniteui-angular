@@ -6,22 +6,40 @@ import { Directive, HostBinding, Input, TemplateRef } from '@angular/core';
 })
 export class IgxNavDrawerItemDirective {
 
+    /**
+     * @hidden
+     */
     @Input('active') public active = false;
 
+    /**
+     * @hidden
+     */
     @Input('isHeader') public isHeader = false;
 
+    /**
+     * @hidden
+     */
     public readonly activeClass = 'igx-nav-drawer__item--active';
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-nav-drawer__item')
     get defaultCSS(): boolean {
         return !this.active && !this.isHeader;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-nav-drawer__item--active')
     get currentCSS(): boolean {
         return this.active && !this.isHeader;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-nav-drawer__item--header')
     get headerCSS(): boolean {
         return this.isHeader;
