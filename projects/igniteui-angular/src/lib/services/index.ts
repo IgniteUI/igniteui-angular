@@ -7,5 +7,8 @@ export * from './exporter-common/base-export-service';
 export * from './exporter-common/exporter-options-base';
 export * from './overlay/overlay';
 export * from './overlay/position';
-export * from './overlay/utilities';
+export {
+    HorizontalAlignment, VerticalAlignment, Point,
+    OverlayEventArgs, OverlaySettings, PositionSettings
+} from './overlay/utilities';
 export * from './overlay/scroll';

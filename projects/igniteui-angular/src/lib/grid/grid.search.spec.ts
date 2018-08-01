@@ -937,8 +937,30 @@ describe('IgxGrid - search API', () => {
         expect(matches).toBe(0);
     });
 
+    it('Should exit edit mode and search a cell', () => {
+        const fix = TestBed.createComponent(SimpleGridComponent);
+        fix.detectChanges();
 
-    function findNext(currentGrid: IgxGridComponent, text: string) {
+        const grid = fix.componentInstance.gridSearch;
+        const cell = grid.getCellByColumn(0, 'Name');
+
+        cell.column.editable = true;
+        cell.inEditMode = true;
+        fix.detectChanges();
+
+        grid.findNext('casey');
+        fix.detectChanges();
+
+        const highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+        const activeHighlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+        expect(cell.inEditMode).toBeFalsy();
+        expect(highlights.length).toBe(1);
+        expect(activeHighlight).toBe(highlights[0]);
+
+    });
+
+    function findNext(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
             currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
                 resolve(state);
