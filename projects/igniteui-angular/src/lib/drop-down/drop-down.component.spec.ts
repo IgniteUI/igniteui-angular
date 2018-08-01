@@ -908,7 +908,7 @@ describe('IgxDropDown ', () => {
         expect(igxDropDown.collapsed).toEqual(true);
     }));
 
-    it('#1663 drop down flickers on open', fakeAsync(() => {
+    fit('#1663 drop down flickers on open', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDropDownWithScrollComponent);
         fixture.detectChanges();
         const button = fixture.debugElement.query(By.css('button')).nativeElement;
@@ -916,6 +916,7 @@ describe('IgxDropDown ', () => {
         button.click();
         igxDropDown.open();
         tick();
+        fixture.detectChanges();
 
         const scrollContainerElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN))[0];
         const scrollContainerHeight = scrollContainerElement.nativeElement.clientHeight;
