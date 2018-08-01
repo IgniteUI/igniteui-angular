@@ -2311,9 +2311,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
-        if (column.level !== dropTarget.level) {
+        if ((column.level !== dropTarget.level) ||
+            (column.topLevelParent !== dropTarget.topLevelParent)) {
             return;
         }
+
         this.gridAPI.submit_value(this.id);
         if (column.level) {
             this._moveChildColumns(column.parent, column, dropTarget);
@@ -2325,11 +2327,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         if (dropTarget.pinned && !column.pinned) {
-            column.pin(dropTarget.index);
+            column.pin();
         }
 
         if (!dropTarget.pinned && column.pinned) {
-            column.pinned = false;
+            column.unpin();
         }
 
         this._moveColumns(column, dropTarget);
