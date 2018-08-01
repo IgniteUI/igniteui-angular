@@ -593,12 +593,12 @@ describe('IgxGrid - GroupBy', () => {
         const gRow = grid.groupsRowList.toArray()[0];
         expect(gRow.expanded).toBe(true);
         const evtEnter = new KeyboardEvent('keydown', {
-            code: 'enter',
-            key: 'enter'
+            code: 'Enter',
+            key: 'Enter'
         });
         const evtSpace = new KeyboardEvent('keydown', {
-            code: 'enter',
-            key: 'enter'
+            code: 'Space',
+            key: 'Spacebar'
         });
         gRow.element.nativeElement.dispatchEvent(evtEnter);
 
@@ -606,7 +606,7 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(gRow.expanded).toBe(false);
 
-        gRow.element.nativeElement.dispatchEvent(evtEnter);
+        gRow.element.nativeElement.dispatchEvent(evtSpace);
         fix.detectChanges();
         expect(gRow.expanded).toBe(true);
     });
