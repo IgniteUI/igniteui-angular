@@ -215,7 +215,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
 
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
-        protected elementRef: ElementRef,
+        protected elementRef: ElementRef
     ) {
         super(dropDown, elementRef);
     }
