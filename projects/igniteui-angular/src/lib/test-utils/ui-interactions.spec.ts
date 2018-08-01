@@ -13,6 +13,13 @@ export class UIInteractions {
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
     }
 
+    public static triggerKeyDownEvtUponElem(keyPressed, elem) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyPressed
+        });
+        elem.dispatchEvent(keyboardEvent);
+    }
+
     public static findCellByInputElem(elem, focusedElem) {
         if (!focusedElem.parentElement) {
             return null;
