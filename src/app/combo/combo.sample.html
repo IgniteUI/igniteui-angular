@@ -19,7 +19,7 @@
                             [data]="items"
                             [allowCustomValues]="true"
                             [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
-                            [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                            [groupKey]="valueKeyVar ? 'region' : ''">
                     <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
                             <div class="display-value--main">{{display[key]}}</div>
