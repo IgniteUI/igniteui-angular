@@ -212,12 +212,12 @@ describe('Carousel', () => {
         nextNav = carouselNative.query(By.css('a.igx-carousel__arrow--next')).nativeElement;
 
         spyOn(carousel, 'prev');
-        UIInteractions.triggerKeyEvtUponElem('click', prevNav);
+        prevNav.dispatchEvent(new Event('click'));
         fixture.detectChanges();
         expect(carousel.prev).toHaveBeenCalled();
 
         spyOn(carousel, 'next');
-        UIInteractions.triggerKeyEvtUponElem('click', nextNav);
+        nextNav.dispatchEvent(new Event('click'));
         fixture.detectChanges();
         expect(carousel.next).toHaveBeenCalled();
     });
