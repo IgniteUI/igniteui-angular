@@ -190,7 +190,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
             if (!this._secondExpression && this.column.dataType === DataType.Boolean ) {
                 expr.filteringOperands.push({
                     fieldName: this.column.field,
-                    condition: IgxBooleanFilteringOperand.instance().condition('all'),
+                    condition: this.expressionsList.toArray()[0].getCondition(this.expressionsList.toArray()[0].conditions[0]),
                     searchVal: null,
                     ignoreCase: this.column.filteringIgnoreCase
                 });
