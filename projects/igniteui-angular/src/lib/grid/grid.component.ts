@@ -3634,11 +3634,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (target) {
             const containerTopOffset =
                 parseInt(row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            if (this.rowHeight > -containerTopOffset // not the entire row is visible, due to grid offset
+            if (this.rowHeight > Math.abs(containerTopOffset) // not the entire row is visible, due to grid offset
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
-
-                    this.performVerticalScroll(-this.rowHeight, rowIndex, columnIndex);
+                    const scrollAmount = containerTopOffset < 0 ?
+                    containerTopOffset :
+                    -this.rowHeight + Math.abs(containerTopOffset);
+                    this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex);
             }
             target.nativeElement.focus();
         } else {
