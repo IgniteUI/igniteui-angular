@@ -124,10 +124,6 @@ export class DropDownSampleComponent implements OnInit {
         this.igxDropDown.toggle(overlaySettings);
     }
 
-    public WTF() {
-        console.log(this.igxDropDown.selectedItem);
-    }
-
     onSelection(event) {
         console.log(event);
         const old = event.oldSelection;
