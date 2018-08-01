@@ -26,8 +26,8 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -1102,7 +1102,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    @ContentChildren(IgxColumnComponent, {read: IgxColumnComponent, descendants: true})
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
     /**
@@ -1912,6 +1912,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             });
         });
         this._ngAfterViewInitPaassed = true;
+
+        // In some rare cases we get the AfterViewInit before the grid is added to the DOM
+        // and as a result we get 0 width and can't size ourselves properly.
+        // In order to prevent that add a mutation observer that watches if we have been added.
+        if (!this.calcWidth && this._width !== undefined) {
+            const config = { childList: true, subtree: true };
+            let observer: MutationObserver = null;
+            const callback = (mutationsList) => {
+                mutationsList.forEach((mutation) => {
+                    if (mutation.type === 'childList') {
+                        const addedNodes = new Array(... mutation.addedNodes);
+                        addedNodes.forEach((node) => {
+                            const added = this.checkIfGridIsAdded(node);
+                            if (added) {
+                                this.calculateGridWidth();
+                                observer.disconnect();
+                            }
+                        });
+                    }
+                });
+            };
+
+            observer = new MutationObserver(callback);
+            observer.observe(this.document.body, config);
+        }
     }
 
     /**
@@ -2781,6 +2806,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
     }
 
+    /**
+     * Recalculates grid summary area.
+     * Should be run for example when enabling or disabling summaries for a column.
+     * ```typescript
+     * this.grid.recalculateSummaries();
+     * ```
+     */
     public recalculateSummaries() {
         this.summariesHeight = 0;
         requestAnimationFrame(() => this.calculateGridSizes());
@@ -2791,7 +2823,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Returns how many times the grid contains the string.
      * ```typescript
      * this.grid.findNext("financial");
-     * ````
+     * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      */
@@ -3096,10 +3128,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             const width = parseInt(computed.getPropertyValue('width'), 10);
-            if (width !== this.calcWidth) {
+            if (Number.isFinite(width) && width !== this.calcWidth) {
                 this.calcWidth = width;
 
                 this._derivePossibleWidth();
+                this.cdr.markForCheck();
             }
             return;
         }
@@ -3321,6 +3354,40 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
+    /**
+     * @hidden
+     */
+    protected setEventBusSubscription() {
+        this.eventBus.pipe(
+            debounceTime(DEBOUNCE_TIME),
+            takeUntil(this.destroy$)
+        ).subscribe(() => this.cdr.detectChanges());
+    }
+
+    /**
+     * @hidden
+     */
+    protected setVerticalScrollSubscription() {
+        /*
+            Until the grid component is destroyed,
+            Take the first event and unsubscribe
+            then merge with an empty observable after DEBOUNCE_TIME,
+            re-subscribe and repeat the process
+        */
+        this.verticalScrollContainer.onChunkLoad.pipe(
+            takeUntil(this.destroy$),
+            take(1),
+            merge(of({})),
+            delay(DEBOUNCE_TIME),
+            repeat()
+        ).subscribe(() => {
+            this.eventBus.next();
+        });
+    }
+
+    /**
+     * @hidden
+     */
     public onHeaderCheckboxClick(event) {
         this.allRowsSelected = event.checked;
         const newSelection =
@@ -3973,6 +4040,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.lastSearchInfo.activeMatchIndex = 0;
                 this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
             }
+        }
+    }
+
+    private checkIfGridIsAdded(node): boolean {
+        if (node === this.nativeElement) {
+            return true;
+        } else {
+            for (const childNode of node.childNodes) {
+                const added = this.checkIfGridIsAdded(childNode);
+                if (added) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

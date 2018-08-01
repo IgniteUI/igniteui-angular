@@ -796,7 +796,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public get filteringExpressions() {
-        return this._filteringExpressions;
+        return this.filterable ? this._filteringExpressions : [];
     }
 
     /**
@@ -930,8 +930,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             this.onSearchInput.emit(event);
         }
         if (this.filterable) {
-            this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
-                true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
+            this.filter();
         } else {
             this.checkMatch();
         }
@@ -1171,8 +1170,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    public filter(term, condition, ignoreCase, valueKey?) {
-        this.prepare_filtering_expression(term, condition, ignoreCase, valueKey);
+    public filter() {
+        this.prepare_filtering_expression(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
+        true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
     }
 
     /**
@@ -1286,7 +1286,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *```
      */
     public toggle() {
-        this.searchValue = '';
         this.dropdown.toggle(this.overlaySettings);
     }
 
@@ -1299,7 +1298,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *```
      */
     public open() {
-        this.searchValue = '';
         this.dropdown.open(this.overlaySettings);
     }
 
