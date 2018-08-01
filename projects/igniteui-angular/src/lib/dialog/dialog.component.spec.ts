@@ -9,14 +9,6 @@ const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
 const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
 
-/* function clearOverlay() {
-    const overlays = document.getElementsByClassName(CLASS_OVERLAY_MAIN) as HTMLCollectionOf<Element>;
-    Array.from(overlays).forEach(element => {
-        element.parentElement.removeChild(element);
-    });
-    document.documentElement.scrollTop = 0;
-    document.documentElement.scrollLeft = 0;
-} */
 describe('Dialog', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({

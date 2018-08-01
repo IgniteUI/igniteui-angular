@@ -1321,6 +1321,7 @@ export class CustomFilter extends IgxFilteringOperand {
         super();
         this.operations = [{
             name: 'custom',
+            isUnary: false,
             logic: (target: string): boolean => {
                 return target === 'custom';
             }
