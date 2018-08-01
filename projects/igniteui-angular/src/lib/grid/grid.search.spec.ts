@@ -8,6 +8,7 @@ import { IgxStringFilteringOperand } from '../../public_api';
 import { BasicGridSearchComponent } from '../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../test-utils/grid-samples.spec';
+import { IForOfState } from '../directives/for-of/for_of.directive';
 
 describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -504,6 +505,24 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
+        it('Should exit edit mode and search a cell', () => {
+            const cell = grid.getCellByColumn(0, 'Name');
+
+            cell.column.editable = true;
+            cell.inEditMode = true;
+            fix.detectChanges();
+
+            grid.findNext('casey');
+            fix.detectChanges();
+
+            const highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
+            const activeHighlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+
+            expect(cell.inEditMode).toBeFalsy();
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+        });
+
         afterAll(() => {
             grid.getCellByColumn(4, 'JobTitle').update('Senior Software Developer');
         });
@@ -937,7 +956,6 @@ describe('IgxGrid - search API', () => {
         expect(matches).toBe(0);
     });
 
-
     function findNext(currentGrid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
             currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
@@ -946,7 +964,6 @@ describe('IgxGrid - search API', () => {
 
             currentGrid.findNext(text);
         });
-
         return promise;
     }
 
@@ -958,11 +975,32 @@ describe('IgxGrid - search API', () => {
 
             currentGrid.findPrev(text);
         });
+        return promise;
+    }
+
+    function find(currentGrid: IgxGridComponent, text: string, findFunc: Function) {
+        const promise = new Promise((resolve) => {
+            let horizontalSubscription, verticalSubsription = null;
+
+            verticalSubsription = currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
+                horizontalSubscription.unsubscribe();
+                verticalSubsription.unsubscribe();
+                resolve(state);
+            });
+
+            horizontalSubscription = currentGrid.rowList.first.virtDirRow.onChunkLoad.subscribe((state) => {
+                horizontalSubscription.unsubscribe();
+                verticalSubsription.unsubscribe();
+                resolve(state);
+            });
+
+            findFunc.call(currentGrid, text);
+        });
 
         return promise;
     }
 
-    function isInView(index, state): boolean {
+    function isInView(index, state: IForOfState): boolean {
         return index > state.startIndex && index <= state.startIndex + state.chunkSize;
     }
 

@@ -239,10 +239,10 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 | `onSearchInput`     | Emitted when an the search input's input event is triggered             | false        | { searchValue: `string` }               |
 | `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>` }|
 | `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: Event }                        |
-| `dropDownOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
-| `dropDownOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
-| `dropDownClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |
-| `dropDownClosed`    | Emitted after the dropdown is closed                                    | false        | { event: Event }                        |
+| `onOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
+| `onOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
+| `onClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |
+| `onClosed`    | Emitted after the dropdown is closed                                    | false        | { event: Event }                        |
 
 ### Methods
 
