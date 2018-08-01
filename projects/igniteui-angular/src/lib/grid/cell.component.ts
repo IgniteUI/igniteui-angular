@@ -152,7 +152,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             'igx-grid__td--editing': this.inEditMode,
             'igx-grid__th--pinned': this.column.pinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__td--selected': this.isSelected
+            'igx-grid__td--selected': this.selected
         };
 
         Object.entries(classList).forEach(([klass, value]) => {
