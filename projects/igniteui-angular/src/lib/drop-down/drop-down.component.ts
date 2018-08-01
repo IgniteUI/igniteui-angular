@@ -16,7 +16,9 @@ import {
     Optional,
     HostListener,
     Directive,
-    Inject
+    Inject,
+    AfterContentInit,
+    AfterContentChecked
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -214,7 +216,9 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     public get selectedItem(): any {
-        const selectedItem = this.selectionAPI.get_selection(this.id)[0];
+        const selection = this.selectionAPI.get_selection(this.id);
+        const selectedItem = selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
+
         if (selectedItem) {
             if (selectedItem.isSelected) {
                 return selectedItem;
@@ -276,7 +280,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
-     * @hidden
+     * Get dropdown's html element of it scroll container
      */
     protected get scrollContainer() {
         return this.toggleDirective.element;
