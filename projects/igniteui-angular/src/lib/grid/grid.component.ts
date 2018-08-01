@@ -29,7 +29,7 @@ import {
 import { Subject, of } from 'rxjs';
 import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity, valToPxlsUsingRange } from '../core/utils';
+import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -4130,59 +4130,4 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
         horVirtScroll.scrollLeft += MINIMUM_COLUMN_WIDTH;
     }
-
-    /**
-     * @hidden
-     * Returns the size (in pixels) of the longest currently visible cell, including the header cell.
-     * ```typescript
-     * @ViewChild('grid') grid: IgxGridComponent;
-     *
-     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     * let size = this.grid.getgetLongestCell(column);
-     * ```
-     * @memberof IgxColumnComponent
-     */
-    public getLargestCellWidth(column: IgxColumnComponent): string {
-        const range = this.document.createRange();
-        const largest = new Map<number, number>();
-
-        let cellsContentWidths = [];
-        if (column.cells[0].nativeElement.children.length > 0) {
-            column.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
-                .map((child) => valToPxlsUsingRange(range, child)))));
-        } else {
-            cellsContentWidths = column.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
-        }
-
-        const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
-        const cellStyle = this.document.defaultView.getComputedStyle(column.cells[index].nativeElement);
-        const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
-            parseFloat(cellStyle.borderRightWidth);
-
-        largest.set(Math.max(...cellsContentWidths), cellPadding);
-
-        let headerCell;
-        const titleIndex = this.hasMovableColumns ? 1 : 0;
-        if (column.headerTemplate && column.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
-            headerCell =  Math.max(...Array.from(column.headerCell.elementRef.nativeElement.children[titleIndex].children)
-                .map((child) => valToPxlsUsingRange(range, child)));
-        } else {
-            headerCell = valToPxlsUsingRange(range, column.headerCell.elementRef.nativeElement.children[titleIndex]);
-        }
-
-        if (column.sortable || column.filterable) {
-            headerCell += column.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
-        }
-
-        const headerStyle = this.document.defaultView.getComputedStyle(column.headerCell.elementRef.nativeElement);
-        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-            parseFloat(headerStyle.borderRightWidth);
-        largest.set(headerCell, headerPadding);
-
-        const largestCell = Math.max(...Array.from(largest.keys()));
-        const largestCellPadding = largest.get(largestCell);
-
-        return Math.ceil(largestCell + largestCellPadding) + 'px';
-    }
-
 }

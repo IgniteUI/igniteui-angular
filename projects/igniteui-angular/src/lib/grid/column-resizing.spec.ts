@@ -13,7 +13,7 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../test-utils/grid-interfaces.spec';
 import { MultiColumnHeadersComponent } from '../test-utils/grid-samples.spec';
 
-describe('IgxGrid - Deferred Column Resizing', () => {
+fdescribe('IgxGrid - Deferred Column Resizing', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
     beforeEach(async(() => {
@@ -346,7 +346,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const fixture = TestBed.createComponent(GridFeaturesComponent);
         fixture.detectChanges();
 
-        const dblclick = new Event('dblclick');
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
@@ -354,31 +353,36 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[1].width).toEqual('150px');
         expect(grid.columns[2].width).toEqual('150px');
 
-        headers[0].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        let resizeArea = headers[0].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 148, 5);
         tick();
         fixture.detectChanges();
 
         expect(grid.columns[0].width).toEqual('100px');
 
-        headers[1].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        resizeArea = headers[1].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 248, 5);
         tick();
         fixture.detectChanges();
 
         expect(grid.columns[1].width).toEqual('207px');
 
-        headers[2].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        resizeArea = headers[2].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 305, 5);
         tick();
         fixture.detectChanges();
 
         expect(grid.columns[2].width).toEqual('97px');
 
-        headers[3].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        resizeArea = headers[3].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 400, 5);
         tick();
         fixture.detectChanges();
 
         expect(grid.columns[3].width).toEqual('88px');
 
-        headers[5].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        resizeArea = headers[5].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 486, 5);
         tick();
         fixture.detectChanges();
 
@@ -389,14 +393,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
-        const dblclick = new Event('dblclick');
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(grid.columns[4].cells[0].nativeElement.getBoundingClientRect().width).toEqual(48);
         expect(grid.columns[4].maxWidth).toEqual('100px');
 
-        headers[4].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        const resizeArea = headers[4].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 498, 5);
         tick();
         fixture.detectChanges();
 
@@ -407,13 +411,13 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const fixture = TestBed.createComponent(GridFeaturesComponent);
         fixture.detectChanges();
 
-        const dblclick = new Event('dblclick');
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(grid.columns[5].width).toEqual('150px');
 
-        headers[5].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        const resizeArea = headers[5].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 898, 5);
         tick();
         fixture.detectChanges();
 
@@ -424,13 +428,13 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
-        const dblclick = new Event('dblclick');
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(grid.columns[2].width).toEqual('100px');
 
-        headers[2].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        const resizeArea = headers[2].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 298, 5);
         tick();
         fixture.detectChanges();
 
@@ -441,7 +445,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
-        const dblclick = new Event('dblclick');
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
@@ -449,7 +452,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[1].width).toEqual('100px');
         expect(grid.columns[2].width).toEqual('100px');
 
-        headers[1].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        const resizeArea = headers[1].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 198, 5);
         tick();
         fixture.detectChanges();
 
@@ -480,7 +484,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const fixture = TestBed.createComponent(GridFeaturesComponent);
         fixture.detectChanges();
 
-        const dblclick = new Event('dblclick');
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
@@ -509,7 +512,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         expect(grid.columns[1].width).toEqual('150px');
 
-        headers[1].componentInstance.resizeArea.nativeElement.dispatchEvent(dblclick);
+        const resizeArea = headers[1].componentInstance.resizeArea.nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', resizeArea, 198, 5);
         tick();
         fixture.detectChanges();
 

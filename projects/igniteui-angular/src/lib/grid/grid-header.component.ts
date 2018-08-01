@@ -233,14 +233,14 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         this.sortDirection = expr ? expr.dir : SortingDirection.None;
     }
 
-    public onResizeAreaMouseOver() {
+    private onResizeAreaMouseOver() {
         if (this.column.resizable) {
             this.resizeCursor = 'col-resize';
             this.cdr.detectChanges();
         }
     }
 
-    public onResizeAreaMouseDown(event) {
+    private onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
             this.showResizer = true;
             this.column.grid.isColumnResizing = true;
@@ -252,11 +252,11 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         this.cdr.detectChanges();
     }
 
-    public onResizeAreaDblClick() {
+    private onResizeAreaDblClick() {
         if (this.column.resizable) {
             const currentColWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
-            const size = this.grid.getLargestCellWidth(this.column);
+            const size = this.column.getLargestCellWidth(this.column);
 
             if (this.column.pinned) {
                 const newPinnedWidth = this.grid.getPinnedWidth(true) - currentColWidth + parseFloat(size);

@@ -41,7 +41,7 @@ export const enum DisplayDensity {
 }
 /**
  *@hidden
-* Determines pixel length of string, using Range
+* Returns the actual size of the node content, using Range
 * ```typescript
 * let range = document.createRange();
 * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
@@ -69,7 +69,7 @@ export function valToPxlsUsingRange(range: Range, node: any): number {
 }
 /**
  *@hidden
-* Determines pixel length of string using Canvas
+* Returns the actual size of the node content, using Canvas
 * ```typescript
 * let ctx = document.createElement('canvas').getContext('2d');
 * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
