@@ -12,69 +12,58 @@ describe('IgxNavbar', () => {
             imports: [
                 IgxNavbarModule
             ]
-        });
+        }).compileComponents();
     }));
 
-    it('should properly initialize properties', async(() => {
-        TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(NavbarIntializeTestComponent);
-            fixture.detectChanges();
+    let fixture, component, domNavbar;
+    beforeEach(() => {
+        fixture = TestBed.createComponent(NavbarIntializeTestComponent);
+        fixture.detectChanges();
+        component = fixture.componentInstance;
+        domNavbar = fixture.debugElement.query(By.css('igx-navbar')).nativeElement;
+    });
 
-            const domNavbar = fixture.debugElement.query(By.css('igx-navbar')).nativeElement;
+    it('should properly initialize properties', () => {
+        expect(component.navbar.id).toContain('igx-navbar-');
+        expect(domNavbar.id).toContain('igx-navbar-');
+        expect(component.navbar.title).toBeUndefined();
+        expect(component.navbar.isActionButtonVisible).toBeFalsy();
+        expect(component.navbar.actionButtonIcon).toBeUndefined();
 
-            expect(fixture.componentInstance.navbar.id).toContain('igx-navbar-');
-            expect(domNavbar.id).toContain('igx-navbar-');
-            expect(fixture.componentInstance.navbar.title).toBeUndefined();
-            expect(fixture.componentInstance.navbar.isActionButtonVisible).toBeFalsy();
-            expect(fixture.componentInstance.navbar.actionButtonIcon).toBeUndefined();
+        component.navbar.id = 'customNavbar';
+        fixture.detectChanges();
 
-            fixture.componentInstance.navbar.id = 'customNavbar';
-            fixture.detectChanges();
+        expect(component.navbar.id).toBe('customNavbar');
+        expect(domNavbar.id).toBe('customNavbar');
+    });
 
-            expect(fixture.componentInstance.navbar.id).toBe('customNavbar');
-            expect(domNavbar.id).toBe('customNavbar');
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
-    }));
+    it('should change properties default values', () => {
+        const title = 'Test title';
+        const isActionButtonVisible = true;
+        const actionButtonIcon = 'Test icon';
 
-    it('should change properties default values', async(() => {
-        TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(NavbarIntializeTestComponent);
-            const title = 'Test title';
-            const isActionButtonVisible = true;
-            const actionButtonIcon = 'Test icon';
+        component.title = title;
+        component.isActionButtonVisible = isActionButtonVisible;
+        component.actionButtonIcon = actionButtonIcon;
+        fixture.detectChanges();
 
-            fixture.componentInstance.title = title;
-            fixture.componentInstance.isActionButtonVisible = isActionButtonVisible;
-            fixture.componentInstance.actionButtonIcon = actionButtonIcon;
-            fixture.detectChanges();
+        expect(component.navbar.title).toBe(title);
+        expect(component.navbar.isActionButtonVisible).toBeTruthy();
+        expect(component.navbar.actionButtonIcon).toBe(actionButtonIcon);
+    });
 
-            expect(fixture.componentInstance.navbar.title).toBe(title);
-            expect(fixture.componentInstance.navbar.isActionButtonVisible).toBeTruthy();
-            expect(fixture.componentInstance.navbar.actionButtonIcon).toBe(actionButtonIcon);
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
-    }));
+    it('should trigger on action', () => {
+        component.isActionButtonVisible = true;
+        component.actionButtonIcon = 'home';
+        fixture.detectChanges();
 
-    it('should trigger on action', async(() => {
-        TestBed.compileComponents().then(() => {
-            const fixture = TestBed.createComponent(NavbarIntializeTestComponent);
-            fixture.componentInstance.isActionButtonVisible = true;
-            fixture.componentInstance.actionButtonIcon = 'home';
-            fixture.detectChanges();
+        spyOn(component.navbar.onAction, 'emit');
+        fixture.debugElement.nativeElement.querySelector('igx-icon').click();
+        fixture.detectChanges();
 
-            spyOn(fixture.componentInstance.navbar.onAction, 'emit');
-            fixture.debugElement.nativeElement.querySelector('igx-icon').click();
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.navbar.onAction.emit)
-                .toHaveBeenCalledWith(fixture.componentInstance.navbar);
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
-    }));
+        expect(component.navbar.onAction.emit)
+            .toHaveBeenCalledWith(component.navbar);
+    });
 });
 @Component({
     selector: 'igx-navbar-test-component',
