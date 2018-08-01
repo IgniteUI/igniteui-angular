@@ -16,8 +16,8 @@
 
 <div class="igx-combo" [style.width]="width" role="combobox" [attr.aria-expanded]="!dropdown.collapsed" aria-haspopup="listbox" [attr.aria-owns]="dropdown.id">
     <igx-input-group [type]="type" (click)="onInputClick($event)">
-        <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" width="90%" readonly [placeholder]="placeholder" [disabled]="disabled" (blur)="onBlur($event)"/>
-        <igx-suffix *ngIf="value.length" igxButton="icon" class="clearButton" igxRipple (click)="handleClearItems($event)">
+        <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" readonly [placeholder]="placeholder" [disabled]="disabled" (blur)="onBlur($event)"/>
+        <igx-suffix *ngIf="value.length" class="clearButton" aria-label="Clear Selection" igxRipple (click)="handleClearItems($event)">
             <igx-icon fontSet="material" name="clear"></igx-icon>
         </igx-suffix>
         <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
