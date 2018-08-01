@@ -45,7 +45,7 @@ function typeInInput(inputElement: any, inputValue: string) {
     inputElement.dispatchEvent(new Event('input'));
 }
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
