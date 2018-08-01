@@ -1509,7 +1509,7 @@ describe('igxCombo', () => {
 
     describe('Rendering tests: ', () => {
         it('All appropriate classes should be applied on combo initialization', () => {
-            const defaultComboWidth = '250px';
+            const defaultComboWidth = '100%';
             const defaultComboDDWidth = '100%';
             const fix = TestBed.createComponent(IgxComboScrollTestComponent);
             fix.detectChanges();
@@ -1556,7 +1556,6 @@ describe('igxCombo', () => {
             expect(inputElement.classList.contains('ng-pristine')).toBeTruthy();
             expect(inputElement.classList.contains('ng-valid')).toBeTruthy();
             expect(inputElement.attributes.getNamedItem('type').nodeValue).toEqual('text');
-            expect(inputElement.attributes.getNamedItem('width').nodeValue).toEqual('90%');
 
             const dropDownButton = inputGroupBundle.children[1];
             expect(dropDownButton.classList.contains(CSS_CLASS_DROPDOWNBUTTON)).toBeTruthy();
@@ -1817,7 +1816,7 @@ describe('igxCombo', () => {
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         }));
-        it('Should ajust combo width to the container element width when set to 100%', fakeAsync(() => {
+        it('Should adjust combo width to the container element width when set to 100%', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
 
@@ -3274,7 +3273,7 @@ class IgxComboInputTestComponent {
             </p>
             <p>
                 <igx-combo #comboReactive formControlName="townCombo"
-                    class="input-container" [filterable]="true" placeholder="Location(s)" [width]="'100%'"
+                    class="input-container" [filterable]="true" placeholder="Location(s)"
                     [data]="items" [displayKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
             </p>
             <p>
@@ -3457,7 +3456,7 @@ export class IgxComboEmptyTestComponent {
     <igx-combo #combo placeholder="Location(s)"
     [data]="citiesData"
     [allowCustomValues]="true"
-    [filterable]="true" [width]="'100%'">
+    [filterable]="true">
     >
     </igx-combo>
     </div>
