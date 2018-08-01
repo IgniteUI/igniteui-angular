@@ -119,7 +119,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public showResizer = false;
     public resizerHeight;
     public dragDirection: RestrictDrag = RestrictDrag.HORIZONTALLY;
-    public resizeEndTimeout = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent) ? 200 : 0;
+    public resizeEndTimeout = isFirefox() ? 200 : 0;
 
     protected sortDirection = SortingDirection.None;
     protected defaultCssClass = 'igx-grid__th';
