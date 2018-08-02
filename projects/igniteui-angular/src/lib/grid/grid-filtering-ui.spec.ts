@@ -22,7 +22,7 @@ describe('IgxGrid - Filtering actions', () => {
                 BrowserAnimationsModule,
                 IgxGridModule.forRoot()]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     afterEach(() => {
@@ -1286,15 +1286,18 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-        tick(100);
+        tick();
+        fix.detectChanges();
 
         sendInput(input, 0, fix);
         fix.detectChanges();
-        tick(100);
+        tick();
+        fix.detectChanges();
 
         grid.nativeElement.click();
         fix.detectChanges();
-        tick(100);
+        tick();
+        fix.detectChanges();
 
         expect(gridFilteringToggle.nativeElement.classList.contains('igx-filtering__toggle--filtered')).toBeTruthy();
     }));
@@ -1335,7 +1338,7 @@ describe('IgxGrid - Filtering actions', () => {
         discardPeriodicTasks();
     }));
 
-    it('Should display populated filter dialog without redrawing it', async(() => {
+    it('Should display populated filter dialog without redrawing it', async () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1378,24 +1381,24 @@ describe('IgxGrid - Filtering actions', () => {
         filterIcon.nativeElement.click();
         fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            const filterUI = fix.debugElement.query(By.css('.igx-filtering__options'));
-            // verify 'And' button is selected
-            const buttonGroup = filterUI.query(By.css('igx-buttongroup'));
-            const buttons = buttonGroup.queryAll(By.css('.igx-button-group__item'));
-            const andButton = buttons.filter((btn) => btn.nativeElement.textContent === 'And')[0];
-            expect(andButton).not.toBeNull();
-            expect(andButton).toBeDefined();
-            expect(andButton.nativeElement.classList.contains('igx-button-group__item--selected'))
-                .toBeTruthy('AndButton is not selected');
+        await fix.whenStable();
 
-            // verify both filter expression components are present
-            const filterExpressions = filterUI.queryAll(By.css('igx-grid-filter-expression'));
-            expect(filterExpressions).not.toBeNull();
-            expect(filterExpressions).toBeDefined();
-            expect(filterExpressions.length).toBe(2, 'not all filter-expression components are visible');
-        });
-    }));
+        const filterUI = fix.debugElement.query(By.css('.igx-filtering__options'));
+        // verify 'And' button is selected
+        const buttonGroup = filterUI.query(By.css('igx-buttongroup'));
+        const buttons = buttonGroup.queryAll(By.css('.igx-button-group__item'));
+        const andButton = buttons.filter((btn) => btn.nativeElement.textContent === 'And')[0];
+        expect(andButton).not.toBeNull();
+        expect(andButton).toBeDefined();
+        expect(andButton.nativeElement.classList.contains('igx-button-group__item--selected'))
+            .toBeTruthy('AndButton is not selected');
+
+        // verify both filter expression components are present
+        const filterExpressions = filterUI.queryAll(By.css('igx-grid-filter-expression'));
+        expect(filterExpressions).not.toBeNull();
+        expect(filterExpressions).toBeDefined();
+        expect(filterExpressions.length).toBe(2, 'not all filter-expression components are visible');
+    });
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -1518,7 +1521,7 @@ function sendInput(element, text, fix) {
 
 function verifyFilterUIPosition(filterUIContainer, grid) {
     const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
-    filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
+        filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
     expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
 }
 
