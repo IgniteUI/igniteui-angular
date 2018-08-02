@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IgxGridComponent, IgxGridCellComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
@@ -15,13 +15,14 @@ export class GridSelectionComponent implements AfterViewInit {
     remote: Observable<any[]>;
     selection;
 
-    constructor(private remoteService: RemoteService) {
+    constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
         this.remoteService.urlBuilder = (state) => this.remoteService.url;
      }
 
     ngAfterViewInit() {
         this.remote = this.remoteService.remoteData;
         this.remoteService.getData(this.grid1.data);
+        this.cdr.detectChanges();
     }
 
     private onRowSelectionChange(event) {
