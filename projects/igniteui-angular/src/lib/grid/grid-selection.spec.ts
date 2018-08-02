@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../calendar';
@@ -771,7 +771,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
-        grid.sort({fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true});
+        grid.sort({ fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true });
         fix.whenStable().then(() => {
             fix.detectChanges();
             expect(firstRow.isSelected).toBeFalsy();
@@ -873,7 +873,7 @@ describe('IgxGrid - Row Selection', () => {
         const oldCellID = oldCell.cellID;
         oldCell.nativeElement.focus();
         oldCell.nativeElement.click();
-        grid.sort({fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true});
+        grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true });
         fixture.detectChanges();
         const cellAfterSorting = fixture.debugElement.query(By.css('.igx-grid__td--selected'));
         expect(grid.selectedCells).toBeDefined();
@@ -1010,6 +1010,66 @@ describe('IgxGrid - Row Selection', () => {
             expect(grid.selectedRows()).toEqual([]);
         });
     }));
+
+    it('Should properly handle TAB / SHIFT + TAB on edge cell, triggering virt scroll', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridWithScrollsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection5;
+        const virtualizationSpy = spyOn<any>(IgxGridComponent.prototype, '_focusNextCell');
+        // _focusNextCell is called when virt scroll is done
+        fix.detectChanges();
+        // Focus left right cell
+        const cells = fix.debugElement.queryAll(By.css('.igx-grid__td'));
+        const gridFirstRow = grid.rowList.first;
+        const cellsLength = grid.rowList.first.cells.length;
+        const mockEvent = jasmine.createSpyObj('mockEvt', ['preventDefault', 'stopPropagation']);
+        // Focus last right cell
+        const lastVisibleCell = gridFirstRow.cells.toArray()[cellsLength - 3];
+        lastVisibleCell.onFocus(mockEvent);
+        tick();
+        fix.detectChanges();
+        tick();
+        // tslint:disable-next-line:no-debugger
+        debugger;
+        expect(lastVisibleCell.isSelected).toBeTruthy();
+        // lastVisibleCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab' }));
+        lastVisibleCell.onTabKey(new KeyboardEvent('keydown', { key: 'tab' }));
+        tick();
+        fix.detectChanges();
+        tick();
+        expect(virtualizationSpy).toHaveBeenCalledTimes(1);
+        const targetCell = gridFirstRow.cells.toArray()[cellsLength - 4];
+        targetCell.nativeElement.focus();
+        tick();
+        fix.detectChanges();
+        tick();
+        expect(targetCell.isSelected).toBeTruthy();
+        // Focus second last right cell, TAB will NOT trigger virtualization;
+        // targetCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab' }));
+        targetCell.onTabKey(new KeyboardEvent('keydown', { key: 'tab' }));
+        tick();
+        fix.detectChanges();
+        tick();
+        expect(virtualizationSpy).toHaveBeenCalledTimes(1);
+        // Focus has changed to last cell
+        expect(lastVisibleCell.isSelected).toBeTruthy();
+        // Focus leftmost cell, SHIFT + TAB will NOT trigger virtualization
+        gridFirstRow.cells.first.nativeElement.focus();
+        tick();
+        fix.detectChanges();
+        tick();
+        expect(gridFirstRow.cells.first.isSelected).toBeTruthy();
+        // gridFirstRow.cells.first.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        gridFirstRow.cells.first.onShiftTabKey(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        tick();
+        fix.detectChanges();
+        tick();
+        // There are not cells prior to the first cell - no scrolling will be done, spy will not be called;
+        expect(virtualizationSpy).toHaveBeenCalledTimes(1);
+        // Cell is no longer focused
+        expect(gridFirstRow.cells.first.isSelected).toBeFalsy();
+    }));
+
 });
 
 @Component({
@@ -1193,7 +1253,6 @@ export class GridWithSelectionFilteringComponent {
             [height]="'600px'"
             [autoGenerate]="true"
             [rowSelectable]="true"
-            (onColumnInit)="columnCreated($event)"
         >
         </igx-grid>
     `
@@ -1208,7 +1267,7 @@ export class GridWithScrollsComponent implements OnInit {
         this.data = this.getData();
     }
 
-    public getData(rows: number = 100, cols: number = 100): any[] {
+    public getData(rows: number = 16, cols: number = 16): any[] {
         const bigData = [];
         for (let i = 0; i < rows; i++) {
             const row = {};
@@ -1220,10 +1279,6 @@ export class GridWithScrollsComponent implements OnInit {
             bigData.push(row);
         }
         return bigData;
-    }
-
-    public columnCreated(column: IgxColumnComponent) {
-        column.width = '50px';
     }
 }
 
