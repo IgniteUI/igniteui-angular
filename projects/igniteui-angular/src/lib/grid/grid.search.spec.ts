@@ -8,6 +8,7 @@ import { IgxStringFilteringOperand } from '../../public_api';
 import { BasicGridSearchComponent } from '../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../test-utils/grid-samples.spec';
+import { IForOfState } from '../directives/for-of/for_of.directive';
 
 describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -963,7 +964,6 @@ describe('IgxGrid - search API', () => {
 
             currentGrid.findNext(text);
         });
-
         return promise;
     }
 
@@ -975,11 +975,32 @@ describe('IgxGrid - search API', () => {
 
             currentGrid.findPrev(text);
         });
+        return promise;
+    }
+
+    function find(currentGrid: IgxGridComponent, text: string, findFunc: Function) {
+        const promise = new Promise((resolve) => {
+            let horizontalSubscription, verticalSubsription = null;
+
+            verticalSubsription = currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
+                horizontalSubscription.unsubscribe();
+                verticalSubsription.unsubscribe();
+                resolve(state);
+            });
+
+            horizontalSubscription = currentGrid.rowList.first.virtDirRow.onChunkLoad.subscribe((state) => {
+                horizontalSubscription.unsubscribe();
+                verticalSubsription.unsubscribe();
+                resolve(state);
+            });
+
+            findFunc.call(currentGrid, text);
+        });
 
         return promise;
     }
 
-    function isInView(index, state): boolean {
+    function isInView(index, state: IForOfState): boolean {
         return index > state.startIndex && index <= state.startIndex + state.chunkSize;
     }
 

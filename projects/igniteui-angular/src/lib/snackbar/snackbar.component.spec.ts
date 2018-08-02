@@ -86,6 +86,7 @@ describe('IgxSnackbar', () => {
         expect(snackbar.onAction.emit).toHaveBeenCalledWith(snackbar);
     });
 });
+
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">
                </igx-snackbar>`
