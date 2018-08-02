@@ -1,10 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
 import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxInputDirective } from '../directives/input/input.directive';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxDatePicker', () => {
     beforeEach(async(() => {
@@ -21,6 +23,10 @@ describe('IgxDatePicker', () => {
         })
         .compileComponents();
     }));
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
 
     it('Initialize a datepicker component', () => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
@@ -247,6 +253,65 @@ describe('IgxDatePicker', () => {
         label = fix.debugElement.query(By.directive(IgxLabelDirective));
         expect(label).not.toBeNull();
     });
+
+    it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        fix.detectChanges();
+
+        const datePicker = fix.debugElement.query(By.css('igx-datepicker'));
+        let overlayToggle = document.getElementsByTagName('igx-toggle');
+        expect(overlayToggle.length).toEqual(0);
+
+        let args: KeyboardEventInit = { key: 'space', bubbles: false };
+
+        datePicker.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        flush();
+        fix.detectChanges();
+
+
+        overlayToggle = document.getElementsByClassName('igx-toggle');
+        expect(overlayToggle[0]).not.toBeNull();
+
+        args = { key: 'Escape', bubbles: true };
+        overlayToggle[0].dispatchEvent(new KeyboardEvent('keydown', args));
+        flush();
+        fix.detectChanges();
+
+        overlayToggle = document.getElementsByClassName('igx-toggle');
+        expect(overlayToggle.length).toEqual(0);
+    }));
+
+    it('When datepicker is closed and the dialog disappear the focus should remain on the input',
+        fakeAsync(() => {
+
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        fix.detectChanges();
+
+        const datePicker = fix.debugElement.query(By.css('igx-datepicker'));
+        let overlayToggle = document.getElementsByTagName('igx-toggle');
+        expect(overlayToggle.length).toEqual(0);
+
+        let args: KeyboardEventInit = { key: 'space', bubbles: false };
+
+        datePicker.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        flush();
+        fix.detectChanges();
+
+
+        overlayToggle = document.getElementsByClassName('igx-toggle');
+        expect(overlayToggle[0]).not.toBeNull();
+        expect(overlayToggle[0]).not.toBeUndefined();
+
+        args = { key: 'Escape', bubbles: true };
+        overlayToggle[0].dispatchEvent(new KeyboardEvent('keydown', args));
+        flush();
+        fix.detectChanges();
+
+        const input = fix.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        overlayToggle = document.getElementsByClassName('igx-toggle');
+        expect(overlayToggle[0]).toEqual(undefined);
+        expect(input).toEqual(document.activeElement);
+    }));
 });
 
 @Component({

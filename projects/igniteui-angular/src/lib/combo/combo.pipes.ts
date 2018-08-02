@@ -9,6 +9,9 @@ import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 
 
+/**
+ * @hidden
+ */
 @Pipe({
     name: 'comboFiltering'
 })
@@ -43,6 +46,9 @@ export class SimpleFilteringStrategy extends FilteringStrategy {
     }
 }
 
+/**
+ * @hidden
+ */
 @Pipe({
     name: 'comboSorting',
     pure: true
@@ -64,6 +70,10 @@ export class IgxComboSortingPipe implements PipeTransform {
         return result;
     }
 }
+
+/**
+ * @hidden
+ */
 @Pipe({
     name: 'comboGrouping'
 })
@@ -84,10 +94,7 @@ export class IgxComboGroupingPipe implements PipeTransform {
         let currentHeader = null;
         for (let i = 0; i < collection.length; i++) {
             let insertFlag = 0;
-            if (!collection[i][groupKey] && currentHeader !== this.combo.defaultFallbackGroup) {
-                currentHeader = this.combo.defaultFallbackGroup;
-                insertFlag = 1;
-            } else if (currentHeader !== collection[i][groupKey]) {
+            if (currentHeader !== collection[i][groupKey]) {
                 currentHeader = collection[i][groupKey];
                 insertFlag = 1;
             }
@@ -104,6 +111,9 @@ export class IgxComboGroupingPipe implements PipeTransform {
     }
 }
 
+/**
+ * @hidden
+ */
 @Pipe({
     name: 'filterCondition',
     pure: true

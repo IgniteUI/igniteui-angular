@@ -35,16 +35,33 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public gridID: string;
 
     @HostBinding('class')
-    get styleClasses() {
-        if (this.column.columnGroup) {
-            return `${this.column.headerClasses}`;
-        }
-        return `igx-grid__th ${this.column.headerClasses}`;
+    get styleClasses(): string {
+        const defaultClasses = [
+            'igx-grid__th--fw',
+            this.column.headerClasses
+        ];
+
+        const classList = {
+            'igx-grid__th': !this.column.columnGroup,
+            'asc': this.ascending,
+            'desc': this.descending,
+            'igx-grid__th--number': this.column.dataType === DataType.Number,
+            'igx-grid__th--sorted': this.sorted,
+            'igx-grid__drag-col-header': this.dragged,
+            'igx-grid__th--pinned': this.isPinned,
+            'igx-grid__th--pinned-last': this.isLastPinned,
+        };
+
+        Object.entries(classList).forEach(([klass, value]) => {
+            if (value) {
+                defaultClasses.push(klass);
+            }
+        });
+        return defaultClasses.join(' ');
     }
 
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
-    @HostBinding('class.igx-grid__th--fw')
     get width() {
         return this.column.width;
     }
@@ -57,12 +74,10 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return null;
     }
 
-    @HostBinding('class.asc')
     get ascending() {
         return this.sortDirection === SortingDirection.Asc;
     }
 
-    @HostBinding('class.desc')
     get descending() {
         return this.sortDirection === SortingDirection.Desc;
     }
@@ -76,17 +91,10 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return 'none';
     }
 
-    @HostBinding('class.igx-grid__th--number')
-    get columnType() {
-        return this.column.dataType === DataType.Number;
-    }
-
-    @HostBinding('class.igx-grid__th--sorted')
     get sorted() {
         return this.sortDirection !== SortingDirection.None;
     }
 
-    @HostBinding('class.igx-grid__drag-col-header')
     get dragged() {
         return this.column === this.column.grid.draggedColumn;
     }
@@ -120,6 +128,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public resizeEndTimeout = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent) ? 200 : 0;
 
     protected sortDirection = SortingDirection.None;
+
     private _startResizePos;
     private _pinnedMaxWidth;
 
@@ -152,22 +161,16 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     @HostListener('click', ['$event'])
     public onClick(event) {
-
         if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.column.sortable) {
-                const grid = this.gridAPI.get(this.gridID);
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-                if (editableCell) {
-                    this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-                }
-                const groupingExpr = grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
+                const groupingExpr = this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
                 const sortDir = groupingExpr ?
                     this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc  : SortingDirection.Desc
                     : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
                 this.sortDirection = sortDir;
-                this.gridAPI.sort(this.gridID, this.column.field, this.sortDirection, this.column.sortingIgnoreCase);
-                grid.onSortingDone.emit({
+                this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase});
+                this.grid.onSortingDone.emit({
                     dir: this.sortDirection,
                     fieldName: this.column.field,
                     ignoreCase: this.column.sortingIgnoreCase
@@ -213,12 +216,10 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return this.gridAPI.get(this.gridID);
     }
 
-    @HostBinding('class.igx-grid__th--pinned')
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding('class.igx-grid__th--pinned-last')
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {

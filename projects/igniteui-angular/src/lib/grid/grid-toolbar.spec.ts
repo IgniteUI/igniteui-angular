@@ -1,41 +1,41 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { TestBed, fakeAsync, async, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { first } from 'rxjs/operators';
 import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../services/index';
-import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../core/utils';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Grid Toolbar', () => {
     let fixture;
     let grid;
-    beforeEach(() => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 GridToolbarTestPage1Component
             ],
             imports: [
                 IgxGridModule.forRoot(),
-                BrowserAnimationsModule
+                NoopAnimationsModule
             ],
             providers: [
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
         })
-        .compileComponents();
-    });
+        .compileComponents()
+        .then(() => {
+            fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid1;
+        });
+    }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(GridToolbarTestPage1Component);
-        fixture.detectChanges();
-        grid = fixture.componentInstance.grid1;
-    });
-
-    afterAll(() => {
-        clearOverlay();
+    afterEach(() => {
+        UIInteractions.clearOverlay();
     });
 
     it('testing toolbar visibility', () => {
@@ -228,7 +228,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         getExportButton().nativeElement.click();
         const exportExcelButton = getOverlay().querySelector('li#btnExportExcel');
 
-        grid.onToolbarExporting.subscribe((args) => {
+        grid.onToolbarExporting.pipe(first()).subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
             expect(args.options).not.toBe(null);
@@ -249,7 +249,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         getExportButton().nativeElement.click();
         const exportExcelButton = getOverlay().querySelector('li#btnExportExcel');
 
-        grid.onToolbarExporting.subscribe((args) => {
+        grid.onToolbarExporting.pipe(first()).subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
             expect(args.options).not.toBe(null);
@@ -274,7 +274,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         getExportButton().nativeElement.click();
         const exportCsvButton = getOverlay().querySelector('li#btnExportCsv');
 
-        grid.onToolbarExporting.subscribe((args) => {
+        grid.onToolbarExporting.pipe(first()).subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
             expect(args.options).not.toBe(null);
@@ -295,7 +295,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         getExportButton().nativeElement.click();
         const exportCsvButton = getOverlay().querySelector('li#btnExportCsv');
 
-        grid.onToolbarExporting.subscribe((args) => {
+        grid.onToolbarExporting.pipe(first()).subscribe((args) => {
             expect(args.grid).not.toBe(null);
             expect(args.exporter).not.toBe(null);
             expect(args.options).not.toBe(null);
@@ -409,7 +409,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         getColumnPinningButton().nativeElement.click();
     });
 
-    it('display density is properly applied.', () => {
+    it('display density is properly applied.', fakeAsync(() => {
         grid.showToolbar = true;
         grid.columnHiding = true;
         fixture.detectChanges();
@@ -419,22 +419,24 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
         expect(parseFloat(toolbar.offsetHeight) > 55).toBe(true);
 
-        grid.toolbar.displayDensity = DisplayDensity.compact;
-        grid.cdr.detectChanges();
+        grid.displayDensity = DisplayDensity.compact;
+        fixture.detectChanges();
+        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
         expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
 
-        grid.toolbar.displayDensity = DisplayDensity.cosy;
-        grid.cdr.detectChanges();
+        grid.displayDensity = DisplayDensity.cosy;
+        fixture.detectChanges();
+        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
         expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
-    });
+    }));
 
-    it('display density is properly applied through the grid.', () => {
+    it('display density is properly applied through the grid.', fakeAsync(() => {
         grid.showToolbar = true;
         grid.columnHiding = true;
         fixture.detectChanges();
@@ -444,21 +446,25 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
 
         grid.displayDensity = DisplayDensity.compact;
-        grid.cdr.detectChanges();
+        fixture.detectChanges();
+        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
 
         grid.displayDensity = DisplayDensity.cosy;
-        grid.cdr.detectChanges();
+        fixture.detectChanges();
+        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
 
         grid.displayDensity = DisplayDensity.comfortable;
-        grid.cdr.detectChanges();
+        fixture.detectChanges();
+        tick(100);
+
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
-    });
+    }));
 
     it('test \'filterColumnsPrompt\' property.', () => {
         grid.showToolbar = true;
@@ -484,8 +490,9 @@ describe('IgxGrid - Grid Toolbar', () => {
         toolbar.toggleColumnHidingUI();
     });
 
-    it('test hiding and pinning dropdowns height.', () => {
+    it('test hiding and pinning dropdowns height.', fakeAsync(() => {
         grid.height = '300px';
+        tick(100);
         grid.showToolbar = true;
         grid.columnHiding = true;
         fixture.detectChanges();
@@ -493,10 +500,11 @@ describe('IgxGrid - Grid Toolbar', () => {
         expect(parseInt(grid.toolbar.columnHidingUI.columnsAreaMaxHeight, 10)).toBe(134);
 
         grid.height = '600px';
+        tick(100);
         fixture.detectChanges();
 
         expect(grid.toolbar.columnHidingUI.columnsAreaMaxHeight).toBe(grid.calcHeight * 0.7 + 'px');
-    });
+    }));
 
     function getToolbar() {
         return fixture.debugElement.query(By.css('igx-grid-toolbar'));
@@ -523,15 +531,6 @@ describe('IgxGrid - Grid Toolbar', () => {
     function getExportOptions() {
         const div = getOverlay();
         return (div) ? div.querySelectorAll('li') : null;
-    }
-
-    function clearOverlay() {
-        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
-        Array.from(overlays).forEach(element => {
-            element.remove();
-        });
-        document.documentElement.scrollTop = 0;
-        document.documentElement.scrollLeft = 0;
     }
 });
 

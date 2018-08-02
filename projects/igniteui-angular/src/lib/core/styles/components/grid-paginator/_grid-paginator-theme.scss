@@ -2,16 +2,18 @@
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Grid Paging Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $text-color [null] - The text color.
-/// @param {Color} $background-color [null] - The background color of the paging panel.
-/// @param {Color} $border-color [null] - The border color of the paging panel.
+/// @param {Color} $text-color [currentColor] - The text color.
+/// @param {Color} $background-color [rgba(0, 0, 0, .04)] - The background color of the paging panel.
+/// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The border color of the paging panel.
 ///
 /// @requires extend
 /// @requires igx-color
+/// @requires hexrgba
 ///
 /// @example scss Change the stripes color
 ///   $my-grid-paginator-theme: igx-grid-paginator-theme(
@@ -28,7 +30,7 @@
     $default-theme: (
         name: 'igx-grid-paginator',
         text-color: currentColor,
-        background-color: rgb(245, 245, 245),
+        background-color: hexrgba(igx-color($palette, 'grays', 100)),
         border-color: igx-color($palette, 'grays', 400)
     );
 
@@ -43,7 +45,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-grid-paginator($theme) {
     @include igx-root-css-vars($theme);
 

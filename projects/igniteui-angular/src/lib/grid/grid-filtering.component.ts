@@ -190,7 +190,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
             if (!this._secondExpression && this.column.dataType === DataType.Boolean ) {
                 expr.filteringOperands.push({
                     fieldName: this.column.field,
-                    condition: IgxBooleanFilteringOperand.instance().condition('all'),
+                    condition: this.expressionsList.toArray()[0].getCondition(this.expressionsList.toArray()[0].conditions[0]),
                     searchVal: null,
                     ignoreCase: this.column.filteringIgnoreCase
                 });
@@ -283,10 +283,6 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     private _filter(): void {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editableCell) {
-            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-        }
         const grid = this.gridAPI.get(this.gridID);
         let expr = grid.filteringExpressionsTree.find(this.column.field) as FilteringExpressionsTree;
 

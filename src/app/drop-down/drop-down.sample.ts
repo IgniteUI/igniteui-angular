@@ -21,7 +21,6 @@ export class DropDownSampleComponent implements OnInit {
     ngOnInit() {
         this.igxDropDown.height = '400px';
         this.igxDropDown.width = '180px';
-        // this.igxDropDown.allowItemsFocus = false;
 
         const states = [
             'New England',
@@ -106,6 +105,8 @@ export class DropDownSampleComponent implements OnInit {
             }
             this.items.push(item);
         }
+
+        this.items[3]['selected'] = true;
     }
 
     constructor() {
@@ -123,9 +124,13 @@ export class DropDownSampleComponent implements OnInit {
         this.igxDropDown.toggle(overlaySettings);
     }
 
-    onSelection() {
+    onSelection(event) {
+        console.log(event);
+        const old = event.oldSelection;
+        event.oldSelection = event.newSelection;
+        event.newSelection = old;
     }
 
-    onOpening() {
+    onOpening(event) {
     }
 }

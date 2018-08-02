@@ -27,7 +27,26 @@ import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPip
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 
-export enum DataTypes {
+/** Custom strategy to provide the combo with callback on initial positioning */
+class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
+    private _callback: () => void;
+    constructor(callback: () => void) {
+        super();
+        this._callback = callback;
+    }
+
+    position(contentElement, size, document?, initialCall?) {
+        if (initialCall) {
+            this._callback();
+        }
+        super.position(contentElement, size);
+    }
+}
+
+/**
+ * @hidden
+ */
+enum DataTypes {
     EMPTY = 'empty',
     PRIMITIVE = 'primitive',
     COMPLEX = 'complex',
@@ -35,8 +54,17 @@ export enum DataTypes {
 }
 
 export enum IgxComboState {
+    /**
+     * Combo with initial state.
+     */
     INITIAL,
+    /**
+     * Combo with valid state.
+     */
     VALID,
+    /**
+     * Combo with invalid state.
+     */
     INVALID
 }
 
@@ -108,10 +136,10 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _comboInput: ElementRef<HTMLInputElement> = null;
     private _valid = IgxComboState.INITIAL;
     private _statusChanges$: Subscription;
-    private _width = '250px';
+    private _width = '100%';
+    private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
-        positionStrategy: new ConnectedPositioningStrategy(),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
@@ -125,11 +153,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService,
         @Self() @Optional() public ngControl: NgControl) {
-            if (this.ngControl) {
-                // Note: we provide the value accessor through here, instead of
-                // the `providers` to avoid running into a circular import.
-                this.ngControl.valueAccessor = this;
-            }
+        if (this.ngControl) {
+            // Note: we provide the value accessor through here, instead of
+            // the `providers` to avoid running into a circular import.
+            this.ngControl.valueAccessor = this;
+        }
     }
 
     /**
@@ -313,7 +341,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public onAddition = new EventEmitter<IComboItemAdditionEvent>();
 
     /**
-     * Emitted when an the search input's input event is triggered
+     * Emitted when the value of the search input changes (e.g. typing, pasting, clear, etc.)
      *
      * ```html
      * <igx-combo (onSearchInput)='handleSearchInputEvent()'></igx-combo>
@@ -442,16 +470,16 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *
      * ```typescript
      * // get
-     * let myComboItemsMaxWidth = this.combo.itemsMaxWidth;
+     * let myComboItemsWidth = this.combo.itemsWidth;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-combo [itemsMaxWidth] = '80'></igx-combo>
+     * <igx-combo [itemsWidth] = '"180px"'></igx-combo>
      * ```
      */
     @Input()
-    public itemsMaxWidth;
+    public itemsWidth: string;
 
     /**
      * Configures the drop down list item height
@@ -565,7 +593,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
-     * Combo item group
+     * The item property by which items should be grouped inside the items list. Not usable if data is not of type Object[].
      *
      * ```html
      * <!--set-->
@@ -580,7 +608,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
-     * Combo item group
+     * The item property by which items should be grouped inside the items list. Not usable if data is not of type Object[].
      *
      * ```typescript
      * // get
@@ -651,6 +679,24 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
     }
 
+    private _compareFunc(itemToSearch, equalCheck?: boolean) {
+        let compareFunc;
+        const key = this.valueKey;
+
+        // When there is remote data we need to compare valueKey values,
+        // instead of comparing entire itemID objects, because in that case they are not equal by reference.
+        if (this.totalItemCount > 0 && key && this.dataType === DataTypes.COMPLEX) {
+            compareFunc = function(selectedItem) {
+                return equalCheck ? selectedItem[key] === itemToSearch[key] :
+                                    selectedItem[key] !== itemToSearch[key];
+            };
+        }
+        return compareFunc;
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(evt) {
@@ -765,7 +811,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public get filteringExpressions() {
-        return this._filteringExpressions;
+        return this.filterable ? this._filteringExpressions : [];
     }
 
     /**
@@ -848,7 +894,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public get filteredData(): any[] {
-        return this._filteredData;
+        return this.filterable ? this._filteredData : this.data;
     }
 
     /**
@@ -894,13 +940,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public handleInputChange(event?) {
-        if (this.filterable) {
-            this.filter(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
-                true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
-            // this.isHeaderChecked();
-        }
         if (event !== undefined) {
+            this.dropdown.verticalScrollContainer.scrollTo(0);
             this.onSearchInput.emit(event);
+        }
+        if (this.filterable) {
+            this.filter();
+        } else {
+            this.checkMatch();
         }
     }
 
@@ -963,8 +1010,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             return;
         }
         const newSelection = select ?
-            this.selectionAPI.select_item(this.id, newItem) :
-            this.selectionAPI.deselect_item(this.id, newItem);
+            this.selectionAPI.select_item(this.id, newItem, this._compareFunc.apply(this, [newItem, true])) :
+            this.selectionAPI.deselect_item(this.id, newItem, this._compareFunc.apply(this, [newItem, false]));
         this.triggerSelectionChange(newSelection);
     }
 
@@ -997,7 +1044,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isItemSelected(item) {
-        return this.selectionAPI.is_item_selected(this.id, item);
+        return this.selectionAPI.is_item_selected(this.id, item, this._compareFunc.apply(this, [item, true]));
     }
 
     /**
@@ -1028,7 +1075,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isAddButtonVisible(): boolean {
-        return this.searchValue && this.customValueFlag;
+        // This should always return a boolean value. If this.searchValue was '', it returns '' instead of false;
+        return this.searchValue !== '' && this.customValueFlag;
     }
 
     /**
@@ -1054,6 +1102,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             [this.valueKey]: newValue,
             [this.displayKey]: newValue
         } : newValue;
+        if (this.groupKey || this.groupKey === 0) {
+            Object.assign(addedItem, { [this.groupKey] : this.defaultFallbackGroup});
+        }
         const oldCollection = this.data;
         const newCollection = [...this.data];
         newCollection.push(addedItem);
@@ -1062,6 +1113,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         };
         this.onAddition.emit(args);
         this.data.push(addedItem);
+        // If you mutate the array, no pipe is invoked and the display isn't updated;
+        // if you replace the array, the pipe executes and the display is updated.
+        this.data = cloneArray(this.data);
         this.changeSelectedItem(addedItem, true);
         this.customValueFlag = false;
         if (this.searchInput) {
@@ -1097,6 +1151,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         this.filteringExpressions = newArray;
     }
 
+    /**
+     * @hidden
+     */
     protected onStatusChanged() {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
@@ -1107,14 +1164,17 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    public filter(term, condition, ignoreCase, valueKey?) {
-        this.prepare_filtering_expression(term, condition, ignoreCase, valueKey);
+    public filter() {
+        this.prepare_filtering_expression(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
+        true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
     }
 
     /**
      * @hidden
      */
     public ngOnInit() {
+        this._positionCallback =  () => this.dropdown.updateScrollPosition();
+        this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
 
         if (this.ngControl && this.ngControl.value) {
@@ -1133,6 +1193,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         }
     }
 
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
@@ -1167,6 +1230,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public registerOnTouched(fn: any): void { }
 
+    /**
+     * @hidden
+     */
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
@@ -1206,7 +1272,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
-     * A method that opens/closes the dialog.
+     * A method that opens/closes the combo.
      *
      *```html
      *<button (click)="combo.toggle()>Toggle Combo</button>
@@ -1214,12 +1280,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *```
      */
     public toggle() {
-        this.searchValue = '';
         this.dropdown.toggle(this.overlaySettings);
     }
 
     /**
-     * A method that opens the dialog.
+     * A method that opens the combo.
      *
      *```html
      *<button (click)="combo.open()>Open Combo</button>
@@ -1227,12 +1292,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      *```
      */
     public open() {
-        this.searchValue = '';
         this.dropdown.open(this.overlaySettings);
     }
 
     /**
-     * A method that closes the dialog.
+     * A method that closes the combo.
      *
      *```html
      *<button (click)="combo.close()>Close Combo</button>

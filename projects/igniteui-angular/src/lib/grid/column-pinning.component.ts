@@ -16,6 +16,14 @@ export class IgxColumnPinningItemDirective extends ColumnChooserItemBase {
         super('pinned');
     }
 
+    /**
+     * Returns whether a column could be pinned.
+     * It's not possible to pin a column if there is not enough space for the unpinned area.
+     * ```typescript
+     * const columnItem: IgxColumnPinningItemDirective;
+     * this.columnItem.pinnable;
+     * ```
+     */
     get pinnable() {
         if (this.column.grid.getUnpinnedWidth(true) - this.column.width < this.column.grid.unpinnedAreaMinWidth) {
             return false;
@@ -35,6 +43,9 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
         super(cdr);
     }
 
+    /**
+     * @hidden
+     */
     createColumnItem(container: any, column: any) {
         if (column.level !== 0) {
             return null;
@@ -45,6 +56,9 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
         return item;
     }
 
+    /**
+     * @hidden
+     */
     public checkboxValueChange(event, columnItem: IgxColumnPinningItemDirective) {
         if (event.checked && !columnItem.pinnable) {
             event.checkbox.checked = false;
@@ -54,6 +68,9 @@ export class IgxColumnPinningComponent extends ColumnChooserBase {
     }
 }
 
+/**
+ * The IgxColumnPinningModule provides the {@link IgxColumnPinningComponent}, {@link IgxColumnPinningItemDirective} inside your application.
+ */
 @NgModule({
     declarations: [IgxColumnPinningComponent, IgxColumnPinningItemDirective],
     exports: [IgxColumnPinningComponent],
