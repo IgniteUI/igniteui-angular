@@ -25,7 +25,7 @@ import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.co
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { OverlaySettings, HorizontalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
-
+import { IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 /**
  *@hidden
  */
