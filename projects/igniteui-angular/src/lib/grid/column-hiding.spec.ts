@@ -29,7 +29,8 @@ describe('Column Hiding UI', () => {
                 GridWithColumnChooserComponent,
                 ColumnHidingInlineComponent,
                 GridWithGroupColumnsComponent,
-                ColumnHidingToggleComponent
+                ColumnHidingToggleComponent,
+                GridWithHiddenColumnComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -1051,6 +1052,28 @@ describe('Column Hiding UI', () => {
         });
     });
 
+    describe('Dynamic hidden chnages: ', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(GridWithHiddenColumnComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+
+            grid.cdr.detectChanges();
+        });
+
+        fit('the grid properly resizes its columns width when column visibility is changed', () => {
+            const calcWidth = grid.calcWidth;
+            expect(parseInt(grid.columnWidth, 10)).toBe(calcWidth / grid.visibleColumns.length);
+
+            fix.componentInstance.changeColumnVisibility('Name');
+            expect(parseInt(grid.columnWidth, 10)).toBe(calcWidth / grid.visibleColumns.length);
+
+            fix.componentInstance.changeColumnVisibility('Name');
+            expect(parseInt(grid.columnWidth, 10)).toBe(calcWidth / grid.visibleColumns.length);
+        });
+    });
+
     function getColumnChooserButton() {
         const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button ? button.nativeElement : undefined;
@@ -1212,4 +1235,20 @@ export class GridWithGroupColumnsComponent implements AfterViewInit {
         this.cdr.detectChanges();
     }
 
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        `[height]="'500px'" [width]="'100%'"`,
+        ``,
+        ColumnDefinitions.idNameHiddenJobHire)
+})
+export class GridWithHiddenColumnComponent {
+    public data = SampleTestData.personJobData;
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public changeColumnVisibility(colKey: string): void {
+        const column = this.grid.getColumnByName(colKey);
+        column.hidden = !column.hidden;
+    }
 }
