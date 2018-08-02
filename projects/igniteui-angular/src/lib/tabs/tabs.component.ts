@@ -67,6 +67,16 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     public tabsType: string | TabsType = 'contentfit';
 
     /**
+     * An @Input property that sets the value of the `selectedIndex`.
+     * Default value is 0.
+     * *```html
+     * <igx-tabs selectedIndex="1">
+     * ```
+     */
+    @Input()
+    public selectedIndex = 0;
+
+    /**
      * Emitted when a tab item is selected.
      * ```html
      * <igx-tabs (onTabItemSelected)="itemSelected($event)">
@@ -166,14 +176,6 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Gets the index of selected tab item.
-     * ```typescript
-     * cosnt selectedItemIndex = this.myTabComponent.selectedIndex;
-     * ```
-     */
-    public selectedIndex = -1;
-
-    /**
      * @hidden
      */
     public calculatedWidth: number;
@@ -255,9 +257,11 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
      */
     public ngAfterViewInit() {
         setTimeout(() => {
-            if (this.selectedIndex === -1) {
+            if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
                 // if nothing is selected - select the first tabs group
                 this._selectGroupByIndex(0);
+            } else {
+                this._selectGroupByIndex(this.selectedIndex);
             }
         });
 
@@ -294,7 +298,7 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
         const group = selectableGroups[selectedIndex];
 
         if (group) {
-            group.select(0, true);
+            group.select(0);
         }
     }
 
