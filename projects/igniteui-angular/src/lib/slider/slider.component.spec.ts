@@ -312,7 +312,7 @@ describe('IgxSlider', () => {
 
             const sliderElement = fixture.nativeElement.querySelector('.igx-slider');
             panRight(sliderElement, sliderElement.offsetHeight, sliderElement.offsetWidth, 200);
-            tick(2000);
+            tick();
 
             fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(60);
