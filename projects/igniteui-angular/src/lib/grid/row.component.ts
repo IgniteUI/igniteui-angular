@@ -34,14 +34,8 @@ export class IgxGridRowComponent implements DoCheck {
      *  The data passed to the row component.
      *
      * ```typescript
-     * // select some rows (by their IDs)
-     * this.grid.selectRows([3, 5, 8], true);
-     *
-     * // get the currently selected rows
-     * let mySelectedRows = this.grid.selectedRows;
-     *
      * // get the row data for the first selected row
-     * let firstSelectedRowData = mySelectedRows[0].rowData;
+     * let selectedRowData = this.grid.selectedRows[0].rowData;
      * ```
      */
     @Input()
@@ -51,14 +45,8 @@ export class IgxGridRowComponent implements DoCheck {
      * The index of the row.
      *
      * ```typescript
-     * // select some rows (by their IDs)
-     * this.grid.selectRows([3, 5, 8], true);
-     *
-     * // get the currently selected rows
-     * let mySelectedRows = this.grid.selectedRows;
-     *
      * // get the index of the second selected row
-     * let secondRowIndex = mySelectedRows[1].index;
+     * let selectedRowIndex = this.grid.selectedRows[1].index;
      * ```
      */
     @Input()
@@ -86,14 +74,8 @@ export class IgxGridRowComponent implements DoCheck {
      * The rendered cells in the row component.
      *
      * ```typescript
-     * // select some rows (by their IDs)
-     * this.grid.selectRows([3, 5, 8], true);
-     *
-     * // get the currently selected rows
-     * let mySelectedRows = this.grid.selectedRows;
-     *
      * // get the cells of the third selected row
-     * let thirtRowCells mySelectedRows[2].cells;
+     * let selectedRowCells = this.grid.selectedRows[2].cells;
      * ```
      */
     @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
@@ -182,14 +164,8 @@ export class IgxGridRowComponent implements DoCheck {
      * A reference to the grid containing the row.
      *
      * ```typescript
-     * // select some rows (by their IDs)
-     * this.grid.selectRows([3, 5, 8], true);
-     *
-     * // get the currently selected rows
-     * let mySelectedRows = this.grid.selectedRows;
-     *
      * // get a reference to the grid of the first selected row
-     * let myGrid = mySelectedRows[0].grid; // this.grid === myGrid
+     * let selectedRowGrid = this.grid.selectedRows[0].grid;
      * ```
      */
     get grid(): IgxGridComponent {
@@ -211,14 +187,8 @@ export class IgxGridRowComponent implements DoCheck {
      * The native DOM element representing the row. Could be null in certain environments.
      *
      * ```typescript
-     * // select some rows (by their IDs)
-     * this.grid.selectRows([3, 5, 8], true);
-     *
-     * // get the currently selected rows
-     * let mySelectedRows = this.grid.selectedRows;
-     *
      * // get the nativeElement of the second selected row
-     * let secondRowNativeElement = mySelectedRows[1].nativeElement;
+     * let selectedRowNativeElement = this.grid.selectedRows[1].nativeElement;
      * ```
      */
     get nativeElement() {
@@ -276,15 +246,9 @@ export class IgxGridRowComponent implements DoCheck {
      * This method emits `onEditDone` event.
      *
      * ```typescript
-     * // select some rows (by their IDs)
-     * this.grid.selectRows([3, 5, 8], true);
-     *
-     * // get the currently selected rows
-     * let mySelectedRows = this.grid.selectedRows;
-     *
      * // update the second selected row's value
      * let newValue = "Apple";
-     * mySelectedRows[1].update(newValue);
+     * this.grid.selectedRows[1].update(newValue);
      * ```
      */
     public update(value: any) {
@@ -315,14 +279,8 @@ export class IgxGridRowComponent implements DoCheck {
      * This method emits `onRowDeleted` event.
      *
      * ```typescript
-     * // select some rows (by their IDs)
-     * this.grid.selectRows([3, 5, 8], true);
-     *
-     * // get the currently selected rows
-     * let mySelectedRows = this.grid.selectedRows;
-     *
      * // delete the third selected row from the grid
-     * mySelectedRows[2].delete();
+     * this.grid.selectedRows[2].delete();
      * ```
      */
     public delete() {
