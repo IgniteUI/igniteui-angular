@@ -161,11 +161,20 @@ export class IgxGridRowComponent implements DoCheck {
     public isSelected: boolean;
 
     /**
-     * A reference to the grid containing the row.
+     * Get a reference to the grid that contains the selected row.
      *
      * ```typescript
-     * // get a reference to the grid of the first selected row
-     * let selectedRowGrid = this.grid.selectedRows[0].grid;
+     * handleRowSelection(event) {
+     *  // the grid on which the onRowSelectionChange event was triggered
+     *  const grid = event.row.grid;
+     * }
+     * ```
+     *
+     * ```html
+     *  <igx-grid
+     *    [data]="data"
+     *    (onRowSelectionChange)="handleRowSelection($event)">
+     *  </igx-grid>
      * ```
      */
     get grid(): IgxGridComponent {
