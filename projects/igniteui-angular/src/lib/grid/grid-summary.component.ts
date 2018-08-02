@@ -6,13 +6,16 @@ import { DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
+/**
+ *@hidden
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-summary',
     templateUrl: './grid-summary.component.html'
 })
-export class IgxGridSummaryComponent implements  DoCheck {
+export class IgxGridSummaryComponent implements DoCheck {
 
     fieldName: string;
 

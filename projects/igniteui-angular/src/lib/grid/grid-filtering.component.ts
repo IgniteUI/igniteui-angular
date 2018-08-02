@@ -25,8 +25,10 @@ import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.co
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { OverlaySettings, HorizontalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
-import { IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 
+/**
+ *@hidden
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -173,7 +175,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
     }
 
-     public onSelectLogicOperator(event): void {
+    public onSelectLogicOperator(event): void {
         this.isSecondConditionVisible = true;
         const grid = this.gridAPI.get(this.gridID);
         const expr = grid.filteringExpressionsTree.find(this.column.field) as FilteringExpressionsTree;
@@ -187,7 +189,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 }
             }
 
-            if (!this._secondExpression && this.column.dataType === DataType.Boolean ) {
+            if (!this._secondExpression && this.column.dataType === DataType.Boolean) {
                 expr.filteringOperands.push({
                     fieldName: this.column.field,
                     condition: this.expressionsList.toArray()[0].getCondition(this.expressionsList.toArray()[0].conditions[0]),

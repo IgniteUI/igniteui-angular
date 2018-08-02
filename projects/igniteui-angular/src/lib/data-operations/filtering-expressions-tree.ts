@@ -10,8 +10,48 @@ export declare interface IFilteringExpressionsTree {
 }
 
 export class FilteringExpressionsTree implements IFilteringExpressionsTree {
+
+    /**
+     * Sets/gets the filtering operands.
+     * ```typescript
+     * const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+     * gridExpressionsTree.filteringOperands = [
+     * {
+     *   condition: IgxStringFilteringOperand.instance().condition('contains'),
+     *   fieldName: 'Column Field',
+     *   searchVal: 'Value',
+     *   ignoreCase: false
+     * }];
+     * ```
+     * ```typescript
+     * let filteringExpressions = gridExpressionsTree.filteringOperands;
+     * ```
+     * @memberof FilteringExpressionsTree
+     */
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[] = [];
+
+    /**
+     * Sets/gets the operator.
+     * ```typescript
+     * gridExpressionsTree.operator = FilteringLogic.And;
+     * ```
+     * ```typescript
+     * let operator = gridExpressionsTree.operator;
+     * ```
+     * @memberof FilteringExpressionsTree
+     */
     operator: FilteringLogic;
+
+    /**
+     * Sets/gets the field name of the column where the filtering expression is placed.
+     * ```typescript
+     *  gridExpressionTree.fieldName = 'Column Field';
+     * ```
+     * ```typescript
+     * let columnField = expressionTree.fieldName;
+     * ```
+     * @memberof FilteringExpressionsTree
+     */
     fieldName?: string;
 
     constructor(operator: FilteringLogic, fieldName?: string) {
@@ -19,6 +59,13 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         this.fieldName = fieldName;
     }
 
+    /**
+     * Returns the filtering expression for a column with the provided fieldName.
+     * ```typescript
+     * let filteringExpression = gridExpressionTree.finds('Column Field');
+     * ```
+     * @memberof FilteringExpressionsTree
+     */
     public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
         const index = this.findIndex(fieldName);
 
@@ -29,6 +76,13 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         return null;
     }
 
+    /**
+     * Returns the index of the filtering expression for a column with the provided fieldName.
+     * ```typescript
+     * let filteringExpressionIndex = gridExpressionTree.findIndex('Column Field');
+     * ```
+     * @memberof FilteringExpressionsTree
+     */
     public findIndex(fieldName: string): number {
         let expr;
         for (let i = 0; i < this.filteringOperands.length; i++) {
