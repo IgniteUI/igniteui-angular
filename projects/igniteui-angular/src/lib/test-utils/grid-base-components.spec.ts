@@ -74,7 +74,7 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobHireDate)
 })
-export class BasicGridSearchComponent extends BasicGridComponent {
+export class BasicGridSearchComponent extends GridWithSizeComponent {
     public highlightClass = 'igx-highlight';
     public activeClass = 'igx-highlight__active';
 }
@@ -83,7 +83,7 @@ export class BasicGridSearchComponent extends BasicGridComponent {
     template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
         '', ColumnDefinitions.idNameJobTitle)
 })
-export class PagingComponent extends BasicGridComponent {
+export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
     public perPage = 3;
 
