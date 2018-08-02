@@ -967,7 +967,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get headerCell(): IgxGridHeaderComponent {
         if (this.grid.headerList.length > 0) {
-            return flatten(this.grid.headerList.toArray()).filter((h) => h.column.index === this.index)[0];
+            return flatten(this.grid.headerList.toArray()).find((h) => h.column === this);
         }
     }
 
