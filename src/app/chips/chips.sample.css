@@ -29,9 +29,9 @@
 }
 
 .dropAreaCc.dragOver {
-    background-color: #1fc960b5;
+    background-color: rgba(31, 201, 96, 0.71);
 }
 
 .dropAreaTo.dragOver {
-    background-color: #1fc960b5;
+    background-color: rgba(31, 201, 96, 0.71);
 }
