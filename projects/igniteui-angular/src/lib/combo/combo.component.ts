@@ -1003,7 +1003,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return this.isRemote && typeof itemID === 'object' ? JSON.stringify(itemID) : itemID;
     }
     private _parseItemID(itemID) {
-        return this.isRemote ? JSON.parse(itemID) : itemID;
+        return this.isRemote && typeof itemID === 'string' ? JSON.parse(itemID) : itemID;
     }
 
     private changeSelectedItem(newItem: any, select?: boolean) {
@@ -1334,7 +1334,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     public selectedItems() {
-        return this.dropdown.selectedItem;
+        const items = this.dropdown.selectedItem;
+        return this.isRemote ? items.map(item => this._parseItemID(item)) : items;
     }
 
     /**
