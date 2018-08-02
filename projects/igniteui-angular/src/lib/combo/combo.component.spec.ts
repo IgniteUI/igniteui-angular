@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -11,6 +12,7 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { RemoteService } from 'src/app/shared/remote.combo.service';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -2546,7 +2548,7 @@ describe('igxCombo', () => {
             fix.detectChanges();
             tick();
             fix.detectChanges();
-            expect(combo.selectedItems()).toEqual([{ field: 'New' }]);
+            expect(combo.selectedItems()).toEqual([{ field: 'New', region: 'Other' }]);
             expect(combo.comboInput.nativeElement.value).toEqual('New');
 
             fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click(mockEvent);
@@ -3304,7 +3306,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 
     ngOnDestroy() {
         this.cdr.detach();
-      }
+    }
 }
 
 
