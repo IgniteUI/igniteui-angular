@@ -44,7 +44,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
-import { IgxGroupByRowTemplateDirective, IgxColumnMovingDragDirective } from './grid.common';
+import { IgxGroupByRowTemplateDirective, DropPosition } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
@@ -2270,10 +2270,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent) {
+    protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
         const list = this.columnList.toArray();
         const fi = list.indexOf(from);
-        const ti = list.indexOf(to);
+        let ti = list.indexOf(to);
+
+        if (pos === DropPosition.BeforeDropTarget && fi < ti) {
+            ti -= 1;
+        }
+
+        if (pos === DropPosition.AfterDropTarget && fi > ti) {
+            ti += 1;
+        }
 
         let activeColumn = null;
         let activeColumnIndex = -1;
@@ -2318,10 +2326,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent) {
+    protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
         const buffer = parent.children.toArray();
         const fi = buffer.indexOf(from);
-        const ti = buffer.indexOf(to);
+        let ti = buffer.indexOf(to);
+
+        if (pos === DropPosition.BeforeDropTarget && fi < ti) {
+            ti -= 1;
+        }
+
+        if (pos === DropPosition.AfterDropTarget && fi > ti) {
+            ti += 1;
+        }
+
         buffer.splice(ti, 0, ...buffer.splice(fi, 1));
         parent.children.reset(buffer);
     }
@@ -2332,7 +2349,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * grid.moveColumn(compName, persDetails);
      * ```
      */
-    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent) {
+    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
         if ((column.level !== dropTarget.level) ||
             (column.topLevelParent !== dropTarget.topLevelParent)) {
             return;
@@ -2340,7 +2357,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this.gridAPI.submit_value(this.id);
         if (column.level) {
-            this._moveChildColumns(column.parent, column, dropTarget);
+            this._moveChildColumns(column.parent, column, dropTarget, pos);
         }
 
         if (dropTarget.pinned && column.pinned) {
@@ -2356,7 +2373,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             column.unpin();
         }
 
-        this._moveColumns(column, dropTarget);
+        this._moveColumns(column, dropTarget, pos);
     }
 
     /**
