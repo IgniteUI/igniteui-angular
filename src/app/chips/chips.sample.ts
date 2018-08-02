@@ -115,7 +115,6 @@ export class ChipsSampleComponent {
     public onDropCc(event){
         
         event.cancel = true;
-        event.drag._dragGhost.remove();
 
         let chipSwapEl = this.chipListTo.find(val=> val.text === event.drag.element.nativeElement.parentElement.children[0].textContent);
         this.chipListCc.push(chipSwapEl);
@@ -133,7 +132,6 @@ export class ChipsSampleComponent {
     public onDropTo(event){
         
         event.cancel = true;
-        event.drag._dragGhost.remove();
 
         let chipSwapEl = this.chipListCc.find(val=> val.text === event.drag.element.nativeElement.parentElement.children[0].textContent);
         this.chipListTo.push(chipSwapEl);
