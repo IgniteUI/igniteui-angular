@@ -152,11 +152,11 @@ describe('Carousel', () => {
         fixture.detectChanges();
 
         const instance = fixture.componentInstance;
-        let currentSlideIndex = instance.carousel.current;
-        let currentSlide = instance.carousel.get(currentSlideIndex);
+        const currentSlideIndex = instance.carousel.current;
+        const currentSlide = instance.carousel.get(currentSlideIndex);
         instance.carousel.remove(currentSlide);
         fixture.detectChanges();
-        
+
         expect(currentSlide.active).toBe(false);
     });
 
