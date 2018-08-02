@@ -12,6 +12,13 @@ export class UIInteractions {
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
     }
 
+    public static triggerKeyDownEvtUponElem(keyPressed, elem) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyPressed
+        });
+        elem.dispatchEvent(keyboardEvent);
+    }
+
     public static findCellByInputElem(elem, focusedElem) {
         if (!focusedElem.parentElement) {
             return null;
@@ -70,5 +77,14 @@ export class UIInteractions {
             element.dispatchEvent(pointerEvent);
             resolve();
         });
+    }
+
+    public static clearOverlay() {
+        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+        Array.from(overlays).forEach(element => {
+            element.remove();
+        });
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
     }
 }

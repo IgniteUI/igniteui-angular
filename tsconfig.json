@@ -35,6 +35,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "preserveConstEnums": true,
-    "stripInternal": true
+    "stripInternal": true,
+    "readme": "none"
   }
 }
