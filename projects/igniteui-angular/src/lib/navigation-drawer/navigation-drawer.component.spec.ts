@@ -268,6 +268,36 @@ describe('Navigation Drawer', () => {
             });
         }));
 
+        it('should stay at 100% parent height when pinned', async(() => {
+            const template = `<div>
+                               <igx-nav-drawer [pin]="pin" pinThreshold="false" [enableGestures]="enableGestures"></igx-nav-drawer>
+                              </div>`;
+            TestBed.overrideComponent(TestComponentPin, { set: { template }});
+            TestBed.compileComponents()
+            .then(() => {
+                const fixture = TestBed.createComponent(TestComponentPin);
+                const windowHeight = window.innerHeight;
+                const aside = fixture.debugElement.query((x) => x.nativeNode.nodeName === 'ASIDE').nativeElement;
+                const container = fixture.debugElement.query(By.css('div')).nativeElement;
+
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(aside.clientHeight).toEqual(windowHeight);
+
+                fixture.componentInstance.pin = true;
+                fixture.detectChanges();
+                expect(aside.clientHeight).toEqual(container.clientHeight);
+
+                container.style.height =  `${windowHeight - 50}px`;
+                expect(aside.clientHeight).toEqual(windowHeight - 50);
+
+                // unpin :
+                fixture.componentInstance.pin = false;
+                fixture.detectChanges();
+                expect(aside.clientHeight).toEqual(windowHeight);
+            });
+        }));
+
         it('should toggle on edge swipe gesture', (done) => {
             let fixture: ComponentFixture<TestComponentDIComponent>;
 
