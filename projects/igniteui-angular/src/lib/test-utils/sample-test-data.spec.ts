@@ -66,6 +66,22 @@ export class SampleTestData {
         { Number: 3, String: "3", Boolean: true, Date: new Date(2018, 9, 22) }
     ];
 
+    /* Fields: Name: string, Avatar: string; 3 items. */
+    public static personAvatarData = [
+        {
+            Name: 'Person 1',
+            Avatar: 'https://randomuser.me/api/portraits/men/43.jpg'
+        },
+        {
+            Name: 'Person 2',
+            Avatar: 'https://randomuser.me/api/portraits/women/66.jpg'
+        },
+        {
+            Name: 'Person 3',
+            Avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
+        }
+    ];
+
     /* Fields: name: string, phone: string; 5 items. */
     public static contactsData = [
         {
@@ -172,6 +188,20 @@ export class SampleTestData {
         { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead" },
         { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer" },
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager" }
+    ];
+
+    /* Data fields: ID: number, Name: string, JobTitle: string, Company: string; 10 items, sorted by ID. */
+    public static personIDNameJobCompany = [
+        { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', Company: 'Company A' },
+        { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', Company: 'Company C' },
+        { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', Company: 'Company A' },
+        { ID: 4, Name: 'Jack Simon', JobTitle: 'Software Developer', Company: 'Company D' },
+        { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software DEVELOPER', Company: 'Company B' },
+        { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', Company: 'Company C' },
+        { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', Company: 'Company B' },
+        { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', Company: 'Company A' },
+        { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Company: 'Company D' },
+        { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Company: 'Company E' }
     ];
 
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
