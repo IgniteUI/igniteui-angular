@@ -11,7 +11,6 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { RemoteService } from 'src/app/shared/remote.combo.service';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -66,8 +65,7 @@ describe('igxCombo', () => {
                 IgxComboModule,
                 NoopAnimationsModule,
                 IgxToggleModule,
-                ReactiveFormsModule,
-                DynamicTestModule
+                ReactiveFormsModule
             ]
         }).compileComponents();
     }));
@@ -1165,7 +1163,7 @@ describe('igxCombo', () => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
-            // This is a workaround for issue https://github.com/angular/angular/issues/14235
+            // This is a workaround for issue github.com/angular/angular/issues/14235
             // Expecting existing DebugElement toBeFalsy creates circular reference in Jasmine
             expect(fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_CLEARBUTTON)).length).toBeFalsy();
 
@@ -1931,8 +1929,6 @@ describe('igxCombo', () => {
                     expect(selItems[1][combo.valueKey]).toEqual(dataItems[1][combo.valueKey]);
                     expect(selItems[2][combo.valueKey]).toEqual(dataItems[2][combo.valueKey]);
                     setTimeout(() => {
-                        //dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-
                         selectedItem = dropdownItems[0];
                         itemCheckbox = selectedItem.querySelector('.' + CSS_CLASS_CHECKBOX);
                         itemCheckbox.click();
