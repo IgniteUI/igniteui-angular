@@ -240,9 +240,6 @@ export class IgxGridRowComponent implements DoCheck {
      */
     protected isFocused = false;
 
-    /**
-     * @hidden
-     */
     constructor(public gridAPI: IgxGridAPIService,
                 private selectionAPI: IgxSelectionAPIService,
                 public element: ElementRef,
