@@ -315,7 +315,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @memberOf IgxCarouselComponent
      */
     public remove(slide: IgxSlideComponent) {
-        if (slide.index == this.current) {
+        if (slide.index === this.current) {
             this.next();
         }
 
