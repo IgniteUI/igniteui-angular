@@ -275,9 +275,9 @@ describe('IgxTabs', () => {
         const fixture = TestBed.createComponent(TabsTestSelectedTabComponent);
         const tabs = fixture.componentInstance.tabs;
         fixture.detectChanges();
+        tick();
 
         expect(tabs.selectedIndex).toBe(2);
-        tick();
         expect(tabs.groups.toArray()[2].isSelected).toBeTruthy();
         expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(320px)');
     }));
