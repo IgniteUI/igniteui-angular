@@ -23,7 +23,6 @@ import {
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.component';
-import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 import { OverlaySettings } from '../services';
 import { IToggleView } from '../core/navigation';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
@@ -219,6 +218,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     public get selectedItem(): any {
         const selection = this.selectionAPI.get_selection(this.id);
         const selectedItem = selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
+
         if (selectedItem) {
             if (selectedItem.isSelected) {
                 return selectedItem;
@@ -404,6 +404,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
+        this.selectionAPI.set_selection(this.id, []);
     }
 
 
