@@ -30,34 +30,98 @@ import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
 })
 export class IgxGridRowComponent implements DoCheck {
 
+    /**
+     *  The data passed to the row component.
+     *
+     * ```typescript
+     * // select some rows (by their IDs)
+     * this.grid.selectRows([3, 5, 8], true);
+     *
+     * // get the currently selected rows
+     * let mySelectedRows = this.grid.selectedRows;
+     *
+     * // get the row data for the first selected row
+     * let firstSelectedRowData = mySelectedRows[0].rowData;
+     * ```
+     */
     @Input()
     public rowData: any;
 
+    /**
+     * The index of the row.
+     *
+     * ```typescript
+     * // select some rows (by their IDs)
+     * this.grid.selectRows([3, 5, 8], true);
+     *
+     * // get the currently selected rows
+     * let mySelectedRows = this.grid.selectedRows;
+     *
+     * // get the index of the second selected row
+     * let secondRowIndex = mySelectedRows[1].index;
+     * ```
+     */
     @Input()
     public index: number;
 
+    /**
+     * @hidden
+     */
     @Input()
     public gridID: string;
 
+    /**
+     * @hidden
+     */
     @ViewChild('igxDirRef', { read: IgxForOfDirective })
     public virtDirRow: IgxForOfDirective<any>;
 
+    /**
+     * @hidden
+     */
     @ViewChild(forwardRef(() => IgxCheckboxComponent), {read: IgxCheckboxComponent})
     public checkboxElement: IgxCheckboxComponent;
 
+    /**
+     * The rendered cells in the row component.
+     *
+     * ```typescript
+     * // select some rows (by their IDs)
+     * this.grid.selectRows([3, 5, 8], true);
+     *
+     * // get the currently selected rows
+     * let mySelectedRows = this.grid.selectedRows;
+     *
+     * // get the cells of the third selected row
+     * let thirtRowCells mySelectedRows[2].cells;
+     * ```
+     */
     @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
     public cells: QueryList<IgxGridCellComponent>;
 
+    /**
+     * @hidden
+     */
     @HostBinding('style.height.px')
     get rowHeight() {
         return this.grid.rowHeight;
     }
+
+    /**
+     * @hidden
+     */
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
+    /**
+     * @hidden
+     */
     @HostBinding('attr.role')
     public role = 'row';
 
+    /**
+     * @hidden
+     */
     @HostBinding('class')
     get styleClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
@@ -65,37 +129,76 @@ export class IgxGridRowComponent implements DoCheck {
         return `${this.defaultCssClass} ${indexClass} ${selectedClass}`;
     }
 
+
+    /**
+     * @hidden
+     */
     get focused(): boolean {
         return this.isFocused;
     }
 
+    /**
+     * @hidden
+     */
     set focused(val: boolean) {
         this.isFocused = val;
     }
 
+    /**
+     * @hidden
+     */
     get columns(): IgxColumnComponent[] {
         return this.grid.visibleColumns;
     }
 
+    /**
+     * @hidden
+     */
     get pinnedColumns(): IgxColumnComponent[] {
         return this.grid.pinnedColumns;
     }
 
+    /**
+     * @hidden
+     */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this.grid.unpinnedColumns;
     }
 
+    /**
+     * @hidden
+     */
     public get rowSelectable() {
         return this.grid.rowSelectable;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('attr.aria-selected')
     public isSelected: boolean;
 
+    /**
+     * A reference to the grid containing the row.
+     *
+     * ```typescript
+     * // select some rows (by their IDs)
+     * this.grid.selectRows([3, 5, 8], true);
+     *
+     * // get the currently selected rows
+     * let mySelectedRows = this.grid.selectedRows;
+     *
+     * // get a reference to the grid of the first selected row
+     * let myGrid = mySelectedRows[0].grid; // this.grid === myGrid
+     * ```
+     */
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
 
+    /**
+     * @hidden
+     */
     public get rowID() {
         // A row in the grid is identified either by:
         // primaryKey data value,
@@ -104,30 +207,66 @@ export class IgxGridRowComponent implements DoCheck {
         return primaryKey ? this.rowData[primaryKey] : this.rowData;
     }
 
+    /**
+     * The native DOM element representing the row. Could be null in certain environments.
+     *
+     * ```typescript
+     * // select some rows (by their IDs)
+     * this.grid.selectRows([3, 5, 8], true);
+     *
+     * // get the currently selected rows
+     * let mySelectedRows = this.grid.selectedRows;
+     *
+     * // get the nativeElement of the second selected row
+     * let secondRowNativeElement = mySelectedRows[1].nativeElement;
+     * ```
+     */
     get nativeElement() {
         return this.element.nativeElement;
     }
 
+    /**
+     * @hidden
+     */
     protected defaultCssClass = 'igx-grid__tr';
+
+    /**
+     * @hidden
+     */
     protected _rowSelection = false;
+
+    /**
+     * @hidden
+     */
     protected isFocused = false;
 
+    /**
+     * @hidden
+     */
     constructor(public gridAPI: IgxGridAPIService,
                 private selectionAPI: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
-
+    /**
+     * @hidden
+     */
     @HostListener('focus', ['$event'])
     public onFocus(event) {
         this.isFocused = true;
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('blur', ['$event'])
     public onBlur(event) {
         this.isFocused = false;
     }
 
+    /**
+     * @hidden
+     */
     public onCheckboxClick(event) {
         const newSelection = (event.checked) ?
                             this.selectionAPI.select_item(this.gridID, this.rowID) :
@@ -135,6 +274,22 @@ export class IgxGridRowComponent implements DoCheck {
         this.grid.triggerRowSelectionChange(newSelection, this, event);
     }
 
+    /**
+     * Updates the specified row object and the data source record with the passed value.
+     * This method emits `onEditDone` event.
+     *
+     * ```typescript
+     * // select some rows (by their IDs)
+     * this.grid.selectRows([3, 5, 8], true);
+     *
+     * // get the currently selected rows
+     * let mySelectedRows = this.grid.selectedRows;
+     *
+     * // update the second selected row's value
+     * let newValue = "Apple";
+     * mySelectedRows[1].update(newValue);
+     * ```
+     */
     public update(value: any) {
         const primaryKey = this.gridAPI.get(this.gridID).primaryKey;
         const row = (primaryKey !== null && primaryKey !== undefined) ?
@@ -158,6 +313,21 @@ export class IgxGridRowComponent implements DoCheck {
 
     }
 
+    /**
+     * Removes the specified row from the grid's data source.
+     * This method emits `onRowDeleted` event.
+     *
+     * ```typescript
+     * // select some rows (by their IDs)
+     * this.grid.selectRows([3, 5, 8], true);
+     *
+     * // get the currently selected rows
+     * let mySelectedRows = this.grid.selectedRows;
+     *
+     * // delete the third selected row from the grid
+     * mySelectedRows[2].delete();
+     * ```
+     */
     public delete() {
         const primaryKey = this.gridAPI.get(this.gridID).primaryKey;
         const row = (primaryKey !== null && primaryKey !== undefined) ?
@@ -185,12 +355,18 @@ export class IgxGridRowComponent implements DoCheck {
         }
     }
 
+    /**
+     * @hidden
+     */
     get rowCheckboxAriaLabel() {
         return this.grid.primaryKey ?
             this.isSelected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
             this.isSelected ? 'Deselect row' : 'Select row';
     }
 
+    /**
+     * @hidden
+     */
     public ngDoCheck() {
         this.isSelected = this.rowSelectable ?
             this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this.rowID) :
@@ -201,6 +377,9 @@ export class IgxGridRowComponent implements DoCheck {
         }
     }
 
+    /**
+     * @hidden
+     */
     notGroups(arr) {
         return arr.filter(c => !c.columnGroup);
     }
