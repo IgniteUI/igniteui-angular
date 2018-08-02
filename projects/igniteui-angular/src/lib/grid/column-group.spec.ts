@@ -517,7 +517,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
     });
 
-    it('Should render column group headers correctly.', async(() => {
+    it('Should render column group headers correctly.', ((done) => {
         const fixture = TestBed.createComponent(BlueWhaleGridComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
@@ -530,60 +530,59 @@ describe('IgxGrid - multi-column headers', () => {
         const secondGroupChildrenCount = 2;
         const secondSubGroupChildrenCount = 50;
         const secondSubGroupHeadersDepth = 2;
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const firstGroup = fixture.debugElement.query(By.css('.firstGroup'));
-            testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
-                gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
-                'firstGroupColumn', firstGroupChildrenCount);
 
-            const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
-            const scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
+        fixture.detectChanges();
+        const firstGroup = fixture.debugElement.query(By.css('.firstGroup'));
+        testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
+            gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
+            'firstGroupColumn', firstGroupChildrenCount);
+
+        let horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+        let scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
+        horizontalScroll.scrollLeft = scrollToNextGroup;
+
+        setTimeout(() => {
+            fixture.detectChanges();
+            const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
+            testColumnGroupHeaderRendering(secondGroup,
+                secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
+                gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
+                'secondSubGroup', secondGroupChildrenCount);
+
+            const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
+            testColumnGroupHeaderRendering(secondSubGroups[0],
+                secondSubGroupChildrenCount * columnWidthPx,
+                secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+                'secondSubGroupColumn', secondSubGroupChildrenCount);
+
+            testColumnGroupHeaderRendering(secondSubGroups[1],
+                secondSubGroupChildrenCount * columnWidthPx,
+                secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+                'secondSubGroupColumn', secondSubGroupChildrenCount);
+
+            horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+            scrollToNextGroup = horizontalScroll.scrollLeft +
+                secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
+
             horizontalScroll.scrollLeft = scrollToNextGroup;
-            return fixture.whenStable();
-        }).then(() => {
             setTimeout(() => {
                 fixture.detectChanges();
-                const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
-                testColumnGroupHeaderRendering(secondGroup,
-                    secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
-                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
-                    'secondSubGroup', secondGroupChildrenCount);
 
-                const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
-                testColumnGroupHeaderRendering(secondSubGroups[0],
-                    secondSubGroupChildrenCount * columnWidthPx,
-                    secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
-                    'secondSubGroupColumn', secondSubGroupChildrenCount);
+                const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
+                testColumnHeaderRendering(idColumn, columnWidthPx,
+                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.idHeaderTitle);
 
-                testColumnGroupHeaderRendering(secondSubGroups[1],
-                    secondSubGroupChildrenCount * columnWidthPx,
-                    secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
-                    'secondSubGroupColumn', secondSubGroupChildrenCount);
+                const companyNameColumn = fixture.debugElement.query(By.css('.companyName'));
+                testColumnHeaderRendering(companyNameColumn, columnWidthPx,
+                    2 * grid.defaultRowHeight, componentInstance.companyNameTitle);
 
-                const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
-                const scrollToNextGroup = horizontalScroll.scrollLeft +
-                    secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
-
-                horizontalScroll.scrollLeft = scrollToNextGroup;
-                setTimeout(() => {
-                    fixture.detectChanges();
-
-                    const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
-                    testColumnHeaderRendering(idColumn, columnWidthPx,
-                        gridHeadersDepth * grid.defaultRowHeight, componentInstance.idHeaderTitle);
-
-                    const companyNameColumn = fixture.debugElement.query(By.css('.companyName'));
-                    testColumnHeaderRendering(companyNameColumn, columnWidthPx,
-                        2 * grid.defaultRowHeight, componentInstance.companyNameTitle);
-
-                    const personDetailsColumn = fixture.debugElement.query(By.css('.personDetails'));
-                    testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
-                        2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
-                        'personDetailsColumn', 2);
-                }, 200);
-            }, 100);
-        });
+                const personDetailsColumn = fixture.debugElement.query(By.css('.personDetails'));
+                testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
+                    2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
+                    'personDetailsColumn', 2);
+                done();
+            }, 200);
+        }, 100);
     }));
 
     it('column pinning - Pin a column in a group using property.', () => {
