@@ -520,11 +520,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                     rowID: this.cms.selection.rowID,
                     columnID: colID
                 }]));
-                this.column.grid.selectionAPI.set_selection(this.column.gridID + '-prev-cell', new Set([{
-                    rowID: this.cms.selection.rowID,
-                    columnID: colID
-                }]));
-
                 this.cms.selection = null;
             }
 

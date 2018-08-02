@@ -239,7 +239,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public _updateCellSelectionStatus() {
         this._clearCellSelection();
-        this.saveCellSelection();
+        this._saveCellSelection();
         if (this.column.editable && this.previousCellEditMode) {
             this.inEditMode = true;
         }
@@ -268,15 +268,18 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.previousCellEditMode = false;
         }
-        this.saveCellSelection(new Set());
+        this._saveCellSelection(new Set());
     }
 
-    public saveCellSelection(newSelection?: Set<any>) {
+    private _saveCellSelection(newSelection?: Set<any>) {
+        const sel = this.selectionApi.get_selection(this.cellSelectionID);
+        if (sel && sel.size > 0) {
+            this.selectionApi.set_selection(this.prevCellSelectionID, sel);
+        }
         if (!newSelection) {
             newSelection = this.selectionApi.select_item(this.cellSelectionID, this.cellID);
         }
         this.selectionApi.set_selection(this.cellSelectionID, newSelection);
-        this.selectionApi.set_selection(this.prevCellSelectionID, newSelection);
     }
 
     private _getLastSelectedCell() {
