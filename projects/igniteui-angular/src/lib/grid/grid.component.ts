@@ -3165,7 +3165,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridSizes() {
-        this.calculateGridWidth();
+        this._derivePossibleWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
         if (this.rowSelectable) {
@@ -3343,7 +3343,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if ((this.columnsWithNoSetWidths === null && !column.width) ||
                 (this.columnsWithNoSetWidths !== null && this.columnsWithNoSetWidths.indexOf(column) !== -1)) {
                 column.width = this.columnWidth;
-                _columnsWithNoSetWidths.push(column);
+
+                if (!column.hidden) {
+                    _columnsWithNoSetWidths.push(column);
+                }
             }
         });
 
