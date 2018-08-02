@@ -315,8 +315,14 @@ export class IgxCarouselComponent implements OnDestroy {
      * @memberOf IgxCarouselComponent
      */
     public remove(slide: IgxSlideComponent) {
+        if (slide.index == this.current) {
+            this.next();
+        }
+
         this.slides.splice(slide.index, 1);
         this._total -= 1;
+
+        slide.active = false;
 
         if (!this.total) {
             this._currentSlide = null;

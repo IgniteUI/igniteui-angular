@@ -147,6 +147,19 @@ describe('Carousel', () => {
         expect(instance.carousel.slides.length).toEqual(4);
     });
 
+    it('Carousel checking if a slide is not active when it gets removed', () => {
+        const fixture = TestBed.createComponent(CarouselTestComponent);
+        fixture.detectChanges();
+
+        const instance = fixture.componentInstance;
+        let currentSlideIndex = instance.carousel.current;
+        let currentSlide = instance.carousel.get(currentSlideIndex);
+        instance.carousel.remove(currentSlide);
+        fixture.detectChanges();
+        
+        expect(currentSlide.active).toBe(false);
+    });
+
     it('Carousel public methods', () => {
         const fixture = TestBed.createComponent(CarouselTestComponent);
         fixture.detectChanges();
