@@ -305,18 +305,20 @@ describe('IgxSlider', () => {
             expect(Math.round( slider.value as number )).toBe(30);
         }));
 
-        it('should move thumb slider to value 60', fakeAsync(() => {
+        it('should move thumb slider to value 60', (done) => {
             slider.value = 30;
-            tick();
             fixture.detectChanges();
+            expect(Math.round(slider.value as number)).toBe(30);
 
             const sliderElement = fixture.nativeElement.querySelector('.igx-slider');
             panRight(sliderElement, sliderElement.offsetHeight, sliderElement.offsetWidth, 200);
-            tick();
 
-            fixture.detectChanges();
-            expect(Math.round(slider.value as number)).toBe(60);
-        }));
+            setTimeout(() => {
+                fixture.detectChanges();
+                expect(Math.round(slider.value as number)).toBe(60);
+                done();
+            }, 2000);
+        });
 
         function panRight(element, elementHeight, elementWidth, duration) {
             const panOptions = {
