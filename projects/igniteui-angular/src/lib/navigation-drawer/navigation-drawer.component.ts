@@ -418,8 +418,6 @@ export class IgxNavigationDrawerComponent implements
         this.updateEdgeZone();
         this.checkPinThreshold();
 
-        // need to set height without absolute positioning
-        this.ensureDrawerHeight();
         this.ensureEvents();
 
         // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
@@ -450,7 +448,6 @@ export class IgxNavigationDrawerComponent implements
         }
         if (changes.pin && changes.pin.currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === 'true');
-            this.ensureDrawerHeight();
             if (this.pin) {
                 this._touchManager.destroy();
                 this._gesturesAttached = false;
@@ -550,19 +547,6 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     * @hidden
-     */
-    protected ensureDrawerHeight() {
-        if (this.pin) {
-            // TODO: nested in content?
-            // setElementStyle warning https://github.com/angular/angular/issues/6563
-            this.renderer.setElementStyle(this.drawer, 'height', window.innerHeight + 'px');
-        } else {
-            this.renderer.setElementStyle(this.drawer, 'height', '');
-        }
-    }
-
-    /**
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
      *
      * @hidden
@@ -646,7 +630,6 @@ export class IgxNavigationDrawerComponent implements
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold();
-                    this.ensureDrawerHeight();
                 });
         }
     }
