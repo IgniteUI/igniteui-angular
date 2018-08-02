@@ -13,6 +13,8 @@ import {
     ViewChild
 } from '@angular/core';
 
+const ONE_PERCENT = 0.01;
+
 export enum IgxTextAlign {
     START = 'start',
     CENTER = 'center',
@@ -81,9 +83,9 @@ export abstract class BaseProgress {
      *<button igxButton="fab" igxRipple="" (click)="setValue()">setValue</button>
      *```
      */
-    public set valueInPercent(valInPercent: number) {
-        const valueInRange = getValueInProperRange(valInPercent, this._max);
-        const valueIntoPercentage = convertInPercentage(valueInRange, this._max);
+    public set valueInPercent(value: number) {
+        const valueInRange = getValueInProperRange(value, this._max);
+        const valueIntoPercentage = convertInPercentage(value, this._max);
         this._valueInPercent = valueIntoPercentage;
     }
 
@@ -275,7 +277,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
             return this._step;
         }
 
-        return this._max * 0.01;
+        return this._max * ONE_PERCENT;
     }
 
     set step(val: number) {
@@ -452,7 +454,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
             return this._step;
         }
 
-        return this._max * 0.02;
+        return this._max * ONE_PERCENT;
     }
 
     set step(val: number) {
