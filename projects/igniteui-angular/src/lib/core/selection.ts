@@ -24,11 +24,11 @@ export class IgxSelectionAPIService {
      *
      * @returns selection after the new item is added
      */
-    public select_item(componentID: string, itemID, sel?: Set<any>, clearSelection?: boolean): Set<any> {
+    public select_item(componentID: string, itemID, sel?: Set<any>): Set<any> {
         if (!sel) {
-            sel = this.get_selection(componentID);
+            sel = new Set(this.get_selection(componentID));
         }
-        if (sel === undefined || clearSelection) {
+        if (sel === undefined) {
             sel = new Set();
         }
         sel.add(itemID);
@@ -44,7 +44,10 @@ export class IgxSelectionAPIService {
      */
     public select_items(componentID: string, itemIDs: any[], clearSelection?: boolean): Set<any> {
         let selection: Set<any>;
-        itemIDs.forEach((item) => selection = this.select_item(componentID, item, selection, clearSelection));
+        if (clearSelection) {
+            selection = new Set();
+        }
+        itemIDs.forEach((item) => selection = this.select_item(componentID, item, selection));
         return selection;
     }
 
@@ -58,7 +61,7 @@ export class IgxSelectionAPIService {
      */
     public deselect_item(componentID: string, itemID, sel?: Set<any>) {
         if (!sel) {
-            sel = this.get_selection(componentID);
+            sel = new Set(this.get_selection(componentID));
         }
         if (sel === undefined) {
             return;
