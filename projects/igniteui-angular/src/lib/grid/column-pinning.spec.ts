@@ -46,7 +46,7 @@ describe('Column Pinning UI', () => {
         });
 
         afterAll(() => {
-            UIInteractions.clearOverlay();
+            HelperUtils.clearOverlay();
         });
 
         it ('title is initially empty.', () => {
