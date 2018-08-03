@@ -75,13 +75,6 @@ export class ColumnDefinitions {
         <igx-column field="HireDate" pinned="true"></igx-column>
     `;
 
-    public static idNameHiddenJobHire = `
-        <igx-column field="ID"></igx-column>
-        <igx-column field="Name" hidden="true"></igx-column>
-        <igx-column field="JobTitle"></igx-column>
-        <igx-column field="HireDate"></igx-column>
-    `;
-
     public static nameJobTitleId = `
         <igx-column field="Name"></igx-column>
         <igx-column field="JobTitle"></igx-column>
