@@ -2,14 +2,18 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.3
+- `igxDropDownItem`:
+    - `isSelected` has a public setter and is now an `@Input` property that can be used for template binding.
 - `igxGrid`
-    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
-- `igxColumn` changes
-    - The footerTemplate property is removed.
-- `igxColumnGroup` changes
-    - The footerTemplate property is removed.
-- `igxCombo`
-    - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
+    - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed.
+    - `isUnary` property added to IFilteringOperation
+    - `igxColumn`
+        - The footerTemplate property is removed.
+    - `igxColumnGroup`
+        - The footerTemplate property is removed.
+    - `igxCombo`
+        - **Breaking change** igxCombo default `width` is set to 100%
+        - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
 
 ## 6.1.2
 - `igxCombo` improvements
@@ -107,7 +111,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
     ```html
     <igx-combo #combo [data]="towns" [displayKey]="'townName'" [valueKey]="'postCode'" [groupKey]="'province'"
-        [allowCustomValues]="true" placeholder="Town(s)" searchPlaceholder="Search town..." [width]="'100%'"></igx-combo>
+        [allowCustomValues]="true" placeholder="Town(s)" searchPlaceholder="Search town..."></igx-combo>
     ```
 
     igxCombo features:

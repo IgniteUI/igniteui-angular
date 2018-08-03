@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { HelperUtils } from '../test-utils/helper-utils.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxDatePicker', () => {
     beforeEach(async(() => {
@@ -25,7 +25,7 @@ describe('IgxDatePicker', () => {
     }));
 
     afterEach(() => {
-        HelperUtils.clearOverlay();
+        UIInteractions.clearOverlay();
     });
 
     it('Initialize a datepicker component', () => {

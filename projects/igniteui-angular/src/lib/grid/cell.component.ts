@@ -39,6 +39,14 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public value: any;
 
+    private get isFirstCell(): boolean {
+        return this.columnIndex === 0 || (this.isPinned && this.visibleColumnIndex === 0);
+    }
+
+    private get isLastCell(): boolean {
+        return this.columnIndex === this.grid.columns.length - 1;
+    }
+
     public highlightClass = 'igx-highlight';
     public activeHighlightClass = 'igx-highlight__active';
 
@@ -130,7 +138,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         return !this.column.editable;
     }
 
-    @HostBinding('class.igx_grid__cell--edit')
     get cellInEditMode() {
         return this.inEditMode;
     }
@@ -151,7 +158,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
-    @HostBinding('class.igx-grid__td--fw')
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
         const colWidth = this.column.width;
@@ -171,7 +177,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    @HostBinding('class.igx-grid__td--editing')
     get editModeCSS() {
         return this.inEditMode;
     }
@@ -189,7 +194,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.column.pinned;
     }
 
-    @HostBinding('class.igx-grid__th--pinned-last')
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         return pinnedCols[pinnedCols.length - 1] === this.column;
@@ -205,7 +209,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostBinding('attr.aria-selected')
-    @HostBinding('class.igx-grid__td--selected')
     set selected(val: boolean) {
         this.isSelected = val;
     }
@@ -404,6 +407,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostListener('keydown.shift.tab', ['$event'])
+    public onShiftTabKey(event) {
+        if (this.isFirstCell) {
+            this.selectionApi.set_selection(this.cellSelectionID, []);
+            this.grid.markForCheck();
+            return;
+        } else {
+            this.onKeydownArrowLeft(event);
+        }
+    }
+
     @HostListener('keydown.arrowleft', ['$event'])
     public onKeydownArrowLeft(event) {
         if (this.inEditMode) {
@@ -480,6 +493,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostListener('keydown.tab', ['$event'])
+    public onTabKey(event) {
+        if (this.isLastCell) {
+            this.selectionApi.set_selection(this.cellSelectionID, []);
+            this.grid.markForCheck();
+            return;
+        } else {
+            this.onKeydownArrowRight(event);
+        }
+    }
+
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event) {
         if (this.inEditMode) {

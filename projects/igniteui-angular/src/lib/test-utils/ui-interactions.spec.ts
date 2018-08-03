@@ -1,15 +1,23 @@
 export class UIInteractions {
 
-    public static sendInput(element, text, fix) {
+    public static sendInput(element, text, fix?) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
-        fix.detectChanges();
-        return fix.whenStable();
+        if (fix) {
+            return fix.whenStable();
+        }
     }
 
     public static triggerKeyEvtUponElem(evtName, elem, bubbles = true) {
         const evtArgs: KeyboardEventInit = { key: evtName, bubbles: bubbles };
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
+    }
+
+    public static triggerKeyDownEvtUponElem(keyPressed, elem) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyPressed
+        });
+        elem.dispatchEvent(keyboardEvent);
     }
 
     public static findCellByInputElem(elem, focusedElem) {

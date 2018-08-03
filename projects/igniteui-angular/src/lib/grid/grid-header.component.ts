@@ -45,7 +45,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
-    @HostBinding('class.igx-grid__th--fw')
     get width() {
         return this.column.width;
     }
@@ -58,12 +57,10 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return null;
     }
 
-    @HostBinding('class.asc')
     get ascending() {
         return this.sortDirection === SortingDirection.Asc;
     }
 
-    @HostBinding('class.desc')
     get descending() {
         return this.sortDirection === SortingDirection.Desc;
     }
@@ -82,7 +79,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return this.sortDirection !== SortingDirection.None;
     }
 
-    @HostBinding('class.igx-grid__drag-col-header')
     get dragged() {
         return this.column === this.column.grid.draggedColumn;
     }
@@ -206,12 +202,10 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return this.gridAPI.get(this.gridID);
     }
 
-    @HostBinding('class.igx-grid__th--pinned')
     get isPinned() {
         return this.column.pinned;
     }
 
-    @HostBinding('class.igx-grid__th--pinned-last')
     get isLastPinned() {
         const pinnedCols = this.grid.pinnedColumns;
         if (pinnedCols.length === 0) {
