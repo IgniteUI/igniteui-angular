@@ -23,6 +23,9 @@ import { IgxColumnComponent } from './column.component';
 import { IgxColumnMovingService } from './grid.common';
 import { isFirefox } from '../core/utils';
 
+/**
+ * @hidden
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -173,10 +176,10 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             if (this.column.sortable) {
                 const groupingExpr = this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
                 const sortDir = groupingExpr ?
-                    this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc  : SortingDirection.Desc
+                    this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
                     : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
                 this.sortDirection = sortDir;
-                this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase});
+                this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase });
                 this.grid.onSortingDone.emit({
                     dir: this.sortDirection,
                     fieldName: this.column.field,
@@ -188,7 +191,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
 
     get restrictResizeMin(): number {
         const actualMinWidth = parseFloat(this.column.minWidth);
-        const defaultMinWidth  = parseFloat(this.column.defaultMinWidth);
+        const defaultMinWidth = parseFloat(this.column.defaultMinWidth);
 
         let minWidth = Number.isNaN(actualMinWidth) || actualMinWidth < defaultMinWidth ? defaultMinWidth : actualMinWidth;
         minWidth = minWidth < parseFloat(this.column.width) ? minWidth : parseFloat(this.column.width);
