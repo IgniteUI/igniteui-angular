@@ -1,6 +1,6 @@
 # igx-snackbar
 
-**igx-snackbar** provides feedback about an operation by showing brief message at the bottom of the screen on mobile and lower left on larger devices. IgxSnackbar will appear above all  other elements on screen and only one can be displayed at a time.  
+**igx-snackbar** provides feedback about an operation by showing brief message at the bottom of the screen on mobile and lower left on larger devices. IgxSnackbar will appear above all other elements on screen and only one can be displayed at a time.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar.html)
 
 # Usage
@@ -15,9 +15,9 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 </igx-snackbar>
 ```
 
-You can be more descriptive and set message `message="This is a simple snackbar!"`.
+You can be more descriptive and set a message `message="This is a simple snackbar!"`.
 
-You can show the snacbar by using `snacbar.show()` method.
+You can show the snackbar by using `snackbar.show()` method.
 
 
 ## Snackbar with button and action
@@ -31,11 +31,12 @@ You can show the snacbar by using `snacbar.show()` method.
              (onAction)="snackbar.hide()">
 </igx-snackbar>
 ```
-You can set the id of the component by `id="Snackbar"` or will be automatically generated;
+You can set the id of the component by `id="Snackbar"`, otherwise it will be automatically generated;
 
-You can set the title of the button by setting `actionName="Dissmis"`;
+You can set the title of the button by setting `actionName="Dismiss"`;
 
 You can hide the Snackbar by using `snackbar.hide()` method.
 
-The Snackbar will be automatically hidden after 10000 milliseconds, this can be controller by the
-`displayTime` attribute, the automatic hiding can be also controller by using the `autoHide` attribute.
+By default, the Snackbar will be automatically hidden after 4000 milliseconds. The automatic hiding behavior can be controlled via the following attributes:
+ - `autoHide` - whether the snackbar should be hidden after a certain time interval.
+ - `displayTime` - the time interval in which the snackbar would hide.
