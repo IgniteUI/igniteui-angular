@@ -8,7 +8,7 @@ export class RemoteService {
 
     remoteData: Observable<any[]>;
     _remoteData: BehaviorSubject<any[]>;
-    url = `http://services.odata.org/V4/Northwind/Northwind.svc/Products`;
+    url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
     urlBuilder;
 
     constructor(private http: HttpClient) {
