@@ -1,12 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import {IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType} from './slider.component';
+import { IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType} from './slider.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 declare var Simulator: any;
 
-describe('IgxSlider', () => {
+fdescribe('IgxSlider', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -15,7 +16,7 @@ describe('IgxSlider', () => {
                 SliderTestComponent
             ],
             imports: [
-                IgxSliderModule
+                IgxSliderModule, NoopAnimationsModule
             ]
         }).compileComponents();
     }));
