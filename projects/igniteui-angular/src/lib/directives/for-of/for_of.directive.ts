@@ -595,7 +595,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const currIndex = Math.round(ratio * count);
+        const ind = ratio * count;
+        // floating point number calculations are flawed so we need to handle rounding errors.
+        const currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
         let endingIndex = this.state.chunkSize + currIndex;
 
         // We update the startIndex before recalculating the chunkSize.
