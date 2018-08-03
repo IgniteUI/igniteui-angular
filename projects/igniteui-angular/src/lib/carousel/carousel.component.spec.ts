@@ -125,15 +125,10 @@ describe('Carousel', () => {
     });
 
     it('Carousel checking if a slide is not active when it gets removed', () => {
-        const fixture = TestBed.createComponent(CarouselTestComponent);
-        fixture.detectChanges();
+        const currentSlide = carousel.get(carousel.current);
+        carousel.remove(currentSlide);
 
-        const instance = fixture.componentInstance;
-        const currentSlideIndex = instance.carousel.current;
-        const currentSlide = instance.carousel.get(currentSlideIndex);
-        instance.carousel.remove(currentSlide);
         fixture.detectChanges();
-
         expect(currentSlide.active).toBe(false);
     });
 
