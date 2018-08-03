@@ -8,7 +8,7 @@ import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand } from '../../public_api';
 import { DisplayDensity } from '../core/utils';
 
-fdescribe('IgxGrid - input properties', () => {
+describe('IgxGrid - input properties', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     beforeEach(async(() => {
