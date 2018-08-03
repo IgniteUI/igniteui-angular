@@ -186,6 +186,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         }
     }
 
+    /**
+     * Attaches a MutationObserver to the parentElement and watches for when the container element is removed/readded to the DOM.
+     * Should be used only when necessary as using many observers may lead to performance degradation.
+     */
     public observe(): void {
         if (this._observer === null) {
             const callback = (mutationList) => {
