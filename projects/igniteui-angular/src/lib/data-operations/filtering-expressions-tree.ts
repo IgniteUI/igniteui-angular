@@ -15,16 +15,17 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * Sets/gets the filtering operands.
      * ```typescript
      * const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-     * gridExpressionsTree.filteringOperands = [
+     * const expression = [
      * {
      *   condition: IgxStringFilteringOperand.instance().condition('contains'),
      *   fieldName: 'Column Field',
      *   searchVal: 'Value',
      *   ignoreCase: false
      * }];
+     * gridExpressionsTree.filteatingOperands.push(expression);
      * ```
      * ```typescript
-     * let filteringExpressions = gridExpressionsTree.filteringOperands;
+     * let filteringOperands= gridExpressionsTree.filteringOperands;
      * ```
      * @memberof FilteringExpressionsTree
      */
@@ -62,7 +63,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
     /**
      * Returns the filtering expression for a column with the provided fieldName.
      * ```typescript
-     * let filteringExpression = gridExpressionTree.finds('Column Field');
+     * let filteringExpression = gridExpressionTree.find('Column Field');
      * ```
      * @memberof FilteringExpressionsTree
      */
