@@ -2,7 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.3
-- `igxDropDownItem`:
+- **General**
+    - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.
+        ```
+        import 'core-js/es7/object';
+        ```
+- `igxDropDownItem`
     - `isSelected` has a public setter and is now an `@Input` property that can be used for template binding.
 - `igxGrid`
     - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed.
