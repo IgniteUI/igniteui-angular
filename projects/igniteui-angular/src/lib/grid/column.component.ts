@@ -1006,43 +1006,52 @@ export class IgxColumnComponent implements AfterContentInit {
         const range = this.grid.document.createRange();
         const largest = new Map<number, number>();
 
-        let cellsContentWidths = [];
-        if (this.cells[0].nativeElement.children.length > 0) {
-            this.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
-                .map((child) => valToPxlsUsingRange(range, child)))));
-        } else {
-            cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
+        if (this.cells.length > 0) {
+            let cellsContentWidths = [];
+            if (this.cells[0].nativeElement.children.length > 0) {
+                this.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
+                    .map((child) => valToPxlsUsingRange(range, child)))));
+            } else {
+                cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
+            }
+
+            const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
+            const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);
+            const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
+                parseFloat(cellStyle.borderRightWidth);
+
+            largest.set(Math.max(...cellsContentWidths), cellPadding);
         }
 
-        const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
-        const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);
-        const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
-            parseFloat(cellStyle.borderRightWidth);
+        if (this.headerCell) {
+            let headerCell;
+            const titleIndex = this.grid.hasMovableColumns ? 1 : 0;
+            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
+                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[titleIndex].children)
+                    .map((child) => valToPxlsUsingRange(range, child)));
+            } else {
+                headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
+            }
 
-        largest.set(Math.max(...cellsContentWidths), cellPadding);
+            if (this.sortable || this.filterable) {
+                headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
+            }
 
-        let headerCell;
-        const titleIndex = this.grid.hasMovableColumns ? 1 : 0;
-        if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
-            headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[titleIndex].children)
-                .map((child) => valToPxlsUsingRange(range, child)));
-        } else {
-            headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
+            const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
+            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+                parseFloat(headerStyle.borderRightWidth);
+            largest.set(headerCell, headerPadding);
+
         }
-
-        if (this.sortable || this.filterable) {
-            headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
-        }
-
-        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
-        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-            parseFloat(headerStyle.borderRightWidth);
-        largest.set(headerCell, headerPadding);
 
         const largestCell = Math.max(...Array.from(largest.keys()));
-        const largestCellPadding = largest.get(largestCell);
+        const width = Math.ceil(largestCell + largest.get(largestCell));
 
-        return Math.ceil(largestCell + largestCellPadding) + 'px';
+        if (Number.isNaN(width)) {
+            return this.width;
+        } else {
+            return width + 'px';
+        }
     }
 
 }
