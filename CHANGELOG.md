@@ -1,6 +1,13 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 6.2.0
+- `igxGrid`
+    - Initializing an `igxGrid` component without setting height inside a container without height defined now causes the grid's body to 
+    become either 500px high or as high as it is needed to show all records in the current view whichever is smaller.
+
+
 ## 6.1.3
 - `igxGrid`
     - **Breaking change** `applyNumberCSSClass` and `columnType` getters are removed. 
