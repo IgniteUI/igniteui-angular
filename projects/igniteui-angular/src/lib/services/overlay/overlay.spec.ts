@@ -28,7 +28,7 @@ import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -73,11 +73,11 @@ describe('igxOverlay', () => {
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
             declarations: DIRECTIVE_COMPONENTS
         }).compileComponents();
-        HelperUtils.clearOverlay();
+        UIInteractions.clearOverlay();
     });
 
     afterAll(() => {
-        HelperUtils.clearOverlay();
+        UIInteractions.clearOverlay();
     });
 
     describe('Unit Tests: ', () => {
@@ -1466,7 +1466,7 @@ describe('igxOverlay', () => {
             }`]
                 }
             }).createComponent(DownRightButtonComponent);
-            HelperUtils.clearOverlay();
+            UIInteractions.clearOverlay();
             fix.detectChanges();
             const currentElement = fix.componentInstance;
             const buttonElement = fix.componentInstance.buttonElement.nativeElement;
@@ -1511,7 +1511,7 @@ describe('igxOverlay', () => {
             }`]
                 }
             }).createComponent(DownRightButtonComponent);
-            HelperUtils.clearOverlay();
+            UIInteractions.clearOverlay();
             fix.detectChanges();
             const currentElement = fix.componentInstance;
             const buttonElement = fix.componentInstance.buttonElement.nativeElement;
@@ -1555,7 +1555,7 @@ describe('igxOverlay', () => {
             }`]
                 }
             }).createComponent(DownRightButtonComponent);
-            HelperUtils.clearOverlay();
+            UIInteractions.clearOverlay();
             fix.detectChanges();
             const currentElement = fix.componentInstance;
             const buttonElement = fix.componentInstance.buttonElement.nativeElement;

@@ -49,7 +49,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[0].context.column.field).toEqual('CompanyName');
 
         expect(headers[1].context.column.field).toEqual('ContactName');
-        expect(headers[1].classes[FIXED_CELL_CSS]).toBe(true);
+        expect(headers[1].nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(400);
@@ -81,7 +81,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[2].context.column.field).toEqual('CompanyName');
-        expect(headers[2].classes[FIXED_CELL_CSS]).toBe(false);
+        expect(headers[2].nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(false);
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(200);
@@ -162,7 +162,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[2].context.column.field).toEqual('ContactName');
-        expect(headers[2].classes[FIXED_CELL_CSS]).toBe(false);
+        expect(headers[2].nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(false);
 
     });
 
@@ -486,7 +486,7 @@ describe('IgxGrid - Column Pinning ', () => {
         let headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual('ID');
-        expect(headers[0].classes[FIXED_CELL_CSS]).toBe(false);
+        expect(headers[0].nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(false);
 
         col.hidden = false;
         fix.detectChanges();
@@ -497,7 +497,7 @@ describe('IgxGrid - Column Pinning ', () => {
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual('CompanyName');
-        expect(headers[0].classes[FIXED_CELL_CSS]).toBe(true);
+        expect(headers[0].nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
     });
 
     it('should allow pinning a hidden column.', () => {

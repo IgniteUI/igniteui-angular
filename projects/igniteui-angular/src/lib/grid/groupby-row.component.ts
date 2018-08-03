@@ -128,10 +128,19 @@ export class IgxGridGroupByRowComponent {
      * this.grid1.rowList.first.toggle()
      * ```
      */
-    @HostListener('keydown.enter')
-    @HostListener('keydown.space')
     public toggle() {
         this.grid.toggleGroup(this.groupRow);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown', ['$event'])
+    public onKeydown(event) {
+        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Space' || event.key === 'Enter') {
+            event.preventDefault();
+            this.grid.toggleGroup(this.groupRow);
+        }
     }
 
     /**
