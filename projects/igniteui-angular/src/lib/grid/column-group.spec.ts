@@ -7,6 +7,7 @@ import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component'
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand} from '../../public_api';
 import { By } from '@angular/platform-browser';
+import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -516,7 +517,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
     });
 
-    it('Should render column group headers correctly.', fakeAsync(() => {
+    it('Should render column group headers correctly.', ((done) => {
         const fixture = TestBed.createComponent(BlueWhaleGridComponent);
         fixture.detectChanges();
         const componentInstance = fixture.componentInstance;
@@ -530,52 +531,58 @@ describe('IgxGrid - multi-column headers', () => {
         const secondSubGroupChildrenCount = 50;
         const secondSubGroupHeadersDepth = 2;
 
+        fixture.detectChanges();
         const firstGroup = fixture.debugElement.query(By.css('.firstGroup'));
         testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
             gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
             'firstGroupColumn', firstGroupChildrenCount);
 
-        const horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+        let horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
         let scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
         horizontalScroll.scrollLeft = scrollToNextGroup;
 
-        tick(200);
-        fixture.detectChanges();
-        const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
-        testColumnGroupHeaderRendering(secondGroup,
-            secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
-            gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
-            'secondSubGroup', secondGroupChildrenCount);
+        setTimeout(() => {
+            fixture.detectChanges();
+            const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
+            testColumnGroupHeaderRendering(secondGroup,
+                secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
+                gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
+                'secondSubGroup', secondGroupChildrenCount);
 
-        const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
-        testColumnGroupHeaderRendering(secondSubGroups[0],
-            secondSubGroupChildrenCount * columnWidthPx,
-            secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
-            'secondSubGroupColumn', secondSubGroupChildrenCount);
+            const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
+            testColumnGroupHeaderRendering(secondSubGroups[0],
+                secondSubGroupChildrenCount * columnWidthPx,
+                secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+                'secondSubGroupColumn', secondSubGroupChildrenCount);
 
-        testColumnGroupHeaderRendering(secondSubGroups[1],
-            secondSubGroupChildrenCount * columnWidthPx,
-            secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
-            'secondSubGroupColumn', secondSubGroupChildrenCount);
+            testColumnGroupHeaderRendering(secondSubGroups[1],
+                secondSubGroupChildrenCount * columnWidthPx,
+                secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
+                'secondSubGroupColumn', secondSubGroupChildrenCount);
 
-        scrollToNextGroup = horizontalScroll.scrollLeft +
-            secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
-        horizontalScroll.scrollLeft = scrollToNextGroup;
+            horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+            scrollToNextGroup = horizontalScroll.scrollLeft +
+                secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
 
-        tick(200);
-        fixture.detectChanges();
-        const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
-        testColumnHeaderRendering(idColumn, columnWidthPx,
-            gridHeadersDepth * grid.defaultRowHeight, componentInstance.idHeaderTitle);
+            horizontalScroll.scrollLeft = scrollToNextGroup;
+            setTimeout(() => {
+                fixture.detectChanges();
 
-        const companyNameColumn = fixture.debugElement.query(By.css('.companyName'));
-        testColumnHeaderRendering(companyNameColumn, columnWidthPx,
-            2 * grid.defaultRowHeight, componentInstance.companyNameTitle);
+                const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
+                testColumnHeaderRendering(idColumn, columnWidthPx,
+                    gridHeadersDepth * grid.defaultRowHeight, componentInstance.idHeaderTitle);
 
-        const personDetailsColumn = fixture.debugElement.query(By.css('.personDetails'));
-        testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
-            2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
-            'personDetailsColumn', 2);
+                const companyNameColumn = fixture.debugElement.query(By.css('.companyName'));
+                testColumnHeaderRendering(companyNameColumn, columnWidthPx,
+                    2 * grid.defaultRowHeight, componentInstance.companyNameTitle);
+
+                const personDetailsColumn = fixture.debugElement.query(By.css('.personDetails'));
+                testColumnGroupHeaderRendering(personDetailsColumn, 2 * columnWidthPx,
+                    2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
+                    'personDetailsColumn', 2);
+                done();
+            }, 200);
+        }, 100);
     }));
 
     it('column pinning - Pin a column in a group using property.', () => {
@@ -1154,13 +1161,13 @@ describe('IgxGrid - multi-column headers', () => {
          const groupRows = grid.groupsRowList.toArray();
          const dataRows = grid.dataRowList.toArray();
 
-         expect(groupRows.length).toEqual(4);
-         expect(dataRows.length).toEqual(8);
+         expect(groupRows.length).toEqual(5);
+         expect(dataRows.length).toEqual(11);
 
          // Verify first grouped row
          const firstGroupedRow = groupRows[0].groupRow;
          expect(firstGroupedRow.value).toEqual('Sales Representative');
-         expect(firstGroupedRow.records.length).toEqual(3);
+         expect(firstGroupedRow.records.length).toEqual(4);
     });
 
     it('Should not render empty column group.', () => {
@@ -1292,7 +1299,7 @@ export class OneGroupOneColGridComponent {
     public gridWrapperWidthPx = '1000';
     public gridHeight = '500px';
     public columnWidth: string;
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1313,7 +1320,7 @@ export class OneGroupThreeColsGridComponent {
     public gridWrapperWidthPx = '900';
     public gridHeight = '500px';
     public columnWidth: string;
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1347,7 +1354,7 @@ export class ColumnGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1429,7 +1436,7 @@ export class ColumnGroupFourLevelTestComponent implements AfterViewInit {
     public addressColsAndGroups = [];
     public colsAndGroupsNaturalOrder = [];
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 
     ngAfterViewInit() {
         this.genInfoColsAndGroups = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
@@ -1469,7 +1476,7 @@ export class ColumnGroupChildLevelTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1494,7 +1501,7 @@ export class ColumnGroupGroupingTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
-    data = DATASOURCEGROUPING;
+    data = SampleTestData.contactInfoData;
 }
 
 @Component({
@@ -1525,7 +1532,7 @@ export class ColumnGroupTwoGroupsTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1580,7 +1587,7 @@ export class ThreeGroupsThreeColumnsGridComponent {
     @ViewChild('postalCodeCol', { read: IgxColumnComponent })
     postalCodeCol: IgxColumnComponent;
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1620,7 +1627,7 @@ export class NestedColGroupsGridComponent {
     @ViewChild('cityCol', { read: IgxColumnComponent })
     cityCol: IgxColumnComponent;
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1720,7 +1727,7 @@ export class StegosaurusGridComponent implements AfterViewInit {
     public phoneColList;
     public faxColList;
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 
     ngAfterViewInit() {
         this.genInfoColList = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
@@ -1779,7 +1786,7 @@ export class BlueWhaleGridComponent {
 
     public gridHeight = '500px';
     public columnWidth = '100px';
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 
     hunderdItems = new Array(100);
     fiftyItems = new Array(50);
@@ -1807,7 +1814,7 @@ export class EmptyColGridComponent {
     @ViewChild('emptyColGroup', { read: IgxColumnGroupComponent })
     emptyColGroup: IgxColumnGroupComponent;
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1842,7 +1849,7 @@ export class OneColPerGroupGridComponent {
     faxColGroupTitle = 'Fax Group';
     faxColTitle = 'Fax';
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1882,7 +1889,7 @@ export class NestedColumnGroupsGridComponent {
     faxColTitle = 'Fax';
     cityColTitle = 'City';
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
 
 @Component({
@@ -1899,53 +1906,8 @@ export class DynamicGridComponent {
     grid: IgxGridComponent;
     mchCount = new Array(1);
 
-    data = DATASOURCE;
+    data = SampleTestData.contactInfoDataFull;
 }
-
-export const DATASOURCE = [
-    // tslint:disable:max-line-length
-    { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
-    { 'ID': 'ANATR', 'CompanyName': 'Ana Trujillo Emparedados y helados', 'ContactName': 'Ana Trujillo', 'ContactTitle': 'Owner', 'Address': 'Avda. de la Constitución 2222', 'City': 'México D.F.', 'Region': null, 'PostalCode': '05021', 'Country': 'Mexico', 'Phone': '(5) 555-4729', 'Fax': '(5) 555-3745' },
-    { 'ID': 'ANTON', 'CompanyName': 'Antonio Moreno Taquería', 'ContactName': 'Antonio Moreno', 'ContactTitle': 'Owner', 'Address': 'Mataderos 2312', 'City': 'México D.F.', 'Region': null, 'PostalCode': '05023', 'Country': 'Mexico', 'Phone': '(5) 555-3932', 'Fax': null },
-    { 'ID': 'AROUT', 'CompanyName': 'Around the Horn', 'ContactName': 'Thomas Hardy', 'ContactTitle': 'Sales Representative', 'Address': '120 Hanover Sq.', 'City': 'London', 'Region': null, 'PostalCode': 'WA1 1DP', 'Country': 'UK', 'Phone': '(171) 555-7788', 'Fax': '(171) 555-6750' },
-    { 'ID': 'BERGS', 'CompanyName': 'Berglunds snabbköp', 'ContactName': 'Christina Berglund', 'ContactTitle': 'Order Administrator', 'Address': 'Berguvsvägen 8', 'City': 'Luleå', 'Region': null, 'PostalCode': 'S-958 22', 'Country': 'Sweden', 'Phone': '0921-12 34 65', 'Fax': '0921-12 34 67' },
-    { 'ID': 'BLAUS', 'CompanyName': 'Blauer See Delikatessen', 'ContactName': 'Hanna Moos', 'ContactTitle': 'Sales Representative', 'Address': 'Forsterstr. 57', 'City': 'Mannheim', 'Region': null, 'PostalCode': '68306', 'Country': 'Germany', 'Phone': '0621-08460', 'Fax': '0621-08924' },
-    { 'ID': 'BLONP', 'CompanyName': 'Blondesddsl père et fils', 'ContactName': 'Frédérique Citeaux', 'ContactTitle': 'Marketing Manager', 'Address': '24, place Kléber', 'City': 'Strasbourg', 'Region': null, 'PostalCode': '67000', 'Country': 'France', 'Phone': '88.60.15.31', 'Fax': '88.60.15.32' },
-    { 'ID': 'BOLID', 'CompanyName': 'Bólido Comidas preparadas', 'ContactName': 'Martín Sommer', 'ContactTitle': 'Owner', 'Address': 'C/ Araquil, 67', 'City': 'Madrid', 'Region': null, 'PostalCode': '28023', 'Country': 'Spain', 'Phone': '(91) 555 22 82', 'Fax': '(91) 555 91 99' },
-    { 'ID': 'BONAP', 'CompanyName': 'Bon app\'', 'ContactName': 'Laurence Lebihan', 'ContactTitle': 'Owner', 'Address': '12, rue des Bouchers', 'City': 'Marseille', 'Region': null, 'PostalCode': '13008', 'Country': 'France', 'Phone': '91.24.45.40', 'Fax': '91.24.45.41' },
-    { 'ID': 'BOTTM', 'CompanyName': 'Bottom-Dollar Markets', 'ContactName': 'Elizabeth Lincoln', 'ContactTitle': 'Accounting Manager', 'Address': '23 Tsawassen Blvd.', 'City': 'Tsawassen', 'Region': 'BC', 'PostalCode': 'T2F 8M4', 'Country': 'Canada', 'Phone': '(604) 555-4729', 'Fax': '(604) 555-3745' },
-    { 'ID': 'BSBEV', 'CompanyName': 'B\'s Beverages', 'ContactName': 'Victoria Ashworth', 'ContactTitle': 'Sales Representative', 'Address': 'Fauntleroy Circus', 'City': 'London', 'Region': null, 'PostalCode': 'EC2 5NT', 'Country': 'UK', 'Phone': '(171) 555-1212', 'Fax': null },
-    { 'ID': 'CACTU', 'CompanyName': 'Cactus Comidas para llevar', 'ContactName': 'Patricio Simpson', 'ContactTitle': 'Sales Agent', 'Address': 'Cerrito 333', 'City': 'Buenos Aires', 'Region': null, 'PostalCode': '1010', 'Country': 'Argentina', 'Phone': '(1) 135-5555', 'Fax': '(1) 135-4892' },
-    { 'ID': 'CENTC', 'CompanyName': 'Centro comercial Moctezuma', 'ContactName': 'Francisco Chang', 'ContactTitle': 'Marketing Manager', 'Address': 'Sierras de Granada 9993', 'City': 'México D.F.', 'Region': null, 'PostalCode': '05022', 'Country': 'Mexico', 'Phone': '(5) 555-3392', 'Fax': '(5) 555-7293' },
-    { 'ID': 'CHOPS', 'CompanyName': 'Chop-suey Chinese', 'ContactName': 'Yang Wang', 'ContactTitle': 'Owner', 'Address': 'Hauptstr. 29', 'City': 'Bern', 'Region': null, 'PostalCode': '3012', 'Country': 'Switzerland', 'Phone': '0452-076545', 'Fax': null },
-    { 'ID': 'COMMI', 'CompanyName': 'Comércio Mineiro', 'ContactName': 'Pedro Afonso', 'ContactTitle': 'Sales Associate', 'Address': 'Av. dos Lusíadas, 23', 'City': 'Sao Paulo', 'Region': 'SP', 'PostalCode': '05432-043', 'Country': 'Brazil', 'Phone': '(11) 555-7647', 'Fax': null },
-    { 'ID': 'CONSH', 'CompanyName': 'Consolidated Holdings', 'ContactName': 'Elizabeth Brown', 'ContactTitle': 'Sales Representative', 'Address': 'Berkeley Gardens 12 Brewery', 'City': 'London', 'Region': null, 'PostalCode': 'WX1 6LT', 'Country': 'UK', 'Phone': '(171) 555-2282', 'Fax': '(171) 555-9199' },
-    { 'ID': 'DRACD', 'CompanyName': 'Drachenblut Delikatessen', 'ContactName': 'Sven Ottlieb', 'ContactTitle': 'Order Administrator', 'Address': 'Walserweg 21', 'City': 'Aachen', 'Region': null, 'PostalCode': '52066', 'Country': 'Germany', 'Phone': '0241-039123', 'Fax': '0241-059428' },
-    { 'ID': 'DUMON', 'CompanyName': 'Du monde entier', 'ContactName': 'Janine Labrune', 'ContactTitle': 'Owner', 'Address': '67, rue des Cinquante Otages', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.67.88.88', 'Fax': '40.67.89.89' },
-    { 'ID': 'EASTC', 'CompanyName': 'Eastern Connection', 'ContactName': 'Ann Devon', 'ContactTitle': 'Sales Agent', 'Address': '35 King George', 'City': 'London', 'Region': null, 'PostalCode': 'WX3 6FW', 'Country': 'UK', 'Phone': '(171) 555-0297', 'Fax': '(171) 555-3373' },
-    { 'ID': 'ERNSH', 'CompanyName': 'Ernst Handel', 'ContactName': 'Roland Mendel', 'ContactTitle': 'Sales Manager', 'Address': 'Kirchgasse 6', 'City': 'Graz', 'Region': null, 'PostalCode': '8010', 'Country': 'Austria', 'Phone': '7675-3425', 'Fax': '7675-3426' },
-    { 'ID': 'FAMIA', 'CompanyName': 'Familia Arquibaldo', 'ContactName': 'Aria Cruz', 'ContactTitle': 'Marketing Assistant', 'Address': 'Rua Orós, 92', 'City': 'Sao Paulo', 'Region': 'SP', 'PostalCode': '05442-030', 'Country': 'Brazil', 'Phone': '(11) 555-9857', 'Fax': null },
-    { 'ID': 'FISSA', 'CompanyName': 'FISSA Fabrica Inter. Salchichas S.A.', 'ContactName': 'Diego Roel', 'ContactTitle': 'Accounting Manager', 'Address': 'C/ Moralzarzal, 86', 'City': 'Madrid', 'Region': null, 'PostalCode': '28034', 'Country': 'Spain', 'Phone': '(91) 555 94 44', 'Fax': '(91) 555 55 93' },
-    { 'ID': 'FOLIG', 'CompanyName': 'Folies gourmandes', 'ContactName': 'Martine Rancé', 'ContactTitle': 'Assistant Sales Agent', 'Address': '184, chaussée de Tournai', 'City': 'Lille', 'Region': null, 'PostalCode': '59000', 'Country': 'France', 'Phone': '20.16.10.16', 'Fax': '20.16.10.17' },
-    { 'ID': 'FOLKO', 'CompanyName': 'Folk och fä HB', 'ContactName': 'Maria Larsson', 'ContactTitle': 'Owner', 'Address': 'Åkergatan 24', 'City': 'Bräcke', 'Region': null, 'PostalCode': 'S-844 67', 'Country': 'Sweden', 'Phone': '0695-34 67 21', 'Fax': null },
-    { 'ID': 'FRANK', 'CompanyName': 'Frankenversand', 'ContactName': 'Peter Franken', 'ContactTitle': 'Marketing Manager', 'Address': 'Berliner Platz 43', 'City': 'München', 'Region': null, 'PostalCode': '80805', 'Country': 'Germany', 'Phone': '089-0877310', 'Fax': '089-0877451' },
-    { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
-    { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
-];
-// tslint:enable:max-line-length
-
-export const DATASOURCEGROUPING = [
-    // tslint:disable:max-line-length
-    { 'ID': '1', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative',  'City': 'Berlin', 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321' },
-    { 'ID': '2', 'ContactName': 'Ana Trujillo', 'ContactTitle': 'Owner',  'City': 'México D.F.',  'PostalCode': '05021', 'Country': 'Mexico', 'Phone': '(5) 555-4729' },
-    { 'ID': '3',  'ContactName': 'Antonio Moreno', 'ContactTitle': 'Owner',  'City': 'México D.F.', 'PostalCode': '05023', 'Country': 'Mexico', 'Phone': '(5) 555-3932' },
-    { 'ID': '4', 'ContactName': 'Thomas Hardy', 'ContactTitle': 'Sales Representative',  'City': 'London',  'PostalCode': 'WA1 1DP', 'Country': 'UK', 'Phone': '(171) 555-7788' },
-    { 'ID': '5', 'ContactName': 'Christina Berglund', 'ContactTitle': 'Order Administrator',  'City': 'Luleå',  'PostalCode': 'S-958 22', 'Country': 'Sweden', 'Phone': '0921-12 34 65' },
-    { 'ID': '6', 'ContactName': 'Hanna Moos', 'ContactTitle': 'Sales Representative',  'City': 'Mannheim',  'PostalCode': '68306', 'Country': 'Germany', 'Phone': '0621-08460' },
-    { 'ID': '7',  'ContactName': 'Frédérique Citeaux', 'ContactTitle': 'Marketing Manager', 'City': 'Strasbourg',  'PostalCode': '67000', 'Country': 'France', 'Phone': '88.60.15.31' },
-    { 'ID': '8', 'ContactName': 'Martín Sommer', 'ContactTitle': 'Owner', 'City': 'Madrid',  'PostalCode': '28023', 'Country': 'Spain', 'Phone': '(91) 555 22 82' }
-];
-// tslint:enable:max-line-length
 
 function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
     const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
