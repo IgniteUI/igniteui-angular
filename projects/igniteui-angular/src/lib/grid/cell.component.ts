@@ -39,6 +39,14 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public value: any;
 
+    private get isFirstCell(): boolean {
+        return this.columnIndex === 0 || (this.isPinned && this.visibleColumnIndex === 0);
+    }
+
+    private get isLastCell(): boolean {
+        return this.columnIndex === this.grid.columns.length - 1;
+    }
+
     public highlightClass = 'igx-highlight';
     public activeHighlightClass = 'igx-highlight__active';
 
@@ -422,6 +430,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostListener('keydown.shift.tab', ['$event'])
+    public onShiftTabKey(event) {
+        if (this.isFirstCell) {
+            this.selectionApi.set_selection(this.cellSelectionID, []);
+            this.grid.markForCheck();
+            return;
+        } else {
+            this.onKeydownArrowLeft(event);
+        }
+    }
+
     @HostListener('keydown.arrowleft', ['$event'])
     public onKeydownArrowLeft(event) {
         if (this.inEditMode) {
@@ -498,6 +516,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostListener('keydown.tab', ['$event'])
+    public onTabKey(event) {
+        if (this.isLastCell) {
+            this.selectionApi.set_selection(this.cellSelectionID, []);
+            this.grid.markForCheck();
+            return;
+        } else {
+            this.onKeydownArrowRight(event);
+        }
+    }
+
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event) {
         if (this.inEditMode) {

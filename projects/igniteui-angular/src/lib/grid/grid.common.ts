@@ -520,6 +520,12 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                     rowID: this.cms.selection.rowID,
                     columnID: colID
                 }]));
+
+                const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
+
+                if (cell) {
+                    cell.focusCell();
+                }
                 this.cms.selection = null;
             }
 
