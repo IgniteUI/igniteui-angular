@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 declare var Simulator: any;
 
-fdescribe('IgxSlider', () => {
+describe('IgxSlider', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
