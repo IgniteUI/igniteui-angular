@@ -432,7 +432,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKey(event) {
         if (this.isFirstCell) {
-            this.selectionApi.set_selection(this.cellSelectionID, []);
+            this.selectionApi.set_selection(this.cellSelectionID, new Set());
             this.grid.markForCheck();
             return;
         } else {
@@ -518,7 +518,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('keydown.tab', ['$event'])
     public onTabKey(event) {
         if (this.isLastCell) {
-            this.selectionApi.set_selection(this.cellSelectionID, []);
+            this.selectionApi.set_selection(this.cellSelectionID, new Set());
             this.grid.markForCheck();
             return;
         } else {
