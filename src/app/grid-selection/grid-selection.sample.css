@@ -4,9 +4,10 @@
     display: flex;
     flex-flow: column;
     align-items: flex-start;
+    margin: 24px;
 }
 .separator {
     padding-top: 5px;
-    padding-bottom: 5px;
+    padding-bottom: 15px;
     box-shadow: 1px 1px #336caf;
 }
