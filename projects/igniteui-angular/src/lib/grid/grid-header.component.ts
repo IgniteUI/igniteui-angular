@@ -264,7 +264,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         if (this.column.resizable) {
             const currentColWidth = this.elementRef.nativeElement.getBoundingClientRect().width;
 
-            const size = this.column.getLargestCellWidth(this.column);
+            const size = this.column.getLargestCellWidth();
 
             if (this.column.pinned) {
                 const newPinnedWidth = this.grid.getPinnedWidth(true) - currentColWidth + parseFloat(size);

@@ -984,7 +984,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public autosize() {
         if (!this.columnGroup) {
 
-            this.width = this.getLargestCellWidth(this);
+            this.width = this.getLargestCellWidth();
 
             this.grid.markForCheck();
             this.grid.reflow();
@@ -998,24 +998,24 @@ export class IgxColumnComponent implements AfterContentInit {
      * @ViewChild('grid') grid: IgxGridComponent;
      *
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-     * let size = this.grid.getLongestCell(column);
+     * let size = column.getLargestCellWidth();
      * ```
      * @memberof IgxColumnComponent
      */
-    public getLargestCellWidth(column: IgxColumnComponent): string {
+    public getLargestCellWidth(): string {
         const range = this.grid.document.createRange();
         const largest = new Map<number, number>();
 
         let cellsContentWidths = [];
-        if (column.cells[0].nativeElement.children.length > 0) {
-            column.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
+        if (this.cells[0].nativeElement.children.length > 0) {
+            this.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
                 .map((child) => valToPxlsUsingRange(range, child)))));
         } else {
-            cellsContentWidths = column.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
+            cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
         }
 
         const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
-        const cellStyle = this.grid.document.defaultView.getComputedStyle(column.cells[index].nativeElement);
+        const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);
         const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
             parseFloat(cellStyle.borderRightWidth);
 
@@ -1023,18 +1023,18 @@ export class IgxColumnComponent implements AfterContentInit {
 
         let headerCell;
         const titleIndex = this.grid.hasMovableColumns ? 1 : 0;
-        if (column.headerTemplate && column.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
-            headerCell =  Math.max(...Array.from(column.headerCell.elementRef.nativeElement.children[titleIndex].children)
+        if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
+            headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[titleIndex].children)
                 .map((child) => valToPxlsUsingRange(range, child)));
         } else {
-            headerCell = valToPxlsUsingRange(range, column.headerCell.elementRef.nativeElement.children[titleIndex]);
+            headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
         }
 
-        if (column.sortable || column.filterable) {
-            headerCell += column.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
+        if (this.sortable || this.filterable) {
+            headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
         }
 
-        const headerStyle = this.grid.document.defaultView.getComputedStyle(column.headerCell.elementRef.nativeElement);
+        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
         const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
             parseFloat(headerStyle.borderRightWidth);
         largest.set(headerCell, headerPadding);
