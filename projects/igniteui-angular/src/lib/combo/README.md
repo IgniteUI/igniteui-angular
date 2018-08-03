@@ -195,9 +195,9 @@ When igxCombo is opened and list item is focused:
 
 - `Esc` will close the list.
 
-When igxCombo is opened allow custom values are enabled and add item button is focused:
+When igxCombo is opened, allow custom values are enabled and add item button is focused:
 
-- `Space` and `Enter` will add new item with valueKey and displayKey equal to the text in the search input and will select the new item.
+- `Enter` will add new item with valueKey and displayKey equal to the text in the search input and will select the new item.
 
 - `ArrowUp` focus will be moved back to the last list item or if list is empty will be moved to the search input.
 
