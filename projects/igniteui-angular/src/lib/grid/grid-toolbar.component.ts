@@ -8,13 +8,15 @@ import {
 } from '@angular/core';
 
 import { DisplayDensity } from '../core/utils';
-import { CsvFileTypes,
-         IgxBaseExporter,
-         IgxCsvExporterOptions,
-         IgxCsvExporterService,
-         IgxExcelExporterOptions,
-         IgxExcelExporterService,
-         AbsoluteScrollStrategy} from '../services/index';
+import {
+    CsvFileTypes,
+    IgxBaseExporter,
+    IgxCsvExporterOptions,
+    IgxCsvExporterService,
+    IgxExcelExporterOptions,
+    IgxExcelExporterService,
+    AbsoluteScrollStrategy
+} from '../services/index';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
@@ -145,7 +147,7 @@ export class IgxGridToolbarComponent {
 
     /**
      * Returns a reference to the `IgxGridComponent` component, hosting the `IgxGridToolbarComponent`.
-     * ```typesript
+     * ```typescript
      * const grid = this.igxGrid1.toolbar.grid;
      * ```
      */
@@ -249,9 +251,9 @@ export class IgxGridToolbarComponent {
     }
 
     constructor(public gridAPI: IgxGridAPIService,
-                public cdr: ChangeDetectorRef,
-                @Optional() public excelExporter: IgxExcelExporterService,
-                @Optional() public csvExporter: IgxCsvExporterService) {
+        public cdr: ChangeDetectorRef,
+        @Optional() public excelExporter: IgxExcelExporterService,
+        @Optional() public csvExporter: IgxCsvExporterService) {
     }
 
     private _positionSettings: PositionSettings = {
@@ -346,8 +348,8 @@ export class IgxGridToolbarComponent {
 
         const fileName = 'ExportedData';
         const options = exportType === 'excel' ?
-                        new IgxExcelExporterOptions(fileName) :
-                        new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
+            new IgxExcelExporterOptions(fileName) :
+            new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
 
         const args = { grid: this.grid, exporter: exp, options: options, cancel: false };
 
