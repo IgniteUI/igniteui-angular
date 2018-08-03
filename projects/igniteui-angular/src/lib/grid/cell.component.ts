@@ -112,8 +112,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public value: any;
 
-
-
     private get isFirstCell(): boolean {
         return this.columnIndex === 0 || (this.isPinned && this.visibleColumnIndex === 0);
     }
@@ -123,16 +121,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /**
-    * Sets/gets the highlight class of the cell.
-    * Default value is `"igx-highlight"`.
-    * ```typescript
-    * let highlightClass = this.cell.highlightClass;
-    * ```
-    * ```typescript
-    * this.cell.highlightClass = 'igx-cell-highlight';
-    * ```
-    * @memberof IgxGridCellComponent
-    */
+     * Sets/gets the highlight class of the cell.
+     * Default value is `"igx-highlight"`.
+     * ```typescript
+     * let highlightClass = this.cell.highlightClass;
+     * ```
+     * ```typescript
+     * this.cell.highlightClass = 'igx-cell-highlight';
+     * ```
+     * @memberof IgxGridCellComponent
+     */
     public highlightClass = 'igx-highlight';
 
     /**
