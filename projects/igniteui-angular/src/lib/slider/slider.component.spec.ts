@@ -306,17 +306,19 @@ describe('IgxSlider', () => {
             expect(Math.round( slider.value as number )).toBe(30);
         }));
 
-        it('should move thumb slider to value 60', fakeAsync(() => {
+        it('should move thumb slider to value 60', async(() => {
             slider.value = 30;
             fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(30);
 
-            const sliderElement = fixture.nativeElement.querySelector('.igx-slider');
-            panRight(sliderElement, sliderElement.offsetHeight, sliderElement.offsetWidth, 200);
-
-            tick(3000);
-            fixture.detectChanges();
-            expect(Math.round(slider.value as number)).toBe(60);
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                const sliderElement = fixture.nativeElement.querySelector('.igx-slider');
+                return panRight(sliderElement, sliderElement.offsetHeight, sliderElement.offsetWidth, 200);
+            }).then(() => {
+                fixture.detectChanges();
+                expect(Math.round(slider.value as number)).toBe(60);
+            });
         }));
 
         function panRight(element, elementHeight, elementWidth, duration) {
@@ -328,6 +330,8 @@ describe('IgxSlider', () => {
             };
 
             return new Promise((resolve, reject) => {
+                // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
+                // Simulator.setType('touch');
                 Simulator.gestures.pan(element, panOptions, () => {
                     resolve();
                 });
