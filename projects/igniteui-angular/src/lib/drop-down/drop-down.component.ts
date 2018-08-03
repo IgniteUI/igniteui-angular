@@ -593,7 +593,8 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Space', ['$event'])
     onSpaceKeyDown(event) {
-        this.target.selectItem(this.target.focusedItem, event);
+        // V.S. : IgxDropDownComponent.selectItem needs event to be true in order to close DD as per specification
+        this.target.selectItem(this.target.focusedItem, this.target instanceof IgxDropDownComponent);
         event.preventDefault();
     }
 
