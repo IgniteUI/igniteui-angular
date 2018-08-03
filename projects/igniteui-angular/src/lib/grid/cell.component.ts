@@ -42,14 +42,7 @@ import { IgxColumnComponent } from './column.component';
 export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     /**
-     * Sets/gets the column of the cell.
-     * ```typescript
-     * @ViewChild('column')
-     *  public column: IgxColumnComponent;
-     * ```
-     * ```typescript
-     *  this.cell.column = this.column;
-     * ```
+     * Gets the column of the cell.
      * ```typescript
      *  let cellColumn = this.cell.column;
      * ```
@@ -59,14 +52,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public column: IgxColumnComponent;
 
     /**
-     * Sets/gets the row of the cell.
-     * ```
-     * @ViewChild('grid')
-     * public grid: IgxColumnComponent;
-     * ```
-     * ```typescript
-     * this.cell.row = this.grid.rowList.toArray()[0];
-     * ```
+     * Gets the row of the cell.
      * ```typescript
      * let cellRow = this.cell.row;
      * ```
@@ -158,7 +144,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /**
-     *
+     * Gets the cell template context object.
+     * ```typescript
+     * let context = this.cell.context();
+     * ```
      * @memberof IgxGridCellComponent
      */
     get context(): any {
@@ -169,7 +158,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /**
-     * Gets the template of the cell.
+     * Gets the cell template.
      * ```typescript
      * let template = this.cell.template;
      * ```
@@ -220,7 +209,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /**
-     * Gets the `index` of the column in which the cell is stored.
+     * Gets the `index` of the cell column.
      * ```typescript
      * let columnIndex = this.cell.columnIndex;
      * ```
@@ -365,7 +354,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /**
-     * Gets the `id` of the grid and the `field` of the column in which the cell is stored.
+     * Returns a string containing the grid `id` and the column `field` concatenated by "_".
      * ```typescript
      * let describedBy = this.cell.describedBy;
      * ```
@@ -436,10 +425,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /**
-     * Gets whether the cell is in edit mode.
-     * If `true`, the `"igx-grid__td--editing"` class is added to the cell.
+     * When `true`, the `"igx-grid__td--editing"` class is applied to the cell.
      * ```typescript
-     * let cellInEditMode = this.cell.cellInEditMode;
+     * let cellInEditMode = this.cell.editModeCSS();
      * ```
      * @memberof IgxGridCellComponent
      */
@@ -472,7 +460,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     /**
      * Gets whether the cell is stored in a pinned column.
-     * If `true`, the `"igx-grid__th--pinned"` class is added to the cell.
      * ```typescript
      * let isPinned = this.cell.isPinned;
      * ```
@@ -485,7 +472,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     /**
      * Gets whether the cell is stored in the last column in the pinned area.
-     * If `true`, the `"igx-grid__th--pinned-last"` class is added to the cell.
      * ```typescript
      * let isLastPinned = this.cell.isLastPinned;
      * ```
