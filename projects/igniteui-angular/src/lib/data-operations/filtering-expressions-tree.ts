@@ -22,10 +22,11 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      *   searchVal: 'Value',
      *   ignoreCase: false
      * }];
-     * gridExpressionsTree.filteatingOperands.push(expression);
+     * gridExpressionsTree.filteringOperands.push(expression);
+     * this.grid.filteringExpressionsTree = gridExpressionsTree;
      * ```
      * ```typescript
-     * let filteringOperands= gridExpressionsTree.filteringOperands;
+     * let filteringOperands = gridExpressionsTree.filteringOperands;
      * ```
      * @memberof FilteringExpressionsTree
      */
