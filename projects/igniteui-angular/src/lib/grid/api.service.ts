@@ -110,6 +110,8 @@ export class IgxGridAPIService {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
+        } else {
+            return this.get(id).dataRowList.find((row) => row.rowData === rowSelector);
         }
     }
 
