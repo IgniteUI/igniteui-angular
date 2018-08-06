@@ -8,7 +8,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
 
-fdescribe('IgLinearBar', () => {
+describe('IgLinearBar', () => {
     const tickTime = 2000;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -212,7 +212,7 @@ fdescribe('IgLinearBar', () => {
         });
     }));
 
-    fit('The update step is 1% of the maximum value, which prevents from slow update with big nums', fakeAsync(() => {
+    it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         fix.detectChanges();
 
@@ -227,7 +227,7 @@ fdescribe('IgLinearBar', () => {
 
         expectedValue = maxVal * ONE_PERCENT;
         expect(bar.step).toBe(expectedValue);
-    }));
+    });
 
     // UI Tests
     describe('Linear bar UI tests', () => {
@@ -307,24 +307,45 @@ fdescribe('IgLinearBar', () => {
             expect(progressElem.classList.contains('progress-linear--striped')).toBeTruthy();
         }));
 
-        fit('Manipulate progressbar with floating point numbers', fakeAsync(() => {
-            const fix = TestBed.createComponent(LinearBarComponent);
+        it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
+            const fix = TestBed.createComponent(InitLinearProgressBarComponent);
+            // tick(tickTime);
             fix.detectChanges();
 
             const bar = fix.componentInstance.linearBar;
-            const compoInst = fix.componentInstance;
+            // const compoInst = fix.componentInstance;
             const maxVal = 1.25;
             const val = 0.50;
 
-            compoInst.max = maxVal;
-            compoInst.value = val;
+            bar.max = maxVal;
+            bar.value = val;
             tick(tickTime);
             fix.detectChanges();
 
             const progressRepresentation = Math.floor(100 * val / maxVal);
-            const getProgressIndicator = bar.elementRef.nativeElement.querySelector(`[class*='progress-linear__bar-progress']`);
-            expect(getProgressIndicator.style.width).toBe(`${progressRepresentation}%`);
+            const getProgressIndicator = fix.debugElement.query(By.css(`[class*='progress-linear__bar-progress']`));
+            expect(getProgressIndicator.styles.width).toBe(`${progressRepresentation}%`);
         }));
+
+        it('Prevent constant update of progress value when value and max value differ', fakeAsync(() => {
+            const fix = TestBed.createComponent(InitLinearProgressBarComponent);
+            fix.detectChanges();
+
+            const bar = fix.componentInstance.linearBar;
+            const maxVal = 1.25;
+
+            bar.step = 0.6;
+            bar.max = maxVal;
+            bar.value  = maxVal;
+
+            tick(tickTime + tickTime);
+            fix.detectChanges();
+
+            const progressBarContainer = fix.debugElement.query(By.css('.progress-linear__bar')).nativeElement;
+            const expectedRes = maxVal + bar.step;
+            expect(parseFloat(progressBarContainer.attributes['aria-valuenow'].textContent)).toBeLessThanOrEqual(expectedRes);
+        }));
+
     });
 });
 
