@@ -315,7 +315,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @memberOf IgxCarouselComponent
      */
     public remove(slide: IgxSlideComponent) {
-        if (slide === this.get(slide.index)) { // check if the requested slide for delete is present in the carousel
+        if (slide && slide === this.get(slide.index)) { // check if the requested slide for delete is present in the carousel
             if (slide.index === this.current) {
                 slide.active = false;
                 this.next();
