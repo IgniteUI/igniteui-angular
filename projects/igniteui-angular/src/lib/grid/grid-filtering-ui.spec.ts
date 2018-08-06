@@ -1399,6 +1399,41 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterExpressions).toBeDefined();
         expect(filterExpressions.length).toBe(2, 'not all filter-expression components are visible');
     });
+
+    it('Should correctly create FilteringExpressionsTree and populate filterUI.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression = {
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+
+        filteringExpressionsTree.filteringOperands.push(expression);
+        grid.filteringExpressionsTree = filteringExpressionsTree;
+
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(2);
+        
+        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const select = filterUIContainer.query(By.css('select'));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(1000);
+
+        verifyFilterUIPosition(filterUIContainer, grid);
+
+        expect(select.nativeElement.value).toMatch('startsWith');
+        expect(input.nativeElement.value).toMatch('Ignite');
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
