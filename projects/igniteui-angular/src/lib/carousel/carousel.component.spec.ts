@@ -6,24 +6,9 @@ import {
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {IgxCarouselComponent, IgxCarouselModule, IgxSlideComponent, ISlideEventArgs} from './carousel.component';
-
-function dispatchEv(element: HTMLElement, eventType: string) {
-    const event = new Event(eventType);
-    element.dispatchEvent(event);
-}
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('Carousel', () => {
-    const navigate = (car: IgxCarouselComponent, dir) => {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            code: dir,
-            key: dir
-        });
-        if (!car.nativeElement.focused) {
-            car.nativeElement.focus();
-        }
-        car.nativeElement.dispatchEvent(keyboardEvent);
-    };
-
     let fixture: ComponentFixture<CarouselTestComponent>;
     let carousel: IgxCarouselComponent;
 
@@ -227,12 +212,12 @@ describe('Carousel', () => {
         nextNav = carouselNative.query(By.css('a.igx-carousel__arrow--next')).nativeElement;
 
         spyOn(carousel, 'prev');
-        dispatchEv(prevNav, 'click');
+        prevNav.dispatchEvent(new Event('click'));
         fixture.detectChanges();
         expect(carousel.prev).toHaveBeenCalled();
 
         spyOn(carousel, 'next');
-        dispatchEv(nextNav, 'click');
+        nextNav.dispatchEvent(new Event('click'));
         fixture.detectChanges();
         expect(carousel.next).toHaveBeenCalled();
     });
@@ -244,30 +229,32 @@ describe('Carousel', () => {
 
         expect(carousel.current).toEqual(0);
         carousel.pause = true;
-        navigate(carousel, 'ArrowRight');
+
+        carousel.nativeElement.focus();
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement);
         fixture.detectChanges();
         expect(carousel.current).toEqual(1);
         expect(carousel.get(1).active).toBeTruthy();
 
-        navigate(carousel, 'ArrowRight');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement);
         fixture.detectChanges();
         expect(carousel.current).toEqual(2);
         expect(carousel.get(1).active).toBe(false);
         expect(carousel.get(2).active).toBe(true);
 
-        navigate(carousel, 'ArrowRight');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement);
         fixture.detectChanges();
         expect(carousel.current).toEqual(3);
 
-        navigate(carousel, 'ArrowRight');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement);
         fixture.detectChanges();
         expect(carousel.current).toEqual(0);
 
-        navigate(carousel, 'ArrowLeft');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement);
         fixture.detectChanges();
         expect(carousel.current).toEqual(3);
 
-        navigate(carousel, 'ArrowLeft');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement);
         fixture.detectChanges();
         expect(carousel.current).toEqual(2);
     });
