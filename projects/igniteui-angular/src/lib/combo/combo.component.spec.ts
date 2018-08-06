@@ -1735,6 +1735,40 @@ describe('igxCombo', () => {
                 }, 20);
             };
         }));
+        it('Should not throw error when setting data to null', () => {
+            const fixture = TestBed.createComponent(IgxComboTestComponent);
+            fixture.detectChanges();
+
+            const combo = fixture.componentInstance.combo;
+            let errorMessage = '';
+
+            try {
+                combo.data = null;
+                fixture.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+
+            expect(errorMessage).toBe('');
+            expect(combo.data).toBe([]);
+        });
+        it('Should not throw error when setting data to undefined', () => {
+            const fixture = TestBed.createComponent(IgxComboTestComponent);
+            fixture.detectChanges();
+
+            const combo = fixture.componentInstance.combo;
+            let errorMessage = '';
+
+            try {
+                combo.data = undefined;
+                fixture.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+
+            expect(errorMessage).toBe('');
+            expect(combo.data).toBe([]);
+        });
         it('Should render selected items properly', async(() => {
             let selectedItem: HTMLElement;
             let itemCheckbox: HTMLElement;
