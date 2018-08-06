@@ -161,6 +161,7 @@ export class IgxGridGroupByRowComponent {
         const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
         const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
         event.preventDefault();
+        event.stopPropagation();
         const rowIndex = this.index + 1;
         this.grid.navigateDown(rowIndex, visibleColumnIndex);
     }
@@ -173,6 +174,7 @@ export class IgxGridGroupByRowComponent {
         const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
         const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
         event.preventDefault();
+        event.stopPropagation();
         if (this.index === 0) {
             return;
         }
