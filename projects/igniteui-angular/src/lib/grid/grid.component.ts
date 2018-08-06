@@ -2875,7 +2875,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * 	Removes all the highlights in the cell.
+     * Removes all the highlights in the cell.
      * ```typescript
      * this.grid.clearSearch();
      * ```
@@ -3963,7 +3963,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.groupingExpressions && this.groupingExpressions.length) {
             const state = {
                 expressions: this.groupingExpressions,
-                expansion:  this.groupingExpansionState,
+                expansion: this.groupingExpansionState,
                 defaultExpanded: this.groupsExpanded
             };
 
