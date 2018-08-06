@@ -270,7 +270,17 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         return this._max;
     }
 
-
+    /**
+     *Returns the value which update the progress indicator of the `IgxLinearProgressBarComponent`.
+     *```typescript
+     *@ViewChild("MyProgressBar")
+     *public progressBar: IgxLinearProgressBarComponent;
+     *public stepValue(event) {
+     *    let step = this.progressBar.step;
+     *    alert(step);
+     *}
+     *```
+     */
     @Input()
     get step(): number {
         if (this._step) {
@@ -280,6 +290,12 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         return this._max * ONE_PERCENT;
     }
 
+    /**
+     *Sets the value by which progress indicator is updated. By default it is 1% of the maximum value.
+     *```html
+     *<igx-linear-bar [striped]="false" [max]="200" [value]="0" [step]="1"></igx-linear-bar>
+     *```
+     */
     set step(val: number) {
         this._step = val;
     }
@@ -448,6 +464,17 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
         return this._max;
     }
 
+    /**
+     *Returns the value which update the progress indicator of the `IgxCircularProgressBarComponent`.
+     *```typescript
+     *@ViewChild("MyProgressBar")
+     *public progressBar: IgxCircularProgressBarComponent;
+     *public stepValue(event) {
+     *    let step = this.progressBar.step;
+     *    alert(step);
+     *}
+     *```
+     */
     @Input()
     get step() {
         if (this._step) {
@@ -457,6 +484,12 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
         return this._max * ONE_PERCENT;
     }
 
+    /**
+     *Sets the value by which progress indicator is updated. By default it is 1% of the maximum value.
+     *```html
+     *<igx-circular-bar [striped]="false" [max]="200" [value]="0" [step]="1"></igx-circular-bar>
+     *```
+    */
     set step(val: number) {
         this._step = val;
     }
