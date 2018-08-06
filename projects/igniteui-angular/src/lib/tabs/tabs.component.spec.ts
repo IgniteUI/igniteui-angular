@@ -59,8 +59,8 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
 
         tabItems = tabs.tabs.toArray();
-        expect(tabItems[0].disabled).toBeFalsy();
-        expect(tabItems[1].disabled).toBeFalsy();
+        expect(tabItems[0].disabled).toBe(false);
+        expect(tabItems[1].disabled).toBe(false);
     });
 
     it('should initialize set/get properties', () => {
