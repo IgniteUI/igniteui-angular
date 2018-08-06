@@ -26,7 +26,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
 
     /**
     * An @Input property that sets the value of the `label`.
-    *```typescript
+    *```html
     *<igx-tabs-group label="Tab 1" icon="folder">
     *```
     */
@@ -165,15 +165,15 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      *```
      * @param focusDelay A number representing the expected delay.
      */
-    public select(focusDelay = 50, onInit = false) {
-        if (this.disabled || this._tabs.selectedIndex === this.index) {
+    public select(focusDelay = 50) {
+        if (this.disabled || this.isSelected) {
             return;
         }
 
         this.isSelected = true;
         this.relatedTab.tabindex = 0;
 
-        if (!onInit) {
+        if (focusDelay !== 0) {
             setTimeout(() => {
                 this.relatedTab.nativeTabItem.nativeElement.focus();
             }, focusDelay);
