@@ -12,7 +12,7 @@ import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxStringFilteringOperand } from '../../../public_api';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { first } from '../../../../../../node_modules/rxjs/operators';
+import { first } from 'rxjs/operators';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
