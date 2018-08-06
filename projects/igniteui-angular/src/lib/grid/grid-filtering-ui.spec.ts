@@ -1419,7 +1419,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         expect(grid.rowList.length).toEqual(2);
-        
+
         const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
         const filterIcon = filterUIContainer.query(By.css('igx-icon'));
         const select = filterUIContainer.query(By.css('select'));
