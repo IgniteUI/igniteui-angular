@@ -85,7 +85,7 @@ export abstract class BaseProgress {
      */
     public set valueInPercent(value: number) {
         const valueInRange = getValueInProperRange(value, this._max);
-        const valueIntoPercentage = convertInPercentage(value, this._max);
+        const valueIntoPercentage = convertInPercentage(valueInRange, this._max);
         this._valueInPercent = valueIntoPercentage;
     }
 
