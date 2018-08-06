@@ -3008,6 +3008,13 @@ describe('igxCombo', () => {
 
         tick();
         fixture.detectChanges();
+        dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+
+        tick();
+        fixture.detectChanges();
+        // SPACE does not add item to collection
+        expect(combo.collapsed).toBeFalsy();
+        expect(combo.value).toEqual('');
         dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
 
         tick();
@@ -3064,6 +3071,13 @@ describe('igxCombo', () => {
         tick();
         fixture.detectChanges();
         dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+
+        tick();
+        fixture.detectChanges();
+        // SPACE does not add item to collection
+        expect(combo.collapsed).toBeFalsy();
+        expect(combo.value).toEqual('');
+        combo.dropdown.focusedItem.element.nativeElement.click();
 
         tick();
         fixture.detectChanges();
