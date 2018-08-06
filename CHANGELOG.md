@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
         ```
         import 'core-js/es7/object';
         ```
+- `igxTabs`
+    - `selectedIndex` property has an `@Input` setter and can be set both in markup and in code behind.
 - `igxDropDownItem`
     - `isSelected` has a public setter and is now an `@Input` property that can be used for template binding.
 - `igxGrid`
