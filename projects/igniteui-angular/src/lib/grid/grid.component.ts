@@ -3494,8 +3494,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
 
-        // XXX: Deprecate index
-        this._columns = this.columnList.toArray();
+        if (this._columns.length !== collection.length) {
+            // XXX: Deprecate index
+            this._columns = this.columnList.toArray();
+        }
         const _columnsWithNoSetWidths = [];
 
         collection.forEach((column: IgxColumnComponent) => {
