@@ -215,6 +215,23 @@ describe('IgLinearBar', () => {
         expect(bar.step).toBe(expectedValue);
     });
 
+    it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
+        const fix = TestBed.createComponent(LinearBarComponent);
+        fix.detectChanges();
+
+        const bar = fix.componentInstance.linearBar;
+        const ONE_PERCENT = 0.01;
+        let expectedValue = bar.max * ONE_PERCENT;
+        expect(bar.step).toBe(expectedValue);
+
+        const maxVal = 15345;
+        fix.componentInstance.max = maxVal;
+        fix.detectChanges();
+
+        expectedValue = maxVal * ONE_PERCENT;
+        expect(bar.step).toBe(expectedValue);
+    });
+
     // UI Tests
     describe('Linear bar UI tests', () => {
         it('The percentage representation should respond to passed value correctly', fakeAsync(() => {
@@ -289,9 +306,9 @@ describe('IgLinearBar', () => {
             fixture.componentInstance.type = 'success';
             fixture.detectChanges();
 
-            expect(progressBarElem.classList.contains('progress-linear__bar-progress--success')).toBeTruthy();
-            expect(progressElem.classList.contains('progress-linear--striped')).toBeTruthy();
-        }));
+            expect(progressBarElem.classList.contains('progress-linear__bar-progress--success')).toBe(true);
+            expect(progressElem.classList.contains('progress-linear--striped')).toBe(true);
+        });
 
         it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
@@ -331,7 +348,6 @@ describe('IgLinearBar', () => {
             const expectedRes = maxVal + bar.step;
             expect(parseFloat(progressBarContainer.attributes['aria-valuenow'].textContent)).toBeLessThanOrEqual(expectedRes);
         }));
-
     });
 });
 
