@@ -4,7 +4,7 @@ import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { first } from '../../../../../../node_modules/rxjs/operators';
+import { first } from 'rxjs/operators';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;

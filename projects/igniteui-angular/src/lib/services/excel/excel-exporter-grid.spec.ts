@@ -11,7 +11,7 @@ import { FileContentData } from './test-data.service.spec';
 import { IgxStringFilteringOperand, SortingDirection } from '../../../public_api';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { first } from '../../../../../../node_modules/rxjs/operators';
+import { first } from 'rxjs/operators';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
