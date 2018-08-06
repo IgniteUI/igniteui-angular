@@ -194,14 +194,14 @@ describe('IgxGrid - Grid Paging', () => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        testPagingAPI(fix, grid, (pageIndex) => grid.paginate(pageIndex));        
+        testPagingAPI(fix, grid, (pageIndex) => grid.paginate(pageIndex));
     }));
 
     it('"page" property should paginate correctly', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        testPagingAPI(fix, grid, (pageIndex) => grid.page = pageIndex);       
+        testPagingAPI(fix, grid, (pageIndex) => grid.page = pageIndex);
     }));
 
     function verifyGridPager( fix, rowsCount, firstCellValue,  pagerText,  buttonsVisibility) {
@@ -235,7 +235,7 @@ describe('IgxGrid - Grid Paging', () => {
         page(desiredPageIndex);
         tick();
         fix.detectChanges();
-        
+
         expect(grid.page).toBe(desiredPageIndex);
 
         // non-existent page, should not paginate
