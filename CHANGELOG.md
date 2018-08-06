@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.3
+- **General**
+    - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.
+        ```
+        import 'core-js/es7/object';
+        ```
 - `igxTabs`
     - `selectedIndex` property has an `@Input` setter and can be set both in markup and in code behind.
 - `igxDropDownItem`
