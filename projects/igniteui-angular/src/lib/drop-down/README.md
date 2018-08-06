@@ -72,7 +72,6 @@ The following getters are available on the **igx-drop-down** component:
 | `items` | `IgxDropDownItemComponent[]` | Gets all of the items but headers. |
 | `headers` | `IgxDropDownItemComponent[]` | Gets header items. |
 | `element`| `ElementRef` | Get dropdown html element. |
-| `scrollContainer`| `ElementRef` | Get drop down's html element of its scroll container. |
 
 The following table summarizes some of the useful **igx-drop-down-item** component inputs, outputs and methods.
 
