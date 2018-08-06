@@ -447,9 +447,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * <igx-grid #grid [data]="Data" [paging]="true" [page]="5" [autoGenerate]="true"></igx-grid>
      */
     set page(val: number) {
-        if (val < 0) {
+        if (val < 0 || val > this.totalPages - 1) {
             return;
         }
+
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.cdr.markForCheck();
@@ -2511,7 +2512,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Goes to the desired page.
+     * Goes to the desired page index.
      * ```typescript
      * this.grid1.paginate(1);
      * ```
@@ -2519,9 +2520,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public paginate(val: number): void {
-        if (val < 0) {
+        if (val < 0 || val > this.totalPages - 1) {
             return;
         }
+
         this.page = val;
     }
 
