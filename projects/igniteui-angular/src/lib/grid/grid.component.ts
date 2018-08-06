@@ -3976,6 +3976,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected initPinning() {
+        let currentPinnedWidth = 0;
+        const pinnedColumns = [];
+        const unpinnedColumns = [];
+        const newUnpinnedCols = [];
+
+        // When a column is a group or is inside a group, pin all related.
         this._pinnedColumns.forEach(col => {
             if (col.parent) {
                 col.parent.pinned = true;
@@ -3984,7 +3990,47 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 col.children.forEach(child => child.pinned = true);
             }
         });
-        this._pinnedColumns = this.columnList.filter(col => col.pinned);
+
+        // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
+        // We take into account top level columns (top level groups and non groups).
+        // If top level is unpinned the pinning handles all children to be unpinned as well.
+        for (let i = 0; i < this._columns.length; i++) {
+            if (this._columns[i].pinned && !this._columns[i].parent) {
+                // Pinned column. Check if with it the unpinned min width is exceeded.
+                const colWidth = parseInt(this._columns[i].width, 10);
+                if (currentPinnedWidth + colWidth > this.calcWidth - this.unpinnedAreaMinWidth) {
+                    // unpinned min width is exceeded. Unpin the columns and add it to the unpinned collection.
+                    this._columns[i].pinned = false;
+                    unpinnedColumns.push(this._columns[i]);
+                    newUnpinnedCols.push(this._columns[i]);
+                } else {
+                    // unpinned min width is not exceeded. Keep it pinned and add it to the pinned collection.
+                    currentPinnedWidth += colWidth;
+                    pinnedColumns.push(this._columns[i]);
+                }
+            } else if (this._columns[i].pinned && this._columns[i].parent) {
+                if (this._columns[i].topLevelParent.pinned) {
+                    pinnedColumns.push(this._columns[i]);
+                } else {
+                    this._columns[i].pinned = false;
+                    unpinnedColumns.push(this._columns[i]);
+                }
+            } else {
+                unpinnedColumns.push(this._columns[i]);
+            }
+        }
+
+        if (newUnpinnedCols.length) {
+            console.warn(
+                'igxGrid - The pinned area exceeds maximum pinned width. ' +
+                'The following columns were unpinned to prevent further issues:' +
+                 newUnpinnedCols.map(col => '"' + col.header + '"').toString() + '. For more info see our documentation.'
+            );
+        }
+
+        // Assign the applicaple collections.
+        this._pinnedColumns = pinnedColumns;
+        this._unpinnedColumns = unpinnedColumns;
     }
 
     private scrollTo(row: number, column: number, page: number, groupByRecord?: IGroupByRecord): void {

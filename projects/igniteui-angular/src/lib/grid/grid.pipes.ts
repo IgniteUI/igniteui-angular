@@ -9,18 +9,21 @@ import { ISortingExpression } from '../data-operations/sorting-expression.interf
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 
+/**
+ *@hidden
+ */
 @Pipe({
-  name: 'gridSort',
-  pure: true
+    name: 'gridSort',
+    pure: true
 })
 export class IgxGridSortingPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) {}
+    constructor(private gridAPI: IgxGridAPIService) { }
 
     public transform(collection: any[], expressions: ISortingExpression | ISortingExpression[],
-                     id: string, pipeTrigger: number): any[] {
+        id: string, pipeTrigger: number): any[] {
 
-        const state = { expressions: []};
+        const state = { expressions: [] };
         state.expressions = this.gridAPI.get(id).sortingExpressions;
 
         if (!state.expressions.length) {
@@ -31,17 +34,20 @@ export class IgxGridSortingPipe implements PipeTransform {
     }
 }
 
+/**
+ *@hidden
+ */
 @Pipe({
     name: 'gridPreGroupBy',
     pure: true
 })
 export class IgxGridPreGroupingPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) {}
+    constructor(private gridAPI: IgxGridAPIService) { }
 
     public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
-                     expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-                     id: string, pipeTrigger: number): IGroupByResult {
+        expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
+        id: string, pipeTrigger: number): IGroupByResult {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.get(id);
@@ -61,17 +67,20 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
     }
 }
 
+/**
+ *@hidden
+ */
 @Pipe({
     name: 'gridPostGroupBy',
     pure: true
 })
 export class IgxGridPostGroupingPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) {}
+    constructor(private gridAPI: IgxGridAPIService) { }
 
     public transform(collection: IGroupByResult, expression: ISortingExpression | ISortingExpression[],
-                     expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-                     id: string, groupsRecords: any[], pipeTrigger: number): any[] {
+        expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
+        id: string, groupsRecords: any[], pipeTrigger: number): any[] {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.get(id);
@@ -91,13 +100,16 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
     }
 }
 
+/**
+ *@hidden
+ */
 @Pipe({
     name: 'gridPaging',
     pure: true
 })
 export class IgxGridPagingPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) {}
+    constructor(private gridAPI: IgxGridAPIService) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 
@@ -119,16 +131,19 @@ export class IgxGridPagingPipe implements PipeTransform {
     }
 }
 
+/**
+ *@hidden
+ */
 @Pipe({
     name: 'gridFiltering',
     pure: true
 })
 export class IgxGridFilteringPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) {}
+    constructor(private gridAPI: IgxGridAPIService) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
-                     id: string, pipeTrigger: number) {
+        id: string, pipeTrigger: number) {
         const grid = this.gridAPI.get(id);
         const state = { expressionsTree: expressionsTree };
 
@@ -144,6 +159,9 @@ export class IgxGridFilteringPipe implements PipeTransform {
     }
 }
 
+/**
+ *@hidden
+ */
 @Pipe({
     name: 'filterCondition',
     pure: true
