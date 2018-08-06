@@ -214,12 +214,12 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     public get selectedItem(): any {
-        const selectedItem = this.selectionAPI.get_selection(this.id)[0];
+        const selectedItem = this.selectionAPI.get_selection_first(this.id);
         if (selectedItem) {
             if (selectedItem.isSelected) {
                 return selectedItem;
             }
-            this.selectionAPI.set_selection(this.id, []);
+            this.selectionAPI.set_selection(this.id, new Set());
         }
         return null;
     }
@@ -400,7 +400,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
-        this.selectionAPI.set_selection(this.id, []);
+        this.selectionAPI.set_selection(this.id, new Set());
     }
 
 
@@ -492,9 +492,8 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         if (!newSelection) {
             newSelection = this._focusedItem;
         }
-
         const args: ISelectionEventArgs = { oldSelection, newSelection };
-        this.selectionAPI.set_selection(this.id, [newSelection]);
+        this.selectionAPI.set_selection(this.id, new Set([newSelection]));
 
         this.onSelection.emit(args);
     }
@@ -590,7 +589,8 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Space', ['$event'])
     onSpaceKeyDown(event) {
-        this.target.selectItem(this.target.focusedItem, event);
+        // V.S. : IgxDropDownComponent.selectItem needs event to be true in order to close DD as per specification
+        this.target.selectItem(this.target.focusedItem, this.target instanceof IgxDropDownComponent);
         event.preventDefault();
     }
 
