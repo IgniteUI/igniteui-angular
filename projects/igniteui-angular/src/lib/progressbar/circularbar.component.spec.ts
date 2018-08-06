@@ -3,7 +3,8 @@ import {
     async,
     fakeAsync,
     TestBed,
-    tick
+    tick,
+    flush
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
@@ -18,15 +19,13 @@ describe('IgCircularBar', () => {
                 IgxCircularProgressBarComponent
             ]
         })
-            .compileComponents();
+        .compileComponents();
     }));
 
-    it('Initialize circularProgressbar with default values', fakeAsync(() => {
+    it('Initialize circularProgressbar with default values', () => {
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
 
-        tick(tickTime);
         fixture.detectChanges();
-        tick(tickTime);
 
         const progress = fixture.componentInstance.circularBar;
         const domProgress = fixture.debugElement.query(By.css('igx-circular-bar')).nativeElement;
@@ -37,41 +36,33 @@ describe('IgCircularBar', () => {
         expect(domProgress.id).toContain('igx-circular-bar-');
         expect(progress.max).toBe(defaultMaxValue);
         expect(progress.value).toBe(0);
-    }));
+    });
 
-    it('should set value to 0 for negative numbers', fakeAsync(() => {
+    it('should set value to 0 for negative numbers', () => {
         const negativeValue = -20;
         const expectedValue = 0;
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
-        tick(tickTime);
         fixture.detectChanges();
-        tick(tickTime);
 
         const progress = fixture.componentInstance.circularBar;
         progress.value = negativeValue;
 
-        tick(tickTime);
         fixture.detectChanges();
-        tick(tickTime);
 
         expect(progress.value).toBe(expectedValue);
-    }));
+    });
 
     it('If passed value is higher then max it should stay equal to maximum (default max size)', fakeAsync(() => {
         const progressBarValue = 120;
         const expectedMaxValue = 100;
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
-        fixture.componentInstance.circularBar.value = 11;
-        tick(tickTime);
         fixture.detectChanges();
-        tick(tickTime);
 
         const progress = fixture.componentInstance.circularBar;
         progress.value = progressBarValue;
 
-        tick(tickTime);
+        tick(2500);
         fixture.detectChanges();
-        tick(tickTime);
 
         expect(progress.value).toBe(expectedMaxValue);
     }));
@@ -80,17 +71,14 @@ describe('IgCircularBar', () => {
         const progressBarMaxValue = 150;
         const progressBarValue = 170;
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
-        tick(tickTime);
         fixture.detectChanges();
-        tick(tickTime);
 
         const progress = fixture.componentInstance.circularBar;
         progress.max = progressBarMaxValue;
         progress.value = progressBarValue;
 
-        tick(tickTime);
+        tick(3000);
         fixture.detectChanges();
-        tick(tickTime);
 
         expect(progress.value).toBe(progressBarMaxValue);
     }));
@@ -100,9 +88,7 @@ describe('IgCircularBar', () => {
         const progressBarValue = 120;
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
 
-        tick(tickTime);
         fixture.detectChanges();
-        tick(tickTime);
 
         const progress = fixture.componentInstance.circularBar;
         progress.max = progressBarMaxValue;
@@ -110,22 +96,24 @@ describe('IgCircularBar', () => {
 
         tick(tickTime);
         fixture.detectChanges();
-        tick(tickTime);
 
         expect(progress.value).toBe(progressBarValue);
+        expect(progress.max).toBe(progressBarMaxValue);
 
         progressBarMaxValue = 200;
         progress.max = progressBarMaxValue;
 
         tick(tickTime);
         fixture.detectChanges();
-        tick(tickTime);
 
         expect(progress.value).toBe(progressBarValue);
+        expect(progress.max).toBe(progressBarMaxValue);
     }));
 
     it('Should update value when we try to decrease it', fakeAsync(() => {
         const fixture = TestBed.createComponent(CircularBarComponent);
+        fixture.detectChanges();
+
         const progressBar = fixture.componentInstance.circularBar;
         let expectedValue = 50;
 
@@ -147,8 +135,10 @@ describe('IgCircularBar', () => {
         expect(progressBar.value).toBe(expectedValue);
     }));
 
-    it('Should update value when we try to decrease it (without animation)', fakeAsync(() => {
+    it('Should update value when we try to decrease it (without animation)', () => {
         const fixture = TestBed.createComponent(CircularBarComponent);
+        fixture.detectChanges();
+
         const progressBar = fixture.componentInstance.circularBar;
         let expectedValue = 50;
 
@@ -163,7 +153,7 @@ describe('IgCircularBar', () => {
         fixture.detectChanges();
 
         expect(progressBar.value).toBe(expectedValue);
-    }));
+    });
 
     it('When passed value is string progress indication should remain the same', async(() => {
         const fix = TestBed.createComponent(CircularBarComponent);
@@ -202,25 +192,20 @@ describe('IgCircularBar', () => {
     });
 
     // UI TESTS
-    describe('Circularbar UI tests', () => {
+    describe('Circular bar UI TESTS', () => {
         it('The value representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
-
-            const expectedValue = 30;
-
-            fixture.componentInstance.value = expectedValue;
-
-            tick(tickTime);
             fixture.detectChanges();
-            tick(tickTime);
 
+            const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
                 .querySelector('.progress-circular');
 
+            tick(tickTime);
             fixture.detectChanges();
 
-            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(expectedValue.toString());
-            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe('100');
+            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
+            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
 
             expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
             expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
@@ -229,28 +214,23 @@ describe('IgCircularBar', () => {
 
         it('The max representation should respond correctly to passed maximum value', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
-
-            const expectedValue = 30;
-
-            tick(tickTime);
             fixture.detectChanges();
-            tick(tickTime);
 
+            const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
                 .querySelector('.progress-circular');
 
-            fixture.detectChanges();
-
-            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(expectedValue.toString());
-            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe('100');
-
-            fixture.componentInstance.max = 200;
-
             tick(tickTime);
             fixture.detectChanges();
-            tick(tickTime);
 
-            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe('200');
+            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
+            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
+
+            componentInstance.max = 200;
+            tick(tickTime);
+            fixture.detectChanges();
+
+            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
             expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
             expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
             expect(progressBarElem.children[2].classList.value).toBe('progress-circular__text');
@@ -295,7 +275,6 @@ describe('IgCircularBar', () => {
         }));
     });
 });
-
 @Component({ template: `<igx-circular-bar></igx-circular-bar>` })
 class InitCircularProgressBarComponent {
     @ViewChild(IgxCircularProgressBarComponent) public circularBar: IgxCircularProgressBarComponent;

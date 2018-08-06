@@ -16,7 +16,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 </igx-drop-down>
 ```
 
-To provide more useful visual information, use `isHeader` to group items semantically or `disabled` to display an item as non-interactive.
+To provide more useful visual information, use `isHeader` to group items semantically, or `disabled` to display an item as non-interactive.
 
 ```html
 <igx-drop-down>
@@ -37,6 +37,7 @@ The following inputs are available in the **igx-drop-down** component:
 | `width` | string | Sets the tab width of the control. |
 | `height` | string | Sets the tab height of the control. |
 | `allowItemsFocus` | boolean | Allows items to take focus. |
+| `id` | string | Sets the drop down's id. |
 
 <div class="divider--half"></div>
 
@@ -48,6 +49,7 @@ The following outputs are available in the **igx-drop-down** component:
 | `onSelection` | false | Emitted when item selection is changing, before the selection completes. | `{ISelectionEventArgs}` |
 | `onOpening` | false | Emitted before the dropdown is opened. |
 | `onOpened` | false | Emitted when a dropdown is being opened. |
+| `onClosing` | false | Emitted before the dropdown is closed. |
 | `onClosed` | false | Emitted when a dropdown is being closed. |
 
 #### Methods
@@ -65,10 +67,12 @@ The following getters are available on the **igx-drop-down** component:
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `selectedItem` | `number` | Gets the selected item. |
+| `selectedItem` | `any` | Gets the selected item. |
+| `collapsed` | `boolean` | Gets if the drop down is collapsed. |
 | `items` | `IgxDropDownItemComponent[]` | Gets all of the items but headers. |
 | `headers` | `IgxDropDownItemComponent[]` | Gets header items. |
 | `element`| `ElementRef` | Get dropdown html element. |
+| `scrollContainer`| `ElementRef` | Get drop down's html element of its scroll container. |
 
 The following table summarizes some of the useful **igx-drop-down-item** component inputs, outputs and methods.
 
@@ -77,13 +81,16 @@ The following inputs are available in the **igx-drop-down-item** component:
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
+| `isSelected` | boolean| Defines if the item is the selected item. Only one item can be selected at time. |
 | `isHeader` | boolean| Defines if the item is a group header. |
 | `disabled` | boolean| Disables the given item. |
 | `isFocused` | boolean| Defines if the given item is focused. |
 
 #### Getters
-The following getters are available on the **igx-drop-down** component:
+The following getters are available on the **igx-drop-down-item** component:
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `isSelected` | `boolean` | Defines if the given item is selected. |
+| `index` | `number` | Gets item index. |
+| `elementHeight` | `number` | Gets item element height. |
+| `element`| `ElementRef` | Get item's html element. |

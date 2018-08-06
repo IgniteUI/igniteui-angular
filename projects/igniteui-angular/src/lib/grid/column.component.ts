@@ -842,6 +842,11 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         const grid = (this.grid as any);
+        const hasIndex = index !== undefined;
+        if (hasIndex && (index < 0 || index >= grid.pinnedColumns.length)) {
+            return false;
+        }
+
         const width = parseInt(this.width, 10);
         const oldIndex = this.visibleIndex;
 
@@ -852,6 +857,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._pinned = true;
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
+        const targetColumn = grid._pinnedColumns[index];
         const args = { column: this, insertAtIndex: index };
         grid.onColumnPinning.emit(args);
 
@@ -863,8 +869,12 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
 
+        if (hasIndex) {
+            grid._moveColumns(this, targetColumn);
+        }
+
         if (this.columnGroup) {
-            this.allChildren.forEach(child => child.pinned = true);
+            this.allChildren.forEach(child => child.pin());
             grid.reinitPinStates();
         }
 
@@ -891,19 +901,30 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         const grid = (this.grid as any);
+        const hasIndex = index !== undefined;
+        if (hasIndex && (index < 0 || index >= grid._unpinnedColumns.length)) {
+            return false;
+        }
+
         const oldIndex = this.visibleIndex;
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
 
+        const targetColumn = grid._unpinnedColumns[index];
         grid._unpinnedColumns.splice(index, 0, this);
         if (grid._pinnedColumns.indexOf(this) !== -1) {
             grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
         }
 
-        if (this.columnGroup) {
-            this.allChildren.forEach(child => child.pinned = false);
+        if (hasIndex) {
+            grid._moveColumns(this, targetColumn);
         }
+
+        if (this.columnGroup) {
+            this.allChildren.forEach(child => child.unpin());
+        }
+
         grid.reinitPinStates();
 
         grid.markForCheck();

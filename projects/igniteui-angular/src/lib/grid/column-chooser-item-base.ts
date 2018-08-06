@@ -5,6 +5,9 @@ export interface IValueChangedEventArgs {
     newValue: any;
 }
 
+/**
+ *@hidden
+ */
 export abstract class ItemPropertyValueChanged {
     private _object: any;
     private _propName: string;

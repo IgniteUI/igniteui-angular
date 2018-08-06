@@ -3,7 +3,8 @@
     <section class="sample-content">
         <button #button igxButton="raised" igxRipple (click)="toggleDropDown()">Toggle dropdown</button>
         <igx-drop-down #dropdown1 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
-            <igx-drop-down-item [igxDropDownItemNavigation]="dropdown1" *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
+            <igx-drop-down-item [igxDropDownItemNavigation]="dropdown1" *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
+                [isSelected]="item.selected">
                 <div class="igx-drop-down__item-template">
                     {{ item.field }}
                 </div>
@@ -12,7 +13,7 @@
 
         <button #button igxButton="raised" igxRipple [igxToggleAction]="dropdown2">With action directive</button>
         <igx-drop-down #dropdown2 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'>
-            <igx-drop-down-item [igxDropDownItemNavigation]="dropdown2" *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
+            <igx-drop-down-item [igxDropDownItemNavigation]="dropdown2" *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                 <div class="igx-drop-down__item-template">
                     {{ item.field }}
                 </div>
