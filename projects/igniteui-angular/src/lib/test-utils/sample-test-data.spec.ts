@@ -64,7 +64,7 @@ export class SampleTestData {
     ])
 
     /* Fields: Name: string, Avatar: string; 3 items. */
-    public static personAvatarData = [
+    public static personAvatarData = () => ([
         {
             Name: 'Person 1',
             Avatar: 'https://randomuser.me/api/portraits/men/43.jpg'
@@ -77,7 +77,7 @@ export class SampleTestData {
             Name: 'Person 3',
             Avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
         }
-    ];
+    ])
 
     /* Fields: name: string, phone: string; 5 items. */
     public static contactsData = () => ([
@@ -188,7 +188,7 @@ export class SampleTestData {
     ])
 
     /* Data fields: ID: number, Name: string, JobTitle: string, Company: string; 10 items, sorted by ID. */
-    public static personIDNameJobCompany = [
+    public static personIDNameJobCompany = () => ([
         { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', Company: 'Company A' },
         { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', Company: 'Company C' },
         { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', Company: 'Company A' },
@@ -199,7 +199,7 @@ export class SampleTestData {
         { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', Company: 'Company A' },
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Company: 'Company D' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Company: 'Company E' }
-    ];
+    ])
 
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;

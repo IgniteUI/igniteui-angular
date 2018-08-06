@@ -11,11 +11,15 @@ import { IgxColumnHidingComponent, IgxColumnPinningComponent, IgxGridComponent }
         </igx-grid>
     `
 })
-export class BasicGridComponent {
-    public data = [];
+export class BasicGridComponent implements OnInit {
+    public data;
 
     @ViewChild(IgxGridComponent)
     public grid: IgxGridComponent;
+
+    ngOnInit() {
+        this.data = [];
+    }
 }
 
 @Component({

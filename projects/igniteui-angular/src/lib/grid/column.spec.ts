@@ -341,27 +341,3 @@ export class ColumnCellFormatterComponent {
         return `${value * value}`;
     }
 }
-
-@Component({
-    template: `
-        <igx-grid [data]="data" height="500px" width="400px">
-            <igx-column field="ProductId"  dataType="number" width="100px"></igx-column>
-            <igx-column field="Number1" dataType="number" width="100px"></igx-column>
-            <igx-column field="Number2" dataType="number" width="100px" [headerClasses]="'headerAlignSyle'"></igx-column>
-            <igx-column field="Number3" dataType="number" width="100px" [cellClasses]="'headerAlignSyle'"></igx-column>
-            <igx-column field="Number4" dataType="number" width="100px"></igx-column>
-            <igx-column field="Number5" dataType="number" width="100px"></igx-column>
-            <igx-column field="Number6" dataType="number" width="100px"></igx-column>
-            <igx-column field="Number7" dataType="number" width="100px"></igx-column>
-        </igx-grid>
-    `,
-    styles: [`.headerAlignSyle {text-align: right !important;}`]
-})
-export class ColumnHaederClassesComponent {
-    public data = [
-        { ProductId: 1, Number1: 11, Number2: 10, Number3: 5, Number4: 3, Number5: 4, Number6: 6, Number7: 7 }
-    ];
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
-    public grid: IgxGridComponent;
-}
