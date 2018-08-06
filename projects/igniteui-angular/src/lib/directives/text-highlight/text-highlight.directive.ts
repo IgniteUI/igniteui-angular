@@ -170,8 +170,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     /**
      * Activates the highlight at a given index.
      * (if such index exists)
-     *
-     * @static
      */
     public static setActiveHighlight(groupName: string, highlight: IActiveHighlightInfo) {
         IgxTextHighlightDirective.highlightGroupsMap.set(groupName, highlight);
@@ -180,8 +178,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     /**
      * Clears any existing highlight.
-     *
-     * @static
      */
     public static clearActiveHighlight(groupName) {
         IgxTextHighlightDirective.highlightGroupsMap.set(groupName, {
