@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     async,
     TestBed
 } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { ButtonGroupAlignment, IgxButtonGroupComponent, IgxButtonGroupModule } from './buttonGroup.component';
+import { IgxButtonModule } from '../directives/button/button.directive';
 
 interface IButton {
     type?: string;
@@ -45,8 +45,15 @@ class Button {
 describe('IgxButtonGroup', () => {
    beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ InitButtonGroupComponent, InitButtonGroupWithValuesComponent],
-            imports: [IgxButtonGroupModule]
+            declarations: [
+                InitButtonGroupComponent,
+                InitButtonGroupWithValuesComponent,
+                TemplatedButtonGroupComponent
+            ],
+            imports: [
+                IgxButtonGroupModule,
+                IgxButtonModule
+            ]
         })
         .compileComponents();
     }));
@@ -65,8 +72,8 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.alignment).toBe(ButtonGroupAlignment.horizontal);
         expect(buttongroup.multiSelection).toBeFalsy();
         expect(buttongroup.itemContentCssClass).toBeUndefined();
-        expect(buttongroup.selectedIndexes.length).toEqual(0);
-        expect(buttongroup.selectedButtons.length).toEqual(0);
+        expect(buttongroup.selectedIndexes.length).toEqual(1);
+        expect(buttongroup.selectedButtons.length).toEqual(1);
     });
 
    it('should initialize buttonGroup with passed values', () => {
@@ -94,8 +101,11 @@ describe('IgxButtonGroup', () => {
 
         buttongroup.selectButton(0);
         expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(0);
+
         buttongroup.selectButton(2);
         expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
     });
 
    it('Button Group multiple selection', () => {
@@ -113,7 +123,59 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.selectedButtons.length).toBe(0);
         buttongroup.selectButton(0);
         buttongroup.selectButton(3);
+        // Button 3 is disabled, so it isn't selected
+        expect(buttongroup.selectedButtons.length).toBe(1);
+    });
+
+    it('Button Group - templated buttons with multiple selection', () => {
+        const fixture = TestBed.createComponent(TemplatedButtonGroupComponent);
+        fixture.detectChanges();
+
+        const buttongroup = fixture.componentInstance.buttonGroup;
+        expect(buttongroup.buttons.length).toBe(4);
+
+        expect(buttongroup.multiSelection).toBeTruthy();
+        buttongroup.selectButton(1);
+        expect(buttongroup.selectedButtons.length).toBe(1);
+        buttongroup.selectButton(2);
+        expect(buttongroup.selectedButtons.length).toBe(2);
+        buttongroup.deselectButton(2);
+        buttongroup.deselectButton(1);
         expect(buttongroup.selectedButtons.length).toBe(0);
+        buttongroup.selectButton(0);
+        buttongroup.selectButton(3);
+        // Button 3 is disabled, so it isn't selected
+        expect(buttongroup.selectedButtons.length).toBe(1);
+    });
+
+    it('Button Group - templated buttons with single selection', () => {
+        const fixture = TestBed.createComponent(TemplatedButtonGroupComponent);
+        fixture.componentInstance.multiselection = false;
+        fixture.detectChanges();
+
+        const buttongroup = fixture.componentInstance.buttonGroup;
+        expect(buttongroup.buttons.length).toBe(4);
+        expect(buttongroup.multiSelection).toBeFalsy();
+
+        buttongroup.selectButton(1);
+        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(1);
+
+        buttongroup.selectButton(2);
+        expect(buttongroup.selectedButtons.length).toBe(1);
+        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
+
+        buttongroup.deselectButton(2);
+        buttongroup.deselectButton(1);
+        expect(buttongroup.selectedButtons.length).toBe(0);
+
+
+        buttongroup.selectButton(0);
+        buttongroup.selectButton(2);
+        buttongroup.selectButton(3);
+        expect(buttongroup.selectedButtons.length).toBe(1);
+        // Button 3 is disabled, so it isn't selected
+        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
     });
 });
 
@@ -218,4 +280,17 @@ class ButtonGroupWithValuesComponent implements OnInit {
             })
         ];
     }
+}
+
+@Component({ template: `<igx-buttongroup [multiSelection]="multiselection" [alignment]="alignment">
+                            <button igxButton>Sofia</button>
+                            <button igxButton>London</button>
+                            <button igxButton>New York</button>
+                            <button igxButton [disabled]="'true'">Tokio</button>
+                        </igx-buttongroup>` })
+class TemplatedButtonGroupComponent {
+    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
+
+    private alignment = ButtonGroupAlignment.vertical;
+    public multiselection = true;
 }
