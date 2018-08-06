@@ -539,6 +539,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     protected chunkLoadedHor;
     protected chunkLoadedVer;
     private cellSelectionID: string;
+    private prevCellSelectionID: string;
     private previousCellEditMode = false;
     private updateCell = true;
 
@@ -553,7 +554,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     public _updateCellSelectionStatus() {
         this._clearCellSelection();
-        this.selectionApi.set_selection(this.cellSelectionID, this.selectionApi.select_item(this.cellSelectionID, this.cellID));
+        this._saveCellSelection();
         if (this.column.editable && this.previousCellEditMode) {
             this.inEditMode = true;
         }
@@ -582,13 +583,23 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.previousCellEditMode = false;
         }
-        this.selectionApi.set_selection(this.cellSelectionID, []);
+        this._saveCellSelection(new Set());
+    }
+
+    private _saveCellSelection(newSelection?: Set<any>) {
+        const sel = this.selectionApi.get_selection(this.cellSelectionID);
+        if (sel && sel.size > 0) {
+            this.selectionApi.set_selection(this.prevCellSelectionID, sel);
+        }
+        if (!newSelection) {
+            newSelection = this.selectionApi.select_item(this.cellSelectionID, this.cellID);
+        }
+        this.selectionApi.set_selection(this.cellSelectionID, newSelection);
     }
 
     private _getLastSelectedCell() {
-        const selection = this.selectionApi.get_selection(this.cellSelectionID);
-        if (selection && selection.length > 0) {
-            const cellID = selection[0];
+        const cellID = this.selectionApi.get_selection_first(this.cellSelectionID);
+        if (cellID) {
             return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);
         }
     }
@@ -601,9 +612,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     public isCellSelected() {
-        const selection = this.selectionApi.get_selection(this.cellSelectionID);
-        if (selection && selection.length > 0) {
-            const selectedCellID = selection[0];
+        const selectedCellID = this.selectionApi.get_selection_first(this.cellSelectionID);
+        if (selectedCellID) {
             return this.cellID.rowID === selectedCellID.rowID &&
                 this.cellID.columnID === selectedCellID.columnID;
         }
@@ -614,7 +624,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      *@hidden
      */
     public ngOnInit() {
-        this.cellSelectionID = this.gridID + '-cells';
+        this.cellSelectionID = this.gridID + '-cell';
+        this.prevCellSelectionID = this.gridID + '-prev-cell';
         this.chunkLoadedHor = this.row.virtDirRow.onChunkLoad.subscribe(
             () => {
                 if (!this.selected) {
@@ -765,7 +776,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKey(event) {
         if (this.isFirstCell) {
-            this.selectionApi.set_selection(this.cellSelectionID, []);
+            this.selectionApi.set_selection(this.cellSelectionID, new Set());
             this.grid.markForCheck();
             return;
         } else {
@@ -857,7 +868,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('keydown.tab', ['$event'])
     public onTabKey(event) {
         if (this.isLastCell) {
-            this.selectionApi.set_selection(this.cellSelectionID, []);
+            this.selectionApi.set_selection(this.cellSelectionID, new Set());
             this.grid.markForCheck();
             return;
         } else {

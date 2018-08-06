@@ -23,6 +23,9 @@ import { FilteringExpressionsTree } from '../data-operations/filtering-expressio
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 
 
+/**
+ *@hidden
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,

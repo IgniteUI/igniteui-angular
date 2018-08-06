@@ -268,7 +268,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._filteredData = value;
 
         if (this.rowSelectable) {
-            this.updateHeaderChecboxStatusOnFilter(this._filteredData);
+            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
         }
 
         this.restoreHighlight();
@@ -447,9 +447,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * <igx-grid #grid [data]="Data" [paging]="true" [page]="5" [autoGenerate]="true"></igx-grid>
      */
     set page(val: number) {
-        if (val < 0) {
+        if (val < 0 || val > this.totalPages - 1) {
             return;
         }
+
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.cdr.markForCheck();
@@ -2511,7 +2512,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Goes to the desired page.
+     * Goes to the desired page index.
      * ```typescript
      * this.grid1.paginate(1);
      * ```
@@ -2519,9 +2520,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public paginate(val: number): void {
-        if (val < 0) {
+        if (val < 0 || val > this.totalPages - 1) {
             return;
         }
+
         this.page = val;
     }
 
@@ -3561,13 +3563,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const newSelection =
             event.checked ?
                 this.filteredData ?
-                    this.selectionAPI.append_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    this.selectionAPI.select_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
                     this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
                 this.filteredData ?
-                    this.selectionAPI.subtract_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
-                    [];
+                    this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    new Set();
         this.triggerRowSelectionChange(newSelection, null, event, event.checked);
-        this.checkHeaderChecboxStatus(event.checked);
+        this.checkHeaderCheckboxStatus(event.checked);
     }
 
     /**
@@ -3603,7 +3605,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public checkHeaderChecboxStatus(headerStatus?: boolean) {
+    public checkHeaderCheckboxStatus(headerStatus?: boolean) {
         if (headerStatus === undefined) {
             this.allRowsSelected = this.selectionAPI.are_all_selected(this.id, this.data);
             if (this.headerCheckbox) {
@@ -3628,7 +3630,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (currSelection) {
             for (const key of Object.keys(filteredData)) {
                 const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
-                if (currSelection.indexOf(dataItem) !== -1) {
+                if (currSelection.has(dataItem)) {
                     atLeastOneSelected = true;
                     if (notAllSelected) {
                         return 'indeterminate';
@@ -3647,7 +3649,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public updateHeaderChecboxStatusOnFilter(data) {
+    public updateHeaderCheckboxStatusOnFilter(data) {
         if (!data) {
             data = this.data;
         }
@@ -3691,7 +3693,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
 	 */
     public selectedRows(): any[] {
-        return this.selectionAPI.get_selection(this.id) || [];
+        let selection: Set<any>;
+        selection = this.selectionAPI.get_selection(this.id);
+        return selection ? Array.from(selection) : [];
     }
 
     /**
@@ -3704,7 +3708,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
-        const newSelection = clearCurrentSelection ? rowIDs : this.selectionAPI.select_items(this.id, rowIDs);
+        let newSelection: Set<any>;
+        newSelection = this.selectionAPI.select_items(this.id, rowIDs, clearCurrentSelection);
         this.triggerRowSelectionChange(newSelection);
     }
 
@@ -3717,7 +3722,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public deselectRows(rowIDs: any[]) {
-        const newSelection = this.selectionAPI.deselect_items(this.id, rowIDs);
+        let newSelection: Set<any>;
+        newSelection = this.selectionAPI.deselect_items(this.id, rowIDs);
         this.triggerRowSelectionChange(newSelection);
     }
 
@@ -3741,18 +3747,24 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      */
     public deselectAllRows() {
-        this.triggerRowSelectionChange([]);
+        this.triggerRowSelectionChange(new Set());
     }
 
     /**
      * @hidden
      */
-    public triggerRowSelectionChange(newSelection: any[], row?: IgxGridRowComponent, event?: Event, headerStatus?: boolean) {
-        const oldSelection = this.selectionAPI.get_selection(this.id);
+    public triggerRowSelectionChange(newSelectionAsSet: Set<any>, row?: IgxGridRowComponent, event?: Event, headerStatus?: boolean) {
+        const oldSelectionAsSet = this.selectionAPI.get_selection(this.id);
+        const oldSelection = oldSelectionAsSet ? Array.from(oldSelectionAsSet) : [];
+        const newSelection = newSelectionAsSet ? Array.from(newSelectionAsSet) : [];
         const args: IRowSelectionEventArgs = { oldSelection, newSelection, row, event };
         this.onRowSelectionChange.emit(args);
-        this.selectionAPI.set_selection(this.id, args.newSelection);
-        this.checkHeaderChecboxStatus(headerStatus);
+        newSelectionAsSet = new Set();
+        for (let i = 0; i < args.newSelection.length; i++) {
+            newSelectionAsSet.add(args.newSelection[i]);
+        }
+        this.selectionAPI.set_selection(this.id, newSelectionAsSet);
+        this.checkHeaderCheckboxStatus(headerStatus);
     }
 
     /**
@@ -3973,6 +3985,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected initPinning() {
+        let currentPinnedWidth = 0;
+        const pinnedColumns = [];
+        const unpinnedColumns = [];
+        const newUnpinnedCols = [];
+
+        // When a column is a group or is inside a group, pin all related.
         this._pinnedColumns.forEach(col => {
             if (col.parent) {
                 col.parent.pinned = true;
@@ -3981,7 +3999,47 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 col.children.forEach(child => child.pinned = true);
             }
         });
-        this._pinnedColumns = this.columnList.filter(col => col.pinned);
+
+        // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
+        // We take into account top level columns (top level groups and non groups).
+        // If top level is unpinned the pinning handles all children to be unpinned as well.
+        for (let i = 0; i < this._columns.length; i++) {
+            if (this._columns[i].pinned && !this._columns[i].parent) {
+                // Pinned column. Check if with it the unpinned min width is exceeded.
+                const colWidth = parseInt(this._columns[i].width, 10);
+                if (currentPinnedWidth + colWidth > this.calcWidth - this.unpinnedAreaMinWidth) {
+                    // unpinned min width is exceeded. Unpin the columns and add it to the unpinned collection.
+                    this._columns[i].pinned = false;
+                    unpinnedColumns.push(this._columns[i]);
+                    newUnpinnedCols.push(this._columns[i]);
+                } else {
+                    // unpinned min width is not exceeded. Keep it pinned and add it to the pinned collection.
+                    currentPinnedWidth += colWidth;
+                    pinnedColumns.push(this._columns[i]);
+                }
+            } else if (this._columns[i].pinned && this._columns[i].parent) {
+                if (this._columns[i].topLevelParent.pinned) {
+                    pinnedColumns.push(this._columns[i]);
+                } else {
+                    this._columns[i].pinned = false;
+                    unpinnedColumns.push(this._columns[i]);
+                }
+            } else {
+                unpinnedColumns.push(this._columns[i]);
+            }
+        }
+
+        if (newUnpinnedCols.length) {
+            console.warn(
+                'igxGrid - The pinned area exceeds maximum pinned width. ' +
+                'The following columns were unpinned to prevent further issues:' +
+                 newUnpinnedCols.map(col => '"' + col.header + '"').toString() + '. For more info see our documentation.'
+            );
+        }
+
+        // Assign the applicaple collections.
+        this._pinnedColumns = pinnedColumns;
+        this._unpinnedColumns = unpinnedColumns;
     }
 
     private scrollTo(row: number, column: number, page: number, groupByRecord?: IGroupByRecord): void {
