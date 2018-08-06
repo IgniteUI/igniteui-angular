@@ -99,7 +99,7 @@ export class IgxTextSelectionDirective {
      * public inputElement: IgxTextSelectionDirective;
      *
      * public triggerElementSelection() {
-     *  inputElement.trigger();
+     *  this.inputElement.trigger();
      * }
      * ```
      */
