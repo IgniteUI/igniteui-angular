@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar, ICalendarDate, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from './index';
-import { UIInteractions } from '../test-utils/ui-interactions.spec'
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxCalendar', () => {
     beforeEach(() => {
