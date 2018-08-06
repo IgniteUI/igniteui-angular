@@ -1,10 +1,10 @@
-import { Component, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grid/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from '../grid/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs } from '../grid/grid.component';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
-import { IGridSelection, IEditDone, IGridRowEvents, IGridRowSelectionChange } from './grid-interfaces.spec';
+import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grid/column.component';
@@ -559,8 +559,10 @@ export class GridFeaturesComponent extends BasicGridComponent {
         ` columnWidth="200" `,
         '', ColumnDefinitions.idNameJobHireDate)
 })
-export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
-    data = SampleTestData.generateFromData(SampleTestData.personJobDataFull, 30);
+export class ScrollableGridSearchComponent extends BasicGridSearchComponent implements OnInit {
+    ngOnInit() {
+        this.data = SampleTestData.generateFromData(SampleTestData.personJobDataFull(), 30);
+    }
 }
 
 @Component({
