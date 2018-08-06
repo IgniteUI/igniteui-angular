@@ -276,11 +276,11 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this.column.grid.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
-        const currSelection = this.column.grid.selectionAPI.get_selection(this.column.gridID + '-cells');
-        if (currSelection && currSelection.length > 0) {
+        const currSelection = this.column.grid.selectionAPI.get_selection_first(this.column.gridID + '-cell');
+        if (currSelection) {
             this.cms.selection = {
-                column: this.column.grid.columnList.toArray()[currSelection[0].columnID],
-                rowID: currSelection[0].rowID
+                column: this.column.grid.columnList.toArray()[currSelection.columnID],
+                rowID: currSelection.rowID
             };
         }
 
@@ -516,17 +516,16 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
 
-                this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cells', [{
+                this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cell', new Set([{
                     rowID: this.cms.selection.rowID,
                     columnID: colID
-                }]);
+                }]));
 
                 const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
 
                 if (cell) {
                     cell.focusCell();
                 }
-
                 this.cms.selection = null;
             }
 

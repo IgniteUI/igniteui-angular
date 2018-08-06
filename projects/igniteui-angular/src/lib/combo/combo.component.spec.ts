@@ -937,7 +937,7 @@ describe('igxCombo', () => {
             const selectionSpy = spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
             dropdown.setSelectedItem(combo.selectedItems()[0], false);
             expect(combo.setSelectedItem).toHaveBeenCalledWith({ field: 'Connecticut', region: 'New England' }, false);
-            expect(selectionSpy.calls.mostRecent().args).toEqual([[]]);
+            expect(Array.from(selectionSpy.calls.mostRecent().args[0])).toEqual([]);
             expect(combo.selectedItems()).toEqual([]);
             combo.setSelectedItem('Connecticut', true);
             expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
