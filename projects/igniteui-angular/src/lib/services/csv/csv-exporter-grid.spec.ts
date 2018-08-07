@@ -17,7 +17,7 @@ describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
     let actualData: FileContentData;
     let options: IgxCsvExporterOptions;
-    const data = SampleTestData.personJobData;
+    const data = SampleTestData.personJobData();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

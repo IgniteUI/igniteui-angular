@@ -87,7 +87,7 @@ export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
     public perPage = 3;
 
-    data = SampleTestData.personJobDataFull;
+    data = SampleTestData.personJobDataFull();
 }
 
 @Component({
@@ -112,6 +112,6 @@ export class GridWithToolbarComponent extends BasicGridComponent {
     public exportExcel = true;
     public exportCsv = true;
 
-    data = SampleTestData.contactInfoData;
+    data = SampleTestData.contactInfoData();
 }
 
