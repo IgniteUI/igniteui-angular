@@ -234,9 +234,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
 	 */
     set filteringExpressionsTree(value) {
-        if (value) {
-            for (let index = 0; index < (value as FilteringExpressionsTree).filteringOperands.length; index++) {
-                const val = (value as FilteringExpressionsTree);
+        if (value && value instanceof FilteringExpressionsTree) {
+            const val = (value as FilteringExpressionsTree);
+            for (let index = 0; index < val.filteringOperands.length; index++) {
                 if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {
                     const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].fieldName);
                     newExpressionsTree.filteringOperands.push(val.filteringOperands[index] as IFilteringExpression);

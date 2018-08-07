@@ -187,8 +187,8 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
         }
     }
 
-    public onInputChanged(val): void {
-        this.updateExpression(val);
+    public onInputChanged(value): void {
+        this.updateExpression(value);
     }
 
     public focusInput(): void {

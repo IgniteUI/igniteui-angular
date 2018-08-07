@@ -1427,7 +1427,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-        tick(1000);
+        tick(100);
 
         verifyFilterUIPosition(filterUIContainer, grid);
 
