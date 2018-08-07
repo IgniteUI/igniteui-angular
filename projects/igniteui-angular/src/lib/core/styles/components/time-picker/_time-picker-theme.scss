@@ -244,7 +244,7 @@
     $header-hour: map-get($categories, 'header-hour');
     $content: map-get($categories, 'content');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %igx-time-picker__header-ampm {
             @include igx-type-style($type-scale, $time-period);
         }

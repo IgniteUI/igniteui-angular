@@ -208,7 +208,7 @@
 ///      font-family: 'GT Walsheim';
 ///      color: mediumvioletred;
 ///   }
-@mixin igx-type-style($scale , $category) {
+@mixin igx-type-style($scale, $category) {
     $type-category: map-get($scale, $category);
     @each $key, $value in $type-category {
         #{$key}: #{$value};

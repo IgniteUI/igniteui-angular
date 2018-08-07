@@ -97,7 +97,7 @@
 @mixin igx-toast-typography($type-scale, $categories: (text: 'body-2')) {
     $text: map-get($categories, 'text');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %igx-toast-display {
             @include igx-type-style($type-scale, $text);
         }

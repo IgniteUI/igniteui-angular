@@ -95,7 +95,7 @@
 @mixin igx-column-hiding-typography($type-scale, $categories: (title: 'subtitle-1')) {
     $title: map-get($categories, 'title');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %column-hiding-title {
             @include igx-type-style($type-scale, $title);
         }

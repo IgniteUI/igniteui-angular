@@ -447,13 +447,15 @@
     $picker-date: map-get($categories, 'picker-date');
     $content: map-get($categories, 'content');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %cal-header-year {
             @include igx-type-style($type-scale, $header-year);
         }
 
         %cal-header-date {
-            @include igx-type-style($type-scale, $header-date);
+            @include igx-type-style($type-scale, $header-date) {
+                line-height: rem(42px);
+            }
         }
 
         %cal-picker-date {

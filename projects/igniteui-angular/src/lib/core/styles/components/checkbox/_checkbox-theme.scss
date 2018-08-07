@@ -300,7 +300,7 @@
 ) {
     $label: map-get($categories, 'label');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %cbx-label {
             @include igx-type-style($type-scale, $label);
         }

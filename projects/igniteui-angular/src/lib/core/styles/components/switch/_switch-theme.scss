@@ -317,7 +317,7 @@
 ) {
     $label: map-get($categories, 'label');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %switch-label {
             @include igx-type-style($type-scale, $label);
         }

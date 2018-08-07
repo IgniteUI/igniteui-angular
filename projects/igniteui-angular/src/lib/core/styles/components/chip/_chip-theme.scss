@@ -474,7 +474,7 @@
 @mixin igx-chip-typography($type-scale, $categories: (text: 'body-2')) {
     $text: map-get($categories, 'text');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %igx-chip__text {
             @include igx-type-style($type-scale, $text);
         }

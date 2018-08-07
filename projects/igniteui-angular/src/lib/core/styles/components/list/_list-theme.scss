@@ -166,7 +166,7 @@
     $header: map-get($categories, 'header');
     $item: map-get($categories, 'item');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %igx-list-header {
             @include igx-type-style($type-scale, $header);
         }

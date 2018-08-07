@@ -313,7 +313,7 @@
     $item: map-get($categories, 'item');
     $header: map-get($categories, 'header');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %item {
             @include igx-type-style($type-scale, $item);
         }

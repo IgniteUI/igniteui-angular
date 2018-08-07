@@ -375,9 +375,11 @@
 /// @param {String} $category ['button'] - The category from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-button-typography($type-scale, $category: 'button') {
-    %igx-button-display {
-        @include igx-type-style($type-scale, $category) {
-            text-align: center
+    @include igx-scope('.igx-typography') {
+        %igx-button-display {
+            @include igx-type-style($type-scale, $category) {
+                text-align: center
+            }
         }
     }
 }

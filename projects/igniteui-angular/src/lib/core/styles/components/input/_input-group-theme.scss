@@ -643,7 +643,7 @@
     $helper-text: map-get($categories, 'helper-text');
     $input-text: map-get($categories, 'input-text');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %form-group-label {
             @include igx-type-style($type-scale, $input-text) {
                 line-height: 1;

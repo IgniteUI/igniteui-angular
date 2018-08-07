@@ -215,12 +215,12 @@
     $subtitle: map-get($categories, 'subtitle');
     $content: map-get($categories, 'content');
 
-    @include b(igx-typography) {
+    @include igx-scope('.igx-typography') {
         %igx-card-header-title {
             @include igx-type-style($type-scale, $title);
         }
 
-        %igx-card-header-title--small{
+        %igx-card-header-title--small {
             @include igx-type-style($type-scale, $title-small);
         }
 
