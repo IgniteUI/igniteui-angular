@@ -190,6 +190,14 @@ export class IgxColumnComponent implements AfterContentInit {
                 if (this.hasSummary) {
                     this.grid.summariesHeight = 0;
                 }
+
+                if (!value) {
+                    this.grid.columnsWithNoSetWidths.push(this);
+                } else if (this.grid.columnsWithNoSetWidths.indexOf(this) !== -1) {
+                    const colIndex = this.grid.columnsWithNoSetWidths.indexOf(this);
+                    this.grid.columnsWithNoSetWidths.splice(colIndex, 1);
+                }
+
                 this.grid.reflow();
             }
         }
