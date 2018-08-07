@@ -8,12 +8,12 @@ export class UIInteractions {
         }
     }
 
-    public static triggerKeyEvtUponElem(evtName, elem, bubbles = true) {
-        const evtArgs: KeyboardEventInit = { key: evtName, bubbles: bubbles };
+    public static triggerKeyEvtUponElem(evtName, elem) {
+        const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true };
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
     }
 
-    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles = true) {
+    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyPressed,
             bubbles: bubbles
@@ -54,7 +54,8 @@ export class UIInteractions {
 
     public static simulateKeyDownEvent(element, key) {
         const keyOptions: KeyboardEventInit = {
-            key
+            key,
+            bubbles: true
         };
 
         const keypressEvent = new KeyboardEvent('keydown', keyOptions);
