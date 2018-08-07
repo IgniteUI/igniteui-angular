@@ -13,9 +13,10 @@ export class UIInteractions {
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
     }
 
-    public static triggerKeyDownEvtUponElem(keyPressed, elem) {
+    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles = true) {
         const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyPressed
+            key: keyPressed,
+            bubbles: bubbles
         });
         elem.dispatchEvent(keyboardEvent);
     }
