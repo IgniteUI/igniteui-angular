@@ -342,7 +342,7 @@ describe('IgxGrid - Grid Sorting', () => {
 
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
 
-    public data = SampleTestData.personIDNameRegionData;
+    public data = SampleTestData.personIDNameRegionData();
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
     @ViewChild('nameColumn') public nameColumn;

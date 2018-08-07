@@ -225,7 +225,7 @@ describe('IgxGrid - Column properties', () => {
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent)
 })
 export class ColumnsFromIterableComponent {
-    public data = SampleTestData.personIDNameData;
+    public data = SampleTestData.personIDNameData();
     public columns = ['ID', 'Name'];
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -237,14 +237,13 @@ export class ColumnsFromIterableComponent {
         <ng-template #newHeader>
             <span class="new-header">New header text</span>
         </ng-template>
-
         <ng-template #newCell>
             <span class="new-cell">New cell text</span>
         </ng-template>
     `
 })
 export class TemplatedColumnsComponent {
-    public data = SampleTestData.personIDNameData;
+    public data = SampleTestData.personIDNameData();
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
