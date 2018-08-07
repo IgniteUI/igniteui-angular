@@ -157,10 +157,16 @@
         z-index: 0;
     }
 
+    %aside--collapsed--right {
+        transform: translate3d(300px, 0, 0);
+        box-shadow: none;
+    }
+
     %igx-nav-drawer__aside--collapsed {
         transform: none;
         width: 0;
         overflow: hidden;
+        border: none;
     }
 
     %aside--collapsed {
@@ -173,11 +179,6 @@
         right: 0;
         border-right: none;
         border-left: 1px solid --var($theme, 'border-color');
-    }
-
-    %aside--collapsed--right {
-        transform: translate3d(300px, 0, 0);
-        box-shadow: none;
     }
 
     %aside--mini {

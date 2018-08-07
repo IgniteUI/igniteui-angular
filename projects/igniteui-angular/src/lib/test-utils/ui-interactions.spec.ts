@@ -1,15 +1,24 @@
 export class UIInteractions {
 
-    public static sendInput(element, text, fix) {
+    public static sendInput(element, text, fix?) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
-        fix.detectChanges();
-        return fix.whenStable();
+        if (fix) {
+            return fix.whenStable();
+        }
     }
 
     public static triggerKeyEvtUponElem(evtName, elem, bubbles = true) {
         const evtArgs: KeyboardEventInit = { key: evtName, bubbles: bubbles };
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
+    }
+
+    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles = true) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyPressed,
+            bubbles: bubbles
+        });
+        elem.dispatchEvent(keyboardEvent);
     }
 
     public static findCellByInputElem(elem, focusedElem) {
@@ -70,5 +79,14 @@ export class UIInteractions {
             element.dispatchEvent(pointerEvent);
             resolve();
         });
+    }
+
+    public static clearOverlay() {
+        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+        Array.from(overlays).forEach(element => {
+            element.remove();
+        });
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
     }
 }
