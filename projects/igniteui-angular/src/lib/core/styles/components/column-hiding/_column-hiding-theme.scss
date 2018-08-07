@@ -90,7 +90,7 @@
 /// category from the typographic scale.
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
-/// @param {Map} $categories [''] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(title: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-column-hiding-typography($type-scale, $categories: (title: 'subtitle-1')) {
     $title: map-get($categories, 'title');

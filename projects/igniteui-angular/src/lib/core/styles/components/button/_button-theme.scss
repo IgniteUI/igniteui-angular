@@ -372,12 +372,14 @@
 /// Uses the 'button' category from the typographic scale.
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
-/// @param {String} $category ['button'] - The category from the typographic scale used for type styles.
+/// @param {String} $categories [(text: 'button')] - The category from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
-@mixin igx-button-typography($type-scale, $category: 'button') {
+@mixin igx-button-typography($type-scale, $categories: (text: 'button')) {
+    $text: map-get($categories, 'text');
+
     @include igx-scope('.igx-typography') {
         %igx-button-display {
-            @include igx-type-style($type-scale, $category) {
+            @include igx-type-style($type-scale, $text) {
                 text-align: center
             }
         }

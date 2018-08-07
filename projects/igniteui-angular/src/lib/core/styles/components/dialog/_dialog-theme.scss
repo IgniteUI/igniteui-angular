@@ -114,7 +114,7 @@
 /// Uses the 'h6' and 'body-1' category from the typographic scale.
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
-/// @param {Map} $categories [''] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(title: 'h6', content: 'body-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-dialog-typography($type-scale, $categories: (
     title: 'h6',
