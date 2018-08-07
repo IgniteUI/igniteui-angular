@@ -124,6 +124,14 @@ describe('Carousel', () => {
         expect(carousel.total).toEqual(4);
     });
 
+    it('Carousel checking if a slide is not active when it gets removed', () => {
+        const currentSlide = carousel.get(carousel.current);
+        carousel.remove(currentSlide);
+
+        fixture.detectChanges();
+        expect(currentSlide.active).toBe(false);
+    });
+
     it('Carousel public methods', () => {
         carousel.stop();
 
