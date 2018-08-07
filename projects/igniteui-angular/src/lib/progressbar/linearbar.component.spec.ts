@@ -8,7 +8,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
 
-fdescribe('IgLinearBar', () => {
+describe('IgLinearBar', () => {
     const tickTime = 2000;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
