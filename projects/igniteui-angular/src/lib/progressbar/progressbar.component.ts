@@ -408,6 +408,17 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     @Input()
     public textVisibility = true;
 
+    /**
+     * Sets/gets the text to be displayed inside the `igxCircularBar`.
+     *```html
+     *<igx-circular-bar text="Progress"></igx-circular-bar>
+     *```
+     *```typescript
+     *let text = this.circularBar.text;
+     *```
+     */
+    @Input()
+    public text: string;
 
     /**
      *Animation on progress `IgxCircularProgressBarComponent`. By default it is set to true.
@@ -584,7 +595,14 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
 
     /**
      * @hidden
-     */
+    */
+    public get textContent(): string {
+        return this.text;
+    }
+
+    /**
+     * @hidden
+    */
     public updateProgressDirectly(val: number) {
         super.updateProgressDirectly(val);
 
