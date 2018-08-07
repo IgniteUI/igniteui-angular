@@ -301,21 +301,26 @@ export class ColumnDefinitions {
     public static movableColumns = `
         <igx-column [movable]="true" field="ID" width="150px"
                     [resizable]="isResizable"
+                    [editable]="isEditable"
                     [sortable]="isSortable"
+                    [hidden]="isHidden"
                     [filterable]="isFilterable">
         </igx-column>
         <igx-column [movable]="true" field="Name" width="150px"
                     [resizable]="isResizable"
+                    [editable]="isEditable"
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
         <igx-column [movable]="false" field="LastName" width="150px"
                     [resizable]="isResizable"
+                    [editable]="isEditable"
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
         <igx-column [movable]="true" field="Region" width="150px"
                     [resizable]="isResizable"
+                    [editable]="isEditable"
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
@@ -345,4 +350,10 @@ export class EventSubscriptions {
     public static onRowSelectionChange = ` (onRowSelectionChange)="rowSelectionChange($event)"`;
 
     public static onColumnResized = ` (onColumnResized)="columnResized($event)"`;
+
+    public static onColumnMovingStart = ` (onColumnMovingStart)="onColumnMovingStarted($event)"`;
+
+    public static onColumnMoving = ` (onColumnMoving)="onColumnMoving($event)"`;
+
+    public static onColumnMovingEnd = ` (onColumnMovingEnd)="onColumnMovingEnded($event)"`;
 }
