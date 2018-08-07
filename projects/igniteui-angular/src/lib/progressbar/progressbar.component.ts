@@ -368,6 +368,8 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     @Input()
     public textVisibility = true;
 
+    @Input()
+    public text: string;
 
     /**
      *Animation on progress `IgxCircularProgressBarComponent`. By default it is set to true.
@@ -509,6 +511,10 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
         });
 
         super.updateProgressSmoothly(val, direction);
+    }
+
+    public get textContent(): string {
+        return this.text;
     }
 
     /**

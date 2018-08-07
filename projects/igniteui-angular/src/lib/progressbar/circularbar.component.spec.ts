@@ -183,6 +183,7 @@ describe('IgCircularBar', () => {
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
                 .querySelector('.progress-circular');
+            let expectedTextContent = componentInstance.circularBar.value + '%';
 
             tick(tickTime);
             fixture.detectChanges();
@@ -193,6 +194,18 @@ describe('IgCircularBar', () => {
             expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
             expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
             expect(progressBarElem.children[2].classList.value).toBe('progress-circular__text');
+            expect(progressBarElem.children[2].textContent.trim()).toMatch(expectedTextContent);
+
+            componentInstance.circularBar.text = 'No progress';
+            fixture.detectChanges();
+
+            expectedTextContent = 'No progress';
+            expect(progressBarElem.children[2].textContent.trim()).toMatch(expectedTextContent);
+
+            componentInstance.circularBar.textVisibility = false;
+            fixture.detectChanges();
+
+            expect(progressBarElem.children[2].classList.value).toMatch('progress-circular__text--hidden');
         }));
 
         it('The max representation should respond correctly to passed maximum value', fakeAsync(() => {
