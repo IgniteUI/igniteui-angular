@@ -17,6 +17,7 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
+import { GridSearchHiddenColumnsComponent } from '../test-utils/grid-samples.spec';
 
 describe('Column Hiding UI', () => {
     let fix;
@@ -29,7 +30,8 @@ describe('Column Hiding UI', () => {
                 GridWithColumnChooserComponent,
                 ColumnHidingInlineComponent,
                 GridWithGroupColumnsComponent,
-                ColumnHidingToggleComponent
+                ColumnHidingToggleComponent,
+                GridSearchHiddenColumnsComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -1050,6 +1052,33 @@ describe('Column Hiding UI', () => {
             expect(getColumnChooserButtonIcon().innerText.toLowerCase()).toBe('visibility');
         });
     });
+
+    describe('Dynamic hidden chnages: ', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(GridSearchHiddenColumnsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+
+            grid.cdr.detectChanges();
+        });
+
+        it('the grid properly resizes its columns width when column visibility is changed', () => {
+            const calcWidth = grid.calcWidth;
+            expect(Math.abs(parseInt(grid.columnWidth, 10) - (calcWidth / grid.visibleColumns.length))).toBeLessThan(1);
+
+            changeColumnVisibility('Name');
+            expect(Math.abs(parseInt(grid.columnWidth, 10) - (calcWidth / grid.visibleColumns.length))).toBeLessThan(1);
+
+            changeColumnVisibility('Name');
+            expect(Math.abs(parseInt(grid.columnWidth, 10) - (calcWidth / grid.visibleColumns.length))).toBeLessThan(1);
+        });
+    });
+
+    function changeColumnVisibility(name: string): void {
+        const column = grid.getColumnByName(name);
+        column.hidden = !column.hidden;
+    }
 
     function getColumnChooserButton() {
         const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
