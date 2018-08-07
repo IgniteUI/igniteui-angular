@@ -3,7 +3,7 @@
         Displays progress determined by the current state.
     </app-page-header>
     <section class="sample-content">
-        <article class="linear-samples sample-column">
+        <!-- <article class="linear-samples sample-column">
             <h4 class="sample-title">Linear progress bar</h4>
             <div class="linear-container">
                 <igx-linear-bar [striped]="false" [value]="currentValue" [max]="200">
@@ -34,7 +34,7 @@
         <article class="linear-samples sample-column">
             <h4 class="sample-title">Striped linear progress bar</h4>
             <div class="linear-container">
-                <igx-linear-bar striped="true" [value]="currentValue">
+                <igx-linear-bar striped="true" [value]="currentValue" [text]="heya" [textVisibility]="true">
                 </igx-linear-bar>
             </div>
 
@@ -94,7 +94,10 @@
                     <igx-circular-bar [value]="44"></igx-circular-bar>
                 </div>
             </div>
-        </article>
+        </article> -->
+        <igx-linear-bar striped="true" value="50" text="heya" [textVisibility]="true">
+            </igx-linear-bar>
+            <igx-circular-bar [value]="44" text="heya" [textVisibility]="true"></igx-circular-bar>
     </section>
 
     <div class="button-container">

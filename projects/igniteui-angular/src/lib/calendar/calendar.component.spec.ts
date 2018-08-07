@@ -319,9 +319,6 @@ describe('IgxCalendar', () => {
                 const calendarHeader = dom.query(By.css('.igx-calendar__header'));
                 expect(calendarHeader).toBeFalsy();
             });
-            // fixture.componentInstance.model = new Date();
-            // fixture.detectChanges();
-
         }));
 
         it('Calendar DOM structure - year view | month view', () => {
@@ -363,7 +360,7 @@ describe('IgxCalendar', () => {
             expect(calendar.viewDate.getFullYear()).toEqual(2014);
         });
 
-        it('Calendar selection - single with event', () => {
+        it('Calendar selection - single with event', async(() => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
@@ -403,9 +400,9 @@ describe('IgxCalendar', () => {
                     )
                 ).toBe(false);
             });
-        });
+        }));
 
-        it('Calendar selection - outside of current month - 1', () => {
+        it('Calendar selection - outside of current month - 1', async(() => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
@@ -428,9 +425,9 @@ describe('IgxCalendar', () => {
                         .nativeElement.textContent.includes('Jul')
                 ).toBe(true);
             });
-        });
+        }));
 
-        it('Calendar selection - outside of current month - 2', () => {
+        it('Calendar selection - outside of current month - 2', async(() => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
@@ -451,12 +448,11 @@ describe('IgxCalendar', () => {
                         .nativeElement.textContent.includes('May')
                 ).toBe(true);
             });
-        });
+        }));
 
-        it('Calendar selection - single through API', () => {
+        it('Calendar selection - single through API', async(() => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
-
             fixture.whenStable().then(() => {
                 fixture.detectChanges();
                 const target = dom.query(By.css('.igx-calendar__date--selected'));
@@ -488,9 +484,9 @@ describe('IgxCalendar', () => {
                     )
                 ).toBe(false);
             });
-        });
+        }));
 
-        it('Calendar selection - multiple with event', () => {
+        it('Calendar selection - multiple with event', async(() => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
@@ -543,9 +539,9 @@ describe('IgxCalendar', () => {
                     )
                 ).toBe(false);
             });
-        });
+        }));
 
-        it('Calendar selection - multiple through API', () => {
+        it('Calendar selection - multiple through API', async(() => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
@@ -597,9 +593,9 @@ describe('IgxCalendar', () => {
                     )
                 ).toBe(true);
             });
-        });
+        }));
 
-        it('Calendar selection - range with event', () => {
+        it('Calendar selection - range with event', async(() => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
@@ -674,9 +670,9 @@ describe('IgxCalendar', () => {
                     ).toBe(true);
                 });
             });
-        });
+        }));
 
-        it('Calendar selection - range through API', () => {
+        it('Calendar selection - range through API', async(() => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
@@ -739,7 +735,7 @@ describe('IgxCalendar', () => {
                     ).toBe(true);
                 }
             });
-        });
+        }));
 
         it('Calendar keyboard navigation - PageUp/PageDown', () => {
             const calendar = fixture.componentInstance.calendar;
@@ -771,7 +767,7 @@ describe('IgxCalendar', () => {
             expect(calendar.viewDate.getFullYear()).toEqual(2018);
         });
 
-        it('Calendar keyboard navigation - Home/End/Enter', () => {
+        it('Calendar keyboard navigation - Home/End/Enter', async(() => {
             fixture.whenStable().then(() => {
                 fixture.detectChanges();
                 const calendar = fixture.componentInstance.calendar;
@@ -799,9 +795,9 @@ describe('IgxCalendar', () => {
 
                 expect((calendar.value as Date).toDateString()).toMatch(new Date(2017, 5, 1).toDateString());
             });
-        });
+        }));
 
-        it('Calendar keyboard navigation - Arrow keys', () => {
+        it('Calendar keyboard navigation - Arrow keys', async(() => {
             fixture.whenStable().then(() => {
                 const calendar = fixture.componentInstance.calendar;
                 const dom = fixture.debugElement;
@@ -836,7 +832,7 @@ describe('IgxCalendar', () => {
 
                 expect(document.activeElement.textContent.trim()).toMatch('1');
             });
-        });
+        }));
 
         it('Calendar date should persist the focus when select date in the (next/prev) month.', ((done) => {
             const component = fixture.debugElement.query(By.css('.igx-calendar'));
@@ -844,7 +840,7 @@ describe('IgxCalendar', () => {
             const calendarMonth = calendar.getCalendarMonth;
             let value = calendarMonth[0][4];
 
-            UIInteractions.triggerKeyDownEvtUponElem('Home', component.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('Home', component.nativeElement, true);
             fixture.detectChanges();
 
             let date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
@@ -861,7 +857,7 @@ describe('IgxCalendar', () => {
                 fixture.detectChanges();
                 date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
                 expect(document.activeElement).toBe(date);
-                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement, true);
                 fixture.detectChanges();
                 setTimeout(() => {
                     fixture.detectChanges();
