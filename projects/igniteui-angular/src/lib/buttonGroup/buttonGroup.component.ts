@@ -11,11 +11,14 @@ import {
     Output,
     QueryList,
     Renderer2,
-    ViewChildren
+    ViewChildren,
+    OnDestroy
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import { IgxButtonDirective, IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/index';
+import { takeUntil } from '../../../../../node_modules/rxjs/operators';
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 let NEXT_ID = 0;
@@ -45,8 +48,10 @@ let NEXT_ID = 0;
     templateUrl: 'buttongroup-content.component.html'
 })
 
-export class IgxButtonGroupComponent implements AfterViewInit {
+export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     private _disabled = false;
+    protected buttonClickNotifier$ = new Subject<boolean>();
+    protected queryListNotifier$ = new Subject<boolean>();
 
     @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
     @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
@@ -280,8 +285,8 @@ export class IgxButtonGroupComponent implements AfterViewInit {
         }
 
         this.selectedIndexes.push(index);
+        button.selected = true;
 
-        this._renderer.setAttribute(buttonElement, 'data-selected', 'true');
         this._renderer.setAttribute(buttonElement, 'aria-pressed', 'true');
         this._renderer.addClass(buttonElement, 'igx-button-group__item--selected');
 
@@ -323,8 +328,8 @@ export class IgxButtonGroupComponent implements AfterViewInit {
         }
 
         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
+        button.selected = false;
 
-        this._renderer.setAttribute(buttonElement, 'data-selected', 'false');
         this._renderer.setAttribute(buttonElement, 'aria-pressed', 'false');
         this._renderer.removeClass(buttonElement, 'igx-button-group__item--selected');
 
@@ -340,23 +345,43 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      * @hidden
      */
     public ngAfterViewInit() {
-        // initial configuration
-        this.buttons.forEach((button, index) => {
-            const buttonElement = button.nativeElement;
+        const initButtons = () => {
+            // Cancel any existing buttonClick subscriptions
+            this.buttonClickNotifier$.next();
 
-            if (this.disabled) {
-                button.disabled = true;
-            }
+            // initial configuration
+            this.buttons.forEach((button, index) => {
+                const buttonElement = button.nativeElement;
 
-            if (!button.disabled && buttonElement.getAttribute('data-selected') === 'true') {
-                this.selectButton(index);
-            }
+                if (this.disabled) {
+                    button.disabled = true;
+                }
 
-            button.buttonClick.subscribe((ev) => this._clickHandler(ev, index));
-            this._renderer.addClass(buttonElement, 'igx-button-group__item');
-        });
+                if (!button.disabled && button.selected) {
+                    this.selectButton(index);
+                }
+
+                button.buttonClick.pipe(takeUntil(this.buttonClickNotifier$)).subscribe((ev) => this._clickHandler(ev, index));
+                this._renderer.addClass(buttonElement, 'igx-button-group__item');
+            });
+        };
+
+        this.viewButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => initButtons());
+        this.templateButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => initButtons());
+        initButtons();
 
         this._cdr.detectChanges();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.buttonClickNotifier$.next();
+        this.buttonClickNotifier$.complete();
+
+        this.queryListNotifier$.next();
+        this.queryListNotifier$.complete();
     }
 
     /**

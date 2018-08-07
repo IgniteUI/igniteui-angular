@@ -112,6 +112,15 @@ export class IgxButtonDirective {
     }
 
     /**
+     * Gets or sets whether the button is selected.
+     * ```html
+     * <button igxButton="flat" [selected]="button.selected"></button>
+     * ```
+     * @memberof IgxButtonDirective
+     */
+    @Input() public selected = false;
+
+    /**
      *@hidden
      */
     @HostListener('click',  ['$event'])
