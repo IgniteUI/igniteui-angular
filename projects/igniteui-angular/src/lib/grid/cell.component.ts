@@ -377,26 +377,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     @HostBinding('class')
     get styleClasses(): string {
-        const defaultClasses = [
-            'igx-grid__td igx-grid__td--fw',
-            this.column.cellClasses
-        ];
-
-        const classList = {
-            'igx_grid__cell--edit': this.inEditMode,
-            'igx-grid__td--number': this.column.dataType === DataType.Number,
-            'igx-grid__td--editing': this.inEditMode,
-            'igx-grid__th--pinned': this.column.pinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__td--selected': this.selected
-        };
-
-        Object.entries(classList).forEach(([klass, value]) => {
-            if (value) {
-                defaultClasses.push(klass);
-            }
-        });
-        return defaultClasses.join(' ');
+        if (this.column.dataType === DataType.Number) {
+            return `${this.defaultCssClass} ${this.column.cellClasses} ${this.numberCssClass}`;
+        } else {
+            return `${this.defaultCssClass} ${this.column.cellClasses}`;
+        }
     }
 
     /**
@@ -460,6 +445,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     set focused(val: boolean) {
         this.isFocused = val;
     }
+
 
     /**
      * Gets whether the cell is stored in a pinned column.
@@ -534,6 +520,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * @hidden
      */
     public editValue;
+    protected defaultCssClass = 'igx-grid__td';
+    protected numberCssClass = 'igx-grid__td--number';
     protected isFocused = false;
     protected isSelected = false;
     protected chunkLoadedHor;

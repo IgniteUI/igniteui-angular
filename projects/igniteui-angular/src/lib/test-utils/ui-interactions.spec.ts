@@ -1,3 +1,7 @@
+export function wait(ms = 0) {
+    return new Promise((resolve, reject) => setTimeout(resolve, ms));
+}
+
 export class UIInteractions {
 
     public static sendInput(element, text, fix?) {
@@ -80,14 +84,5 @@ export class UIInteractions {
             element.dispatchEvent(pointerEvent);
             resolve();
         });
-    }
-
-    public static clearOverlay() {
-        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
-        Array.from(overlays).forEach(element => {
-            element.remove();
-        });
-        document.documentElement.scrollTop = 0;
-        document.documentElement.scrollLeft = 0;
     }
 }

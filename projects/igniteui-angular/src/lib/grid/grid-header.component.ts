@@ -38,29 +38,12 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public gridID: string;
 
     @HostBinding('class')
-    get styleClasses(): string {
-        const defaultClasses = [
-            'igx-grid__th--fw',
-            this.column.headerClasses
-        ];
-
-        const classList = {
-            'igx-grid__th': !this.column.columnGroup,
-            'asc': this.ascending,
-            'desc': this.descending,
-            'igx-grid__th--number': this.column.dataType === DataType.Number,
-            'igx-grid__th--sorted': this.sorted,
-            'igx-grid__drag-col-header': this.dragged,
-            'igx-grid__th--pinned': this.isPinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
-        };
-
-        Object.entries(classList).forEach(([klass, value]) => {
-            if (value) {
-                defaultClasses.push(klass);
-            }
-        });
-        return defaultClasses.join(' ');
+    get styleClasses() {
+        return[
+            this.column.columnGroup ? '' : `${this.defaultCssClass}`,
+            this.column.headerClasses,
+            this.column.dataType === DataType.Number ? `${this.numberCssClass}` : ''
+        ].join(' ');
     }
 
     @HostBinding('style.min-width')
@@ -94,6 +77,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return 'none';
     }
 
+    @HostBinding('class.igx-grid__th--sorted')
     get sorted() {
         return this.sortDirection !== SortingDirection.None;
     }
@@ -131,6 +115,8 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public resizeEndTimeout = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent) ? 200 : 0;
 
     protected sortDirection = SortingDirection.None;
+    protected defaultCssClass = 'igx-grid__th';
+    protected numberCssClass = 'igx-grid__th--number';
 
     private _startResizePos;
     private _pinnedMaxWidth;

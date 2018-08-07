@@ -7,7 +7,7 @@ import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, 
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../core/utils';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Grid Toolbar', () => {
     let fixture;
@@ -35,7 +35,7 @@ describe('IgxGrid - Grid Toolbar', () => {
     }));
 
     afterEach(() => {
-        UIInteractions.clearOverlay();
+        HelperUtils.clearOverlay();
     });
 
     it('testing toolbar visibility', () => {

@@ -16,9 +16,9 @@ describe('IgxGrid - Column properties', () => {
             declarations: [
                 ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,
+                ColumnHiddenFromMarkupComponent,
                 ColumnCellFormatterComponent,
-                ColumnHaederClassesComponent,
-                ColumnHiddenFromMarkupComponent
+                ColumnHaederClassesComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -225,7 +225,7 @@ describe('IgxGrid - Column properties', () => {
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent)
 })
 export class ColumnsFromIterableComponent {
-    public data = SampleTestData.personIDNameData;
+    public data = SampleTestData.personIDNameData();
     public columns = ['ID', 'Name'];
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -244,7 +244,7 @@ export class ColumnsFromIterableComponent {
     `
 })
 export class TemplatedColumnsComponent {
-    public data = SampleTestData.personIDNameData;
+    public data = SampleTestData.personIDNameData();
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
