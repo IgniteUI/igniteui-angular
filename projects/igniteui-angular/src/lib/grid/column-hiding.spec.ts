@@ -13,9 +13,9 @@ import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
 import { ColumnDisplayOrder } from './column-chooser-base';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { GridSearchHiddenColumnsComponent } from '../test-utils/grid-samples.spec';
 
@@ -454,22 +454,26 @@ describe('Column Hiding UI', () => {
             expect(filterInput.placeholder).toBe('@\#&*');
         });
 
-        it('filters columns on every keystroke in filter input.', (done) => {
+        it('filters columns on every keystroke in filter input.', (async () => {
             const filterInput = getFilterInput();
-            UIInteractions.sendInput(filterInput, 'r', fix).then(() => {
-                expect(columnChooser.columnItems.length).toBe(3);
-                UIInteractions.sendInput(filterInput, 're', fix).then(() => {
-                    expect(columnChooser.columnItems.length).toBe(2);
-                    UIInteractions.sendInput(filterInput, 'r', fix).then(() => {
-                        expect(columnChooser.columnItems.length).toBe(3);
-                        UIInteractions.sendInput(filterInput, '', fix).then(() => {
-                            expect(columnChooser.columnItems.length).toBe(5);
-                            done();
-                        });
-                    });
-                });
-            });
-        });
+
+
+            UIInteractions.sendInput(filterInput, 'r');
+            await wait();
+            expect(columnChooser.columnItems.length).toBe(3);
+
+            UIInteractions.sendInput(filterInput, 're');
+            await wait();
+            expect(columnChooser.columnItems.length).toBe(2);
+
+            UIInteractions.sendInput(filterInput, 'r');
+            await wait();
+            expect(columnChooser.columnItems.length).toBe(3);
+
+            UIInteractions.sendInput(filterInput, '');
+            await wait();
+            expect(columnChooser.columnItems.length).toBe(5);
+        }));
 
         it('filters columns according to the specified filter criteria.', fakeAsync(() => {
             columnChooser.filterCriteria = 'd';
