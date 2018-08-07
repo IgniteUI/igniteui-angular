@@ -8,7 +8,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
 
-describe('IgLinearBar', () => {
+fdescribe('IgLinearBar', () => {
     const tickTime = 2000;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -183,19 +183,16 @@ describe('IgLinearBar', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         fix.detectChanges();
 
+        tick(tickTime);
         const datepicker = fix.componentInstance.linearBar;
         const expectedRes = fix.componentInstance.value;
-        fix.whenStable().then(() => {
-            expect(datepicker.value).toEqual(expectedRes);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            datepicker.value = '0345-234';
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(datepicker.value).toEqual(expectedRes);
-        });
+        expect(datepicker.value).toEqual(expectedRes);
+
+        datepicker.value = '0345-234';
+
+        tick(tickTime);
+        fix.detectChanges();
+        expect(datepicker.value).toEqual(expectedRes);
     }));
 
     it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
@@ -255,7 +252,7 @@ describe('IgLinearBar', () => {
             expect(progressBarContainer.attributes['aria-valuenow'].textContent).toBe(expectedValue.toString());
         }));
 
-        it('Should change class suffix which would be relevant to the type that had been passed', fakeAsync(() => {
+        it('Should change class suffix which would be relevant to the type that had been passed', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
@@ -263,30 +260,30 @@ describe('IgLinearBar', () => {
                 fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector('.progress-linear__bar');
             const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
 
-            expect(progressBarElem.classList.contains('progress-linear__bar-progress--default')).toBeTruthy();
+            expect(progressBarElem.classList.contains('progress-linear__bar-progress--default')).toBe(true);
 
             fixture.componentInstance.type = 'info';
             fixture.detectChanges();
 
-            expect(progressBarElem.classList.contains('progress-linear__bar-progress--info')).toBeTruthy();
-        }));
+            expect(progressBarElem.classList.contains('progress-linear__bar-progress--info')).toBe(true);
+        });
 
-        it('Change progressbar style to be striped', fakeAsync(() => {
+        it('Change progressbar style to be striped', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
             const progressElem = fixture.componentInstance.linearBar.elementRef.nativeElement
                 .getElementsByClassName('progress-linear')[0];
 
-            expect(progressElem.classList.contains('progress-linear--striped')).toBeFalsy();
+            expect(progressElem.classList.contains('progress-linear--striped')).toBe(false);
 
             fixture.componentInstance.striped = true;
             fixture.detectChanges();
 
-            expect(progressElem.classList.contains('progress-linear--striped')).toBeTruthy();
-        }));
+            expect(progressElem.classList.contains('progress-linear--striped')).toBe(true);
+        });
 
-        it('should stay striped when the type has changed', fakeAsync(() => {
+        it('should stay striped when the type has changed', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
@@ -300,8 +297,8 @@ describe('IgLinearBar', () => {
             fixture.componentInstance.striped = true;
             fixture.detectChanges();
 
-            expect(progressBarElem.classList.contains('progress-linear__bar-progress--default')).toBeTruthy();
-            expect(progressElem.classList.contains('progress-linear--striped')).toBeTruthy();
+            expect(progressBarElem.classList.contains('progress-linear__bar-progress--default')).toBe(true);
+            expect(progressElem.classList.contains('progress-linear--striped')).toBe(true);
 
             fixture.componentInstance.type = 'success';
             fixture.detectChanges();
@@ -312,11 +309,9 @@ describe('IgLinearBar', () => {
 
         it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
-            // tick(tickTime);
             fix.detectChanges();
 
             const bar = fix.componentInstance.linearBar;
-            // const compoInst = fix.componentInstance;
             const maxVal = 1.25;
             const val = 0.50;
 
