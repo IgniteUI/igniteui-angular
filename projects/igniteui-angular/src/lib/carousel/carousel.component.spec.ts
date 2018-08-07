@@ -239,30 +239,30 @@ describe('Carousel', () => {
         carousel.pause = true;
 
         carousel.nativeElement.focus();
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
         fixture.detectChanges();
         expect(carousel.current).toEqual(1);
         expect(carousel.get(1).active).toBeTruthy();
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
         fixture.detectChanges();
         expect(carousel.current).toEqual(2);
         expect(carousel.get(1).active).toBe(false);
         expect(carousel.get(2).active).toBe(true);
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
         fixture.detectChanges();
         expect(carousel.current).toEqual(3);
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
         fixture.detectChanges();
         expect(carousel.current).toEqual(0);
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement, true);
         fixture.detectChanges();
         expect(carousel.current).toEqual(3);
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement, true);
         fixture.detectChanges();
         expect(carousel.current).toEqual(2);
     });
