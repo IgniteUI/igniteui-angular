@@ -1156,7 +1156,7 @@ export class ColumnHidingInlineComponent extends GridData implements AfterViewIn
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
     @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
 
-    public data = SampleTestData.productInfoData;
+    public data = SampleTestData.productInfoData();
     public height = '500px';
     public width = '500px';
 
@@ -1200,7 +1200,7 @@ export class GridWithColumnChooserComponent extends GridData implements AfterVie
     @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
     @ViewChild(IgxDropDownComponent) public dropDown: IgxColumnHidingComponent;
 
-    public data = SampleTestData.productInfoData;
+    public data = SampleTestData.productInfoData();
     public height = '500px';
     public width = '500px';
 

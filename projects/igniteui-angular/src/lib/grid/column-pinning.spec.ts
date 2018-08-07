@@ -289,7 +289,7 @@ export class ColumnPinningComponent extends GridData implements AfterViewInit {
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
     @ViewChild(IgxColumnPinningComponent) public chooser: IgxColumnPinningComponent;
 
-    public data = SampleTestData.productInfoData;
+    public data = SampleTestData.productInfoData();
     public height = '500px';
     public width = '500px';
 
@@ -332,7 +332,7 @@ export class GridWithColumnChooserComponent extends GridData implements AfterVie
     @ViewChild(IgxDropDownComponent) public dropDown: IgxDropDownComponent;
 
 
-    public data = SampleTestData.productInfoData;
+    public data = SampleTestData.productInfoData();
     public height = '500px';
     public width = '500px';
 
@@ -365,7 +365,7 @@ export class GridWithGroupColumnsComponent implements AfterViewInit {
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
     @ViewChild(IgxColumnPinningComponent) public chooser: IgxColumnPinningComponent;
 
-    data = SampleTestData.contactInfoData;
+    data = SampleTestData.contactInfoData();
     // tslint:enable:max-line-length
 
     constructor(private cdr: ChangeDetectorRef) {}

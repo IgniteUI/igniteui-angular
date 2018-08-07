@@ -400,7 +400,7 @@ describe('Excel Exporter', () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        const data = SampleTestData.personJobData;
+        const data = SampleTestData.personJobData();
 
         const rows = [];
         exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
