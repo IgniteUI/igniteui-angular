@@ -35,7 +35,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     private _lastSearchInfo: ISearchInfo;
     private _div = null;
-    private _observer: MutationObserver;
+    private _observer: MutationObserver = null;
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
@@ -97,35 +97,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
 
-        const callback = (mutationList) => {
-            mutationList.forEach((mutation) => {
-                const removedNodes = new Array(... mutation.removedNodes);
-                removedNodes.forEach((n) => {
-                    if (n === this._container) {
-                        this._nodeWasRemoved = true;
-                        this.clearChildElements(false);
-                    }
-                });
-
-                const addedNodes = new Array(... mutation.addedNodes);
-                addedNodes.forEach((n) => {
-                    if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
-                        this._container = this.parentElement.firstElementChild;
-                        this._nodeWasRemoved = false;
-
-                        this._forceEvaluation = true;
-                        this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
-                        this._forceEvaluation = false;
-
-                        this.activateIfNecessary();
-                    }
-                });
-            });
-        };
-
-        this._observer = new MutationObserver(callback);
-        this._observer.observe(this.parentElement, {childList: true});
-
         IgxTextHighlightDirective.onActiveElementChanged.subscribe((groupName) => {
             if (this.groupName === groupName) {
                 if (this._activeElementIndex !== -1) {
@@ -137,7 +108,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     }
 
     ngOnDestroy() {
-        this._observer.disconnect();
+        if (this._observer !== null) {
+            this._observer.disconnect();
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -210,6 +183,45 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
         if (group.columnIndex === this.column && group.rowIndex === this.row && group.page === this.page) {
             this.activate(group.index);
+        }
+    }
+
+    /**
+     * Attaches a MutationObserver to the parentElement and watches for when the container element is removed/readded to the DOM.
+     * Should be used only when necessary as using many observers may lead to performance degradation.
+     */
+    public observe(): void {
+        if (this._observer === null) {
+            const callback = (mutationList) => {
+                mutationList.forEach((mutation) => {
+                    const removedNodes = new Array(... mutation.removedNodes);
+                    removedNodes.forEach((n) => {
+                        if (n === this._container) {
+                            this._nodeWasRemoved = true;
+                            this.clearChildElements(false);
+                        }
+                    });
+
+                    const addedNodes = new Array(... mutation.addedNodes);
+                    addedNodes.forEach((n) => {
+                        if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
+                            this._container = this.parentElement.firstElementChild;
+                            this._nodeWasRemoved = false;
+
+                            this._forceEvaluation = true;
+                            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
+                            this._forceEvaluation = false;
+
+                            this.activateIfNecessary();
+                            this._observer.disconnect();
+                            this._observer = null;
+                        }
+                    });
+                });
+            };
+
+            this._observer = new MutationObserver(callback);
+            this._observer.observe(this.parentElement, {childList: true});
         }
     }
 
