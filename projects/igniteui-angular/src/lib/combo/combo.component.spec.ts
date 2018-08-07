@@ -1750,7 +1750,8 @@ describe('igxCombo', () => {
             }
 
             expect(errorMessage).toBe('');
-            expect(combo.data).toBe([]);
+            expect(combo.data).not.toBe(null);
+            expect(combo.data).not.toBe(undefined);
         });
         it('Should not throw error when setting data to undefined', () => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -1767,7 +1768,8 @@ describe('igxCombo', () => {
             }
 
             expect(errorMessage).toBe('');
-            expect(combo.data).toBe([]);
+            expect(combo.data).not.toBe(null);
+            expect(combo.data).not.toBe(undefined);
         });
         it('Should render selected items properly', async(() => {
             let selectedItem: HTMLElement;
