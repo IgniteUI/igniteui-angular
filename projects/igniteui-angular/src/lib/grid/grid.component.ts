@@ -2416,6 +2416,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const newList = this._resetColumnList(list);
         this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
+        this._columns = this.columnList.toArray();
 
         if (activeColumn !== null && activeColumn !== undefined) {
             const newIndex = newList.indexOf(activeColumn);
