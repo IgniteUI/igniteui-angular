@@ -192,25 +192,20 @@ describe('IgCircularBar', () => {
     });
 
     // UI TESTS
-    describe('Circularbar UI tests', () => {
+    describe('Circular bar UI TESTS', () => {
         it('The value representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
-
-            const expectedValue = 30;
-
-            fixture.componentInstance.value = expectedValue;
-
-            tick(tickTime);
             fixture.detectChanges();
-            tick(tickTime);
 
+            const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
                 .querySelector('.progress-circular');
 
+            tick(tickTime);
             fixture.detectChanges();
 
-            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(expectedValue.toString());
-            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe('100');
+            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
+            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
 
             expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
             expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
@@ -219,28 +214,23 @@ describe('IgCircularBar', () => {
 
         it('The max representation should respond correctly to passed maximum value', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
-
-            const expectedValue = 30;
-
-            tick(tickTime);
             fixture.detectChanges();
-            tick(tickTime);
 
+            const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
                 .querySelector('.progress-circular');
 
-            fixture.detectChanges();
-
-            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(expectedValue.toString());
-            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe('100');
-
-            fixture.componentInstance.max = 200;
-
             tick(tickTime);
             fixture.detectChanges();
-            tick(tickTime);
 
-            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe('200');
+            expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
+            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
+
+            componentInstance.max = 200;
+            tick(tickTime);
+            fixture.detectChanges();
+
+            expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
             expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
             expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
             expect(progressBarElem.children[2].classList.value).toBe('progress-circular__text');

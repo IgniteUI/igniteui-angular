@@ -183,13 +183,14 @@ describe('IgLinearBar', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         fix.detectChanges();
 
-        tick(tickTime);
         const datepicker = fix.componentInstance.linearBar;
         const expectedRes = fix.componentInstance.value;
+
+        tick(tickTime);
+        fix.detectChanges();
         expect(datepicker.value).toEqual(expectedRes);
 
         datepicker.value = '0345-234';
-
         tick(tickTime);
         fix.detectChanges();
         expect(datepicker.value).toEqual(expectedRes);
@@ -212,44 +213,22 @@ describe('IgLinearBar', () => {
         expect(bar.step).toBe(expectedValue);
     });
 
-    it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
-        const fix = TestBed.createComponent(LinearBarComponent);
-        fix.detectChanges();
-
-        const bar = fix.componentInstance.linearBar;
-        const ONE_PERCENT = 0.01;
-        let expectedValue = bar.max * ONE_PERCENT;
-        expect(bar.step).toBe(expectedValue);
-
-        const maxVal = 15345;
-        fix.componentInstance.max = maxVal;
-        fix.detectChanges();
-
-        expectedValue = maxVal * ONE_PERCENT;
-        expect(bar.step).toBe(expectedValue);
-    });
-
     // UI Tests
-    describe('Linear bar UI tests', () => {
+    describe('UI tests linear bar', () => {
         it('The percentage representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(LinearBarComponent);
-
-            const expectedValue = 30;
-
-            fixture.componentInstance.value = expectedValue;
-
-            tick(tickTime);
             fixture.detectChanges();
-            tick(tickTime);
 
+            const componentInstance = fixture.componentInstance;
             const progressBarContainer =
                 fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector('.progress-linear__bar');
             const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
 
+            tick(tickTime);
             fixture.detectChanges();
 
-            expect(progressBarElem.style.width).toBe(expectedValue + '%');
-            expect(progressBarContainer.attributes['aria-valuenow'].textContent).toBe(expectedValue.toString());
+            expect(progressBarElem.style.width).toBe(componentInstance.value + '%');
+            expect(progressBarContainer.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
         }));
 
         it('Should change class suffix which would be relevant to the type that had been passed', () => {
@@ -309,9 +288,11 @@ describe('IgLinearBar', () => {
 
         it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
+            // tick(tickTime);
             fix.detectChanges();
 
             const bar = fix.componentInstance.linearBar;
+            // const compoInst = fix.componentInstance;
             const maxVal = 1.25;
             const val = 0.50;
 
