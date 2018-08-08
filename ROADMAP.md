@@ -13,6 +13,7 @@
 7. Typography Updates 
 8. Tooltip
 9. Vertical Tabs
+10.Row Editing with transactions 
 
 
 # Previous Milestones
