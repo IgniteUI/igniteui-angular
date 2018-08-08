@@ -148,6 +148,10 @@
         z-index: 2;
     }
 
+    %igx-list-item-content {
+        background-color: yellow;
+    }
+
     %igx-list-item--active {
         color: --var($theme, 'item-text-color-active');
         background-color: --var($theme, 'item-background-active');

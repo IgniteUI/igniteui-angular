@@ -33,10 +33,12 @@ export class IgxListItemComponent implements IListChild {
      *@hidden
      */
     private _panState: IgxListPanState = IgxListPanState.NONE;
+
     /**
      *@hidden
      */
     private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
+
     /**
      *@hidden
      */
@@ -48,6 +50,7 @@ export class IgxListItemComponent implements IListChild {
         private elementRef: ElementRef,
         private _renderer: Renderer2) {
     }
+
     /**
      * Sets/gets whether the `list item` is a header.
      * ```html
@@ -60,6 +63,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @Input()
     public isHeader: boolean;
+
     /**
      * Sets/gets whether the `list item` is hidden.
      * By default the `hidden` value is `false`.
@@ -73,6 +77,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @Input()
     public hidden = false;
+
     /**
      * Gets the `role` attribute of the `list item`.
      * ```typescript
@@ -84,6 +89,7 @@ export class IgxListItemComponent implements IListChild {
     public get role() {
         return this.isHeader ? 'separator' : 'listitem';
     }
+
     /**
      * Sets/gets the `aria-label` attribute of the `list item`.
      * ```typescript
@@ -96,6 +102,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostBinding('attr.aria-label')
     public ariaLabel: string;
+
     /**
      * Gets the `touch-action` style of the `list item`.
      * ```typescript
@@ -104,6 +111,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostBinding('style.touch-action')
     public touchAction = 'pan-y';
+
     /**
      * Indicates whether `list item` should have header style.
      * ```typescript
@@ -115,6 +123,7 @@ export class IgxListItemComponent implements IListChild {
     get headerStyle(): boolean {
         return this.isHeader;
     }
+
     /**
      * Applies the inner style of the `list item` if the item is not counted as header.
      * ```typescript
@@ -126,6 +135,7 @@ export class IgxListItemComponent implements IListChild {
     get innerStyle(): boolean {
         return !this.isHeader;
     }
+
     /**
      * Returns string value which describes the display mode of the `list item`.
      * ```typescript
@@ -137,6 +147,7 @@ export class IgxListItemComponent implements IListChild {
     get display(): string {
         return this.hidden ? 'none' : '';
     }
+
     /**
      *@hidden
      */
@@ -144,22 +155,26 @@ export class IgxListItemComponent implements IListChild {
     clicked(evt) {
         this.list.onItemClicked.emit({ item: this, event: evt });
     }
+
     /**
      *@hidden
      */
     @HostListener('panstart', ['$event'])
     panStart(ev) {
+        //console.log("@@@ list-item panStart");
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
 
         this._currentLeft = this.left;
     }
+
     /**
      *@hidden
      */
     @HostListener('panmove', ['$event'])
     panMove(ev) {
+        //console.log("@@@ list-item panMove " + ev.deltaX);
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
@@ -167,16 +182,22 @@ export class IgxListItemComponent implements IListChild {
         const isPanningToLeft = ev.deltaX < 0;
 
         if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
-            this.left = Math.max(this.maxLeft, this.left + ev.deltaX);
+            let newLeft = Math.max(this.maxLeft, /*this.left +*/ ev.deltaX);
+            //console.log("@@@ new left: " + newLeft);
+            this.left = newLeft;
         } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
-            this.left = Math.min(this.maxRight, this.left + ev.deltaX);
+            let newLeft = Math.min(this.maxRight, /*this.left*/ + ev.deltaX);
+            //console.log("@@@ new left: " + newLeft);
+            this.left = newLeft;
         }
     }
+
     /**
      *@hidden
      */
     @HostListener('panend', ['$event'])
     panEnd(ev) {
+        //console.log("@@@ list-item panEnd");
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
@@ -186,6 +207,7 @@ export class IgxListItemComponent implements IListChild {
         this.performMagneticGrip();
 
         if (oldPanState !== this._panState) {
+            //console.log("@@@ onLeftPan onRighPan");
             this.list.onPanStateChange.emit({ oldState: oldPanState, newState: this._panState, item: this });
             if (this._panState === IgxListPanState.LEFT) {
                 this.list.onLeftPan.emit(this);
@@ -194,6 +216,7 @@ export class IgxListItemComponent implements IListChild {
             }
         }
     }
+
     /**
      * Gets the `panState` of a `list item`.
      * ```typescript
@@ -204,6 +227,7 @@ export class IgxListItemComponent implements IListChild {
     public get panState(): IgxListPanState {
         return this._panState;
     }
+
     /**
      * Gets the `index` of a `list item`.
      * ```typescript
@@ -214,6 +238,7 @@ export class IgxListItemComponent implements IListChild {
     public get index(): number {
         return this.list.children.toArray().indexOf(this);
     }
+
     /**
      * Returns an element reference to the list item.
      * ```typescript
@@ -222,8 +247,11 @@ export class IgxListItemComponent implements IListChild {
      * @memberof IgxListItemComponent
      */
     public get element() {
+        console.log("@@@ ne: ");
+        console.log(this.elementRef.nativeElement);
         return this.elementRef.nativeElement;
     }
+
     /**
      * Gets the width of a `list item`.
      * ```typescript
@@ -236,6 +264,7 @@ export class IgxListItemComponent implements IListChild {
             return this.element.offsetWidth;
         }
     }
+
     /**
      * Gets the maximum left position of the `list item`.
      * ```typescript
@@ -246,6 +275,7 @@ export class IgxListItemComponent implements IListChild {
     public get maxLeft() {
         return -this.width;
     }
+
     /**
      * Gets the maximum right position of the `list item`.
      * ```typescript
@@ -256,12 +286,14 @@ export class IgxListItemComponent implements IListChild {
     public get maxRight() {
         return this.width;
     }
+
     /**
      *@hidden
      */
     private get left() {
         return this.element.offsetLeft;
     }
+
     /**
      *@hidden
      */
@@ -273,6 +305,7 @@ export class IgxListItemComponent implements IListChild {
         }
         this.element.style.left = val;
     }
+
     /**
      *@hidden
      */
@@ -297,6 +330,7 @@ export class IgxListItemComponent implements IListChild {
             }
         }
     }
+
     /**
      *@hidden
      */
