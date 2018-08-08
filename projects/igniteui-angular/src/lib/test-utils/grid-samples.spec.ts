@@ -665,7 +665,9 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
         EventSubscriptions.onColumnInit, '')}`
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
+
     data = SampleTestData.contactInfoDataFull();
+
     width = '500px';
     height = '400px';
     paging = false;
