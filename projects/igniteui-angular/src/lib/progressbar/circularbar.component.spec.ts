@@ -307,7 +307,7 @@ describe('IgCircularBar', () => {
             fixture.detectChanges();
 
             const componentInstance = fixture.componentInstance;
-            const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
+            const progressBarElem = fixture.debugElement.nativeElement
                 .querySelector('.progress-circular');
 
             tick(tickTime);
@@ -326,7 +326,7 @@ describe('IgCircularBar', () => {
             fixture.detectChanges();
 
             const componentInstance = fixture.componentInstance;
-            const progressBarElem = fixture.componentInstance.circularBar.elementRef.nativeElement
+            const progressBarElem = fixture.debugElement.nativeElement
                 .querySelector('.progress-circular');
 
             tick(tickTime);

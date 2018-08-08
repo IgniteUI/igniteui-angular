@@ -106,13 +106,12 @@ export abstract class BaseProgress {
         if (this.valueInPercent === passedValue) {
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
-        } else if (this.isExceedingUpperLimit(progressValue, passedValue, step) ||
-            this.isExceedingLowerLimit(progressValue, passedValue, step)) {
+        } else if (this.isInLimitRange(progressValue, passedValue, step)) {
                 this.updateProgress(val);
                 cancelAnimationFrame(this.requestAnimationId);
         } else {
             this.valueInPercent = progressValue;
-            requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
+            this.requestAnimationId = requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
         }
     }
 
@@ -133,6 +132,13 @@ export abstract class BaseProgress {
         }
 
         return -step;
+    }
+
+    /**
+     * @hidden
+     */
+    private isInLimitRange(val: number, comparator: number, step: number) {
+        return this.isExceedingUpperLimit(val, comparator, step) || this.isExceedingLowerLimit(val, comparator, step);
     }
 
     /**
@@ -389,7 +395,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      */
     @Output() public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
-    constructor(private elementRef: ElementRef) {
+    constructor() {
         super();
     }
 }
@@ -574,25 +580,12 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
         this.onProgressChanged.emit(changedValues);
     }
 
-    /**
-     * @hidden
-     */
-    public get circleRadius() {
-        return this._circleRadius;
-    }
-
-    /**
-     * @hidden
-     */
-    public get circumference() {
-        return 2 * Math.PI * this.circleRadius;
-    }
-
     private _circleRadius = 46;
+    private _circumference = 2 * Math.PI * this._circleRadius;
 
     @ViewChild('circle') private _svgCircle: ElementRef;
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
+    constructor(private renderer: Renderer2) {
         super();
     }
 
@@ -634,7 +627,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     }
 
     private getProgress(percentage: number) {
-        return this.circumference - (percentage * this.circumference / 100);
+        return this._circumference - (percentage * this._circumference / 100);
     }
 }
 
