@@ -6,14 +6,14 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $track-color [null] - The main track color.
-/// @param {Color} $fill-color-default [null] - The track default fill color.
-/// @param {Color} $fill-color-danger [null] - The track danger fill color.
-/// @param {Color} $fill-color-warning [null] - The track warning fill color.
-/// @param {Color} $fill-color-info [null] - The track info fill color.
-/// @param {Color} $fill-color-success [null] - The track success fill color.
-/// @param {Color} $stripes-color [null] - The track stripes color.
-/// @param {Color} $text-color [null] - The track value text color.
+/// @param {Color} $track-color [rgba(0, 0, 0, .12)] - The main track color.
+/// @param {Color} $fill-color-default [primary 500] - The track default fill color.
+/// @param {Color} $fill-color-danger [error 500] - The track danger fill color.
+/// @param {Color} $fill-color-warning [warn 500] - The track warning fill color.
+/// @param {Color} $fill-color-info [info 500] - The track info fill color.
+/// @param {Color} $fill-color-success [success 500] - The track success fill color.
+/// @param {Color} $stripes-color [rgba(255, 255, 255, .7)] - The track stripes color.
+/// @param {Color} $text-color [rgba(0, 0, 0, .62)] - The track value text color.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -63,7 +63,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires em
-/// @requires var
+/// @requires --var
 @mixin igx-progress-linear($theme) {
     @include igx-root-css-vars($theme);
 
@@ -168,9 +168,9 @@
 }
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $base-circle-color [null] - The base circle fill color.
-/// @param {Color} $progress-circle-color [null] - The progress circle fill color.
-/// @param {Color} $text-color [null] - The value text color.
+/// @param {Color} $base-circle-color [rgba(0, 0, 0, .12)] - The base circle fill color.
+/// @param {Color} $progress-circle-color [primary 500] - The progress circle fill color.
+/// @param {Color} $text-color [rgba(0, 0, 0, .62)] - The value text color.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -206,7 +206,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-progress-circular($theme) {
     @include igx-root-css-vars($theme);
 

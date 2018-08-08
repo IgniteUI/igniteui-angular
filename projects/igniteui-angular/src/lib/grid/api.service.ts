@@ -11,7 +11,9 @@ import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
-
+/**
+ *@hidden
+ */
 @Injectable()
 export class IgxGridAPIService {
 
@@ -70,21 +72,23 @@ export class IgxGridAPIService {
         }
     }
 
-    public set_cell_inEditMode(gridId: string, cell,  editMode: boolean) {
+    public set_cell_inEditMode(gridId: string, cell, editMode: boolean) {
         if (!this.editCellState.has(gridId)) {
             this.editCellState.set(gridId, null);
         }
         if (!this.get_cell_inEditMode(gridId) && editMode) {
-            this.editCellState.set(gridId, {cellID: cell.cellID, cell: Object.assign({}, cell)});
+            this.editCellState.set(gridId, { cellID: cell.cellID, cell: Object.assign({}, cell) });
         }
     }
 
     public escape_editMode(gridId, cellId?) {
         const editableCell = this.get_cell_inEditMode(gridId);
         if (editableCell) {
-            if (cellId && cellId.rowID === editableCell.cellID.rowID &&
-                cellId.columnID === editableCell.cellID.columnID) {
+            if (cellId) {
+                if (cellId.rowID === editableCell.cellID.rowID &&
+                    cellId.columnID === editableCell.cellID.columnID) {
                     this.editCellState.delete(gridId);
+                }
             } else {
                 this.editCellState.delete(gridId);
             }
@@ -106,6 +110,8 @@ export class IgxGridAPIService {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
+        } else {
+            return this.get(id).dataRowList.find((row) => row.rowData === rowSelector);
         }
     }
 
@@ -118,10 +124,6 @@ export class IgxGridAPIService {
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
-    }
-
-    public notify(id: string) {
-        this.get(id).eventBus.next(true);
     }
 
     public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
@@ -168,12 +170,14 @@ export class IgxGridAPIService {
             cellObj = this.get(id).columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
         }
         if (cellObj) {
-            const args: IGridEditEventArgs = { row: cellObj.row, cell: cellObj,
-                currentValue: cellObj.value, newValue: editValue };
+            const args: IGridEditEventArgs = {
+                row: cellObj.row, cell: cellObj,
+                currentValue: cellObj.value, newValue: editValue
+            };
             this.get(id).onEditDone.emit(args);
-            const column =  this.get(id).columnList.toArray()[columnID];
+            const column = this.get(id).columnList.toArray()[columnID];
             if (this.get(id).primaryKey) {
-                const index =  this.get(id).data.map((record) => record[this.get(id).primaryKey]).indexOf(rowID);
+                const index = this.get(id).data.map((record) => record[this.get(id).primaryKey]).indexOf(rowID);
                 this.get(id).data[index][column.field] = args.newValue;
             } else {
                 this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
@@ -380,9 +384,9 @@ export class IgxGridAPIService {
         let newExpressionsTree;
         const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
         const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
-                                conditionOrExpressionsTree as IFilteringExpressionsTree : null;
+            conditionOrExpressionsTree as IFilteringExpressionsTree : null;
         const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
-                          null : conditionOrExpressionsTree as IFilteringOperation;
+            null : conditionOrExpressionsTree as IFilteringOperation;
         const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
 
         if (oldExpressionsTreeIndex === -1) {

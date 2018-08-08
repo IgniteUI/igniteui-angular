@@ -1,3 +1,6 @@
+@import '../ripple/ripple-theme';
+@import '../ripple/ripple-component';
+
 ////
 /// @group themes
 /// @access public
@@ -7,12 +10,11 @@
 
 /// Checkbox Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $label-color [null]- The text color used for the label text.
-/// @param {Color} $empty-color [null] - The unchecked border color.
-/// @param {Color} $fill-color [null] - The checked border and fill colors.
-/// @param {Color} $tick-color [null] - The checked mark color.
-/// @param {Color} $disabled-color [null] - The disabled border and fill colors.
-/// @param {Bool} $light [null] - Determines the default color scheme - light or not.
+/// @param {Color} $label-color [rgba(0, 0, 0, .87)]- The text color used for the label text.
+/// @param {Color} $empty-color [rgba(0, 0, 0, .54)] - The unchecked border color.
+/// @param {Color} $fill-color [secondary 500] - The checked border and fill colors.
+/// @param {Color} $tick-color [#fff] - The checked mark color.
+/// @param {Color} $disabled-color [rgba(0, 0, 0, .24)] - The disabled border and fill colors.
 /// @param {String} $variant ['dark'] - Determines the default color scheme - could be either 'dark' or 'light'.
 /// Set to light when the surrounding area is dark.
 ///
@@ -36,11 +38,11 @@
 
     $dark-theme: (
         name: $name,
-        label-color: igx-color($palette, grays, 900),
+        label-color: igx-color($palette, 'grays', 900),
         empty-color: igx-color($palette, 'grays', 600),
         fill-color: igx-color($palette, 'secondary', 500),
         tick-color: #fff,
-        disabled-color: igx-color($palette, grays, 400)
+        disabled-color: igx-color($palette, 'grays', 400)
     );
 
     $light-theme: (
@@ -78,7 +80,7 @@
 /// @requires igx-ripple-theme
 /// @requires rem
 /// @requires em
-/// @requires var
+/// @requires --var
 @mixin igx-checkbox($theme) {
     @include igx-root-css-vars($theme);
 

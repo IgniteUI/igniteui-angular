@@ -2,12 +2,13 @@
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
 ///
-/// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
-/// @param {Color} $search-background [null] - The combo search box background color.
-/// @param {Color} $search-background [null] - The combo search box background color.
-/// @param {Color} $search-background [null] - The combo search box background color.
+/// @param {Color} $search-separator-border-color [rgba(0, 0, 0, .12)] - The combo search box separator color.
+/// @param {Color} $empty-list-placeholder-color [rgba(0, 0, 0, .26)] - The combo placeholder text color.
+/// @param {Color} $empty-list-background [#fff] - The combo list background color.
 ///
 /// @requires text-contrast
 /// @requires igx-color
@@ -27,7 +28,7 @@
 
     @return extend($default-theme,
     (
-        pallete: $palette,
+        palette: $palette,
         search-separator-border-color: $search-separator-border-color,
         empty-list-placeholder-color: $empty-list-placeholder-color,
         empty-list-background: $empty-list-background
@@ -36,8 +37,8 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires igx-color
 /// @requires rem
+/// @requires --var
 @mixin igx-combo($theme) {
     @include igx-root-css-vars($theme);
 
@@ -75,7 +76,7 @@
         padding: rem(8px) rem(16px);
         margin: 0 !important;
         z-index: 26;
-        border-bottom: 1px dashed  --var($theme, 'search-separator-border-color');
+        border-bottom: 1px dashed --var($theme, 'search-separator-border-color');
     }
 
     %igx-combo__content {

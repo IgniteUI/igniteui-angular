@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
 
 import {
-    IgxGridComponent,
+    IgxGridComponent, IgxButtonGroupComponent
 } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-cellediting',
@@ -15,13 +15,21 @@ export class GridCellEditingComponent {
     public gridWithPK: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent })
     public gridWithoutPK: IgxGridComponent;
+    @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
     data: any;
     dataWithoutPK: any;
+    public density = 'compact';
+    public displayDensities;
 
     constructor() {
         const date = new Date();
         this.data = data;
         this.dataWithoutPK = dataWithoutPK;
+        this.displayDensities = [
+            { label: 'compact', selected: this.density === 'compact', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        ];
     }
 
     public addRow() {
@@ -118,5 +126,8 @@ export class GridCellEditingComponent {
             case 'date': newValue = new Date('2027-07-31'); break;
         }
         selectedCell.update(newValue);
+    }
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 }

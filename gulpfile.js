@@ -44,7 +44,7 @@ gulp.task('build-style', () => {
 
 gulp.task('copy-git-hooks', () => {
 
-    if (process.env.TRAVIS || process.env.CI) {
+    if (process.env.TRAVIS || process.env.CI || !fs.existsSync('.git')) {
         return;
     }
 

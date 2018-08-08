@@ -1,6 +1,6 @@
 <ng-template #defaultItemsTemplate>
     <div igxDrawerItem [isHeader]="true">Navigation Drawer</div>
-    <div igxDrawerItem> Star by adding</div>
+    <div igxDrawerItem> Start by adding</div>
     <div igxDrawerItem> <code>&lt;ng-template igxDrawer&gt;</code> </div>
     <div igxDrawerItem> And some items inside </div>
     <div igxDrawerItem> Style with igxDrawerItem </div>
@@ -16,6 +16,7 @@
     class="igx-nav-drawer__aside"
     [class.igx-nav-drawer__aside--collapsed]="!miniTemplate && !isOpen"
     [class.igx-nav-drawer__aside--mini]="miniTemplate && !isOpen"
+    [class.igx-nav-drawer__aside--normal]="!miniTemplate || isOpen"
     [class.igx-nav-drawer__aside--pinned]="pin"
     [class.igx-nav-drawer__aside--right]="position == 'right'" #aside>
 

@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxTimePicker', () => {
     beforeEach(async(() => {
@@ -24,7 +25,11 @@ describe('IgxTimePicker', () => {
         .compileComponents();
     }));
 
-    it('Initialize a timepicker component', () => {
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
+
+    it('Initialize a TimePicker component', () => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
         fixture.detectChanges();
 
@@ -65,7 +70,7 @@ describe('IgxTimePicker', () => {
         expect(getValueFromInput).toEqual(formattedTime);
     });
 
-    it('Dialog header value', () => {
+    it('Dialog header value', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
         fixture.detectChanges();
 
@@ -82,9 +87,9 @@ describe('IgxTimePicker', () => {
          `${getTimeFromPopupHeader[1].innerText.replace(/\n/g, '')} ${getTimeFromPopupHeader[0].innerText}`;
 
         expect(formatedTimeFromPopupHeader).toBe(formatedTestElementTime);
-    });
+    }));
 
-    it('Dialog selected element position', () => {
+    it('Dialog selected element position', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
         fixture.detectChanges();
 
@@ -106,9 +111,9 @@ describe('IgxTimePicker', () => {
         expect(getMinuteColumn[3].classList).toContain('igx-time-picker__item--selected');
         expect(getAMPMColumn[3].classList).toContain('igx-time-picker__item--selected');
 
-    });
+    }));
 
-    it('TImepicker open event', () => {
+    it('TimePicker open event', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
         fixture.detectChanges();
 
@@ -120,13 +125,12 @@ describe('IgxTimePicker', () => {
         spyOn(timePicker.onOpen, 'emit');
 
         target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-
-        fixture.detectChanges();
+        tick();
 
         expect(timePicker.onOpen.emit).toHaveBeenCalled();
-    });
+    }));
 
-    it('TImepicker Validation Failed event', () => {
+    it('TimePicker Validation Failed event', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithMInMaxTimeValueComponent);
         fixture.detectChanges();
 
@@ -141,11 +145,12 @@ describe('IgxTimePicker', () => {
         spyOn(timePicker.onValidationFailed, 'emit');
         getOkButton.triggerEventHandler('click', {});
         fixture.detectChanges();
+        tick();
 
         expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
-    });
+    }));
 
-    it('Timepicker cancel button', () => {
+    it('TimePicker cancel button', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
         fixture.detectChanges();
 
@@ -161,13 +166,13 @@ describe('IgxTimePicker', () => {
         const getCancelButton = dom.queryAll(By.css('.igx-button--flat'))[0];
         getCancelButton.triggerEventHandler('click', {});
         fixture.detectChanges();
+        tick();
 
         const selectedTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
         expect(initialTime).toEqual(selectedTime);
+    }));
 
-    });
-
-    it('Timepicker ValueChanged event', () => {
+    it('TimePicker ValueChanged event', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
         fixture.detectChanges();
 
@@ -190,15 +195,19 @@ describe('IgxTimePicker', () => {
 
         selectHour.triggerEventHandler('click', {});
         fixture.detectChanges();
+        tick();
         selectMinutes.triggerEventHandler('click', {});
         fixture.detectChanges();
+        tick();
         selectAMPM.triggerEventHandler('click', {});
         fixture.detectChanges();
+        tick();
 
         const getOkButton = dom.queryAll(By.css('.igx-button--flat'))[1];
         spyOn(timePicker.onValueChanged, 'emit');
         getOkButton.triggerEventHandler('click', {});
         fixture.detectChanges();
+        tick();
 
         expect(timePicker.onValueChanged.emit).toHaveBeenCalled();
 
@@ -206,10 +215,9 @@ describe('IgxTimePicker', () => {
         const selectedTime = `${hourValue}:${minuteValue} ${aMPMValue}`;
 
         expect(getValueFromInput).toEqual(selectedTime);
+    }));
 
-    });
-
-    it('Timepicker UP Down Keyboard navigation', () => {
+    it('TimePicker UP Down Keyboard navigation', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
         fixture.detectChanges();
 
@@ -226,29 +234,47 @@ describe('IgxTimePicker', () => {
         // move arrows several times with hour column
         let args = { key: 'ArrowUp', bubbles: true };
         getHourColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
         args = { key: 'ArrowDown', bubbles: true };
         getHourColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
         args = { key: 'ArrowUp', bubbles: true };
         getHourColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
         fixture.detectChanges();
+        tick();
 
         getMinuteColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         // move arrows several times with minute column
         args = { key: 'ArrowDown', bubbles: true };
         getMinuteColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
         args = { key: 'ArrowUp', bubbles: true };
         getMinuteColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
         args = { key: 'ArrowDown', bubbles: true };
         getMinuteColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
         fixture.detectChanges();
+        tick();
 
         getAMPMColumn.nativeElement.focus();
+        tick();
+
         // move arrows several times with ampm column
         args = { key: 'ArrowUp', bubbles: true };
         getAMPMColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
         args = { key: 'ArrowDown', bubbles: true };
         getAMPMColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
         fixture.detectChanges();
+        tick();
 
         // get time from dialog header
         const getTimeFromPopupHeader: any = dom.query(By.css('.igx-time-picker__header')).nativeElement.children;
@@ -258,13 +284,14 @@ describe('IgxTimePicker', () => {
         args = { key: 'Enter', bubbles: true };
         getHourColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
         fixture.detectChanges();
+        tick();
 
         const getValueFromInput = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
 
         expect(formatedTimeFromPopupHeader).toBe(getValueFromInput);
-    });
+    }));
 
-    it('Timepicker Left Right Keyboard navigation', fakeAsync(() => {
+    it('TimePicker Left Right Keyboard navigation', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
         fixture.detectChanges();
 
@@ -274,76 +301,71 @@ describe('IgxTimePicker', () => {
 
         let args = { key: 'ArrowRight', bubbles: true };
         openInput(fixture);
-        tick();
 
         const getHourColumn: any = dom.query(By.css('.igx-time-picker__hourList'));
         getHourColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+        expect(document.activeElement.classList).toContain('igx-time-picker__hourList');
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(document.activeElement.classList).toContain('igx-time-picker__hourList');
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
+        expect(document.activeElement.classList).toContain('igx-time-picker__minuteList');
 
-            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        }).then(() => {
-            fixture.detectChanges();
-            expect(document.activeElement.classList).toContain('igx-time-picker__minuteList');
+        args = { key: 'ArrowLeft', bubbles: true };
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
 
-            args = { key: 'ArrowLeft', bubbles: true };
-            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-            fixture.detectChanges();
-            args = { key: 'ArrowRight', bubbles: true };
-            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-            fixture.detectChanges();
+        args = { key: 'ArrowRight', bubbles: true };
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
 
-            args = { key: 'ArrowUp', bubbles: true };
-            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        }).then(() => {
-            fixture.detectChanges();
-            expect(document.activeElement.children[3].innerHTML.trim()).toBe('23');
+        args = { key: 'ArrowUp', bubbles: true };
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
+        expect(document.activeElement.children[3].innerHTML.trim()).toBe('23');
 
-            args = { key: 'ArrowRight', bubbles: true };
-            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        }).then(() => {
-            fixture.detectChanges();
+        args = { key: 'ArrowRight', bubbles: true };
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
 
-            args = { key: 'ArrowDown', bubbles: true };
-            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        }).then(() => {
-            fixture.detectChanges();
-            expect(document.activeElement.children[3].innerHTML.trim()).toBe('PM');
-        }).then(() => {
-            fixture.detectChanges();
+        args = { key: 'ArrowDown', bubbles: true };
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
+        expect(document.activeElement.children[3].innerHTML.trim()).toBe('PM');
 
-            args = { key: 'ArrowLeft', bubbles: true };
-            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        }).then(() => {
-            fixture.detectChanges();
-            expect(document.activeElement.classList).toContain('igx-time-picker__minuteList');
-        }).then(() => {
-            // get time from dialog header
-            const getTimeFromPopupHeader: any = dom.query(By.css('.igx-time-picker__header')).nativeElement.children;
-            const formatedTimeFromPopupHeader =
-            `${getTimeFromPopupHeader[1].innerText.replace(/\n/g, '')} ${getTimeFromPopupHeader[0].innerText}`;
+        args = { key: 'ArrowLeft', bubbles: true };
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
+        expect(document.activeElement.classList).toContain('igx-time-picker__minuteList');
 
-            expect(formatedTimeFromPopupHeader).toBe('3:23 PM');
-        }).then(() => {
-            args = { key: 'Escape', bubbles: true };
-            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        }).then(() => {
-            fixture.detectChanges();
-            const selectedTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
-            tick();
-            expect(initialTime).toEqual(selectedTime);
-        });
+        // get time from dialog header
+        const getTimeFromPopupHeader: any = dom.query(By.css('.igx-time-picker__header')).nativeElement.children;
+        const formatedTimeFromPopupHeader =
+        `${getTimeFromPopupHeader[1].innerText.replace(/\n/g, '')} ${getTimeFromPopupHeader[0].innerText}`;
+        expect(formatedTimeFromPopupHeader).toBe('3:23 PM');
+
+        args = { key: 'Escape', bubbles: true };
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
+
+        const selectedTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
+        expect(initialTime).toEqual(selectedTime);
     }));
 
-    it('Timepicker Mouse Over', fakeAsync(() => {
+    it('TimePicker Mouse Over', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
         fixture.detectChanges();
 
         openInput(fixture);
-        tick();
-        fixture.detectChanges();
 
         // const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
@@ -353,33 +375,29 @@ describe('IgxTimePicker', () => {
 
         getHourColumn.triggerEventHandler('focus', {});
         fixture.detectChanges();
-        getHourColumn.triggerEventHandler('mouseover', {});
+        tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(document.activeElement.classList).toContain('igx-time-picker__hourList');
-            tick();
-            getMinuteColumn.triggerEventHandler('mouseover', {});
-        })
-        .then(() => {
-            fixture.detectChanges();
-            expect(document.activeElement.classList).toContain('igx-time-picker__minuteList');
-            tick();
-            getAMPMColumn.triggerEventHandler('mouseover', {});
-        }).then(() => {
-            fixture.detectChanges();
-            expect(document.activeElement.classList).toContain('igx-time-picker__ampmList');
-            getHourColumn.triggerEventHandler('blur', {});
-            fixture.detectChanges();
-        });
+        getHourColumn.triggerEventHandler('mouseover', {});
+        fixture.detectChanges();
+        tick();
+        expect(document.activeElement.classList).toContain('igx-time-picker__hourList');
+
+        getMinuteColumn.triggerEventHandler('mouseover', {});
+        fixture.detectChanges();
+        tick();
+        expect(document.activeElement.classList).toContain('igx-time-picker__minuteList');
+
+        getAMPMColumn.triggerEventHandler('mouseover', {});
+        fixture.detectChanges();
+        tick();
+        expect(document.activeElement.classList).toContain('igx-time-picker__ampmList');
     }));
 
-    it('Timepicker Mouse Wheel', fakeAsync(() => {
+    it('TimePicker Mouse Wheel', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
         fixture.detectChanges();
 
         openInput(fixture);
-        fixture.detectChanges();
 
         // const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
@@ -391,60 +409,71 @@ describe('IgxTimePicker', () => {
 
         // focus hours
         getHourColumn.nativeElement.focus();
+        fixture.detectChanges();
         tick();
+
         getHourColumn.triggerEventHandler('wheel', event);
+        fixture.detectChanges();
+        tick();
 
         event = new WheelEvent('wheel', {deltaX: 0, deltaY: -100});
         getHourColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
         // move the mouse wheel up and expect the selected element to be 2
         expect(getHourColumn.nativeElement.children[3].innerText).toBe('2');
 
         event = new WheelEvent('wheel', {deltaX: 0, deltaY: 100});
         getHourColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
         // move the mouse wheel down and expect the selected element to be 3 again
         expect(getHourColumn.nativeElement.children[3].innerText).toBe('3');
 
         // focus minutes
         getMinuteColumn.nativeElement.focus();
+        fixture.detectChanges();
         tick();
+
         event = new WheelEvent('wheel', {deltaX: 0, deltaY: -100});
         getMinuteColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
         // move the mouse wheel up and expect the selected element to be 23
         expect(getMinuteColumn.nativeElement.children[3].innerText).toBe('23');
 
         event = new WheelEvent('wheel', {deltaX: 0, deltaY: 100});
         getMinuteColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
         // move the mouse wheel down and expect the selected element to be 24 again
         expect(getMinuteColumn.nativeElement.children[3].innerText).toBe('24');
 
         // focus ampm
         getAMPMColumn.nativeElement.focus();
-        tick();
         fixture.detectChanges();
+        tick();
 
         event = new WheelEvent('wheel', {deltaX: 0, deltaY: 100});
         getAMPMColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
         // move the mouse wheel down and expect the selected element to be PM
         expect(getAMPMColumn.nativeElement.children[3].innerText).toBe('PM');
 
         event = new WheelEvent('wheel', {deltaX: 0, deltaY: -100});
         getAMPMColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
         // move the mouse wheel up and expect the selected element to be AM again
         expect(getAMPMColumn.nativeElement.children[3].innerText).toBe('AM');
     }));
 
-    it('Timepicker Pan Move', fakeAsync(() => {
+    it('TimePicker Pan Move', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
         fixture.detectChanges();
 
         openInput(fixture);
-        fixture.detectChanges();
 
         // const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
@@ -459,57 +488,76 @@ describe('IgxTimePicker', () => {
 
         // focus hours
         getHourColumn.nativeElement.focus();
+        fixture.detectChanges();
         tick();
+
         getHourColumn.triggerEventHandler('panmove', event);
+        fixture.detectChanges();
+        tick();
+
         getHourColumn.triggerEventHandler('panmove', eventDown);
         fixture.detectChanges();
+        tick();
         // swipe up and expect the selected element to be 4
         expect(getHourColumn.nativeElement.children[3].innerText).toBe('4');
+
         getHourColumn.triggerEventHandler('panmove', eventUp);
         fixture.detectChanges();
+        tick();
         // swipe down and expect the selected element to be 3 again
         expect(getHourColumn.nativeElement.children[3].innerText).toBe('3');
 
         // focus minutes
         getMinuteColumn.nativeElement.focus();
+        fixture.detectChanges();
         tick();
+
         getMinuteColumn.triggerEventHandler('panmove', eventDown);
         fixture.detectChanges();
+        tick();
         // swipe up and expect the selected element to be 25
         expect(getMinuteColumn.nativeElement.children[3].innerText).toBe('25');
+
         getMinuteColumn.triggerEventHandler('panmove', eventUp);
         fixture.detectChanges();
+        tick();
         // swipe down and expect the selected element to be 24 again
         expect(getMinuteColumn.nativeElement.children[3].innerText).toBe('24');
 
         // focus ampm
         getAMPMColumn.nativeElement.focus();
+        fixture.detectChanges();
         tick();
+
         getAMPMColumn.triggerEventHandler('panmove', eventDown);
         fixture.detectChanges();
+        tick();
         // swipe up and expect the selected element to be PM
         expect(getAMPMColumn.nativeElement.children[3].innerText).toBe('PM');
+
         getAMPMColumn.triggerEventHandler('panmove', eventUp);
         fixture.detectChanges();
+        tick();
         // move the swipe up and expect the selected element to be AM again
         expect(getAMPMColumn.nativeElement.children[3].innerText).toBe('AM');
     }));
 
-    it('TimePicker 24 hour format', () => {
+    it('TimePicker 24 hour format', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWith24HTimeComponent);
         fixture.detectChanges();
         const dom = fixture.debugElement;
 
         openInput(fixture);
+
         const getAMPMColumn: any = dom.query(By.css('.igx-time-picker__ampmList'));
         expect(getAMPMColumn.children.length).toBe(0);
+
         const getHourColumn = dom.query(By.css('.igx-time-picker__hourList'));
         const selectHour = getHourColumn.children[3];
         expect(selectHour.nativeElement.innerText).toBe('00');
+    }));
 
-    });
-
-    it('TimePicker Items in view', () => {
+    it('TimePicker Items in view', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithAMPMLeadingZerosTimeComponent);
         fixture.detectChanges();
         const dom = fixture.debugElement;
@@ -524,12 +572,12 @@ describe('IgxTimePicker', () => {
         expect(getHoursInview).toEqual(['08', '09', '10', '11', '12', '01', '02']);
         expect(getMinutessInview).toEqual([ '24', '25', '26', '27', '28', '29', '30' ]);
         expect(getAMPMInview).toEqual([ 'AM', 'PM' ]);
+    }));
 
-    });
-
-    it('TimePicker scroll to end', () => {
+    it('TimePicker scroll to end', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithSpinLoopFalseValueComponent);
         fixture.detectChanges();
+
         const dom = fixture.debugElement;
         const timePicker = fixture.componentInstance.timePicker;
         const initialTime = fixture.componentInstance.dateValue;
@@ -541,18 +589,32 @@ describe('IgxTimePicker', () => {
         const getAMPMColumn: any = dom.query(By.css('.igx-time-picker__ampmList'));
 
         getHourColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         spyOn(console, 'error');
 
         const event = new WheelEvent('wheel', {deltaX: 0, deltaY: -100});
 
         getHourColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
+
         getMinuteColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         getMinuteColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
+
         getAMPMColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         getAMPMColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
 
         // check console for error
         expect(console.error).not.toHaveBeenCalled();
@@ -569,9 +631,9 @@ describe('IgxTimePicker', () => {
         `${getTimeFromPopupHeader[1].innerText.replace(/\n/g, '')} ${getTimeFromPopupHeader[0].innerText}`;
 
         expect(formatedTestElementTime).toBe(formatedTimeFromPopupHeader);
-    });
+    }));
 
-    it('TimePicker check isSpinLoop with Items Delta', () => {
+    it('TimePicker check isSpinLoop with Items Delta', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithItemsDeltaValueComponent);
         fixture.detectChanges();
         const dom = fixture.debugElement;
@@ -587,14 +649,28 @@ describe('IgxTimePicker', () => {
 
         // check scrolling each element
         getHourColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         getHourColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
+
         getMinuteColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         getMinuteColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
+
         getAMPMColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         getAMPMColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
 
         const getTimeFromPopupHeader: any = fixture.debugElement.query(By.css('.igx-time-picker__header')).nativeElement.children;
         const formatedTimeFromPopupHeader =
@@ -603,18 +679,30 @@ describe('IgxTimePicker', () => {
 
         // check scrolling again up not to throw error
         spyOn(console, 'error');
+
         getHourColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
+
         getMinuteColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         getMinuteColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
+
         getAMPMColumn.nativeElement.focus();
+        fixture.detectChanges();
+        tick();
+
         getAMPMColumn.triggerEventHandler('wheel', event);
         fixture.detectChanges();
+        tick();
         expect(console.error).not.toHaveBeenCalled();
-    });
+    }));
 
-    it('Timepicker with not valid element arrow up', () => {
+    it('TimePicker with not valid element arrow up', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
         fixture.detectChanges();
 
@@ -631,11 +719,12 @@ describe('IgxTimePicker', () => {
         const args = { key: 'ArrowUp', bubbles: true };
         getHourColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
         fixture.detectChanges();
+        tick();
 
         expect(getHourColumn.nativeElement.children[3].innerText).not.toBe(notValidHour);
-    });
+    }));
 
-    it('Timepicker with not valid element arrow down', () => {
+    it('TimePicker with not valid element arrow down', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
         fixture.detectChanges();
 
@@ -650,14 +739,19 @@ describe('IgxTimePicker', () => {
         const getMinuteColumn: any = dom.query(By.css('.igx-time-picker__minuteList'));
         const getAMPMColumn: any = dom.query(By.css('.igx-time-picker__ampmList'));
         const args = { key: 'ArrowDown', bubbles: true };
+
         getMinuteColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+        fixture.detectChanges();
+        tick();
+
         getAMPMColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
         fixture.detectChanges();
+        tick();
 
         expect(getMinuteColumn.nativeElement.children[3].innerText).not.toBe(notValidValue);
-    });
+    }));
 
-    it('Timepicker vertical', () => {
+    it('TimePicker vertical', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
         fixture.detectChanges();
         const dom = fixture.debugElement;
@@ -672,7 +766,7 @@ describe('IgxTimePicker', () => {
         const dialog = dom.query(By.css('.igx-dialog__window')).nativeElement;
 
         expect(dialog.offsetWidth).toBeGreaterThan(dialog.offsetHeight);
-    });
+    }));
 });
 
 @Component({
@@ -773,31 +867,36 @@ function openInput(fixture) {
     const timePickerTarget = dom.query(By.directive(IgxInputDirective));
     timePickerTarget.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
     fixture.detectChanges();
+    tick();
 }
 
 // the time difference should be plus or minus 3 hours or minutes
 function selectTimeDifference(fixture, hour, minute, aMPM = null) {
-        const dom = fixture.debugElement;
-        const middlePos = 3;
+    const dom = fixture.debugElement;
+    const middlePos = 3;
 
-        const getHourColumn = dom.query(By.css('.igx-time-picker__hourList'));
-        const selectHour = getHourColumn.children[middlePos + hour];
+    const getHourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+    const selectHour = getHourColumn.children[middlePos + hour];
 
-        const getMinutesColumn = dom.query(By.css('.igx-time-picker__minuteList'));
-        const selectMinutes = getMinutesColumn.children[middlePos + minute];
+    const getMinutesColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+    const selectMinutes = getMinutesColumn.children[middlePos + minute];
 
-        selectHour.triggerEventHandler('click', {});
-        selectMinutes.triggerEventHandler('click', {});
+    selectHour.triggerEventHandler('click', {});
+    fixture.detectChanges();
+    tick();
+
+    selectMinutes.triggerEventHandler('click', {});
+    fixture.detectChanges();
+    tick();
+
+    if (aMPM && (aMPM.toUpperCase() === 'AM' || aMPM.toUpperCase() === 'PM')) {
+        const getAMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
+        const selectAMPM = findByInnerText(getAMPMColumn.children, aMPM.toUpperCase());
+
+        selectAMPM.triggerEventHandler('click', {});
         fixture.detectChanges();
-
-        if (aMPM && (aMPM.toUpperCase() === 'AM' || aMPM.toUpperCase() === 'PM')) {
-            const getAMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
-            const selectAMPM = findByInnerText(getAMPMColumn.children, aMPM.toUpperCase());
-
-            selectAMPM.triggerEventHandler('click', {});
-            fixture.detectChanges();
-        }
-
+        tick();
+    }
 }
 
 function findByInnerText(collection, searchText) {
@@ -806,10 +905,4 @@ function findByInnerText(collection, searchText) {
             return element;
         }
     }
-}
-function clickOkButton(fixture) {
-    const dom = fixture.debugElement;
-    const getOkButton = dom.queryAll(By.css('.igx-button--flat'))[1];
-    getOkButton.triggerEventHandler('click', {});
-    fixture.detectChanges();
 }

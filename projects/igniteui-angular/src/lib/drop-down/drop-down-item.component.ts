@@ -5,7 +5,8 @@ import {
     HostBinding,
     HostListener,
     Inject,
-    Input
+    Input,
+    DoCheck
 } from '@angular/core';
 import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component';
 
@@ -15,18 +16,14 @@ import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component
  */
 
 export class IgxDropDownItemBase {
+
     /**
      * @hidden
      */
     protected _isFocused = false;
 
     /**
-     * Gets the selected item's id.
-     *
-     * ```typescript
-     *  let selectedItem = this.dropdown.selectedItem() as IgxDropDownItemBase;
-     *  let itemId = selectedItem.itemID;
-     * ```
+     * @hidden
      */
     public get itemID() {
         return;
@@ -49,8 +46,8 @@ export class IgxDropDownItemBase {
      * Gets if the item is the currently selected one in the dropdown
      *
      * ```typescript
-     *  let mySelectedItem = this.dropdown.selectedItem() as IgxDropDownBase;
-     *  let isMyItemSelected = mySelectedItem.isSelected(); // true
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemSelected = mySelectedItem.isSelected; // true
      * ```
      */
     get isSelected() {
@@ -68,21 +65,19 @@ export class IgxDropDownItemBase {
 
     /**
      * Sets/gets if the given item is focused
-     *
      * ```typescript
-     *  // get
-     *  let selectedItem = this.dropdown.selectedItem() as IgxDropDownItemBase;
-     *  let itemIsFocused = selectedItem.isFocused;
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemFocused = mySelectedItem.isFocused;
      * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
     get isFocused() {
         return this._isFocused;
     }
+
     /**
      * ```html
-     *  <!--set-->
-     *  <igx-drop-down-item *ngFor="let item of items" isFocused={{item.isFocused}}>
+     *  <igx-drop-down-item *ngFor="let item of items" isFocused={{!item.isFocused}}>
      *      <div>
      *          {{item.field}}
      *      </div>
@@ -103,20 +98,19 @@ export class IgxDropDownItemBase {
 
     /**
      * Sets/gets if the given item is header
-     *
      * ```typescript
      *  // get
-     *  let selecteItem = this.dropdown.selectdItem() as IgxDropDownItemBase;
-     *  let itemIsHeader = selectedItem.isHeader;
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemHeader = mySelectedItem.isHeader;
      * ```
      *
      * ```html
      *  <!--set-->
-     *  <igx-drop-down-item *ngFor="let item of items" isHeader={{item.header}}>
-     *      <div>
+     *  <igx-dropdown-item *ngFor="let item of items">
+     *      <div *ngIf="items.indexOf(item) === 5; then item.isHeader = true">
      *          {{item.field}}
-     *      </div>
-        </igx-drop-down-item>
+*           </div>
+     *  </igx-drop-down-item>
      * ```
      */
     @Input()
@@ -128,23 +122,21 @@ export class IgxDropDownItemBase {
      *
      * ```typescript
      *  // get
-     *  let selectedItem = this.dropdown.selectedItem() as IgxDropDownItemBase;
-     *  let isItemDisabled = selectedItem.disabled;
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let myItemIsDisabled = mySelectedItem.disabled;
      * ```
      *
      * ```html
-     * <!--set-->
-     * <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}}>
+     *  <igx-drop-down-item *ngFor="let item of items" disabled={{!item.disabled}}>
      *      <div>
      *          {{item.field}}
      *      </div>
-     * </igx-drop-down-item>
+     *  </igx-drop-down-item>
      * ```
      */
     @Input()
     @HostBinding('class.igx-drop-down__item--disabled')
     public disabled = false;
-
 
     /**
      * @hidden
@@ -153,6 +145,7 @@ export class IgxDropDownItemBase {
     get setTabIndex() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.disabled || this.isHeader);
         if (shouldSetTabIndex) {
+            return 0;
         } else {
             return null;
         }
@@ -160,10 +153,7 @@ export class IgxDropDownItemBase {
 
     /**
      * Gets item index
-     *
-     * ```typescript
-     *  let currentItemIndex = (<IgxDropDownItemBase>this.dropdown.selectedItem()).index;
-     * ```
+     * @hidden
      */
     public get index(): number {
         return this.dropDown.items.indexOf(this);
@@ -171,10 +161,7 @@ export class IgxDropDownItemBase {
 
     /**
      * Gets item element height
-     *
-     * ```typescript
-     *  let myElementHeight = this.dropdown.elementHeight;
-     * ```
+     * @hidden
      */
     public get elementHeight(): number {
         return this.elementRef.nativeElement.clientHeight;
@@ -182,10 +169,7 @@ export class IgxDropDownItemBase {
 
     /**
      * Get item html element
-     *
-     * ```typescript
-     *  let myItemHtmlElement = this.dropdown.element;
-     * ```
+     * @hidden
      */
     public get element() {
         return this.elementRef;
@@ -207,7 +191,7 @@ export class IgxDropDownItemBase {
             return;
         }
         this.dropDown.navigateItem(this.index);
-        this.dropDown.selectItem(this);
+        this.dropDown.selectItem(this, event);
     }
 
     /**
@@ -223,11 +207,45 @@ export class IgxDropDownItemBase {
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html'
 })
-export class IgxDropDownItemComponent extends IgxDropDownItemBase {
+export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoCheck {
+    /**
+     * @hidden
+     */
+    protected _isSelected = false;
+
     constructor(
         @Inject(forwardRef(() => IgxDropDownComponent)) public dropDown: IgxDropDownComponent,
         protected elementRef: ElementRef
     ) {
         super(dropDown, elementRef);
+    }
+
+    /**
+     * Sets/Gets if the item is the currently selected one in the dropdown
+     *
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemSelected = mySelectedItem.isSelected; // true
+     * ```
+     */
+    get isSelected() {
+        return this._isSelected;
+    }
+    @Input()
+    set isSelected(value: boolean) {
+        if (this.isHeader) {
+            return;
+        }
+
+        this._isSelected = value;
+    }
+
+    ngDoCheck(): void {
+        if (this.isSelected) {
+            const dropDownSelectedItem = this.dropDown.selectedItem;
+            if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
+                this.dropDown.selectItem(this);
+            }
+        }
     }
 }

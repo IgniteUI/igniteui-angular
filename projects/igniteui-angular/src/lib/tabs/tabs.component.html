@@ -13,7 +13,7 @@
                 'igx-tabs__header-menu-item--selected': group.isSelected,
                 'igx-tabs__header-menu-item--disabled': group.disabled }" [relatedGroup]="group" role="tab">
                 </igx-tab-item>
-                <div #selectedIndicator class="igx-tabs__header-menu-item-indicator"></div>
+                <div #selectedIndicator *ngIf="groups.length > 0" class="igx-tabs__header-menu-item-indicator"></div>
             </div>
         </div>
         <button igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollRight($event)" igxRightButtonStyle>

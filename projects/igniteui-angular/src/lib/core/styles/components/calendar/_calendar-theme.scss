@@ -14,32 +14,32 @@
 /// If only background colors are specified, text/icon colors
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $content-background [null] - The main content background color.
-/// @param {Color} $content-text-color [null] - The main content text color.
+/// @param {Color} $content-background [#fff] - The main content background color.
+/// @param {Color} $content-text-color [rgba(0, 0, 0, .87)] - The main content text color.
 ///
-/// @param {Color} $header-background [null] - The header background color.
-/// @param {Color} $header-text-color [null] - The header text color.
+/// @param {Color} $header-background [secondary 500] - The header background color.
+/// @param {Color} $header-text-color [igx-contrast-color of secondary 500] - The header text color.
 ///
-/// @param {Color} $picker-arrow-color [null] - The idle picker arrow color.
-/// @param {Color} $picker-arrow-hover-color [null] - The picker hover arrow color.
+/// @param {Color} $picker-arrow-color [rgba(0, 0, 0, .74)] - The idle picker arrow color.
+/// @param {Color} $picker-arrow-hover-color [secondary 500] - The picker hover arrow color.
 ///
-/// @param {Color} $picker-text-color [null]- The idle picker month/year color.
-/// @param {Color} $picker-text-hover-color [null]-  The hover picker month/year color.
+/// @param {Color} $picker-text-color [rgba(0, 0, 0, .74)]- The idle picker month/year color.
+/// @param {Color} $picker-text-hover-color [secondary 500]-  The hover picker month/year color.
 ///
-/// @param {Color} $inactive-text-color [null] - The text color for weekday labels and other month dates.
-/// @param {Color} $weekend-text-color [null] - The text color for weekend days.
+/// @param {Color} $inactive-text-color [rgba(0, 0, 0, .24)] - The text color for weekday labels and other month dates.
+/// @param {Color} $weekend-text-color [rgba(0, 0, 0, .24)] - The text color for weekend days.
 ///
-/// @param {Color} $year-current-text-color [null] - The text color for the current/selected year.
-/// @param {Color} $month-current-text-color [null]- The text color for the current/selected month.
+/// @param {Color} $year-current-text-color [secondary 500] - The text color for the current/selected year.
+/// @param {Color} $month-current-text-color [secondary 500]- The text color for the current/selected month.
 ///
-/// @param {Color} $year-hover-text-color [null] - The year hover text color.
-/// @param {Color} $month-hover-text-color [null] - The month hover text color.
+/// @param {Color} $year-hover-text-color [secondary 500] - The year hover text color.
+/// @param {Color} $month-hover-text-color [secondary 500] - The month hover text color.
 ///
-/// @param {Color} $date-selected-background [null] - The background color for the selected date.
-/// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
+/// @param {Color} $date-selected-background [secondary 500] - The background color for the selected date.
+/// @param {Color} $date-selected-text-color [igx-contrast-color of secondary 500] - The text color for the selected date.
 ///
-/// @param {Color} $date-current-text-color [null] - The text color for the current date.
-/// @param {Color} $date-hover-background [null] - The hover date background color.
+/// @param {Color} $date-current-text-color [secondary 500] - The text color for the current date.
+/// @param {Color} $date-hover-background [rgba(0, 0, 0, .08)] - The hover date background color.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -111,7 +111,7 @@
         date-selected-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         date-current-text-color: igx-color($palette, 'secondary', 500),
-        date-hover-background: igx-color($palette, 'grays', 100)
+        date-hover-background: igx-color($palette, 'grays', 200)
     );
 
 
@@ -215,8 +215,8 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires em
 /// @requires rem
-/// @requires var
 /// @requires {mixin} ellipsis
+/// @requires --var
 @mixin igx-calendar($theme) {
     @include igx-root-css-vars($theme);
 

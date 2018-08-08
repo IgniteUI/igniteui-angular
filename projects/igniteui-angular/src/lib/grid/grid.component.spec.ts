@@ -16,7 +16,8 @@ describe('IgxGrid - input properties', () => {
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
                 IgGridTest30x1000Component, IgGridTest150x200Component,
                 IgxGridTestDefaultWidthHeightComponent,
-                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent
+                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent,
+                IgxGridDensityTestComponent, IgxGridWithEmptyDataComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -88,11 +89,13 @@ describe('IgxGrid - input properties', () => {
 
         gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
             - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
-        console.log(gridBodyHeight);
-        console.log(window.getComputedStyle(gridBody.nativeElement).height);
-        console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
+            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
+
+        // The scrollbar is no longer visible
+        //    - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+        // console.log(gridBodyHeight);
+        // console.log(window.getComputedStyle(gridBody.nativeElement).height);
+        // console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
         expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
     }));
 
@@ -406,31 +409,24 @@ describe('IgxGrid - input properties', () => {
     });
 
     it(`When edit a cell onto filtered data through grid method, the row should
-            disapear and the new value should not persist onto the next row`, async(() => {
-            const fix = TestBed.createComponent(IgGridTest5x5Component);
-            fix.detectChanges();
+            disapear and the new value should not persist onto the next row`, () => {
+        const fix = TestBed.createComponent(IgGridTest5x5Component);
+        fix.detectChanges();
 
-            const grid = fix.componentInstance.gridMinDefaultColWidth;
-            const cols = fix.componentInstance.cols;
-            const gridApi = fix.componentInstance.gridApi;
-            const editValue = 777;
+        const grid = fix.componentInstance.gridMinDefaultColWidth;
+        const cols = fix.componentInstance.cols;
+        const gridApi = fix.componentInstance.gridApi;
+        const editValue = 777;
 
-            fix.whenStable().then(() => {
-                grid.filter(cols[0].key, 1, IgxNumberFilteringOperand.instance().condition('equals'));
-                return fix.whenStable();
-            }).then(() => {
-                fix.detectChanges();
-                grid.updateCell(editValue, 0, cols[0].key);
-                grid.markForCheck();
-                return fix.whenStable();
-            }).then(() => {
-                fix.detectChanges();
-                const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
-                const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
-                const firstCellInputValue = firstRowCells[0].nativeElement.textContent.trim();
-                expect(firstCellInputValue).toEqual('1');
-            });
-        }));
+        grid.filter(cols[0].key, 1, IgxNumberFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        grid.getCellByColumn(0, cols[0].key).update(editValue);
+        fix.detectChanges();
+        const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+        const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
+        const firstCellInputValue = firstRowCells[0].nativeElement.textContent.trim();
+        expect(firstCellInputValue).toEqual('1');
+    });
 
     it('should render correct columns if after scrolling right container size changes so that all columns become visible.', (done) => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
@@ -439,35 +435,198 @@ describe('IgxGrid - input properties', () => {
         fix.componentInstance.generateColumns(5);
         fix.componentInstance.generateData(5);
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            // scrollbar should be visible
-            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
-            const scrollbar = fix.componentInstance.grid2.parentVirtDir.getHorizontalScroll();
+        fix.detectChanges();
+        expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        const scrollbar = fix.componentInstance.grid2.parentVirtDir.getHorizontalScroll();
+        scrollbar.scrollLeft = 10000;
+        grid.width = '1500px';
 
-            // scroll to the right
-            scrollbar.scrollLeft = 10000;
-            return fix.whenStable();
-        }).then(() => {
+        setTimeout(() => {
             fix.detectChanges();
-            // change width so that all columns are visible
-            grid.width = '1500px';
-            return fix.whenStable();
-        }).then(() => {
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            expect(headers.length).toEqual(5);
+            for (let i = 0; i < headers.length; i++) {
+                expect(headers[i].context.column.field).toEqual(fix.componentInstance.grid2.columns[i].field);
+            }
+            done();
+        }, 100);
+    });
+    it('Keyboard navigation - should allow horizontal navigation when the grid is focused', (done) => {
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
+        const grid = fix.componentInstance.grid2;
+        const rightArrowKeyEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowRight',
+            key: 'ArrowRight'
+        });
+        const leftArrowKeyEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowLeft',
+            key: 'ArrowLeft'
+        });
+        let currentScrollLeft;
+        grid.width = '800px';
+        grid.height = '500px';
+        fix.componentInstance.generateColumns(15);
+        fix.componentInstance.generateData(15);
+        fix.detectChanges();
+        grid.nativeElement.dispatchEvent(new Event('focus'));
+
+        // testing the right key
+        grid.nativeElement.dispatchEvent(rightArrowKeyEvent);
+        grid.cdr.detectChanges();
+        setTimeout(() => {
+            currentScrollLeft = grid.parentVirtDir.getHorizontalScroll().scrollLeft;
+            expect(currentScrollLeft).toEqual(parseInt(MIN_COL_WIDTH, 10));
+
+            // testing the left key
+            grid.nativeElement.dispatchEvent(leftArrowKeyEvent);
+            grid.cdr.detectChanges();
             setTimeout(() => {
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
-
-                // verify correct columns are rendered.
-                const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-                expect(headers.length).toEqual(5);
-                for (let i = 0; i < headers.length; i++) {
-                    expect(headers[i].context.column.field).toEqual(fix.componentInstance.grid2.columns[i].field);
-                }
-
+                currentScrollLeft = grid.parentVirtDir.getHorizontalScroll().scrollLeft;
+                expect(currentScrollLeft).toEqual(0);
                 done();
             }, 100);
-        });
+        }, 0);
     });
+    it('Keyboard navigation - should allow vertical navigation when the grid is focused', (done) => {
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
+        const grid = fix.componentInstance.grid2;
+        const downArrowKeyEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowDown',
+            key: 'ArrowDown'
+        });
+        const upArrowKeyEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowUp',
+            key: 'ArrowUp'
+        });
+        let currScrollTop;
+        grid.width = '800px';
+        grid.height = '500px';
+        fix.componentInstance.generateColumns(15);
+        fix.componentInstance.generateData(15);
+        fix.detectChanges();
+        grid.nativeElement.dispatchEvent(new Event('focus'));
+
+        // testing the down key
+        grid.nativeElement.dispatchEvent(downArrowKeyEvent);
+        grid.cdr.detectChanges();
+        setTimeout(() => {
+            currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForItemSize);
+
+            // testing the up key
+            grid.nativeElement.dispatchEvent(upArrowKeyEvent);
+            grid.cdr.detectChanges();
+            setTimeout(() => {
+                currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
+                expect(currScrollTop).toEqual(0);
+                done();
+            }, 100);
+        }, 0);
+    });
+    it('Keyboard navigation - should allow pageup/pagedown navigation when the grid is focused', (done) => {
+        const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
+        const grid = fix.componentInstance.grid2;
+        const pageDownKeyEvent = new KeyboardEvent('keydown', {
+            code: 'PageDown',
+            key: 'PageDown'
+        });
+        const pageUpKeyEvent = new KeyboardEvent('keydown', {
+            code: 'PageUp',
+            key: 'PageUp'
+        });
+        let currScrollTop;
+        grid.width = '800px';
+        grid.height = '500px';
+        fix.componentInstance.generateColumns(25);
+        fix.componentInstance.generateData(25);
+        fix.detectChanges();
+        grid.nativeElement.dispatchEvent(new Event('focus'));
+
+        // testing the pagedown key
+        grid.nativeElement.dispatchEvent(pageDownKeyEvent);
+        grid.cdr.detectChanges();
+        setTimeout(() => {
+            currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
+
+            // testing the pageup key
+            grid.nativeElement.dispatchEvent(pageUpKeyEvent);
+            grid.cdr.detectChanges();
+            setTimeout(() => {
+                currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
+                expect(currScrollTop).toEqual(0);
+                done();
+            }, 100);
+        }, 0);
+    });
+    it('should change displayDensity runtime correctly', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxGridDensityTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const headerHight = fixture.debugElement.query(By.css('.igx-grid__thead')).query(By.css('.igx-grid__tr')).nativeElement;
+        const rowHeight = fixture.debugElement.query(By.css('.igx-grid__tbody')).query(By.css('.igx-grid__tr')).nativeElement;
+        const summaryItemHeigh = fixture.debugElement.query(By.css('.igx-grid__tfoot'))
+        .query(By.css('.igx-grid-summary__item')).nativeElement;
+
+        expect(grid.defaultRowHeight).toBe(50);
+        expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+        grid.displayDensity = 'cosy';
+        fixture.detectChanges();
+        tick(100);
+        expect(grid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
+        expect(grid.defaultRowHeight).toBe(40);
+        expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+        grid.displayDensity = 'compact';
+        fixture.detectChanges();
+        tick(100);
+        expect(grid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
+        expect(grid.defaultRowHeight).toBe(32);
+        expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+        expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+    }));
+    it('Should render empty message', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxGridWithEmptyDataComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody'));
+
+        // Check for loaded rows in grid's container
+        fixture.componentInstance.generateData(4, 30);
+        fixture.detectChanges();
+        tick(100);
+        expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+
+        // Check for empty filter grid message and body less than 100px
+        const columns = fixture.componentInstance.grid.columns;
+        grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
+        fixture.detectChanges();
+        tick(100);
+        expect(gridBody.nativeElement.innerText.substr(0,
+            gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyFilteredGridMessage);
+        expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeLessThan(100);
+
+        // Clear filter and check if grid's body height is restored based on all loaded rows
+        grid.clearFilter(columns[0].field);
+        fixture.detectChanges();
+        tick(100);
+        expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+
+        // Clearing grid's data and check for empty grid message
+        fixture.componentInstance.clearData();
+        fixture.detectChanges();
+        tick(100);
+        expect(gridBody.nativeElement.innerText.substr(0,
+            gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyGridMessage);
+    }));
+
 });
 
 @Component({
@@ -827,5 +986,81 @@ export class IgxGridTestPercentWidthHeightComponent {
             data.push(record);
         }
         return data;
+    }
+}
+
+@Component({
+    template:
+        `
+        <igx-grid #grid [data]="data" height="400px" width="600px">
+            <igx-column field="ProductID" header="Product ID">
+            </igx-column>
+            <igx-column field="ProductName" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true">
+            </igx-column>
+            <igx-column field="OrderDate" [dataType]="'date'" [sortable]="true" [hasSummary]="true">
+            </igx-column>
+        </igx-grid>
+        `
+})
+export class IgxGridDensityTestComponent {
+    public data = [
+        { ProductID: 1, ProductName: 'Chai', UnitsInStock: 2760, OrderDate: new Date('2005-03-21') },
+        { ProductID: 2, ProductName: 'Aniseed Syrup', UnitsInStock: 198, OrderDate: new Date('2008-01-15') },
+        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', UnitsInStock: 52, OrderDate: new Date('2010-11-20') },
+        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', UnitsInStock: 0, OrderDate: new Date('2007-10-11') },
+        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', UnitsInStock: 0, OrderDate: new Date('2001-07-27') },
+        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', UnitsInStock: 1098, OrderDate: new Date('1990-05-17') },
+        { ProductID: 7, ProductName: 'Queso Cabrales', UnitsInStock: 0, OrderDate: new Date('2005-03-03') },
+        { ProductID: 8, ProductName: 'Tofu', UnitsInStock: 7898, OrderDate: new Date('2017-09-09') },
+        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', UnitsInStock: 6998, OrderDate: new Date('2025-12-25') },
+        { ProductID: 10, ProductName: 'Pie', UnitsInStock: 1000, OrderDate: new Date('2017-05-07') }
+    ];
+
+    @ViewChild('grid', { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
+}
+
+@Component({
+    template:
+        `<igx-grid #grid [data]="data" [width]="'700px'">
+            <igx-column [filterable]="true" [field]="'col0'" [header]="'col0'"
+                [dataType]="'number'">
+            </igx-column>
+            <igx-column [filterable]="true" [field]="'col1'" [header]="'col1'"
+                [dataType]="'number'">
+            </igx-column>
+            <igx-column [filterable]="true" [field]="'col2'" [header]="'col2'"
+                [dataType]="'number'">
+            </igx-column>
+            <igx-column [filterable]="true" [field]="'col3'" [header]="'col3'"
+                [dataType]="'number'">
+            </igx-column>
+        </igx-grid>
+        `
+})
+export class IgxGridWithEmptyDataComponent {
+    public data = [];
+
+    @ViewChild('grid', { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
+    constructor(private _cdr: ChangeDetectorRef) {
+    }
+
+    public generateData(columns, rows) {
+        for (let r = 0; r < rows; r++) {
+            const record = {};
+            for (let c = 0; c < columns; c++) {
+                record['col' + c] = c * r;
+            }
+            this.data.push(record);
+        }
+    }
+
+    public clearData() {
+        this.data = [];
     }
 }

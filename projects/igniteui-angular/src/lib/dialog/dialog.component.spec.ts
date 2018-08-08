@@ -2,21 +2,13 @@ import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
 const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
 
-/* function clearOverlay() {
-    const overlays = document.getElementsByClassName(CLASS_OVERLAY_MAIN) as HTMLCollectionOf<Element>;
-    Array.from(overlays).forEach(element => {
-        element.parentElement.removeChild(element);
-    });
-    document.documentElement.scrollTop = 0;
-    document.documentElement.scrollLeft = 0;
-} */
 describe('Dialog', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -32,6 +24,10 @@ describe('Dialog', () => {
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
     }));
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
 
     it('Initialize a datepicker component with id', () => {
         const fixture = TestBed.createComponent(AlertComponent);

@@ -7,18 +7,18 @@
 
 /// Grid Filtering Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $toggle-icon-color [null] - The idle toggle icon color.
-/// @param {Color} $toggle-icon-hover-color [null] - The hover toggle icon color.
-/// @param {Color} $toggle-icon-active-color [null] - The active toggle icon color.
-/// @param {Color} $toggle-icon-filtered-color [null] - The filtered toggle icon color.
-/// @param {Color} $toggle-background [null] - The idle toggle background color.
-/// @param {Color} $toggle-hover-background [null] - The hover toggle background color.
-/// @param {Color} $toggle-active-background [null] - The active toggle background color.
-/// @param {Color} $toggle-filtered-background [null] - The filtered toggle background color.
-/// @param {Color} $menu-background [null] - The idle menu background color.
-/// @param {Color} $menu-text-color [null] - The idle menu text color.
-/// @param {Color} $menu-button-text-color [null] - The menu button text color.
-/// @param {Color} $menu-button-disabled-text-color [null] - The menu disabled button text color.
+/// @param {Color} $toggle-icon-color [inherit] - The idle toggle icon color.
+/// @param {Color} $toggle-icon-hover-color [#fff] - The hover toggle icon color.
+/// @param {Color} $toggle-icon-active-color [igx-contrast color of secondary 500] - The active toggle icon color.
+/// @param {Color} $toggle-icon-filtered-color [secondary 500] - The filtered toggle icon color.
+/// @param {Color} $toggle-background [transparent] - The idle toggle background color.
+/// @param {Color} $toggle-hover-background [rgba(0, 0, 0, .12)] - The hover toggle background color.
+/// @param {Color} $toggle-active-background [secondary 500] - The active toggle background color.
+/// @param {Color} $toggle-filtered-background [transparent] - The filtered toggle background color.
+/// @param {Color} $menu-background [#fff] - The idle menu background color.
+/// @param {Color} $menu-text-color [rgba(0, 0, 0, .87)] - The idle menu text color.
+/// @param {Color} $menu-button-text-color [secondary 500] - The menu button text color.
+/// @param {Color} $menu-button-disabled-text-color [inherit] - The menu disabled button text color.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -105,11 +105,10 @@
 /// @requires igx-button-theme
 /// @requires {mixin} igx-button
 /// @requires igx-color
-/// @requires igx-contrast-color
 /// @requires igx-elevation
 /// @requires $elevations
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-grid-filtering($theme) {
     @include igx-root-css-vars($theme);
 

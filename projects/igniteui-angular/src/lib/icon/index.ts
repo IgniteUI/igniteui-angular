@@ -18,3 +18,6 @@ export class IgxIconModule {
         };
     }
 }
+
+export * from './icon.component';
+export * from './icon.service';

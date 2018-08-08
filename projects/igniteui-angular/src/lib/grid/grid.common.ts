@@ -22,6 +22,9 @@ import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragd
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxResizer]'
 })
@@ -115,7 +118,9 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCell]'
 })
@@ -123,7 +128,9 @@ export class IgxCellTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxHeader]'
 })
@@ -132,7 +139,9 @@ export class IgxCellHeaderTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxGroupByRow]'
 })
@@ -141,7 +150,9 @@ export class IgxGroupByRowTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxFooter]'
 })
@@ -149,7 +160,9 @@ export class IgxCellFooterTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCellEditor]'
 })
@@ -158,7 +171,9 @@ export class IgxCellEditorTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
-
+/**
+ * @hidden
+ */
 @Injectable()
 export class IgxColumnMovingService {
     private _icon: any;
@@ -198,7 +213,9 @@ export class IgxColumnMovingService {
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxColumnMovingDrag]'
 })
@@ -259,11 +276,11 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this.column.grid.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
-        const currSelection = this.column.grid.selectionAPI.get_selection(this.column.gridID + '-cells');
-        if (currSelection && currSelection.length > 0) {
+        const currSelection = this.column.grid.selectionAPI.get_selection_first(this.column.gridID + '-cell');
+        if (currSelection) {
             this.cms.selection = {
-                column: this.column.grid.columnList.toArray()[currSelection[0].columnID],
-                rowID: currSelection[0].rowID
+                column: this.column.grid.columnList.toArray()[currSelection.columnID],
+                rowID: currSelection.rowID
             };
         }
 
@@ -352,7 +369,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxColumnMovingDrop]'
 })
@@ -497,11 +516,16 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
 
-                this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cells', [{
+                this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cell', new Set([{
                     rowID: this.cms.selection.rowID,
                     columnID: colID
-                }]);
+                }]));
 
+                const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
+
+                if (cell) {
+                    cell.focusCell();
+                }
                 this.cms.selection = null;
             }
 
@@ -510,7 +534,9 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 }
-
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxGroupAreaDrop]'
 })
@@ -522,6 +548,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
 
     @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
+
 
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;

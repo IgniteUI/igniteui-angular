@@ -25,10 +25,9 @@ import {
 } from '../calendar/index';
 import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxInputDirective } from '../input-group';
 
 export interface IFormatViews {
     day?: boolean;
@@ -485,9 +484,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.onSelection.emit(event);
     }
 
-    @HostListener('keydown.space')
-    public onSpaceClick() {
+    @HostListener('keydown.spacebar', ['$event'])
+    @HostListener('keydown.space', ['$event'])
+    public onSpaceClick(event) {
         this.onOpenEvent();
+        event.preventDefault();
     }
 
     private updateCalendarInstance() {

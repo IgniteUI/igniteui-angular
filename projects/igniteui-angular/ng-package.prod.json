@@ -6,6 +6,7 @@
   },
   "whitelistedNonPeerDependencies": [
       "@types/hammerjs",
-      "hammerjs"
+      "hammerjs",
+      "jszip"
     ]
 }

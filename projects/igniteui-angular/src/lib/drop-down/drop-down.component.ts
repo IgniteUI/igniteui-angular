@@ -21,7 +21,6 @@ import {
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.component';
-import { IPositionStrategy } from '../services/overlay/position/IPositionStrategy';
 import { OverlaySettings } from '../services';
 import { IToggleView } from '../core/navigation';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
@@ -33,27 +32,13 @@ export interface ISelectionEventArgs {
     newSelection: IgxDropDownItemBase;
 }
 
+/** @hidden */
 export enum Navigate {
     Up = -1,
     Down = 1
 }
 
-/**
- * **Ignite UI for Angular DropDown** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down.html)
- *
- * The Ignite UI for Angular Drop Down displays a scrollable list of items which may be visually grouped and
- * supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down
- *
- * Example:
- * ```html
- * <igx-drop-down>
- *   <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
- *     {{ item.value }}
- *   </igx-drop-down-item>
- * </igx-drop-down>
- * ```
- */
+
 export class IgxDropDownBase implements OnInit, IToggleView {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
     protected _focusedItem: any = null;
@@ -205,6 +190,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     set id(value: string) {
+        this.selectionAPI.set_selection(value, this.selectionAPI.get_selection(this.id));
         this._id = value;
         this.toggleDirective.id = value;
     }
@@ -228,8 +214,14 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     public get selectedItem(): any {
-        const selection = this.selectionAPI.get_selection(this.id);
-        return selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
+        const selectedItem = this.selectionAPI.get_selection_first(this.id);
+        if (selectedItem) {
+            if (selectedItem.isSelected) {
+                return selectedItem;
+            }
+            this.selectionAPI.set_selection(this.id, new Set());
+        }
+        return null;
     }
 
     /**
@@ -275,15 +267,15 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * Get dropdown html element
      *
-     * @hidden
+     * ```typescript
+     * let myDropDownElement = this.dropdown.element;
+     * ```
      */
     public get element() {
         return this.elementRef.nativeElement;
     }
 
     /**
-     * Get dropdown html element
-     *
      * @hidden
      */
     protected get scrollContainer() {
@@ -297,11 +289,6 @@ export class IgxDropDownBase implements OnInit, IToggleView {
 
     /**
      * Select an item by index
-     *
-     * ```typescript
-     *  let newItemIndex = 3;
-     *  this.dropdown.setSelectedItem(3);
-     * ```
      * @param index of the item to select
      */
     setSelectedItem(index: number) {
@@ -310,7 +297,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
 
         const newSelection = this.items.find((item) => item.index === index);
-        if (newSelection.disabled) {
+        if (newSelection.isHeader) {
             return;
         }
 
@@ -355,41 +342,21 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
-     *  Returns the currently focused item.
-     *
-     * ```typescript
-     *  // get
-     *  let currentFocusedItem = this.dropdown.focusedItem;
-     * ```
+     * @hidden
      */
     public get focusedItem() {
         return this._focusedItem;
     }
 
     /**
-     * Sets focus to the passed item.
-     *
-     * ```typescript
-     *  // set
-     *  this.dropdown.focisedItem(itemToFocus);
-     * ```
+     * @hidden
      */
     public set focusedItem(item) {
         this._focusedItem = item;
     }
 
     /**
-     * Navigates to an item in the dropdown using a pre-defined direction and optional starting index.
-     *
-     * ```typescript
-     *  let nextItem = this.dropdown.navigate(Navigate.Down); // navigate to the next item in the dropdown
-     *
-     *  const currentItemIndex = 1;
-     *  let nextItemFromIndex = this.dropdown.navigate(Navigate.Down, currentItemIndex); // navigate to the third item in the dropdown
-     * ```
-     *
-     * @param direction
-     * @param [currentIndex]
+     * @hidden
      */
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
@@ -401,43 +368,28 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
-     *  Navigate to the first item in the dropdown.
-     *
-     * ```typescript
-     *  let firstItem = this.dropdown.navigateFirst();
-     * ```
+     * @hidden
      */
     navigateFirst() {
         this.navigate(Navigate.Down, -1);
     }
 
     /**
-     *  Navigate to the last item in the dropdown.
-     *
-     * ```typescript
-     *  let lastItem = this.dropdown.navigateLast();
-     * ```
+     * @hidden
      */
     navigateLast() {
         this.navigate(Navigate.Up, this.items.length);
     }
+
     /**
-     * Navigate to the next item in the dropdown.
-     *
-     * ```typescript
-     *  let nextItem = this.dropdown.navigateNext();
-     * ```
+     * @hidden
      */
     navigateNext() {
         this.navigate(Navigate.Down);
     }
 
     /**
-     * Navigate to the previous item in the dropdown.
-     *
-     * ```typescript
-     *  let previousItem = this.dropdown.navigatePrev();
-     * ```
+     * @hidden
      */
     navigatePrev() {
         this.navigate(Navigate.Up);
@@ -448,6 +400,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
+        this.selectionAPI.set_selection(this.id, new Set());
     }
 
 
@@ -504,7 +457,6 @@ export class IgxDropDownBase implements OnInit, IToggleView {
 
     /**
      * @hidden
-     * @param newItem
      */
     public scrollToHiddenItem(newItem: IgxDropDownItemBase) {
         const elementRect = newItem.element.nativeElement.getBoundingClientRect();
@@ -521,12 +473,15 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * @hidden
      */
-    public selectItem(item: IgxDropDownItemBase) {
+    public selectItem(item: IgxDropDownItemBase, event?) {
         if (item === null) {
             return;
         }
-        this.setSelectedItem(item.index);
-        this.toggleDirective.close();
+        this.changeSelectedItem(item);
+
+        if (event) {
+            this.toggleDirective.close();
+        }
     }
 
     /**
@@ -537,15 +492,13 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         if (!newSelection) {
             newSelection = this._focusedItem;
         }
-
-        this.selectionAPI.set_selection(this.id, [newSelection]);
         const args: ISelectionEventArgs = { oldSelection, newSelection };
+        this.selectionAPI.set_selection(this.id, new Set([newSelection]));
+
         this.onSelection.emit(args);
     }
 
     /**
-     * Returns the position index of the scroll.
-     *
      * @hidden
      */
     protected calculateScrollPosition(item: IgxDropDownItemBase): number {
@@ -636,7 +589,8 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Space', ['$event'])
     onSpaceKeyDown(event) {
-        this.target.selectItem(this.target.focusedItem);
+        // V.S. : IgxDropDownComponent.selectItem needs event to be true in order to close DD as per specification
+        this.target.selectItem(this.target.focusedItem, this.target instanceof IgxDropDownComponent);
         event.preventDefault();
     }
 
@@ -645,7 +599,7 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Spacebar', ['$event'])
     onSpaceKeyDownIE(event) {
-        this.target.selectItem(this.target.focusedItem);
+        this.target.selectItem(this.target.focusedItem, event);
         event.preventDefault();
     }
 
@@ -657,14 +611,14 @@ export class IgxDropDownItemNavigationDirective {
         if (!(this.target instanceof IgxDropDownComponent)) {
             if (this.target.focusedItem.itemData === 'ADD ITEM') {
                 const targetC = this.target as IgxComboDropDownComponent;
-                targetC.parentElement.addItemToCollection();
+                targetC.combo.addItemToCollection();
             } else {
                 this.target.close();
             }
             event.preventDefault();
             return;
         }
-        this.target.selectItem(this.target.focusedItem);
+        this.target.selectItem(this.target.focusedItem, event);
         event.preventDefault();
     }
 
@@ -707,17 +661,44 @@ export class IgxDropDownItemNavigationDirective {
     }
 }
 
+/**
+ * **Ignite UI for Angular DropDown** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down.html)
+ *
+ * The Ignite UI for Angular Drop Down displays a scrollable list of items which may be visually grouped and
+ * supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down
+ *
+ * Example:
+ * ```html
+ * <igx-drop-down>
+ *   <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
+ *     {{ item.value }}
+ *   </igx-drop-down-item>
+ * </igx-drop-down>
+ * ```
+ */
 @Component({
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html'
 })
 export class IgxDropDownComponent extends IgxDropDownBase {
-
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selectionAPI: IgxSelectionAPIService) {
         super(elementRef, cdr, selectionAPI);
+    }
+
+    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent) {
+        const oldSelection = this.selectedItem;
+        super.changeSelectedItem(newSelection);
+
+        if (oldSelection) {
+            oldSelection.isSelected = false;
+        }
+        if (newSelection) {
+            newSelection.isSelected = true;
+        }
     }
 }
 @NgModule({

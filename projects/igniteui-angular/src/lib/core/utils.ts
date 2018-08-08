@@ -1,4 +1,6 @@
-
+/**
+ *@hidden
+ */
 export function cloneArray(array, deep?: boolean) {
     const arr = [];
     if (!array) {
@@ -10,11 +12,15 @@ export function cloneArray(array, deep?: boolean) {
     }
     return arr;
 }
-
+/**
+ *@hidden
+ */
 export function cloneObject(object: any) {
     return JSON.parse(JSON.stringify(object));
 }
-
+/**
+ *@hidden
+ */
 export const enum KEYCODES {
     ENTER = 13,
     SPACE = 32,
@@ -25,7 +31,9 @@ export const enum KEYCODES {
     DOWN_ARROW = 40,
     F2 = 113
 }
-
+/**
+ *@hidden
+ */
 export const enum DisplayDensity {
     comfortable = 'comfortable',
     cosy = 'cosy',
