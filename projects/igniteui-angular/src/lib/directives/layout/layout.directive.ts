@@ -157,9 +157,9 @@ export class IgxFlexDirective {
      *
      * ```html
      * <div>
-     *    <div igxFlex igxShrink="0">Content1</div>
-     *    <div igxFlex igxShrink="1">Content2</div>
-     *    <div igxFlex igxShrink="0">Content3</div>
+     *    <div igxFlex igxFlexShrink="1">Content1</div>
+     *    <div igxFlex igxFlexShrink="0">Content2</div>
+     *    <div igxFlex igxFlexShrink="1">Content3</div>
      * </div>
      * ```
      */
