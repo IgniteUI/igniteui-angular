@@ -271,4 +271,3 @@ describe('IgxGrid - Grid Paging', () => {
         expect(grid.page).toBe(desiredPageIndex);
     }
 });
-

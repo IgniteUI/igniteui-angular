@@ -1392,7 +1392,6 @@ describe('IgxGrid - Filtering actions', () => {
         expect(andButton).toBeDefined();
         expect(andButton.nativeElement.classList.contains('igx-button-group__item--selected'))
             .toBeTruthy('AndButton is not selected');
-
         // verify both filter expression components are present
         const filterExpressions = filterUI.queryAll(By.css('igx-grid-filter-expression'));
         expect(filterExpressions).not.toBeNull();

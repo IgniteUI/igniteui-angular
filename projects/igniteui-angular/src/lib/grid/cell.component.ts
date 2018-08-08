@@ -98,7 +98,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public value: any;
 
-
     private get isFirstCell(): boolean {
         return this.columnIndex === 0 || (this.isPinned && this.visibleColumnIndex === 0);
     }
@@ -147,7 +146,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * Gets the cell template context object.
      * ```typescript
-     *  let context = this.cell.context();
+     * let context = this.cell.context();
      * ```
      * @memberof IgxGridCellComponent
      */

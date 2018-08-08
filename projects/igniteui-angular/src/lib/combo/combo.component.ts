@@ -129,6 +129,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     protected _displayKey: string | number = '';
     private _dataType = '';
+    private _data = [];
     private _filteredData = [];
     private _children: QueryList<IgxDropDownItemBase>;
     private _dropdownContainer: ElementRef = null;
@@ -543,7 +544,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public data = [];
+    get data() {
+        return this._data;
+    }
+    set data(val: any[]) {
+        this._data = (val) ? val : [];
+    }
 
     /**
      * Combo value data source propery.
@@ -1002,7 +1008,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     private _stringifyItemID(itemID) {
         return this.isRemote && typeof itemID === 'object' ? JSON.stringify(itemID) : itemID;
     }
-
     private _parseItemID(itemID) {
         return this.isRemote && typeof itemID === 'string' ? JSON.parse(itemID) : itemID;
     }
@@ -1064,7 +1069,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             }
             this.selectionAPI.set_selection(this.id, newSelectionAsSet);
             this.value = this.dataType !== DataTypes.PRIMITIVE ?
-            newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
+                newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
                 newSelection.join(', ');
             // this.isHeaderChecked();
             this._onChangeCallback(newSelection);
