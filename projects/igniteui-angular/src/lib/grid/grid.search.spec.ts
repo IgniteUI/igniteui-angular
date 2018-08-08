@@ -30,8 +30,7 @@ describe('IgxGrid - search API', () => {
     describe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(BasicGridSearchComponent);
-            const currentData = Object.assign([], SampleTestData.personJobDataFull);
-            fix.componentInstance.data = currentData;
+            fix.componentInstance.data = SampleTestData.personJobDataFull();
             fix.detectChanges();
 
             component = fix.componentInstance;
