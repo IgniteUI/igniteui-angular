@@ -1,8 +1,9 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridModule } from './index';
 import { ReorderedColumnsComponent,  PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../test-utils/grid-samples.spec';
 import { PagingComponent } from '../test-utils/grid-base-components.spec';
+import { IgxGridComponent } from './grid.component';
 
 describe('IgxGrid - Grid Paging', () => {
 
@@ -61,6 +62,7 @@ describe('IgxGrid - Grid Paging', () => {
         const grid = fix.componentInstance.grid;
         grid.paging = true;
         grid.perPage = 3;
+        fix.detectChanges();
 
         // Goto page 3 through API and listen for event
         spyOn(grid.onPagingDone, 'emit');
@@ -188,6 +190,20 @@ describe('IgxGrid - Grid Paging', () => {
         }).not.toThrow();
     });
 
+    it('"paginate" method should paginate correctly', fakeAsync(() => {
+        const fix = TestBed.createComponent(PagingComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        testPagingAPI(fix, grid, (pageIndex) => grid.paginate(pageIndex));
+    }));
+
+    it('"page" property should paginate correctly', fakeAsync(() => {
+        const fix = TestBed.createComponent(PagingComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        testPagingAPI(fix, grid, (pageIndex) => grid.page = pageIndex);
+    }));
+
     function verifyGridPager( fix, rowsCount, firstCellValue,  pagerText,  buttonsVisibility) {
         const disabled = 'igx-button--disabled';
         const grid = fix.componentInstance.grid;
@@ -209,6 +225,50 @@ describe('IgxGrid - Grid Paging', () => {
             expect(pagingButtons[2].className.includes(disabled)).toBe(buttonsVisibility[2]);
             expect(pagingButtons[3].className.includes(disabled)).toBe(buttonsVisibility[3]);
         }
+    }
+
+    type pageFunc = (page: number) => void;
+
+    function testPagingAPI(fix: ComponentFixture<PagingComponent>,
+        grid: IgxGridComponent, page: pageFunc) {
+        let desiredPageIndex = 2;
+        page(desiredPageIndex);
+        tick();
+        fix.detectChanges();
+
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // non-existent page, should not paginate
+        page(-2);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // non-existent page, should not paginate
+        page(666);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // first page
+        desiredPageIndex = 0;
+        page(desiredPageIndex);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // last page
+        desiredPageIndex = grid.totalPages - 1;
+        page(desiredPageIndex);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // last page + 1, should not paginate
+        page(grid.totalPages);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
     }
 });
 
