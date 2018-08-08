@@ -642,7 +642,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 })
 export class ResizableColumnsComponent {
 
-    public data = SampleTestData.personIDNameRegionData;
+    public data = SampleTestData.personIDNameRegionData();
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 }
@@ -652,7 +652,7 @@ export class ResizableColumnsComponent {
 })
 export class PinnedColumnsComponent {
 
-    public data = SampleTestData.personIDNameRegionData;
+    public data = SampleTestData.personIDNameRegionData();
     public width = '500px';
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 }
@@ -685,7 +685,7 @@ export class GridFeaturesComponent implements IColumnResized {
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
-    public data = SampleTestData.productInfoDataFull;
+    public data = SampleTestData.productInfoDataFull();
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 
@@ -721,6 +721,6 @@ export class NullColumnsComponent implements OnInit {
             { field: 'Fax', resizable: true }
         ];
 
-        this.data = SampleTestData.contactInfoData;
+        this.data = SampleTestData.contactInfoData();
     }
 }
