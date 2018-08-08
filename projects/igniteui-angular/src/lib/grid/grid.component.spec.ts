@@ -419,7 +419,7 @@ describe('IgxGrid - input properties', () => {
         expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
     });
 
-    fit('should render 10 records if height is 100% and parent container\'s height is unset', () => {
+    it('should render 10 records if height is 100% and parent container\'s height is unset', () => {
         const fix = TestBed.createComponent(IgxGridWrappedInNoHeightContainerComponent);
         fix.componentInstance.grid.height = '700px';
         fix.detectChanges();
@@ -455,7 +455,7 @@ describe('IgxGrid - input properties', () => {
         expect(defaultHeight).not.toBeNull();
         expect(defaultHeightNum).toBeGreaterThan(300);
         expect(defaultHeightNum).toBeLessThan(330);
-        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy()
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
         expect(fix.componentInstance.grid.rowList.length).toEqual(11);
     });
 
