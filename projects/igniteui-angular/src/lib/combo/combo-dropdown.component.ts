@@ -112,7 +112,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     public get selectedItem(): any[] {
-        return this.selectionAPI.get_selection(this.combo.id) || [];
+        const sel = this.selectionAPI.get_selection(this.combo.id);
+        return sel ? Array.from(sel) : [];
     }
 
     /**
