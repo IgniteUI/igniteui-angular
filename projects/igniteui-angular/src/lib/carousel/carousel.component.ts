@@ -315,19 +315,26 @@ export class IgxCarouselComponent implements OnDestroy {
      * @memberOf IgxCarouselComponent
      */
     public remove(slide: IgxSlideComponent) {
-        this.slides.splice(slide.index, 1);
-        this._total -= 1;
+        if (slide && slide === this.get(slide.index)) { // check if the requested slide for delete is present in the carousel
+            if (slide.index === this.current) {
+                slide.active = false;
+                this.next();
+            }
 
-        if (!this.total) {
-            this._currentSlide = null;
-            return;
+            this.slides.splice(slide.index, 1);
+            this._total -= 1;
+
+            if (!this.total) {
+                this._currentSlide = null;
+                return;
+            }
+
+            for (let i = 0; i < this.total; i++) {
+                this.slides[i].index = i;
+            }
+
+            this.onSlideRemoved.emit({ carousel: this, slide });
         }
-
-        for (let i = 0; i < this.total; i++) {
-            this.slides[i].index = i;
-        }
-
-        this.onSlideRemoved.emit({ carousel: this, slide });
     }
 
     /**
