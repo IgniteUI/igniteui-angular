@@ -171,21 +171,21 @@
         )
     );
 
-    @return extend($default-scale, (
-        h1: $h1,
-        h2: $h2,
-        h3: $h3,
-        h4: $h4,
-        h5: $h5,
-        h6: $h6,
-        subtitle-1: $subtitle-1,
-        subtitle-2: $subtitle-2,
-        body-1: $body-1,
-        body-2: $body-2,
-        button: $button,
-        caption: $caption,
-        overline: $overline
-    ));
+    @return (
+        h1: extend(map-get($default-scale, 'h1'), $h1),
+        h2: extend(map-get($default-scale, 'h2'), $h2),
+        h3: extend(map-get($default-scale, 'h3'), $h3),
+        h4: extend(map-get($default-scale, 'h4'), $h4),
+        h5: extend(map-get($default-scale, 'h5'), $h5),
+        h6: extend(map-get($default-scale, 'h6'), $h6),
+        subtitle-1: extend(map-get($default-scale, 'subtitle-1'), $subtitle-1),
+        subtitle-2: extend(map-get($default-scale, 'subtitle-2'), $subtitle-2),
+        body-1: extend(map-get($default-scale, 'body-1'), $body-1),
+        body-2: extend(map-get($default-scale, 'body-2'), $body-2),
+        button: extend(map-get($default-scale, 'button'), $button),
+        caption: extend(map-get($default-scale, 'caption'), $caption),
+        overline: extend(map-get($default-scale, 'overline'), $overline)
+    );
 }
 
 /// Get type scale category config.
