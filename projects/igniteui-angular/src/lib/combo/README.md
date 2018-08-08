@@ -23,7 +23,7 @@ Remote binding, defining `valueKey` and `displayKey`, and exposing `onDataPreLoa
 <igx-combo [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [valueKey]="'ProductID'" [displayKey]="'ProductName'" ></igx-combo>
 ```
 
-```typesciprt
+```typescript
 public ngOnInit() {
     this.remoteData = this.remoteService.remoteData;
 }
