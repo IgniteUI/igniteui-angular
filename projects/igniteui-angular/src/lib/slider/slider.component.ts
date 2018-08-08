@@ -177,6 +177,8 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     private _upperBound?: number;
     private _lowerValue: number;
     private _upperValue: number;
+    private _trackUpperBound: boolean;
+    private _trackLowerBound: boolean;
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -198,6 +200,42 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
         const isRange: boolean = this.type === SliderType.RANGE;
 
         return isRange;
+    }
+
+
+    /**
+     * Returns the maximum value for the `IgxSliderComponent`.
+     * ```typescript
+     *@ViewChild("slider")
+     *public slider: IgxSliderComponent;
+     *ngAfterViewInit(){
+     *    let sliderMax = this.slider.maxValue;
+     *}
+     * ```
+     */
+    public get maxValue(): number {
+        return this._maxValue;
+    }
+
+    /**
+     * Sets the maximal value for the `IgxSliderComponent`.
+     * The default maximum value is 100.
+     * ```html
+     * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="256">
+     * ```
+     */
+    @Input()
+    public set maxValue(value: number) {
+        if (value <= this._minValue) {
+            this._maxValue = this._minValue + 1;
+        } else {
+            this._maxValue = value;
+        }
+
+        if (this._trackUpperBound) {
+            this._upperBound = this._maxValue;
+        }
+        this.invalidateValue();
     }
 
     /**
@@ -225,42 +263,14 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     public set minValue(value: number) {
         if (value >= this.maxValue) {
             this._minValue = this.maxValue - 1;
-            return;
+        } else {
+            this._minValue = value;
         }
 
-        this._minValue = value;
-    }
-
-    /**
-     * Returns the maximum value for the `IgxSliderComponent`.
-     * ```typescript
-     *@ViewChild("slider")
-     *public slider: IgxSliderComponent;
-     *ngAfterViewInit(){
-     *    let sliderMax = this.slider.maxValue;
-     *}
-     * ```
-     */
-    public get maxValue(): number {
-        return this._maxValue;
-    }
-
-    /**
-     * Sets the maximal value for the `IgxSliderComponent`.
-     * The default maximum value is 100.
-     * ```html
-     * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="256">
-     * ```
-     */
-    @Input()
-    public set maxValue(value: number) {
-        if (value <= this._minValue) {
-            this._maxValue = this._minValue + 1;
-
-            return;
+        if (this._trackLowerBound) {
+            this._lowerBound = this._minValue;
         }
-
-        this._maxValue = value;
+        this.invalidateValue();
     }
 
     /**
@@ -286,6 +296,10 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
      */
     @Input()
     public set lowerBound(value: number) {
+        if (this._trackLowerBound) {
+            this._trackLowerBound = false;
+        }
+
         if (value >= this.upperBound) {
             this._lowerBound = this.minValue;
             return;
@@ -317,6 +331,10 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
      */
     @Input()
     public set upperBound(value: number) {
+        if (this._trackUpperBound) {
+            this._trackUpperBound = false;
+        }
+
         if (value <= this.lowerBound) {
             this._upperBound = this.maxValue;
 
@@ -462,10 +480,12 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
     public ngOnInit() {
         if (this.lowerBound === undefined) {
             this.lowerBound = this.minValue;
+            this._trackLowerBound = true;
         }
 
         if (this.upperBound === undefined) {
             this.upperBound = this.maxValue;
+            this._trackUpperBound = true;
         }
 
         if (this.isRange) {
@@ -697,6 +717,48 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
             () => this.isActiveLabel = false,
             this.thumbLabelVisibilityDuration
         );
+    }
+
+    private invalidateValue() {
+        if (!this.isRange) {
+            if (this.value >= this._lowerBound && this.value <= this._upperBound) {
+                this.positionHandlesAndUpdateTrack();
+            } else if (this.value < this._lowerBound) {
+                this.value = this._lowerBound;
+            } else if (this.value > this._upperBound) {
+                this.value = this._upperBound;
+            }
+        } else {
+            const value = this.value as IRangeSliderValue;
+
+            if (value.lower >= this._lowerBound && value.lower <= this._upperBound) {
+                this.positionHandlesAndUpdateTrack();
+            } else if (value.lower < this._lowerBound) {
+                this.value = {
+                    lower: this._lowerBound,
+                    upper: value.upper
+                };
+            } else if (value.lower > this._upperBound) {
+                this.value = {
+                    lower: value.lower,
+                    upper: this._upperBound
+                };
+            }
+
+            if (value.upper >= this._lowerBound && value.upper <= this._upperBound) {
+                this.positionHandlesAndUpdateTrack();
+            } else if (value.upper < this._lowerBound) {
+                this.value = {
+                    lower: this._lowerBound,
+                    upper: value.upper
+                };
+            } else if (value.upper > this._upperBound) {
+                this.value = {
+                    lower: value.lower,
+                    upper: this._upperBound
+                };
+            }
+        }
     }
 
     private generateTickMarks(color: string, interval: number) {

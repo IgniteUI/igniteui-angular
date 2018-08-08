@@ -113,177 +113,177 @@ export class IgxRadioComponent implements ControlValueAccessor {
      * @memberof IgxRadioComponent
      */
     @Input() public value: any;
-/**
- * Sets/gets the `name` attribute of the radio component.
- * ```html
- * <igx-radio name = "Radio1"></igx-radio>
- *  ```
- * ```typescript
- * let name =  this.radio.name;
- * ```
- * @memberof IgxRadioComponent
- */
-@Input() public name: string;
-/**
- * Sets the value of the `tabindex` attribute.
- * ```html
- * <igx-radio [tabindex] = "1"></igx-radio>
- * ```
- * ```typescript
- * let tabIndex =  this.radio.tabindex;
- * ```
- * @memberof IgxRadioComponent
- */
-@Input() public tabindex: number = null;
-/**
- * Enables/disables the ripple effect on the radio button..
- * If not set, the `disableRipple` will have value `false`.
- * ```html
- * <igx-radio [disableRipple] = "true"></igx-radio>
- * ```
- * ```typescript
- * let isDisabledRipple =  this.radio.disableRipple;
- * ```
- * @memberof IgxRadioComponent
- */
-@Input() public disableRipple = false;
-/**
- * Sets/gets whether the radio button is required.
- * If not set, `required` will have value `false`.
- * ```html
- * <igx-radio [required] = "true"></igx-radio>
- * ```
- * ```typescript
- * let isRequired =  this.radio.required;
- * ```
- * @memberof IgxRadioComponent
- */
-@Input() public required = false;
-/**
- * Sets/gets the `aria-labelledby` attribute of the radio component.
- * If not set, the `aria-labelledby` will be equal to the value of `labelId` attribute.
- * ```html
- * <igx-radio aria-labelledby = "Radio1"></igx-radio>
- * ```
- * ```typescript
- * let ariaLabelledBy = this.radio.ariaLabelledBy;
- * ```
- * @memberof IgxRadioComponent
- */
-@Input('aria-labelledby')
+    /**
+     * Sets/gets the `name` attribute of the radio component.
+     * ```html
+     * <igx-radio name = "Radio1"></igx-radio>
+     *  ```
+     * ```typescript
+     * let name =  this.radio.name;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @Input() public name: string;
+    /**
+     * Sets the value of the `tabindex` attribute.
+     * ```html
+     * <igx-radio [tabindex] = "1"></igx-radio>
+     * ```
+     * ```typescript
+     * let tabIndex =  this.radio.tabindex;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @Input() public tabindex: number = null;
+    /**
+     * Enables/disables the ripple effect on the radio button..
+     * If not set, the `disableRipple` will have value `false`.
+     * ```html
+     * <igx-radio [disableRipple] = "true"></igx-radio>
+     * ```
+     * ```typescript
+     * let isDisabledRipple =  this.radio.disableRipple;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @Input() public disableRipple = false;
+    /**
+     * Sets/gets whether the radio button is required.
+     * If not set, `required` will have value `false`.
+     * ```html
+     * <igx-radio [required] = "true"></igx-radio>
+     * ```
+     * ```typescript
+     * let isRequired =  this.radio.required;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @Input() public required = false;
+    /**
+     * Sets/gets the `aria-labelledby` attribute of the radio component.
+     * If not set, the `aria-labelledby` will be equal to the value of `labelId` attribute.
+     * ```html
+     * <igx-radio aria-labelledby = "Radio1"></igx-radio>
+     * ```
+     * ```typescript
+     * let ariaLabelledBy = this.radio.ariaLabelledBy;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @Input('aria-labelledby')
     public ariaLabelledBy = this.labelId;
-/**
- * Sets/gets the `aria-label` attribute of the radio component.
- * ```html
- * <igx-radio aria-label = "Radio1"></igx-radio>
- * ```
- * ```typescript
- * let ariaLabel =  this.radio.ariaLabel;
- * ```
- * @memberof IgxRadioComponent
- */
-@Input('aria-label')
+    /**
+     * Sets/gets the `aria-label` attribute of the radio component.
+     * ```html
+     * <igx-radio aria-label = "Radio1"></igx-radio>
+     * ```
+     * ```typescript
+     * let ariaLabel =  this.radio.ariaLabel;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @Input('aria-label')
     public ariaLabel: string | null = null;
-/**
- * An event that is emitted after the radio `value` is changed.
- * Provides references to the `IgxRadioComponent` and the `value` property as event arguments.
- * @memberof IgxRadioComponent
- */
-@Output()
+    /**
+     * An event that is emitted after the radio `value` is changed.
+     * Provides references to the `IgxRadioComponent` and the `value` property as event arguments.
+     * @memberof IgxRadioComponent
+     */
+    @Output()
     readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
-/**
- * Returns the class of the radio component.
- * ```typescript
- * let radioClass = this.radio.cssClass;
- * ```
- * @memberof IgxRadioComponent
- */
-@HostBinding('class.igx-radio')
+    /**
+     * Returns the class of the radio component.
+     * ```typescript
+     * let radioClass = this.radio.cssClass;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @HostBinding('class.igx-radio')
     public cssClass = 'igx-radio';
-/**
- * Sets/gets  the `checked` attribute.
- * Default value is `false`.
- * ```html
- * <igx-radio [checked] = "true"></igx-radio>
- * ```
- * ```typescript
- * let isChecked =  this.radio.checked;
- * ```
- * @memberof IgxRadioComponent
- */
-@HostBinding('class.igx-radio--checked')
+    /**
+     * Sets/gets  the `checked` attribute.
+     * Default value is `false`.
+     * ```html
+     * <igx-radio [checked] = "true"></igx-radio>
+     * ```
+     * ```typescript
+     * let isChecked =  this.radio.checked;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @HostBinding('class.igx-radio--checked')
     @Input() public checked = false;
-/**
- * Sets/gets  the `disabled` attribute.
- * Default value is `false`.
- * ```html
- * <igx-radio [disabled] = "true"></igx-radio>
- * ```
- * ```typescript
- * let isDisabled =  this.radio.disabled;
- * ```
- * @memberof IgxRadioComponent
- */
-@HostBinding('class.igx-radio--disabled')
+    /**
+     * Sets/gets  the `disabled` attribute.
+     * Default value is `false`.
+     * ```html
+     * <igx-radio [disabled] = "true"></igx-radio>
+     * ```
+     * ```typescript
+     * let isDisabled =  this.radio.disabled;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @HostBinding('class.igx-radio--disabled')
     @Input() public disabled = false;
-/**
- * Sets/gets whether the radio component is on focus.
- * Default value is `false`.
- * ```typescript
- * this.radio.focus = true;
- * ```
- * ```typescript
- * let isFocused =  this.radio.focused;
- * ```
- * @memberof IgxRadioComponent
- */
-@HostBinding('class.igx-radio--focused')
+    /**
+     * Sets/gets whether the radio component is on focus.
+     * Default value is `false`.
+     * ```typescript
+     * this.radio.focus = true;
+     * ```
+     * ```typescript
+     * let isFocused =  this.radio.focused;
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    @HostBinding('class.igx-radio--focused')
     public focused = false;
-/**
- *@hidden
- */
-public inputId = `${this.id}-input`;
+    /**
+     *@hidden
+     */
+    public inputId = `${this.id}-input`;
     /**
      *@hidden
      */
     protected _value: any = null;
 
     constructor() { }
-/**
- *@hidden
- */
-private _onTouchedCallback: () => void = noop;
-/**
- *@hidden
- */
-private _onChangeCallback: (_: any) => void = noop;
-/**
- *@hidden
- */
-public _onRadioChange(event) {
+    /**
+     *@hidden
+     */
+    private _onTouchedCallback: () => void = noop;
+    /**
+     *@hidden
+     */
+    private _onChangeCallback: (_: any) => void = noop;
+    /**
+     *@hidden
+     */
+    public _onRadioChange(event) {
         event.stopPropagation();
     }
-/**
- *@hidden
- */
-public _onRadioClick(event) {
+    /**
+     *@hidden
+     */
+    public _onRadioClick(event) {
         event.stopPropagation();
         this.select();
     }
-/**
- *@hidden
- */
-public _onLabelClick() {
+    /**
+     *@hidden
+     */
+    public _onLabelClick() {
         this.select();
     }
-/**
- * Selects the current radio button.
- * ```typescript
- * this.radio.select();
- * ```
- * @memberof IgxRadioComponent
- */
-public select() {
+    /**
+     * Selects the current radio button.
+     * ```typescript
+     * this.radio.select();
+     * ```
+     * @memberof IgxRadioComponent
+     */
+    public select() {
         if (this.disabled) {
             return;
         }
@@ -293,21 +293,21 @@ public select() {
         this.change.emit({ value: this.value, radio: this });
         this._onChangeCallback(this.value);
     }
-/**
- * Checks whether the provided value is consistent to the current radio button.
- * If it is, the checked attribute will have value `true`;
- * ```typescript
- * this.radio.writeValue('radioButtonValue');
- * ```
- */
-public writeValue(value: any) {
+    /**
+     * Checks whether the provided value is consistent to the current radio button.
+     * If it is, the checked attribute will have value `true`;
+     * ```typescript
+     * this.radio.writeValue('radioButtonValue');
+     * ```
+     */
+    public writeValue(value: any) {
         this._value = value;
         this.checked = (this._value === this.value);
     }
-/**
- *@hidden
- */
-public get labelClass(): string {
+    /**
+     *@hidden
+     */
+    public get labelClass(): string {
         switch (this.labelPosition) {
             case RadioLabelPosition.BEFORE:
                 return `${this.cssClass}__label--before`;
@@ -316,25 +316,25 @@ public get labelClass(): string {
                 return `${this.cssClass}__label`;
         }
     }
-/**
- *@hidden
- */
-public onFocus(event) {
+    /**
+     *@hidden
+     */
+    public onFocus(event) {
         this.focused = true;
     }
-/**
- *@hidden
- */
-public onBlur(event) {
+    /**
+     *@hidden
+     */
+    public onBlur(event) {
         this.focused = false;
         this._onTouchedCallback();
     }
-/**
- *@hidden
- */
-public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
-/**
- *@hidden
- */
-public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    /**
+     *@hidden
+     */
+    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    /**
+     *@hidden
+     */
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }

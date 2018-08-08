@@ -6,13 +6,13 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null] - The list background color.
-/// @param {Color} $header-background [null] - The list header background color.
-/// @param {Color} $header-text-color [null] - The list header text color.
-/// @param {Color} $item-background [null] - The list item background color.
-/// @param {Color} $item-text-color [null] - The list item text color.
-/// @param {Color} $item-background-active [null] - The active list item background color.
-/// @param {Color} $item-text-color-active [null] - The active list item text color.
+/// @param {Color} $background [#fff] - The list background color.
+/// @param {Color} $header-background [#fff] - The list header background color.
+/// @param {Color} $header-text-color [secondary 500] - The list header text color.
+/// @param {Color} $item-background [#fff] - The list item background color.
+/// @param {Color} $item-text-color [rgba(0, 0, 0, .74)] - The list item text color.
+/// @param {Color} $item-background-active [rgba(0, 0, 0, .04)] - The active list item background color.
+/// @param {Color} $item-text-color-active [rgba(0, 0, 0, .74)] - The active list item text color.
 /// @requires text-contrast
 ///
 /// @example scss Change the list background color
@@ -81,8 +81,8 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires igx-color
 /// @requires em
+/// @requires --var
 @mixin igx-list($theme) {
     @include igx-root-css-vars($theme);
 
@@ -158,4 +158,3 @@
         transition: left .3s $ease-out-quad;
     }
 }
-

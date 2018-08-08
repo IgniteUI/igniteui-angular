@@ -28,14 +28,17 @@ describe('Update 6.1.0', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should update igxToggle events', done => {
+    it('should update igxToggle events and selectors', done => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
+            `<igx-tab-bar attr igxForRemote="true"></igx-tab-bar>` +
             `<elem igxToggle (onOpen)="handler" (onClose)="handler"></elem>`
         );
         const tree = schematicRunner.runSchematic('migration-04', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(`<elem igxToggle (onOpened)="handler" (onClosed)="handler"></elem>`);
+            .toEqual(
+                `<igx-bottom-nav attr></igx-bottom-nav>` +
+                `<elem igxToggle (onOpened)="handler" (onClosed)="handler"></elem>`);
         done();
     });
 });

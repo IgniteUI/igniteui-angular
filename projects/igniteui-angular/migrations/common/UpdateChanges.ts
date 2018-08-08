@@ -14,25 +14,25 @@ export class UpdateChanges {
     protected outputChanges: OutputChanges;
     protected selectorChanges: SelectorChanges;
 
-    private _templateFiles: FileEntry[] = [];
-    public get templateFiles(): FileEntry[] {
+    private _templateFiles: string[] = [];
+    public get templateFiles(): string[] {
         if (!this._templateFiles.length) {
             // https://github.com/angular/devkit/blob/master/packages/angular_devkit/schematics/src/tree/filesystem.ts
             this.sourceDirsVisitor((fulPath, entry) => {
                 if (fulPath.endsWith('component.html')) {
-                    this._templateFiles.push(entry);
+                    this._templateFiles.push(entry.path);
                 }
             });
         }
         return this._templateFiles;
     }
 
-    private _tsFiles: FileEntry[] = [];
-    public get tsFiles(): FileEntry[] {
+    private _tsFiles: string[] = [];
+    public get tsFiles(): string[] {
         if (!this._tsFiles.length) {
             this.sourceDirsVisitor((fulPath, entry) => {
                 if (fulPath.endsWith('.ts')) {
-                    this._tsFiles.push(entry);
+                    this._tsFiles.push(entry.path);
                 }
             });
         }
@@ -63,26 +63,26 @@ export class UpdateChanges {
     /** Apply configured changes to the Host Tree */
     public applyChanges() {
         if (this.selectorChanges && this.selectorChanges.changes.length) {
-            for (const entry of this.templateFiles) {
-                this.updateSelectors(entry);
+            for (const entryPath of this.templateFiles) {
+                this.updateSelectors(entryPath);
             }
         }
         if (this.outputChanges && this.outputChanges.changes.length) {
-            for (const entry of this.templateFiles) {
-                this.updateOutputs(entry);
+            for (const entryPath of this.templateFiles) {
+                this.updateOutputs(entryPath);
             }
         }
 
         /** TS files */
         if (this.classChanges && this.classChanges.changes.length) {
-            for (const entry of this.tsFiles) {
-                this.updateClasses(entry);
+            for (const entryPath of this.tsFiles) {
+                this.updateClasses(entryPath);
             }
         }
     }
 
-    protected updateSelectors(entry: FileEntry) {
-        let fileContent = entry.content.toString();
+    protected updateSelectors(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
         for (const change of this.selectorChanges.changes) {
             let searchPttrn = change.type === 'component' ? '<' : '';
@@ -93,7 +93,7 @@ export class UpdateChanges {
             }
         }
         if (overwrite) {
-            this.host.overwrite(entry.path, fileContent);
+            this.host.overwrite(entryPath, fileContent);
         }
     }
 
@@ -127,8 +127,8 @@ export class UpdateChanges {
         return fileContent;
     }
 
-    protected updateClasses(entry: FileEntry) {
-        let fileContent = entry.content.toString();
+    protected updateClasses(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
         for (const change of this.classChanges.changes) {
             if (fileContent.indexOf(change.name) !== -1) {
@@ -142,12 +142,12 @@ export class UpdateChanges {
             }
         }
         if (overwrite) {
-            this.host.overwrite(entry.path, fileContent);
+            this.host.overwrite(entryPath, fileContent);
         }
     }
 
-    protected updateOutputs(entry: FileEntry) {
-        let fileContent = entry.content.toString();
+    protected updateOutputs(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
         for (const change of this.outputChanges.changes) {
             if (fileContent.indexOf(change.owner.selector) !== -1 && fileContent.indexOf(change.name) !== -1) {
@@ -181,7 +181,7 @@ export class UpdateChanges {
             }
         }
         if (overwrite) {
-            this.host.overwrite(entry.path, fileContent);
+            this.host.overwrite(entryPath, fileContent);
         }
     }
 

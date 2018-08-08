@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, filter } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 
 @Injectable({ providedIn: 'root' })
@@ -34,9 +34,24 @@ export class IgxOverlayService {
         closeOnOutsideClick: true
     };
 
+    /**
+     * Emitted before the component is opened.
+     */
     public onOpening = new EventEmitter<OverlayEventArgs>();
+
+    /**
+     * Emitted after the component is opened and all animations are finished.
+     */
     public onOpened = new EventEmitter<OverlayEventArgs>();
+
+    /**
+     * Emitted before the component is closed.
+     */
     public onClosing = new EventEmitter<OverlayEventArgs>();
+
+    /**
+     * Emitted after the component is closed and all animations are finished.
+     */
     public onClosed = new EventEmitter<OverlayEventArgs>();
 
     constructor(
@@ -48,6 +63,9 @@ export class IgxOverlayService {
         this._document = <Document>this.document;
     }
 
+    /**
+     * Shows the provided component.
+     */
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
         const id: string = (this._componentId++).toString();
         settings = Object.assign({}, this._defaultSettings, settings);
@@ -95,6 +113,9 @@ export class IgxOverlayService {
         return id;
     }
 
+    /**
+     * Hides the component with the ID provided as a parameter.
+     */
     hide(id: string) {
         const info: OverlayInfo = this.getOverlayById(id);
 
@@ -129,6 +150,9 @@ export class IgxOverlayService {
         }
     }
 
+    /**
+     * Hides all the components and the overlay.
+     */
     hideAll() {
         // since overlays are removed on animation done, que all hides
         for (let i = this._overlayInfos.length; i--;) {
@@ -136,6 +160,9 @@ export class IgxOverlayService {
         }
     }
 
+    /**
+     * Repositions the component with ID provided as a parameter.
+     */
     reposition(id: string) {
         const overlay = this.getOverlayById(id);
         if (!overlay) {
@@ -243,13 +270,10 @@ export class IgxOverlayService {
 
     private setupModalWrapper(info: OverlayInfo) {
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
-        fromEvent(wrapperElement, 'keydown')
-            .pipe(take(1))
-            .subscribe((ev: KeyboardEvent) => {
-                if (ev.key === 'Escape') {
-                    this.hide(info.id);
-                }
-            });
+        fromEvent(wrapperElement, 'keydown').pipe(
+            filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
+            take(1)
+        ).subscribe(() => this.hide(info.id));
         wrapperElement.classList.remove('igx-overlay__wrapper');
         this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
         wrapperElement.classList.add('igx-overlay__wrapper--modal');
@@ -271,12 +295,6 @@ export class IgxOverlayService {
         if (info.hook) {
             info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
             info.hook.parentElement.removeChild(info.hook);
-        }
-
-        if (info.settings.closeOnOutsideClick) {
-            if (this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length === 1) {
-                this._document.removeEventListener('click', this.documentClicked, true);
-            }
         }
 
         const index = this._overlayInfos.indexOf(info);

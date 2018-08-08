@@ -3,26 +3,3 @@
 // Generate a palette
 @include igx-core();
 @include igx-theme($default-palette);
-
-
-$my-dd-theme: igx-drop-down-theme(
-    $selected-item-background: igx-color($default-palette, 'primary', 100),
-    $header-text-color: #09f,
-    $selected-hover-item-background: igx-color($default-palette, 'primary', 200),
-    $selected-focus-item-background: igx-color($default-palette, 'primary', 200)
-);
-
-$my-input-theme: igx-input-group-theme(
-    $idle-bottom-line-color: transparent,
-    $hover-bottom-line-color: transparent,
-    $filled-bottom-line-color: #09f
-);
-
-
-.combo-sample {
-    @include igx-drop-down($my-dd-theme);
-}
-
-.igx-combo__search {
-    @include igx-input-group($my-input-theme);
-}

@@ -23,7 +23,7 @@ Remote binding, defining `valueKey` and `displayKey`, and exposing `onDataPreLoa
 <igx-combo [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [valueKey]="'ProductID'" [displayKey]="'ProductName'" ></igx-combo>
 ```
 
-```typesciprt
+```typescript
 public ngOnInit() {
     this.remoteData = this.remoteService.remoteData;
 }
@@ -77,7 +77,7 @@ set values(newValues: Array<any>) {
 By default filtering in the combo is enabled. However you can disable it using the following code:
 
 ```html
-<igx-combo [filaterable]="false"></igx-combo>
+<igx-combo [filterable]="false"></igx-combo>
 ```
 
 <div class="divider--half"></div>
@@ -195,9 +195,9 @@ When igxCombo is opened and list item is focused:
 
 - `Esc` will close the list.
 
-When igxCombo is opened allow custom values are enabled and add item button is focused:
+When igxCombo is opened, allow custom values are enabled and add item button is focused:
 
-- `Space` and `Enter` will add new item with valueKey and displayKey equal to the text in the search input and will select the new item.
+- `Enter` will add new item with valueKey and displayKey equal to the text in the search input and will select the new item.
 
 - `ArrowUp` focus will be moved back to the last list item or if list is empty will be moved to the search input.
 
@@ -211,17 +211,18 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 |  `id`                    | combo id                                          | string                      |
 |  `data`                  | combo data source                                 | any                         |
 |  `value`                 | combo value                                       | string                      |
-|  `allowCustomValue`      | enable/disables combo custom value                | boolean                     |
+|  `allowCustomValue`      | enables/disables combo custom value                | boolean                     |
+|  `filterable`            | enables/disables combo drop down filtering - enabled by default                  | boolean                     |
 |  `valueKey`              | combo value data source property                  | string                      |
 |  `displayKey`            | combo display data source property                | string                      |
 |  `groupKey`              | combo item group                                  | string                      |
 |  `virtualizationState`   | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
 |  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
-|  `heigth`                | defines combo height                              | string                      |
-|  `itemsMaxHeight `       | defines drop down height                          | string                      |
-|  `itemsMaxWidth `        | defines drop down width                           | string                      |
-|  `itemHeight `           | defines drop down item height                     | string                      |
+|  `height`                | defines combo height                              | string                      |
+|  `itemsMaxHeight `       | defines drop down maximum height                  | number                      |
+|  `itemsWidth `           | defines drop down width                           | string                      |
+|  `itemHeight `           | defines drop down item height                     | number                      |
 |  `placeholder `          | defines the "empty value" text                    | string                      |
 |  `searchPlaceholder `    | defines the placeholder text for search input     | string                      |
 |  `collapsed`             | gets drop down state                              | boolean                     |
@@ -238,10 +239,10 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 | `onSearchInput`     | Emitted when an the search input's input event is triggered             | false        | { searchValue: `string` }               |
 | `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>` }|
 | `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: Event }                        |
-| `dropDownOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
-| `dropDownOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
-| `dropDownClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |
-| `dropDownClosed`    | Emitted after the dropdown is closed                                    | false        | { event: Event }                        |
+| `onOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
+| `onOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
+| `onClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |
+| `onClosed`    | Emitted after the dropdown is closed                                    | false        | { event: Event }                        |
 
 ### Methods
 

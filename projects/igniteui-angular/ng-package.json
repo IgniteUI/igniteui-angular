@@ -4,5 +4,10 @@
   "deleteDestPath": false,
   "lib": {
     "entryFile": "src/public_api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+      "@types/hammerjs",
+      "hammerjs",
+      "jszip"
+    ]
 }

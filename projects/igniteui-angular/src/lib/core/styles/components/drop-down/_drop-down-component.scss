@@ -27,6 +27,10 @@
         @extend %igx-drop-down__item--selected !optional;
     }
 
+    @include e(item, $mods: (selected, focused)) {
+        @extend %igx-drop-down__item--selected--focused !optional;
+    }
+
     @include e(item, $m: disabled) {
         @extend %igx-drop-down__item--disabled !optional;
     }

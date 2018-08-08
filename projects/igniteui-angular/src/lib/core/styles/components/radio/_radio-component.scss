@@ -11,6 +11,21 @@
 
     @extend %radio-display !optional;
 
+    &:hover {
+        @include e(ripple) {
+            @extend %radio-ripple--hover !optional;
+            @extend %radio-ripple--hover-unchecked !optional;
+        }
+    }
+
+    &:active {
+        @include e(ripple) {
+            @extend %radio-ripple--hover !optional;
+            @extend %radio-ripple--hover-unchecked !optional;
+            @extend %radio-ripple--pressed !optional;
+        }
+    }
+
     @include e(input) {
         @extend %radio-input !optional;
     }
@@ -42,6 +57,21 @@
     @include m(checked) {
         @include e(composite) {
             @extend %radio-composite--x !optional;
+        }
+
+        &:hover {
+            @include e(ripple) {
+                @extend %radio-ripple--hover !optional;
+                @extend %radio-ripple--hover-checked !optional;
+            }
+        }
+
+        &:active {
+            @include e(ripple) {
+                @extend %radio-ripple--hover !optional;
+                @extend %radio-ripple--hover-checked !optional;
+                @extend %radio-ripple--pressed !optional;
+            }
         }
     }
 

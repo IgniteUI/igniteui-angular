@@ -31,6 +31,31 @@
     @return ($pixels / $context) * 1rem;
 }
 
+/// Calculates the luminance for a given color.
+/// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests.
+///
+/// @param {Color} $color - The color to calculate luminance for.
+@function luminance($color) {
+    $red: nth($linear-channel-values, red($color) + 1);
+    $green: nth($linear-channel-values, green($color) + 1);
+    $blue: nth($linear-channel-values, blue($color) + 1);
+
+    @return .2126 * $red + .7152 * $green + .0722 * $blue;
+}
+
+/// Calculates the contrast ratio between two colors.
+/// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+///
+/// @param {Color} $background - The background color.
+/// @param {Color} $foreground - The foreground color.
+/// @returns {Number} - The contrast ratio between the background and foreground colors.
+@function contrast($background, $foreground) {
+    $backLum: luminance($background) + .05;
+    $foreLum: luminance($foreground) + .05;
+
+    @return max($backLum, $foreLum) / min($backLum, $foreLum);
+}
+
 /// Generates a color shade from base color and saturation level.
 /// @access private
 /// @group Palettes
@@ -98,18 +123,16 @@
 /// @access public
 /// @group Palettes
 /// @param {Color} $color - The color used to return a contrast color for.
-/// @returns {Color} - Returns either white or black depending on the brightness of the input color.
+/// @returns {Color} - Returns either white or black depending on the luminance of the input color.
 @function text-contrast($color) {
-    @if type-of($color) == color {
-        $color-brightness: round((red($color) * 299) + (green($color) * 587) + (blue($color) * 114) / 1000);
-        $light-color: round((red(#fff) * 299) + (green(#fff) * 587) + (blue(#fff) * 114) / 1000);
-        @if abs($color-brightness) < ($light-color / 2) {
-            @return #fff;
-        } @else {
-            @return #000;
-        }
+    $lightContrast: contrast($color, white);
+    $darkContrast: contrast($color, black);
+
+    @if ($lightContrast > $darkContrast) {
+        @return white;
+    } @else {
+        @return black;
     }
-    @return $color;
 }
 
 /// Test if `$value` is a valid direction.
@@ -126,7 +149,7 @@
 /// is in the list of known components.
 /// @access private
 /// @param {String|List} $excludes - The components list to check in.
-/// @return {List}
+/// @return {List} - The list of passed items.
 @function is-component($items) {
     $register: map-keys($components);
     @each $item in $items {
@@ -141,7 +164,7 @@
 /// @access private
 /// @param {number} $num - The number to convert.
 /// @param {radix} $radix - The base radix to use for the conversion.
-/// @return {String}
+/// @return {String} - The resulting string.
 @function to-string($num, $radix: 16) {
     $chars: '0123456789abcdef';
     $result: '';
@@ -166,7 +189,7 @@
 /// @access public
 /// @requires {function} to-string
 /// @param {Color} $rgba - The rgba color to convert.
-/// @return {Color}
+/// @return {Color} - The hexidecimal representation of the rgba value.
 @function hexrgba($rgba) {
     @if type-of($rgba) == color {
         $red: red($rgba);
@@ -290,16 +313,16 @@
             800: rgba(0, 0, 0, .74),
             900: rgba(0, 0, 0, .87),
             contrast: (
-                50: text-contrast(rgba(0, 0, 0, .02)),
-                100: text-contrast(rgba(0, 0, 0, .04)),
-                200: text-contrast(rgba(0, 0, 0, .08)),
-                300: text-contrast(rgba(0, 0, 0, .12)),
-                400: text-contrast(rgba(0, 0, 0, .26)),
-                500: text-contrast(rgba(0, 0, 0, .38)),
-                600: text-contrast(rgba(0, 0, 0, .54)),
-                700: text-contrast(rgba(0, 0, 0, .62)),
-                800: text-contrast(rgba(0, 0, 0, .74)),
-                900: text-contrast(rgba(0, 0, 0, .87)),
+                50: text-contrast(hexrgba(rgba(0, 0, 0, .02))),
+                100: text-contrast(hexrgba(rgba(0, 0, 0, .04))),
+                200: text-contrast(hexrgba(rgba(0, 0, 0, .08))),
+                300: text-contrast(hexrgba(rgba(0, 0, 0, .12))),
+                400: text-contrast(hexrgba(rgba(0, 0, 0, .26))),
+                500: text-contrast(hexrgba(rgba(0, 0, 0, .38))),
+                600: text-contrast(hexrgba(rgba(0, 0, 0, .54))),
+                700: text-contrast(hexrgba(rgba(0, 0, 0, .62))),
+                800: text-contrast(hexrgba(rgba(0, 0, 0, .74))),
+                900: text-contrast(hexrgba(rgba(0, 0, 0, .87))),
             )
         )
     );
@@ -339,7 +362,8 @@
 ///   // %igx-avatar-icon {
 ///   //   color: var(--igx-avatar-icon-color);
 ///   // }
-///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme':
+///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme';
+/// @returns {String} - The value of the key in the passed map, or the name of key concatenated with the key name.
 @function --var($map, $key) {
     $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, true);
 

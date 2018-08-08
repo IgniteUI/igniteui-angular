@@ -7,22 +7,26 @@ import { IgxGridModule } from './index';
 const CELL_CSS_CLASS = '.igx-grid__td';
 describe('IgxGrid - CRUD operations', () => {
 
+    let fix;
+    let grid;
+    let data;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultCRUDGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
-        }).compileComponents();
+        }).compileComponents()
+        .then(() => {
+            fix = TestBed.createComponent(DefaultCRUDGridComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.instance;
+            data = fix.componentInstance.data;
+        });
     }));
 
     it('should support adding rows through the grid API', () => {
-        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.instance;
-        const data = fix.componentInstance.data;
-
         expect(grid.data.length).toEqual(data.length);
         expect(grid.rowList.length).toEqual(grid.data.length);
 
@@ -37,11 +41,6 @@ describe('IgxGrid - CRUD operations', () => {
     });
 
     it('should support adding rows by manipulating the `data` @Input of the grid', () => {
-        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.instance;
-
         // Add to the data array without changing the reference
         // with manual detection
         for (let i = 0; i < 10; i++) {
@@ -68,12 +67,6 @@ describe('IgxGrid - CRUD operations', () => {
     });
 
     it('should support deleting rows through the grid API', () => {
-        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.instance;
-        const data = fix.componentInstance.data;
-
         grid.deleteRow(1);
         fix.detectChanges();
 
@@ -108,11 +101,6 @@ describe('IgxGrid - CRUD operations', () => {
     });
 
     it('should support removing rows by manipulating the `data` @Input of the grid', () => {
-        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.instance;
-
         // Remove from the data array without changing the reference
         // with manual detection
         fix.componentInstance.data.pop();
@@ -143,12 +131,6 @@ describe('IgxGrid - CRUD operations', () => {
     });
 
     it('should support updating a row through the grid API', () => {
-        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.instance;
-        const data = fix.componentInstance.data;
-
         spyOn(grid.onEditDone, 'emit').and.callThrough();
 
         // Update non-existing row
@@ -159,7 +141,8 @@ describe('IgxGrid - CRUD operations', () => {
         expect(grid.data[0].index).not.toEqual(-100);
 
         // Update an existing row
-        grid.updateRow('change', 0);
+        grid.updateRow('change', 1);
+        fix.detectChanges();
 
         const row = grid.rowList.toArray()[0];
         const args: IGridEditEventArgs = {
@@ -169,24 +152,17 @@ describe('IgxGrid - CRUD operations', () => {
             newValue: { index: 200, value: 200 }
         };
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
-            expect(grid.rowList.first.cells.first.value).toEqual(200);
-            expect(grid.data[0].index).toEqual(200);
-        });
+        expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
+        expect(grid.rowList.first.cells.first.value).toEqual(200);
+        expect(grid.data[0].index).toEqual(200);
     });
 
-    it('should support updating a cell value through the grid API', async(() => {
-        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.instance;
-
+    it('should support updating a cell value through the grid API', () => {
         spyOn(grid.onEditDone, 'emit').and.callThrough();
 
         // Update a non-existing cell
         grid.updateCell(-100, 100, 'index');
+        fix.detectChanges();
 
         const cell = grid.getCellByColumn(0, 'index');
         const args: IGridEditEventArgs = {
@@ -196,114 +172,116 @@ describe('IgxGrid - CRUD operations', () => {
             newValue: 200
         };
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
-            expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch('-100');
+        expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
+        expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch('-100');
 
-            // Update an existing cell
-            grid.updateCell('change', 1, 'index');
-
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-
-            expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
-            expect(grid.rowList.first.cells.first.value).toEqual(200);
-            expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('200');
-        });
-    }));
-
-    it('should support updating a cell value through the cell object', async(() => {
-        const fix = TestBed.createComponent(DefaultCRUDGridComponent);
+        // Update an existing cell
+        grid.updateCell('change', 1, 'index');
         fix.detectChanges();
 
-        const grid = fix.componentInstance.instance;
+        expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
+        expect(grid.rowList.first.cells.first.value).toEqual(200);
+        expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('200');
+    });
 
+    it('should support updating a cell value through the cell object', () => {
         const firstCell = grid.getCellByColumn(0, 'index');
         firstCell.update(100);
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
+        fix.detectChanges();
 
-            expect(grid.rowList.first.cells.first.value).toEqual(100);
-            expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('100');
-        });
-    }));
+        expect(grid.rowList.first.cells.first.value).toEqual(100);
+        expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('100');
+    });
 
-    it('should update row through row object when PK is defined', async(() => {
-        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.instance;
+    it('should update row through row object when PK is defined', () => {
         let firstRow = grid.getRowByKey(1);
         firstRow.update({ index: 31, value: 51});
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            firstRow = grid.getRowByKey(31);
-            expect(firstRow).toBeDefined();
-            const firstCell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-            const secondCell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
-            expect(parseInt(firstCell.nativeElement.innerText, 10)).toBe(31);
-            expect(parseInt(secondCell.nativeElement.innerText, 10)).toBe(51);
-        });
-    }));
+        fix.detectChanges();
+        firstRow = grid.getRowByKey(31);
+        expect(firstRow).toBeDefined();
+        const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        expect(parseInt(firstCell.nativeElement.innerText, 10)).toBe(31);
+        expect(parseInt(secondCell.nativeElement.innerText, 10)).toBe(51);
+    });
 
-    it('should update row through row object when PK is NOT defined', async(() => {
-        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.instance;
+    it('should update row through row object when PK is NOT defined', () => {
         grid.primaryKey = null;
-        fixture.detectChanges();
+        fix.detectChanges();
         expect(grid.primaryKey).toBeNull();
         let firstRow = grid.getRowByIndex(0);
         firstRow.update({ index: 100, value: 99});
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            firstRow = grid.getRowByIndex(0);
-            expect(firstRow).toBeDefined();
-            const firstCell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-            const secondCell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
-            expect(parseInt(firstCell.nativeElement.innerText, 10)).toBe(100);
-            expect(parseInt(secondCell.nativeElement.innerText, 10)).toBe(99);
-        });
-    }));
+        fix.detectChanges();
+        firstRow = grid.getRowByIndex(0);
+        expect(firstRow).toBeDefined();
+        const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        expect(parseInt(firstCell.nativeElement.innerText, 10)).toBe(100);
+        expect(parseInt(secondCell.nativeElement.innerText, 10)).toBe(99);
+    });
 
-    it('should delete row through row object when PK is defined', async(() => {
-        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.instance;
+    it('should delete row through row object when PK is defined', () => {
         let firstRow = grid.getRowByKey(1);
         firstRow.delete();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            firstRow = grid.getRowByKey(1);
-            expect(firstRow).toBeUndefined();
-            expect(grid.rowList.length).toBe(0);
-        });
-    }));
+        fix.detectChanges();
+        firstRow = grid.getRowByKey(1);
+        expect(firstRow).toBeUndefined();
+        expect(grid.rowList.length).toBe(0);
+    });
 
-    it('should delete row through row object when PK is NOT defined', async(() => {
-        const fixture = TestBed.createComponent(DefaultCRUDGridComponent);
-        fixture.detectChanges();
+    it('should delete row through row object when PK is defined and there is cell in edit mode', () => {
+        const indexColumn = grid.getColumnByName('index');
+        indexColumn.editable = true;
+        fix.detectChanges();
+        const cell = grid.getCellByKey(1, 'index');
+        const cellDom = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        fix.detectChanges();
+        cellDom.triggerEventHandler('dblclick', {});
+        fix.detectChanges();
+        expect(cell.inEditMode).toBe(true);
+        grid.deleteRow(1);
+        fix.detectChanges();
+        const firstRow = grid.getRowByKey(1);
+        expect(firstRow).toBeUndefined();
+        expect(grid.rowList.length).toBe(0);
+    });
 
-        const grid = fixture.componentInstance.instance;
+    it('should delete row through row object when PK is NOT defined', () => {
         grid.primaryKey = null;
-        fixture.detectChanges();
+        fix.detectChanges();
         expect(grid.primaryKey).toBeNull();
         let firstRow = grid.getRowByIndex(0);
         firstRow.delete();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            firstRow = grid.getRowByIndex(0);
-            expect(firstRow).toBeUndefined();
-            expect(grid.rowList.length).toBe(0);
-        });
-    }));
+        fix.detectChanges();
+        firstRow = grid.getRowByIndex(0);
+        expect(firstRow).toBeUndefined();
+        expect(grid.rowList.length).toBe(0);
+    });
+
+    it('should delete row through row object when PK is NOT defined and there is cell in edit mode', () => {
+        const indexColumn = grid.getColumnByName('index');
+        indexColumn.editable = true;
+        grid.primaryKey = null;
+        fix.detectChanges();
+        expect(grid.primaryKey).toBeNull();
+        const cell = grid.getCellByColumn(0, 'index');
+        const cellDom = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+        let firstRow;
+        fix.detectChanges();
+        cellDom.triggerEventHandler('dblclick', {});
+        fix.detectChanges();
+        expect(cell.inEditMode).toBe(true);
+        firstRow = grid.getRowByIndex(0);
+        firstRow.delete();
+        fix.detectChanges();
+        firstRow = grid.getRowByIndex(0);
+        expect(firstRow).toBeUndefined();
+        expect(grid.rowList.length).toBe(0);
+    });
+
 });
 
 @Component({

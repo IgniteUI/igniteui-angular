@@ -17,9 +17,8 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { fromEvent, interval, Observable, Subscription } from 'rxjs';
+import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
-import { BaseComponent } from '../core/base';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
@@ -77,7 +76,6 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Position of the Navigation Drawer. Can be "left"(default) or "right".
-     * Only has effect when not pinned.
      *
      * ```typescript
      * // get
@@ -288,6 +286,12 @@ export class IgxNavigationDrawerComponent implements
         return '0px';
     }
 
+    /** @hidden */
+    @HostBinding('style.order')
+    get isPinnedRight() {
+        return this.pin && this.position === 'right' ?  '1' : '0';
+    }
+
     private _gesturesAttached = false;
     private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
     private _resizeObserver: Subscription;
@@ -302,8 +306,8 @@ export class IgxNavigationDrawerComponent implements
     @ViewChild('overlay') private _overlay: ElementRef;
     @ViewChild('dummy') private _styleDummy: ElementRef;
 
-    /**
-     *  @hidden
+   /**
+     * @hidden
      */
     get drawer() {
         return this._drawer.nativeElement;
@@ -317,7 +321,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     *  @hidden
+     * @hidden
      */
     get styleDummy() {
         return this._styleDummy.nativeElement;
@@ -327,7 +331,6 @@ export class IgxNavigationDrawerComponent implements
     private _panning = false;
     private _panStartWidth: number;
     private _panLimit: number;
-    private _previousDeltaX: number;
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
@@ -415,8 +418,6 @@ export class IgxNavigationDrawerComponent implements
         this.updateEdgeZone();
         this.checkPinThreshold();
 
-        // need to set height without absolute positioning
-        this.ensureDrawerHeight();
         this.ensureEvents();
 
         // TODO: apply platform-safe Ruler from http://plnkr.co/edit/81nWDyreYMzkunihfRgX?p=preview
@@ -447,7 +448,6 @@ export class IgxNavigationDrawerComponent implements
         }
         if (changes.pin && changes.pin.currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === 'true');
-            this.ensureDrawerHeight();
             if (this.pin) {
                 this._touchManager.destroy();
                 this._gesturesAttached = false;
@@ -547,19 +547,6 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     * @hidden
-     */
-    protected ensureDrawerHeight() {
-        if (this.pin) {
-            // TODO: nested in content?
-            // setElementStyle warning https://github.com/angular/angular/issues/6563
-            this.renderer.setElementStyle(this.drawer, 'height', window.innerHeight + 'px');
-        } else {
-            this.renderer.setElementStyle(this.drawer, 'height', '');
-        }
-    }
-
-    /**
      * Get the Drawer width for specific state. Will attempt to evaluate requested state and cache.
      *
      * @hidden
@@ -643,7 +630,6 @@ export class IgxNavigationDrawerComponent implements
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold();
-                    this.ensureDrawerHeight();
                 });
         }
     }

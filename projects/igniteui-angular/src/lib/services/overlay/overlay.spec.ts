@@ -28,6 +28,7 @@ import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -35,14 +36,6 @@ const CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper--modal';
 const CLASS_OVERLAY_MAIN = 'igx-overlay';
 
-function clearOverlay() {
-    const overlays = document.getElementsByClassName(CLASS_OVERLAY_MAIN) as HTMLCollectionOf<Element>;
-    Array.from(overlays).forEach(element => {
-        element.parentElement.removeChild(element);
-    });
-    document.documentElement.scrollTop = 0;
-    document.documentElement.scrollLeft = 0;
-}
 // Utility function to get all applied to element css from all sources.
 function css(element) {
     const sheets = document.styleSheets, ret = [];
@@ -80,11 +73,11 @@ describe('igxOverlay', () => {
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
             declarations: DIRECTIVE_COMPONENTS
         }).compileComponents();
-        clearOverlay();
+        UIInteractions.clearOverlay();
     });
 
-    afterAll(async () => {
-        clearOverlay();
+    afterAll(() => {
+        UIInteractions.clearOverlay();
     });
 
     describe('Unit Tests: ', () => {
@@ -1473,7 +1466,7 @@ describe('igxOverlay', () => {
             }`]
                 }
             }).createComponent(DownRightButtonComponent);
-            clearOverlay();
+            UIInteractions.clearOverlay();
             fix.detectChanges();
             const currentElement = fix.componentInstance;
             const buttonElement = fix.componentInstance.buttonElement.nativeElement;
@@ -1518,7 +1511,7 @@ describe('igxOverlay', () => {
             }`]
                 }
             }).createComponent(DownRightButtonComponent);
-            clearOverlay();
+            UIInteractions.clearOverlay();
             fix.detectChanges();
             const currentElement = fix.componentInstance;
             const buttonElement = fix.componentInstance.buttonElement.nativeElement;
@@ -1562,7 +1555,7 @@ describe('igxOverlay', () => {
             }`]
                 }
             }).createComponent(DownRightButtonComponent);
-            clearOverlay();
+            UIInteractions.clearOverlay();
             fix.detectChanges();
             const currentElement = fix.componentInstance;
             const buttonElement = fix.componentInstance.buttonElement.nativeElement;

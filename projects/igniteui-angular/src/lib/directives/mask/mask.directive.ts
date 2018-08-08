@@ -19,47 +19,47 @@ const noop = () => { };
     selector: '[igxMask]'
 })
 export class IgxMaskDirective implements OnInit, ControlValueAccessor {
-/**
- * Sets the input mask.
- * ```html
- * <input [igxMask] = "'00/00/0000'">
- * ```
- * @memberof IgxMaskDirective
- */
-@Input('igxMask')
+    /**
+     * Sets the input mask.
+     * ```html
+     * <input [igxMask] = "'00/00/0000'">
+     * ```
+     * @memberof IgxMaskDirective
+     */
+    @Input('igxMask')
     public mask: string;
-/**
- * Sets the character representing a fillable spot in the input mask.
- * Default value is "'_'".
- * ```html
- * <input [promptChar] = "'/'">
- * ```
- * @memberof IgxMaskDirective
- */
-@Input()
+    /**
+     * Sets the character representing a fillable spot in the input mask.
+     * Default value is "'_'".
+     * ```html
+     * <input [promptChar] = "'/'">
+     * ```
+     * @memberof IgxMaskDirective
+     */
+    @Input()
     public promptChar: string;
-/**
- * Specifies if the bound value includes the formatting symbols.
- * ```html
- * <input [includeLiterals] = "true">
- * ```
- * @memberof IgxMaskDirective
- */
-@Input()
+    /**
+     * Specifies if the bound value includes the formatting symbols.
+     * ```html
+     * <input [includeLiterals] = "true">
+     * ```
+     * @memberof IgxMaskDirective
+     */
+    @Input()
     public includeLiterals: boolean;
     /**
      *@hidden
      */
     @Input()
     private dataValue: string;
-/**
- * Emits an event each time the value changes.
- * Provides `rawValue: string` and `formattedValue: string` as event arguments.
- * ```html
- * <input (onValueChange) = "onValueChange(rawValue: string, formattedValue: string)">
- * ```
- */
-@Output()
+    /**
+     * Emits an event each time the value changes.
+     * Provides `rawValue: string` and `formattedValue: string` as event arguments.
+     * ```html
+     * <input (onValueChange) = "onValueChange(rawValue: string, formattedValue: string)">
+     * ```
+     */
+    @Output()
     public onValueChange = new EventEmitter<IMaskEventArgs>();
     /**
      *@hidden
@@ -232,10 +232,10 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     public onFocus(event) {
         this.value = this.maskHelper.parseValueByMaskOnInit(this.value, this._maskOptions);
     }
-/**
- *@hidden
- */
-private getCursorPosition(): number {
+    /**
+     *@hidden
+     */
+    private getCursorPosition(): number {
         return this.nativeElement.selectionStart;
     }
     /**
@@ -244,10 +244,10 @@ private getCursorPosition(): number {
     private setCursorPosition(start: number, end: number = start): void {
         this.nativeElement.setSelectionRange(start, end);
     }
-/**
- *@hidden
- */
-public writeValue(value) {
+    /**
+     *@hidden
+     */
+    public writeValue(value) {
         if (this.promptChar && this.promptChar.length > 1) {
             this._maskOptions.promptChar = this.promptChar.substring(0, 1);
         }
@@ -259,14 +259,14 @@ public writeValue(value) {
 
         this.onValueChange.emit({ rawValue: value, formattedValue: this.value });
     }
-/**
- *@hidden
- */
-public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
-/**
- *@hidden
- */
-public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    /**
+     *@hidden
+     */
+    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    /**
+     *@hidden
+     */
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
 /**
  * The IgxMaskModule provides the {@link IgxMaskDirective} inside your application.

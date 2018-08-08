@@ -1,10 +1,10 @@
 {
     "dest": "./dist/igniteui-angular/docs/sass",
-    "descriptionPath": ".projects/igniteui-angular/src/lib/core/styles/README.md",
+    "descriptionPath": "./projects/igniteui-angular/src/lib/core/styles/README.md",
     "exclude": [],
     "package": {
         "name": "Ignite UI for Angular",
-        "version": "6.0"
+        "version": "6.1.x"
     },
     "theme": "default",
     "autofill": ["throws", "content"],
@@ -18,5 +18,6 @@
         "alias": true,
         "access": ["public", "private"]
     },
-    "privatePrefix": true
+    "privatePrefix": true,
+    "resolvedValue": true
 }

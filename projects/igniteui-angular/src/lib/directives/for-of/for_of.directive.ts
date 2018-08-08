@@ -32,21 +32,122 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
-    @Input() public igxForOf: any[];
-    @Input() public igxForScrollOrientation: string;
-    @Input() public igxForScrollContainer: any;
-    @Input() public igxForContainerSize: any;
-    @Input() public igxForItemSize: any;
+
+    /**
+     * An @Input property that sets the data to be rendered.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
+     * ```
+     */
+    @Input()
+    public igxForOf: any[];
+
+    /**
+     * An @Input property that specifies the scroll orientation.
+     * Scroll orientation can be "vertical" or "horizontal".
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'"></ng-template>
+     * ```
+     */
+    @Input()
+    public igxForScrollOrientation: string;
+
+    /**
+     * Optionally pass the parent `igxFor` instance to create a virtual template scrolling both horizontally and vertically.
+     * ```html
+     * <ng-template #scrollContainer igxFor let-rowData [igxForOf]="data"
+     *       [igxForScrollOrientation]="'vertical'"
+     *       [igxForContainerSize]="'500px'"
+     *       [igxForItemSize]="'50px'"
+     *       let-rowIndex="index">
+     *       <div [style.display]="'flex'" [style.height]="'50px'">
+     *           <ng-template #childContainer igxFor let-item [igxForOf]="data"
+     *               [igxForScrollOrientation]="'horizontal'"
+     *               [igxForScrollContainer]="parentVirtDir"
+     *               [igxForContainerSize]="'500px'">
+     *                   <div [style.min-width]="'50px'">{{rowIndex}} : {{item.text}}</div>
+     *           </ng-template>
+     *       </div>
+     * </ng-template>
+     * ```
+     */
+    @Input()
+    public igxForScrollContainer: any;
+
+    /**
+     * An @Input property that sets the px-affixed size of the container along the axis of scrolling.
+     * For "horizontal" orientation this value is the width of the container and for "vertical" is the height.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForContainerSize]="'500px'"
+     *      [igxForScrollOrientation]="'horizontal'">
+     * </ng-template>
+     * ```
+     */
+    @Input()
+    public igxForContainerSize: any;
+
+    /**
+     * An @Input property that sets the px-affixed size of the item along the axis of scrolling.
+     * For "horizontal" orientation this value is the width of the column and for "vertical" is the height or the row.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" [igxForItemSize]="'50px'"></ng-template>
+     * ```
+     */
+    @Input()
+    public igxForItemSize: any;
+
+    /**
+     * @hidden
+     */
     public dc: ComponentRef<DisplayContainerComponent>;
+
+    /**
+     * The current state of the directive. It contains `startIndex` and `chunkSize`.
+     * state.startIndex - The index of the item at which the current visible chunk begins.
+     * state.chunkSize - The number of items the current visible chunk holds.
+     * These options can be used when implementing remote virtualization as they provide the necessary state information.
+     * ```typescript
+     * const gridState = this.parentVirtDir.state;
+     * ```
+     */
     public state: IForOfState = {
         startIndex: 0,
         chunkSize: 0
     };
+    /**
+     * The total count of the virtual data items, when using remote service.
+     * ```typescript
+     * this.parentVirtDir.totalItemCount = data.Count;
+     * ```
+     */
     public totalItemCount: number = null;
 
+    /**
+     * An event that is emitted after a new chunk has been loaded.
+     * ```html
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onChunkLoad)="chunkLoad($event)"></ng-template>
+     * ```
+     * ```typescript
+     * chunkLoad(e){
+     * alert("chunk loaded!");
+     * }
+     * ```
+     */
     @Output()
     public onChunkLoad = new EventEmitter<IForOfState>();
 
+    /**
+     * An event that is emitted on chunk loading to emit the current state information - startIndex, endIndex, totalCount.
+     * Can be used for implementing remote load on demand for the igxFor data.
+     * ```html
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onChunkPreload)="chunkPreload($event)"></ng-template>
+     * ```
+     * ```typescript
+     * chunkPreload(e){
+     * alert("chunk is loading!");
+     * }
+     * ```
+     */
     @Output()
     public onChunkPreload = new EventEmitter<IForOfState>();
 
@@ -68,7 +169,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         const scrollTop = this.getVerticalScroll().scrollTop;
         const scrollHeight = this.getVerticalScroll().scrollHeight;
-        return Math.floor(scrollTop + this.igxForContainerSize) === scrollHeight;
+        // Use === and not >= because `scrollTop + container size` can't be bigger than `scrollHeight`, unless something isn't updated.
+        // Also use Math.round because Chrome has some inconsistencies and `scrollTop + container` can be float when zooming the page.
+        return Math.round(scrollTop + this.igxForContainerSize) === scrollHeight;
     }
 
     private get _isAtBottomIndex() {
@@ -112,10 +215,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         public cdr: ChangeDetectorRef,
         private _zone: NgZone) { }
 
+    /**
+     * @hidden
+     */
     protected get isRemote(): boolean {
         return this.totalItemCount !== null;
     }
 
+    /**
+     * @hidden
+     */
     public ngOnInit(): void {
         let totalWidth = 0;
         const vc = this.igxForScrollContainer ? this.igxForScrollContainer._viewContainer : this._viewContainer;
@@ -204,11 +313,19 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.dc.instance._viewContainer.element.nativeElement.style.height = '100%';
         }
     }
+
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         if (this.hScroll) {
             this.hScroll.removeEventListener('scroll', this.func);
         }
     }
+
+    /**
+     * @hidden
+     */
     public ngOnChanges(changes: SimpleChanges): void {
         const forOf = 'igxForOf';
         if (forOf in changes) {
@@ -229,6 +346,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
+    /**
+     * @hidden
+     */
     public ngDoCheck(): void {
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
@@ -246,6 +366,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
+    /**
+     * Shifts the scroll thumb position.
+     * ```typescript
+     * this.parentVirtDir.addScrollTop(5);
+     * ```
+     * @param addTop negative value to scroll up and positive to scroll down;
+     */
     public addScrollTop(addTop: number): boolean {
         if (addTop === 0 && this.igxForScrollOrientation === 'horizontal') {
             return false;
@@ -285,6 +412,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return this._virtScrollTop !== originalVirtScrollTop;
     }
 
+    /**
+     * Scrolls to the specified index.
+     * ```typescript
+     * this.parentVirtDir.scrollTo(5);
+     * ```
+     * @param index
+     */
     public scrollTo(index) {
         if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length)) {
             return;
@@ -306,18 +440,72 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
+    /**
+     * Scrolls by one item into the appropriate next direction.
+     * For "horizontal" orientation that will be the right column and for "vertical" that is the lower row.
+     * ```typescript
+     * this.parentVirtDir.scrollNext();
+     * ```
+     */
     public scrollNext() {
         this.scrollTo(this.state.startIndex + 1);
     }
 
+    /**
+     * Scrolls by one item into the appropriate previous direction.
+     * For "horizontal" orientation that will be the left column and for "vertical" that is the upper row.
+     * ```typescript
+     * this.parentVirtDir.scrollPrev();
+     * ```
+     */
     public scrollPrev() {
         this.scrollTo(this.state.startIndex - 1);
     }
 
+    /**
+     * Scrolls by one page into the appropriate next direction.
+     * For "horizontal" orientation that will be one view to the right and for "vertical" that is one view to the bottom.
+     * ```typescript
+     * this.parentVirtDir.scrollNextPage();
+     * ```
+     */
+    public scrollNextPage() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.hvh.instance.elementRef.nativeElement.scrollLeft += parseInt(this.igxForContainerSize, 10);
+        } else {
+            this.addScrollTop(parseInt(this.igxForContainerSize, 10));
+        }
+    }
+
+    /**
+     * Scrolls by one page into the appropriate previous direction.
+     * For "horizontal" orientation that will be one view to the left and for "vertical" that is one view to the top.
+     * ```typescript
+     * this.parentVirtDir.scrollPrevPage();
+     * ```
+     */
+    public scrollPrevPage() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.hvh.instance.elementRef.nativeElement.scrollLeft -= parseInt(this.igxForContainerSize, 10);
+        } else {
+            const containerSize = (parseInt(this.igxForContainerSize, 10));
+            this.addScrollTop(-containerSize);
+        }
+    }
+
+    /**
+     * @hidden
+     */
     public getColumnScrollLeft(colIndex) {
         return this.hCache[colIndex];
     }
 
+    /**
+     * Returns a reference to the vertical scrollbar DOM element.
+     * ```typescript
+     * this.parentVirtDir.getVerticalScroll();
+     * ```
+     */
     public getVerticalScroll() {
         if (this.vh) {
             return this.vh.instance.elementRef.nativeElement;
@@ -325,11 +513,51 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return null;
     }
 
-    public getHorizontalScroll() {
-        return this.getElement(this._viewContainer, 'igx-horizontal-virtual-helper');
+    /**
+     * Returns the total number of items that are fully visible.
+     * ```typescript
+     * this.parentVirtDir.getItemCountInView();
+     * ```
+     */
+    public getItemCountInView() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            const scrLeft = this.hScroll.scrollLeft;
+            let startIndex = this.getHorizontalIndexAt(
+                scrLeft,
+                this.hCache,
+                0
+            );
+            if (scrLeft - this.hCache[startIndex] > 0 ) {
+                // fisrt item is not fully in view
+                startIndex++;
+            }
+            const endIndex = this.getHorizontalIndexAt(
+                scrLeft + parseInt(this.igxForContainerSize, 10),
+                this.hCache,
+                0
+            );
+            return endIndex - startIndex;
+        } else {
+          return  Math.floor(parseInt(this.igxForContainerSize, 10) /
+          parseInt(this.igxForItemSize, 10));
+
+        }
     }
 
-    /** Function that is called when scrolling vertically */
+    /**
+     * Returns a reference to the horizontal scrollbar DOM element.
+     * ```typescript
+     * this.parentVirtDir.getHorizontalScroll();
+     * ```
+     */
+    public getHorizontalScroll() {
+        return this.getElement(this._viewContainer, 'igx-horizontal-virtual-helper') || this.hScroll;
+    }
+
+    /**
+     * @hidden
+     * Function that is called when scrolling vertically
+     */
     protected onScroll(event) {
         /* in certain situations this may be called when no scrollbar is visible */
         if (!parseInt(this.vh.instance.elementRef.nativeElement.style.height, 10)) {
@@ -359,12 +587,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.onChunkLoad.emit(this.state);
     }
 
+    /**
+     * @hidden
+     */
     protected fixedUpdateAllRows(inScrollTop: number, scrollHeight: number): number {
         const ratio = scrollHeight !== 0 ? inScrollTop / scrollHeight : 0;
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const currIndex = Math.floor(ratio * count);
+        const ind = ratio * count;
+        // floating point number calculations are flawed so we need to handle rounding errors.
+        const currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
         let endingIndex = this.state.chunkSize + currIndex;
 
         // We update the startIndex before recalculating the chunkSize.
@@ -401,7 +634,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return inScrollTop - this.state.startIndex * (scrollHeight / count);
     }
 
-    /** Function that is called when scrolling horizontally */
+    /**
+     * @hidden
+     * Function that is called when scrolling horizontally
+     */
     protected onHScroll(event) {
         /* in certain situations this may be called when no scrollbar is visible */
         if (!parseInt(this.hScroll.children[0].style.width, 10)) {
@@ -417,6 +653,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.onChunkLoad.emit();
     }
 
+    /**
+     * @hidden
+     */
     protected fixedUpdateAllCols(inScrollLeft) {
         const startIndex = this.getHorizontalIndexAt(
             inScrollLeft,
@@ -443,7 +682,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return inScrollLeft - this.hCache[this.state.startIndex];
     }
 
-    /** Function that is called when scrolling with the mouse wheel or using touchpad */
+    /**
+     * @hidden
+     * Function that is called when scrolling with the mouse wheel or using touchpad
+     */
     protected onWheel(event) {
         if (this.igxForScrollOrientation === 'horizontal' && Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
             const scrollStepX = 10;
@@ -467,7 +709,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    /** Function that is called the first moment we start interacting with the content on a touch device */
+    /**
+     * @hidden
+     * Function that is called the first moment we start interacting with the content on a touch device
+     */
     protected onTouchStart(event) {
         if (typeof MSGesture === 'function') {
             return false;
@@ -479,7 +724,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    /** Function that is called when we need to scroll the content based on touch interactions */
+    /**
+     * @hidden
+     * Function that is called when we need to scroll the content based on touch interactions
+     */
     protected onTouchMove(event) {
         if (typeof MSGesture === 'function') {
             return false;
@@ -506,7 +754,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    /** Function that is called when we need to detect touch starting on a touch device on IE/Edge */
+    /**
+     * @hidden
+     * Function that is called when we need to detect touch starting on a touch device on IE/Edge
+     */
     protected onPointerDown(event) {
         if (!event || (event.pointerType !== 2 && event.pointerType !== 'touch') ||
             typeof MSGesture !== 'function') {
@@ -522,7 +773,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this._gestureObject.addPointer(this._pointerCapture);
     }
 
-    /** Function that is called when we need to detect touch ending on a touch device on IE/Edge */
+    /**
+     * @hidden
+     * Function that is called when we need to detect touch ending on a touch device on IE/Edge
+     */
     protected onPointerUp(event) {
         if (!this._pointerCapture) {
             return true;
@@ -532,7 +786,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         delete this._pointerCapture;
     }
 
-    /** Function that is called when a gesture begins on IE/Edge */
+    /**
+     * @hidden
+     *  Function that is called when a gesture begins on IE/Edge
+     */
     protected onMSGestureStart(event) {
         if (this.igxForScrollOrientation === 'horizontal') {
             this._lastTouchX = event.screenX;
@@ -542,7 +799,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return false;
     }
 
-    /** Function that is called when a we need to scroll based on the gesture performed on IE/Edge */
+    /**
+     * @hidden
+     * Function that is called when a we need to scroll based on the gesture performed on IE/Edge
+     */
     protected onMSGestureChange(event) {
         if (this.igxForScrollOrientation === 'horizontal') {
             const movedX = this._lastTouchX - event.screenX;
@@ -558,10 +818,35 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return false;
     }
 
+    /**
+     * Gets the function used to track changes in the items collection.
+     * By default the object references are compared. However this can be optimized if you have unique identifier
+     * value that can be used for the comparison instead of the object ref or if you have some other property values
+     * in the item object that should be tracked for changes.
+     * This option is similar to ngForTrackBy.
+     * ```typescript
+     * const trackFunc = this.parentVirtDir.igxForTrackBy;
+     * ```
+     */
     @Input()
     get igxForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
+
+    /**
+     * Sets the function used to track changes in the items collection.
+     * This function can be set in scenarios where you want to optimize or
+     * customize the tracking of changes for the items in the collection.
+     * The igxForTrackBy function takes the index and the current item as arguments and needs to return the unique identifier for this item.
+     * ```typescript
+     * this.parentVirtDir.igxForTrackBy = (index, item) => {
+     *      return item.id + item.width;
+     * };
+     * ```
+     */
     set igxForTrackBy(fn: TrackByFunction<T>) { this._trackByFn = fn; }
 
+    /**
+     * @hidden
+     */
     protected _applyChanges(changes: IterableChanges<T>) {
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
@@ -585,6 +870,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
+    /**
+     * @hidden
+     */
     protected _calcMaxBrowserHeight(): number {
         const div = document.createElement('div');
         const style = div.style;
@@ -597,6 +885,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
+     * @hidden
      * Recalculates the chunkSize based on current startIndex and returns the new size.
      * This should be called after this.state.startIndex is updated, not before.
      */
@@ -633,11 +922,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return chunkSize;
     }
 
+    /**
+     * @hidden
+     */
     protected getElement(viewref, nodeName) {
         const elem = viewref.element.nativeElement.parentNode.getElementsByTagName(nodeName);
         return elem.length > 0 ? elem[0] : null;
     }
 
+    /**
+     * @hidden
+     */
     protected initHCache(cols: any[]): number {
         let totalWidth = 0;
         let i = 0;
@@ -650,6 +945,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return totalWidth;
     }
 
+    /**
+     * @hidden
+     */
     protected _calcMaxChunkSize() {
         let i = 0;
         let length = 0;
@@ -688,6 +986,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return maxLength;
     }
 
+    /**
+     * @hidden
+     */
     protected getHorizontalIndexAt(left, set, index) {
         let midIdx;
         let midLeft;
@@ -745,7 +1046,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    /** Removes an elemenet from the embedded views and updates chunkSize */
+    /**
+     * @hidden
+     * Removes an elemenet from the embedded views and updates chunkSize.
+     */
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
         oldElem.destroy();
@@ -753,7 +1057,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.state.chunkSize--;
     }
 
-    /** If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize */
+    /**
+     * @hidden
+     * If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize
+     */
     protected addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
         if (!this.isRemote && (!this.igxForOf || elemIndex > this.igxForOf.length)) {
@@ -802,14 +1109,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _updateScrollOffset() {
         let scrollOffset = 0;
         if (this.igxForScrollOrientation === 'horizontal') {
-            scrollOffset = this.hScroll ? this.hScroll.scrollLeft - this.hCache[this.state.startIndex] : 0;
+            scrollOffset = this.hScroll && parseInt(this.hScroll.children[0].style.width, 10) ?
+            this.hScroll.scrollLeft - this.hCache[this.state.startIndex] : 0;
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         } else {
             const count = this.isRemote ?
                 this.totalItemCount :
                 this.igxForOf ? this.igxForOf.length : 0;
             const vScroll = this.vh.instance.elementRef.nativeElement;
-            scrollOffset = vScroll ? vScroll.scrollTop - this.state.startIndex * (this._virtHeight / count) : 0;
+            scrollOffset = vScroll && parseInt(vScroll.style.height, 10) ?
+            vScroll.scrollTop - this.state.startIndex * (this._virtHeight / count) : 0;
             scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
             this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         }
@@ -825,6 +1134,10 @@ export interface IForOfState {
     startIndex?: number;
     chunkSize?: number;
 }
+
+/**
+ * The IgxForOfModule provides the {@link IgxForOfDirective}, inside your application.
+ */
 
 @NgModule({
     declarations: [IgxForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],

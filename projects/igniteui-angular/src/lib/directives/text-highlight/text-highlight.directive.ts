@@ -34,8 +34,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
 
     private _lastSearchInfo: ISearchInfo;
-    private _addedElements = [];
-    private _observer: MutationObserver;
+    private _div = null;
+    private _observer: MutationObserver = null;
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
@@ -46,11 +46,25 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     @Input('activeCssClass')
     public activeCssClass: string;
 
+    @Input('containerClass')
+    public containerClass: string;
+
     @Input('groupName')
     public groupName = '';
 
+    private _value = '';
+
     @Input('value')
-    public value: any = '';
+    public get value(): any {
+        return this._value;
+    }
+    public set value(value: any) {
+        if (value === undefined || value === null) {
+            this._value = '';
+        } else {
+            this._value = value;
+        }
+    }
 
     @Input('row')
     public row: number;
@@ -63,7 +77,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     public parentElement: any;
 
-    private container: any;
+    private _container: any;
 
     public static setActiveHighlight(groupName: string, highlight: IActiveHighlightInfo) {
         IgxTextHighlightDirective.highlightGroupsMap.set(groupName, highlight);
@@ -83,35 +97,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
 
-        const callback = (mutationList) => {
-            mutationList.forEach((mutation) => {
-                const removedNodes = new Array(... mutation.removedNodes);
-                removedNodes.forEach((n) => {
-                    if (n === this.container) {
-                        this._nodeWasRemoved = true;
-                        this.clearChildElements(false);
-                    }
-                });
-
-                const addedNodes = new Array(... mutation.addedNodes);
-                addedNodes.forEach((n) => {
-                    if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
-                        this.container = this.parentElement.firstElementChild;
-                        this._nodeWasRemoved = false;
-
-                        this._forceEvaluation = true;
-                        this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
-                        this._forceEvaluation = false;
-
-                        this.activateIfNecessary();
-                    }
-                });
-            });
-        };
-
-        this._observer = new MutationObserver(callback);
-        this._observer.observe(this.parentElement, {childList: true});
-
         IgxTextHighlightDirective.onActiveElementChanged.subscribe((groupName) => {
             if (this.groupName === groupName) {
                 if (this._activeElementIndex !== -1) {
@@ -123,7 +108,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     }
 
     ngOnDestroy() {
-        this._observer.disconnect();
+        if (this._observer !== null) {
+            this._observer.disconnect();
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -160,7 +147,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             caseSensitive: false
         };
 
-        this.container = this.parentElement.firstElementChild;
+        this._container = this.parentElement.firstElementChild;
     }
 
     public highlight(text: string, caseSensitive?: boolean): number {
@@ -177,6 +164,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
                 this.clearChildElements(true);
                 this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive);
             }
+        } else if (this._nodeWasRemoved) {
+            this._lastSearchInfo.searchedText = text;
+            this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
         }
 
         return this._lastSearchInfo.matchCount;
@@ -196,19 +186,60 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         }
     }
 
+    /**
+     * Attaches a MutationObserver to the parentElement and watches for when the container element is removed/readded to the DOM.
+     * Should be used only when necessary as using many observers may lead to performance degradation.
+     */
+    public observe(): void {
+        if (this._observer === null) {
+            const callback = (mutationList) => {
+                mutationList.forEach((mutation) => {
+                    const removedNodes = new Array(... mutation.removedNodes);
+                    removedNodes.forEach((n) => {
+                        if (n === this._container) {
+                            this._nodeWasRemoved = true;
+                            this.clearChildElements(false);
+                        }
+                    });
+
+                    const addedNodes = new Array(... mutation.addedNodes);
+                    addedNodes.forEach((n) => {
+                        if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
+                            this._container = this.parentElement.firstElementChild;
+                            this._nodeWasRemoved = false;
+
+                            this._forceEvaluation = true;
+                            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
+                            this._forceEvaluation = false;
+
+                            this.activateIfNecessary();
+                            this._observer.disconnect();
+                            this._observer = null;
+                        }
+                    });
+                });
+            };
+
+            this._observer = new MutationObserver(callback);
+            this._observer.observe(this.parentElement, {childList: true});
+        }
+    }
+
     private activate(index: number) {
         this.deactivate();
 
-        const spans = this._addedElements.filter((el) => el.nodeName === 'SPAN');
-        this._activeElementIndex = index;
+        if (this._div !== null) {
+            const spans = this._div.querySelectorAll('span');
+            this._activeElementIndex = index;
 
-        if (spans.length <= index) {
-            return;
+            if (spans.length <= index) {
+                return;
+            }
+
+            const elementToActivate = spans[index];
+            this.renderer.addClass(elementToActivate, this.activeCssClass);
+            this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;font-weight:bold;color:black');
         }
-
-        const elementToActivate = spans[index];
-        this.renderer.addClass(elementToActivate, this.activeCssClass);
-        this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;font-weight:bold');
     }
 
     private deactivate() {
@@ -216,7 +247,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             return;
         }
 
-        const spans = this._addedElements.filter((el) => el.nodeName === 'SPAN');
+        const spans = this._div.querySelectorAll('span');
 
         if (spans.length <= this._activeElementIndex) {
             this._activeElementIndex = -1;
@@ -225,7 +256,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
         const elementToDeactivate = spans[this._activeElementIndex];
         this.renderer.removeClass(elementToDeactivate, this.activeCssClass);
-        this.renderer.setAttribute(elementToDeactivate, 'style', 'background:yellow;font-weight:bold');
+        this.renderer.setAttribute(elementToDeactivate, 'style', 'background:yellow;font-weight:bold;color:black');
         this._activeElementIndex = -1;
     }
 
@@ -234,16 +265,17 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             this.renderer.setProperty(this.parentElement.firstElementChild, 'hidden', originalContentHidden);
         }
 
-        while (this._addedElements.length) {
-            const el = this._addedElements.pop();
+        if (this._div !== null) {
+            this.renderer.removeChild(this.parentElement, this._div);
 
-            this.renderer.removeChild(this.parentElement, el);
+            this._div = null;
+            this._activeElementIndex = -1;
         }
-
-        this._activeElementIndex = -1;
     }
 
     private getHighlightedText(searchText: string, caseSensitive: boolean) {
+        this.appendDiv();
+
         const stringValue = String(this.value);
         const contentStringResolved = !caseSensitive ? stringValue.toLowerCase() : stringValue;
         const searchTextResolved = !caseSensitive ? searchText.toLowerCase() : searchText;
@@ -258,7 +290,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
             this.appendText(stringValue.substring(previousMatchEnd, start));
             // tslint:disable-next-line:max-line-length
-            this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold">${stringValue.substring(start, end)}</span>`);
+            this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue.substring(start, end)}</span>`);
 
             previousMatchEnd = end;
             matchCount++;
@@ -273,17 +305,19 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     private appendText(text: string) {
         const textElement = this.renderer.createText(text);
-        this.renderer.appendChild(this.parentElement, textElement);
-        this._addedElements.push(textElement);
+        this.renderer.appendChild(this._div, textElement);
     }
 
     private appendSpan(outerHTML: string) {
         const span = this.renderer.createElement('span');
-        this.renderer.appendChild(this.parentElement, span);
+        this.renderer.appendChild(this._div, span);
         this.renderer.setProperty(span, 'outerHTML', outerHTML);
+    }
 
-        const childNodes = this.parentElement.childNodes;
-        this._addedElements.push(childNodes[childNodes.length - 1]);
+    private appendDiv() {
+        this._div = this.renderer.createElement('div');
+        this.renderer.addClass(this._div, this.containerClass);
+        this.renderer.appendChild(this.parentElement, this._div);
     }
 
     private searchNeedsEvaluation(text: string, caseSensitive: boolean): boolean {

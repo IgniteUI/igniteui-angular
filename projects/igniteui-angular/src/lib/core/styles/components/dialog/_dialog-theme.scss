@@ -7,9 +7,9 @@
 
 /// Dialog Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null] - The dialog background color.
-/// @param {Color} $title-color [null] - The dialog title text color.
-/// @param {Color} $message-color [null] - The dialog message text color.
+/// @param {Color} $background [#fff] - The dialog background color.
+/// @param {Color} $title-color [rgba(0, 0, 0, .74)] - The dialog title text color.
+/// @param {Color} $message-color [rgba(0, 0, 0, .54)] - The dialog message text color.
 ///
 /// @requires extend
 /// @requires text-contrast
@@ -52,9 +52,8 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires igx-elevation
 /// @requires $elevations
-/// @requires $overlay-color
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-dialog($theme) {
     @include igx-root-css-vars($theme);
 
@@ -71,6 +70,10 @@
     $dialog-message-padding: rem(12px) rem(24px);
     $dialog-message-font-weight: 400;
     $dialog-actions-padding: rem(8px);
+
+    %igx-dialog-display {
+        outline-style: none;
+    }
 
     %igx-dialog--hidden {
         display: none;

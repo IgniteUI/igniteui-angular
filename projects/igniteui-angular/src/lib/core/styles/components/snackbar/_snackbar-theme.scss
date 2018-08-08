@@ -8,9 +8,9 @@
 /// If you specify a background color, but do not specify colors for either the
 /// button or the text, their colors will be set automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null] - The background color used in the snackbar.
-/// @param {Color} $text-color [null] - The text color used in the snackbar.
-/// @param {Color} $button-color [null] - The button color used in the snackbar.
+/// @param {Color} $background [#323232] - The background color used in the snackbar.
+/// @param {Color} $text-color [#fff] - The text color used in the snackbar.
+/// @param {Color} $button-color [secondary 500] - The button color used in the snackbar.
 ///
 /// @requires extend
 /// @requires text-contrast
@@ -54,7 +54,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-snackbar($theme) {
     @include igx-root-css-vars($theme);
 

@@ -1,43 +1,35 @@
-import { Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grid';
-import { IgxColumnComponent } from '../../grid/column.component';
 import { IgxGridComponent } from '../../grid/grid.component';
-import { ExportTestDataService, FileContentData, ValueData } from '../excel/test-data.service.spec';
+import { FileContentData } from '../excel/test-data.service.spec';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
-import {
-    GridDeclarationComponent,
-    GridMarkupPagingDeclarationComponent,
-    GridReorderedColumnsComponent
-} from '../exporter-common/components-declarations';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxStringFilteringOperand } from '../../../public_api';
+import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { first } from 'rxjs/operators';
 
 describe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
     let actualData: FileContentData;
-    let sourceData: ExportTestDataService;
     let options: IgxCsvExporterOptions;
-    const data = new ExportTestDataService().simpleGridData;
+    const data = SampleTestData.personJobData();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridMarkupPagingDeclarationComponent,
-                GridDeclarationComponent,
-                GridReorderedColumnsComponent
+                ReorderedColumnsComponent,
+                GridIDNameJobTitleComponent
             ],
-            imports: [IgxGridModule.forRoot()],
-            providers: [ ExportTestDataService ]
+            imports: [IgxGridModule.forRoot()]
         })
         .compileComponents().then(() => {
             exporter = new IgxCsvExporterService();
-            sourceData = new ExportTestDataService();
             actualData = new FileContentData();
             options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
@@ -45,6 +37,11 @@ describe('CSV Grid Exporter', () => {
             spyOn(ExportUtilities as any, 'saveBlobToFile');
         });
     }));
+
+    afterEach(() => {
+        exporter.onColumnExport.unsubscribe();
+        exporter.onRowExport.unsubscribe();
+    });
 
     it('should export grid as displayed.', async(() => {
         const currentGrid: IgxGridComponent = null;
@@ -105,10 +102,10 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should honor \'ignoreColumnsVisibility\' option.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
         grid.columns[0].hidden = true;
         options.ignoreColumnsOrder = true;
         options.ignoreColumnsVisibility = false;
@@ -129,10 +126,10 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should honor columns visibility changes.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
         options.ignoreColumnsOrder = true;
 
         fix.whenStable().then(() => {
@@ -173,9 +170,9 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should honor columns declaration order.', async(() => {
-        const fix = TestBed.createComponent(GridReorderedColumnsComponent);
+        const fix = TestBed.createComponent(ReorderedColumnsComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
 
         fix.whenStable().then(() => {
             fix.detectChanges();
@@ -186,9 +183,9 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should honor applied sorting.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
         grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
 
         fix.whenStable().then(() => {
@@ -200,9 +197,9 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should honor changes in applied sorting.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
         grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
 
         fix.whenStable().then(() => {
@@ -259,9 +256,9 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should fire \'onColumnExport\' for each grid column.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
 
         const cols = [];
         exporter.onColumnExport.subscribe((value) => {
@@ -283,9 +280,9 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should fire \'onColumnExport\' for each visible grid column.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
 
         const cols = [];
         exporter.onColumnExport.subscribe((value) => {
@@ -309,9 +306,9 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should not export columns when \'onColumnExport\' is canceled.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
 
         exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
             value.cancel = true;
@@ -325,9 +322,9 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should fire \'onRowExport\' for each grid row.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
 
         const rows = [];
         exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
@@ -346,9 +343,9 @@ describe('CSV Grid Exporter', () => {
     }));
 
     it('should not export rows when \'onRowExport\' is canceled.', async(() => {
-        const fix = TestBed.createComponent(GridDeclarationComponent);
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.grid1;
+        const grid = fix.componentInstance.grid;
 
         exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
             value.cancel = true;
@@ -365,7 +362,7 @@ describe('CSV Grid Exporter', () => {
     //     const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
     //     fix.detectChanges();
 
-    //     const grid = fix.componentInstance.grid1;
+    //     const grid = fix.componentInstance.grid;
     //     grid.paging = true;
     //     options.exportCurrentlyVisiblePageOnly = true;
 
@@ -387,7 +384,7 @@ describe('CSV Grid Exporter', () => {
     //     const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
     //     fix.detectChanges();
 
-    //     const grid = fix.componentInstance.grid1;
+    //     const grid = fix.componentInstance.grid;
     //     fix.whenStable().then(() => {
     //         expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized!");
     //         options.exportCurrentlyVisiblePageOnly = true;
@@ -413,7 +410,7 @@ describe('CSV Grid Exporter', () => {
     //     const fix = TestBed.createComponent(GridMarkupPagingDeclarationComponent);
     //     fix.detectChanges();
 
-    //     const grid = fix.componentInstance.grid1;
+    //     const grid = fix.componentInstance.grid;
     //     fix.whenStable().then(() => {
     //         expect(grid.rowList.length).toEqual(3, "Invalid number of rows initialized!");
     //         options.exportCurrentlyVisiblePageOnly = true;
@@ -435,9 +432,9 @@ describe('CSV Grid Exporter', () => {
     // }));
 
     // it("should fire 'onRowExport' for each visible grid row.", async(() => {
-    //     const fix = TestBed.createComponent(GridDeclarationComponent);
+    //     const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
     //     fix.detectChanges();
-    //     const grid = fix.componentInstance.grid1;
+    //     const grid = fix.componentInstance.grid;
 
     //     const rows = [];
     //     exporter.onRowExport.subscribe((value: RowExportingEventArgs) => {
@@ -459,9 +456,9 @@ describe('CSV Grid Exporter', () => {
     //     });
     // }));
 
-    async function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {
-        const result = await new Promise<CSVWrapper>((resolve) => {
-            exporter.onExportEnded.subscribe((value) => {
+    function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {
+        const result = new Promise<CSVWrapper>((resolve) => {
+            exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
                 resolve(wrapper);
             });
@@ -469,5 +466,4 @@ describe('CSV Grid Exporter', () => {
         });
         return result;
     }
-
 });

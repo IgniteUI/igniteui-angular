@@ -25,20 +25,7 @@ import { DisplayDensity } from '../core/utils';
 
 @Component({
     selector: 'igx-chip',
-    templateUrl: 'chip.component.html',
-    styles: [
-        `:host {
-            display: flex;
-            align-items: center;
-            position: relative;
-            transition-property: top, left;
-            touch-action: none;
-        }
-        .item-selected {
-            background: lightblue;
-        }
-        `
-    ]
+    templateUrl: 'chip.component.html'
 })
 export class IgxChipComponent implements AfterViewInit {
 
@@ -287,6 +274,20 @@ export class IgxChipComponent implements AfterViewInit {
     public removeBtn: ElementRef;
 
     /**
+     * @hidden
+     */
+    public get ghostClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'igx-chip__ghost--cosy';
+            case DisplayDensity.compact:
+                return 'igx-chip__ghost--compact';
+            default:
+                return 'igx-chip__ghost';
+        }
+    }
+
+    /**
      * Returns if the `IgxChipComponent` is selected.
      * ```typescript
      * @ViewChild('myChip')
@@ -395,17 +396,18 @@ export class IgxChipComponent implements AfterViewInit {
             return;
         }
 
-        if ((event.key === 'Delete' || event.key === 'Del') && this.removable) {
+        // Check keyIdentifier for Safary
+        if ((event.key === 'Delete' || event.key === 'Del' || event.keyIdentifier === 'U+007F') && this.removable) {
             this.onRemove.emit({
                 owner: this
             });
         }
 
-        if ((event.key === ' ' || event.key === 'Spacebar') && this.selectable) {
+        if ((event.key === ' ' || event.key === 'Spacebar' || event.keyIdentifier === 'U+0020') && this.selectable) {
             this.selected = !this.selected;
         }
 
-        if (event.key !== 'Tab') {
+        if (event.key !== 'Tab' && event.keyIdentifier !== 'U+0009') {
             event.preventDefault();
         }
     }
@@ -414,7 +416,8 @@ export class IgxChipComponent implements AfterViewInit {
      * @hidden
      */
     public onRemoveBtnKeyDown(event) {
-        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') {
+        if (event.key === ' ' || event.key === 'Spacebar' || event.keyIdentifier === 'U+0020' ||
+        event.key === 'Enter' || event.keyIdentifier === 'Enter') {
             this.onRemove.emit({
                 owner: this
             });
@@ -507,7 +510,7 @@ export class IgxChipComponent implements AfterViewInit {
     // -----------------------------
     // Start chip igxDrop behaviour
     public onChipDragEnterHandler(event) {
-        if (this.dragDir === event.drag) {
+        if (this.dragDir === event.drag || !event.dragData || !event.dragData.chip) {
             return;
         }
 

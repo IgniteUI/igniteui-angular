@@ -11,6 +11,21 @@
 
     @extend %switch-display !optional;
 
+    &:hover {
+        @include e(ripple) {
+            @extend %switch-ripple--hover !optional;
+            @extend %switch-ripple--hover-unchecked !optional;
+        }
+    }
+
+    &:active {
+        @include e(ripple) {
+            @extend %switch-ripple--hover !optional;
+            @extend %switch-ripple--hover-unchecked !optional;
+            @extend %switch-ripple--pressed !optional;
+        }
+    }
+
     @include e(input) {
         @extend %switch-input !optional;
     }
@@ -50,6 +65,21 @@
 
         @include e(composite-thumb) {
             @extend %switch-composite-thumb--x !optional;
+        }
+
+        &:hover {
+            @include e(ripple) {
+                @extend %switch-ripple--hover !optional;
+                @extend %switch-ripple--hover-checked !optional;
+            }
+        }
+
+        &:active {
+            @include e(ripple) {
+                @extend %switch-ripple--hover !optional;
+                @extend %switch-ripple--hover-checked !optional;
+                @extend %switch-ripple--pressed !optional;
+            }
         }
     }
 

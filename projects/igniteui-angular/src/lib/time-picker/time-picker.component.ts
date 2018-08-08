@@ -6,6 +6,7 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     NgModule,
     OnDestroy,
@@ -28,6 +29,7 @@ import {
     IgxItemListDirective,
     IgxMinuteItemDirective
 } from './time-picker.directives';
+import { Subscription } from 'rxjs';
 
 let NEXT_ID = 0;
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -62,7 +64,7 @@ export interface IgxTimePickerValidationFailedEventArgs {
     selector: 'igx-time-picker',
     templateUrl: 'time-picker.component.html'
 })
-export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, DoCheck {
+export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, DoCheck, AfterViewInit {
 
     private _value: Date;
 
@@ -268,6 +270,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public onOpen = new EventEmitter<IgxTimePickerComponent>();
 
     /**
+     * Emitted when a timePicker is being closed.
+     */
+    @Output()
+    public onClose = new EventEmitter<IgxTimePickerComponent>();
+
+    /**
      * @hidden
      */
     @ViewChild('hourList')
@@ -284,6 +292,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     @ViewChild('ampmList')
     public ampmList: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('input')
+    private _input: ElementRef;
 
     /**
      * @hidden
@@ -327,6 +341,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     private _prevSelectedHour: string;
     private _prevSelectedMinute: string;
     private _prevSelectedAmPm: string;
+
+    protected dialogClosed = new Subscription();
 
     /**
      * Returns the current time formatted as string using the `format` option.
@@ -436,7 +452,15 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * @hidden
      */
+    ngAfterViewInit(): void {
+        this.dialogClosed = this._alert.toggleRef.onClosed.pipe().subscribe((ev) => this.handleDialogCloseAction());
+    }
+
+    /**
+     * @hidden
+     */
     public ngOnDestroy(): void {
+        this.dialogClosed.unsubscribe();
     }
 
     // XXX - temporary fix related with issue #1660
@@ -448,6 +472,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             this._alert.toggleRef.element.classList.add('igx-time-picker');
             this._alert.toggleRef.element.classList.remove('igx-time-picker--vertical');
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public handleDialogCloseAction() {
+        this._input.nativeElement.focus();
+        this.onClose.emit(this);
     }
 
     /**
@@ -904,6 +936,16 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.selectedHour = this._prevSelectedHour;
         this.selectedMinute = this._prevSelectedMinute;
         this.selectedAmPm = this._prevSelectedAmPm;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.spacebar', ['$event'])
+    @HostListener('keydown.space', ['$event'])
+    public onKeydownSpace(event) {
+        this.onClick();
+        event.preventDefault();
     }
 
     /**

@@ -6,17 +6,17 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null] - The navigation drawer background color.
-/// @param {Color} $border-color [null] - The navigation drawer right border color.
-/// @param {Color} $item-header-text-color [null] - The header's idle text color.
-/// @param {Color} $item-text-color [null] - The item's idle text color.
-/// @param {Color} $item-icon-color [null] - The item's icon color.
-/// @param {Color} $item-active-text-color [null] - The item's active text color.
-/// @param {Color} $item-active-background [null] - The item's active background color.
-/// @param {Color} $item-active-icon-color [null] - The item's icon active color.
-/// @param {Color} $item-hover-background [null] - The item's hover background color.
-/// @param {Color} $item-hover-text-color [null] - The item's hover text color.
-/// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
+/// @param {Color} $background [#fff] - The navigation drawer background color.
+/// @param {Color} $border-color [rgba(0, 0, 0, .14)] - The navigation drawer right border color.
+/// @param {Color} $item-header-text-color [rgba(0, 0, 0, .54)] - The header's idle text color.
+/// @param {Color} $item-text-color [rgba(0, 0, 0, .62)] - The item's idle text color.
+/// @param {Color} $item-icon-color [rgba(0, 0, 0, .62)] - The item's icon color.
+/// @param {Color} $item-active-text-color [rgba(0, 0, 0, .38)] - The item's active text color.
+/// @param {Color} $item-active-background [rgba(0, 0, 0, .04)] - The item's active background color.
+/// @param {Color} $item-active-icon-color [rgba(0, 0, 0, .38)] - The item's icon active color.
+/// @param {Color} $item-hover-background [rgba(0, 0, 0, .08)] - The item's hover background color.
+/// @param {Color} $item-hover-text-color [rgba(0, 0, 0, .74)] - The item's hover text color.
+/// @param {Color} $item-hover-icon-color [rgba(0, 0, 0, .74)] - The item's hover icon color.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -118,6 +118,7 @@
 /// @requires $elevations
 /// @requires $overlay-color
 /// @requires rem
+/// @requires --var
 @mixin igx-navdrawer($theme) {
     @include igx-root-css-vars($theme);
 
@@ -129,7 +130,6 @@
 
     %aside {
         position: fixed;
-        width: rem(242px);
         height: 100%;
         max-width: 90%;
         min-height: 100%;
@@ -140,7 +140,6 @@
         left: 0;
         z-index: 999;
         transition: width, transform;
-        transition-duration: .3s, .3s;
         transition-timing-function: $ease-out-quad, $ease-out-quad;
         box-shadow: igx-elevation($elevations, 5);
         border-right: 1px solid --var($theme, 'border-color');
@@ -158,10 +157,16 @@
         z-index: 0;
     }
 
+    %aside--collapsed--right {
+        transform: translate3d(300px, 0, 0);
+        box-shadow: none;
+    }
+
     %igx-nav-drawer__aside--collapsed {
         transform: none;
         width: 0;
         overflow: hidden;
+        border: none;
     }
 
     %aside--collapsed {
@@ -176,14 +181,14 @@
         border-left: 1px solid --var($theme, 'border-color');
     }
 
-    %aside--collapsed--right {
-        transform: translate3d(300px, 0, 0);
-        box-shadow: none;
-    }
-
     %aside--mini {
         width: rem(60px);
         transition-duration: .2s, .2s;
+    }
+
+    %aside--normal {
+        width: rem(242px);
+        transition-duration: .3s, .3s;
     }
 
     %overlay {

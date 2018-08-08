@@ -1,89 +1,101 @@
 export class IgxSelectionAPIService {
     // If primaryKey is defined, then multiple selection is based on the primaryKey, and it is array of numbers, strings, etc.
     // If the primaryKey is omitted, then selection is based on the item data
-    protected selection: Map<string,  any[]> = new Map<string, any[]>();
+    protected selection: Map<string,  Set<any>> = new Map<string, Set<any>>();
 
-    protected prevSelection: Map<string,  any[]> = new Map<string, any[]>();
-
-    public get_selection(componentID: string): any[] {
+    public get_selection(componentID: string): Set<any> {
         return this.selection.get(componentID);
     }
 
-    public get_prev_selection(componentID: string): any[] {
-        return this.prevSelection.get(componentID);
-    }
-    public set_prev_selection(componentID: string, currSelection: any[]) {
-       this.prevSelection.set(componentID, currSelection);
-    }
-
-    public set_selection(componentID: string, currSelection: any[]) {
-        const sel = this.get_selection(componentID);
-        if (sel && sel.length > 0) {
-            this.set_prev_selection(componentID, sel);
-        }
+    public set_selection(componentID: string, currSelection: Set<any>) {
         this.selection.set(componentID, currSelection);
     }
 
     public get_selection_length(componentID: string): number {
-        return (this.get_selection(componentID) || []).length;
+        const sel = this.get_selection(componentID);
+        return sel ? sel.size : 0;
     }
 
-    public select_item(componentID: string, itemID, currSelection?: any[]): any[] {
-        if (!currSelection) {
-            currSelection = this.get_selection(componentID);
+    /**
+     * Add item to component selection using item's ID.
+     * @param componentID ID of the component, which we add new item to.
+     * @param itemID ID of the item to add to component selection.
+     * @param sel Used internally only by the selection (select_items method) to accumulate selection for multiple items.
+     *
+     * @returns selection after the new item is added
+     */
+    public select_item(componentID: string, itemID, sel?: Set<any>): Set<any> {
+        if (!sel) {
+            sel = new Set(this.get_selection(componentID));
         }
-        if (currSelection === undefined) {
-            currSelection = [];
+        if (sel === undefined) {
+            sel = new Set();
         }
-        currSelection = [...currSelection];
-        if (currSelection.indexOf(itemID) === -1) {
-            currSelection.push(itemID);
-        }
-        return currSelection;
+        sel.add(itemID);
+        return sel;
     }
 
-    public select_items(componentID: string, itemIDs: any[]): any[] {
-        let selection: any[];
+    /**
+     * Add items to component selection using their IDs.
+     * @param componentID ID of the component, which we add new items to.
+     * @param itemIDs Array of IDs of the items to add to component selection.
+     *
+     * @returns selection after the new item is added
+     */
+    public select_items(componentID: string, itemIDs: any[], clearSelection?: boolean): Set<any> {
+        let selection: Set<any>;
+        if (clearSelection) {
+            selection = new Set();
+        }
         itemIDs.forEach((item) => selection = this.select_item(componentID, item, selection));
         return selection;
     }
 
-    public append_items(componentID: string, itemIDs: any[]): any[] {
-        let selection = this.get_selection(componentID);
-        if (selection === undefined) {
-            selection = [];
+    /**
+     * Remove item from component selection using item's ID.
+     * @param componentID ID of the component, which we remove items from.
+     * @param itemID ID of the item to remove from component selection.
+     * @param sel Used internally only by the selection (deselect_items method) to accumulate deselected items.
+     *
+     * @returns selection after the item is removed
+     */
+    public deselect_item(componentID: string, itemID, sel?: Set<any>) {
+        if (!sel) {
+            sel = new Set(this.get_selection(componentID));
         }
-        return [...selection, ...itemIDs];
-    }
-
-    public deselect_item(componentID: string, itemID, currSelection?: any[]) {
-        if (!currSelection) {
-            currSelection = this.get_selection(componentID);
-        }
-        if (currSelection === undefined) {
+        if (sel === undefined) {
             return;
         }
-        return currSelection.filter((item) => item !== itemID);
+        sel.delete(itemID);
+        return sel;
     }
 
-    public deselect_items(componentID: string, itemIDs: any[]): any[] {
-        let selection: any[];
+    /**
+     * Remove items from component selection using their IDs.
+     * @param componentID ID of the component, which we remove items from.
+     * @param itemID ID of the items to remove from component selection.
+     *
+     * @returns selection after the item is removed
+     */
+    public deselect_items(componentID: string, itemIDs: any[]): Set<any> {
+        let selection: Set<any>;
         itemIDs.forEach((deselectedItem) => selection = this.deselect_item(componentID, deselectedItem, selection));
         return selection;
     }
 
-    public subtract_items(componentID: string, itemIDs: any[]) {
-        const selection = this.get_selection(componentID);
-        return selection.filter((selectedItemID) => itemIDs.indexOf(selectedItemID) === -1);
-    }
-
     public is_item_selected(componentID: string, itemID) {
-        const selection = this.get_selection(componentID);
-        if (selection && selection.indexOf(itemID) !== -1) {
-            return true;
-        } else {
+        const sel = this.get_selection(componentID);
+        if (!sel) {
             return false;
         }
+        return sel.has(itemID);
+    }
+
+    public get_selection_first(componentID: string) {
+        const sel = this.get_selection(componentID);
+        if (sel && sel.size > 0) {
+            return sel.values().next().value;
+       }
     }
 
     public get_all_ids(data, primaryKey?) {

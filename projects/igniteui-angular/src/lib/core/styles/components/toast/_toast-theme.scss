@@ -8,8 +8,8 @@
 /// If only background color is specified,
 /// the text-color will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null] - The background color used for the toast.
-/// @param {Color} $text-color [null] - The text-color used for the toast.
+/// @param {Color} $background [rgba(0, 0, 0, .54)] - The background color used for the toast.
+/// @param {Color} $text-color [#fff] - The text-color used for the toast.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -45,7 +45,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
-/// @requires var
+/// @requires --var
 @mixin igx-toast($theme) {
     @include igx-root-css-vars($theme);
 

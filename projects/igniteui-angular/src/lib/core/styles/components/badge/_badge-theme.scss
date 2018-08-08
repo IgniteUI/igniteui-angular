@@ -9,10 +9,10 @@
 /// will be assigned automatically to a contrasting color.
 ///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $icon-color [null] - The icon color used.
-/// @param {Color} $text-color [null] - The text color used.
-/// @param {Color} $border-color [null] - The border color used.
-/// @param {Color} $background-color [null] - The background color used.
+/// @param {Color} $icon-color [#fff] - The icon color used.
+/// @param {Color} $text-color [#fff] - The text color used.
+/// @param {Color} $border-color [#fff] - The border color used.
+/// @param {Color} $background-color [primary 500] - The background color used.
 /// @param {Bool} $disable-shadow [true] - Sets the badge shadow visibility.
 /// @param {Bool} $disable-border [true] - Sets the badge border visibility.
 ///
@@ -70,9 +70,9 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires var
 /// @requires igx-color
 /// @requires rem
+/// @requires --var
 @mixin igx-badge($theme) {
     @include igx-root-css-vars($theme);
 

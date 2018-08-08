@@ -4,13 +4,13 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Card Theme
+///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [null]- The card background color.
-/// @param {Color} $header-text-color [null] - The text color of the card title.
-/// @param {Color} $subtitle-text-color [null] - The text color of the card subtitle.
-/// @param {Color} $content-text-color [null] - The text color of the card content.
-/// @param {Color} $actions-text-color [null] - The text color of the card buttons.
+/// @param {Color} $background [#fff]- The card background color.
+/// @param {Color} $header-text-color [rgba(0, 0, 0, .74)] - The text color of the card title.
+/// @param {Color} $subtitle-text-color [rgba(0, 0, 0, .54)] - The text color of the card subtitle.
+/// @param {Color} $content-text-color [rgba(0, 0, 0, .54)] - The text color of the card content.
+/// @param {Color} $actions-text-color [rgba(0, 0, 0, .54)] - The text color of the card buttons.
 ///
 /// @requires extend
 /// @requires igx-color
@@ -72,6 +72,7 @@
 /// @requires em
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires --var
 @mixin igx-card($theme) {
     @include igx-root-css-vars($theme);
 
@@ -193,7 +194,7 @@
         display: flex;
         flex-flow: row nowrap;
 
-        .igx-button--icon {
+        %igx-button--icon {
             color: --var($theme, 'actions-text-color');
         }
     }

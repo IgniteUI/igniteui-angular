@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
@@ -92,37 +92,36 @@ describe('IgxInput', () => {
         expect(igxInput.placeholder).toBe('Test');
     });
 
-    it('Should have an initial filled style when data bound.', async(() => {
+    it('Should have an initial filled style when data bound.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
 
-            const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
-            expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
+        expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-            const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
-            expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        const notFilledNull = fixture.componentInstance.igxInputGroupNotFilledNull.element.nativeElement;
+        expect(notFilledNull.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-            const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
-            expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        const notFilledEmpty = fixture.componentInstance.igxInputGroupNotFilledEmpty.element.nativeElement;
+        expect(notFilledEmpty.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
 
-            const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
-            expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        const filledString = fixture.componentInstance.igxInputGroupFilledString.element.nativeElement;
+        expect(filledString.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-            const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
-            expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        const filledNumber = fixture.componentInstance.igxInputGroupFilledNumber.element.nativeElement;
+        expect(filledNumber.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-            const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
-            expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        const filledBoolFalse = fixture.componentInstance.igxInputGroupFilledBoolFalse.element.nativeElement;
+        expect(filledBoolFalse.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-            const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
-            expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        const filledBoolTrue = fixture.componentInstance.igxInputGroupFilledBoolTrue.element.nativeElement;
+        expect(filledBoolTrue.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
-            const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
-            expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
-        });
+        const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
+        expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
     }));
 
     it('Should have a filled style. Value API.', () => {
@@ -214,7 +213,7 @@ describe('IgxInput', () => {
         expect(requiredInputGroups.length).toBe(4);
     });
 
-    it('When updating two inputs with same attribute names through ngModel, label should responds', async(() => {
+    it('When updating two inputs with same attribute names through ngModel, label should responds', fakeAsync(() => {
         const fix = TestBed.createComponent(InputsWithSameNameAttributesComponent);
         fix.detectChanges();
 
@@ -227,14 +226,65 @@ describe('IgxInput', () => {
         fix.componentInstance.model.firstName = 'Mike';
         fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
-            igxInputGroups.forEach(element => {
-                const inputGroup = element.nativeElement;
-                expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(true);
-            });
+        tick();
+        fix.detectChanges();
+
+        igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
+        igxInputGroups.forEach(element => {
+            const inputGroup = element.nativeElement;
+            expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(true);
         });
+    }));
+
+    it('When value is changed only via ngModel', fakeAsync(() => {
+        const fix = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
+        fix.detectChanges();
+
+        const inputGroup = fix.debugElement.children[0];
+
+        fix.componentInstance.user.firstName = 'Bobby';
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--filled')).toBe(true);
+
+        fix.componentInstance.user.firstName = undefined;
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
+
+        fix.componentInstance.user.firstName = '';
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(true);
+    }));
+
+    it('When value is changed via reactive form', fakeAsync(() => {
+        const fix = TestBed.createComponent(ReactiveFormComponent);
+        fix.detectChanges();
+
+        const igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
+        const firstInputGroup = igxInputGroups[0];
+
+        fix.componentInstance.form.patchValue({ str: 'test' });
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--filled')).toBe(true);
+
+        fix.componentInstance.form.patchValue({ str: undefined });
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
+
+        fix.componentInstance.form.patchValue({ str: '' });
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+        expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(true);
     }));
 });
 

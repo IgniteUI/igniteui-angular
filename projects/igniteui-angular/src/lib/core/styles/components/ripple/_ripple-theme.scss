@@ -6,7 +6,7 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $color [null] - The color of the ripple.
+/// @param {Color} $color [rgba(0, 0, 0, .74)] - The color of the ripple.
 ///
 /// @requires extend
 /// @requires igx-color
