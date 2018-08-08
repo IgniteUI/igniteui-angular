@@ -129,6 +129,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     protected _displayKey: string | number = '';
     private _dataType = '';
+    private _data = [];
     private _filteredData = [];
     private _children: QueryList<IgxDropDownItemBase>;
     private _dropdownContainer: ElementRef = null;
@@ -543,7 +544,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public data = [];
+    get data() {
+        return this._data;
+    }
+    set data(val: any[]) {
+        this._data = (val) ? val : [];
+    }
 
     /**
      * Combo value data source propery.
