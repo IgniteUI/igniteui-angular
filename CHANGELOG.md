@@ -18,9 +18,11 @@ All notable changes for each version of this project will be documented in this 
         - The footerTemplate property is removed.
     - `igxColumnGroup`
         - The footerTemplate property is removed.
-    - `igxCombo`
-        - **Breaking change** igxCombo default `width` is set to 100%
-        - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
+    - Initializing an `igxGrid` component without setting height inside a container without height defined now causes the grid to render 10
+    records from the data view or all of them if there are fewer than 10 records available.
+- `igxCombo`
+    - **Breaking change** igxCombo default `width` is set to 100%
+    - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
 
 ## 6.1.2
 - `igxCombo` improvements
