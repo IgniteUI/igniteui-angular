@@ -11,6 +11,7 @@ import { FileContentData } from './test-data.service.spec';
 import { IgxStringFilteringOperand, SortingDirection } from '../../../public_api';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { first } from 'rxjs/operators';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
@@ -37,6 +38,11 @@ describe('Excel Exporter', () => {
             spyOn(ExportUtilities as any, 'saveBlobToFile');
         });
     }));
+
+    afterEach(() => {
+        exporter.onColumnExport.unsubscribe();
+        exporter.onRowExport.unsubscribe();
+    });
 
     it('should export grid as displayed.', async(() => {
         const currentGrid: IgxGridComponent = null;
@@ -400,7 +406,7 @@ describe('Excel Exporter', () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        const data = SampleTestData.personJobData;
+        const data = SampleTestData.personJobData();
 
         const rows = [];
         exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
@@ -463,7 +469,7 @@ describe('Excel Exporter', () => {
 
     function getExportedData(grid: IgxGridComponent, exportOptions: IgxExcelExporterOptions) {
         const exportData = new Promise<JSZipWrapper>((resolve) => {
-            exporter.onExportEnded.subscribe((value) => {
+            exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
