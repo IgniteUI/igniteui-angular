@@ -43,7 +43,7 @@ export class IgxLayoutDirective {
      *
      * The default value `nowrap` sets this behavior.
      *
-     * Other accepted values are `wrap` and `wrap-reverse`
+     * Other accepted values are `wrap` and `wrap-reverse`.
      *
      * ```html
      * <div
@@ -63,7 +63,7 @@ export class IgxLayoutDirective {
      *
      * Defaults to `flex-start` which packs the children toward the start line.
      *
-     * Other possible values are `flex-end`, `center`, `space-between`, `space-around`
+     * Other possible values are `flex-end`, `center`, `space-between`, `space-around`.
      *
      * ```html
      * <div
@@ -83,7 +83,7 @@ export class IgxLayoutDirective {
      *
      * Defaults to `flex-start`.
      *
-     * Other possible values are `flex-end`, `center`, `baseline`, and `stretch`
+     * Other possible values are `flex-end`, `center`, `baseline`, and `stretch`.
      *
      * ```html
      * <div
@@ -136,9 +136,9 @@ export class IgxLayoutDirective {
 export class IgxFlexDirective {
 
     /**
-     * Applies the `grow` attribute to the element that uses the directive.
+     * Applies the `grow` attribute to an element that uses the directive.
      *
-     * Default value is `1`
+     * Default value is `1`.
      *
      * ```html
      * <div>
@@ -151,9 +151,9 @@ export class IgxFlexDirective {
     @Input('igxFlexGrow') public grow = 1;
 
     /**
-     * Applies the `shrink` attribute to the element that uses the directive.
+     * Applies the `shrink` attribute to an element that uses the directive.
      *
-     * Default value is `1`
+     * Default value is `1`.
      *
      * ```html
      * <div>
@@ -168,7 +168,7 @@ export class IgxFlexDirective {
     /**
      * Applies the directive to an element.
      *
-     * Possible values include `igxFlexGrow`, `igxFlexShrink`, `igxFlexOrder`, `igxFlexBasis`
+     * Possible values include `igxFlexGrow`, `igxFlexShrink`, `igxFlexOrder`, `igxFlexBasis`.
      *
      * ```html
      * <div igxFlex>Content</div>
@@ -179,7 +179,7 @@ export class IgxFlexDirective {
     /**
      * Applies the `order` attribute to an element that uses the directive.
      *
-     * Default value is `0`
+     * Default value is `0`.
      *
      * ```html
      * <div>
@@ -194,9 +194,9 @@ export class IgxFlexDirective {
     /**
      * Applies the `flex-basis` attribute to an element that uses the directive.
      *
-     * Default value is `auto`
+     * Default value is `auto`.
      *
-     * Other possible values include `content`, `max-content`, `min-content`, `fit-content`
+     * Other possible values include `content`, `max-content`, `min-content`, `fit-content`.
      *
      * ```html
      * <div igxFlex igxFlexBasis="fit-content">Content</div>
