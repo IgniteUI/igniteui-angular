@@ -139,6 +139,7 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.selectedButtons.length).toBe(1);
         buttongroup.selectButton(2);
         expect(buttongroup.selectedButtons.length).toBe(2);
+        buttongroup.deselectButton(1);
         buttongroup.deselectButton(2);
         expect(buttongroup.selectedButtons.length).toBe(0);
         buttongroup.selectButton(0);
@@ -165,7 +166,6 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
 
         buttongroup.deselectButton(2);
-        buttongroup.deselectButton(1);
         expect(buttongroup.selectedButtons.length).toBe(0);
 
         buttongroup.selectButton(0);
