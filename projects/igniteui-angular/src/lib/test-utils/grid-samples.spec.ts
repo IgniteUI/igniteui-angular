@@ -652,7 +652,7 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
     template: `${GridTemplateStrings.declareGrid(`height="800px"`, '', ColumnDefinitions.multiColHeadersColumns)}`
 })
 export class MultiColumnHeadersComponent extends BasicGridComponent {
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
