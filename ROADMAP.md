@@ -13,8 +13,8 @@
 7. Typography Updates 
 8. Tooltip
 9. Vertical Tabs
-10. Row Editing with transactions 
-
+10. Row Editing with transactions   
+11. Adding Disabled Dates and Special Dates options in igxCalander
 
 # Previous Milestones
 
