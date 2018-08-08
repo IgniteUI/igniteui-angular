@@ -113,6 +113,7 @@ export class IgxButtonDirective {
 
     /**
      * Gets or sets whether the button is selected.
+     * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
      * ```html
      * <button igxButton="flat" [selected]="button.selected"></button>
      * ```
