@@ -140,7 +140,6 @@ describe('IgxButtonGroup', () => {
         buttongroup.selectButton(2);
         expect(buttongroup.selectedButtons.length).toBe(2);
         buttongroup.deselectButton(2);
-        buttongroup.deselectButton(1);
         expect(buttongroup.selectedButtons.length).toBe(0);
         buttongroup.selectButton(0);
         buttongroup.selectButton(3);
@@ -169,7 +168,6 @@ describe('IgxButtonGroup', () => {
         buttongroup.deselectButton(1);
         expect(buttongroup.selectedButtons.length).toBe(0);
 
-
         buttongroup.selectButton(0);
         buttongroup.selectButton(2);
         buttongroup.selectButton(3);
@@ -177,6 +175,27 @@ describe('IgxButtonGroup', () => {
         // Button 3 is disabled, so it isn't selected
         expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
     });
+
+    it('Button Group - selection handles wrong indexes gracefully', () => {
+        const fixture = TestBed.createComponent(TemplatedButtonGroupComponent);
+        fixture.detectChanges();
+
+        const buttongroup = fixture.componentInstance.buttonGroup;
+        let error = '';
+
+        try {
+            buttongroup.selectButton(-1);
+            buttongroup.selectButton(3000);
+
+            buttongroup.deselectButton(-1);
+            buttongroup.deselectButton(3000);
+        } catch (ex) {
+            error = ex.message;
+        }
+
+        expect(error).toBe('');
+    });
+
 });
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })

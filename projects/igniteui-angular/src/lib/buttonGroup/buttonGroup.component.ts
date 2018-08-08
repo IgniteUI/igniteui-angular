@@ -277,6 +277,10 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
      *```
      */
     public selectButton(index: number) {
+        if (index >= this.buttons.length || index < 0) {
+            return;
+        }
+
         const button = this.buttons[index];
         const buttonElement = button.nativeElement;
 
@@ -320,6 +324,10 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
      * ```
      */
     public deselectButton(index: number) {
+        if (index >= this.buttons.length || index < 0) {
+            return;
+        }
+
         const button = this.buttons[index];
         const buttonElement = button.nativeElement;
 
@@ -348,6 +356,8 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
         const initButtons = () => {
             // Cancel any existing buttonClick subscriptions
             this.buttonClickNotifier$.next();
+
+            this.selectedIndexes.splice(0, this.selectedIndexes.length);
 
             // initial configuration
             this.buttons.forEach((button, index) => {
