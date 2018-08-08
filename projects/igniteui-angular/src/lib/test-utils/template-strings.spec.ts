@@ -312,6 +312,7 @@ export class ColumnDefinitions {
                     [editable]="isEditable"
                     [sortable]="isSortable"
                     [hidden]="isHidden"
+                    [groupable]="isGroupable"
                     [filterable]="isFilterable">
         </igx-column>
         <igx-column [movable]="true" field="Name" width="150px"
@@ -333,6 +334,32 @@ export class ColumnDefinitions {
                     [filterable]="isFilterable">
         </igx-column>
     `;
+
+    public static multiColHeadersColumns = `
+        <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="isPinned"
+                    [sortable]="true" [filterable]="true" field="Missing"></igx-column>
+        <igx-column-group [movable]="true" header="General Information">
+            <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
+            <igx-column-group [movable]="true" header="Person Details">
+                <igx-column [movable]="true" [width]="'100px'" field="ContactName"></igx-column>
+                <igx-column [movable]="true" [filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column [movable]="true" [resizable]="true" field="ID"></igx-column>
+        <igx-column-group [movable]="true" header="Address Information">
+            <igx-column field="Country" [width]="'90px'">
+                <ng-template igxHeader let-column>
+                    {{ column.field }}
+                </ng-template>
+                <ng-template igxCell let-cell="cell" let-val let-row>
+                    {{val}}
+                </ng-template>
+            </igx-column>
+            <igx-column [movable]="true" [width]="'150px'" field="Region"></igx-column>
+            <igx-column [movable]="true" field="City"></igx-column>
+            <igx-column [movable]="true" field="Address"></igx-column>
+        </igx-column-group>
+  `;
 
     public static contactInfoGroupableColumns = `
     <igx-column [movable]="true" [hasSummary]="true" [resizable]="true"

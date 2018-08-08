@@ -615,6 +615,7 @@ export class MovableColumnsComponent extends BasicGridComponent {
     isResizable = false;
     isEditable = false;
     isHidden = false;
+    isGroupable = false;
     width = '500px';
     height = '300px';
     count = 0;
@@ -681,6 +682,13 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
     }
 }
 
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="800px"`, '', ColumnDefinitions.multiColHeadersColumns)}`
+})
+export class MultiColumnHeadersComponent extends BasicGridComponent {
+    data = SampleTestData.contactInfoDataFull();
+    isPinned = false;
+}
 
 @Component({
     template: `${GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameAvatar)}`
