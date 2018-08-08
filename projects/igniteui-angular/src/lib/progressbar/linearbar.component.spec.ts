@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import {
     async,
     fakeAsync,
@@ -330,7 +330,7 @@ describe('IgLinearBar', () => {
 
             const componentInstance = fixture.componentInstance;
             const progressBarContainer =
-                fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector('.progress-linear__bar');
+                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
             const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
 
             tick(tickTime);
@@ -345,7 +345,7 @@ describe('IgLinearBar', () => {
             fixture.detectChanges();
 
             const progressBarContainer =
-                fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector('.progress-linear__bar');
+                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
             const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
 
             expect(progressBarElem.classList.contains('progress-linear__bar-progress--default')).toBe(true);
@@ -360,7 +360,7 @@ describe('IgLinearBar', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
-            const progressElem = fixture.componentInstance.linearBar.elementRef.nativeElement
+            const progressElem = fixture.debugElement.nativeElement
                 .getElementsByClassName('progress-linear')[0];
 
             expect(progressElem.classList.contains('progress-linear--striped')).toBe(false);
@@ -375,11 +375,11 @@ describe('IgLinearBar', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
-            const progressElem = fixture.componentInstance.linearBar.elementRef.nativeElement
+            const progressElem = fixture.debugElement.nativeElement
                 .getElementsByClassName('progress-linear')[0];
 
             const progressBarContainer =
-                fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector('.progress-linear__bar');
+                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
             const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
 
             fixture.componentInstance.striped = true;
