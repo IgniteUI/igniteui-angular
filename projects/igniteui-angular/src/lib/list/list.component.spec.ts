@@ -1,24 +1,36 @@
-import { Component, QueryList, ViewChild } from '@angular/core';
+import { QueryList } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import { IgxListComponent, IgxListModule } from './list.component';
+import {
+    ListWithHeaderComponent, ListWithPanningComponent,
+    EmptyListComponent, CustomEmptyListComponent,
+    ListLoadingComponent,
+    ListCustomLoadingComponent,
+    TwoHeadersListComponent } from '../test-utils/list-components.spec';
 
 declare var Simulator: any;
 
 describe('List', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ListTestComponent, ListWithPanningAllowedComponent, ListLoadingComponent,
-                ListWithLeftPanningAllowedComponent, ListWithRightPanningAllowedComponent, ListCustomLoadingComponent,
-                ListWithNoItemsComponent, ListWithCustomNoItemsTemplateComponent, TwoHeadersListComponent],
+            declarations: [
+                CustomEmptyListComponent,
+                EmptyListComponent,
+                ListCustomLoadingComponent,
+                ListLoadingComponent,
+                ListWithHeaderComponent,
+                ListWithPanningComponent,
+                TwoHeadersListComponent
+            ],
             imports: [IgxListModule]
         }).compileComponents();
     }));
 
     it('should initialize igx-list with item and header', () => {
-        const fixture = TestBed.createComponent(ListTestComponent);
+        const fixture = TestBed.createComponent(ListWithHeaderComponent);
         const list = fixture.componentInstance.list;
         const domList = fixture.debugElement.query(By.css('igx-list')).nativeElement;
 
@@ -51,7 +63,7 @@ describe('List', () => {
     });
 
     it('should set/get properly layout properties: width, left, maxLeft, maxRight', () => {
-        const fixture = TestBed.createComponent(ListTestComponent);
+        const fixture = TestBed.createComponent(ListWithHeaderComponent);
         const list = fixture.componentInstance.list;
         const testWidth = 400;
         const testLeft = 0;
@@ -72,7 +84,7 @@ describe('List', () => {
      });
 
     it('should calculate properly item index', () => {
-        const fixture = TestBed.createComponent(ListTestComponent);
+        const fixture = TestBed.createComponent(ListWithHeaderComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
 
@@ -97,7 +109,7 @@ describe('List', () => {
         let timesCalledStateChanged = 0;
         let timesCalledRightPan = 0;
 
-        fixture = TestBed.createComponent(ListWithPanningAllowedComponent);
+        fixture = TestBed.createComponent(ListWithPanningComponent);
         list = fixture.componentInstance.list;
 
         fixture.detectChanges();
@@ -133,6 +145,12 @@ describe('List', () => {
         expect(timesCalledLeftPan).toBe(1);
         expect(timesCalledStateChanged).toBe(2);
         expect(timesCalledRightPan).toBe(1);
+
+        list.onLeftPan.unsubscribe();
+        list.onPanStateChange.unsubscribe();
+        list.onRightPan.unsubscribe();
+
+        unsubscribeEvents(list);
     });
 
     it('should pan right only.', () => {
@@ -142,8 +160,8 @@ describe('List', () => {
         let timesCalledStateChanged = 0;
         let timesCalledRightPan = 0;
 
-        fixture = TestBed.createComponent(ListWithRightPanningAllowedComponent);
-        list = fixture.componentInstance.list;
+        fixture = TestBed.createComponent(ListWithPanningComponent);
+        fixture.componentInstance.allowLeftPanning = false;
 
         fixture.detectChanges();
 
@@ -180,6 +198,8 @@ describe('List', () => {
         expect(timesCalledLeftPan).toBe(0);
         expect(timesCalledStateChanged).toBe(1);
         expect(timesCalledRightPan).toBe(1);
+
+        unsubscribeEvents(list);
     });
 
     it('should pan left only.', () => {
@@ -189,7 +209,8 @@ describe('List', () => {
         let timesCalledStateChanged = 0;
         let timesCalledRightPan = 0;
 
-        fixture = TestBed.createComponent(ListWithLeftPanningAllowedComponent);
+        fixture = TestBed.createComponent(ListWithPanningComponent);
+        fixture.componentInstance.allowRightPanning = false;
         fixture.detectChanges();
 
         list = fixture.componentInstance.list;
@@ -225,10 +246,12 @@ describe('List', () => {
         expect(timesCalledLeftPan).toBe(1);
         expect(timesCalledStateChanged).toBe(1);
         expect(timesCalledRightPan).toBe(0);
+
+        unsubscribeEvents(list);
     });
 
     it('Should have default no items template.', () => {
-        const fixture = TestBed.createComponent(ListWithNoItemsComponent);
+        const fixture = TestBed.createComponent(EmptyListComponent);
         const list = fixture.componentInstance.list;
         const listNoItemsMessage = 'There are no items in the list.';
 
@@ -243,7 +266,7 @@ describe('List', () => {
     });
 
     it('Should have custom no items template.', () => {
-        const fixture = TestBed.createComponent(ListWithCustomNoItemsTemplateComponent);
+        const fixture = TestBed.createComponent(CustomEmptyListComponent);
         const list = fixture.componentInstance.list;
         const listCustomNoItemsTemplateContent = 'Custom no items message.';
 
@@ -294,7 +317,7 @@ describe('List', () => {
         let timesCalled = 0;
 
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ListTestComponent);
+            fixture = TestBed.createComponent(ListWithHeaderComponent);
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
@@ -324,6 +347,7 @@ describe('List', () => {
             expect(timesCalled).toBe(3);
             expect(listItem.index).toBe(0);
             expect(listItem.element.textContent.trim()).toBe('Header');
+            unsubscribeEvents(list);
             done();
         });
     }, 5000);
@@ -472,125 +496,16 @@ describe('List', () => {
         expect(list.items instanceof Array).toBeTruthy();
         expect(list.items.length).toBe(expectedCount);
     }
+
     function verifyHeadersCount(list, expectedCount) {
         expect(list.headers instanceof Array).toBeTruthy();
         expect(list.headers.length).toBe(expectedCount);
     }
+
+    function unsubscribeEvents(list) {
+        list.onLeftPan.unsubscribe();
+        list.onPanStateChange.unsubscribe();
+        list.onRightPan.unsubscribe();
+        list.onItemClicked.unsubscribe();
+    }
 });
-
-@Component({
-    template: `<div #wrapper>
-                    <igx-list>
-                        <igx-list-item [isHeader]="true">Header</igx-list-item>
-                        <igx-list-item>Item 1</igx-list-item>
-                        <igx-list-item>Item 2</igx-list-item>
-                        <igx-list-item>Item 3</igx-list-item>
-                    </igx-list>
-                </div>`
-})
-class ListTestComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-    @ViewChild('wrapper') public wrapper;
-}
-
-@Component({
-    template: `<div #wrapper>
-                    <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
-                        <igx-list-item>Item 1</igx-list-item>
-                        <igx-list-item>Item 2</igx-list-item>
-                        <igx-list-item>Item 3</igx-list-item>
-                    </igx-list>
-                </div>`
-})
-class ListWithPanningAllowedComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-}
-
-@Component({
-    template: `<div #wrapper>
-                <igx-list [allowLeftPanning]="false" [allowRightPanning]="true">
-                    <igx-list-item>Item 1</igx-list-item>
-                    <igx-list-item>Item 2</igx-list-item>
-                    <igx-list-item>Item 3</igx-list-item>
-                </igx-list>
-            </div>`
-})
-class ListWithRightPanningAllowedComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-}
-
-@Component({
-    template: `<div #wrapper>
-                <igx-list [allowLeftPanning]="true" [allowRightPanning]="false">
-                    <igx-list-item>Item 1</igx-list-item>
-                    <igx-list-item>Item 2</igx-list-item>
-                    <igx-list-item>Item 3</igx-list-item>
-                </igx-list>
-            </div>`
-})
-class ListWithLeftPanningAllowedComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-}
-
-@Component({
-    template: `<div #wrapper>
-            <igx-list>
-            </igx-list>
-        </div>`
-})
-class ListWithNoItemsComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-}
-
-@Component({
-    template: `<div #wrapper>
-                <igx-list>
-                    <ng-template igxEmptyList>
-                        <h3>Custom no items message.</h3>
-                    </ng-template>
-                </igx-list>
-            </div>`
-})
-class ListWithCustomNoItemsTemplateComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-}
-
-@Component({
-    template: `<div #wrapper>
-                <igx-list [isLoading]="true">
-                </igx-list>
-            </div>`
-})
-class ListLoadingComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-}
-
-
-@Component({
-    template: `<div #wrapper>
-                <igx-list [isLoading]="true">
-                    <ng-template igxDataLoading>
-                        <h3>Loading data...</h3>
-                    </ng-template>
-                </igx-list>
-            </div>`
-})
-class ListCustomLoadingComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-}
-
-@Component({
-    template: `<div #wrapper>
-                    <igx-list [allowRightPanning]="false" [allowLeftPanning]="false">
-                        <igx-list-item [isHeader]="true">Header 1</igx-list-item>
-                        <igx-list-item [isHeader]="false" [hidden]="false">Item 1</igx-list-item>
-                        <igx-list-item [isHeader]="true">Header 2</igx-list-item>
-                        <igx-list-item [hidden]="true">Item 2</igx-list-item>
-                        <igx-list-item>Item 3</igx-list-item>
-                    </igx-list>
-                </div>`
-})
-class TwoHeadersListComponent {
-    @ViewChild(IgxListComponent) public list: IgxListComponent;
-    @ViewChild('wrapper') public wrapper;
-}

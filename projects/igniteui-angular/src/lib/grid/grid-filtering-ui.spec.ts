@@ -1341,9 +1341,11 @@ describe('IgxGrid - Filtering actions', () => {
     it('Should display populated filter dialog without redrawing it', async () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
         grid.width = '400px';
         grid.getColumnByName('ID').width = '50px';
+
         // filter the ProductName by two conditions
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
@@ -1359,14 +1361,18 @@ describe('IgxGrid - Filtering actions', () => {
         filteringExpressionsTree.filteringOperands.push(expression);
         filteringExpressionsTree.filteringOperands.push(expression1);
         grid.filter('ProductName', null, filteringExpressionsTree);
+
         fix.detectChanges();
+
         // scroll horizontally to the right, so ProductName column is out of view
         const horScroll = grid.parentVirtDir.getHorizontalScroll();
         horScroll.scrollLeft = 1000;
         fix.detectChanges();
+
         // scroll horizontally to the left, so ProductName is back in view
         horScroll.scrollLeft = 0;
         fix.detectChanges();
+
         // click filter icon
         const filterButton = fix.debugElement.queryAll(By.css('igx-grid-filter'))[0];
         const filterIcon = filterButton.query(By.css('igx-icon'));

@@ -114,7 +114,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
     });
 
-    it('Grid sort by multiple expressions and clear sorting through API', () => {
+    it('Should sort grid by multiple expressions and clear sorting through API', () => {
         const firstColumn = 'ID';
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
@@ -152,7 +152,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.sortingExpressions.length).toEqual(0);
     });
 
-    it('Grid sort by multiple expressions through API using ignoreCase for the second expression', () => {
+    it('Should sort grid by multiple expressions through API using ignoreCase for the second expression', () => {
         const firstColumn = 'ID';
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
@@ -195,7 +195,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
     });
 
-    it('Grid sort by invalid expressions fieldName shouldn\'t change anything', () => {
+    it('Should sort grid by invalid expressions fieldName shouldn\'t change anything', () => {
         const gridData = fixture.componentInstance.data;
         const firstColumn = 'ID';
         const secondColumn = 'Name';
@@ -221,7 +221,7 @@ describe('IgxGrid - Grid Sorting', () => {
     });
 
     // sort now allows only params of type ISortingExpression hence it is not possible to pass invalid expressions
-    it(`Grid sort by mixed valid and invalid expressions should update the
+    it(`Should sort grid by mixed valid and invalid expressions should update the
             data only by valid ones (through API)`, () => {
         const firstColumn = 'ID';
         const secondColumn = 'Name';
@@ -247,7 +247,7 @@ describe('IgxGrid - Grid Sorting', () => {
 
     // UI Tests
 
-    it('Grid sort ascending by clicking once on first header cell UI', () => {
+    it('Should sort grid ascending by clicking once on first header cell UI', () => {
         const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 
         clickCurrentRow(firstHeaderCell);
@@ -268,7 +268,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
     });
 
-    it('Grid sort descending by clicking twice on header cell UI', () => {
+    it('Should sort grid descending by clicking twice on header cell UI', () => {
         const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 
         clickCurrentRow(firstHeaderCell);
@@ -291,7 +291,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
     });
 
-    it('Grid sort none when we click three time on header cell UI', () => {
+    it('Should sort grid none when we click three time on header cell UI', () => {
         const gridData = fixture.componentInstance.data;
         const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 

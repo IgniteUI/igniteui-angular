@@ -3320,4 +3320,3 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
     }
 }
 
-

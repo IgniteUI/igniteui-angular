@@ -69,7 +69,7 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     /**
      * An @Input property that sets the value of the `selectedIndex`.
      * Default value is 0.
-     * *```html
+     * ```html
      * <igx-tabs selectedIndex="1">
      * ```
      */
@@ -335,11 +335,11 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     }
 }
 
-    /**
-    * The IgxTabsModule provides the {@link IgxTabsComponent}, {@link IgxTabsGroupComponent},
-    *{@link IgxTabItemComponent}, {@link IgxTabItemTemplateDirective}, {@link IgxRightButtonStyleDirective}
-    * and {@link IgxLeftButtonStyleDirective} inside your application.
-    */
+/**
+* The IgxTabsModule provides the {@link IgxTabsComponent}, {@link IgxTabsGroupComponent},
+*{@link IgxTabItemComponent}, {@link IgxTabItemTemplateDirective}, {@link IgxRightButtonStyleDirective}
+* and {@link IgxLeftButtonStyleDirective} inside your application.
+*/
 @NgModule({
     declarations: [IgxTabsComponent,
         IgxTabsGroupComponent,
