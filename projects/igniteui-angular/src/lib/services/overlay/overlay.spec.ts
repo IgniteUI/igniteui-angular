@@ -10,7 +10,7 @@ import { async as asyncWrapper, TestBed, fakeAsync, tick, ComponentFixtureAutoDe
 import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
-import { IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './../../directives/toggle/toggle.directive';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
@@ -91,6 +91,42 @@ describe('igxOverlay', () => {
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
             expect(overlayDiv).toBeDefined();
             expect(overlayDiv.classList.contains('igx-overlay')).toBeTruthy();
+        }));
+
+        it('Should attach to setting target or default to body', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const button = fixture.componentInstance.buttonElement;
+            const overlay = fixture.componentInstance.overlay;
+            fixture.detectChanges();
+
+            overlay.show(SimpleDynamicComponent, {
+                outlet: button,
+                modal: false
+            });
+            tick();
+            let wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(wrapper).toBeDefined();
+            expect(wrapper.parentNode).toBe(button.nativeElement);
+            overlay.hideAll();
+
+            overlay.show(SimpleDynamicComponent, { modal: false });
+            tick();
+            wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(wrapper).toBeDefined();
+            expect(wrapper.parentElement.classList).toContain('igx-overlay');
+            expect(wrapper.parentElement.parentElement).toBe(document.body);
+            overlay.hideAll();
+
+            const outlet = document.createElement('div');
+            fixture.debugElement.nativeElement.appendChild(outlet);
+            overlay.show(SimpleDynamicComponent, {
+                modal: false,
+                outlet: new IgxOverlayOutletDirective(new ElementRef(outlet))
+            });
+            tick();
+            wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(wrapper).toBeDefined();
+            expect(wrapper.parentNode).toBe(outlet);
         }));
 
         it('Should show component passed to overlay', fakeAsync(() => {

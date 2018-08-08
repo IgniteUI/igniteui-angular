@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output,
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from './toggle.directive';
+import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
 import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy } from '../../services';
 
@@ -14,6 +14,7 @@ describe('IgxToggle', () => {
             declarations: [
                 IgxToggleActionTestComponent,
                 IgxToggleActionSettingsComponent,
+                IgxToggleOutletComponent,
                 IgxToggleServiceInjectComponent,
                 IgxOverlayServiceComponent,
                 IgxToggleTestComponent,
@@ -294,6 +295,26 @@ describe('IgxToggle', () => {
             expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
+
+        it('should pass IgxOverlayOutletDirective input from IgxToggleActionDiretive', () => {
+            const fixture = TestBed.createComponent(IgxToggleOutletComponent);
+            const outlet = fixture.debugElement.query(By.css('.outlet-container')).nativeElement;
+            const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
+            fixture.detectChanges();
+
+            const settings = /*<OverlaySettings>*/{
+                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
+                closeOnOutsideClick: true,
+                modal: false,
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                target: jasmine.any(IgxOverlayOutletDirective)
+            };
+
+            fixture.componentInstance.toggleAction.onClick();
+            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
+            const directive = toggleSpy.calls.mostRecent().args[0].target as IgxOverlayOutletDirective;
+            expect(directive.nativeElement).toBe(outlet);
+        });
     });
 });
 
@@ -357,6 +378,15 @@ export class IgxToggleActionSettingsComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
 }
+
+@Component({
+    template: `
+    <button [igxToggleAction]="toggleRef" [overlaySettings]="{}" [igxToggleOutlet]="outlet"></button>
+    <div igxToggle #toggleRef="toggle"></div>
+    <div igxOverlayOutlet #outlet="overlay-outlet" class="outlet-container"></div>
+    `
+})
+export class IgxToggleOutletComponent extends IgxToggleActionSettingsComponent {}
 
 @Component({
     template: `

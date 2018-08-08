@@ -290,6 +290,9 @@ export class IgxToggleActionDirective implements OnInit {
         this._closeOnOutsideClick = v;
     }
 
+    @Input('igxToggleOutlet')
+    public outlet: IgxOverlayOutletDirective;
+
     /**
      * @hidden
      */
@@ -334,12 +337,28 @@ export class IgxToggleActionDirective implements OnInit {
         if (this.closeOnOutsideClick !== undefined) {
             this._overlayDefaults.closeOnOutsideClick = this.closeOnOutsideClick;
         }
+        if (this.outlet) {
+            this._overlayDefaults.outlet = this.outlet;
+        }
         this.target.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings));
     }
 }
+
+@Directive({
+    exportAs: 'overlay-outlet',
+    selector: '[igxOverlayOutlet]'
+})
+export class IgxOverlayOutletDirective {
+    constructor(public element: ElementRef) { }
+
+    public get nativeElement() {
+        return this.element.nativeElement;
+    }
+}
+
 @NgModule({
-    declarations: [IgxToggleDirective, IgxToggleActionDirective],
-    exports: [IgxToggleDirective, IgxToggleActionDirective],
+    declarations: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
+    exports: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
     providers: [IgxNavigationService]
 })
 export class IgxToggleModule { }
