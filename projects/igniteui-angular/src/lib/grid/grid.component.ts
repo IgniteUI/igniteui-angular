@@ -50,6 +50,7 @@ import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
+import { IgxGridHeaderComponent } from './grid-header.component';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -1175,6 +1176,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxGridHeaderComponent, { read: IgxGridHeaderComponent })
+    public headerList: QueryList<IgxGridHeaderComponent>;
 
     /**
      * @hidden
