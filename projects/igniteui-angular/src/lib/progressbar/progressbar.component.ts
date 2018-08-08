@@ -142,7 +142,6 @@ export abstract class BaseProgress {
      * @param val
      * @param comparator
      * @param step
-     * @param isMaxComparator
      */
     private isExceedingUpperLimit(val: number, comparator: number, step: number) {
         return val > comparator && step > 0;
@@ -166,7 +165,6 @@ export abstract class BaseProgress {
     private updateProgress(val: number) {
         this._value = val;
         this.valueInPercent = convertInPercentage(this._value, this._max);
-        // this.valueInPercent = this._value;
     }
 }
 let NEXT_LINEAR_ID = 0;
