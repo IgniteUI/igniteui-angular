@@ -1,10 +1,11 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DataType } from '../data-operations/data-util';
-import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
+import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '../test-utils/grid-samples.spec';
 
 describe('IgxGrid - Column properties', () => {
 
@@ -15,9 +16,9 @@ describe('IgxGrid - Column properties', () => {
             declarations: [
                 ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,
-                ColumnHiddenFromMarkupComponent,
                 ColumnCellFormatterComponent,
-                ColumnHaederClassesComponent
+                ColumnHaederClassesComponent,
+                ColumnHiddenFromMarkupComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -87,7 +88,7 @@ describe('IgxGrid - Column properties', () => {
         const fix = TestBed.createComponent(ColumnHiddenFromMarkupComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.instance;
+        const grid = fix.componentInstance.grid;
 
         expect(grid.visibleColumns.length).toEqual(0);
         expect(fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS)).length).toEqual(0);
@@ -103,7 +104,7 @@ describe('IgxGrid - Column properties', () => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.instance;
+        const grid = fix.componentInstance.grid;
         const formatter = fix.componentInstance.multiplier;
 
         expect(grid.columnList.first.formatter).toBeDefined();
@@ -118,7 +119,7 @@ describe('IgxGrid - Column properties', () => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.instance;
+        const grid = fix.componentInstance.grid;
         let headers: DebugElement[];
 
         expect(grid.columnList.first.field).toMatch('ID');
@@ -148,13 +149,13 @@ describe('IgxGrid - Column properties', () => {
 
         expect(grid.columnList.length).toEqual(2);
 
-        fix.componentInstance.declarations.push('MyNewColumn');
+        fix.componentInstance.columns.push('MyNewColumn');
         fix.detectChanges();
 
         expect(grid.columnList.length).toEqual(3);
         expect(grid.columnList.last.field).toMatch('MyNewColumn');
 
-        fix.componentInstance.declarations.pop();
+        fix.componentInstance.columns.pop();
         fix.detectChanges();
 
         expect(grid.columnList.length).toEqual(2);
@@ -163,9 +164,9 @@ describe('IgxGrid - Column properties', () => {
 
     it('should apply columnWidth on columns that don\'t have explicit width', () => {
         const fix = TestBed.createComponent(ColumnCellFormatterComponent);
-        fix.componentInstance.instance.columnWidth = '200px';
+        fix.componentInstance.grid.columnWidth = '200px';
         fix.detectChanges();
-        const cols = fix.componentInstance.instance.columnList;
+        const cols = fix.componentInstance.grid.columnList;
         cols.forEach((item) => {
             expect(item.width).toEqual('200px');
         });
@@ -221,57 +222,18 @@ describe('IgxGrid - Column properties', () => {
 });
 
 @Component({
-    template: `
-        <igx-grid [data]="data">
-            <igx-column *ngFor="let each of declarations" [field]="each"></igx-column>
-        </igx-grid>
-    `
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent)
 })
 export class ColumnsFromIterableComponent {
-
-    public data = [
-        { ID: 1, Name: 'Johny' },
-        { ID: 2, Name: 'Sally' },
-        { ID: 3, Name: 'Tim' }
-    ];
-
-    public declarations = ['ID', 'Name'];
+    public data = SampleTestData.personIDNameData();
+    public columns = ['ID', 'Name'];
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 }
 
 @Component({
-    template: `
-        <igx-grid [data]="data">
-            <igx-column field="ID">
-                <ng-template igxHeader>
-                    <span class="header">Header text</span>
-                </ng-template>
-
-                <ng-template igxCell>
-                    <span class="cell">Cell text</span>
-                </ng-template>
-
-                <ng-template igxFooter>
-                    <span class="footer">Footer text</span>
-                </ng-template>
-            </igx-column>
-            <igx-column field="Name">
-                <ng-template igxHeader>
-                    <span class="header">Header text</span>
-                </ng-template>
-
-                <ng-template igxCell>
-                    <span class="cell">Cell text</span>
-                </ng-template>
-
-                <ng-template igxFooter>
-                    <span class="footer">Footer text</span>
-                </ng-template>
-            </igx-column>
-        </igx-grid>
-
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.columnTemplates) + `
         <ng-template #newHeader>
             <span class="new-header">New header text</span>
         </ng-template>
@@ -282,12 +244,7 @@ export class ColumnsFromIterableComponent {
     `
 })
 export class TemplatedColumnsComponent {
-
-    public data = [
-        { ID: 1, Name: 'Johny' },
-        { ID: 2, Name: 'Sally' },
-        { ID: 3, Name: 'Tim' }
-    ];
+    public data = SampleTestData.personIDNameData();
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
@@ -297,49 +254,6 @@ export class TemplatedColumnsComponent {
 
     @ViewChild('newCell', { read: TemplateRef })
     public newCellTemplate: TemplateRef<any>;
-}
-
-@Component({
-    template: `
-        <igx-grid [data]="data">
-            <igx-column field="ID" [hidden]="true"></igx-column>
-        </igx-grid>
-    `
-})
-export class ColumnHiddenFromMarkupComponent {
-
-    public data = [
-        { ID: 1, Name: 'Johny' },
-        { ID: 2, Name: 'Sally' },
-        { ID: 3, Name: 'Tim' }
-    ];
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
-    public instance: IgxGridComponent;
-}
-
-@Component({
-    template: `
-        <igx-grid [data]="data">
-            <igx-column field="ID" [formatter]="multiplier"></igx-column>
-            <igx-column field="Name"></igx-column>
-        </igx-grid>
-    `
-})
-export class ColumnCellFormatterComponent {
-
-    public data = [
-        { ID: 1, Name: 'Johny' },
-        { ID: 2, Name: 'Sally' },
-        { ID: 3, Name: 'Tim' }
-    ];
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
-    public instance: IgxGridComponent;
-
-    public multiplier(value: number): string {
-        return `${value * value}`;
-    }
 }
 
 @Component({

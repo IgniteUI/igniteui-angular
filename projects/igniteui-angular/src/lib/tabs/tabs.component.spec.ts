@@ -7,7 +7,7 @@ import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
 describe('IgxTabs', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent],
+            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent, TabsTestSelectedTabComponent],
             imports: [IgxTabsModule]
         })
             .compileComponents();
@@ -48,7 +48,7 @@ describe('IgxTabs', () => {
         const tabs = fixture.componentInstance.tabs;
         let tabItems;
 
-        expect(tabs.selectedIndex).toBe(-1);
+        expect(tabs.selectedIndex).toBe(0);
         expect(tabs.selectedTabItem).toBeUndefined();
 
         fixture.componentInstance.tabSelectedHandler = () => {
@@ -59,8 +59,8 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
 
         tabItems = tabs.tabs.toArray();
-        expect(tabItems[0].disabled).toBeFalsy();
-        expect(tabItems[1].disabled).toBeFalsy();
+        expect(tabItems[0].disabled).toBe(false);
+        expect(tabItems[1].disabled).toBe(false);
     });
 
     it('should initialize set/get properties', () => {
@@ -88,7 +88,7 @@ describe('IgxTabs', () => {
         let tab1: IgxTabItemComponent;
         let tab2: IgxTabItemComponent;
 
-        expect(tabs.selectedIndex).toBe(-1);
+        expect(tabs.selectedIndex).toBe(0);
         fixture.componentInstance.tabSelectedHandler = () => {
             expect(tabs.selectedIndex).toBe(0);
             expect(tabs.selectedTabItem).toBe(tab1);
@@ -138,7 +138,7 @@ describe('IgxTabs', () => {
         let tab1: IgxTabItemComponent;
         let tab3: IgxTabItemComponent;
 
-        expect(tabs.selectedIndex).toBe(-1);
+        expect(tabs.selectedIndex).toBe(0);
         expect(tabs.selectedTabItem).toBe(tab1);
 
         tick();
@@ -205,7 +205,6 @@ describe('IgxTabs', () => {
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
         let args = { key: 'ArrowRight', bubbles: true };
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
         expect(tabs.selectedIndex).toBe(1);
 
         tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
@@ -271,6 +270,17 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
     });
+
+    it('should select third tab by default', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TabsTestSelectedTabComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+        tick();
+
+        expect(tabs.selectedIndex).toBe(2);
+        expect(tabs.groups.toArray()[2].isSelected).toBeTruthy();
+        expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(320px)');
+    }));
 });
 
 @Component({
@@ -394,4 +404,27 @@ class TabsTest2Component {
 class TemplatedTabsTestComponent {
     @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv') public wrapperDiv: any;
+}
+
+@Component({
+    template: `
+        <div>
+            <igx-tabs [selectedIndex]="2">
+                <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
+            </igx-tabs>
+        </div>`
+})
+class TabsTestSelectedTabComponent {
+    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
+    public collection: any[];
+
+    public constructor() {
+        this.collection =
+            [
+                { name: 'Tab 1' },
+                { name: 'Tab 2' },
+                { name: 'Tab 3' },
+                { name: 'Tab 4' }
+            ];
+    }
 }
