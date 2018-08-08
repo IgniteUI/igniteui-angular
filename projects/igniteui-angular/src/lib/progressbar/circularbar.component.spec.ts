@@ -10,7 +10,7 @@ import { By } from '@angular/platform-browser';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
 import { Common } from './common.spec';
 
-fdescribe('IgCircularBar', () => {
+describe('IgCircularBar', () => {
     const tickTime = 2000;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
