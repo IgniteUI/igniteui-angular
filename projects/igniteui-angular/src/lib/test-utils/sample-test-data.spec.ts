@@ -1,9 +1,6 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map  } from 'rxjs/operators';
+
 import { Calendar } from '../calendar/calendar';
 import { cloneObject } from '../core/utils';
-import { IDataState } from '../data-operations/data-state.interface';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ValueData } from '../services/excel/test-data.service.spec';
 
 export class SampleTestData {
@@ -12,62 +9,62 @@ export class SampleTestData {
     private static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
     // tslint:disable:quotemark
-    public static stringArray = [
+    public static stringArray = () => ([
         "Terrance Orta",
         "Richard Mahoney LongerName",
         "Donna Price",
         "Lisa Landers",
         "Dorothy H. Spencer"
-    ];
+    ])
 
-    public static numbersArray = [
+    public static numbersArray = () => ([
         10,
         20,
         30
-    ];
+    ])
 
-    public static dateArray = [
+    public static dateArray = () => ([
         new Date("2018"),
         new Date(2018, 3, 23),
         new Date(30),
         new Date("2018/03/23")
-    ];
+    ])
 
-    public static emptyObjectData = [
+    public static emptyObjectData = () => ([
         {},
         {},
         {}
-    ];
+    ])
 
-    public static noHeadersObjectArray = [
+    public static noHeadersObjectArray = () => ([
         new ValueData('1'),
         new ValueData('2'),
         new ValueData('3')
-    ];
+    ])
 
-    public static oneItemNumberData = [{ index: 1, value: 1 }];
+    public static oneItemNumberData = () => ([{ index: 1, value: 1 }]);
 
     /* Fields: index: number, value: number; 2 items. */
-    public static numberDataTwoFields = [
+    public static numberDataTwoFields = () => ([
         { index: 1, value: 1},
         { index: 2, value: 2}
-    ];
+    ])
 
     /* Fields: index: number, value: number, other: number, another: number; 2 items. */
-    public static numberDataFourFields = [
+    public static numberDataFourFields = () => ([
         { index: 1, value: 1, other: 1, another: 1},
         { index: 2, value: 2, other: 2, another: 2}
-    ];
+    ])
 
     /* Fields: Number: number, String: string, Boolean: boolean; Date: date; 3 items. */
-    public static differentTypesData = [
+    public static differentTypesData = () => ([
         { Number: 1, String: "1", Boolean: true, Date: new Date(2018, 3, 3) },
         { Number: 2, String: "2", Boolean: false, Date: new Date(2018, 5, 6) },
         { Number: 3, String: "3", Boolean: true, Date: new Date(2018, 9, 22) }
-    ];
+    ])
 
     /* Fields: Name: string, Avatar: string; 3 items. */
-    public static personAvatarData = [
+    public static personAvatarData = () => ([
         {
             Name: 'Person 1',
             Avatar: 'https://randomuser.me/api/portraits/men/43.jpg'
@@ -80,10 +77,10 @@ export class SampleTestData {
             Name: 'Person 3',
             Avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
         }
-    ];
+    ])
 
     /* Fields: name: string, phone: string; 5 items. */
-    public static contactsData = [
+    public static contactsData = () => ([
         {
             name: "Terrance Orta",
             phone: "770-504-2217"
@@ -100,10 +97,10 @@ export class SampleTestData {
             name: "Dorothy H. Spencer",
             phone: "573-394-9254"
         }
-    ];
+    ])
 
     /* Fields: name: string, phone: string; 6 items. Remarks: Contains special and cyrilic characters. */
-    public static contactsFunkyData = [
+    public static contactsFunkyData = () => ([
         {
             name: "Terrance Mc'Orta",
             phone: "(+359)770-504-2217 | 2218"
@@ -123,10 +120,10 @@ export class SampleTestData {
             name: "Иван Иванов (1,2)",
             phone: "№ 573-394-9254"
         }
-    ];
+    ])
 
     /* Fields: name: string, phone: string; 3 items. Remarks: Contains records without values for one of the fields. */
-    public static contactsDataPartial = [
+    public static contactsDataPartial = () => ([
         {
             name: "Terrance Orta",
             phone: "770-504-2217"
@@ -135,24 +132,24 @@ export class SampleTestData {
         }, {
             phone: "780-555-1331"
         }
-    ];
+    ])
 
     /* Data fields: ID: number, Name: string; 3 items. */
-    public static personIDNameData = [
+    public static personIDNameData = () => ([
         { ID: 1, Name: "Johny" },
         { ID: 2, Name: "Sally" },
         { ID: 3, Name: "Tim" }
-    ];
+    ])
 
     /* Data fields: FirstName: string, LastName: string, age:number; 3 items. */
-    public static personNameAgeData = [
+    public static personNameAgeData = () => ([
         { FirstName: "John", LastName: "Brown", age: 20 },
         { FirstName: "Ben", LastName: "Affleck", age: 30 },
         { FirstName: "Tom", LastName: "Riddle", age: 50 }
-    ];
+    ])
 
     /* Data fields: ID: number, Name: string, LastName: string, Region: string; 7 items. */
-    public static personIDNameRegionData = [
+    public static personIDNameRegionData = () => ([
         { ID: 2, Name: "Jane", LastName: "Brown", Region: "AD" },
         { ID: 1, Name: "Brad", LastName: "Williams", Region: "BD" },
         { ID: 6, Name: "Rick", LastName: "Jones", Region: "ACD"},
@@ -160,10 +157,10 @@ export class SampleTestData {
         { ID: 5, Name: "ALex", LastName: "Smith", Region: "MlDs" },
         { ID: 4, Name: "Alex", LastName: "Wilson", Region: "DC" },
         { ID: 3, Name: "Connor", LastName: "Walker", Region: "OC" }
-    ];
+    ])
 
     /* Data fields: ID: number, Name: string, JobTitle: string, HireDate: string; 10 items, sorted by ID. */
-    public static personJobDataFull = [
+    public static personJobDataFull = () => ([
         { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", HireDate: "2017-06-19T11:43:07.714Z" },
         { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", HireDate: "2015-12-18T11:23:17.714Z" },
         { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", HireDate: "2005-11-18T11:23:17.714Z" },
@@ -174,10 +171,10 @@ export class SampleTestData {
         { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
         { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
-    ];
+    ])
 
     /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
-    public static personJobData = [
+    public static personJobData = () => ([
         { ID: 1, Name: "Casey Houston", JobTitle: "Vice President" },
         { ID: 2, Name: "Gilberto Todd", JobTitle: "Director" },
         { ID: 3, Name: "Tanya Bennett", JobTitle: "Director" },
@@ -188,10 +185,10 @@ export class SampleTestData {
         { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead" },
         { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer" },
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager" }
-    ];
+    ])
 
     /* Data fields: ID: number, Name: string, JobTitle: string, Company: string; 10 items, sorted by ID. */
-    public static personIDNameJobCompany = [
+    public static personIDNameJobCompany = () => ([
         { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', Company: 'Company A' },
         { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', Company: 'Company C' },
         { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', Company: 'Company A' },
@@ -202,12 +199,12 @@ export class SampleTestData {
         { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', Company: 'Company A' },
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Company: 'Company D' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Company: 'Company E' }
-    ];
+    ])
 
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
         11 items, sorted by ID. */
-    public static contactInfoData = [
+    public static contactInfoData = () => ([
         {
             ID: "ALFKI",
             CompanyName: "Alfreds Futterkiste",
@@ -349,13 +346,13 @@ export class SampleTestData {
             Phone: "(171) 555-1212",
             Fax: null
         }
-    ];
+    ])
 
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
         27 items, sorted by ID. */
     /* tslint:disable */
-    public static contactInfoDataFull = [
+    public static contactInfoDataFull = () => ([
         { "ID": "ALFKI", "CompanyName": "Alfreds Futterkiste", "ContactName": "Maria Anders", "ContactTitle": "Sales Representative", "Address": "Obere Str. 57", "City": "Berlin", "Region": null, "PostalCode": "12209", "Country": "Germany", "Phone": "030-0074321", "Fax": "030-0076545" },
         { "ID": "ANATR", "CompanyName": "Ana Trujillo Emparedados y helados", "ContactName": "Ana Trujillo", "ContactTitle": "Owner", "Address": "Avda. de la Constitución 2222", "City": "México D.F.", "Region": null, "PostalCode": "05021", "Country": "Mexico", "Phone": "(5) 555-4729", "Fax": "(5) 555-3745" },
         { "ID": "ANTON", "CompanyName": "Antonio Moreno Taquería", "ContactName": "Antonio Moreno", "ContactTitle": "Owner", "Address": "Mataderos 2312", "City": "México D.F.", "Region": null, "PostalCode": "05023", "Country": "Mexico", "Phone": "(5) 555-3932", "Fax": null },
@@ -383,13 +380,13 @@ export class SampleTestData {
         { "ID": "FRANK", "CompanyName": "Frankenversand", "ContactName": "Peter Franken", "ContactTitle": "Marketing Manager", "Address": "Berliner Platz 43", "City": "München", "Region": null, "PostalCode": "80805", "Country": "Germany", "Phone": "089-0877310", "Fax": "089-0877451" },
         { "ID": "FRANR", "CompanyName": "France restauration", "ContactName": "Carine Schmitt", "ContactTitle": "Marketing Manager", "Address": "54, rue Royale", "City": "Nantes", "Region": null, "PostalCode": "44000", "Country": "France", "Phone": "40.32.21.21", "Fax": "40.32.21.20" },
         { "ID": "FRANS", "CompanyName": "Franchi S.p.A.", "ContactName": "Paolo Accorti", "ContactTitle": "Sales Representative", "Address": "Via Monte Bianco 34", "City": "Torino", "Region": null, "PostalCode": "10100", "Country": "Italy", "Phone": "011-4988260", "Fax": "011-4988261" }
-    ];
+    ]);
     /* tslint:enable */
 
     // tslint:disable:quotemark
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string; 1 item. */
-    public static contactMariaAndersData = [{
+    public static contactMariaAndersData = () => ([{
         ID: "ALFKI",
         CompanyName: "Alfreds Futterkiste",
         ContactName: "Maria Anders",
@@ -401,11 +398,11 @@ export class SampleTestData {
         Country: "Germany",
         Phone: "030-0074321",
         Fax: "030-0076545"
-    }];
+    }])
 
     /* Data fields: Downloads: number, ID: number, ProductName: string, ReleaseDate: Date, Released: boolean;
         8 items, sorted by ID. */
-    public static productInfoData = [
+    public static productInfoData = () => ([
         {
             Downloads: 254,
             ID: 1,
@@ -462,12 +459,12 @@ export class SampleTestData {
             ReleaseDate: SampleTestData.today,
             Released: false
         }
-    ];
+    ])
 
     /* Data fields: Downloads: number, ID: number, ProductName: string, ReleaseDate: Date, Released: boolean,
         Category: string, Items: string, Test: string;
         8 items, sorted by ID. */
-    public static productInfoDataFull = [
+    public static productInfoDataFull = () => ([
         {
             Downloads: 254,
             ID: 1,
@@ -548,11 +545,11 @@ export class SampleTestData {
             Items: "Item 8",
             Test: "Test 8"
         }
-    ];
+    ])
 
     /* Data fields: ProductID: number, ProductName: string, InStock: boolean, UnitsInStock: number, OrderDate: Date;
         10 items, sorted by ID. */
-    public static foodProductData = [
+    public static foodProductData = () => ([
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
         { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
         { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
@@ -563,11 +560,11 @@ export class SampleTestData {
         { ProductID: 8, ProductName: "Tofu", InStock: true, UnitsInStock: 7898, OrderDate: new Date("2017-09-09") },
         { ProductID: 9, ProductName: "Teatime Chocolate Biscuits", InStock: true, UnitsInStock: 6998, OrderDate: new Date("2025-12-25") },
         { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: new Date("2018-03-01") }
-    ];
+    ])
 
     /* Data fields: ProductID: number, ProductName: string, InStock: boolean, UnitsInStock: number, OrderDate: Date;
         19 items, sorted by ID. */
-    public static foodProductDataExtended = [
+    public static foodProductDataExtended = () => ([
         { ProductID: 1, ProductName: "Chai", InStock: true, UnitsInStock: 2760, OrderDate: new Date("2005-03-21") },
         { ProductID: 2, ProductName: "Aniseed Syrup", InStock: false, UnitsInStock: 198, OrderDate: new Date("2008-01-15") },
         { ProductID: 3, ProductName: "Chef Antons Cajun Seasoning", InStock: true, UnitsInStock: 52, OrderDate: new Date("2010-11-20") },
@@ -587,7 +584,7 @@ export class SampleTestData {
         { ProductID: 17, ProductName: "Parmesan", InStock: true, UnitsInStock: 4898, OrderDate: new Date("2017-09-09") },
         { ProductID: 18, ProductName: "Steaks", InStock: true, UnitsInStock: 3098, OrderDate: new Date("2025-12-25") },
         { ProductID: 19, ProductName: "Biscuits", InStock: true, UnitsInStock: 10570, OrderDate: new Date("2018-03-01") }
-    ];
+    ])
 
     /* Generates data with the following data fields: index: number, value: number, other: number, another: number. */
     public static generateNumberData(rowsCount: number) {

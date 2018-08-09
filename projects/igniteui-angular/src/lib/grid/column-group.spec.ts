@@ -1299,7 +1299,7 @@ export class OneGroupOneColGridComponent {
     public gridWrapperWidthPx = '1000';
     public gridHeight = '500px';
     public columnWidth: string;
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1320,7 +1320,7 @@ export class OneGroupThreeColsGridComponent {
     public gridWrapperWidthPx = '900';
     public gridHeight = '500px';
     public columnWidth: string;
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1354,7 +1354,7 @@ export class ColumnGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1436,7 +1436,7 @@ export class ColumnGroupFourLevelTestComponent implements AfterViewInit {
     public addressColsAndGroups = [];
     public colsAndGroupsNaturalOrder = [];
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 
     ngAfterViewInit() {
         this.genInfoColsAndGroups = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
@@ -1476,7 +1476,7 @@ export class ColumnGroupChildLevelTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1501,7 +1501,7 @@ export class ColumnGroupGroupingTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
-    data = SampleTestData.contactInfoData;
+    data = SampleTestData.contactInfoData();
 }
 
 @Component({
@@ -1532,7 +1532,7 @@ export class ColumnGroupTwoGroupsTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     grid: IgxGridComponent;
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1587,7 +1587,7 @@ export class ThreeGroupsThreeColumnsGridComponent {
     @ViewChild('postalCodeCol', { read: IgxColumnComponent })
     postalCodeCol: IgxColumnComponent;
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1627,7 +1627,7 @@ export class NestedColGroupsGridComponent {
     @ViewChild('cityCol', { read: IgxColumnComponent })
     cityCol: IgxColumnComponent;
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1727,7 +1727,7 @@ export class StegosaurusGridComponent implements AfterViewInit {
     public phoneColList;
     public faxColList;
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 
     ngAfterViewInit() {
         this.genInfoColList = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
@@ -1786,7 +1786,7 @@ export class BlueWhaleGridComponent {
 
     public gridHeight = '500px';
     public columnWidth = '100px';
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 
     hunderdItems = new Array(100);
     fiftyItems = new Array(50);
@@ -1814,7 +1814,7 @@ export class EmptyColGridComponent {
     @ViewChild('emptyColGroup', { read: IgxColumnGroupComponent })
     emptyColGroup: IgxColumnGroupComponent;
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1849,7 +1849,7 @@ export class OneColPerGroupGridComponent {
     faxColGroupTitle = 'Fax Group';
     faxColTitle = 'Fax';
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1889,7 +1889,7 @@ export class NestedColumnGroupsGridComponent {
     faxColTitle = 'Fax';
     cityColTitle = 'City';
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -1906,7 +1906,7 @@ export class DynamicGridComponent {
     grid: IgxGridComponent;
     mchCount = new Array(1);
 
-    data = SampleTestData.contactInfoDataFull;
+    data = SampleTestData.contactInfoDataFull();
 }
 
 function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {

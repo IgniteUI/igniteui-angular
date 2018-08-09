@@ -50,7 +50,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     *```
     */
     @Input()
-    public disabled: boolean;
+    public disabled = false;
 
     /**
      * @hidden
