@@ -76,7 +76,6 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Position of the Navigation Drawer. Can be "left"(default) or "right".
-     * Only has effect when not pinned.
      *
      * ```typescript
      * // get
@@ -285,6 +284,12 @@ export class IgxNavigationDrawerComponent implements
         }
 
         return '0px';
+    }
+
+    /** @hidden */
+    @HostBinding('style.order')
+    get isPinnedRight() {
+        return this.pin && this.position === 'right' ?  '1' : '0';
     }
 
     private _gesturesAttached = false;
