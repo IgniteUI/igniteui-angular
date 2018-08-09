@@ -275,7 +275,7 @@ describe('IgxSlider', () => {
 
             const fromThumb = fixture.nativeElement.querySelector('.igx-slider__thumb-to');
             fromThumb.focus();
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
 
             fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(61);
@@ -287,7 +287,7 @@ describe('IgxSlider', () => {
 
             const toThumb = fixture.nativeElement.querySelector('.igx-slider__thumb-to');
             toThumb.focus();
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
 
             fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(59);
@@ -372,7 +372,7 @@ describe('IgxSlider', () => {
 
             const fromThumb = fixture.nativeElement.querySelector('.igx-slider__thumb-from');
             fromThumb.dispatchEvent(new Event('focus'));
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             fixture.detectChanges();
 
             expect((slider.value as IRangeSliderValue).lower).toBe(59);
@@ -389,7 +389,7 @@ describe('IgxSlider', () => {
 
             const toThumb = fixture.nativeElement.querySelector('.igx-slider__thumb-to');
             toThumb.dispatchEvent(new Event('focus'));
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
             fixture.detectChanges();
 
             expect((slider.value as IRangeSliderValue).lower).toBe(59);
@@ -406,7 +406,7 @@ describe('IgxSlider', () => {
 
             const toThumb = fixture.nativeElement.querySelector('.igx-slider__thumb-to');
             toThumb.focus();
-            UIInteractions.triggerKeyDownEvtUponElem('A', toThumb);
+            UIInteractions.triggerKeyDownEvtUponElem('A', toThumb, true);
             fixture.detectChanges();
 
             expect((slider.value as IRangeSliderValue).lower).toBe(50);
@@ -427,7 +427,7 @@ describe('IgxSlider', () => {
             const fromThumb = fixture.nativeElement.querySelector('.igx-slider__thumb-from');
 
             fromThumb.dispatchEvent(new Event('focus'));
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb );
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
             flush();
             fixture.detectChanges();
 
@@ -447,7 +447,7 @@ describe('IgxSlider', () => {
             const toThumb = fixture.nativeElement.querySelector('.igx-slider__thumb-to');
             toThumb.focus();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
             flush();
             fixture.detectChanges();
             expect((slider.value as IRangeSliderValue).lower).toBe(50);
@@ -466,7 +466,7 @@ describe('IgxSlider', () => {
             const toThumb = fixture.nativeElement.querySelector('.igx-slider__thumb-to');
             toThumb.focus();
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
             flush();
             fixture.detectChanges();
             expect((slider.value as IRangeSliderValue).lower).toBe(50);
