@@ -216,14 +216,13 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     public get selectedItem(): any {
-        const selection = this.selectionAPI.get_selection(this.id);
-        const selectedItem = selection && selection.length > 0 ? selection[0] as IgxDropDownItemComponent : null;
+        const selectedItem = this.selectionAPI.get_selection_first(this.id);
 
         if (selectedItem) {
             if (selectedItem.isSelected) {
                 return selectedItem;
             }
-            this.selectionAPI.set_selection(this.id, []);
+            this.selectionAPI.set_selection(this.id, new Set());
         }
         return null;
     }
@@ -404,7 +403,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
-        this.selectionAPI.set_selection(this.id, []);
+        this.selectionAPI.set_selection(this.id, new Set());
     }
 
 
@@ -498,7 +497,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         }
 
         const args: ISelectionEventArgs = { oldSelection, newSelection };
-        this.selectionAPI.set_selection(this.id, [newSelection]);
+        this.selectionAPI.set_selection(this.id, new Set([newSelection]));
 
         this.onSelection.emit(args);
     }
