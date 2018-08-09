@@ -2,6 +2,15 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 6.1.3
+- **General**
+    - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.
+        ```
+        import 'core-js/es7/object';
+        ```
+- `IgxCircularProgressBar`
+    - `text` input property exposed to set the text to be displayed inside the circular bar.
+- `igxTabs`
+    - `selectedIndex` property has an `@Input` setter and can be set both in markup and in code behind.
 - `igxDropDownItem`
     - `isSelected` has a public setter and is now an `@Input` property that can be used for template binding.
 - `igxGrid`
