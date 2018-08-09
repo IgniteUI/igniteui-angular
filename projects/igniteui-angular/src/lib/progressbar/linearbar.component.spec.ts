@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import {
     async,
     fakeAsync,
@@ -7,6 +7,7 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
+import { Common } from './common.spec';
 
 describe('IgLinearBar', () => {
     const tickTime = 2000;
@@ -196,6 +197,131 @@ describe('IgLinearBar', () => {
         expect(datepicker.value).toEqual(expectedRes);
     }));
 
+    it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
+        const fix = TestBed.createComponent(LinearBarComponent);
+        fix.detectChanges();
+
+        const bar = fix.componentInstance.linearBar;
+        const ONE_PERCENT = 0.01;
+        let expectedValue = bar.max * ONE_PERCENT;
+        expect(bar.step).toBe(expectedValue);
+
+        const maxVal = 15345;
+        fix.componentInstance.max = maxVal;
+        fix.detectChanges();
+
+        expectedValue = maxVal * ONE_PERCENT;
+        expect(bar.step).toBe(expectedValue);
+    });
+
+    it('Value should not exceed the lower limit (0) when operating with floating numbers', fakeAsync(() => {
+        const fix = TestBed.createComponent(LinearBarComponent);
+        const compInstance = fix.componentInstance;
+        compInstance.max = 2.5;
+        compInstance.value = -0.3;
+        fix.detectChanges();
+
+        tick(tickTime);
+        const bar = compInstance.linearBar;
+        const expectedRes = 0;
+        expect(bar.value).toBe(expectedRes);
+        expect(bar.valueInPercent).toBe(expectedRes);
+
+        compInstance.animate = false;
+        compInstance.value = -2;
+
+        fix.detectChanges();
+
+        expect(bar.value).toBe(expectedRes);
+        expect(bar.valueInPercent).toBe(expectedRes);
+    }));
+
+    it('Value should not exceed the max limit when operating with floating numbers', fakeAsync(() => {
+        const fix = TestBed.createComponent(LinearBarComponent);
+        const compInstance = fix.componentInstance;
+        let value = 2.67;
+        const max = 2.5;
+        compInstance.max = max;
+        compInstance.value = value;
+        fix.detectChanges();
+
+        const bar = compInstance.linearBar;
+        tick(tickTime);
+        expect(bar.value).toBe(max);
+        expect(bar.valueInPercent).toBe(100);
+
+        value = 3.01;
+        compInstance.animate = false;
+        compInstance.value = value;
+
+        fix.detectChanges();
+        expect(bar.value).toBe(max);
+        expect(bar.valueInPercent).toBe(100);
+    }));
+
+    it('when passing string as value it should be parsed correctly', () => {
+        const fix = TestBed.createComponent(LinearBarComponent);
+        const compInstance = fix.componentInstance;
+        const stringValue = '0.50';
+        compInstance.value = stringValue;
+        fix.detectChanges();
+
+        const bar = compInstance.linearBar;
+
+        let expectedRes: number | string = stringValue.toString();
+        expect(bar.value).not.toBe(expectedRes);
+        expectedRes = parseFloat(stringValue);
+        expect(bar.value).toBe(expectedRes);
+    });
+
+    it('when update step is bigger than passed value the progress indicator should follow the value representation', () => {
+        const fix = TestBed.createComponent(InitLinearProgressBarComponent);
+        fix.detectChanges();
+
+        const bar = fix.componentInstance.linearBar;
+        const step = 5;
+        const value = 2;
+        const max = 10;
+        bar.step = step;
+        bar.max = max;
+        bar.value = value;
+
+        fix.detectChanges();
+
+        const percentValue = Common.calcPercentage(value, max);
+        expect(bar.value).toBe(value);
+        expect(bar.step).toBe(step);
+        expect(bar.max).toBe(max);
+        expect(bar.valueInPercent).toBe(percentValue);
+    });
+
+    it(`when step value is not divisble to passed value the result returned from the
+        value getter should be as same as the passed one`, fakeAsync(() => {
+            const fix = TestBed.createComponent(InitLinearProgressBarComponent);
+            fix.detectChanges();
+
+            const bar = fix.componentInstance.linearBar;
+            const step = 3.734;
+            let value = 30;
+            let valueInPercent = Common.calcPercentage(value, bar.max);
+            bar.step = step;
+            bar.value = value;
+
+            tick(tickTime);
+            fix.detectChanges();
+            expect(bar.step).toBe(step);
+            expect(bar.value).toBe(value);
+            expect(bar.valueInPercent).toBe(valueInPercent);
+
+            value = 10;
+            valueInPercent = Common.calcPercentage(value, bar.max);
+            bar.value = value;
+            tick(tickTime);
+            fix.detectChanges();
+            expect(bar.value).toBe(value);
+            expect(bar.valueInPercent).toBe(valueInPercent);
+    }));
+
     // UI Tests
     describe('UI tests linear bar', () => {
         it('The percentage representation should respond to passed value correctly', fakeAsync(() => {
@@ -204,7 +330,7 @@ describe('IgLinearBar', () => {
 
             const componentInstance = fixture.componentInstance;
             const progressBarContainer =
-                fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector('.progress-linear__bar');
+                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
             const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
 
             tick(tickTime);
@@ -214,12 +340,12 @@ describe('IgLinearBar', () => {
             expect(progressBarContainer.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
         }));
 
-        it('Should change class suffix which would be relevant to the type that had been passed', () => {
+        it('Should change class suffix which would be relevant to the type that has been passed', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
             const progressBarContainer =
-                fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector('.progress-linear__bar');
+                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
             const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
 
             expect(progressBarElem.classList.contains('progress-linear__bar-progress--default')).toBe(true);
@@ -234,7 +360,7 @@ describe('IgLinearBar', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
-            const progressElem = fixture.componentInstance.linearBar.elementRef.nativeElement
+            const progressElem = fixture.debugElement.nativeElement
                 .getElementsByClassName('progress-linear')[0];
 
             expect(progressElem.classList.contains('progress-linear--striped')).toBe(false);
@@ -249,11 +375,11 @@ describe('IgLinearBar', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
-            const progressElem = fixture.componentInstance.linearBar.elementRef.nativeElement
+            const progressElem = fixture.debugElement.nativeElement
                 .getElementsByClassName('progress-linear')[0];
 
             const progressBarContainer =
-                fixture.componentInstance.linearBar.elementRef.nativeElement.querySelector('.progress-linear__bar');
+                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
             const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
 
             fixture.componentInstance.striped = true;
@@ -268,6 +394,43 @@ describe('IgLinearBar', () => {
             expect(progressBarElem.classList.contains('progress-linear__bar-progress--success')).toBe(true);
             expect(progressElem.classList.contains('progress-linear--striped')).toBe(true);
         });
+
+        it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
+            const fix = TestBed.createComponent(InitLinearProgressBarComponent);
+            fix.detectChanges();
+
+            const bar = fix.componentInstance.linearBar;
+            const maxVal = 1.25;
+            const val = 0.50;
+
+            bar.max = maxVal;
+            bar.value = val;
+            tick(tickTime);
+            fix.detectChanges();
+
+            const progressRepresentation = Common.calcPercentage(val, maxVal);
+            const getProgressIndicator = fix.debugElement.query(By.css(`[class*='progress-linear__bar-progress']`));
+            expect(getProgressIndicator.styles.width).toBe(`${progressRepresentation}%`);
+        }));
+
+        it('Prevent constant update of progress value when value and max value differ', fakeAsync(() => {
+            const fix = TestBed.createComponent(InitLinearProgressBarComponent);
+            fix.detectChanges();
+
+            const bar = fix.componentInstance.linearBar;
+            const maxVal = 3.25;
+            const value = 2.55;
+            bar.step = 0.634;
+            bar.max = maxVal;
+            bar.value  = value;
+
+            tick(tickTime + tickTime); // enough time to exceed the progress update.
+            fix.detectChanges();
+
+            const progressBarContainer = fix.debugElement.query(By.css('.progress-linear__bar')).nativeElement;
+            expect(parseFloat(progressBarContainer.attributes['aria-valuenow'].textContent)).toBe(value);
+            expect(bar.value).toBe(value);
+        }));
     });
 });
 
@@ -287,7 +450,7 @@ class LinearBarComponent {
     @ViewChild('wrapper') public wrapper;
     @ViewChild('linearBar') public linearBar;
 
-    public value = 30;
+    public value: string | number = 30;
     public max = 100;
     public type = 'default';
     public striped = false;
