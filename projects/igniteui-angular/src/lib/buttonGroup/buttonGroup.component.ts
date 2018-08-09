@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
 import { IgxButtonDirective, IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/index';
-import { takeUntil } from '../../../../../node_modules/rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 let NEXT_ID = 0;
