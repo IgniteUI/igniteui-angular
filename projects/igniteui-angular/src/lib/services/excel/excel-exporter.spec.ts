@@ -4,6 +4,7 @@ import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { first } from 'rxjs/operators';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
@@ -29,7 +30,7 @@ describe('Excel Exporter', () => {
     });
 
     it('should export empty objects successfully.', (done) => {
-        getExportedData(SampleTestData.emptyObjectData, options).then((wrapper) => {
+        getExportedData(SampleTestData.emptyObjectData(), options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             done();
@@ -38,7 +39,7 @@ describe('Excel Exporter', () => {
 
     it('should export string data without headers successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(SampleTestData.stringArray, options).then((wrapper) => {
+        getExportedData(SampleTestData.stringArray(), options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
@@ -48,7 +49,7 @@ describe('Excel Exporter', () => {
 
     it('should export date time data without headers successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(SampleTestData.dateArray, options).then((wrapper) => {
+        getExportedData(SampleTestData.dateArray(), options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
@@ -58,7 +59,7 @@ describe('Excel Exporter', () => {
 
     it('should export number data without headers successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(SampleTestData.numbersArray, options).then((wrapper) => {
+        getExportedData(SampleTestData.numbersArray(), options).then((wrapper) => {
             wrapper.verifyStructure();
             // wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
@@ -67,7 +68,7 @@ describe('Excel Exporter', () => {
     });
 
     it('should export object data without headers successfully.', (done) => {
-        getExportedData(SampleTestData.noHeadersObjectArray, options).then((wrapper) => {
+        getExportedData(SampleTestData.noHeadersObjectArray(), options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.noHeadersObjectDataContent);
@@ -77,7 +78,7 @@ describe('Excel Exporter', () => {
 
     it('should export regular data successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(SampleTestData.contactsData, options).then((wrapper) => {
+        getExportedData(SampleTestData.contactsData(), options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsDataContent);
@@ -87,7 +88,7 @@ describe('Excel Exporter', () => {
 
     it('should export data with missing values successfully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(SampleTestData.contactsDataPartial, options).then((wrapper) => {
+        getExportedData(SampleTestData.contactsDataPartial(), options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
@@ -97,7 +98,7 @@ describe('Excel Exporter', () => {
 
     it('should export data with special characters successully.', (done) => {
         options.columnWidth = 50;
-        getExportedData(SampleTestData.contactsFunkyData, options).then((wrapper) => {
+        getExportedData(SampleTestData.contactsFunkyData(), options).then((wrapper) => {
             wrapper.verifyStructure();
             wrapper.verifyTemplateFilesContent();
             wrapper.verifyDataFilesContent(actualData.contactsFunkyDataContent);
@@ -122,7 +123,7 @@ describe('Excel Exporter', () => {
 
     function getExportedData(data: any[], exportOptions: IgxExcelExporterOptions) {
         const result = new Promise<JSZipWrapper>((resolve) => {
-            exporter.onExportEnded.subscribe((value) => {
+            exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });

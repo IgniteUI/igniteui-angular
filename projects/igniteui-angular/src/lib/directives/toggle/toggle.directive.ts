@@ -32,40 +32,126 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayClosedSub: Subscription;
     private _overlayClosingSub: Subscription;
 
+    /**
+     * Emits an event after the toggle container is opened.
+     *
+     * ```typescript
+     * onToggleOpened(event) {
+     *    alert("Toggle opened!");
+     * }
+     * ```
+     *
+     * ```html
+     * <div
+     *   igxToggle
+     *   (onOpened)='onToggleOpened($event)'>
+     * </div>
+     * ```
+     */
     @Output()
     public onOpened = new EventEmitter();
 
+    /**
+     * Emits an event before the toggle container is opened.
+     *
+     * ```typescript
+     * onToggleOpening(event) {
+     *  alert("Toggle opening!");
+     * }
+     * ```
+     *
+     * ```html
+     * <div
+     *   igxToggle
+     *   (onOpening)='onToggleOpening($event)'>
+     * </div>
+     * ```
+     */
     @Output()
     public onOpening = new EventEmitter();
 
+    /**
+     * Emits an event after the toggle container is closed.
+     *
+     * ```typescript
+     * onToggleClosed(event) {
+     *  alert("Toggle closed!");
+     * }
+     * ```
+     *
+     * ```html
+     * <div
+     *   igxToggle
+     *   (onClosed)='onToggleClosed($event)'>
+     * </div>
+     * ```
+     */
     @Output()
     public onClosed = new EventEmitter();
 
+    /**
+     * Emits an event before the toggle container is closed.
+     *
+     * ```typescript
+     * onToggleClosing(event) {
+     *  alert("Toggle closing!");
+     * }
+     * ```
+     *
+     * ```html
+     * <div
+     *  igxToggle
+     *  (onClosing)='onToggleClosing($event)'>
+     * </div>
+     * ```
+     */
     @Output()
     public onClosing = new EventEmitter();
 
     private _collapsed = true;
+    /**
+     * @hidden
+     */
     public get collapsed(): boolean {
         return this._collapsed;
     }
 
+    /**
+     * Identifier which is registered into `IgxNavigationService`
+     *
+     * ```typescript
+     * let myToggleId = this.toggle.id;
+     * ```
+     */
     @Input()
     public id: string;
 
+    /**
+     * @hidden
+     */
     public get element() {
         return this.elementRef.nativeElement;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-toggle--hidden')
     public get hiddenClass() {
         return this.collapsed;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-toggle')
     public get defaultClass() {
         return !this.collapsed;
     }
 
+    /**
+     * @hidden
+     */
     constructor(
         private elementRef: ElementRef,
         private cdr: ChangeDetectorRef,
@@ -73,6 +159,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         @Optional() private navigationService: IgxNavigationService) {
     }
 
+    /**
+     * Opens the toggle.
+     *
+     * ```typescript
+     * this.myToggle.open();
+     * ```
+     */
     public open(overlaySettings?: OverlaySettings) {
         if (!this.collapsed) { return; }
 
@@ -93,22 +186,42 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             .subscribe(this.overlayClosing);
     }
 
+    /**
+     * Closes the toggle.
+     *
+     * ```typescript
+     * this.myToggle.close();
+     * ```
+     */
     public close() {
         if (this.collapsed) { return; }
 
         this.overlayService.hide(this._overlayId);
     }
 
+    /**
+     * Opens or closes the toggle, depending on its current state.
+     *
+     * ```typescript
+     * this.myToggle.toggle();
+     * ```
+     */
     public toggle(overlaySettings?: OverlaySettings) {
         this.collapsed ? this.open(overlaySettings) : this.close();
     }
 
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         if (this.navigationService && this.id) {
             this.navigationService.add(this.id, this);
         }
     }
 
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         if (this.navigationService && this.id) {
             this.navigationService.remove(this.id);
@@ -147,19 +260,39 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 export class IgxToggleActionDirective implements OnInit {
     private _overlayDefaults: OverlaySettings;
 
+    /**
+     * @hidden
+     */
     @Input()
     public overlaySettings: OverlaySettings;
 
     private _closeOnOutsideClick: boolean;
+    /**
+     * Determines whether the toggle should close when you click outside.
+     *
+     * ```typescript
+     * // get
+     * let closesOnOutsideClick = this.toggle.closeOnOutsideClick;
+     * ```
+     */
     public get closeOnOutsideClick(): boolean {
         return this._closeOnOutsideClick;
     }
+    /**
+     * ```html
+     * <!--set-->
+     * <div igxToggle [closeOnOutsideClick]="'true'"></div>
+     * ```
+     */
     @Input()
     public set closeOnOutsideClick(v: boolean) {
         console.warn(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`);
         this._closeOnOutsideClick = v;
     }
 
+    /**
+     * @hidden
+     */
     @Input('igxToggleAction')
     set target(target: any) {
         if (target !== null && target !== '') {
@@ -167,6 +300,9 @@ export class IgxToggleActionDirective implements OnInit {
         }
     }
 
+    /**
+     * @hidden
+     */
     get target(): any {
         if (typeof this._target === 'string') {
             return this.navigationService.get(this._target);
@@ -178,6 +314,9 @@ export class IgxToggleActionDirective implements OnInit {
 
     constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
 
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         this._overlayDefaults = {
             positionStrategy: new ConnectedPositioningStrategy({ target: this.element.nativeElement }),
@@ -187,6 +326,9 @@ export class IgxToggleActionDirective implements OnInit {
         };
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('click')
     public onClick() {
         if (this.closeOnOutsideClick !== undefined) {

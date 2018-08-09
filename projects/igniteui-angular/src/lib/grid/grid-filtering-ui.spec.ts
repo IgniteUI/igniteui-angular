@@ -6,7 +6,7 @@ import { Calendar, ICalendarDate } from '../calendar/calendar';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { IgxFilteringOperand, IgxStringFilteringOperand } from '../../public_api';
+import { IgxFilteringOperand, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from '../../public_api';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
@@ -22,7 +22,7 @@ describe('IgxGrid - Filtering actions', () => {
                 BrowserAnimationsModule,
                 IgxGridModule.forRoot()]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     afterEach(() => {
@@ -1286,15 +1286,18 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
-        tick(100);
+        tick();
+        fix.detectChanges();
 
         sendInput(input, 0, fix);
         fix.detectChanges();
-        tick(100);
+        tick();
+        fix.detectChanges();
 
         grid.nativeElement.click();
         fix.detectChanges();
-        tick(100);
+        tick();
+        fix.detectChanges();
 
         expect(gridFilteringToggle.nativeElement.classList.contains('igx-filtering__toggle--filtered')).toBeTruthy();
     }));
@@ -1333,6 +1336,103 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(8);
 
         discardPeriodicTasks();
+    }));
+
+    it('Should display populated filter dialog without redrawing it', async () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.width = '400px';
+        grid.getColumnByName('ID').width = '50px';
+
+        // filter the ProductName by two conditions
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression = {
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+        const expression1 = {
+            fieldName: 'ProductName',
+            searchVal: 'Angular',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        filteringExpressionsTree.filteringOperands.push(expression1);
+        grid.filter('ProductName', null, filteringExpressionsTree);
+
+        fix.detectChanges();
+
+        // scroll horizontally to the right, so ProductName column is out of view
+        const horScroll = grid.parentVirtDir.getHorizontalScroll();
+        horScroll.scrollLeft = 1000;
+        fix.detectChanges();
+
+        // scroll horizontally to the left, so ProductName is back in view
+        horScroll.scrollLeft = 0;
+        fix.detectChanges();
+
+        // click filter icon
+        const filterButton = fix.debugElement.queryAll(By.css('igx-grid-filter'))[0];
+        const filterIcon = filterButton.query(By.css('igx-icon'));
+        filterIcon.triggerEventHandler('mousedown', null);
+        fix.detectChanges();
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        await fix.whenStable();
+
+        const filterUI = fix.debugElement.query(By.css('.igx-filtering__options'));
+        // verify 'And' button is selected
+        const buttonGroup = filterUI.query(By.css('igx-buttongroup'));
+        const buttons = buttonGroup.queryAll(By.css('.igx-button-group__item'));
+        const andButton = buttons.filter((btn) => btn.nativeElement.textContent === 'And')[0];
+        expect(andButton).not.toBeNull();
+        expect(andButton).toBeDefined();
+        expect(andButton.nativeElement.classList.contains('igx-button-group__item--selected'))
+            .toBeTruthy('AndButton is not selected');
+
+        // verify both filter expression components are present
+        const filterExpressions = filterUI.queryAll(By.css('igx-grid-filter-expression'));
+        expect(filterExpressions).not.toBeNull();
+        expect(filterExpressions).toBeDefined();
+        expect(filterExpressions.length).toBe(2, 'not all filter-expression components are visible');
+    });
+
+    it('Should correctly create FilteringExpressionsTree and populate filterUI.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression = {
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+
+        filteringExpressionsTree.filteringOperands.push(expression);
+        grid.filteringExpressionsTree = filteringExpressionsTree;
+
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(2);
+
+        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const select = filterUIContainer.query(By.css('select'));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
+
+        verifyFilterUIPosition(filterUIContainer, grid);
+
+        expect(select.nativeElement.value).toMatch('startsWith');
+        expect(input.nativeElement.value).toMatch('Ignite');
     }));
 });
 
@@ -1456,7 +1556,7 @@ function sendInput(element, text, fix) {
 
 function verifyFilterUIPosition(filterUIContainer, grid) {
     const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
-    filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
+        filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
     expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
 }
 
