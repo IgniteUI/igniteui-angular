@@ -307,12 +307,12 @@ describe('IgxToggle', () => {
                 closeOnOutsideClick: true,
                 modal: false,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
-                target: jasmine.any(IgxOverlayOutletDirective)
+                outlet: jasmine.any(IgxOverlayOutletDirective)
             };
 
             fixture.componentInstance.toggleAction.onClick();
             expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
-            const directive = toggleSpy.calls.mostRecent().args[0].target as IgxOverlayOutletDirective;
+            const directive = toggleSpy.calls.mostRecent().args[0].outlet as IgxOverlayOutletDirective;
             expect(directive.nativeElement).toBe(outlet);
         });
     });
