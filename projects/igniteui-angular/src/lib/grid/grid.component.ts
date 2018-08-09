@@ -50,6 +50,7 @@ import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
+import { IgxGridHeaderComponent } from './grid-header.component';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -234,12 +235,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     set filteringExpressionsTree(value) {
-        if (value) {
+        if (value && value instanceof FilteringExpressionsTree) {
+            const val = (value as FilteringExpressionsTree);
+            for (let index = 0; index < val.filteringOperands.length; index++) {
+                if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {
+                    const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].fieldName);
+                    newExpressionsTree.filteringOperands.push(val.filteringOperands[index] as IFilteringExpression);
+                    val.filteringOperands[index] = newExpressionsTree;
+                }
+            }
+
             this._filteringExpressionsTree = value;
-            this.clearSummaryCache();
             this._pipeTrigger++;
             this.cdr.markForCheck();
-            requestAnimationFrame(() => this.cdr.detectChanges());
+            requestAnimationFrame(() => {
+                this.clearSummaryCache();
+                this.cdr.detectChanges();
+            });
         }
     }
 
@@ -1175,6 +1187,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxGridHeaderComponent, { read: IgxGridHeaderComponent })
+    public headerList: QueryList<IgxGridHeaderComponent>;
 
     /**
      * @hidden
@@ -4413,5 +4431,4 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
         horVirtScroll.scrollLeft += MINIMUM_COLUMN_WIDTH;
     }
-
 }
