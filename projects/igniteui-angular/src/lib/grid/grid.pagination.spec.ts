@@ -162,7 +162,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
     });
 
-    fit('change paging pages per page API', () => {
+    it('change paging pages per page API', () => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         const grid = fix.componentInstance.grid;
         grid.paging = true;
