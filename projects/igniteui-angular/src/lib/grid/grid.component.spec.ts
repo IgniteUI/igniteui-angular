@@ -6,6 +6,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand } from '../../public_api';
+import { DisplayDensity } from '../core/utils';
 
 describe('IgxGrid - input properties', () => {
     const MIN_COL_WIDTH = '136px';
@@ -15,9 +16,9 @@ describe('IgxGrid - input properties', () => {
             declarations: [
                 IgxGridTestComponent, IgGridTest5x5Component, IgGridTest10x30Component,
                 IgGridTest30x1000Component, IgGridTest150x200Component,
-                IgxGridTestDefaultWidthHeightComponent,
-                IgGridNullHeightComponent, IgxGridTestPercentWidthHeightComponent,
-                IgxGridDensityTestComponent, IgxGridWithEmptyDataComponent
+                IgxGridTestDefaultWidthHeightComponent, IgGridNullHeightComponent,
+                IgxGridTestPercentWidthHeightComponent, IgxGridDensityTestComponent,
+                IgxGridWithEmptyDataComponent, IgxGridWrappedInNoHeightContainerComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -408,8 +409,58 @@ describe('IgxGrid - input properties', () => {
         expect(grid.rowList.length).toBeGreaterThan(0);
     });
 
+    it('should render 10 records if height is unset and parent container\'s height is unset', () => {
+        const fix = TestBed.createComponent(IgxGridWrappedInNoHeightContainerComponent);
+        fix.detectChanges();
+        const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+        expect(defaultHeight).not.toBeNull();
+        expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+        expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
+    });
+
+    it('should render 10 records if height is 100% and parent container\'s height is unset', () => {
+        const fix = TestBed.createComponent(IgxGridWrappedInNoHeightContainerComponent);
+        fix.componentInstance.grid.height = '700px';
+        fix.detectChanges();
+        const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+        expect(defaultHeight).not.toBeNull();
+        expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+        expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
+    });
+
+    it(`should render all records exactly if height is 100% and parent container\'s height is unset and
+        there are fewer than 10 records in the data view`, () => {
+        const fix = TestBed.createComponent(IgxGridWrappedInNoHeightContainerComponent);
+        fix.componentInstance.grid.height = '100%';
+        fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
+        fix.detectChanges();
+        const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+        expect(defaultHeight).not.toBeNull();
+        expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
+        expect(fix.componentInstance.grid.rowList.length).toEqual(5);
+    });
+
+    it(`should render 10 records if height is 100% and parent container\'s height is unset and
+        display density is changed`, () => {
+        const fix = TestBed.createComponent(IgxGridWrappedInNoHeightContainerComponent);
+        fix.componentInstance.grid.height = '100%';
+        fix.componentInstance.data = fix.componentInstance.data.slice(0, 11);
+        fix.componentInstance.density = DisplayDensity.compact;
+        fix.detectChanges();
+        const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+        const defaultHeightNum = parseInt(defaultHeight, 10);
+        expect(defaultHeight).not.toBeNull();
+        expect(defaultHeightNum).toBeGreaterThan(300);
+        expect(defaultHeightNum).toBeLessThan(330);
+        expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+        expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+    });
+
     it(`When edit a cell onto filtered data through grid method, the row should
-            disapear and the new value should not persist onto the next row`, () => {
+        disapear and the new value should not persist onto the next row`, () => {
         const fix = TestBed.createComponent(IgGridTest5x5Component);
         fix.detectChanges();
 
@@ -452,6 +503,7 @@ describe('IgxGrid - input properties', () => {
             done();
         }, 100);
     });
+
     it('Keyboard navigation - should allow horizontal navigation when the grid is focused', (done) => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         const grid = fix.componentInstance.grid2;
@@ -488,6 +540,7 @@ describe('IgxGrid - input properties', () => {
             }, 100);
         }, 0);
     });
+
     it('Keyboard navigation - should allow vertical navigation when the grid is focused', (done) => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         const grid = fix.componentInstance.grid2;
@@ -524,6 +577,7 @@ describe('IgxGrid - input properties', () => {
             }, 100);
         }, 0);
     });
+
     it('Keyboard navigation - should allow pageup/pagedown navigation when the grid is focused', (done) => {
         const fix = TestBed.createComponent(IgxGridTestDefaultWidthHeightComponent);
         const grid = fix.componentInstance.grid2;
@@ -560,6 +614,7 @@ describe('IgxGrid - input properties', () => {
             }, 100);
         }, 0);
     });
+
     it('should change displayDensity runtime correctly', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxGridDensityTestComponent);
         fixture.detectChanges();
@@ -591,6 +646,7 @@ describe('IgxGrid - input properties', () => {
         expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
         expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
     }));
+
     it('Should render empty message', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxGridWithEmptyDataComponent);
         fixture.detectChanges();
@@ -626,7 +682,6 @@ describe('IgxGrid - input properties', () => {
         expect(gridBody.nativeElement.innerText.substr(0,
             gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyGridMessage);
     }));
-
 });
 
 @Component({
@@ -666,7 +721,11 @@ export class IgxGridTestComponent {
     }
 
     public isVerticalScrollbarVisible() {
-        return this.getVerticalScrollHeight() > 0;
+        const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        if (scrollbar) {
+            return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
+        }
+        return false;
     }
 }
 
@@ -1063,4 +1122,49 @@ export class IgxGridWithEmptyDataComponent {
     public clearData() {
         this.data = [];
     }
+}
+
+@Component({
+    template:
+        `<div style="width: 800px;">
+            <igx-grid #grid [data]="data" [displayDensity]="density"
+                [autoGenerate]="true" [paging]="paging" [perPage]="pageSize" width="100%">
+            </igx-grid>
+        </div>`
+})
+export class IgxGridWrappedInNoHeightContainerComponent extends IgxGridTestComponent {
+    public data = [
+        { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste' },
+        { 'ID': 'ANATR', 'CompanyName': 'Ana Trujillo Emparedados y helados' },
+        { 'ID': 'ANTON', 'CompanyName': 'Antonio Moreno Taquería' },
+        { 'ID': 'AROUT', 'CompanyName': 'Around the Horn' },
+        { 'ID': 'BERGS', 'CompanyName': 'Berglunds snabbköp' },
+        { 'ID': 'BLAUS', 'CompanyName': 'Blauer See Delikatessen' },
+        { 'ID': 'BLONP', 'CompanyName': 'Blondesddsl père et fils' },
+        { 'ID': 'BOLID', 'CompanyName': 'Bólido Comidas preparadas' },
+        { 'ID': 'BONAP', 'CompanyName': 'Bon app\'' },
+        { 'ID': 'BOTTM', 'CompanyName': 'Bottom-Dollar Markets' },
+        { 'ID': 'BSBEV', 'CompanyName': 'B\'s Beverages' },
+        { 'ID': 'CACTU', 'CompanyName': 'Cactus Comidas para llevar' },
+        { 'ID': 'CENTC', 'CompanyName': 'Centro comercial Moctezuma' },
+        { 'ID': 'CHOPS', 'CompanyName': 'Chop-suey Chinese' },
+        { 'ID': 'COMMI', 'CompanyName': 'Comércio Mineiro' },
+        { 'ID': 'CONSH', 'CompanyName': 'Consolidated Holdings' },
+        { 'ID': 'DRACD', 'CompanyName': 'Drachenblut Delikatessen' },
+        { 'ID': 'DUMON', 'CompanyName': 'Du monde entier' },
+        { 'ID': 'EASTC', 'CompanyName': 'Eastern Connection' },
+        { 'ID': 'ERNSH', 'CompanyName': 'Ernst Handel' },
+        { 'ID': 'FAMIA', 'CompanyName': 'Familia Arquibaldo' },
+        { 'ID': 'FISSA', 'CompanyName': 'FISSA Fabrica Inter' },
+        { 'ID': 'FOLIG', 'CompanyName': 'Folies gourmandes' },
+        { 'ID': 'FOLKO', 'CompanyName': 'Folk och fä HB' },
+        { 'ID': 'FRANK', 'CompanyName': 'Frankenversand' },
+        { 'ID': 'FRANR', 'CompanyName': 'France restauration' },
+        { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.' }
+    ];
+
+    public height = null;
+    public paging = false;
+    public pageSize = 5;
+    public density = DisplayDensity.comfortable;
 }
