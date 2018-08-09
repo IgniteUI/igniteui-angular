@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
         ```
         import 'core-js/es7/object';
         ```
+- `IgxCircularProgressBar`
+    - `text` input property exposed to set the text to be displayed inside the circular bar.
 - `igxTabs`
     - `selectedIndex` property has an `@Input` setter and can be set both in markup and in code behind.
 - `igxDropDownItem`

@@ -50,6 +50,7 @@ import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
+import { IgxGridHeaderComponent } from './grid-header.component';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -1175,6 +1176,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxGridHeaderComponent, { read: IgxGridHeaderComponent })
+    public headerList: QueryList<IgxGridHeaderComponent>;
 
     /**
      * @hidden
@@ -2416,6 +2423,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const newList = this._resetColumnList(list);
         this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
+        this._columns = this.columnList.toArray();
 
         if (activeColumn !== null && activeColumn !== undefined) {
             const newIndex = newList.indexOf(activeColumn);
@@ -3328,7 +3336,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridSizes() {
-        this.calculateGridWidth();
+        this._derivePossibleWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
         if (this.rowSelectable) {
@@ -3496,8 +3504,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
 
-        // XXX: Deprecate index
-        this._columns = this.columnList.toArray();
+        if (this._columns.length !== collection.length) {
+            // XXX: Deprecate index
+            this._columns = this.columnList.toArray();
+        }
         const _columnsWithNoSetWidths = [];
 
         collection.forEach((column: IgxColumnComponent) => {
@@ -3508,7 +3518,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if ((this.columnsWithNoSetWidths === null && !column.width) ||
                 (this.columnsWithNoSetWidths !== null && this.columnsWithNoSetWidths.indexOf(column) !== -1)) {
                 column.width = this.columnWidth;
-                _columnsWithNoSetWidths.push(column);
+
+                if (!column.hidden) {
+                    _columnsWithNoSetWidths.push(column);
+                }
             }
         });
 
