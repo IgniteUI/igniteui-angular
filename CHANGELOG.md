@@ -24,7 +24,7 @@ All notable changes for each version of this project will be documented in this 
         - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
     - `igxLinearBar` and `igxCircularBar`
         - exposed `step` input which determines the update step of the progress indicator. By default it is one percent of the maximum value.
-        - IgxCircularProgressBar `text` input property exposed to set the text to be displayed inside the circular bar.
+        - IgxCircularBar `text` input property exposed to set the text to be displayed inside the circular bar.
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
