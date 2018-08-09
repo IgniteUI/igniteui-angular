@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 
 const ONE_PERCENT = 0.01;
+const MIN_VALUE = 0;
 
 export enum IgxTextAlign {
     START = 'start',
@@ -30,12 +31,12 @@ export abstract class BaseProgress {
     /**
      * @hidden
      */
-    protected requestAnimationId: number = undefined;
+    private requestAnimationId: number = undefined;
 
     /**
      * @hidden
      */
-    protected _valueInPercent = 0;
+    protected _valueInPercent = MIN_VALUE;
     /**
      * @hidden
      */
@@ -43,7 +44,7 @@ export abstract class BaseProgress {
     /**
      * @hidden
      */
-    protected _value = 0;
+    protected _value = MIN_VALUE;
     /**
      * @hidden
      */
@@ -84,40 +85,34 @@ export abstract class BaseProgress {
      *```
      */
     public set valueInPercent(value: number) {
-        const valueInRange = getValueInProperRange(value, this._max);
-        const valueIntoPercentage = convertInPercentage(valueInRange, this._max);
-        this._valueInPercent = valueIntoPercentage;
+        this._valueInPercent = value;
     }
 
     /**
      * @hidden
      */
     protected runAnimation(val: number, step: number) {
-        // const direction = this.directionFlow(this._value, val, step);
-
-        if (!this.requestAnimationId) {
-            this.requestAnimationId = requestAnimationFrame(
-                () => this.updateProgressSmoothly.call(this, val, step));
-        }
-
+        this.requestAnimationId = requestAnimationFrame(
+            () => this.updateProgressSmoothly.call(this, val, step));
     }
 
     /**
      * @hidden
      */
     protected updateProgressSmoothly(val: number, step: number) {
-        const convertPassedValIntoPercent = convertInPercentage(val, this._max);
-        if (this.valueInPercent === convertPassedValIntoPercent ||
-            (this.valueInPercent > convertPassedValIntoPercent && step > 0) ||
-            (this.valueInPercent < convertPassedValIntoPercent && step < 0)) {
-                this.requestAnimationId = undefined;
-                return;
-        }
-
         this._value += step;
-        this.valueInPercent = this._value;
-
-        requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
+        const passedValue = convertInPercentage(val, this._max);
+        const progressValue = convertInPercentage(this._value, this._max);
+        if (this.valueInPercent === passedValue) {
+            this.updateProgress(val);
+            cancelAnimationFrame(this.requestAnimationId);
+        } else if (this.isInLimitRange(progressValue, passedValue, step)) {
+                this.updateProgress(val);
+                cancelAnimationFrame(this.requestAnimationId);
+        } else {
+            this.valueInPercent = progressValue;
+            this.requestAnimationId = requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
+        }
     }
 
     /**
@@ -125,7 +120,7 @@ export abstract class BaseProgress {
      */
     protected updateProgressDirectly(val: number) {
         this._value = val;
-        this.valueInPercent = this._value;
+        this.valueInPercent = convertInPercentage(this._value, this._max);
     }
 
     /**
@@ -137,6 +132,45 @@ export abstract class BaseProgress {
         }
 
         return -step;
+    }
+
+    /**
+     * @hidden
+     */
+    private isInLimitRange(val: number, comparator: number, step: number) {
+        return this.isExceedingUpperLimit(val, comparator, step) || this.isExceedingLowerLimit(val, comparator, step);
+    }
+
+    /**
+     * @hidden
+     *
+     *
+     * @param val
+     * @param comparator
+     * @param step
+     */
+    private isExceedingUpperLimit(val: number, comparator: number, step: number) {
+        return val > comparator && step > 0;
+    }
+
+    /**
+     * @hidden
+     *
+     * @param val
+     * @param comparator
+     * @param step
+     */
+    private isExceedingLowerLimit(val: number, comparator: number, step: number) {
+        return val < comparator && step < 0;
+    }
+
+    /**
+     * @hidden
+     * @param step
+     */
+    private updateProgress(val: number) {
+        this._value = val;
+        this.valueInPercent = convertInPercentage(this._value, this._max);
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -297,7 +331,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      *```
      */
     set step(val: number) {
-        this._step = val;
+        this._step = Number(val);
     }
 
     /**
@@ -323,6 +357,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      *```
      */
     set value(val) {
+        val = Number(val);
         if (this._value === val) {
             return;
         }
@@ -337,7 +372,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         };
 
         const updateValue = super.directionFlow(this._value, val, this.step);
-        if (this._animate) {
+        if (this._animate && val >= this.step) {
             super.runAnimation(valueInRange, updateValue);
         } else {
             super.updateProgressDirectly(valueInRange);
@@ -360,7 +395,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      */
     @Output() public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
-    constructor(private elementRef: ElementRef) {
+    constructor() {
         super();
     }
 }
@@ -369,7 +404,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html'
 })
-export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit {
+export class IgxCircularProgressBarComponent extends BaseProgress {
 
     private readonly STROKE_OPACITY_DVIDER = 100;
     private readonly STROKE_OPACITY_ADDITION = .2;
@@ -476,7 +511,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
      *```
      */
     @Input()
-    get step() {
+    get step(): number {
         if (this._step) {
             return this._step;
         }
@@ -491,7 +526,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
      *```
     */
     set step(val: number) {
-        this._step = val;
+        this._step = Number(val);
     }
 
     /**
@@ -509,7 +544,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
      *```
      */
     @Input()
-    get value() {
+    get value(): number {
         return this._value;
     }
 
@@ -519,7 +554,8 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
      *<igx-circular-bar [value]="50"></igx-circular-bar>
      *```
      */
-    set value(val) {
+    set value(val: number) {
+        val = Number(val);
         if (this._value === val) {
             return;
         }
@@ -535,7 +571,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
         };
 
         const updateValue = super.directionFlow(this._value, val, this.step);
-        if (this.animate) {
+        if (this.animate && val >= this.step) {
             super.runAnimation(valueInProperRange, updateValue);
         } else {
             this.updateProgressDirectly(valueInProperRange);
@@ -544,22 +580,13 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
         this.onProgressChanged.emit(changedValues);
     }
 
-    private _radius = 0;
-    private _circumference: number;
+    private _circleRadius = 46;
+    private _circumference = 2 * Math.PI * this._circleRadius;
 
     @ViewChild('circle') private _svgCircle: ElementRef;
-    @ViewChild('text') private _svgText: ElementRef;
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
+    constructor(private renderer: Renderer2) {
         super();
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit() {
-        this._radius = parseInt(this._svgCircle.nativeElement.getAttribute('r'), 10);
-        this._circumference = 2 * Math.PI * this._radius;
     }
 
     /**
