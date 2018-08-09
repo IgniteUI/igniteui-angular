@@ -12,6 +12,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipComponent } from '../chips/chip.component';
+import { BasicVirtualGridComponent } from '../test-utils/grid-base-components.spec';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -2027,7 +2028,7 @@ describe('IgxGrid - GroupBy', () => {
     }
 });
 
-export class DataParent {
+export class DataParent  extends BasicVirtualGridComponent {
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
     public nextDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0, 0);
     public prevDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0, 0, 0);
