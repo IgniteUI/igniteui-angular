@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { IgxGridComponent } from '../grid/grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
@@ -16,6 +16,21 @@ export class BasicGridComponent {
 
     @ViewChild(IgxGridComponent)
     public grid: IgxGridComponent;
+}
+
+export class BasicVirtualGridComponent extends BasicGridComponent implements OnInit, OnDestroy {
+
+    ngOnInit(): void {
+        this.grid.verticalScrollContainer.onChunkLoad.subscribe(
+            next => {
+                this.grid.markForCheck();
+            }
+        );
+    }
+    ngOnDestroy(): void {
+        this.grid.verticalScrollContainer.onChunkLoad.unsubscribe();
+    }
+
 }
 
 @Component({
