@@ -20,9 +20,9 @@ All notable changes for each version of this project will be documented in this 
         - The footerTemplate property is removed.
     - `igxColumnGroup`
         - The footerTemplate property is removed.
-    - `igxCombo`
-        - **Breaking change** igxCombo default `width` is set to 100%
-        - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
+- `igxCombo`
+    - **Breaking change** igxCombo default `width` is set to 100%
+    - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
 - `igxLinearBar` and `igxCircularBar`
     - exposed `step` input which determines the update step of the progress indicator. By default it is one percent of the maximum value.
 ## 6.1.2
