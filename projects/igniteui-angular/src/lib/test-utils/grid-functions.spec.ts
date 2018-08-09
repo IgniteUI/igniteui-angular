@@ -68,6 +68,22 @@ export class GridFunctions {
         return cell.nativeElement.textContent.trim();
     }
 
+    public static verifyColumnIsHidden(column, isHidden: boolean, visibleColumnsCount: number) {
+        expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
+
+        const visibleColumns = column.grid.visibleColumns;
+        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
+        expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+    }
+
+    public static  verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
+        expect(column.pinned).toBe(isPinned, 'Pinned is not ' + isPinned);
+
+        const pinnedColumns = column.grid.pinnedColumns;
+        expect(pinnedColumns.length).toBe(pinnedColumnsCount, 'Unexpected pinned columns count!');
+        expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
+    }
+
     /* Filtering-related methods */
     public static verifyFilterUIPosition(filterUIContainer, grid) {
         const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
@@ -79,19 +95,19 @@ export class GridFunctions {
     public static createDateFilterConditions(grid: IgxGridComponent, calendar: Calendar, today) {
         const expectedResults = [];
         // day + 15
-        const dateItem0 = this.generateICalendarDate(grid.data[0].ReleaseDate,
+        const dateItem0 = GridFunctions.generateICalendarDate(grid.data[0].ReleaseDate,
             today.getFullYear(), today.getMonth());
         // month - 1
-        const dateItem1 = this.generateICalendarDate(grid.data[1].ReleaseDate,
+        const dateItem1 = GridFunctions.generateICalendarDate(grid.data[1].ReleaseDate,
             today.getFullYear(), today.getMonth());
         // day - 1
-        const dateItem3 = this.generateICalendarDate(grid.data[3].ReleaseDate,
+        const dateItem3 = GridFunctions.generateICalendarDate(grid.data[3].ReleaseDate,
             today.getFullYear(), today.getMonth());
         // day + 1
-        const dateItem5 = this.generateICalendarDate(grid.data[5].ReleaseDate,
+        const dateItem5 = GridFunctions.generateICalendarDate(grid.data[5].ReleaseDate,
             today.getFullYear(), today.getMonth());
         // month + 1
-        const dateItem6 = this.generateICalendarDate(grid.data[6].ReleaseDate,
+        const dateItem6 = GridFunctions.generateICalendarDate(grid.data[6].ReleaseDate,
             today.getFullYear(), today.getMonth());
 
         let thisMonthCountItems = 1;
@@ -194,11 +210,11 @@ export class GridFunctions {
         return {
             date,
             isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
-            isLastYear: this.isLastYear(date, year),
-            isNextMonth: this.isNextMonth(date, year, month),
-            isNextYear: this.isNextYear(date, year),
-            isPrevMonth: this.isPreviousMonth(date, year, month),
-            isThisYear: this.isThisYear(date, year)
+            isLastYear: GridFunctions.isLastYear(date, year),
+            isNextMonth: GridFunctions.isNextMonth(date, year, month),
+            isNextYear: GridFunctions.isNextYear(date, year),
+            isPrevMonth: GridFunctions.isPreviousMonth(date, year, month),
+            isThisYear: GridFunctions.isThisYear(date, year)
         };
     }
 
@@ -310,20 +326,23 @@ export class GridFunctions {
     }
 
     public static getColumnHidingButton(fixture) {
-        return this.getToolbar(fixture).queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
+        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
+        return button ? button.nativeElement : undefined;
     }
 
     public static getColumnPinningButton(fixture) {
-        return this.getToolbar(fixture).queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnPinning');
+        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
+                                    .find((b) => b.nativeElement.name === 'btnColumnPinning');
+        return button ? button.nativeElement : undefined;
     }
 
     public static getExportButton(fixture) {
-        const div = this.getToolbar(fixture).query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
+        const div = GridFunctions.getToolbar(fixture).query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
         return (div) ? div.query(By.css('button')) : null;
     }
 
     public static getExportOptions(fixture) {
-        const div = this.getOverlay(fixture);
+        const div = GridFunctions.getOverlay(fixture);
         return (div) ? div.querySelectorAll('li') : null;
     }
 
