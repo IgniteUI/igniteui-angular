@@ -6,6 +6,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand } from '../../public_api';
+import { BasicVirtualGridComponent } from '../test-utils/grid-base-components.spec';
 
 describe('IgxGrid - input properties', () => {
     const MIN_COL_WIDTH = '136px';
@@ -676,7 +677,7 @@ export class IgxGridTestComponent {
                 </igx-column>
                 </igx-grid>`
 })
-export class IgxGridTestDefaultWidthHeightComponent {
+export class IgxGridTestDefaultWidthHeightComponent  extends BasicVirtualGridComponent {
     public data = [];
     public cols = [];
     @ViewChild('grid2') public grid2: IgxGridComponent;

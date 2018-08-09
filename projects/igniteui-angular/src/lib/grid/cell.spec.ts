@@ -10,6 +10,7 @@ import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { BasicVirtualGridComponent } from '../test-utils/grid-base-components.spec';
 
 describe('IgxGrid - Cell component', () => {
 
@@ -1203,7 +1204,7 @@ export class CtrlKeyKeyboardNagivationComponent {
         </igx-grid>
     `
 })
-export class VirtualGridComponent {
+export class VirtualGridComponent extends BasicVirtualGridComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
@@ -1221,6 +1222,7 @@ export class VirtualGridComponent {
     public selectedCell: IgxGridCellComponent;
 
     constructor() {
+        super();
         this.data = this.generateData(1000);
     }
 
