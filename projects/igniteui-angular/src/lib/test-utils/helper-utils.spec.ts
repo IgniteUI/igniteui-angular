@@ -1,6 +1,9 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from '../../public_api';
+import { wait } from '../test-utils/ui-interactions.spec';
+import { take } from 'rxjs/operators';
+import { IgxGridGroupByRowComponent } from '../grid/groupby-row.component';
 
 export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {
@@ -44,4 +47,42 @@ export class HelperUtils {
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
     }
+
+    public static navigateToIndex = (grid, rowStartIndex, rowEndIndex, colIndex?) => new Promise(async(resolve, reject) => {
+        const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
+        const row = grid.getRowByIndex(rowStartIndex);
+        const cIndx = colIndex || 0;
+        const colKey = grid.columnList.toArray()[cIndx].field;
+        let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+        if (rowStartIndex === rowEndIndex) {
+           resolve();
+           return;
+        }
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: dir,
+            key: dir
+        });
+        const elem = row instanceof IgxGridGroupByRowComponent ?
+            row : grid.getCellByColumn(row.index, colKey);
+        if (dir === 'ArrowDown') {
+            elem.onKeydownArrowDown(keyboardEvent);
+        } else {
+            elem.onKeydownArrowUp(keyboardEvent);
+        }
+
+        if (nextRow) {
+            await wait(10);
+            HelperUtils.navigateToIndex(grid, nextRow.index, rowEndIndex, colIndex).then(() => { resolve(); });
+        } else {
+            // else wait for chunk to load.
+            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                next: async() => {
+                    grid.markForCheck();
+                    nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+                    HelperUtils.navigateToIndex(grid, nextRow.index, rowEndIndex, colIndex).then(() => {resolve(); });
+                }
+            });
+        }
+
+    });
 }
