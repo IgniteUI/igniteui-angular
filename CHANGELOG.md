@@ -20,8 +20,7 @@ All notable changes for each version of this project will be documented in this 
     - `igxColumnGroup`
         - The footerTemplate property is removed.
     - exposed `autosize()` method on `IgxColumnComponent`. It allows the user to programatically change the size of a column according to it's largest visible cell.
-    - Initializing an `igxGrid` component without setting height, inside a container without height defined, now causes the grid to render 10
-    records from the data view or all of the records if there are fewer than 10 available.
+    - Initializing an `igxGrid` component without setting height, inside a container without height defined, now causes the grid to render 10 records from the data view or all of the records if there are fewer than 10 available.
 - `igxCombo`
     - **Breaking change** igxCombo default `width` is set to 100%
     - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
