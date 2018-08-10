@@ -121,7 +121,7 @@ describe('IgxGrid - search API', () => {
             expect(activeSpan).toBe(spans[0]);
         });
 
-        it('findPrev and findNext work properly for case sensitive seaches', () => {
+        it('findPrev and findNext work properly for case sensitive searches', () => {
             grid.getCellByColumn(4, 'JobTitle').update('Senior Software DEVELOPER');
             fix.detectChanges();
 
@@ -161,6 +161,137 @@ describe('IgxGrid - search API', () => {
             expect(activeSpan).toBe(null);
             expect(count).toBe(0);
             expect(spans.length).toBe(0);
+        });
+
+        it('findNext and findPrev highlight nothing when there is no exact match, regardless of case sensitivity.', () => {
+            const exactMatch = true;
+            let count = grid.findNext('Developer', false, exactMatch);
+            fix.detectChanges();
+            let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(0);
+            expect(count).toBe(0);
+
+            count = grid.findNext('Developer', true, exactMatch);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(0);
+            expect(count).toBe(0);
+
+            count = grid.findPrev('Developer', false, exactMatch);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(0);
+            expect(count).toBe(0);
+
+            count = grid.findPrev('Developer', true, exactMatch);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(0);
+            expect(count).toBe(0);
+        });
+
+        it('findNext and findPrev highlight only exact matches when searching by exact match', () => {
+            let count = grid.findNext('Software Developer', false, false);
+            fix.detectChanges();
+            let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(4);
+            expect(count).toBe(4);
+
+            count = grid.findNext('Software Developer', false, true);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            let activeSpan = fixNativeElement.querySelector('.' + component.activeClass);
+            expect(activeSpan).toBe(spans[0]);
+            expect(spans.length).toBe(1);
+            expect(count).toBe(1);
+
+            count = grid.findPrev('Software Developer', false, false);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(4);
+            expect(count).toBe(4);
+
+            count = grid.findPrev('Software Developer', false, true);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            activeSpan = fixNativeElement.querySelector('.' + component.activeClass);
+            expect(activeSpan).toBe(spans[0]);
+            expect(spans.length).toBe(1);
+            expect(count).toBe(1);
+        });
+
+        it('findNext and findPrev highlight only exact matches by respecting case sensitivity', () => {
+            grid.getCellByColumn(5, 'JobTitle').update('director of Dev operations');
+            grid.getCellByColumn(6, 'JobTitle').update('director of HR operations');
+            fix.detectChanges();
+
+            // Case INsensitive and exact match
+            const exactMatch = true;
+            let count = grid.findNext('director', false, exactMatch);
+            fix.detectChanges();
+            let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            let activeSpan = fixNativeElement.querySelector('.' + component.activeClass);
+            expect(activeSpan).toBe(spans[0]);
+            expect(spans.length).toBe(2);
+            expect(count).toBe(2);
+
+            count = grid.findPrev('director', false, exactMatch);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            activeSpan = fixNativeElement.querySelector('.' + component.activeClass);
+            expect(activeSpan).toBe(spans[1]);
+            expect(spans.length).toBe(2);
+            expect(count).toBe(2);
+
+            // Case sensitive and exact match
+            count = grid.findNext('director', true, exactMatch);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(0);
+            expect(count).toBe(0);
+
+            count = grid.findPrev('director', true, exactMatch);
+            fix.detectChanges();
+            spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(spans.length).toBe(0);
+            expect(count).toBe(0);
+        });
+
+        it('Should update exact match highlights when filtering.', () => {
+            const count = grid.findNext('Software Developer', false, true);
+            let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            let highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(0);
+            expect(activeHighlight).toBeNull();
+
+            grid.clearFilter('JobTitle');
+        });
+
+        it('Should update exact match highlights when clearing filter.', () => {
+            grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            const count = grid.findNext('Software Developer', false, true);
+            let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            let highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(0);
+            expect(activeHighlight).toBeNull();
+
+            grid.clearFilter('JobTitle');
+            fix.detectChanges();
+
+            activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
+            highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
         });
 
         it('Should update the active highlight when sorting', () => {
