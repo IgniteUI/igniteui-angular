@@ -187,6 +187,24 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public isSpinLoop = true;
 
     /**
+     * An @Input property that sets the label.
+     * The default label is 'Time'.
+     * ```html
+     * <igx-time-picker [label]="Start"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public label = 'Time';
+
+    /**
+     * An @Input property that sets the visibility of the label.
+     * By default the visibility is set to true.
+     * <igx-time-picker [labelVisibility]="false"></igx-time-picker>
+     */
+    @Input()
+    public labelVisibility = true;
+
+    /**
      * An @Input property that Gets/Sets the orientation of the `igxTimePicker`. By default `vertical` is set to false.
      * ```html
      *<igx-time-picker [vertical]="true" id="time-picker"></igx-time-picker>
