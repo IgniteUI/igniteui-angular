@@ -4,7 +4,7 @@
 
 ## Milestone 5 (by November 30th, 2018)
 
-1. Hierarchical Grid  
+1. Hierarchical Grid POC (Proof of concept)  
 2. Tree Grid
 3. Advanced Filtering Dialog
 4. Quick Per-column Search in the igxGrid
