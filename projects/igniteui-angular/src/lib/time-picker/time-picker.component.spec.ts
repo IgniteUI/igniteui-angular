@@ -177,14 +177,14 @@ describe('IgxTimePicker', () => {
         selectMinutes.triggerEventHandler('click', {});
         await wait();
         fixture.detectChanges();
-    
+
         const getAMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
         const selectAMPM = findByInnerText(getAMPMColumn.children, 'AM');
 
         selectAMPM.triggerEventHandler('click', {});
         await wait();
         fixture.detectChanges();
-    
+
         const getCancelButton = dom.queryAll(By.css('.igx-button--flat'))[0];
         getCancelButton.triggerEventHandler('click', {});
         await wait();
@@ -663,7 +663,7 @@ describe('IgxTimePicker', () => {
         UIInteractions.clickElement(timePickerTarget);
         await wait();
         fixture.detectChanges();
-    
+
         const getHourColumn: any = dom.query(By.css('.igx-time-picker__hourList'));
         const getMinuteColumn: any = dom.query(By.css('.igx-time-picker__minuteList'));
         const getAMPMColumn: any = dom.query(By.css('.igx-time-picker__ampmList'));
