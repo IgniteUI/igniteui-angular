@@ -7,8 +7,7 @@ All notable changes for each version of this project will be documented in this 
         ```
         import 'core-js/es7/object';
         ```
-- `IgxCircularProgressBar`
-    - `text` input property exposed to set the text to be displayed inside the circular bar.
+
 - `igxTabs`
     - `selectedIndex` property has an `@Input` setter and can be set both in markup and in code behind.
 - `igxDropDownItem`
@@ -20,10 +19,14 @@ All notable changes for each version of this project will be documented in this 
         - The footerTemplate property is removed.
     - `igxColumnGroup`
         - The footerTemplate property is removed.
-    - `igxCombo`
-        - **Breaking change** igxCombo default `width` is set to 100%
-        - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
-
+    - exposed `autosize()` method on `IgxColumnComponent`. It allows the user to programatically change the size of a column according to it's largest visible cell.
+    - Initializing an `igxGrid` component without setting height, inside a container without height defined, now causes the grid to render 10 records from the data view or all of the records if there are fewer than 10 available.
+- `igxCombo`
+    - **Breaking change** igxCombo default `width` is set to 100%
+    - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
+- `igxLinearBar` and `igxCircularBar`
+    - exposed `step` input which determines the update step of the progress indicator. By default it is one percent of the maximum value.
+    - `IgxCircularBar` `text` input property exposed to set the text to be displayed inside the circular bar.
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
