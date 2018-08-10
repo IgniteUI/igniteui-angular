@@ -100,7 +100,7 @@ describe('IgxHighlight', () => {
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         const count = component.highlightText(
             'LoReM ipsuM dolor sit AMET, consectetur adipiscing elit. Vestibulum vulputate LucTUS dui ut maximus.' +
-            'Quisque sed suscipit lorem. Vestibulum sit.',
+            ' Quisque sed suscipit lorem. Vestibulum sit.',
             false, true);
         fix.detectChanges();
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
