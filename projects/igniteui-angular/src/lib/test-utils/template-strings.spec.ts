@@ -197,6 +197,14 @@ export class ColumnDefinitions {
         <igx-column field="Name"></igx-column>
     `;
 
+    public static productHidable = `
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" [disableHiding]="true" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" [hidden]="true" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
+    `;
+
     public static productFilterable = `
         <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
@@ -319,6 +327,49 @@ export class ColumnDefinitions {
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
+    `;
+
+    public static multiColHeadersColumns = `
+        <igx-column [width]="'100px'" [movable]="true" [resizable]="true"
+                    [sortable]="true" [filterable]="true" field="Missing"></igx-column>
+        <igx-column-group [movable]="true" header="General Information">
+            <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
+            <igx-column-group [movable]="true" header="Person Details">
+                <igx-column [movable]="true" [width]="'100px'" field="ContactName"></igx-column>
+                <igx-column [movable]="true" [filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column [movable]="true" [resizable]="true" field="ID"></igx-column>
+        <igx-column-group [movable]="true" header="Address Information">
+            <igx-column field="Country" [width]="'90px'">
+                <ng-template igxHeader let-column>
+                    {{ column.field }}
+                </ng-template>
+                <ng-template igxCell let-cell="cell" let-val let-row>
+                    {{val}}
+                </ng-template>
+            </igx-column>
+            <igx-column [movable]="true" [width]="'150px'" field="Region"></igx-column>
+            <igx-column [movable]="true" field="City"></igx-column>
+            <igx-column [movable]="true" field="Address"></igx-column>
+        </igx-column-group>
+    `;
+
+    public static contactInfoGroupableColumns = `
+    <igx-column [movable]="true" [hasSummary]="true" [resizable]="true"
+                [pinned]="true" field="Missing"></igx-column>
+    <igx-column-group [movable]="true" [pinned]="false" header="General Information">
+        <igx-column [movable]="true" filterable="true" sortable="true"
+                resizable="true" field="CompanyName"></igx-column>
+        <igx-column-group [movable]="true" header="Person Details">
+            <igx-column [movable]="true" [pinned]="false" filterable="true"
+                sortable="true" resizable="true" field="ContactName"></igx-column>
+            <igx-column [movable]="true" [hasSummary]="true" filterable="true"
+                sortable="true" resizable="true" field="ContactTitle"></igx-column>
+        </igx-column-group>
+    </igx-column-group>
+    <igx-column field="ID" [movable]="true" [hasSummary]="true" [resizable]="true"
+                editable="true"></igx-column>
     `;
 }
 
