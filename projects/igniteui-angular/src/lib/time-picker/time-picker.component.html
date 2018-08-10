@@ -2,7 +2,7 @@
     <igx-prefix>
         <igx-icon>access_time</igx-icon>
     </igx-prefix>
-    <label igxLabel>Time</label>
+    <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
     <input #input igxInput [value]="displayTime" [disabled]="disabled" tabindex="0" readonly />
 </igx-input-group>
 <ng-container *ngTemplateOutlet="scroll"></ng-container>

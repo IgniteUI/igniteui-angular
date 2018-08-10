@@ -7,7 +7,7 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
-describe('IgxTimePicker', () => {
+fdescribe('IgxTimePicker', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
