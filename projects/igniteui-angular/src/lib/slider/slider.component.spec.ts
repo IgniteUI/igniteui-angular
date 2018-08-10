@@ -306,7 +306,7 @@ describe('IgxSlider', () => {
             expect(Math.round(slider.value as number)).toBe(30);
         }));
 
-        fit('should move thumb slider to value 60', (async () => {
+        it('should move thumb slider to value 60', (async () => {
             slider.value = 30;
             fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(30);
