@@ -586,7 +586,7 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
-        await HelperUtils.navigateToIndex(grid, 0, 9);
+        await HelperUtils.navigateVerticallyToIndex(grid, 0, 9);
 
         let row = grid.getRowByIndex(9);
         expect(row instanceof IgxGridRowComponent).toBe(true);
@@ -594,7 +594,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(row.cells.toArray()[0].selected).toBe(true);
 
 
-        await HelperUtils.navigateToIndex(grid, 9, 0);
+        await HelperUtils.navigateVerticallyToIndex(grid, 9, 0);
 
         row = grid.getRowByIndex(0);
         expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
@@ -620,7 +620,7 @@ describe('IgxGrid - GroupBy', () => {
         let cell = grid.getCellByColumn(2, 'Released');
         cell.onFocus(new Event('focus'));
 
-        await HelperUtils.navigateToIndex(grid, 0, 9, 4);
+        await HelperUtils.navigateVerticallyToIndex(grid, 0, 9, 4);
 
         grid.markForCheck();
         fix.detectChanges();
@@ -650,7 +650,7 @@ describe('IgxGrid - GroupBy', () => {
         const cell = grid.getCellByColumn(20, 'Released');
         cell.onFocus(new Event('focus'));
         fix.detectChanges();
-        await HelperUtils.navigateToIndex(grid, 20, 0, 4);
+        await HelperUtils.navigateVerticallyToIndex(grid, 20, 0, 4);
 
         const row = grid.getRowByIndex(0);
         expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
@@ -674,7 +674,7 @@ describe('IgxGrid - GroupBy', () => {
         cell.onFocus(new Event('focus'));
         fix.detectChanges();
         expect(cell.selected).toBe(true);
-        await HelperUtils.navigateToIndex(grid, 2, 0);
+        await HelperUtils.navigateVerticallyToIndex(grid, 2, 0);
 
         fix.detectChanges();
         const row = grid.getRowByIndex(0);
