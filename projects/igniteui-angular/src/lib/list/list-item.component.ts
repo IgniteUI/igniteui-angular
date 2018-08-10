@@ -167,9 +167,9 @@ export class IgxListItemComponent implements IListChild {
         const isPanningToLeft = ev.deltaX < 0;
 
         if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
-            this.left = Math.max(this.maxLeft, this.left + ev.deltaX);
+            this.left = Math.max(this.maxLeft, ev.deltaX);
         } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
-            this.left = Math.min(this.maxRight, this.left + ev.deltaX);
+            this.left = Math.min(this.maxRight, ev.deltaX);
         }
     }
     /**
