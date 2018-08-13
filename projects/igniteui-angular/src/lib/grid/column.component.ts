@@ -28,6 +28,8 @@ import {
     IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand
 } from '../../public_api';
+import { IgxGridHeaderComponent } from './grid-header.component';
+import { valToPxlsUsingRange } from '../core/utils';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -960,6 +962,103 @@ export class IgxColumnComponent implements AfterContentInit {
     protected check() {
         if (this.grid) {
             this.grid.markForCheck();
+        }
+    }
+
+    /**
+     * Returns a reference to the header of the column.
+     * ```typescript
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let headerCell = column.headerCell;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get headerCell(): IgxGridHeaderComponent {
+        if (this.grid.headerList.length > 0) {
+            return flatten(this.grid.headerList.toArray()).find((h) => h.column === this);
+        }
+    }
+
+    /**
+     * Autosize the column to the longest currently visible cell value, including the header cell.
+     * ```typescript
+     * @ViewChild('grid') grid: IgxGridComponent;
+     *
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * column.autosize();
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public autosize() {
+        if (!this.columnGroup) {
+
+            this.width = this.getLargestCellWidth();
+
+            this.grid.markForCheck();
+            this.grid.reflow();
+        }
+    }
+
+    /**
+     * @hidden
+     * Returns the size (in pixels) of the longest currently visible cell, including the header cell.
+     * ```typescript
+     * @ViewChild('grid') grid: IgxGridComponent;
+     *
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let size = column.getLargestCellWidth();
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public getLargestCellWidth(): string {
+        const range = this.grid.document.createRange();
+        const largest = new Map<number, number>();
+
+        if (this.cells.length > 0) {
+            let cellsContentWidths = [];
+            if (this.cells[0].nativeElement.children.length > 0) {
+                this.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
+                    .map((child) => valToPxlsUsingRange(range, child)))));
+            } else {
+                cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
+            }
+
+            const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
+            const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);
+            const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
+                parseFloat(cellStyle.borderRightWidth);
+
+            largest.set(Math.max(...cellsContentWidths), cellPadding);
+        }
+
+        if (this.headerCell) {
+            let headerCell;
+            const titleIndex = this.grid.hasMovableColumns ? 1 : 0;
+            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
+                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[titleIndex].children)
+                    .map((child) => valToPxlsUsingRange(range, child)));
+            } else {
+                headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
+            }
+
+            if (this.sortable || this.filterable) {
+                headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
+            }
+
+            const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
+            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+                parseFloat(headerStyle.borderRightWidth);
+            largest.set(headerCell, headerPadding);
+
+        }
+
+        const largestCell = Math.max(...Array.from(largest.keys()));
+        const width = Math.ceil(largestCell + largest.get(largestCell));
+
+        if (Number.isNaN(width)) {
+            return this.width;
+        } else {
+            return width + 'px';
         }
     }
 
