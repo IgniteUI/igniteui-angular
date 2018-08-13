@@ -47,7 +47,7 @@ function typeInInput(inputElement: any, inputValue: string) {
     inputElement.dispatchEvent(new Event('input'));
 }
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -1854,25 +1854,42 @@ describe('igxCombo', () => {
                     productIndex++;
                 }
             };
-            const scrollDownAndVerifyComboData = function () {
-                setTimeout(() => {
-                    combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
-                    fixture.detectChanges();
-                    fixture.componentInstance.cdr.detectChanges();
-                    setTimeout(() => {
-                        verifyComboData();
-                        if (productIndex <= combo.data.length - 10) {
-                            scrollDownAndVerifyComboData();
-                        } else {
-                            done();
-                        }
-                    }, 10);
-                }, 5);
-            };
             combo.toggle();
             fixture.detectChanges();
             verifyComboData();
-            scrollDownAndVerifyComboData();
+            setTimeout(() => {
+                productIndex = 42;
+                combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
+                fixture.detectChanges();
+                setTimeout(() => {
+                    verifyComboData();
+                    setTimeout(() => {
+                        productIndex = 485;
+                        combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
+                        fixture.detectChanges();
+                        setTimeout(() => {
+                            verifyComboData();
+                            setTimeout(() => {
+                                productIndex = 873;
+                                combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
+                                fixture.detectChanges();
+                                setTimeout(() => {
+                                    verifyComboData();
+                                    setTimeout(() => {
+                                        productIndex = 649;
+                                        combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
+                                        fixture.detectChanges();
+                                        setTimeout(() => {
+                                            verifyComboData();
+                                            done();
+                                        }, 5);
+                                    }, 5);
+                                }, 5);
+                            }, 5);
+                        }, 5);
+                    }, 5);
+                }, 5);
+            }, 5);
         });
         it('Should bind combo data to remote service data and display items properly', (done) => {
             const fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
