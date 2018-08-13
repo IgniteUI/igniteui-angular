@@ -1,15 +1,11 @@
-import {Component, ViewChild} from '@angular/core';
-import {async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {IgxSnackbarComponent, IgxSnackbarModule} from './snackbar.component';
-
-const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+import { IgxSnackbarComponent, IgxSnackbarModule } from './snackbar.component';
 
 describe('IgxSnackbar', () => {
-    let fixture;
     beforeEach(async(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
         TestBed.configureTestingModule({
             declarations: [
                 SnackbarInitializeTestComponent
@@ -18,88 +14,79 @@ describe('IgxSnackbar', () => {
                 BrowserAnimationsModule,
                 IgxSnackbarModule
             ]
-        }).compileComponents().then(() => {
-            fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
-            fixture.detectChanges();
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
+        }).compileComponents();
     }));
 
-    afterEach(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
+    let fixture, domSnackbar, snackbar;
+    beforeEach(() => {
+        fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
+        fixture.detectChanges();
+        snackbar = fixture.componentInstance.snackbar;
+        domSnackbar = fixture.debugElement.query(By.css('igx-snackbar')).nativeElement;
     });
 
     it('should properly initialize properties', () => {
-        const domSnackbar = fixture.debugElement.query(By.css('igx-snackbar')).nativeElement;
-
-        expect(fixture.componentInstance.snackbar.id).toContain('igx-snackbar-');
-        expect(fixture.componentInstance.snackbar.message).toBeUndefined();
-        expect(fixture.componentInstance.snackbar.actionText).toBeUndefined();
-        expect(fixture.componentInstance.snackbar.displayTime).toBe(4000);
-        expect(fixture.componentInstance.snackbar.autoHide).toBeTruthy();
-        expect(fixture.componentInstance.snackbar.isVisible).toBeFalsy();
-        expect(fixture.componentInstance.snackbar.actionText).toBeUndefined();
+        expect(snackbar.id).toContain('igx-snackbar-');
+        expect(snackbar.message).toBeUndefined();
+        expect(snackbar.actionText).toBeUndefined();
+        expect(snackbar.displayTime).toBe(4000);
+        expect(snackbar.autoHide).toBeTruthy();
+        expect(snackbar.isVisible).toBeFalsy();
+        expect(snackbar.actionText).toBeUndefined();
 
         expect(domSnackbar.id).toContain('igx-snackbar-');
-        fixture.componentInstance.snackbar.id = 'customId';
+        snackbar.id = 'customId';
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.snackbar.id).toBe('customId');
+        expect(snackbar.id).toBe('customId');
         expect(domSnackbar.id).toBe('customId');
     });
 
     it('should auto hide 1 seconds after is open', fakeAsync(() => {
         const displayTime = 1000;
-        fixture.componentInstance.snackbar.displayTime = displayTime;
-
-        fixture.componentInstance.snackbar.autoHide = true;
-
-        fixture.componentInstance.snackbar.show();
-
-        tick();
-
-        expect(fixture.componentInstance.snackbar.isVisible).toBeTruthy();
-        expect(fixture.componentInstance.snackbar.autoHide).toBeTruthy();
-
-        tick(displayTime);
+        snackbar.displayTime = displayTime;
         fixture.detectChanges();
+        snackbar.show();
 
-        expect(fixture.componentInstance.snackbar.isVisible).toBeFalsy();
+        fixture.detectChanges();
+        expect(snackbar.isVisible).toBeTruthy();
+        expect(snackbar.autoHide).toBeTruthy();
+
+        tick(1000);
+        fixture.detectChanges();
+        expect(snackbar.isVisible).toBeFalsy();
     }));
 
     it('should not auto hide seconds after is open', fakeAsync(() => {
         const displayTime = 1000;
-        fixture.componentInstance.snackbar.displayTime = displayTime;
-        fixture.componentInstance.snackbar.autoHide = false;
+        snackbar.displayTime = displayTime;
+        snackbar.autoHide = false;
 
-        fixture.componentInstance.snackbar.show();
+        snackbar.show();
 
-        tick();
+        expect(snackbar.isVisible).toBeTruthy();
+        expect(snackbar.autoHide).toBeFalsy();
 
-        expect(fixture.componentInstance.snackbar.isVisible).toBeTruthy();
-        expect(fixture.componentInstance.snackbar.autoHide).toBeFalsy();
-
-        tick(displayTime);
+        tick(1000);
         fixture.detectChanges();
-        expect(fixture.componentInstance.snackbar.isVisible).toBeTruthy();
+        expect(snackbar.isVisible).toBeTruthy();
     }));
 
-    it('should trigger on action', fakeAsync(() => {
+    it('should trigger on action', () => {
         fixture.componentInstance.text = 'Click';
-        fixture.componentInstance.snackbar.isVisible = true;
+
+        spyOn(snackbar.onAction, 'emit');
+
+        snackbar.isVisible = true;
         fixture.detectChanges();
 
-        spyOn(fixture.componentInstance.snackbar.onAction, 'emit');
         fixture.debugElement.nativeElement.querySelector('button').click();
         fixture.detectChanges();
-        tick();
 
-        expect(fixture.componentInstance.snackbar.onAction.emit)
-            .toHaveBeenCalledWith(fixture.componentInstance.snackbar);
-
-    }));
+        expect(snackbar.onAction.emit).toHaveBeenCalledWith(snackbar);
+    });
 });
+
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">
                </igx-snackbar>`
