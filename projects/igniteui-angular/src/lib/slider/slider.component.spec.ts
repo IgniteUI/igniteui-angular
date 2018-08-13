@@ -3,6 +3,7 @@ import { async, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angul
 import { By } from '@angular/platform-browser';
 import {IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType} from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 declare var Simulator: any;
 
@@ -15,7 +16,7 @@ describe('IgxSlider', () => {
                 SliderTestComponent
             ],
             imports: [
-                IgxSliderModule
+                IgxSliderModule, NoopAnimationsModule
             ]
         }).compileComponents();
     }));
