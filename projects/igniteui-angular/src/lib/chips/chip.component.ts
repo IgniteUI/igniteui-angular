@@ -305,7 +305,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * Sets the `IgxChipComponent` to be selected.
      * ```html
-     * <igx-chip *ngFor="let weekday of weekDays" [selectable]="true" [selected]="weekday.available">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
      * ```
      */
     public set selected(newValue: boolean) {
