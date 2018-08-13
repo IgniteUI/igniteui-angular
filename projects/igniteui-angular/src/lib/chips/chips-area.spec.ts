@@ -563,7 +563,7 @@ describe('IgxChipsArea', () => {
         selectedChip.selected = true;
         fix.detectChanges();
 
-        expect(selectedChip.selected);
+        expect(selectedChip.selected).toBe(true);
     });
 
     it('should focus on chip correctly', () => {
