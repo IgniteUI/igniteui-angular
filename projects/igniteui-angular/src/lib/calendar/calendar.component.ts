@@ -37,6 +37,25 @@ export enum CalendarSelection {
     RANGE = 'range'
 }
 
+export enum DateRangeType {
+    After,
+    Before,
+    Between,
+    Specific,
+    Weekdays,
+    Weekends
+}
+
+export class DateRangeDescriptor {
+    type: DateRangeType;
+    dateRange: Date[];
+
+    constructor(type: DateRangeType, dateRange: Date[] = null) {
+        this.type = type;
+        this.dateRange = dateRange;
+    }
+}
+
 export class CalendarHammerConfig extends HammerGestureConfig {
     public overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
@@ -296,6 +315,25 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      */
     @Input()
     public vertical = false;
+
+    @Input()
+    public get disabledDates(): DateRangeDescriptor[] {
+        return this._disabledDates;
+    }
+
+    public set disabledDates(value: DateRangeDescriptor[]) {
+        this._disabledDates = value;
+    }
+
+    @Input()
+    public get specialDates(): DateRangeDescriptor[] {
+        return this._specialDates;
+    }
+
+    public set specialDates(value: DateRangeDescriptor[]) {
+        this._specialDates = value;
+    }
+
     /**
      * Emits an event when a selection is made in the calendar.
      * Provides reference the `selectedDates` property in the `IgxCalendarComponent`.
@@ -551,7 +589,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         month: true,
         year: false
     };
-
+    /**
+     *@hidden
+     */
+    private _disabledDates: DateRangeDescriptor[] = null;
+    /**
+     *@hidden
+     */
+    private _specialDates: DateRangeDescriptor[] = null;
     /**
      * @hidden
      */
@@ -730,6 +775,36 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
                 this.selectRange(value);
                 break;
         }
+    }
+
+    /**
+     * Checks whether a date is disabled.
+     *```typescript
+     * this.calendar.isDateDisabled(new Date(`2018-06-12`));
+     *```
+     * @hidden
+     */
+    public isDateDisabled(date: Date) {
+        if (this.disabledDates === null) {
+            return false;
+        }
+
+        return this.isDateInRanges(date, this.disabledDates);
+    }
+
+    /**
+     * Checks whether a date is special.
+     *```typescript
+     * this.calendar.isDateSpecial(new Date(`2018-06-12`));
+     *```
+     * @hidden
+     */
+    public isDateSpecial(date: Date) {
+        if (this.specialDates === null) {
+            return false;
+        }
+
+        return this.isDateInRanges(date, this.specialDates);
     }
 
     /**
@@ -974,7 +1049,6 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             this.selectedDates = [start];
 
             this.selectedDates = [start, ...this.generateDateRange(start, end)];
-
         } else {
             if (!this._rangeStarted) {
                 this._rangeStarted = true;
@@ -997,6 +1071,67 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             }
         }
         this._onChangeCallback(this.selectedDates);
+    }
+
+    private isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boolean {
+        date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const dateInMs = date.getTime();
+
+        for (const descriptor of ranges) {
+            const dRanges = descriptor.dateRange === null ? null :
+                descriptor.dateRange.map(r => new Date(r.getFullYear(),
+                    r.getMonth(), r.getDate()));
+            switch (descriptor.type) {
+                case (DateRangeType.After):
+                    if (dateInMs > dRanges[0].getTime()) {
+                        return true;
+                    }
+
+                    break;
+                case (DateRangeType.Before):
+                    if (dateInMs < dRanges[0].getTime()) {
+                        return true;
+                    }
+
+                    break;
+                case (DateRangeType.Between):
+                    const dRange = dRanges.map(d => d.getTime());
+                    const min = Math.min(dRange[0], dRange[1]);
+                    const max = Math.max(dRange[0], dRange[1]);
+                    if (dateInMs >= min && dateInMs <= max) {
+                        return true;
+                    }
+
+                    break;
+                case (DateRangeType.Specific):
+                    const datesInMs = dRanges.map(d => d.getTime());
+                    for (const specificDateInMs of datesInMs) {
+                        if (dateInMs === specificDateInMs) {
+                            return true;
+                        }
+                    }
+
+                    break;
+                case (DateRangeType.Weekdays):
+                    const day = date.getDay();
+                    if (day !== 0 && day !== 6) {
+                        return true;
+                    }
+
+                    break;
+                case (DateRangeType.Weekends):
+                    const weekday = date.getDay();
+                    if (weekday === 0 || weekday === 6) {
+                        return true;
+                    }
+
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        return false;
     }
 
     /**
