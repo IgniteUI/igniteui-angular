@@ -555,6 +555,17 @@ describe('IgxChipsArea', () => {
         });
     });
 
+    it('should be able to select chip using api when selectable is set to false', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const selectedChip = fix.componentInstance.chipsArea.chipsList.toArray()[0];
+        selectedChip.selected = true;
+        fix.detectChanges();
+
+        expect(selectedChip.selected);
+    });
+
     it('should focus on chip correctly', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
