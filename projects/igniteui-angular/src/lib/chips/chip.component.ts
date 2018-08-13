@@ -297,18 +297,15 @@ export class IgxChipComponent implements AfterViewInit {
      * }
      * ```
      */
+    @Input()
     public get selected() {
         return this._selected;
     }
 
     /**
      * Sets the `IgxChipComponent` to be selected.
-     * ```typescript
-     * @ViewChild('myChip')
-     * public chip: IgxChipComponent;
-     * ngAfterViewInit(){
-     *     this.chip.selected = true;
-     * }
+     * ```html
+     * <igx-chip *ngFor="let weekday of weekDays" [selectable]="true" [selected]="weekday.available">
      * ```
      */
     public set selected(newValue: boolean) {
