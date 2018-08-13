@@ -1,4 +1,4 @@
-<div class="sample-wrapper"> 
+<div class="sample-wrapper">
     <app-page-header title="Chips" description="Hello chips"></app-page-header>
     <section class="sample-content">
         <div class="sample-holder">
@@ -18,8 +18,8 @@
 
             <div class="wrapperAreaTo">
                 <igx-chips-area #chipsAreaTo class="chipAreaTo" (onReorder)="chipsOrderChangedTo($event)">
-                        <span>To:</span>
-                    <igx-chip *ngFor="let chip of chipListTo" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartTo()">
+                    <span>To:</span>
+                    <igx-chip *ngFor="let chip of chipListTo" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartTo()" (onMoveEnd)="moveEndedTo()">
                         <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                     </igx-chip>
                     <div class="dropAreaTo" igxDrop #dropTo (onDrop)="onDropTo($event)" (igxDragEnter)="onDragEnterCc($event)" (igxDragLeave)="onDragLeaveCc($event)"></div>
@@ -28,8 +28,8 @@
 
             <div class="wrapperAreaCc">
                 <igx-chips-area #chipsAreaCc class="chipAreaCc" (onReorder)="chipsOrderChangedCc($event)">
-                        <span>Cc:</span>
-                    <igx-chip *ngFor="let chip of chipListCc" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartCc()">
+                    <span>Cc:</span>
+                    <igx-chip *ngFor="let chip of chipListCc" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartCc()" (onMoveEnd)="moveEndedCc()">
                         <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                     </igx-chip>
                     <div igxDrop #dropCc (onDrop)="onDropCc($event)" (igxDragEnter)="onDragEnterCc($event)" (igxDragLeave)="onDragLeaveCc($event)"
