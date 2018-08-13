@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType} from './slider.component';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 declare var Simulator: any;
 
@@ -305,16 +305,15 @@ describe('IgxSlider', () => {
             expect(Math.round( slider.value as number )).toBe(30);
         }));
 
-        it('should move thumb slider to value 60', fakeAsync(() => {
+        it('should move thumb slider to value 60', (async () => {
             slider.value = 30;
-            tick();
             fixture.detectChanges();
+            expect(Math.round(slider.value as number)).toBe(30);
 
             const sliderElement = fixture.nativeElement.querySelector('.igx-slider');
-            panRight(sliderElement, sliderElement.offsetHeight, sliderElement.offsetWidth, 200);
-            tick(2000);
+            await panRight(sliderElement, sliderElement.offsetHeight, sliderElement.offsetWidth, 200);
+            await wait(100);
 
-            fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(60);
         }));
 
@@ -327,6 +326,8 @@ describe('IgxSlider', () => {
             };
 
             return new Promise((resolve, reject) => {
+                // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
+                Simulator.setType('touch');
                 Simulator.gestures.pan(element, panOptions, () => {
                     resolve();
                 });
