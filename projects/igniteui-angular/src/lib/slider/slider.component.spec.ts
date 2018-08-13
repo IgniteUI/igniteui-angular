@@ -306,7 +306,7 @@ describe('IgxSlider', () => {
             expect(Math.round(slider.value as number)).toBe(30);
         }));
 
-        it('should move thumb slider to value 60', (async () => {
+        xit('should move thumb slider to value 60', (async () => {
             slider.value = 30;
             fixture.detectChanges();
             expect(Math.round(slider.value as number)).toBe(30);
@@ -328,7 +328,7 @@ describe('IgxSlider', () => {
 
             return new Promise((resolve, reject) => {
                 // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
-                // Simulator.setType('touch');
+                Simulator.setType('touch');
                 Simulator.gestures.pan(element, panOptions, () => {
                     resolve();
                 });
