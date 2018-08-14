@@ -788,7 +788,7 @@ describe('IgxTimePicker', () => {
         await wait();
         fixture.detectChanges();
 
-        expect(hourColumn.nativeElement.children[3].innerText).toEqual("03");
+        expect(hourColumn.nativeElement.children[3].innerText).toEqual('03');
     }));
 
     it('TimePicker with not valid element arrow down', (async() => {
@@ -815,7 +815,7 @@ describe('IgxTimePicker', () => {
         await wait();
         fixture.detectChanges();
 
-        expect(minuteColumn.nativeElement.children[3].innerText).toEqual("28");
+        expect(minuteColumn.nativeElement.children[3].innerText).toEqual('28');
     }));
 
     it('TimePicker vertical', (async() => {
