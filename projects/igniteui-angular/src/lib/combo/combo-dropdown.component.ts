@@ -135,6 +135,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         vContainer.scrollTo(0);
         this.subscribeNext(vContainer, () => {
             this.focusItem(0);
+            this.combo.triggerCheck();
         });
     }
 
@@ -143,10 +144,11 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     navigateLast() {
         const vContainer = this.verticalScrollContainer;
-        const scrollTarget = this.combo.totalItemCount ? this.combo.totalItemCount - 1 : this.items.length - 1;
+        const scrollTarget = this.combo.totalItemCount ? this.combo.totalItemCount - 1 : this.combo.data.length - 1;
         vContainer.scrollTo(scrollTarget);
         this.subscribeNext(vContainer, () => {
-            this.focusItem(scrollTarget);
+            this.focusItem(this.items.length - 1);
+            this.combo.triggerCheck();
         });
     }
 
