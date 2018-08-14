@@ -21,7 +21,8 @@ import {
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarModule,
     IgxCalendarSubheaderTemplateDirective,
-    WEEKDAYS
+    WEEKDAYS,
+    DateRangeDescriptor
 } from '../calendar/index';
 import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component';
 import { IgxIconModule } from '../icon/index';
@@ -212,6 +213,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this._formatViews = Object.assign(this._formatViews, formatViews);
     }
 
+    public get disabledDates(): DateRangeDescriptor[] {
+        return this._disabledDates;
+    }
+
+    public set disabledDates(value: DateRangeDescriptor[]) {
+        this._disabledDates = value;
+    }
+
     /**
      *An @Input proeprty that sets the orientation of the `IgxDatePickerComponent` header.
      *```html
@@ -346,11 +355,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         weekday: 'short',
         year: 'numeric'
     };
+
     private _formatViews = {
         day: false,
         month: true,
         year: false
     };
+
+    private _disabledDates: DateRangeDescriptor[] = null;
 
     @ViewChild(IgxInputDirective) private input: IgxInputDirective;
 
@@ -496,6 +508,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.calendar.formatViews = this._formatViews;
         this.calendar.locale = this.locale;
         this.calendar.vertical = this.vertical;
+        this.calendar.disabledDates = this.disabledDates;
 
         if (this.headerTemplate) {
             this.calendar.headerTemplate = this.headerTemplate;

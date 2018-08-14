@@ -316,7 +316,6 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     @Input()
     public vertical = false;
 
-    @Input()
     public get disabledDates(): DateRangeDescriptor[] {
         return this._disabledDates;
     }
@@ -925,9 +924,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
 
         const node = this.dates.find((date) => date.nativeElement === event.target);
-        const index = this.dates.toArray().indexOf(node);
-        if (node && index > -1 && index - 7 > -1) {
-            this.dates.toArray()[index - 7].nativeElement.focus();
+        if (!node) { return; }
+        const dates = this.dates.toArray();
+        for (let index = dates.indexOf(node); index - 7 > -1; index -= 7) {
+            const date = dates[index - 7];
+            if (!date.isDisabled) {
+                date.nativeElement.focus();
+                break;
+            }
         }
     }
 
@@ -939,9 +943,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
 
         const node = this.dates.find((date) => date.nativeElement === event.target);
-        const index = this.dates.toArray().indexOf(node);
-        if (node && index > -1 && index + 7 < this.dates.length) {
-            this.dates.toArray()[index + 7].nativeElement.focus();
+        if (!node) { return; }
+        const dates = this.dates.toArray();
+        for (let index = dates.indexOf(node); index + 7 < this.dates.length; index += 7) {
+            const date = dates[index + 7];
+            if (!date.isDisabled) {
+                date.nativeElement.focus();
+                break;
+            }
         }
     }
 
@@ -953,9 +962,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
 
         const node = this.dates.find((date) => date.nativeElement === event.target);
-        const index = this.dates.toArray().indexOf(node);
-        if (node && index > -1 && index > 0) {
-            this.dates.toArray()[index - 1].nativeElement.focus();
+        if (!node) { return; }
+        const dates = this.dates.toArray();
+        for (let index = dates.indexOf(node); index > 0; index--) {
+            const date = dates[index - 1];
+            if (!date.isDisabled) {
+                date.nativeElement.focus();
+                break;
+            }
         }
     }
 
@@ -967,9 +981,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
 
         const node = this.dates.find((date) => date.nativeElement === event.target);
-        const index = this.dates.toArray().indexOf(node);
-        if (node && index > -1 && index < this.dates.length - 1) {
-            this.dates.toArray()[index + 1].nativeElement.focus();
+        if (!node) { return; }
+        const dates = this.dates.toArray();
+        for (let index = dates.indexOf(node); index < this.dates.length - 1; index++) {
+            const date = dates[index + 1];
+            if (!date.isDisabled) {
+                date.nativeElement.focus();
+                break;
+            }
         }
     }
 
@@ -980,9 +999,13 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
 
-        this.dates
-            .filter((date) => date.isCurrentMonth)
-            .shift().nativeElement.focus();
+        const dates = this.dates.filter(d => d.isCurrentMonth);
+        for (let i = 0; i < dates.length; i++) {
+            if (!dates[i].isDisabled) {
+                dates[i].nativeElement.focus();
+                break;
+            }
+        }
     }
 
     /**
@@ -992,9 +1015,13 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
 
-        this.dates
-            .filter((date) => date.isCurrentMonth)
-            .pop().nativeElement.focus();
+        const dates = this.dates.filter(d => d.isCurrentMonth);
+        for (let i = dates.length - 1; i >= 0; i--) {
+            if (!dates[i].isDisabled) {
+                dates[i].nativeElement.focus();
+                break;
+            }
+        }
     }
 
     /**
