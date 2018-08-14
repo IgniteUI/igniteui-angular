@@ -86,7 +86,7 @@
             <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
             </igx-grid-groupby-row>
         </ng-template>
-        <ng-template [igxTemplateOutlet]='isGroupByRecord(rowData) ? group_template : record_template' [igxTemplateOutletContext]='getContext(rowData)' (onViewDetached)='viewDetachHandler($event)'></ng-template>
+        <ng-container *igxTemplateOutlet="isGroupByRecord(rowData) ? group_template : record_template; context: getContext(rowData) "></ng-container>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
