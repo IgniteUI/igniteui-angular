@@ -41,6 +41,10 @@ export class UIInteractions {
         return row.triggerEventHandler('click', new Event('click'));
     }
 
+    public static clickElement(element) {
+        element.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+    }
+
     public static simulateMouseEvent(eventName: string, element, x, y) {
         const options: MouseEventInit = {
             view: window,
