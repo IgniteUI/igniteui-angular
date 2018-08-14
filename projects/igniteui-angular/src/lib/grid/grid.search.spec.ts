@@ -164,26 +164,25 @@ describe('IgxGrid - search API', () => {
         });
 
         it('findNext and findPrev highlight nothing when there is no exact match, regardless of case sensitivity.', () => {
-            const exactMatch = true;
-            let count = grid.findNext('Developer', false, exactMatch);
+            let count = grid.findNext('Developer', false, true);
             fix.detectChanges();
             let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             expect(spans.length).toBe(0);
             expect(count).toBe(0);
 
-            count = grid.findNext('Developer', true, exactMatch);
+            count = grid.findNext('Developer', true, true);
             fix.detectChanges();
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             expect(spans.length).toBe(0);
             expect(count).toBe(0);
 
-            count = grid.findPrev('Developer', false, exactMatch);
+            count = grid.findPrev('Developer', false, true);
             fix.detectChanges();
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             expect(spans.length).toBe(0);
             expect(count).toBe(0);
 
-            count = grid.findPrev('Developer', true, exactMatch);
+            count = grid.findPrev('Developer', true, true);
             fix.detectChanges();
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             expect(spans.length).toBe(0);
