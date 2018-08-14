@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, ViewChild, AfterViewInit, EventEmitter, OnDestroy } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, discardPeriodicTasks } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
@@ -21,7 +21,6 @@ describe('IgxGrid - Cell component', () => {
         // grid - the grid in which to navigate.
         // cell - current cell from which the navigation will start.
         // index - the index to which to navigate
-        // cb - callback function that will be called when index is reached.
 
             const currIndex = cell.visibleColumnIndex;
             const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
@@ -38,7 +37,7 @@ describe('IgxGrid - Cell component', () => {
                 grid.cdr.detectChanges();
             }
             // if index reached return
-            if (currIndex === index) { if (cb) { cb(); } return; }
+            if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
             // cell.nativeElement.dispatchEvent(keyboardEvent);
             if (dir === 'ArrowRight') {
@@ -50,21 +49,19 @@ describe('IgxGrid - Cell component', () => {
             grid.cdr.detectChanges();
             // if next row exists navigate next
             if (nextCell) {
-                nextCell.cdr.detectChanges();
-                setTimeout(() => {
-                    navigateHorizontallyToIndex(grid, nextCell, index, cb);
-                }, 100);
+                await wait(10);
+                navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
             } else {
                 // else wait for chunk to load.
                 cell.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
                     next: () => {
                         grid.cdr.detectChanges();
                         nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
-                        navigateHorizontallyToIndex(grid, nextCell, index, cb);
+                        navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
                     }
                 });
             }
-    };
+    });
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -764,7 +761,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
     });
 
-    it('keyboard navigation - should allow horizontal navigation in virtualized grid.', (done) => {
+    it('keyboard navigation - should allow horizontal navigation in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         const cols = [];
         for (let i = 0; i < 10; i++) {
@@ -775,19 +772,12 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         const cell = grid.getCellByColumn(0, 'col3');
-
-        const cbFunc = () => {
-            expect(fix.componentInstance.selectedCell.columnIndex).toEqual(9);
-            fix.detectChanges();
-            const cbFunc2 = () => {
-                expect(fix.componentInstance.selectedCell.columnIndex).toEqual(1);
-                done();
-            };
-            navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1, cbFunc2);
-        };
-        navigateHorizontallyToIndex(grid, cell, 9, cbFunc);
+        await navigateHorizontallyToIndex(grid, cell, 9);
+        expect(fix.componentInstance.selectedCell.columnIndex).toEqual(9);
+        await navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1);
+        expect(fix.componentInstance.selectedCell.columnIndex).toEqual(1);
     });
-    it('keyboard navigation - should allow horizontal navigation in virtualized grid with pinned cols.', (done) => {
+    it('keyboard navigation - should allow horizontal navigation in virtualized grid with pinned cols.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         const cols = [];
         for (let i = 0; i < 10; i++) {
@@ -802,16 +792,10 @@ describe('IgxGrid - Cell component', () => {
         grid.pinColumn('col3');
         fix.detectChanges();
         const cell = grid.getCellByColumn(0, 'col1');
-        const cbFunc = () => {
-            expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(9);
-            const cbFunc2 = () => {
-                expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(1);
-                done();
-            };
-            navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1, cbFunc2);
-        };
-        navigateHorizontallyToIndex(grid, cell, 9, cbFunc);
-
+        await navigateHorizontallyToIndex(grid, cell, 9);
+        expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(9);
+        await navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1);
+        expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(1);
     });
 
     it('keyboard navigation - should allow vertical navigation in virtualized grid with pinned cols.', async() => {
