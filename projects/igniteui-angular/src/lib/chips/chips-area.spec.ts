@@ -38,6 +38,24 @@ class TestChipComponent {
 }
 
 @Component({
+    template: `
+        <igx-chips-area #chipsArea>
+            <igx-chip #chipElem [id]="1" [draggable]="true" [removable]="true" [selectable]="true" [selected]="true">
+                <span #label [class]="'igx-chip__text'">first chip</span>
+            </igx-chip>
+            <igx-chip #chipElem [id]="2" [draggable]="false" [removable]="false" [selectable]="false" [selected]="true">
+                <span #label [class]="'igx-chip__text'">second chip</span>
+            </igx-chip>
+            <igx-chip #chipElem [id]="3" [draggable]="true" [removable]="true" [selectable]="true" [selected]="false">
+                <span #label [class]="'igx-chip__text'">third chip</span>
+            </igx-chip>
+        </igx-chips-area>
+    `
+})
+class TestChipSelectComponent extends TestChipComponent {
+}
+
+@Component({
     template:
     `
         <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)"
@@ -108,7 +126,8 @@ describe('IgxChipsArea', () => {
         TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,
-                TestChipReorderComponent
+                TestChipReorderComponent,
+                TestChipSelectComponent
             ],
             imports: [FormsModule, IgxIconModule, IgxChipsModule]
         }).compileComponents();
@@ -553,6 +572,30 @@ describe('IgxChipsArea', () => {
             owner: chipAreaComp,
             newSelection: [secondChipComp, thirdChipComp]
         });
+    });
+
+    it('should be able to select chip using api when selectable is set to false', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const selectedChip = fix.componentInstance.chipsArea.chipsList.toArray()[0];
+        selectedChip.selected = true;
+        fix.detectChanges();
+
+        expect(selectedChip.selected).toBe(true);
+    });
+
+    fit('should be able to select chip using input property', () => {
+        const fix = TestBed.createComponent(TestChipSelectComponent);
+        fix.detectChanges();
+
+        const firstChipComp = fix.componentInstance.chips.toArray()[0];
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+        const thirdChipComp = fix.componentInstance.chips.toArray()[2];
+
+        expect(firstChipComp.selected).toBe(true);
+        expect(secondChipComp.selected).toBe(true);
+        expect(thirdChipComp.selected).toBe(false);
     });
 
     it('should focus on chip correctly', () => {
