@@ -53,6 +53,7 @@ describe('igxCombo', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxComboTestComponent,
+                IgxComboTestDataComponent,
                 IgxComboSampleComponent,
                 IgxComboInputTestComponent,
                 IgxComboScrollTestComponent,
@@ -666,6 +667,8 @@ describe('igxCombo', () => {
                         lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                         expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
+                        expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                        expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                         combo.dropdown.verticalScrollContainer.scrollTo(6);
                         setTimeout(function () {
                             fixture.detectChanges();
@@ -714,6 +717,8 @@ describe('igxCombo', () => {
                         lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                         expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
+                        expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                        expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                         combo.dropdown.verticalScrollContainer.scrollTo(3);
                         setTimeout(function () {
                             fixture.detectChanges();
@@ -738,6 +743,38 @@ describe('igxCombo', () => {
                 }, 20);
             }, 10);
         });
+    });
+
+    it('Should scroll down to the last item in the dropdown list with END key - combo with more records', (done) => {
+        let dropdownContainer: HTMLElement;
+        let firstVisibleItem: Element;
+        let lastVisibleItem: Element;
+        const endEvent = new KeyboardEvent('keydown', { key: 'End' });
+        const fixture = TestBed.createComponent(IgxComboTestDataComponent);
+        fixture.detectChanges();
+        const combo = fixture.componentInstance.combo;
+        combo.toggle();
+        setTimeout(() => {
+            fixture.detectChanges();
+            const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+            const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
+            expect(scrollbar.scrollTop).toEqual(0);
+            dropdownContent.dispatchEvent(endEvent);
+            setTimeout(() => {
+                fixture.detectChanges();
+                setTimeout(function () {
+                    fixture.detectChanges();
+                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                    dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
+                    firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
+                    lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                    expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
+                    expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                    expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                    done();
+                }, 20);
+            }, 20);
+        }, 10);
     });
 
     describe('Selection tests: ', () => {
@@ -2850,6 +2887,41 @@ class IgxComboTestComponent {
         'Palermo',
         'Palma de Mallorca'];
 
+}
+
+@Component({
+    template: `<igx-combo #combo [data]='citiesData'></igx-combo>`
+})
+class IgxComboTestDataComponent {
+    @ViewChild('combo', { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+
+    public citiesData: string[] = [
+        'New York',
+        'Sofia',
+        'Istanbul',
+        'Paris',
+        'Hamburg',
+        'Berlin',
+        'London',
+        'Oslo',
+        'Los Angeles',
+        'Rome',
+        'Madrid',
+        'Ottawa',
+        'Prague',
+        'Padua',
+        'Palermo',
+        'Palma de Mallorca'
+    ];
+
+    constructor() {
+        let newArray = [];
+        for (let i = 0; i < 100; i ++) {
+            newArray = newArray.concat(this.citiesData.map(item => item + ' ' + i));
+        }
+        this.citiesData = newArray;
+    }
 }
 
 @Component({
