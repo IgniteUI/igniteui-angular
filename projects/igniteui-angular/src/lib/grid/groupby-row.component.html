@@ -13,7 +13,7 @@
         <div class="igx-group-label">
             <igx-icon fontSet="material" name="group_work" class="igx-group-label__icon"></igx-icon>
             <span class="igx-group-label__column-name">
-            {{ groupRow.expression.fieldName }}:
+            {{ groupRow.expression ? groupRow.expression.fieldName : '' }}:
             </span>
 
             <ng-container *ngIf="dataType === 'boolean' || dataType === 'string'; else default" >
@@ -28,7 +28,7 @@
                 </ng-container>
             </ng-template>
 
-            <igx-badge [value]="groupRow.records.length" class='igx-group-label__count-badge'></igx-badge>
+            <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'></igx-badge>
         </div>
     </ng-template>
 </ng-container>

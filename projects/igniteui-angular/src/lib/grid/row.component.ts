@@ -314,13 +314,13 @@ export class IgxGridRowComponent implements DoCheck {
      * @hidden
      */
     public ngDoCheck() {
-        this.isSelected = this.rowSelectable ?
-            this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this.rowID) :
-            this.selectionAPI.is_item_selected(this.gridID, this.rowID);
-        this.cdr.markForCheck();
-        if (this.checkboxElement) {
-            this.checkboxElement.checked = this.isSelected;
-        }
+         this.isSelected = this.rowSelectable ?
+             this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this.rowID) :
+             this.selectionAPI.is_item_selected(this.gridID, this.rowID);
+         this.cdr.markForCheck();
+         if (this.checkboxElement) {
+             this.checkboxElement.checked = this.isSelected;
+         }
     }
 
     /**

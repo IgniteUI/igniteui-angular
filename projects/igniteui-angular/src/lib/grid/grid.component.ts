@@ -3697,6 +3697,28 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+     /**
+     * @hidden
+     */
+    public getContext(rowData): any {
+        return {
+            $implicit: rowData,
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+        };
+    }
+
+    public viewDetachHandler(evt) {
+        //TODO - figure out a way to update ViewChildren collection and omit the detached views.
+        // update ViewChildren collection to remove detached elements.
+        //this.rowList.setDirty();
+        //this.groupsRowList.setDirty();
+        //this.dataRowList.setDirty();
+        const rList = this.rowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        this.rowList.reset(rList);
+    }
+
     /**
      * @hidden
      */

@@ -108,7 +108,8 @@ export class IgxGridGroupByRowComponent {
      */
     @HostBinding('attr.aria-describedby')
     get describedBy(): string {
-        return this.gridID + '_' + this.groupRow.expression.fieldName;
+        const grRowExpr = this.groupRow.expression !== undefined ? this.groupRow.expression.fieldName : '';
+        return this.gridID + '_' + grRowExpr;
     }
 
     /**
