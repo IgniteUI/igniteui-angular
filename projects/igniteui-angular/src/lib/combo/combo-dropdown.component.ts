@@ -134,6 +134,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         const vContainer = this.verticalScrollContainer;
         vContainer.scrollTo(0);
         this.subscribeNext(vContainer, () => {
+            this.combo.triggerCheck();
             this.focusItem(0);
             this.combo.triggerCheck();
         });
@@ -147,6 +148,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         const scrollTarget = this.combo.totalItemCount ? this.combo.totalItemCount - 1 : this.combo.data.length - 1;
         vContainer.scrollTo(scrollTarget);
         this.subscribeNext(vContainer, () => {
+            this.combo.triggerCheck();
             this.focusItem(this.items.length - 1);
             this.combo.triggerCheck();
         });

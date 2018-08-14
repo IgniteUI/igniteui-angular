@@ -655,6 +655,8 @@ describe('igxCombo', () => {
                     lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                     expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
                     expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
+                    expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                    expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                     dropdownContent.dispatchEvent(homeEvent);
                     setTimeout(() => {
                         fixture.detectChanges();
@@ -678,6 +680,8 @@ describe('igxCombo', () => {
                                 lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                                 expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
                                 expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
+                                expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                                expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                                 expect(scrollbar.scrollTop).toEqual(0);
                             }, 20);
                         }, 20);
@@ -725,6 +729,8 @@ describe('igxCombo', () => {
                                 expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
                                 expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                                expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                                expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                                 done();
                             }, 20);
                         }, 20);
