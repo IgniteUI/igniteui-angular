@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
@@ -998,7 +998,6 @@ describe('IgxGrid - GroupBy', () => {
         for (const grRow of grRows) {
             expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
-        discardPeriodicTasks();
     }));
 
     // GroupBy + Summaries
@@ -1067,7 +1066,6 @@ describe('IgxGrid - GroupBy', () => {
 
     // GroupBy + Updating
     it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', fakeAsync(() => {
-        discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '500px';
@@ -1122,7 +1120,6 @@ describe('IgxGrid - GroupBy', () => {
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(6);
-        discardPeriodicTasks();
     }));
 
     it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group',

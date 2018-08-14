@@ -1,9 +1,8 @@
 import { Component, DebugElement } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
-import { IgxDragDropModule, RestrictDrag } from './dragdrop.directive';
+import { IgxDragDropModule } from './dragdrop.directive';
 
 describe('IgxDrag', () => {
 
@@ -13,7 +12,6 @@ describe('IgxDrag', () => {
             ],
             imports: [
                 FormsModule,
-                IgxAvatarModule,
                 IgxDragDropModule
             ]
         })
