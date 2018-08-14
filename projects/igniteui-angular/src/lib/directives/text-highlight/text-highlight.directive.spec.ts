@@ -75,7 +75,7 @@ describe('IgxHighlight', () => {
         expect(count).toBe(0);
     });
 
-    it('Should not highlight anyhing when there is no exact match, regardless of case sensitivity.', () => {
+    it('Should not highlight anything when there is no exact match, regardless of case sensitivity.', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
 
@@ -85,6 +85,12 @@ describe('IgxHighlight', () => {
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
         expect(count).toBe(0);
+
+        count = component.highlightText('Lorem', false, false);
+        fix.detectChanges();
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        expect(spans.length).toBe(2);
+        expect(count).toBe(2);
 
         count = component.highlightText('Lorem', true, true);
         fix.detectChanges();

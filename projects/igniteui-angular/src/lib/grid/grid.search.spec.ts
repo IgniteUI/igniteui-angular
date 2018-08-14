@@ -222,12 +222,10 @@ describe('IgxGrid - search API', () => {
 
         it('findNext and findPrev highlight only exact matches by respecting case sensitivity', () => {
             grid.getCellByColumn(5, 'JobTitle').update('director of Dev operations');
-            grid.getCellByColumn(6, 'JobTitle').update('director of HR operations');
             fix.detectChanges();
 
             // Case INsensitive and exact match
-            const exactMatch = true;
-            let count = grid.findNext('director', false, exactMatch);
+            let count = grid.findNext('director', false, true);
             fix.detectChanges();
             let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             let activeSpan = fixNativeElement.querySelector('.' + component.activeClass);
@@ -235,7 +233,7 @@ describe('IgxGrid - search API', () => {
             expect(spans.length).toBe(2);
             expect(count).toBe(2);
 
-            count = grid.findPrev('director', false, exactMatch);
+            count = grid.findPrev('director', false, true);
             fix.detectChanges();
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             activeSpan = fixNativeElement.querySelector('.' + component.activeClass);
@@ -244,13 +242,13 @@ describe('IgxGrid - search API', () => {
             expect(count).toBe(2);
 
             // Case sensitive and exact match
-            count = grid.findNext('director', true, exactMatch);
+            count = grid.findNext('director', true, true);
             fix.detectChanges();
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             expect(spans.length).toBe(0);
             expect(count).toBe(0);
 
-            count = grid.findPrev('director', true, exactMatch);
+            count = grid.findPrev('director', true, true);
             fix.detectChanges();
             spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             expect(spans.length).toBe(0);
