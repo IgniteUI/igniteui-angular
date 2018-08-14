@@ -4174,8 +4174,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
-                    let occurenceIndex = 0;
-                    let searchIndex = searchValue.indexOf(searchText);
                     const pageIndex = this.paging ? Math.floor(i / this.perPage) : 0;
 
                     if (exactMatch) {
@@ -4184,12 +4182,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                                 row: rowIndex,
                                 column: j,
                                 page: pageIndex,
-                                index: occurenceIndex++,
+                                index: 0,
                                 groupByRecord: groupByRecord,
                                 item: dataRow
                             });
                         }
                     } else {
+                        let occurenceIndex = 0;
+                        let searchIndex = searchValue.indexOf(searchText);
+
                         while (searchIndex !== -1) {
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: rowIndex,
