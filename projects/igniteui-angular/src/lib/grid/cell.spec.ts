@@ -17,7 +17,10 @@ describe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
 
-    const navigateHorizontallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
+    const navigateHorizontallyToIndex = (
+        grid: IgxGridComponent,
+        cell: IgxGridCellComponent,
+        index: number)  => new Promise(async(resolve) => {
         // grid - the grid in which to navigate.
         // cell - current cell from which the navigation will start.
         // index - the index to which to navigate
