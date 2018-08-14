@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 - `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
 - `IgxOverlayOutlet` directive introducedto mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
+- `igxButtonGroup`
+    - Added the ability to define buttons directly in the template
 
 ## 6.1.3
 - **General**
@@ -25,6 +27,7 @@ All notable changes for each version of this project will be documented in this 
     - `igxColumnGroup`
         - The footerTemplate property is removed.
     - exposed `autosize()` method on `IgxColumnComponent`. It allows the user to programatically change the size of a column according to it's largest visible cell.
+    - Initializing an `igxGrid` component without setting height, inside a container without height defined, now causes the grid to render 10 records from the data view or all of the records if there are fewer than 10 available.
 - `igxCombo`
     - **Breaking change** igxCombo default `width` is set to 100%
     - **Breaking change** `itemsMaxWidth` is renamed to `itemsWidth`
