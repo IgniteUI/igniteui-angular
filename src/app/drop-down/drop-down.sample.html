@@ -20,7 +20,7 @@
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button #button igxButton="raised" igxRipple [igxToggleAction]="toggle">igxToggle</button>
+        <button #button igxButton="raised" igxRipple [igxToggleAction]="toggle" [igxToggleOutlet]="outlet">igxToggle</button>
         <div igxToggle #toggle="toggle" style="height: 300px; overflow: auto">
             <div *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
@@ -28,5 +28,7 @@
                 </div>
             </div>
         </div>
+
+        <div igxOverlayOutlet #outlet="overlay-outlet"></div>
     </section>
 </div>
