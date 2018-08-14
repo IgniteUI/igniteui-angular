@@ -13,6 +13,7 @@ import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } 
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { RemoteService } from 'src/app/shared/remote.combo.service';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -41,11 +42,6 @@ const CSS_CLASS_INPUTGROUP_BUNDLESUFFIX = 'igx-input-group__bundle-suffix';
 const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
-
-function typeInInput(inputElement: any, inputValue: string) {
-    inputElement.value = inputValue;
-    inputElement.dispatchEvent(new Event('input'));
-}
 
 describe('igxCombo', () => {
     beforeEach(async(() => {
@@ -155,7 +151,7 @@ describe('igxCombo', () => {
             const comboElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
             const inputElement = comboElement.nativeElement;
             expect(comboElement.attributes['readonly']).toBeDefined();
-            typeInInput(inputElement, inputText);
+            UIInteractions.sendInput(comboElement, inputText, fixture);
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -1549,17 +1545,14 @@ describe('igxCombo', () => {
         it('Should not throw error when setting data to null', () => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
-
             const combo = fixture.componentInstance.combo;
             let errorMessage = '';
-
             try {
                 combo.data = null;
                 fixture.detectChanges();
             } catch (ex) {
                 errorMessage = ex.message;
             }
-
             expect(errorMessage).toBe('');
             expect(combo.data).not.toBeUndefined();
             expect(combo.data).not.toBeNull();
@@ -1568,17 +1561,14 @@ describe('igxCombo', () => {
         it('Should not throw error when setting data to undefined', () => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
-
             const combo = fixture.componentInstance.combo;
             let errorMessage = '';
-
             try {
                 combo.data = undefined;
                 fixture.detectChanges();
             } catch (ex) {
                 errorMessage = ex.message;
             }
-
             expect(errorMessage).toBe('');
             expect(combo.data).not.toBeUndefined();
             expect(combo.data).not.toBeNull();
@@ -1838,13 +1828,14 @@ describe('igxCombo', () => {
             const comboData = combo.data;
             expect(comboData).toEqual(data);
         });
-        it('Should bind combo data to remote service data', (done) => {
+        it('Should bind combo data to remote service data', (async () => {
             let productIndex = 0;
             const fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.instance;
 
             const verifyComboData = function () {
+                fixture.detectChanges();
                 for (let itemIndex = 0; itemIndex < 10; itemIndex++) {
                     expect(combo.data[itemIndex].id).toEqual(productIndex);
                     expect(combo.data[itemIndex].product).toEqual('Product ' + productIndex);
@@ -1854,43 +1845,40 @@ describe('igxCombo', () => {
                     productIndex++;
                 }
             };
+
             combo.toggle();
             fixture.detectChanges();
             verifyComboData();
-            setTimeout(() => {
-                productIndex = 42;
-                combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
-                fixture.detectChanges();
-                setTimeout(() => {
-                    verifyComboData();
-                    setTimeout(() => {
-                        productIndex = 485;
-                        combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
-                        fixture.detectChanges();
-                        setTimeout(() => {
-                            verifyComboData();
-                            setTimeout(() => {
-                                productIndex = 873;
-                                combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
-                                fixture.detectChanges();
-                                setTimeout(() => {
-                                    verifyComboData();
-                                    setTimeout(() => {
-                                        productIndex = 649;
-                                        combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
-                                        fixture.detectChanges();
-                                        setTimeout(() => {
-                                            verifyComboData();
-                                            done();
-                                        }, 5);
-                                    }, 5);
-                                }, 5);
-                            }, 5);
-                        }, 5);
-                    }, 5);
-                }, 5);
-            }, 5);
-        });
+            await wait(10);
+
+            productIndex = 42;
+            combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
+            fixture.detectChanges();
+            await wait(20);
+            verifyComboData();
+            await wait(20);
+
+            productIndex = 485;
+            combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
+            fixture.detectChanges();
+            await wait(20);
+            verifyComboData();
+            await wait(20);
+
+            productIndex = 873;
+            combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
+            fixture.detectChanges();
+            await wait(20);
+            verifyComboData();
+            await wait(20);
+
+            productIndex = 649;
+            combo.dropdown.verticalScrollContainer.scrollTo(productIndex);
+            fixture.detectChanges();
+            await wait(20);
+            verifyComboData();
+            await wait(20);
+        }));
         it('Should bind combo data to remote service data and display items properly', (done) => {
             const fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
             fixture.detectChanges();
@@ -2341,10 +2329,11 @@ describe('igxCombo', () => {
             combo.dropdown.toggle();
             tick();
             fixture.detectChanges();
-            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
+            const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
 
             const verifyFilteredItems = function (inputValue: string, expectedItemsNumber) {
-                typeInInput(searchInputElement, inputValue);
+                UIInteractions.sendInput(searchInput, inputValue, fixture);
                 fixture.detectChanges();
                 dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                 dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
@@ -2361,7 +2350,7 @@ describe('igxCombo', () => {
             expectedValues.splice(0, 1);
             checkFilteredItems(dropdownItems);
 
-            typeInInput(searchInputElement, 'Pala');
+            UIInteractions.sendInput(searchInput, 'Pala', fixture);
             fixture.detectChanges();
             dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             expect(dropdownItems.length).toEqual(0);
@@ -2377,8 +2366,9 @@ describe('igxCombo', () => {
             combo.toggle();
             tick();
             fixture.detectChanges();
-            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
-            typeInInput(searchInputElement, 'P');
+            const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
+            UIInteractions.sendInput(searchInput, 'P', fixture);
             fixture.detectChanges();
             dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             dropDownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
@@ -2386,7 +2376,7 @@ describe('igxCombo', () => {
             expect(listItems.length).toEqual(5);
             expect(dropdownList.childElementCount).toEqual(2);
 
-            typeInInput(searchInputElement, 'Pat');
+            UIInteractions.sendInput(searchInput, 'Pat', fixture);
             fixture.detectChanges();
             listItems = dropDownContainer.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             expect(listItems.length).toEqual(0);
@@ -2395,7 +2385,6 @@ describe('igxCombo', () => {
             expect(dropdownItem.firstElementChild.textContent).toEqual('The list is empty');
         }));
         it('Should fire onSearchInput event when typing in the search box ', fakeAsync(() => {
-            const event = new Event('input');
             let searchInputElement;
             let timesFired = 0;
             const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -2405,10 +2394,11 @@ describe('igxCombo', () => {
             combo.toggle();
             tick();
             fixture.detectChanges();
-            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
+            const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
 
             const verifyOnSearchInputEventIsFired = function (inputValue: string) {
-                typeInInput(searchInputElement, inputValue);
+                UIInteractions.sendInput(searchInput, inputValue, fixture);
                 fixture.detectChanges();
                 timesFired++;
                 expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(timesFired);
@@ -2429,12 +2419,13 @@ describe('igxCombo', () => {
             combo.dropdown.toggle();
             tick();
             fixture.detectChanges();
-            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
+            const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
 
             const verifyFilteredItems = function (inputValue: string,
                 expectedDropdownItemsNumber: number,
                 expectedFilteredItemsNumber: number) {
-                typeInInput(searchInputElement, inputValue);
+                UIInteractions.sendInput(searchInput, inputValue, fixture);
                 fixture.detectChanges();
                 dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                 dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
@@ -2461,8 +2452,9 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
 
-            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
-            typeInInput(searchInputElement, 'P');
+            const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
+            UIInteractions.sendInput(searchInput, 'P', fixture);
             fixture.detectChanges();
             dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
             dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
@@ -2490,8 +2482,9 @@ describe('igxCombo', () => {
             combo.dropdown.toggle();
             tick();
             fixture.detectChanges();
-            searchInputElement = fixture.debugElement.query(By.css('input[name=\'searchInput\']')).nativeElement;
-            typeInInput(searchInputElement, 'Mi');
+            const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
+            UIInteractions.sendInput(searchInput, 'Mi', fixture);
             fixture.detectChanges();
             dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
             const listHeaders: NodeListOf<HTMLElement> = dropdownList.querySelectorAll('.' + CSS_CLASS_HEADERITEM);
@@ -2580,7 +2573,7 @@ describe('igxCombo', () => {
             addItem = fix.debugElement.query(By.css('.igx-combo__add'));
             expect(addItem).toEqual(null);
             expect(combo.children.length).toBeTruthy();
-            typeInInput(combo.searchInput.nativeElement, 'New');
+            UIInteractions.sendInput(combo.searchInput, 'New', fix);
             tick();
             fix.detectChanges();
             expect(combo.searchValue).toEqual('New');
@@ -2588,7 +2581,7 @@ describe('igxCombo', () => {
             expect(addItem === null).toBeFalsy();
             expect(combo.children.length).toBeTruthy();
 
-            typeInInput(combo.searchInput.nativeElement, 'New York');
+            UIInteractions.sendInput(combo.searchInput, 'New York', fix);
             tick();
             fix.detectChanges();
             expect(combo.searchValue).toEqual('New York');
@@ -3342,4 +3335,3 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         this.cdr.detach();
     }
 }
-
