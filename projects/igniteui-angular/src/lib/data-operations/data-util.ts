@@ -165,7 +165,7 @@ export class DataUtil {
 
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
         const hierarchy: Array<IGroupByKey> = [];
-        if (gRow !== undefined) {
+        if (gRow !== undefined && gRow.expression) {
             hierarchy.push({ fieldName: gRow.expression.fieldName, value: gRow.value });
             while (gRow.groupParent) {
                 gRow = gRow.groupParent;
