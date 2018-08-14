@@ -12,8 +12,6 @@ export class IgxTemplateOutletDirective implements OnChanges {
 
   @Input() public igxTemplateOutlet !: TemplateRef<any>;
 
-    @Output()
-    public onViewDetached = new EventEmitter<any>();
 
   constructor(private _viewContainerRef: ViewContainerRef,  private _zone: NgZone,  public cdr: ChangeDetectorRef) {
   }
@@ -31,11 +29,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
                 // use from cache
                 const vr = this._viewRef;
                 const detachedView = this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
-                vr.detectChanges();
                 this._viewRef = res;
                 this._viewContainerRef.insert(this._viewRef, 0);
                 this._updateExistingContext(this.igxTemplateOutletContext);
-                this.onViewDetached.emit(detachedView);
             } else {
                 this._recreateView();
             }
@@ -66,7 +62,6 @@ export class IgxTemplateOutletDirective implements OnChanges {
                         this.igxTemplateOutlet, {});
                     emptyView = this._viewContainerRef.detach(this._viewContainerRef.indexOf(emptyView)) as EmbeddedViewRef<any>;
                     this._embeddedViewsMap.set(this.igxTemplateOutletContext['templateID'], emptyView);
-                    this.onViewDetached.emit(emptyView);
                 }
             }
       }
@@ -96,7 +91,6 @@ export class IgxTemplateOutletDirective implements OnChanges {
     for (const propName of Object.keys(ctx)) {
       (<any>this._viewRef.context)[propName] = (<any>this.igxTemplateOutletContext)[propName];
       }
-    this._viewRef.detectChanges();
   }
 }
 @NgModule({
