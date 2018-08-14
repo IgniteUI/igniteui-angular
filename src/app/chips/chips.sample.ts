@@ -157,4 +157,14 @@ export class ChipsSampleComponent {
         this.dropTo.nativeElement.textContent = "You can drop me here!";
         this.dropCc.nativeElement.style.visibility = "hidden";
     }
+
+    moveEndedTo(){
+        this.dropTo.nativeElement.style.visibility = "hidden";
+        this.dropCc.nativeElement.style.visibility = "hidden";
+    }
+
+    moveEndedCc(){
+        this.dropTo.nativeElement.style.visibility = "hidden";
+        this.dropCc.nativeElement.style.visibility = "hidden";
+    }
 }
