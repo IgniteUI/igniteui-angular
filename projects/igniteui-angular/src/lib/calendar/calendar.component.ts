@@ -764,6 +764,11 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      *```
      */
     public selectDate(value: Date | Date[]) {
+        value = this.removeDisabledDates(value);
+        if (value === null || (Array.isArray(value) && value.length === 0)) {
+            return;
+        }
+
         switch (this.selection) {
             case 'single':
                 this.selectSingle(value as Date);
@@ -1071,6 +1076,26 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             }
         }
         this._onChangeCallback(this.selectedDates);
+    }
+    /**
+     *@hidden
+     */
+    private removeDisabledDates(value: Date | Date[]): Date | Date[] {
+        if (Array.isArray(value)) {
+            for (let i = 0; i < value.length; i++) {
+                if (this.isDateDisabled(value[i])) {
+                    value.splice(i, 1);
+                }
+            }
+
+            return value;
+        } else {
+            if (this.isDateDisabled(value)) {
+                return null;
+            } else {
+                return value;
+            }
+        }
     }
 
     private isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boolean {
