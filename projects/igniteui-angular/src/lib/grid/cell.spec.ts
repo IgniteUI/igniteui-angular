@@ -11,62 +11,12 @@ import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { wait } from '../test-utils/ui-interactions.spec';
+import { HelperUtils} from '../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
-    const navigateVerticallyToIndex = (grid: IgxGridComponent, cell: IgxGridCellComponent, index: number, cb?) => {
-            // grid - the grid in which to navigate.
-            // cell - current cell from which the navigation will start.
-            // index - the index to which to navigate
-            // cb - callback function that will be called when index is reached.
-            const currIndex = cell.rowIndex;
-            const dir = currIndex < index ? 'ArrowDown' : 'ArrowUp';
-            const nextIndex = dir === 'ArrowDown' ? currIndex + 1 : currIndex - 1;
-            const nextRow = grid.getRowByIndex(nextIndex);
-            const keyboardEvent = new KeyboardEvent('keydown', {
-                code: dir,
-                key: dir
-            });
-            if (!cell.focused) {
-                cell.nativeElement.dispatchEvent(new Event('focus'));
-                grid.cdr.detectChanges();
-            }
-            // if index reached return
-            if (currIndex === index) { if (cb) { cb(); } return; }
-            // else call arrow up/down
-            // cell.nativeElement.dispatchEvent(keyboardEvent);
-            if (dir === 'ArrowDown') {
-                cell.onKeydownArrowDown(keyboardEvent);
-            } else {
-                cell.onKeydownArrowUp(keyboardEvent);
-            }
-            grid.cdr.detectChanges();
-            // if next row exists navigate next
-            if (nextRow) {
-                const nextCell = nextRow.cells.toArray()[0];
-                nextCell.cdr.detectChanges();
-                if (nextCell.focused) {
-                    navigateVerticallyToIndex(grid, nextCell, index, cb);
-                } else {
-                    grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                        next: () => {
-                            grid.cdr.detectChanges();
-                            navigateVerticallyToIndex(grid, nextCell, index, cb);
-                        }
-                    });
-                }
-            } else {
-                // else wait for chunk to load.
-                grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                    next: () => {
-                        grid.cdr.detectChanges();
-                        cell = grid.selectedCells[0];
-                        navigateVerticallyToIndex(grid, cell, index, cb);
-                    }
-                });
-            }
-        };
+
     const navigateHorizontallyToIndex = (
         grid: IgxGridComponent,
         cell: IgxGridCellComponent,
@@ -785,42 +735,33 @@ describe('IgxGrid - Cell component', () => {
         });
     });
 
-    it('keyboard navigation - should allow navigating down in virtualized grid.', (done) => {
+    it('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         const cell = grid.getCellByColumn(4, 'index');
-        const cbFunc = () => {
-            fix.detectChanges();
-            // verify first cell 100th row is selected.
-            setTimeout( () => {
-                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
-                done();
-            }, 10);
-        };
+        cell.onFocus(new Event('focus'));
+        fix.detectChanges();
         // navigate down to 100th row.
-        navigateVerticallyToIndex(grid, cell, 100, cbFunc);
+        await HelperUtils.navigateVerticallyToIndex(grid, 4, 100);
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
     });
 
-    it('keyboard navigation - should allow navigating up in virtualized grid.', (done) => {
+    it('keyboard navigation - should allow navigating up in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         grid.verticalScrollContainer.addScrollTop(5000);
+
+        await wait();
         fix.detectChanges();
-        setTimeout(() => {
-            const cell = grid.getCellByColumn(104, 'index');
-            const cbFunc = () => {
-                fix.detectChanges();
-                // verify first cell 0 row is selected.
-                setTimeout( () => {
-                    expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
-                    done();
-                }, 10);
-            };
-            // navigate to 0.
-            navigateVerticallyToIndex(grid, cell, 0, cbFunc);
-        }, 100);
+        const cell = grid.getCellByColumn(104, 'index');
+        cell.onFocus(new Event('focus'));
+        fix.detectChanges();
+        await HelperUtils.navigateVerticallyToIndex(grid, 104, 0);
+
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
     });
 
     it('keyboard navigation - should allow horizontal navigation in virtualized grid.', async() => {
@@ -860,22 +801,19 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(1);
     });
 
-    it('keyboard navigation - should allow vertical navigation in virtualized grid with pinned cols.', (done) => {
+    it('keyboard navigation - should allow vertical navigation in virtualized grid with pinned cols.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         grid.pinColumn('index');
+
         const cell = grid.getCellByColumn(4, 'index');
-        const cbFunc = () => {
-            // verify first cell 100th row is selected.
-            fix.detectChanges();
-            setTimeout(() => {
-                expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
-                done();
-            }, 10);
-        };
+        cell.onFocus(new Event('focus'));
+        fix.detectChanges();
         // navigate down to 100th row.
-        navigateVerticallyToIndex(grid, cell, 100, cbFunc);
+        await HelperUtils.navigateVerticallyToIndex(grid, 4, 100);
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
     });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating down', (done) => {
