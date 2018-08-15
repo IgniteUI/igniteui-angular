@@ -16,7 +16,8 @@ describe('IgxInputGroup', () => {
                 InputGroupBoxComponent,
                 InputGroupBorderComponent,
                 InputGroupSearchComponent,
-                InputGroupDisabledComponent
+                InputGroupDisabledComponent,
+                InputGroupDisabledByDefaultComponent
             ],
             imports: [
                 IgxInputGroupModule
@@ -112,6 +113,15 @@ describe('IgxInputGroup', () => {
         fixture.detectChanges();
         expect(igxInputGroup.disabled).toBeFalsy();
     });
+
+    it('disabled by default should properly work.', () => {
+        const fixture = TestBed.createComponent(InputGroupDisabledByDefaultComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const igxInputGroup = component.igxInputGroup;
+        expect(igxInputGroup.disabled).toBeTruthy();
+    });
 });
 
 @Component({
@@ -195,4 +205,15 @@ class InputGroupDisabledComponent {
     public changeDisableState() {
         this.disabled = !this.disabled;
     }
+}
+
+@Component({
+    template: `<igx-input-group #igxInputGroup [disabled]="disabled">
+                    <input igxInput />
+                </igx-input-group>`
+})
+class InputGroupDisabledByDefaultComponent {
+    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+
+    public disabled = true;
 }

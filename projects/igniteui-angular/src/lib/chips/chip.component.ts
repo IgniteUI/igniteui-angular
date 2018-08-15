@@ -317,7 +317,7 @@ export class IgxChipComponent implements AfterViewInit {
             nextStatus: false,
             cancel: false
         };
-        if (newValue && this.selectable && !this._selected) {
+        if (newValue && !this._selected) {
             onSelectArgs.nextStatus = true;
             this.onSelection.emit(onSelectArgs);
 
