@@ -12,6 +12,7 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { RemoteService } from 'src/app/shared/remote.combo.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
@@ -49,6 +50,7 @@ describe('igxCombo', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxComboTestComponent,
+                IgxComboTestDataComponent,
                 IgxComboSampleComponent,
                 IgxComboInputTestComponent,
                 IgxComboScrollTestComponent,
@@ -651,6 +653,8 @@ describe('igxCombo', () => {
                     lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                     expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
                     expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
+                    expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                    expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                     dropdownContent.dispatchEvent(homeEvent);
                     setTimeout(() => {
                         fixture.detectChanges();
@@ -665,6 +669,8 @@ describe('igxCombo', () => {
                             fixture.detectChanges();
                             dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                             firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
+                            expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                            expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                             expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[6]);
                             dropdownContent.dispatchEvent(homeEvent);
                             setTimeout(function () {
@@ -674,6 +680,8 @@ describe('igxCombo', () => {
                                 lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                                 expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
                                 expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
+                                expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                                expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                                 expect(scrollbar.scrollTop).toEqual(0);
                             }, 20);
                         }, 20);
@@ -706,6 +714,8 @@ describe('igxCombo', () => {
                         lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                         expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
+                        expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                        expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                         combo.dropdown.verticalScrollContainer.scrollTo(3);
                         setTimeout(function () {
                             fixture.detectChanges();
@@ -721,6 +731,8 @@ describe('igxCombo', () => {
                                 expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
                                 expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                                expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                                expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                                 done();
                             }, 20);
                         }, 20);
@@ -728,7 +740,133 @@ describe('igxCombo', () => {
                 }, 20);
             }, 10);
         });
+
+        it('Should scroll down to the last item in the dropdown list with END key - combo with more records', (done) => {
+            let dropdownContainer: HTMLElement;
+            let firstVisibleItem: Element;
+            let lastVisibleItem: Element;
+            const endEvent = new KeyboardEvent('keydown', { key: 'End' });
+            const fixture = TestBed.createComponent(IgxComboTestDataComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            combo.toggle();
+            combo.onOpened.pipe(take(1)).subscribe(() => {
+                fixture.detectChanges();
+                const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+                const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
+                expect(scrollbar.scrollTop).toEqual(0);
+                dropdownContent.dispatchEvent(endEvent);
+                combo.dropdown.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    fixture.detectChanges();
+                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                    dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
+                    firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
+                    lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                    expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
+                    expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                    expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                    done();
+                });
+            });
+        });
+
+        it('Should properly navigate to last item using END key when no virtScroll is necessary', (done) => {
+            let dropdownContainer: HTMLElement;
+            let firstVisibleItem: Element;
+            let lastVisibleItem: Element;
+            const endEvent = new KeyboardEvent('keydown', { key: 'End' });
+            const moveUpEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' });
+            const fixture = TestBed.createComponent(IgxComboTestDataComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            combo.toggle();
+            combo.onOpened.pipe(take(1)).subscribe(() => {
+                fixture.detectChanges();
+                const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+                const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
+                expect(scrollbar.scrollTop).toEqual(0);
+                dropdownContent.dispatchEvent(endEvent);
+                combo.dropdown.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    fixture.detectChanges();
+                    // Content was scrolled to bottom
+                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                    dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
+                    firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
+                    lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                    expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
+                    expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                    expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+
+                    dropdownContent.dispatchEvent(moveUpEvent);
+                    fixture.detectChanges();
+                    lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                    // Scroll has not changed
+                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                    // Last item is no longer focused
+                    expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+
+                    dropdownContent.dispatchEvent(endEvent);
+                    fixture.detectChanges();
+                    lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                    // Scroll has not changed
+                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                    // Last item is focused again
+                    expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                    done();
+                });
+            });
+        });
+
+        it('Should properly navigate to first item using HOME key', (done) => {
+            let dropdownContainer: HTMLElement;
+            let firstVisibleItem: Element;
+            let lastVisibleItem: Element;
+            const endEvent = new KeyboardEvent('keydown', { key: 'End' });
+            const homeEvent = new KeyboardEvent('keydown', { key: 'Home' });
+            const moveDownEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' });
+            const fixture = TestBed.createComponent(IgxComboTestDataComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            combo.toggle();
+            combo.onOpened.pipe(take(1)).subscribe(() => {
+                fixture.detectChanges();
+                const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+                const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
+                expect(scrollbar.scrollTop).toEqual(0);
+                // Scroll to bottom;
+                dropdownContent.dispatchEvent(endEvent);
+                combo.dropdown.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    fixture.detectChanges();
+                    // Content was scrolled to bottom
+                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                    // Scroll to top
+                    dropdownContent.dispatchEvent(homeEvent);
+                    combo.dropdown.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                        fixture.detectChanges();
+                        dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
+                        firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
+                        lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                        // Container is scrolled to top
+                        expect(scrollbar.scrollTop).toEqual(0);
+                        // First item is focused
+                        expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                        dropdownContent.dispatchEvent(moveDownEvent);
+                        fixture.detectChanges();
+                        firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
+                        // Scroll has not change
+                        expect(scrollbar.scrollTop).toEqual(0);
+                        // First item is no longer focused
+                        expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
+                        dropdownContent.dispatchEvent(homeEvent);
+                        fixture.detectChanges();
+                        expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                        done();
+                    });
+                });
+            });
+        });
     });
+
 
     describe('Selection tests: ', () => {
         function getCheckbox(dropdownElement: any, itemIndex: number): HTMLElement {
@@ -2860,6 +2998,39 @@ class IgxComboTestComponent {
         'Palermo',
         'Palma de Mallorca'];
 
+}
+
+@Component({
+    template: `<igx-combo #combo [data]='citiesData'></igx-combo>`
+})
+class IgxComboTestDataComponent {
+    @ViewChild('combo', { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+    public citiesData: string[] = [
+        'New York',
+        'Sofia',
+        'Istanbul',
+        'Paris',
+        'Hamburg',
+        'Berlin',
+        'London',
+        'Oslo',
+        'Los Angeles',
+        'Rome',
+        'Madrid',
+        'Ottawa',
+        'Prague',
+        'Padua',
+        'Palermo',
+        'Palma de Mallorca'
+    ];
+    constructor() {
+        let newArray = [];
+        for (let i = 0; i < 100; i++) {
+            newArray = newArray.concat(this.citiesData.map(item => item + ' ' + i));
+        }
+        this.citiesData = newArray;
+    }
 }
 
 @Component({
