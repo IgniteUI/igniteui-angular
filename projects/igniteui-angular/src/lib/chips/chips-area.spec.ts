@@ -585,7 +585,7 @@ describe('IgxChipsArea', () => {
         expect(selectedChip.selected).toBe(true);
     });
 
-    fit('should be able to select chip using input property', () => {
+    it('should be able to select chip using input property', () => {
         const fix = TestBed.createComponent(TestChipSelectComponent);
         fix.detectChanges();
 
