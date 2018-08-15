@@ -261,14 +261,25 @@ export class IgxToggleActionDirective implements OnInit {
     private _overlayDefaults: OverlaySettings;
 
     /**
-     * @hidden
+     * Provide settings that control the toggle overlay positioning, interaction and scroll behavior.
+     * ```typescript
+     * const settings: OverlaySettings = {
+     *      closeOnOutsideClick: false,
+     *      modal: false
+     *  }
+     * ```
+     * ---
+     * ```html
+     * <!--set-->
+     * <div igxToggleAction [overlaySettings]="settings"></div>
+     * ```
      */
     @Input()
     public overlaySettings: OverlaySettings;
 
     private _closeOnOutsideClick: boolean;
     /**
-     * Determines whether the toggle should close when you click outside.
+     * DEPRECATED. Determines whether the toggle should close when you click outside.
      *
      * ```typescript
      * // get
@@ -281,7 +292,7 @@ export class IgxToggleActionDirective implements OnInit {
     /**
      * ```html
      * <!--set-->
-     * <div igxToggle [closeOnOutsideClick]="'true'"></div>
+     * <div igxToggleAction [closeOnOutsideClick]="'true'"></div>
      * ```
      */
     @Input()
@@ -289,6 +300,18 @@ export class IgxToggleActionDirective implements OnInit {
         console.warn(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`);
         this._closeOnOutsideClick = v;
     }
+
+    /**
+     * Determines where the toggle element overlay should be attached.
+     *
+     * ```html
+     * <!--set-->
+     * <div igxToggleAction [igxToggleOutlet]="outlet"></div>
+     * ```
+     * Where `outlet` in an instance of `IgxOverlayOutletDirective` or an `ElementRef`
+     */
+    @Input('igxToggleOutlet')
+    public outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * @hidden
@@ -334,12 +357,36 @@ export class IgxToggleActionDirective implements OnInit {
         if (this.closeOnOutsideClick !== undefined) {
             this._overlayDefaults.closeOnOutsideClick = this.closeOnOutsideClick;
         }
+        if (this.outlet) {
+            this._overlayDefaults.outlet = this.outlet;
+        }
         this.target.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings));
     }
 }
+
+/**
+ * Mark an element as an igxOverlay outlet container.
+ * Directive instance is exported as `overlay-outlet` to be assigned to templates variables:
+ * ```html
+ * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+ * ```
+ */
+@Directive({
+    exportAs: 'overlay-outlet',
+    selector: '[igxOverlayOutlet]'
+})
+export class IgxOverlayOutletDirective {
+    constructor(public element: ElementRef) { }
+
+    /** @hidden */
+    public get nativeElement() {
+        return this.element.nativeElement;
+    }
+}
+
 @NgModule({
-    declarations: [IgxToggleDirective, IgxToggleActionDirective],
-    exports: [IgxToggleDirective, IgxToggleActionDirective],
+    declarations: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
+    exports: [IgxToggleDirective, IgxToggleActionDirective, IgxOverlayOutletDirective],
     providers: [IgxNavigationService]
 })
 export class IgxToggleModule { }
