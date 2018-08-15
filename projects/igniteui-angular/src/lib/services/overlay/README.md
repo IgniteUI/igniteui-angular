@@ -64,10 +64,11 @@ this.overlay.show(component, overlaySettings);
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| positionStrategy    | IPositionStrategy | Position strategy to use with this settings         | 
-| scrollStrategy      | IScrollStrategy   | Scroll strategy to use with this settings           |
-| modal               | boolean           | Set if the overlay should be in modal mode          |
-| closeOnOutsideClick | boolean           | Set if the overlay should closed on outside click   |
+| positionStrategy    | IPositionStrategy                       | Position strategy to use with this settings         | 
+| scrollStrategy      | IScrollStrategy                         | Scroll strategy to use with this settings           |
+| modal               | boolean                                 | Set if the overlay should be in modal mode          |
+| closeOnOutsideClick | boolean                                 | Set if the overlay should closed on outside click   |
+| outlet              | IgxOverlayOutletDirective or ElementRef | Set the outlet container to attach the overlay to   |
 
 ###### PositionSettings
 

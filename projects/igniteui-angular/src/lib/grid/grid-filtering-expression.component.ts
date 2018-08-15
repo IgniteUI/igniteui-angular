@@ -23,6 +23,9 @@ import { FilteringExpressionsTree } from '../data-operations/filtering-expressio
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 
 
+/**
+ *@hidden
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -108,6 +111,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
                 this.value = null;
                 this.expression.condition = this.getCondition(this.conditions[0]);
             }
+            this.cdr.detectChanges();
         }
     }
 
@@ -186,10 +190,8 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
         }
     }
 
-    public onInputChanged(val): void {
-        this.expression.condition = this.getCondition(this.select.nativeElement.value);
-        this.value = val;
-        this.onExpressionChanged.emit(this.expression);
+    public onInputChanged(value): void {
+        this.updateExpression(value);
     }
 
     public focusInput(): void {
@@ -211,8 +213,13 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
         this.clearFiltering(false);
     }
 
-    public onDatePickerValueChanged(): void {
+    public onDatePickerValueChanged(value): void {
+        this.updateExpression(value);
+    }
+
+    private updateExpression(value): void {
         this.expression.condition = this.getCondition(this.select.nativeElement.value);
+        this.value = value;
         this.onExpressionChanged.emit(this.expression);
     }
 }
