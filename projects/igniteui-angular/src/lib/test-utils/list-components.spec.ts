@@ -98,3 +98,21 @@ export class ListCustomLoadingComponent extends ListLoadingComponent {
 })
 export class TwoHeadersListComponent extends ListWithPanningComponent {
 }
+
+@Component({
+    template: `<div #wrapper>
+        <igx-list [allowRightPanning]="allowRightPanning" [allowLeftPanning]="allowLeftPanning">
+            <ng-template igxListItemLeftPanning>
+                <div>Left</div>
+            </ng-template>
+            <ng-template igxListItemRightPanning>
+                <div>Right</div>
+            </ng-template>
+            <igx-list-item>Item 1</igx-list-item>
+            <igx-list-item>Item 2</igx-list-item>
+            <igx-list-item>Item 3</igx-list-item>
+        </igx-list>
+    </div>`
+})
+export class ListWithPanningTemplatesComponent extends ListWithPanningComponent {
+}

@@ -8,7 +8,8 @@ import {
     HostListener,
     Inject,
     Input,
-    Renderer2
+    Renderer2,
+    ViewChild
 } from '@angular/core';
 
 import {
@@ -29,20 +30,29 @@ import { IgxListComponent } from './list.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxListItemComponent implements IListChild {
+
     /**
      *@hidden
      */
     private _panState: IgxListPanState = IgxListPanState.NONE;
 
     /**
-     *@hidden
+     * Provides a reference to the template's base element shown when left panning a list item.
+     * ```typescript
+     * const leftPanTmpl = this.listItem.leftPanningTemplateElement;
+     * ```
      */
-    private _FRACTION_OF_WIDTH_TO_TRIGGER_GRIP = 0.5; // as a fraction of the item width
+    @ViewChild('leftPanningTmpl')
+    public leftPanningTemplateElement;
 
     /**
-     *@hidden
+     * Provides a reference to the template's base element shown when right panning a list item.
+     * ```typescript
+     * const rightPanTmpl = this.listItem.rightPanningTemplateElement;
+     * ```
      */
-    private _currentLeft = 0;
+    @ViewChild('rightPanningTmpl')
+    public rightPanningTemplateElement;
 
     constructor(
         @Inject(forwardRef(() => IgxListComponent))
@@ -131,7 +141,7 @@ export class IgxListItemComponent implements IListChild {
      * ```
      * @memberof IgxListItemComponent
      */
-    @HostBinding('class.igx-list__item')
+    @HostBinding('class.igx-list__item-base')
     get innerStyle(): boolean {
         return !this.isHeader;
     }
@@ -161,12 +171,9 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panstart', ['$event'])
     panStart(ev) {
-        //console.log("@@@ list-item panStart");
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
-
-        this._currentLeft = this.left;
     }
 
     /**
@@ -174,7 +181,6 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panmove', ['$event'])
     panMove(ev) {
-        //console.log("@@@ list-item panMove " + ev.deltaX);
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
@@ -182,13 +188,13 @@ export class IgxListItemComponent implements IListChild {
         const isPanningToLeft = ev.deltaX < 0;
 
         if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
-            let newLeft = Math.max(this.maxLeft, /*this.left +*/ ev.deltaX);
-            //console.log("@@@ new left: " + newLeft);
-            this.left = newLeft;
+            this.showLeftPanTemplate();
+            let newLeft = Math.max(this.maxLeft, ev.deltaX);
+            this.contentLeft = newLeft;
         } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
-            let newLeft = Math.min(this.maxRight, /*this.left*/ + ev.deltaX);
-            //console.log("@@@ new left: " + newLeft);
-            this.left = newLeft;
+            this.showRightPanTemplate();
+            let newLeft = Math.min(this.maxRight, ev.deltaX);
+            this.contentLeft = newLeft;
         }
     }
 
@@ -197,23 +203,84 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panend', ['$event'])
     panEnd(ev) {
-        //console.log("@@@ list-item panEnd");
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
+        if (this.contentLeft === 0) {
+            return; // no pannig has occured (yet)
+        }
 
         const oldPanState = this._panState;
+        const widthTriggeringGrip = this.width * this.list.panEndTriggeringTreshold;
 
-        this.performMagneticGrip();
+        if (Math.abs(this.contentLeft) < widthTriggeringGrip) {
+            this.contentLeft = 0;
+            this._panState = IgxListPanState.NONE;
+            this.hideLeftAndRightPanTemplates();
+            return;
+        }
+
+        const dir = this.contentLeft > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
+        const args = { item: this, direction: dir, cancel: false};
+        
+        if (dir == IgxListPanState.LEFT) {
+            this.list.onLeftPan.emit(args);
+        } else {
+            this.list.onRightPan.emit(args);
+        }
+
+        if (args.cancel === true) {
+            this.contentLeft = 0;
+            this._panState = IgxListPanState.NONE;
+        } else {
+            if (dir == IgxListPanState.LEFT) {
+                this.contentLeft = this.maxLeft;
+                this._panState = IgxListPanState.LEFT;
+            } else {
+                this.contentLeft = this.maxRight;
+                this._panState = IgxListPanState.RIGHT;
+            }
+        }
 
         if (oldPanState !== this._panState) {
-            //console.log("@@@ onLeftPan onRighPan");
-            this.list.onPanStateChange.emit({ oldState: oldPanState, newState: this._panState, item: this });
-            if (this._panState === IgxListPanState.LEFT) {
-                this.list.onLeftPan.emit(this);
-            } else if (this._panState === IgxListPanState.RIGHT) {
-                this.list.onRightPan.emit(this);
-            }
+            let args2 = { oldState: oldPanState, newState: this._panState, item: this };
+            this.list.onPanStateChange.emit(args2);
+        }
+        this.hideLeftAndRightPanTemplates();
+    }
+
+    /**
+     *@hidden
+     */
+    private showLeftPanTemplate() {
+        this.setLeftAndRightTemplatesVisibility("visible", "hidden");
+    }
+
+    /**
+     *@hidden
+     */
+    private showRightPanTemplate() {
+        this.setLeftAndRightTemplatesVisibility("hidden", "visible");
+    }
+
+    /**
+     *@hidden
+     */
+    private hideLeftAndRightPanTemplates() {
+        setTimeout(() => {
+            this.setLeftAndRightTemplatesVisibility("hidden", "hidden");
+        }, 500);
+    }
+
+    /**
+     *@hidden
+     */
+    private setLeftAndRightTemplatesVisibility(leftVisibility, rightVisibility) {
+        if (this.leftPanningTemplateElement && this.leftPanningTemplateElement.nativeElement) {
+            this.leftPanningTemplateElement.nativeElement.style.visibility = leftVisibility;
+        }
+        if (this.rightPanningTemplateElement && this.rightPanningTemplateElement.nativeElement) {
+            this.rightPanningTemplateElement.nativeElement.style.visibility = rightVisibility;
         }
     }
 
@@ -247,9 +314,32 @@ export class IgxListItemComponent implements IListChild {
      * @memberof IgxListItemComponent
      */
     public get element() {
-        console.log("@@@ ne: ");
-        console.log(this.elementRef.nativeElement);
         return this.elementRef.nativeElement;
+    }
+
+    /**
+     * Returns a reference container which contains the list item's content.
+     * ```typescript
+     * let listItemContainer =  this.listItem.contentElement.
+     * ```
+     * @memberof IgxListItemComponent
+     */
+    public get contentElement() {
+        const candidates = this.element.getElementsByClassName('igx-list__item-content');
+        return (candidates && candidates.length > 0) ? candidates[0] : null;
+    }
+
+    /**
+     * Returns the `context` object which represents the `template context` binding into the `list item container`
+     * by providing the `$implicit` declaration which is the `IgxListItemComponent` itself.
+     * ```typescript
+     * let listItemComponent = this.listItem.context;
+     * ```
+     */
+    public get context(): any {
+        return {
+            $implicit: this
+        };
     }
 
     /**
@@ -290,45 +380,19 @@ export class IgxListItemComponent implements IListChild {
     /**
      *@hidden
      */
-    private get left() {
-        return this.element.offsetLeft;
+    private get contentLeft() {
+        return this.contentElement.offsetLeft;
     }
 
     /**
      *@hidden
      */
-    private set left(value: number) {
+    private set contentLeft(value: number) {
         let val = value + '';
-
         if (val.indexOf('px') === -1) {
             val += 'px';
         }
-        this.element.style.left = val;
-    }
-
-    /**
-     *@hidden
-     */
-    private performMagneticGrip() {
-        const widthTriggeringGrip = this.width * this._FRACTION_OF_WIDTH_TO_TRIGGER_GRIP;
-
-        if (this.left > 0) {
-            if (this.left > widthTriggeringGrip) {
-                this.left = this.maxRight;
-                this._panState = IgxListPanState.RIGHT;
-            } else {
-                this.left = 0;
-                this._panState = IgxListPanState.NONE;
-            }
-        } else {
-            if (-this.left > widthTriggeringGrip) {
-                this.left = this.maxLeft;
-                this._panState = IgxListPanState.LEFT;
-            } else {
-                this.left = 0;
-                this._panState = IgxListPanState.NONE;
-            }
-        }
+        this.contentElement.style.left = val;
     }
 
     /**

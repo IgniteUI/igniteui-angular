@@ -7,7 +7,7 @@ import { IgxListComponent, IgxListModule } from './list.component';
 import {
     ListWithHeaderComponent, ListWithPanningComponent,
     EmptyListComponent, CustomEmptyListComponent,
-    ListLoadingComponent,
+    ListLoadingComponent, ListWithPanningTemplatesComponent,
     ListCustomLoadingComponent,
     TwoHeadersListComponent } from '../test-utils/list-components.spec';
 
@@ -23,7 +23,8 @@ describe('List', () => {
                 ListLoadingComponent,
                 ListWithHeaderComponent,
                 ListWithPanningComponent,
-                TwoHeadersListComponent
+                TwoHeadersListComponent,
+                ListWithPanningTemplatesComponent
             ],
             imports: [IgxListModule]
         }).compileComponents();
@@ -80,7 +81,7 @@ describe('List', () => {
         expect(item.width).toBe(testWidth);
         expect(item.maxLeft).toBe(-testWidth);
         expect(item.maxRight).toBe(testWidth);
-        expect(item.left).toBe(testLeft);
+        expect(item.contentLeft).toBe(testLeft);
      });
 
     it('should calculate properly item index', () => {
@@ -444,6 +445,42 @@ describe('List', () => {
             done();
         });
     }, 5000);
+
+    it('check the panLeftTemplate is visible when left-panning a list item.', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Pan item left */
+        panItem(itemNativeElements[0], -0.3);
+        fixture.detectChanges();
+
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('visible');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+    });
+
+    it('check the panRightTemplate is visible when right-panning a list item.', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Pan item right */
+        panItem(itemNativeElements[0], 0.3);
+        fixture.detectChanges();
+
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('visible');
+    });
 
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {

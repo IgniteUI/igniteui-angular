@@ -39,3 +39,23 @@
     color: crimson;
     cursor: pointer;
 }
+
+.listItemLeftPanningStyle {
+    display: flex;
+    flex-direction: row-reverse;
+    background-color:orange;
+    color: white;
+    width: 100%;
+    padding-right: 10px;
+    align-items: center;
+}
+
+.listItemRightPanningStyle {
+    display: flex;
+    flex-direction: row;
+    background-color:limegreen;
+    color: white;
+    width: 100%;
+    padding-left: 10px;
+    align-items: center;
+}
