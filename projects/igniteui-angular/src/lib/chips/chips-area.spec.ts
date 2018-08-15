@@ -1,4 +1,4 @@
-import { ChipsSampleComponent } from './../../../../../src/app/chips/chips.sample';
+﻿import { ChipsSampleComponent } from './../../../../../src/app/chips/chips.sample';
 import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import {
     async,
@@ -611,7 +611,7 @@ describe('IgxChipsArea', () => {
         expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
     });
 
-    it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', () => {
+    it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', async(() => {
         const leftKey = new KeyboardEvent('keydown', {
             'key': 'ArrowLeft',
             shiftKey: true
@@ -662,9 +662,61 @@ describe('IgxChipsArea', () => {
             expect(firstChipLeft).toEqual(newFirstChipLeft);
             expect(newSecondChipLeft).toEqual(secondChipLeft);
         });
-    });
+    }));
 
-    it('should not reorder chips when shift + leftarrow and shift + rightarrow is pressed when the chip is going out of bounce', () => {
+    it('should reorder chips when shift + leftarrow is pressed and shift + rightarrow is pressed twice', async(() => {
+        const fix = TestBed.createComponent(TestChipReorderComponent);
+        fix.detectChanges();
+
+        const leftKey = new KeyboardEvent('keydown', {
+            'key': 'ArrowLeft',
+            shiftKey: true
+        });
+        const rightKey = new KeyboardEvent('keydown', {
+            'key': 'ArrowRight',
+            shiftKey: true
+        });
+        const chipAreaComponent = fix.componentInstance.chipsArea;
+        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const targetChip = chipComponents[2].componentInstance;
+        const targetChipElem = targetChip.chipArea.nativeElement;
+
+        targetChipElem.focus();
+        fix.detectChanges();
+
+        expect(document.activeElement).toBe(targetChipElem);
+        expect(chipAreaComponent.chipsList.toArray()[2].id).toEqual('Town');
+        expect(chipAreaComponent.chipsList.toArray()[3].id).toEqual('FirstName');
+
+        document.activeElement.dispatchEvent(rightKey);
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipAreaComponent.chipsList.toArray()[2].id).toEqual('FirstName');
+            expect(chipAreaComponent.chipsList.toArray()[3].id).toEqual('Town');
+
+            document.activeElement.dispatchEvent(leftKey);
+            fix.detectChanges();
+
+            return fix.whenStable();
+        }).then(() => {
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipAreaComponent.chipsList.toArray()[2].id).toEqual('Town');
+            expect(chipAreaComponent.chipsList.toArray()[3].id).toEqual('FirstName');
+
+            document.activeElement.dispatchEvent(leftKey);
+            fix.detectChanges();
+
+            return fix.whenStable();
+        }).then(() => {
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipAreaComponent.chipsList.toArray()[2].id).toEqual('City');
+            expect(chipAreaComponent.chipsList.toArray()[3].id).toEqual('FirstName');
+        });
+    }));
+
+    it('should not reorder chips for shift + leftarrow and shift + rightarrow when the chip is going out of bounce', async(() => {
         const leftKey = new KeyboardEvent('keydown', {
             'key': 'ArrowLeft',
             shiftKey: true
@@ -705,7 +757,7 @@ describe('IgxChipsArea', () => {
             expect(firstChipLeft).toEqual(newFirstChipLeft);
             expect(newlastChipLeft).toEqual(lastChipLeft);
         });
-    });
+    }));
 
     it('should delete chip when delete button is pressed and chip is removable', () => {
         const deleteKey = new KeyboardEvent('keydown', {
@@ -747,7 +799,7 @@ describe('IgxChipsArea', () => {
         expect(chipComponents.length).toEqual(3);
     });
 
-    it('chip should persist selected state when it is dragged and dropped', () => {
+    it('chip should persist selected state when it is dragged and dropped', async(() => {
         const spaceKeyEvent = new KeyboardEvent('keydown', {
             'key': ' '
         });
@@ -797,7 +849,7 @@ describe('IgxChipsArea', () => {
             const firstChip = chipComponents[0].componentInstance;
             expect(firstChip.selected).not.toBeTruthy();
         });
-    });
+    }));
 
     it('should not fire any event of the chip area when attempting deleting of a chip', () => {
         const fix = TestBed.createComponent(TestChipComponent);
