@@ -4,10 +4,17 @@
 
 ## Milestone 5 (by November 30th, 2018)
 
-1. Hierarchical Grid  
+1. Hierarchical Grid POC (Proof of concept)  
 2. Tree Grid
 3. Advanced Filtering Dialog
-
+4. Quick Per-column Search in the igxGrid
+5. Collapsable Item 
+6. Conditional Cell Styling capability 
+7. Typography Updates 
+8. Tooltip
+9. Vertical Tabs
+10. Row Editing with transactions   
+11. Adding Disabled Dates and Special Dates options in igxCalander
 
 # Previous Milestones
 

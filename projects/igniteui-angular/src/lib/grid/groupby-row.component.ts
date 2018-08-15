@@ -197,16 +197,16 @@ export class IgxGridGroupByRowComponent {
     }
 
     private _getSelectedColIndex() {
-        const selection = this.selectionAPI.get_selection(this.gridID + '-cells');
-        if (selection && selection.length > 0) {
-             return selection[0].columnID;
+        const cell = this.selectionAPI.get_selection_first(this.gridID + '-cell');
+        if (cell) {
+            return cell.columnID;
         }
     }
 
     private _getPrevSelectedColIndex() {
-        const selection = this.selectionAPI.get_prev_selection(this.gridID + '-cells');
-        if (selection && selection.length > 0) {
-            return selection[0].columnID;
+        const prevCell = this.selectionAPI.get_selection_first(this.gridID + '-prev-cell');
+        if (prevCell) {
+            return prevCell.columnID;
         }
     }
 }

@@ -45,8 +45,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
 
     protected get lastVisibleIndex(): number {
         return this.combo.totalItemCount ?
-        Math.floor(this.combo.itemsMaxHeight / this.combo.itemHeight) :
-        this.items.length - 1;
+            Math.floor(this.combo.itemsMaxHeight / this.combo.itemHeight) :
+            this.items.length - 1;
     }
 
     /**
@@ -112,7 +112,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     public get selectedItem(): any[] {
-        return this.selectionAPI.get_selection(this.combo.id) || [];
+        const sel = this.selectionAPI.get_selection(this.combo.id);
+        return sel ? Array.from(sel) : [];
     }
 
     /**
@@ -131,9 +132,15 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     navigateFirst() {
         const vContainer = this.verticalScrollContainer;
+        if (vContainer.state.startIndex === 0) {
+            this.focusItem(0);
+            return;
+        }
         vContainer.scrollTo(0);
         this.subscribeNext(vContainer, () => {
+            this.combo.triggerCheck();
             this.focusItem(0);
+            this.combo.triggerCheck();
         });
     }
 
@@ -142,10 +149,18 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     navigateLast() {
         const vContainer = this.verticalScrollContainer;
-        const scrollTarget = this.combo.totalItemCount ? this.combo.totalItemCount - 1 : this.items.length - 1;
+        const scrollTarget = this.combo.totalItemCount ? this.combo.totalItemCount - 1 : this.combo.data.length - 1;
+        if (vContainer.igxForOf.length <= vContainer.state.startIndex + vContainer.state.chunkSize) {
+            if (vContainer.getItemCountInView() === vContainer.state.chunkSize) {
+                this.focusItem(this.items.length - 1);
+                return;
+            }
+        }
         vContainer.scrollTo(scrollTarget);
         this.subscribeNext(vContainer, () => {
-            this.focusItem(scrollTarget);
+            this.combo.triggerCheck();
+            this.focusItem(this.items.length - 1);
+            this.combo.triggerCheck();
         });
     }
 
