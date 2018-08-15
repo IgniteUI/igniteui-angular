@@ -189,12 +189,10 @@ export class IgxListItemComponent implements IListChild {
 
         if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
             this.showLeftPanTemplate();
-            let newLeft = Math.max(this.maxLeft, ev.deltaX);
-            this.contentLeft = newLeft;
+            this.contentLeft = Math.max(this.maxLeft, ev.deltaX);
         } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
             this.showRightPanTemplate();
-            let newLeft = Math.min(this.maxRight, ev.deltaX);
-            this.contentLeft = newLeft;
+            this.contentLeft = Math.min(this.maxRight, ev.deltaX);
         }
     }
 
@@ -222,8 +220,8 @@ export class IgxListItemComponent implements IListChild {
 
         const dir = this.contentLeft > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
         const args = { item: this, direction: dir, cancel: false};
-        
-        if (dir == IgxListPanState.LEFT) {
+
+        if (dir === IgxListPanState.LEFT) {
             this.list.onLeftPan.emit(args);
         } else {
             this.list.onRightPan.emit(args);
@@ -233,7 +231,7 @@ export class IgxListItemComponent implements IListChild {
             this.contentLeft = 0;
             this._panState = IgxListPanState.NONE;
         } else {
-            if (dir == IgxListPanState.LEFT) {
+            if (dir === IgxListPanState.LEFT) {
                 this.contentLeft = this.maxLeft;
                 this._panState = IgxListPanState.LEFT;
             } else {
@@ -243,7 +241,7 @@ export class IgxListItemComponent implements IListChild {
         }
 
         if (oldPanState !== this._panState) {
-            let args2 = { oldState: oldPanState, newState: this._panState, item: this };
+            const args2 = { oldState: oldPanState, newState: this._panState, item: this };
             this.list.onPanStateChange.emit(args2);
         }
         this.hideLeftAndRightPanTemplates();
@@ -253,14 +251,14 @@ export class IgxListItemComponent implements IListChild {
      *@hidden
      */
     private showLeftPanTemplate() {
-        this.setLeftAndRightTemplatesVisibility("visible", "hidden");
+        this.setLeftAndRightTemplatesVisibility('visible', 'hidden');
     }
 
     /**
      *@hidden
      */
     private showRightPanTemplate() {
-        this.setLeftAndRightTemplatesVisibility("hidden", "visible");
+        this.setLeftAndRightTemplatesVisibility('hidden', 'visible');
     }
 
     /**
@@ -268,7 +266,7 @@ export class IgxListItemComponent implements IListChild {
      */
     private hideLeftAndRightPanTemplates() {
         setTimeout(() => {
-            this.setLeftAndRightTemplatesVisibility("hidden", "hidden");
+            this.setLeftAndRightTemplatesVisibility('hidden', 'hidden');
         }, 500);
     }
 

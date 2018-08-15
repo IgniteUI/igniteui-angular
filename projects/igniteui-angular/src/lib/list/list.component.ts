@@ -38,9 +38,9 @@ export interface IListItemClickEventArgs {
 }
 
 export interface IListItemPanningEventArgs {
-    item: IgxListItemComponent,
-    direction: IgxListPanState,
-    cancel: boolean
+    item: IgxListItemComponent;
+    direction: IgxListPanState;
+    cancel: boolean;
 }
 
 /**
@@ -135,7 +135,7 @@ export class IgxListComponent {
      * this.list.panEndTriggeringTreshold = 0.8;
      * ```
      */
-    public panEndTriggeringTreshold: number = 0.5;
+    public panEndTriggeringTreshold = 0.5;
 
     /**@hidden*/
     @ViewChild('defaultEmptyList', { read: TemplateRef })
