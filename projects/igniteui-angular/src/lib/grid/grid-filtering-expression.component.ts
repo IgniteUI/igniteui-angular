@@ -23,6 +23,9 @@ import { FilteringExpressionsTree } from '../data-operations/filtering-expressio
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 
 
+/**
+ *@hidden
+ */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -83,12 +86,6 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
     protected _value = null;
-
-    protected UNARY_CONDITIONS = [
-        'all', 'true', 'false', 'null', 'notNull', 'empty', 'notEmpty',
-        'yesterday', 'today', 'thisMonth', 'lastMonth', 'nextMonth',
-        'thisYear', 'lastYear', 'nextYear'
-    ];
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
@@ -161,12 +158,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     }
 
     public isUnaryCondition(): boolean {
-        for (const each of this.UNARY_CONDITIONS) {
-            if (this.expression && this.expression.condition && this.expression.condition.name === each) {
-                return true;
-            }
-        }
-        return false;
+        return this.expression && this.expression.condition && this.expression.condition.isUnary;
     }
 
     get conditions() {

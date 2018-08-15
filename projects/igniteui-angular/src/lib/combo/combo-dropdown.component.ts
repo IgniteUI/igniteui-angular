@@ -112,7 +112,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     public get selectedItem(): any[] {
-        return this.selectionAPI.get_selection(this.combo.id) || [];
+        const sel = this.selectionAPI.get_selection(this.combo.id);
+        return sel ? Array.from(sel) : [];
     }
 
     /**
@@ -349,11 +350,18 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this.onClosed.emit();
     }
 
+    /**
+     * @hidden
+     */
     onToggleClosing() {
+        this.combo.searchValue = '';
         super.onToggleClosing();
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }
 
+    /**
+     * @hidden
+     */
     updateScrollPosition() {
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
     }

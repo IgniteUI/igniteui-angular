@@ -23,7 +23,7 @@ Remote binding, defining `valueKey` and `displayKey`, and exposing `onDataPreLoa
 <igx-combo [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [valueKey]="'ProductID'" [displayKey]="'ProductName'" ></igx-combo>
 ```
 
-```typesciprt
+```typescript
 public ngOnInit() {
     this.remoteData = this.remoteService.remoteData;
 }
@@ -220,9 +220,9 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 |  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
 |  `height`                | defines combo height                              | string                      |
-|  `itemsMaxHeight `       | defines drop down height                          | string                      |
-|  `itemsMaxWidth `        | defines drop down width                           | string                      |
-|  `itemHeight `           | defines drop down item height                     | string                      |
+|  `itemsMaxHeight `       | defines drop down maximum height                  | number                      |
+|  `itemsWidth `           | defines drop down width                           | string                      |
+|  `itemHeight `           | defines drop down item height                     | number                      |
 |  `placeholder `          | defines the "empty value" text                    | string                      |
 |  `searchPlaceholder `    | defines the placeholder text for search input     | string                      |
 |  `collapsed`             | gets drop down state                              | boolean                     |
@@ -239,10 +239,10 @@ When igxCombo is opened allow custom values are enabled and add item button is f
 | `onSearchInput`     | Emitted when an the search input's input event is triggered             | false        | { searchValue: `string` }               |
 | `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>` }|
 | `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: Event }                        |
-| `dropDownOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
-| `dropDownOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
-| `dropDownClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |
-| `dropDownClosed`    | Emitted after the dropdown is closed                                    | false        | { event: Event }                        |
+| `onOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
+| `onOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
+| `onClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |
+| `onClosed`    | Emitted after the dropdown is closed                                    | false        | { event: Event }                        |
 
 ### Methods
 

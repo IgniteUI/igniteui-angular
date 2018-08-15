@@ -38,7 +38,6 @@ describe('igxMask', () => {
         const fixture = TestBed.createComponent(DefMaskComponent);
         fixture.detectChanges();
 
-        // const comp = fixture.componentInstance;
         const input = fixture.debugElement.query(By.css('input'));
 
         expect(input.nativeElement.value).toEqual('__________');
@@ -53,10 +52,8 @@ describe('igxMask', () => {
         input.triggerEventHandler('focus', {});
         tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(input.nativeElement.value).toEqual('@#$YUA123_');
-        });
+        fixture.detectChanges();
+        expect(input.nativeElement.value).toEqual('@#$YUA123_');
     }));
 
     it('Mask rules - digit (0-9) or a space', fakeAsync(() => {
@@ -141,11 +138,10 @@ describe('igxMask', () => {
         input.triggerEventHandler('focus', {});
         tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(input.nativeElement.value).toEqual('(777) 7___-___');
-            expect(comp.value).toEqual('7777');
-        });
+        fixture.detectChanges();
+        expect(input.nativeElement.value).toEqual('(777) 7___-___');
+        expect(comp.value).toEqual('7777');
+
     }));
 
     it('Enter incorrect value with a preset mask', fakeAsync(() => {
@@ -164,10 +160,8 @@ describe('igxMask', () => {
         input.triggerEventHandler('focus', {});
         tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(input.nativeElement.value).toEqual('(___) 4569-_12');
-        });
+        fixture.detectChanges();
+        expect(input.nativeElement.value).toEqual('(___) 4569-_12');
 
         input.triggerEventHandler('focus', {});
         tick();
@@ -179,10 +173,8 @@ describe('igxMask', () => {
         input.triggerEventHandler('focus', {});
         tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(input.nativeElement.value).toEqual('(111) 1111-111');
-        });
+        fixture.detectChanges();
+        expect(input.nativeElement.value).toEqual('(111) 1111-111');
     }));
 
     it('Include literals in component value', fakeAsync(() => {
@@ -214,12 +206,10 @@ describe('igxMask', () => {
         input.triggerEventHandler('focus', {});
         tick();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(input.nativeElement.value).toEqual('(123) ____-___');
+        fixture.detectChanges();
+        expect(input.nativeElement.value).toEqual('(123) ____-___');
 
-            expect(fixture.componentInstance.raw).toEqual('123');
-        });
+        expect(fixture.componentInstance.raw).toEqual('123');
     }));
 
     it('One way binding', fakeAsync(() => {

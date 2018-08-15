@@ -35,33 +35,120 @@ export enum TabsType {
 })
 
 export class IgxTabsComponent implements AfterViewInit, OnDestroy {
-    @ViewChildren(forwardRef(() => IgxTabItemComponent)) public tabs: QueryList<IgxTabItemComponent>;
-    @ContentChildren(forwardRef(() => IgxTabsGroupComponent)) public groups: QueryList<IgxTabsGroupComponent>;
 
+    /**
+     * Provides an observable collection of all `IgxTabItemComponent`s.
+     * ```typescript
+     * const tabItems = this.myTabComponent.tabs;
+     * ```
+     */
+    @ViewChildren(forwardRef(() => IgxTabItemComponent))
+    public tabs: QueryList<IgxTabItemComponent>;
+
+    /**
+     * Provides an observable collection of all `IgxTabsGroupComponent`s.
+     * ```typescript
+     * const groupItems = this.myTabComponent.tabs;
+     * ```
+     */
+    @ContentChildren(forwardRef(() => IgxTabsGroupComponent))
+    public groups: QueryList<IgxTabsGroupComponent>;
+
+    /**
+     * Defines the tab header sizing mode. You can choose between `contentfit` or `fixed`.
+     * By default the header sizing mode is `contentfit`.
+     * ```html
+     * <igx-tabs tabsType="fixed">
+     *     <igx-tabs-group label="HOME">Home</igx-tabs-group>
+     * </igx-tabs>
+     * ```
+     */
     @Input('tabsType')
     public tabsType: string | TabsType = 'contentfit';
 
+    /**
+     * An @Input property that sets the value of the `selectedIndex`.
+     * Default value is 0.
+     * *```html
+     * <igx-tabs selectedIndex="1">
+     * ```
+     */
+    @Input()
+    public selectedIndex = 0;
+
+    /**
+     * Emitted when a tab item is selected.
+     * ```html
+     * <igx-tabs (onTabItemSelected)="itemSelected($event)">
+     *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+     *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
+     * </igx-tabs>
+     * ```
+     * ```typescript
+     * itemSelected(e){
+     *      const tabGroup = e.group;
+     *      const tabItem = e.tab;
+     * }
+     * ```
+     */
     @Output() public onTabItemSelected = new EventEmitter();
+
+    /**
+     * Emitted when a tab item is deselected.
+     * ```html
+     * <igx-tabs (onTabItemDeselected)="itemDeselected($event)">
+     *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+     *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
+     * </igx-tabs>
+     * ```
+     * ```typescript
+     * itemDeselected(e){
+     *      const tabGroup = e.group;
+     *      const tabItem = e.tab;
+     * }
+     * ```
+     */
     @Output() public onTabItemDeselected = new EventEmitter();
 
+    /**
+     * @hidden
+     */
     @ViewChild('tabsContainer')
     public tabsContainer: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChild('headerContainer')
     public headerContainer: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChild('itemsContainer')
     public itemsContainer: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChild('contentsContainer')
     public contentsContainer: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChild('selectedIndicator')
     public selectedIndicator: ElementRef;
 
+    /**
+     * @hidden
+     */
     @ViewChild('viewPort')
     public viewPort: ElementRef;
 
+    /**
+     * @hidden
+     */
     @HostBinding('attr.class')
     public get class() {
         const defaultStyle = `igx-tabs`;
@@ -88,17 +175,33 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
         return css;
     }
 
-    public selectedIndex = -1;
+    /**
+     * @hidden
+     */
     public calculatedWidth: number;
+
+    /**
+     * @hidden
+     */
     public visibleItemsWidth: number;
+
+    /**
+     * @hidden
+     */
     public offset = 0;
 
     private _groupChanges$: Subscription;
 
+    /**
+     * @hidden
+     */
     public scrollLeft(event) {
         this._scroll(false);
     }
 
+    /**
+     * @hidden
+     */
     public scrollRight(event) {
         this._scroll(true);
     }
@@ -122,6 +225,9 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
 
     }
 
+    /**
+     * @hidden
+     */
     public scrollElement(element: any, scrollRight: boolean): void {
         requestAnimationFrame(() => {
             const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
@@ -131,6 +237,12 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
         });
     }
 
+    /**
+     * Gets the selected `IgxTabItemComponent`.
+     * ```
+     * const selectedItem = this.myTabComponent.selectedTabItem;
+     * ```
+     */
     get selectedTabItem(): IgxTabItemComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
             return this.tabs.toArray()[this.selectedIndex];
@@ -140,11 +252,16 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     constructor(private _element: ElementRef) {
     }
 
+    /**
+     * @hidden
+     */
     public ngAfterViewInit() {
         setTimeout(() => {
-            if (this.selectedIndex === -1) {
+            if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
                 // if nothing is selected - select the first tabs group
                 this._selectGroupByIndex(0);
+            } else {
+                this._selectGroupByIndex(this.selectedIndex);
             }
         });
 
@@ -153,6 +270,9 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
         });
     }
 
+    /**
+     * @hidden
+     */
     public ngOnDestroy(): void {
         if (this._groupChanges$) {
             this._groupChanges$.unsubscribe();
@@ -178,10 +298,13 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
         const group = selectableGroups[selectedIndex];
 
         if (group) {
-            group.select(0, true);
+            group.select(0);
         }
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('onTabItemSelected', ['$event'])
     public _selectedGroupHandler(args) {
         const prevSelectedIndex = this.selectedIndex;
@@ -212,6 +335,11 @@ export class IgxTabsComponent implements AfterViewInit, OnDestroy {
     }
 }
 
+    /**
+    * The IgxTabsModule provides the {@link IgxTabsComponent}, {@link IgxTabsGroupComponent},
+    *{@link IgxTabItemComponent}, {@link IgxTabItemTemplateDirective}, {@link IgxRightButtonStyleDirective}
+    * and {@link IgxLeftButtonStyleDirective} inside your application.
+    */
 @NgModule({
     declarations: [IgxTabsComponent,
         IgxTabsGroupComponent,

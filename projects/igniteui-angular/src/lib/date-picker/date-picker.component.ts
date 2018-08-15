@@ -484,6 +484,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.onSelection.emit(event);
     }
 
+    @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event) {
         this.onOpenEvent();

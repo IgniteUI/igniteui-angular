@@ -28,6 +28,9 @@ import {
     IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand
 } from '../../public_api';
+import { IgxGridHeaderComponent } from './grid-header.component';
+import { valToPxlsUsingRange } from '../core/utils';
+
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -187,6 +190,17 @@ export class IgxColumnComponent implements AfterContentInit {
                         this.grid.refreshSearch();
                     }
                 }
+                if (this.hasSummary) {
+                    this.grid.summariesHeight = 0;
+                }
+
+                if (!value) {
+                    this.grid.columnsWithNoSetWidths.push(this);
+                } else if (this.grid.columnsWithNoSetWidths.indexOf(this) !== -1) {
+                    const colIndex = this.grid.columnsWithNoSetWidths.indexOf(this);
+                    this.grid.columnsWithNoSetWidths.splice(colIndex, 1);
+                }
+
                 this.grid.reflow();
             }
         }
@@ -546,19 +560,6 @@ export class IgxColumnComponent implements AfterContentInit {
         this.grid.markForCheck();
     }
     /**
-     *@hidden
-     */
-    get footerTemplate(): TemplateRef<any> {
-        return this._headerTemplate;
-    }
-    /**
-     *@hidden
-     */
-    set footerTemplate(template: TemplateRef<any>) {
-        this._footerTemplate = template;
-        this.grid.markForCheck();
-    }
-    /**
      * Returns a reference to the inline editor template.
      * ```typescript
      * let inlineEditorTemplate = this.column.inlineEditorTemplate;
@@ -705,10 +706,6 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _footerTemplate: TemplateRef<any>;
-    /**
-     *@hidden
-     */
     protected _inlineEditorTemplate: TemplateRef<any>;
     /**
      *@hidden
@@ -751,11 +748,6 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellFooterTemplateDirective, { read: IgxCellFooterTemplateDirective })
-    protected footTemplate: IgxCellFooterTemplateDirective;
-    /**
-     *@hidden
-     */
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
@@ -784,9 +776,6 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         if (this.headTemplate) {
             this._headerTemplate = this.headTemplate.template;
-        }
-        if (this.footTemplate) {
-            this._footerTemplate = this.footTemplate.template;
         }
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
@@ -864,6 +853,11 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         const grid = (this.grid as any);
+        const hasIndex = index !== undefined;
+        if (hasIndex && (index < 0 || index >= grid.pinnedColumns.length)) {
+            return false;
+        }
+
         const width = parseInt(this.width, 10);
         const oldIndex = this.visibleIndex;
 
@@ -874,6 +868,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._pinned = true;
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
+        const targetColumn = grid._pinnedColumns[index];
         const args = { column: this, insertAtIndex: index };
         grid.onColumnPinning.emit(args);
 
@@ -885,8 +880,12 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
 
+        if (hasIndex) {
+            grid._moveColumns(this, targetColumn);
+        }
+
         if (this.columnGroup) {
-            this.allChildren.forEach(child => child.pinned = true);
+            this.allChildren.forEach(child => child.pin());
             grid.reinitPinStates();
         }
 
@@ -913,19 +912,30 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         const grid = (this.grid as any);
+        const hasIndex = index !== undefined;
+        if (hasIndex && (index < 0 || index >= grid._unpinnedColumns.length)) {
+            return false;
+        }
+
         const oldIndex = this.visibleIndex;
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
 
+        const targetColumn = grid._unpinnedColumns[index];
         grid._unpinnedColumns.splice(index, 0, this);
         if (grid._pinnedColumns.indexOf(this) !== -1) {
             grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
         }
 
-        if (this.columnGroup) {
-            this.allChildren.forEach(child => child.pinned = false);
+        if (hasIndex) {
+            grid._moveColumns(this, targetColumn);
         }
+
+        if (this.columnGroup) {
+            this.allChildren.forEach(child => child.unpin());
+        }
+
         grid.reinitPinStates();
 
         grid.markForCheck();
@@ -956,6 +966,99 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+     /**
+     * Returns a reference to the header of the column.
+     * ```typescript
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let headerCell = column.headerCell;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get headerCell(): IgxGridHeaderComponent {
+        if (this.grid.headerList.length > 0) {
+            return flatten(this.grid.headerList.toArray()).find((h) => h.column === this);
+        }
+    }
+
+     /**
+     * Autosize the column to the longest currently visible cell value, including the header cell.
+     * ```typescript
+     * @ViewChild('grid') grid: IgxGridComponent;
+     *
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * column.autosize();
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public autosize() {
+        if (!this.columnGroup) {
+             this.width = this.getLargestCellWidth();
+             this.grid.markForCheck();
+            this.grid.reflow();
+        }
+    }
+
+     /**
+     * @hidden
+     * Returns the size (in pixels) of the longest currently visible cell, including the header cell.
+     * ```typescript
+     * @ViewChild('grid') grid: IgxGridComponent;
+     *
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let size = column.getLargestCellWidth();
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public getLargestCellWidth(): string {
+        const range = this.grid.document.createRange();
+        const largest = new Map<number, number>();
+
+         if (this.cells.length > 0) {
+            let cellsContentWidths = [];
+            if (this.cells[0].nativeElement.children.length > 0) {
+                this.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
+                    .map((child) => valToPxlsUsingRange(range, child)))));
+            } else {
+                cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
+            }
+
+            const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
+            const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);
+            const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
+                parseFloat(cellStyle.borderRightWidth);
+
+            largest.set(Math.max(...cellsContentWidths), cellPadding);
+        }
+
+         if (this.headerCell) {
+            let headerCell;
+            const titleIndex = this.grid.hasMovableColumns ? 1 : 0;
+            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
+                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[titleIndex].children)
+                    .map((child) => valToPxlsUsingRange(range, child)));
+            } else {
+                headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
+            }
+
+            if (this.sortable || this.filterable) {
+                headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
+            }
+
+            const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
+            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+                parseFloat(headerStyle.borderRightWidth);
+            largest.set(headerCell, headerPadding);
+         }
+
+        const largestCell = Math.max(...Array.from(largest.keys()));
+        const width = Math.ceil(largestCell + largest.get(largestCell));
+
+        if (Number.isNaN(width)) {
+            return this.width;
+        } else {
+            return width + 'px';
+        }
+    }
 }
 
 
@@ -1059,16 +1162,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     set headerTemplate(template: TemplateRef<any>) { }
-    /**
-     *@hidden
-     */
-    get footerTemplate(): TemplateRef<any> {
-        return this._headerTemplate;
-    }
-    /**
-     * @hidden
-     */
-    set footerTemplate(template: TemplateRef<any>) { }
     /**
      * Returns a reference to the inline editor template.
      * ```typescript

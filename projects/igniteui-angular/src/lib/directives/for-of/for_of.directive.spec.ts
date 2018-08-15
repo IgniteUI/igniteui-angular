@@ -937,6 +937,27 @@ describe('IgxVirtual directive - simple template', () => {
             done();
         }, 10);
     });
+
+    it('should return correct value for getItemCountInView API. ', (done) => {
+        const fix = TestBed.createComponent(VirtualComponent);
+        fix.componentRef.hostView.detectChanges();
+        fix.detectChanges();
+
+        /**  Scroll left 1500px and top 105px */
+        expect(() => {
+            fix.componentInstance.scrollLeft(1500);
+            fix.componentInstance.scrollTop(105);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        /** Timeout for scroll event to trigger during test */
+        setTimeout(() => {
+            expect(fix.componentInstance.parentVirtDir.getItemCountInView()).toBe(8);
+            const hDirective = fix.componentInstance.childVirtDirs.toArray()[0];
+            expect(hDirective.getItemCountInView()).toBe(2);
+            done();
+        }, 0);
+    });
 });
 
 /** igxFor for testing */

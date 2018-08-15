@@ -1,15 +1,28 @@
+export function wait(ms = 0) {
+    return new Promise((resolve, reject) => setTimeout(resolve, ms));
+}
+
 export class UIInteractions {
 
-    public static sendInput(element, text, fix) {
+    public static sendInput(element, text, fix?) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
-        fix.detectChanges();
-        return fix.whenStable();
+        if (fix) {
+            return fix.whenStable();
+        }
     }
 
-    public static triggerKeyEvtUponElem(evtName, elem, bubbles = true) {
-        const evtArgs: KeyboardEventInit = { key: evtName, bubbles: bubbles };
+    public static triggerKeyEvtUponElem(evtName, elem) {
+        const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true };
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
+    }
+
+    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyPressed,
+            bubbles: bubbles
+        });
+        elem.dispatchEvent(keyboardEvent);
     }
 
     public static findCellByInputElem(elem, focusedElem) {
@@ -26,6 +39,10 @@ export class UIInteractions {
 
     public static clickCurrentRow(row) {
         return row.triggerEventHandler('click', new Event('click'));
+    }
+
+    public static clickElement(element) {
+        element.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
@@ -45,7 +62,8 @@ export class UIInteractions {
 
     public static simulateKeyDownEvent(element, key) {
         const keyOptions: KeyboardEventInit = {
-            key
+            key,
+            bubbles: true
         };
 
         const keypressEvent = new KeyboardEvent('keydown', keyOptions);
