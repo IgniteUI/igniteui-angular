@@ -2417,15 +2417,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
         const list = this.columnList.toArray();
-        const fi = list.indexOf(from);
-        let ti = list.indexOf(to);
+        const fromIndex = list.indexOf(from);
+        let toIndex = list.indexOf(to);
 
-        if (pos === DropPosition.BeforeDropTarget && fi < ti) {
-            ti -= 1;
+        if (pos === DropPosition.BeforeDropTarget && fromIndex < toIndex) {
+            toIndex--;
         }
 
-        if (pos === DropPosition.AfterDropTarget && fi > ti) {
-            ti += 1;
+        if (pos === DropPosition.AfterDropTarget && fromIndex > toIndex) {
+            toIndex++;
         }
 
         let activeColumn = null;
@@ -2440,7 +2440,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
         }
 
-        list.splice(ti, 0, ...list.splice(fi, 1));
+        list.splice(toIndex, 0, ...list.splice(fromIndex, 1));
         const newList = this._resetColumnList(list);
         this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
@@ -2474,18 +2474,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
         const buffer = parent.children.toArray();
-        const fi = buffer.indexOf(from);
-        let ti = buffer.indexOf(to);
+        const fromIndex = buffer.indexOf(from);
+        let toIndex = buffer.indexOf(to);
 
-        if (pos === DropPosition.BeforeDropTarget && fi < ti) {
-            ti -= 1;
+        if (pos === DropPosition.BeforeDropTarget && fromIndex < toIndex) {
+            toIndex--;
         }
 
-        if (pos === DropPosition.AfterDropTarget && fi > ti) {
-            ti += 1;
+        if (pos === DropPosition.AfterDropTarget && fromIndex > toIndex) {
+            toIndex++;
         }
 
-        buffer.splice(ti, 0, ...buffer.splice(fi, 1));
+        buffer.splice(toIndex, 0, ...buffer.splice(fromIndex, 1));
         parent.children.reset(buffer);
     }
 

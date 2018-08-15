@@ -415,7 +415,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
     public ngOnDestroy() {
         this._dragLeave.next(true);
-        this._dragLeave.unsubscribe();
+        this._dragLeave.complete();
     }
 
     public onDragOver(event) {

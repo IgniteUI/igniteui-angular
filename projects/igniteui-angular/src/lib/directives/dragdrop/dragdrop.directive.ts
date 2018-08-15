@@ -415,7 +415,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      */
     ngOnDestroy() {
         this._destroy.next(true);
-        this._destroy.unsubscribe();
+        this._destroy.complete();
     }
 
     /**
@@ -812,7 +812,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._destroy.next(true);
-        this._destroy.unsubscribe();
+        this._destroy.complete();
     }
 
     /**
