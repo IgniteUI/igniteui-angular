@@ -161,6 +161,7 @@ export class IgxGridGroupByRowComponent {
         const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
         const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
         event.preventDefault();
+        event.stopPropagation();
         const rowIndex = this.index + 1;
         this.grid.navigateDown(rowIndex, visibleColumnIndex);
     }
@@ -173,6 +174,7 @@ export class IgxGridGroupByRowComponent {
         const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
         const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
         event.preventDefault();
+        event.stopPropagation();
         if (this.index === 0) {
             return;
         }
@@ -195,16 +197,16 @@ export class IgxGridGroupByRowComponent {
     }
 
     private _getSelectedColIndex() {
-        const selection = this.selectionAPI.get_selection(this.gridID + '-cells');
-        if (selection && selection.length > 0) {
-             return selection[0].columnID;
+        const cell = this.selectionAPI.get_selection_first(this.gridID + '-cell');
+        if (cell) {
+            return cell.columnID;
         }
     }
 
     private _getPrevSelectedColIndex() {
-        const selection = this.selectionAPI.get_prev_selection(this.gridID + '-cells');
-        if (selection && selection.length > 0) {
-            return selection[0].columnID;
+        const prevCell = this.selectionAPI.get_selection_first(this.gridID + '-prev-cell');
+        if (prevCell) {
+            return prevCell.columnID;
         }
     }
 }
