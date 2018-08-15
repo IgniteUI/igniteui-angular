@@ -279,10 +279,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-
-        + %igx-tabs__item-label {
-            padding-top: $icon-label-space;
-        }
     }
 
     %igx-tabs__header-menu-item-indicator {
@@ -349,7 +345,6 @@
     %igx-tabs__item-label {
         @include ellipsis();
         font-size: $label-font-size;
-        line-height: $label-line-height;
         max-width: 100%;
         text-align: center;
 
