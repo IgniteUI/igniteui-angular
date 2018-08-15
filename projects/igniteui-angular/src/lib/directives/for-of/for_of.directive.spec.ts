@@ -29,6 +29,12 @@ describe('IgxForOf directive -', () => {
     let verticalScroller: HTMLElement;
     let horizontalScroller: HTMLElement;
 
+    let dg: DataGenerator;
+
+    beforeAll(() => {
+        dg = new DataGenerator();
+    });
+
     describe('empty virtual component', () => {
         let fix: ComponentFixture<EmptyVirtualComponent>;
 
@@ -68,6 +74,7 @@ describe('IgxForOf directive -', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(HorizontalVirtualComponent);
+            dg.generateData(300, 5, fix.componentInstance);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
             displayContainer  = fix.nativeElement.querySelector('igx-display-container');
@@ -181,6 +188,7 @@ describe('IgxForOf directive -', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualComponent);
+            fix.componentInstance.data = dg.generateVerticalData(fix.componentInstance.cols);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
             displayContainer = fix.nativeElement.querySelector('igx-display-container');
@@ -223,14 +231,6 @@ describe('IgxForOf directive -', () => {
                 });
             });
 
-            // let observer = new MutationObserver(mutations => {
-            //     expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
-            //     observer.disconnect();
-            //     done();
-            // });
-            // var config = { attributes: true, attributeFilter: ["style"] };
-            // observer.observe(displayContainer, config);
-
             fix.componentInstance.data = [{ '1': 1, '2': 2, '3': 3, '4': 4 }];
             fix.detectChanges();
         });
@@ -252,7 +252,7 @@ describe('IgxForOf directive -', () => {
             }).not.toThrow();
             let rowsRendered = displayContainer.querySelectorAll('div');
             expect(rowsRendered.length).toBe(0);
-            fix.componentInstance.data = DataGenerator.generateVerticalData(fix.componentInstance.cols);
+            fix.componentInstance.data = dg.generateVerticalData(fix.componentInstance.cols);
             fix.detectChanges();
             rowsRendered = displayContainer.querySelectorAll('div');
             expect(rowsRendered.length).not.toBe(0);
@@ -274,6 +274,7 @@ describe('IgxForOf directive -', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(VirtualComponent);
+            dg.generateData300x50000(fix.componentInstance);
             fix.detectChanges();
             displayContainer = fix.nativeElement.querySelector('igx-display-container');
             verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
@@ -431,7 +432,7 @@ describe('IgxForOf directive -', () => {
 
             /** Step 1. Lower the amount of rows to 5. The vertical scrollbar then should not be rendered */
             expect(() => {
-                DataGenerator.generateData(300, 5, fix.componentInstance);
+                dg.generateData(300, 5, fix.componentInstance);
                 fix.detectChanges();
 
                 fix.componentInstance.scrollTop(verticalScroller.scrollTop);
@@ -456,7 +457,7 @@ describe('IgxForOf directive -', () => {
 
             /** Step 3. Increase the ammout of rows back and vertical scrollbar should be rendered back */
             expect(() => {
-                DataGenerator.generateData300x50000(fix.componentInstance);
+                dg.generateData300x50000(fix.componentInstance);
                 fix.detectChanges();
 
                 // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
@@ -481,7 +482,7 @@ describe('IgxForOf directive -', () => {
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(rowsRendered.length).toBe(9);
 
-            DataGenerator.generateData300x50000(fix.componentInstance);
+            dg.generateData300x50000(fix.componentInstance);
             fix.detectChanges();
 
             /** Step 1. Scroll to the left. There should be no errors then and everything should be still the same */
@@ -506,7 +507,7 @@ describe('IgxForOf directive -', () => {
             /** Step 3. Set the ammout of rows back and vertical scrollbar should be rendered back then.
              *  It should reset the scroll position. */
             expect(() => {
-                DataGenerator.generateData300x50000(fix.componentInstance);
+                dg.generateData300x50000(fix.componentInstance);
                 fix.detectChanges();
 
                 // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
@@ -543,7 +544,7 @@ describe('IgxForOf directive -', () => {
 
             /** Step 2. Lower the amount of cols to 0 so there would be no horizontal scrollbar */
             expect(() => {
-                DataGenerator.generateData(2, 0, fix.componentInstance);
+                dg.generateData(2, 0, fix.componentInstance);
                 fix.detectChanges();
 
                 // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
@@ -559,7 +560,7 @@ describe('IgxForOf directive -', () => {
 
             /** Step 3. Set the data back to and it should render both scrollbars. It should reset the scroll position */
             expect(() => {
-                DataGenerator.generateData300x50000(fix.componentInstance);
+                dg.generateData300x50000(fix.componentInstance);
                 fix.detectChanges();
 
                 // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
@@ -593,7 +594,7 @@ describe('IgxForOf directive -', () => {
 
             /** Step 1. Lower the amount of cols to 3 so there would be no horizontal scrollbar */
             expect(() => {
-                DataGenerator.generateData(3, 50000, fix.componentInstance);
+                dg.generateData(3, 50000, fix.componentInstance);
                 fix.detectChanges();
 
                 // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
@@ -628,7 +629,7 @@ describe('IgxForOf directive -', () => {
 
             /** Step 3. Set the data back to have 300 columns and the horizontal scrollbar should render now. */
             expect(() => {
-                DataGenerator.generateData300x50000(fix.componentInstance);
+                dg.generateData300x50000(fix.componentInstance);
                 fix.detectChanges();
 
                 // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
@@ -764,10 +765,10 @@ describe('IgxForOf directive -', () => {
             let firstRowDisplayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
 
-            this.data = DataGenerator.generateData(300, 0, fix.componentInstance);
+            dg.generateData(300, 0, fix.componentInstance);
             fix.detectChanges();
 
-            DataGenerator.generateData300x50000(fix.componentInstance);
+            dg.generateData300x50000(fix.componentInstance);
             fix.detectChanges();
 
             /** Offset should be equal to the offset before so there is no misalignment */
@@ -904,14 +905,16 @@ describe('IgxForOf directive -', () => {
     });
 });
 
-export class DataGenerator {
-    public static verticalData: any[] = [];
-    public static data300x50000: any[] = [];
-    public static cols300: any[] = [];
+class DataGenerator {
+    public verticalData: any[] = [];
+    public data300x50000: any[] = [];
+    public cols300: any[] = [];
 
-    public static generateVerticalData(cols) {
-        if (DataGenerator.verticalData.length !== 0) {
-            return DataGenerator.verticalData;
+    constructor() {}
+
+    public generateVerticalData(cols) {
+        if (this.verticalData.length !== 0) {
+            return this.verticalData;
         }
         const dummyData = [];
         for (let i = 0; i < 50000; i++) {
@@ -923,14 +926,14 @@ export class DataGenerator {
             dummyData.push(obj);
         }
 
-        return DataGenerator.verticalData = dummyData;
+        return this.verticalData = dummyData;
     }
 
-    public static generateData(numCols: number, numRows: number, instance) {
+    public generateData(numCols: number, numRows: number, instance?) {
         const dummyData = [];
-        instance.cols = [];
+        const cols = [];
         for (let j = 0; j < numCols; j++) {
-            instance.cols.push({
+            cols.push({
                 field: j.toString(),
                 width: j % 8 < 2 ? 100 : (j % 6 + 0.25) * 125
             });
@@ -938,27 +941,33 @@ export class DataGenerator {
 
         for (let i = 0; i < numRows; i++) {
             const obj = {};
-            for (let j = 0; j < instance.cols.length; j++) {
-                const col = instance.cols[j].field;
+            for (let j = 0; j < cols.length; j++) {
+                const col = cols[j].field;
                 obj[col] = 10 * i * j;
             }
             dummyData.push(obj);
         }
 
+        if (instance) {
+            instance.cols = cols;
         instance.data = dummyData;
-        return {data: dummyData, cols: instance.cols};
+        } else {
+            return {data: dummyData, cols: cols};
+        }
     }
 
-    public static generateData300x50000(instance) {
+    public generateData300x50000(instance) {
         if (this.data300x50000.length !== 0) {
-            instance.cols = this.cols300;
-            instance.data = this.data300x50000;
-            return;
-        }
+            instance.cols = [...this.cols300];
+            instance.data = [...this.data300x50000];
+        } else {
+            const result = this.generateData(300, 50000);
+            this.data300x50000 = [...result.data];
+            this.cols300 = [...result.cols];
 
-        const result = this.generateData(300, 50000, instance);
-        this.data300x50000 = result.data;
-        this.cols300 = result.cols;
+            instance.cols = [...this.cols300];
+            instance.data = [...this.data300x50000];
+        }
     }
 }
 
@@ -1075,7 +1084,7 @@ export class EmptyVirtualComponent {
         </div>
     `
 })
-export class VerticalVirtualComponent implements OnInit {
+export class VerticalVirtualComponent {
 
     public width = '450px';
     public height = '300px';
@@ -1092,10 +1101,6 @@ export class VerticalVirtualComponent implements OnInit {
 
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective })
     public parentVirtDir: TestIgxForOfDirective<any>;
-
-    public ngOnInit(): void {
-        this.data = DataGenerator.generateVerticalData(this.cols);
-    }
 
     public scrollTop(newScrollTop) {
         const verticalScrollbar = this.container.nativeElement.querySelector('igx-virtual-helper');
@@ -1142,7 +1147,6 @@ export class HorizontalVirtualComponent implements OnInit {
     public childVirtDirs: QueryList<TestIgxForOfDirective<any>>;
 
     public ngOnInit(): void {
-        DataGenerator.generateData(300, 5, this);
         this.scrollContainer._viewContainer = this.container;
     }
 
@@ -1177,7 +1181,7 @@ export class HorizontalVirtualComponent implements OnInit {
         </div>
     `
 })
-export class VirtualComponent implements OnInit {
+export class VirtualComponent {
 
     public width = '800px';
     public height = '400px';
@@ -1192,10 +1196,6 @@ export class VirtualComponent implements OnInit {
 
     @ViewChildren('childContainer', { read: TestIgxForOfDirective })
     public childVirtDirs: QueryList<TestIgxForOfDirective<any>>;
-
-    public ngOnInit(): void {
-        DataGenerator.generateData300x50000(this);
-    }
 
     public scrollTop(newScrollTop) {
         const verticalScrollbar = this.container.element.nativeElement.querySelector('igx-virtual-helper');
