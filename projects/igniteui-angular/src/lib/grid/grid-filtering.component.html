@@ -11,7 +11,8 @@
     (onOpened)="focusFirstInput()"
     (onClosed)="refresh()"
     #directive="toggle"
-    class="igx-filtering__options">
+    class="igx-filtering__options"
+    #toggle="toggle">
 
     <igx-grid-filter-expression
         name="firstExpr"
@@ -38,5 +39,4 @@
         <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
         <button igxButton igxRipple (click)="directive.close()">Close</button>
     </div>
-
 </div>
