@@ -93,6 +93,8 @@ export class IgxGridAPIService {
                 this.editCellState.delete(gridId);
             }
         }
+
+        this.get(gridId).refreshSearch();
     }
 
 
