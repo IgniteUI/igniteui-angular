@@ -7,6 +7,7 @@ import { IgxDateSummaryOperand, IgxGridComponent, IgxGridModule, IgxNumberSummar
 import { IgxGridAPIService } from './api.service';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
+import { constants } from 'os';
 
 describe('IgxGrid - Summaries', () => {
     const SUMMARY_CLASS = '.igx-grid-summary';
