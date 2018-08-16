@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import {  AfterContentInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
 
 import {
@@ -8,7 +8,7 @@ import {
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
 })
-export class GridCellEditingComponent {
+export class GridCellEditingComponent implements AfterContentInit, OnDestroy {
 
     orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent })
@@ -20,6 +20,7 @@ export class GridCellEditingComponent {
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
+    private subscribtion;
 
     constructor() {
         const date = new Date();
@@ -49,12 +50,21 @@ export class GridCellEditingComponent {
     }
 
     public deleteRow(rowID) {
+        debugger;
         const row = this.gridWithPK.getRowByKey(rowID);
-        row.delete();
+        this.gridWithPK.deleteRow(rowID);
     }
     public updateCell() {
         this.gridWithPK.updateCell('Updated', 1, 'ProductName');
     }
+
+    ngAfterContentInit(): void {
+        this.subscribtion = this.gridWithPK.onEditDone.subscribe((editObj) => console.log(editObj));
+    }
+
+    ngOnDestroy(): void {
+    }
+
     public updateRow(rowID) {
         this.gridWithPK.updateRow({
             ProductID: rowID + 96,
@@ -87,7 +97,10 @@ export class GridCellEditingComponent {
     public updRecord() {
         const newData = 'UPDATED';
         const selectedCell = this.gridWithPK.selectedCells[0];
-        selectedCell.update(newData);
+        debugger;
+        if (selectedCell) {
+            selectedCell.update(newData);
+        }
     }
 
     deleteRowbyIndex(index) {
@@ -95,6 +108,7 @@ export class GridCellEditingComponent {
         row.delete();
     }
     updateRowbyIndex(index) {
+        debugger;
         const row = this.gridWithoutPK.getRowByIndex(index);
         row.update({
             ProductID: index + 53,
@@ -127,6 +141,24 @@ export class GridCellEditingComponent {
         }
         selectedCell.update(newValue);
     }
+
+    updateSpecificRow() {
+        debugger;
+        this.gridWithPK.updateRow({
+            ProductID: 225 + 96,
+            ProductName: 'UpdatedRow',
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: undefined,
+            UnitPrice: undefined,
+            UnitsInStock: -99 + 225,
+            UnitsOnOrder: 0 + 225,
+            ReorderLevel: -12 + 225,
+            Discontinued: false,
+            OrderDate: new Date('2005-03-17')
+        }, 1);
+    }
+
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
     }
