@@ -1,3 +1,7 @@
+export function wait(ms = 0) {
+    return new Promise((resolve, reject) => setTimeout(resolve, ms));
+}
+
 export class UIInteractions {
 
     public static sendInput(element, text, fix?) {
@@ -35,6 +39,10 @@ export class UIInteractions {
 
     public static clickCurrentRow(row) {
         return row.triggerEventHandler('click', new Event('click'));
+    }
+
+    public static clickElement(element) {
+        element.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
