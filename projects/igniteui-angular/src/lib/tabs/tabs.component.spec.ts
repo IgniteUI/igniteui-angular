@@ -5,7 +5,7 @@ import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
 import { wait } from '../test-utils/ui-interactions.spec';
 
-fdescribe('IgxTabs', () => {
+describe('IgxTabs', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent, TabsTestSelectedTabComponent],
