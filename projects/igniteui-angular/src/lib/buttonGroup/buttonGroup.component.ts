@@ -1,17 +1,24 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
+    ContentChildren,
+    ChangeDetectorRef,
     EventEmitter,
-    forwardRef,
-    HostBinding, Inject,
-    Input, NgModule, Output, QueryList, Renderer2, ViewChildren
+    HostBinding,
+    Input,
+    NgModule,
+    Output,
+    QueryList,
+    Renderer2,
+    ViewChildren,
+    OnDestroy
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import { IgxButtonDirective, IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/index';
+import { takeUntil } from 'rxjs/operators';
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 let NEXT_ID = 0;
@@ -41,11 +48,20 @@ let NEXT_ID = 0;
     templateUrl: 'buttongroup-content.component.html'
 })
 
-export class IgxButtonGroupComponent implements AfterViewInit {
+export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
+    private _disabled = false;
+    protected buttonClickNotifier$ = new Subject<boolean>();
+    protected queryListNotifier$ = new Subject<boolean>();
+
+    @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
+    @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
+
     /**
-     * @hidden
+     * A collection containing all buttons inside the button group.
      */
-    @ViewChildren(IgxButtonDirective) public buttons: QueryList<IgxButtonGroupComponent>;
+    public get buttons(): IgxButtonDirective[] {
+        return [...this.viewButtons.toArray(), ...this.templateButtons.toArray()];
+    }
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
@@ -126,8 +142,19 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      * <igx-buttongroup [disabled]="true" [multiSelection]="multi" [values]="fontOptions"></igx-buttongroup>
      * ```
      */
-    @Input() public disabled = false;
+    @Input()
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        if (this._disabled !== value) {
+            this._disabled = value;
 
+            if (this.viewButtons && this.templateButtons) {
+                this.buttons.forEach((b) => b.disabled = this._disabled);
+            }
+        }
+    }
 
     /**
      * @hidden
@@ -217,7 +244,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
     private _isVertical: boolean;
     private _itemContentCssClass: string;
 
-    constructor(private _el: ElementRef, private _renderer: Renderer2, cdr: ChangeDetectorRef) {
+    constructor(private _cdr: ChangeDetectorRef, private _renderer: Renderer2) {
     }
 
     /**
@@ -230,7 +257,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      *}
      *```
      */
-    get selectedButtons(): IgxButtonGroupComponent[] {
+    get selectedButtons(): IgxButtonDirective[] {
         return this.buttons.filter((b, i) => {
             return this.selectedIndexes.indexOf(i) !== -1;
         });
@@ -250,18 +277,32 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      *```
      */
     public selectButton(index: number) {
-        if (this.buttons.toArray()[index]._el.nativeElement.getAttribute('data-togglable') === 'false'
-            || this.buttons.toArray()[index]._el.nativeElement.classList.contains('igx-button--disabled')) {
+        if (index >= this.buttons.length || index < 0) {
             return;
         }
-        const buttonElement = this.buttons.toArray()[index]._el.nativeElement;
+
+        const button = this.buttons[index];
+        const buttonElement = button.nativeElement;
+
+        if (buttonElement.classList.contains('igx-button--disabled')) {
+            return;
+        }
+
         this.selectedIndexes.push(index);
-        buttonElement.setAttribute('data-selected', true);
-        this.onSelect.emit({ button: this.buttons.toArray()[index], index });
-        this.values[index].selected = true;
+        button.selected = true;
+
+        this._renderer.setAttribute(buttonElement, 'aria-pressed', 'true');
+        this._renderer.addClass(buttonElement, 'igx-button-group__item--selected');
+
+        this.onSelect.emit({ button: button, index: index });
+
+        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
+        if (indexInViewButtons !== -1) {
+            this.values[indexInViewButtons].selected = true;
+        }
 
         // deselect other buttons if multiSelection is not enabled
-        if (!this.multiSelection && this.selectedIndexes.length > 0) {
+        if (!this.multiSelection && this.selectedIndexes.length > 1) {
             this.buttons.forEach((b, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
                     this.deselectButton(i);
@@ -283,29 +324,74 @@ export class IgxButtonGroupComponent implements AfterViewInit {
      * ```
      */
     public deselectButton(index: number) {
-        if (this.buttons.toArray()[index]._el.nativeElement.getAttribute('data-togglable') === 'false'
-            || this.buttons.toArray()[index]._el.nativeElement.classList.contains('igx-button--disabled')) {
+        if (index >= this.buttons.length || index < 0) {
             return;
         }
-        const buttonElement = this.buttons.toArray()[index]._el.nativeElement;
+
+        const button = this.buttons[index];
+        const buttonElement = button.nativeElement;
+
+        if (buttonElement.classList.contains('igx-button--disabled')) {
+            return;
+        }
+
         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
-        buttonElement.setAttribute('data-selected', false);
-        this.onUnselect.emit({ button: this.buttons.toArray()[index], index });
-        this.values[index].selected = false;
+        button.selected = false;
+
+        this._renderer.setAttribute(buttonElement, 'aria-pressed', 'false');
+        this._renderer.removeClass(buttonElement, 'igx-button-group__item--selected');
+
+        this.onUnselect.emit({ button: button, index: index });
+
+        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
+        if (indexInViewButtons !== -1) {
+            this.values[indexInViewButtons].selected = false;
+        }
     }
 
     /**
      * @hidden
      */
     public ngAfterViewInit() {
-        // initial selection
-        setTimeout(() => {
+        const initButtons = () => {
+            // Cancel any existing buttonClick subscriptions
+            this.buttonClickNotifier$.next();
+
+            this.selectedIndexes.splice(0, this.selectedIndexes.length);
+
+            // initial configuration
             this.buttons.forEach((button, index) => {
-                if (!button.disabled && button._el.nativeElement.getAttribute('data-selected') === 'true') {
+                const buttonElement = button.nativeElement;
+
+                if (this.disabled) {
+                    button.disabled = true;
+                }
+
+                if (!button.disabled && button.selected) {
                     this.selectButton(index);
                 }
+
+                button.buttonClick.pipe(takeUntil(this.buttonClickNotifier$)).subscribe((ev) => this._clickHandler(ev, index));
+                this._renderer.addClass(buttonElement, 'igx-button-group__item');
             });
-        }, 0);
+        };
+
+        this.viewButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => initButtons());
+        this.templateButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => initButtons());
+        initButtons();
+
+        this._cdr.detectChanges();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.buttonClickNotifier$.next();
+        this.buttonClickNotifier$.complete();
+
+        this.queryListNotifier$.next();
+        this.queryListNotifier$.complete();
     }
 
     /**
@@ -321,7 +407,7 @@ export class IgxButtonGroupComponent implements AfterViewInit {
 }
 
 export interface IButtonGroupEventArgs {
-    button: IgxButtonGroupComponent;
+    button: IgxButtonDirective;
     index: number;
 }
 
