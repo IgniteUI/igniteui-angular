@@ -2,7 +2,9 @@
     <ng-container *ngFor="let summary of resolveSummaries">
         <div class="{{itemClass}}" [style.height.px]="summaryItemHeight">
             <span class="igx-grid-summary__label" title="{{ summary.label }}">{{ summary.label }}</span>
-            <span class="igx-grid-summary__result" title="{{ summary.summaryResult }}">{{ summary.summaryResult }}</span>
+            <span class="igx-grid-summary__result" title="{{ summary.summaryResult }}">
+                {{ isNumber(summary.summaryResult) ? (summary.summaryResult | number) : (summary.summaryResult | date) }}
+            </span>
         </div>
     </ng-container>
 </ng-container>
