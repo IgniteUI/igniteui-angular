@@ -265,12 +265,12 @@ describe('IgxGrid - Summaries', () => {
         const unitsInStockCell = grid.getCellByColumn(0, 'UnitsInStock');
 
         let maxValue = summariesUnitOfStock.query(By.css('[title=\'Max\']')).nativeElement.nextSibling.innerText;
-        expect(+maxValue).toBe(oldMaxValue);
-        unitsInStockCell.update(newMaxValue);
+        expect(maxValue).toBe(oldMaxValue);
+        unitsInStockCell.update(99000);
         fixture.detectChanges();
 
         maxValue = summariesUnitOfStock.query(By.css('[title=\'Max\']')).nativeElement.nextSibling.innerText;
-        expect(+maxValue).toBe(newMaxValue);
+        expect(maxValue).toBe(newMaxValue);
 
     });
     it('should display all active summaries after column pinning', () => {
