@@ -1,5 +1,5 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar, ICalendarDate } from '../calendar/calendar';
@@ -539,6 +539,34 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(4);
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     });
+
+    it('Should correctly update summary.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ReleaseDate');
+        const expression = {
+            fieldName: 'ReleaseDate',
+            searchVal: null,
+            condition: IgxDateFilteringOperand.instance().condition('yesterday')
+        };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        gridExpressionsTree.filteringOperands.push(filteringExpressionsTree);
+        grid.filteringExpressionsTree = gridExpressionsTree;
+
+        fix.detectChanges();
+        tick(100);
+
+        expect(grid.rowList.length).toEqual(1);
+
+        const summariesReleaseDate = fix.debugElement.queryAll(By.css('.igx-grid-summary'))[0];
+        const count = summariesReleaseDate.query(By.css('[title=\'Count\']')).nativeElement.nextSibling.innerText;
+
+        expect(count).toBe('1');
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -548,6 +576,7 @@ export class CustomFilter extends IgxFilteringOperand {
         super();
         this.operations = [{
             name: 'custom',
+            isUnary: false,
             logic: (target: string): boolean => {
                 return target === 'custom';
             }
@@ -561,7 +590,7 @@ export class CustomFilter extends IgxFilteringOperand {
 
 @Component({
     template: `<igx-grid [data]="data" height="500px">
-        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
         <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
         <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>

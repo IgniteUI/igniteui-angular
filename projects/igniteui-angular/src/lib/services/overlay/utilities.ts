@@ -4,6 +4,7 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
 import { AnimationMetadata, AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
+import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -15,10 +16,6 @@ export enum VerticalAlignment {
     Top = -1,
     Middle = -0.5,
     Bottom = 0
-}
-
-export class Rectangle {
-    constructor(public x: number, public y: number, public w: number, public h: number) { }
 }
 
 export class Point {
@@ -40,6 +37,7 @@ export interface OverlaySettings {
     scrollStrategy?: IScrollStrategy;
     modal?: boolean;
     closeOnOutsideClick?: boolean;
+    outlet?: IgxOverlayOutletDirective | ElementRef;
 }
 
 export interface OverlayEventArgs {
@@ -49,6 +47,7 @@ export interface OverlayEventArgs {
     componentRef?: ComponentRef<{}>;
 }
 
+/** @hidden */
 export function getPointFromPositionsSettings(settings: PositionSettings): Point {
     let result: Point = new Point(0, 0);
 
@@ -63,6 +62,7 @@ export function getPointFromPositionsSettings(settings: PositionSettings): Point
     return result;
 }
 
+/** @hidden */
 export interface OverlayInfo {
     id?: string;
     elementRef?: ElementRef;

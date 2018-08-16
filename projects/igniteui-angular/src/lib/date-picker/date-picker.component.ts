@@ -58,6 +58,7 @@ let NEXT_ID = 0;
         [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     // tslint:disable-next-line:component-selector
     selector: 'igx-datePicker',
+    styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
 export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
@@ -484,6 +485,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.onSelection.emit(event);
     }
 
+    @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event) {
         this.onOpenEvent();

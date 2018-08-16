@@ -34,9 +34,24 @@ export class IgxOverlayService {
         closeOnOutsideClick: true
     };
 
+    /**
+     * Emitted before the component is opened.
+     */
     public onOpening = new EventEmitter<OverlayEventArgs>();
+
+    /**
+     * Emitted after the component is opened and all animations are finished.
+     */
     public onOpened = new EventEmitter<OverlayEventArgs>();
+
+    /**
+     * Emitted before the component is closed.
+     */
     public onClosing = new EventEmitter<OverlayEventArgs>();
+
+    /**
+     * Emitted after the component is closed and all animations are finished.
+     */
     public onClosed = new EventEmitter<OverlayEventArgs>();
 
     constructor(
@@ -48,6 +63,9 @@ export class IgxOverlayService {
         this._document = <Document>this.document;
     }
 
+    /**
+     * Shows the provided component.
+     */
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
         const id: string = (this._componentId++).toString();
         settings = Object.assign({}, this._defaultSettings, settings);
@@ -95,6 +113,9 @@ export class IgxOverlayService {
         return id;
     }
 
+    /**
+     * Hides the component with the ID provided as a parameter.
+     */
     hide(id: string) {
         const info: OverlayInfo = this.getOverlayById(id);
 
@@ -129,6 +150,9 @@ export class IgxOverlayService {
         }
     }
 
+    /**
+     * Hides all the components and the overlay.
+     */
     hideAll() {
         // since overlays are removed on animation done, que all hides
         for (let i = this._overlayInfos.length; i--;) {
@@ -136,6 +160,9 @@ export class IgxOverlayService {
         }
     }
 
+    /**
+     * Repositions the component with ID provided as a parameter.
+     */
     reposition(id: string) {
         const overlay = this.getOverlayById(id);
         if (!overlay) {
@@ -183,7 +210,7 @@ export class IgxOverlayService {
     private moveElementToOverlay(info: OverlayInfo) {
         const wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(wrapperElement, info.settings);
-        this.getOverlayElement().appendChild(wrapperElement);
+        this.getOverlayElement(info).appendChild(wrapperElement);
         const elementScrollTop = info.elementRef.nativeElement.scrollTop;
         contentElement.appendChild(info.elementRef.nativeElement);
 
@@ -217,7 +244,10 @@ export class IgxOverlayService {
         return content;
     }
 
-    private getOverlayElement(): HTMLElement {
+    private getOverlayElement(info: OverlayInfo): HTMLElement {
+        if (info.settings.outlet) {
+            return info.settings.outlet.nativeElement;
+        }
         if (!this._overlayElement) {
             this._overlayElement = this._document.createElement('div');
             this._overlayElement.classList.add('igx-overlay');
@@ -244,7 +274,7 @@ export class IgxOverlayService {
     private setupModalWrapper(info: OverlayInfo) {
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
         fromEvent(wrapperElement, 'keydown').pipe(
-            filter((ev: KeyboardEvent) => ev.key === 'Escape'),
+            filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
             take(1)
         ).subscribe(() => this.hide(info.id));
         wrapperElement.classList.remove('igx-overlay__wrapper');
@@ -254,12 +284,13 @@ export class IgxOverlayService {
 
     private onCloseDone(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
-        if (!this._overlayElement.contains(child)) {
+        const outlet = this.getOverlayElement(info);
+        if (!outlet.contains(child)) {
             console.warn('Component with id:' + info.id + ' is already removed!');
             return;
         }
 
-        this._overlayElement.removeChild(child.parentNode.parentNode);
+        outlet.removeChild(child.parentNode.parentNode);
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);
             info.componentRef.destroy();
@@ -272,7 +303,9 @@ export class IgxOverlayService {
 
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
-        if (this._overlayInfos.length === 0 && this._overlayElement.parentElement) {
+
+        // this._overlayElement.parentElement check just for tests that manually delete the element
+        if (this._overlayInfos.length === 0 && this._overlayElement && this._overlayElement.parentElement) {
             this._overlayElement.parentElement.removeChild(this._overlayElement);
             this._overlayElement = null;
         }

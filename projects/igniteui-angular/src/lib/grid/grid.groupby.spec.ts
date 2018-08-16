@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,7 +7,7 @@ import { IgxStringFilteringOperand } from '../data-operations/filtering-conditio
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxColumnMovingDragDirective } from './grid.common';
+import { IgxColumnMovingDragDirective, IgxGroupAreaDropDirective } from './grid.common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
@@ -593,12 +593,12 @@ describe('IgxGrid - GroupBy', () => {
         const gRow = grid.groupsRowList.toArray()[0];
         expect(gRow.expanded).toBe(true);
         const evtEnter = new KeyboardEvent('keydown', {
-            code: 'enter',
-            key: 'enter'
+            code: 'Enter',
+            key: 'Enter'
         });
         const evtSpace = new KeyboardEvent('keydown', {
-            code: 'enter',
-            key: 'enter'
+            code: 'Space',
+            key: 'Spacebar'
         });
         gRow.element.nativeElement.dispatchEvent(evtEnter);
 
@@ -606,7 +606,7 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(gRow.expanded).toBe(false);
 
-        gRow.element.nativeElement.dispatchEvent(evtEnter);
+        gRow.element.nativeElement.dispatchEvent(evtSpace);
         fix.detectChanges();
         expect(gRow.expanded).toBe(true);
     });
@@ -1993,6 +1993,32 @@ describe('IgxGrid - GroupBy', () => {
         expect(hScrBar.hidden).toBe(false);
     });
 
+    it('should allow changing the text of the drop area', async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        fix.componentInstance.instance.dropAreaMessage = 'Drop area here!';
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const groupDropArea = fix.debugElement.query(By.directive(IgxGroupAreaDropDirective));
+            expect(groupDropArea.nativeElement.children[1].textContent).toEqual('Drop area here!');
+        });
+    }));
+
+    it('should allow templating the drop area by passing template reference', async(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        fix.componentInstance.instance.dropAreaTemplate = fix.componentInstance.dropAreaTemplate;
+        fix.detectChanges();
+
+        fix.whenStable().then(() => {
+            const groupDropArea = fix.debugElement.query(By.directive(IgxGroupAreaDropDirective));
+            expect(groupDropArea.nativeElement.textContent.trim()).toEqual('Custom template');
+        });
+    }));
+
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
@@ -2073,6 +2099,9 @@ export class DataParent {
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
+        <ng-template #dropArea>
+            <span> Custom template </span>
+        </ng-template>
     `
 })
 export class DefaultGridComponent extends DataParent {
@@ -2081,6 +2110,10 @@ export class DefaultGridComponent extends DataParent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
+
+    @ViewChild('dropArea', { read: TemplateRef })
+    public dropAreaTemplate: TemplateRef<any>;
+
     public enableSorting = false;
     public enableFiltering = false;
     public enableResizing = false;

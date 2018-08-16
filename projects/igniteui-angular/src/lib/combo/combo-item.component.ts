@@ -20,6 +20,9 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
         return this.dropDown.combo;
     }
 
+    /**
+     * Gets the height of a list item
+     */
     @HostBinding('style.height.px')
     get itemHeight() {
         return this.combo.itemHeight;
@@ -35,7 +38,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
      * @hidden
      */
     public get itemID() {
-        return this.itemData;
+        return this.combo.isRemote ? JSON.stringify(this.itemData) : this.itemData;
     }
 
     constructor(
@@ -53,6 +56,9 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
         return this.combo.isItemSelected(this.itemID);
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('click', ['$event'])
     clicked(event) {
         if (this.disabled || this.isHeader) {

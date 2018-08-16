@@ -1,7 +1,9 @@
 import { Component, ViewChild, ViewChildren } from '@angular/core';
 import {
     async,
-    TestBed
+    fakeAsync,
+    TestBed,
+    tick
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -62,7 +64,7 @@ describe('IgxRadio', () => {
 
     });
 
-    it('Binding to ngModel', async(() => {
+    it('Binding to ngModel', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioWithModelComponent);
         fixture.detectChanges();
 
@@ -73,30 +75,28 @@ describe('IgxRadio', () => {
         // the selected radio button in the UI
         fixture.componentInstance.selected = 'Baz';
         fixture.detectChanges();
+        tick();
 
-        fixture.whenStable().then(() => {
-            expect(radios[2].checked).toBe(true);
+        fixture.detectChanges();
+        expect(radios[2].checked).toBe(true);
 
-            // Change the model through UI interaction
-            // with the native label element
-            radios[0].nativeLabel.nativeElement.click();
-            fixture.detectChanges();
+        // Change the model through UI interaction
+        // with the native label element
+        radios[0].nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+        tick();
 
-            fixture.whenStable().then(() => {
-                expect(radios[0].checked).toBe(true);
-                expect(fixture.componentInstance.selected).toEqual('Foo');
+        expect(radios[0].checked).toBe(true);
+        expect(fixture.componentInstance.selected).toEqual('Foo');
 
-                // Change the model through UI interaction
-                // with the placeholder label element
-                radios[1].placeholderLabel.nativeElement.click();
-                fixture.detectChanges();
+        // Change the model through UI interaction
+        // with the placeholder label element
+        radios[1].placeholderLabel.nativeElement.click();
+        fixture.detectChanges();
+        tick();
 
-                fixture.whenStable().then(() => {
-                    expect(radios[1].checked).toBe(true);
-                    expect(fixture.componentInstance.selected).toEqual('Bar');
-                });
-            });
-        });
+        expect(radios[1].checked).toBe(true);
+        expect(fixture.componentInstance.selected).toEqual('Bar');
     }));
 
     it('Positions label before and after radio button', () => {

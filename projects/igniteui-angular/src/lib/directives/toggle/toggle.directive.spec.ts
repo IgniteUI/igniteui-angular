@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output,
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule } from './toggle.directive';
+import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
 import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy } from '../../services';
 
@@ -14,6 +14,7 @@ describe('IgxToggle', () => {
             declarations: [
                 IgxToggleActionTestComponent,
                 IgxToggleActionSettingsComponent,
+                IgxToggleOutletComponent,
                 IgxToggleServiceInjectComponent,
                 IgxOverlayServiceComponent,
                 IgxToggleTestComponent,
@@ -38,7 +39,7 @@ describe('IgxToggle', () => {
         fixture.detectChanges();
         const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
         expect(fixture.componentInstance.toggle.collapsed).toBe(true);
-        expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
+        expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
     });
 
     it('should show and hide content according \'collapsed\' attribute', () => {
@@ -47,7 +48,7 @@ describe('IgxToggle', () => {
 
         const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
         expect(fixture.componentInstance.toggle.collapsed).toBe(true);
-        expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
+        expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
         fixture.componentInstance.toggle.open();
         fixture.detectChanges();
 
@@ -123,14 +124,14 @@ describe('IgxToggle', () => {
 
         const button: DebugElement = fixture.debugElement.query(By.directive(IgxToggleActionDirective));
         const divEl: DebugElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
-        expect(fixture.componentInstance.toggle.collapsed).toBeTruthy();
-        expect(divEl.classes[HIDDEN_TOGGLER_CLASS]).toBeTruthy();
+        expect(fixture.componentInstance.toggle.collapsed).toBe(true);
+        expect(divEl.classes[HIDDEN_TOGGLER_CLASS]).toBe(true);
         button.triggerEventHandler('click', null);
         tick();
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.toggle.collapsed).toBeFalsy();
-        expect(divEl.classes[TOGGLER_CLASS]).toBeTruthy();
+        expect(fixture.componentInstance.toggle.collapsed).toBe(false);
+        expect(divEl.classes[TOGGLER_CLASS]).toBe(true);
     }));
     it('should close toggle when IgxToggleActionDiretive is clicked and toggle is opened', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
@@ -141,18 +142,16 @@ describe('IgxToggle', () => {
         const divEl = fixture.debugElement.query(By.directive(IgxToggleDirective)).nativeElement;
         const button: DebugElement = fixture.debugElement.query(By.directive(IgxToggleActionDirective));
 
-        expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
+        expect(divEl.classList.contains(TOGGLER_CLASS)).toBe(true);
 
         button.triggerEventHandler('click', null);
 
-        fixture.whenStable().then(() => {
-            tick();
-            fixture.detectChanges();
-            expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
-        });
+        tick();
+        fixture.detectChanges();
+        expect(divEl.classList.contains(HIDDEN_TOGGLER_CLASS)).toBeTruthy();
     }));
 
-    it('should hide content and emit \'onClosed\' event when you click outside the toggler\'s content', fakeAsync(() => {
+    it('should hide content and emit \'onClosed\' event when you click outside the toggle\'s content', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
 
@@ -165,9 +164,10 @@ describe('IgxToggle', () => {
         tick();
         expect(toggle.onOpened.emit).toHaveBeenCalled();
 
-        expect(fixture.debugElement.componentInstance.isClosed).toBeFalsy();
-        expect(divEl.classList.contains(TOGGLER_CLASS)).toBeTruthy();
+        expect(fixture.componentInstance.toggle.collapsed).toBe(false);
+        expect(divEl.classList.contains(TOGGLER_CLASS)).toBe(true);
         spyOn(toggle.onClosed, 'emit');
+
         p.nativeElement.click();
         tick();
         fixture.detectChanges();
@@ -182,7 +182,7 @@ describe('IgxToggle', () => {
         const toggleFromComponent = fixture.componentInstance.toggle;
         const toggleFromService = fixture.componentInstance.toggleAction.target as IgxToggleDirective;
 
-        expect(toggleFromService instanceof IgxToggleDirective).toBeTruthy();
+        expect(toggleFromService instanceof IgxToggleDirective).toBe(true);
         expect(toggleFromService.id).toEqual(toggleFromComponent.id);
     }));
 
@@ -198,21 +198,18 @@ describe('IgxToggle', () => {
         spyOn(toggle.onClosed, 'emit');
         button.triggerEventHandler('click', null);
 
-        fix.whenStable().then(() => {
-            tick();
-            fix.detectChanges();
+        tick();
+        fix.detectChanges();
 
-            expect(toggle.onOpened.emit).toHaveBeenCalled();
-            expect(toggleElm.classList.contains(TOGGLER_CLASS)).toBe(true);
-        }).then(() => {
-            button.triggerEventHandler('click', null);
+        expect(toggle.onOpened.emit).toHaveBeenCalled();
+        expect(toggleElm.classList.contains(TOGGLER_CLASS)).toBe(true);
+        button.triggerEventHandler('click', null);
 
-            tick();
-            fix.detectChanges();
+        tick();
+        fix.detectChanges();
 
-            expect(toggle.onClosed.emit).toHaveBeenCalled();
-            expect(toggleElm.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
-        });
+        expect(toggle.onClosed.emit).toHaveBeenCalled();
+        expect(toggleElm.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
     }));
 
     describe('overlay settings', () => {
@@ -274,23 +271,50 @@ describe('IgxToggle', () => {
         it('Should fire toggle "onClosing" event when closing through closeOnOutsideClick', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionSettingsComponent);
             fixture.detectChanges();
+
             const toggle = fixture.componentInstance.toggle;
+
             spyOn(toggle, 'toggle').and.callThrough();
             spyOn(toggle.onClosed, 'emit').and.callThrough();
             spyOn(toggle.onClosing, 'emit').and.callThrough();
             spyOn(toggle.onOpening, 'emit').and.callThrough();
             spyOn(toggle.onOpened, 'emit').and.callThrough();
+
             const button = fixture.debugElement.query(By.css('button')).nativeElement;
             button.click();
-            tick(500);
+            tick();
+            fixture.detectChanges();
+
             expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
             expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
 
             document.documentElement.dispatchEvent(new Event('click'));
-            tick(500);
-            expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
+            tick();
+            fixture.detectChanges();
+
             expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
+
+        it('should pass IgxOverlayOutletDirective input from IgxToggleActionDiretive', () => {
+            const fixture = TestBed.createComponent(IgxToggleOutletComponent);
+            const outlet = fixture.debugElement.query(By.css('.outlet-container')).nativeElement;
+            const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
+            fixture.detectChanges();
+
+            const settings = /*<OverlaySettings>*/{
+                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
+                closeOnOutsideClick: true,
+                modal: false,
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                outlet: jasmine.any(IgxOverlayOutletDirective)
+            };
+
+            fixture.componentInstance.toggleAction.onClick();
+            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
+            const directive = toggleSpy.calls.mostRecent().args[0].outlet as IgxOverlayOutletDirective;
+            expect(directive.nativeElement).toBe(outlet);
+        });
     });
 });
 
@@ -354,6 +378,15 @@ export class IgxToggleActionSettingsComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
     @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
 }
+
+@Component({
+    template: `
+    <button [igxToggleAction]="toggleRef" [overlaySettings]="{}" [igxToggleOutlet]="outlet"></button>
+    <div igxToggle #toggleRef="toggle"></div>
+    <div igxOverlayOutlet #outlet="overlay-outlet" class="outlet-container"></div>
+    `
+})
+export class IgxToggleOutletComponent extends IgxToggleActionSettingsComponent {}
 
 @Component({
     template: `

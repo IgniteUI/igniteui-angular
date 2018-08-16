@@ -110,6 +110,8 @@ export class IgxGridAPIService {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
+        } else {
+            return this.get(id).dataRowList.find((row) => row.rowData === rowSelector);
         }
     }
 
@@ -122,10 +124,6 @@ export class IgxGridAPIService {
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
-    }
-
-    public notify(id: string) {
-        this.get(id).eventBus.next(true);
     }
 
     public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {

@@ -37,8 +37,7 @@
             <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
         </igx-chip>
         <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass">
-            <igx-icon fontSet="material" name="group_work" class="igx-drop-area__icon"></igx-icon>
-            <span class="igx-drop-area__text">Drag a column header and drop it here to group by that column</span>
+            <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
         </div>
     </igx-chips-area>
 </div>
@@ -126,5 +125,10 @@
 
 <ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
+</ng-template>
+
+<ng-template #defaultDropArea>
+    <igx-icon fontSet="material" name="group_work" class="igx-drop-area__icon"></igx-icon>
+    <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 

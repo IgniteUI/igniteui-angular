@@ -62,6 +62,7 @@ export interface IgxTimePickerValidationFailedEventArgs {
         }
     ],
     selector: 'igx-time-picker',
+    styles: [':host {display: block;}'],
     templateUrl: 'time-picker.component.html'
 })
 export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, DoCheck, AfterViewInit {
@@ -941,9 +942,11 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * @hidden
      */
-    @HostListener('keydown.space')
-    public onKeydownSpace() {
+    @HostListener('keydown.spacebar', ['$event'])
+    @HostListener('keydown.space', ['$event'])
+    public onKeydownSpace(event) {
         this.onClick();
+        event.preventDefault();
     }
 
     /**

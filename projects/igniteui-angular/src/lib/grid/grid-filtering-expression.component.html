@@ -17,8 +17,8 @@
 <ng-template #defaultDateUI>
     <igx-datePicker
         *ngIf="!unaryCondition"
-        [(ngModel)]="value"
-        (onSelection)="onDatePickerValueChanged()">
+        [value]="value"
+        (onSelection)="onDatePickerValueChanged($event)">
     </igx-datePicker>
 </ng-template>
 

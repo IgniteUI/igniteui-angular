@@ -6,9 +6,9 @@ import { Calendar, ICalendarDate } from '../calendar/calendar';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { IgxFilteringOperand, IgxStringFilteringOperand } from '../../public_api';
+import { IgxFilteringOperand, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from '../../public_api';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { HelperUtils } from '../test-utils/helper-utils.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
@@ -22,15 +22,15 @@ describe('IgxGrid - Filtering actions', () => {
                 BrowserAnimationsModule,
                 IgxGridModule.forRoot()]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     afterEach(() => {
-        HelperUtils.clearOverlay();
+        UIInteractions.clearOverlay();
     });
 
     // UI tests string column, empty input
-    it('UI tests on string column', async(() => {
+    it('UI tests on string column', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -47,109 +47,128 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        tick(100);
 
-        fix.whenStable().then(() => {
-            // iterate over not unary conditions when input is empty
-            // starts with
-            verifyFilterUIPosition(filterUIContainer, grid);
+        // iterate over not unary conditions when input is empty
+        // starts with
+        verifyFilterUIPosition(filterUIContainer, grid);
 
-            options[1].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        options[1].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // ends with
-            options[2].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // does not contain
-            options[3].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        // ends with
+        options[2].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // equals
-            options[4].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // does not equal
-            options[5].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        // does not contain
+        options[3].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // empty
-            options[6].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(4);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // not empty
-            options[7].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(4);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
+        // equals
+        options[4].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // iterate over unary conditions
-            // null
-            options[8].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // not null
-            options[9].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(5);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
+        // does not equal
+        options[5].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // changing from unary to not unary condition when input is empty - filtering should keep its state
-            // contains
-            options[0].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            input = filterUIContainer.query(By.directive(IgxInputDirective));
-            expect(grid.rowList.length).toEqual(5);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            // input is empty but there is filtering applied, so reset button should be active !
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-        });
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // empty
+        options[6].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(4);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toEqual(0);
+
+        // not empty
+        options[7].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(4);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toEqual(0);
+
+        // iterate over unary conditions
+        // null
+        options[8].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(3);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toEqual(0);
+
+        // not null
+        options[9].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(5);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toEqual(0);
+
+        // changing from unary to not unary condition when input is empty - filtering should keep its state
+        // contains
+        options[0].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        input = filterUIContainer.query(By.directive(IgxInputDirective));
+        expect(grid.rowList.length).toEqual(5);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        // input is empty but there is filtering applied, so reset button should be active !
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
     }));
 
     // UI tests string column with value in input
-    it('UI tests on string column', async(() => {
+    it('UI tests on string column', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -166,116 +185,123 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        tick(100);
 
-        fix.whenStable().then(() => {
-            // iterate over not unary conditions and fill the input
-            // contains
-            sendInput(input, 'Ignite', fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        // iterate over not unary conditions and fill the input
+        // contains
+        sendInput(input, 'Ignite', fix);
+        fix.detectChanges();
+        tick();
 
-            // starts with
-            options[2].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            sendInput(input, 'Net', fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            verifyFilterUIPosition(filterUIContainer, grid);
-            expect(grid.rowList.length).toEqual(1);
-            expect(grid.getCellByColumn(0, 'ID').value).toEqual(2);
-            expect(grid.getCellByColumn(0, 'ProductName').value).toMatch('NetAdvantage');
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(grid.rowList.length).toEqual(2);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // ends with
-            options[3].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            sendInput(input, 'script', fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        // starts with
+        options[2].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // does not contain
-            options[1].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(6);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        sendInput(input, 'Net', fix);
+        fix.detectChanges();
+        tick();
 
-            // use reset button
-            reset.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        verifyFilterUIPosition(filterUIContainer, grid);
+        expect(grid.rowList.length).toEqual(1);
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual(2);
+        expect(grid.getCellByColumn(0, 'ProductName').value).toMatch('NetAdvantage');
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // equals
-            options[4].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            sendInput(input, 'NetAdvantage', fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(1);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        // ends with
+        options[3].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // equals
-            options[4].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            sendInput(input, ' ', fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(0);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-            const emptyTemplate = fix.debugElement.query(By.css('span.igx-grid__tbody-message'));
-            expect(emptyTemplate.nativeElement.offsetHeight).toBeGreaterThan(0);
+        sendInput(input, 'script', fix);
+        fix.detectChanges();
+        tick();
 
-            // does not equal
-            options[5].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            sendInput(input, 'NetAdvantage', fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(7);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-        });
+        expect(grid.rowList.length).toEqual(2);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // does not contain
+        options[1].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(6);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // use reset button
+        reset.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // equals
+        options[4].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        sendInput(input, 'NetAdvantage', fix);
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(1);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // equals
+        options[4].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        sendInput(input, ' ', fix);
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(0);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        const emptyTemplate = fix.debugElement.query(By.css('span.igx-grid__tbody-message'));
+        expect(emptyTemplate.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // does not equal
+        options[5].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        sendInput(input, 'NetAdvantage', fix);
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(7);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
     }));
 
     // UI tests number column
-    it('UI tests on number column', async(() => {
+    it('UI tests on number column', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -294,200 +320,217 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        tick(100);
 
-        fix.whenStable().then(() => {
+        verifyFilterUIPosition(filterUIContainer, grid);
 
-            verifyFilterUIPosition(filterUIContainer, grid);
+        // iterate over not unary conditions and fill the input
+        // equals
+        sendInput(input, 0, fix);
+        fix.detectChanges();
+        tick();
 
-            // iterate over not unary conditions and fill the input
-            // equals
-            sendInput(input, 0, fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(1);
-            expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(0);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            const clear = filterUIContainer.query(By.css('igx-suffix'));
-            expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(grid.rowList.length).toEqual(1);
+        expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(0);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        let clear = filterUIContainer.query(By.css('igx-suffix'));
+        expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // clear input value
-            input.nativeElement.value = '';
-            input.nativeElement.dispatchEvent(new Event('input'));
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
+        // clear input value
+        input.nativeElement.value = '';
+        input.nativeElement.dispatchEvent(new Event('input'));
+        fix.detectChanges();
+        tick();
 
-            // iterate over not unary conditions when input is empty
-            // does not equal
-            options[1].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        // iterate over not unary conditions when input is empty
+        // does not equal
+        options[1].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // greater than
-            options[2].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // iterate over unary conditions
-            // null
-            options[6].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(1);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
+        // greater than
+        options[2].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // not null
-            options[7].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(7);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // empty
-            options[8].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(1);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
+        // iterate over unary conditions
+        // null
+        options[6].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // not empty
-            options[9].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(7);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(grid.rowList.length).toEqual(1);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toEqual(0);
 
-            // changing from unary to not unary condition when input is empty - filtering should keep its state
-            // equals - filter should keep its state and not be reset
-            options[0].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            input = filterUIContainer.query(By.directive(IgxInputDirective));
-            expect(grid.rowList.length).toEqual(7);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            // input is empty but there is filtering applied, so reset button should be active !
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        // not null
+        options[7].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // iterate over not unary conditions and fill the input
-            // equals
-            sendInput(input, 100, fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(1);
-            expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(100);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            const clear = filterUIContainer.query(By.css('igx-suffix'));
-            expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(grid.rowList.length).toEqual(7);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toEqual(0);
 
-            // does not equal
-            options[1].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(7);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        // empty
+        options[8].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // greater than
-            options[2].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            sendInput(input, 300, fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(grid.rowList.length).toEqual(1);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toEqual(0);
 
-            // use reset button
-            reset.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-            expect(select.nativeElement.value).toMatch('equals');
+        // not empty
+        options[9].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // less than
-            options[3].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            sendInput(input, 100, fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(grid.rowList.length).toEqual(7);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toEqual(0);
 
-            // use clear button
-            const clear = filterUIContainer.query(By.css('igx-suffix'));
-            clear.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-            expect(select.nativeElement.value).toMatch('lessThan');
+        // changing from unary to not unary condition when input is empty - filtering should keep its state
+        // equals - filter should keep its state and not be reset
+        options[0].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // greater than or equal to
-            options[4].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            sendInput(input, 254, fix);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        input = filterUIContainer.query(By.directive(IgxInputDirective));
+        expect(grid.rowList.length).toEqual(7);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        // input is empty but there is filtering applied, so reset button should be active !
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
-            // less than or equal to
-            options[5].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(6);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-        });
+        // iterate over not unary conditions and fill the input
+        // equals
+        sendInput(input, 100, fix);
+        fix.detectChanges();
+        tick();
+
+        clear = filterUIContainer.query(By.css('igx-suffix'));
+        expect(grid.rowList.length).toEqual(1);
+        expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(100);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // does not equal
+        options[1].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(7);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // greater than
+        options[2].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        sendInput(input, 300, fix);
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(2);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // use reset button
+        reset.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(select.nativeElement.value).toMatch('equals');
+
+        // less than
+        options[3].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        sendInput(input, 100, fix);
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(3);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        clear = filterUIContainer.query(By.css('igx-suffix'));
+        clear.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(select.nativeElement.value).toMatch('lessThan');
+
+        // greater than or equal to
+        options[4].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        sendInput(input, 254, fix);
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(3);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // less than or equal to
+        options[5].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(6);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
     }));
 
     // UI tests boolean column
-    it('UI tests on boolean column', async(() => {
+    it('UI tests on boolean column', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -503,87 +546,100 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        tick(100);
 
-        fix.whenStable().then(() => {
-            verifyFilterUIPosition(filterUIContainer, grid);
+        verifyFilterUIPosition(filterUIContainer, grid);
 
-            // false condition
-            options[2].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            expect(grid.getCellByColumn(0, 'Released').value).toBeFalsy();
-            expect(grid.getCellByColumn(1, 'Released').value).toBeFalsy();
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        // false condition
+        options[2].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // true condition
-            options[1].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-            expect(grid.getCellByColumn(0, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(1, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, 'Released').value).toBeFalsy();
+        expect(grid.getCellByColumn(1, 'Released').value).toBeFalsy();
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
-            // (all) condition
-            options[0].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(8);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        // true condition
+        options[1].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // empty condition
-            options[3].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-            expect(grid.getCellByColumn(0, 'Released').value).toEqual(null);
-            expect(grid.getCellByColumn(1, 'Released').value).toEqual(null);
-            expect(grid.getCellByColumn(2, 'Released').value).toEqual(undefined);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(grid.rowList.length).toEqual(3);
+        expect(grid.getCellByColumn(0, 'Released').value).toBe(true);
+        expect(grid.getCellByColumn(1, 'Released').value).toBe(true);
+        expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
-            // not empty condition
-            options[4].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(5);
-            expect(grid.getCellByColumn(0, 'Released').value).toBe(false);
-            expect(grid.getCellByColumn(1, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(3, 'Released').value).toMatch('');
-            expect(grid.getCellByColumn(4, 'Released').value).toBe(true);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        // (all) condition
+        options[0].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
 
-            // null condition
-            options[5].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            expect(grid.getCellByColumn(0, 'Released').value).toEqual(null);
-            expect(grid.getCellByColumn(1, 'Released').value).toEqual(null);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(grid.rowList.length).toEqual(8);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
 
-            // not null condition
-            options[6].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(6);
-            expect(grid.getCellByColumn(0, 'Released').value).toBe(false);
-            expect(grid.getCellByColumn(1, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(3, 'Released').value).toMatch('');
-            expect(grid.getCellByColumn(4, 'Released').value).toBe(true);
-            expect(grid.getCellByColumn(5, 'Released').value).toBe(undefined);
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        });
+        // empty condition
+        options[3].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(3);
+        expect(grid.getCellByColumn(0, 'Released').value).toEqual(null);
+        expect(grid.getCellByColumn(1, 'Released').value).toEqual(null);
+        expect(grid.getCellByColumn(2, 'Released').value).toEqual(undefined);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+
+        // not empty condition
+        options[4].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(5);
+        expect(grid.getCellByColumn(0, 'Released').value).toBe(false);
+        expect(grid.getCellByColumn(1, 'Released').value).toBe(true);
+        expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
+        expect(grid.getCellByColumn(3, 'Released').value).toMatch('');
+        expect(grid.getCellByColumn(4, 'Released').value).toBe(true);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+
+        // null condition
+        options[5].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, 'Released').value).toEqual(null);
+        expect(grid.getCellByColumn(1, 'Released').value).toEqual(null);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+
+        // not null condition
+        options[6].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(6);
+        expect(grid.getCellByColumn(0, 'Released').value).toBe(false);
+        expect(grid.getCellByColumn(1, 'Released').value).toBe(true);
+        expect(grid.getCellByColumn(2, 'Released').value).toBe(true);
+        expect(grid.getCellByColumn(3, 'Released').value).toMatch('');
+        expect(grid.getCellByColumn(4, 'Released').value).toBe(true);
+        expect(grid.getCellByColumn(5, 'Released').value).toBe(undefined);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
     }));
 
     // UI tests date column
@@ -863,7 +919,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(expectedResults[3]);
     });
 
-    it('UI - should correctly filter date column by \'equals\' filtering conditions', async(() => {
+    it('UI - should correctly filter date column by \'equals\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -872,37 +928,33 @@ describe('IgxGrid - Filtering actions', () => {
         const select = filterIcon.query(By.css('select'));
         const input = filterIcon.query(By.directive(IgxInputDirective));
 
-        fix.whenStable().then(() => {
-            filterIcon.triggerEventHandler('mousedown', null);
-            fix.detectChanges();
-            filterIcon.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            verifyFilterUIPosition(filterIcon, grid);
-            select.nativeElement.value = 'equals';
-            select.nativeElement.dispatchEvent(new Event('change'));
-            input.nativeElement.click();
-            return fix.whenRenderingDone();
-        }).then(() => {
-            fix.detectChanges();
-             // pick a date from the date picker
-            const calendar = fix.debugElement.query(By.css('igx-calendar'));
-            const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
-            currentDay.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            input.nativeElement.dispatchEvent(new Event('change'));
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(1);
-        });
+        filterIcon.triggerEventHandler('mousedown', null);
+        fix.detectChanges();
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
 
+        verifyFilterUIPosition(filterIcon, grid);
+        select.nativeElement.value = 'equals';
+        select.nativeElement.dispatchEvent(new Event('change'));
+        input.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        const calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
+        currentDay.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        input.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(1);
     }));
 
-    it('UI - should correctly filter date column by \'doesNotEqual\' filtering conditions', async(() => {
+    it('UI - should correctly filter date column by \'doesNotEqual\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -911,36 +963,33 @@ describe('IgxGrid - Filtering actions', () => {
         const select = filterIcon.query(By.css('select'));
         const input = filterIcon.query(By.directive(IgxInputDirective));
 
-        fix.whenStable().then(() => {
-            filterIcon.triggerEventHandler('mousedown', null);
-            fix.detectChanges();
-            filterIcon.nativeElement.click();
-            verifyFilterUIPosition(filterIcon, grid);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            select.nativeElement.value = 'doesNotEqual';
-            select.nativeElement.dispatchEvent(new Event('change'));
-            input.nativeElement.click();
-            return fix.whenRenderingDone();
-        }).then(() => {
-            fix.detectChanges();
-             // pick a date from the date picker
-            const calendar = fix.debugElement.query(By.css('igx-calendar'));
-            const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
-            currentDay.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            input.nativeElement.dispatchEvent(new Event('change'));
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(7);
-        });
+        filterIcon.triggerEventHandler('mousedown', null);
+        fix.detectChanges();
+        filterIcon.nativeElement.click();
+        tick(100);
+
+        verifyFilterUIPosition(filterIcon, grid);
+        fix.detectChanges();
+        select.nativeElement.value = 'doesNotEqual';
+        select.nativeElement.dispatchEvent(new Event('change'));
+        input.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        const calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
+        currentDay.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        input.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(7);
     }));
 
-    it('UI - should correctly filter date column by \'after\' filtering conditions', async(() => {
+    it('UI - should correctly filter date column by \'after\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -949,36 +998,33 @@ describe('IgxGrid - Filtering actions', () => {
         const select = filterIcon.query(By.css('select'));
         const input = filterIcon.query(By.directive(IgxInputDirective));
 
-        fix.whenStable().then(() => {
-            filterIcon.triggerEventHandler('mousedown', null);
-            fix.detectChanges();
-            filterIcon.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            verifyFilterUIPosition(filterIcon, grid);
-            select.nativeElement.value = 'after';
-            select.nativeElement.dispatchEvent(new Event('change'));
-            input.nativeElement.click();
-            return fix.whenRenderingDone();
-        }).then(() => {
-            fix.detectChanges();
-             // pick a date from the date picker
-            const calendar = fix.debugElement.query(By.css('igx-calendar'));
-            const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
-            currentDay.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            input.nativeElement.dispatchEvent(new Event('change'));
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-        });
+        filterIcon.triggerEventHandler('mousedown', null);
+        fix.detectChanges();
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
+
+        verifyFilterUIPosition(filterIcon, grid);
+        select.nativeElement.value = 'after';
+        select.nativeElement.dispatchEvent(new Event('change'));
+        input.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        const calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
+        currentDay.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        input.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(3);
     }));
 
-    it('UI - should correctly filter date column by \'before\' filtering conditions', async(() => {
+    it('UI - should correctly filter date column by \'before\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -987,116 +1033,103 @@ describe('IgxGrid - Filtering actions', () => {
         const select = filterIcon.query(By.css('select'));
         const input = filterIcon.query(By.directive(IgxInputDirective));
 
-        fix.whenStable().then(() => {
-            filterIcon.triggerEventHandler('mousedown', null);
-            fix.detectChanges();
-            filterIcon.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            verifyFilterUIPosition(filterIcon, grid);
-            select.nativeElement.value = 'before';
-            select.nativeElement.dispatchEvent(new Event('change'));
-            input.nativeElement.click();
-            return fix.whenRenderingDone();
-        }).then(() => {
-            fix.detectChanges();
-             // pick a date from the date picker
-            const calendar = fix.debugElement.query(By.css('igx-calendar'));
-            const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
-            currentDay.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            input.nativeElement.dispatchEvent(new Event('change'));
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-        });
+        filterIcon.triggerEventHandler('mousedown', null);
+        fix.detectChanges();
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
+
+        verifyFilterUIPosition(filterIcon, grid);
+        select.nativeElement.value = 'before';
+        select.nativeElement.dispatchEvent(new Event('change'));
+        input.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        const calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
+        currentDay.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        input.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(3);
     }));
 
-    it('Should correctly select month from month view datepicker/calendar component', async(() => {
+    it('Should correctly select month from month view datepicker/calendar component', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         const filterIcon = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[3];
         const input = filterIcon.query(By.directive(IgxInputDirective));
 
-        fix.whenStable().then(() => {
-            filterIcon.triggerEventHandler('mousedown', null);
-            fix.detectChanges();
-            filterIcon.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
+        filterIcon.triggerEventHandler('mousedown', null);
+        fix.detectChanges();
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
 
-            input.nativeElement.click();
-            fix.detectChanges();
+        input.nativeElement.click();
+        fix.detectChanges();
+        tick();
 
-            const calendar = fix.debugElement.query(By.css('igx-calendar'));
-            const monthView = calendar.queryAll(By.css('.date__el'))[0];
-            monthView.nativeElement.click();
+        let calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const monthView = calendar.queryAll(By.css('.date__el'))[0];
+        monthView.nativeElement.click();
+        fix.detectChanges();
+        tick();
 
-            fix.detectChanges();
+        const firstMonth = calendar.queryAll(By.css('.igx-calendar__month'))[0];
+        firstMonth.nativeElement.click();
+        fix.detectChanges();
+        tick();
 
-            const firstMonth = calendar.queryAll(By.css('.igx-calendar__month'))[0];
-            firstMonth.nativeElement.click();
+        calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const month = calendar.queryAll(By.css('.date__el'))[0];
 
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-
-            const calendar = fix.debugElement.query(By.css('igx-calendar'));
-            const month = calendar.queryAll(By.css('.date__el'))[0];
-
-            expect(month.nativeElement.textContent.trim()).toEqual('Jan');
-        });
+        expect(month.nativeElement.textContent.trim()).toEqual('Jan');
     }));
 
-    it('Should correctly select year from year view datepicker/calendar component', async(() => {
+    it('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         const filterIcon = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[3];
         const input = filterIcon.query(By.directive(IgxInputDirective));
 
-        fix.whenStable().then(() => {
-            filterIcon.triggerEventHandler('mousedown', null);
-            fix.detectChanges();
-            filterIcon.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
+        filterIcon.triggerEventHandler('mousedown', null);
+        fix.detectChanges();
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
 
-            input.nativeElement.click();
-            fix.detectChanges();
+        input.nativeElement.click();
+        fix.detectChanges();
+        tick();
 
-            const calendar = fix.debugElement.query(By.css('igx-calendar'));
-            const monthView = calendar.queryAll(By.css('.date__el'))[1];
-            monthView.nativeElement.click();
+        let calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const monthView = calendar.queryAll(By.css('.date__el'))[1];
+        monthView.nativeElement.click();
+        fix.detectChanges();
+        tick();
 
-            fix.detectChanges();
+        const firstMonth = calendar.queryAll(By.css('.igx-calendar__year'))[0];
+        firstMonth.nativeElement.click();
+        fix.detectChanges();
+        tick();
 
-            const firstMonth = calendar.queryAll(By.css('.igx-calendar__year'))[0];
-            firstMonth.nativeElement.click();
+        calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const month = calendar.queryAll(By.css('.date__el'))[1];
 
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
+        const today = new Date(Date.now());
 
-            const calendar = fix.debugElement.query(By.css('igx-calendar'));
-            const month = calendar.queryAll(By.css('.date__el'))[1];
-
-            const today = new Date(Date.now());
-
-            const expectedResult = today.getFullYear() - 3;
-            expect(month.nativeElement.textContent.trim()).toEqual(expectedResult.toString());
-        });
+        const expectedResult = today.getFullYear() - 3;
+        expect(month.nativeElement.textContent.trim()).toEqual(expectedResult.toString());
     }));
 
     // UI tests custom column
-    it('UI tests on custom column', async(() => {
+    it('UI tests on custom column', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1113,22 +1146,24 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        tick(100);
 
-        fix.whenStable().then(() => {
-            sendInput(input, 'a', fix);
-            return fix.whenStable();
-        }).then(() => {
-            verifyFilterUIPosition(filterUIContainer, grid);
+        verifyFilterUIPosition(filterUIContainer, grid);
 
-            // false condition
-            options[0].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(1);
-            expect(grid.getCellByColumn(0, 'AnotherField').value).toMatch('custom');
-            expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-            expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        });
+        sendInput(input, 'a', fix);
+        fix.detectChanges();
+        tick();
+
+        // false condition
+        options[0].selected = true;
+        select.nativeElement.dispatchEvent(new Event('change'));
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(1);
+        expect(grid.getCellByColumn(0, 'AnotherField').value).toMatch('custom');
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
     }));
 
     it('Should emit onFilteringDone when we clicked reset', () => {
@@ -1171,7 +1206,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(secondExpr.attributes['name']).toEqual('secondExpr');
     });
 
-    it('Unselecting And/Or hides second condition UI and removes the second filter expression', async(() => {
+    it('Unselecting And/Or hides second condition UI and removes the second filter expression', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1185,31 +1220,30 @@ describe('IgxGrid - Filtering actions', () => {
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        tick(100);
 
-        fix.whenStable().then(() => {
-            sendInput(input, 'I', fix);
-            return fix.whenStable();
-        }).then(() => {
-            andButton.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            const input1 = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
-            sendInput(input1, 'g', fix);
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            verifyFilterUIPosition(filterUIContainer, grid);
+        verifyFilterUIPosition(filterUIContainer, grid);
 
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(2);
-            andButton.nativeElement.click();
-            fix.detectChanges();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(grid.rowList.length).toEqual(3);
-        });
+        sendInput(input, 'I', fix);
+        fix.detectChanges();
+        tick();
+
+        andButton.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        const input1 = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
+        sendInput(input1, 'g', fix);
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(2);
+
+        andButton.nativeElement.click();
+        fix.detectChanges();
+        tick();
+
+        expect(grid.rowList.length).toEqual(3);
     }));
 
     it('Should emit onFilteringDone when clear the input of filteringUI', () => {
@@ -1238,8 +1272,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(columnFilteringExpressionsTree);
     });
 
-    // Excluding this test since there is a timing issue with the first 'expect'. The scenario works as expected.
-    xit('When filter column with value 0 and dataType number, filtering icon class indicator should be applied', ((done) => {
+    it('When filter column with value 0 and dataType number, filtering icon class indicator should be applied', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1251,27 +1284,22 @@ describe('IgxGrid - Filtering actions', () => {
         const gridFilteringToggle = filterUiContainer.query(By.css('.igx-filtering__toggle'));
         const input = filterUiContainer.query(By.directive(IgxInputDirective));
 
-        fix.whenStable().then(() => {
-            filterIcon.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            sendInput(input, 0, fix);
-            return fix.whenStable();
-        }).then(() => {
-            expect(gridFilteringToggle.nativeElement.classList.contains('igx-filtering__toggle--active')).toBeTruthy();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            grid.nativeElement.click();
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            setTimeout(() => {
-                expect(gridFilteringToggle.nativeElement.classList.contains('igx-filtering__toggle--filtered')).toBeTruthy();
-                done();
-            }, 500);
-        });
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+
+        sendInput(input, 0, fix);
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+
+        grid.nativeElement.click();
+        fix.detectChanges();
+        tick();
+        fix.detectChanges();
+
+        expect(gridFilteringToggle.nativeElement.classList.contains('igx-filtering__toggle--filtered')).toBeTruthy();
     }));
 
     it('Choose only second unary condition should filter the grid', fakeAsync(() => {
@@ -1286,31 +1314,125 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(8);
 
         filterIcon.nativeElement.click();
-        tick();
         fix.detectChanges();
-
-        andButton.nativeElement.click();
         tick();
-        fix.detectChanges();
-
-        const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
-        sendInput(input, 'g', fix);
-        tick();
-        fix.detectChanges();
 
         verifyFilterUIPosition(filterUIContainer, grid);
 
-        tick();
+        andButton.nativeElement.click();
         fix.detectChanges();
+        tick();
+
+        const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
+        sendInput(input, 'g', fix);
+        fix.detectChanges();
+        tick();
 
         expect(grid.rowList.length).toEqual(3);
         andButton.nativeElement.click();
-        tick();
         fix.detectChanges();
+        tick();
 
         expect(grid.rowList.length).toEqual(8);
 
         discardPeriodicTasks();
+    }));
+
+    it('Should display populated filter dialog without redrawing it', async () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.width = '400px';
+        grid.getColumnByName('ID').width = '50px';
+
+        // filter the ProductName by two conditions
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression = {
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+        const expression1 = {
+            fieldName: 'ProductName',
+            searchVal: 'Angular',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        filteringExpressionsTree.filteringOperands.push(expression1);
+        grid.filter('ProductName', null, filteringExpressionsTree);
+
+        fix.detectChanges();
+
+        // scroll horizontally to the right, so ProductName column is out of view
+        const horScroll = grid.parentVirtDir.getHorizontalScroll();
+        horScroll.scrollLeft = 1000;
+        fix.detectChanges();
+
+        // scroll horizontally to the left, so ProductName is back in view
+        horScroll.scrollLeft = 0;
+        fix.detectChanges();
+
+        // click filter icon
+        const filterButton = fix.debugElement.queryAll(By.css('igx-grid-filter'))[0];
+        const filterIcon = filterButton.query(By.css('igx-icon'));
+        filterIcon.triggerEventHandler('mousedown', null);
+        fix.detectChanges();
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+
+        await fix.whenStable();
+
+        const filterUI = fix.debugElement.query(By.css('.igx-filtering__options'));
+        // verify 'And' button is selected
+        const buttonGroup = filterUI.query(By.css('igx-buttongroup'));
+        const buttons = buttonGroup.queryAll(By.css('.igx-button-group__item'));
+        const andButton = buttons.filter((btn) => btn.nativeElement.textContent === 'And')[0];
+        expect(andButton).not.toBeNull();
+        expect(andButton).toBeDefined();
+        expect(andButton.nativeElement.classList.contains('igx-button-group__item--selected'))
+            .toBeTruthy('AndButton is not selected');
+
+        // verify both filter expression components are present
+        const filterExpressions = filterUI.queryAll(By.css('igx-grid-filter-expression'));
+        expect(filterExpressions).not.toBeNull();
+        expect(filterExpressions).toBeDefined();
+        expect(filterExpressions.length).toBe(2, 'not all filter-expression components are visible');
+    });
+
+    it('Should correctly create FilteringExpressionsTree and populate filterUI.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression = {
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+
+        filteringExpressionsTree.filteringOperands.push(expression);
+        grid.filteringExpressionsTree = filteringExpressionsTree;
+
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(2);
+
+        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const select = filterUIContainer.query(By.css('select'));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
+
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
+
+        verifyFilterUIPosition(filterUIContainer, grid);
+
+        expect(select.nativeElement.value).toMatch('startsWith');
+        expect(input.nativeElement.value).toMatch('Ignite');
     }));
 });
 
@@ -1321,6 +1443,7 @@ export class CustomFilter extends IgxFilteringOperand {
         super();
         this.operations = [{
             name: 'custom',
+            isUnary: false,
             logic: (target: string): boolean => {
                 return target === 'custom';
             }
@@ -1429,12 +1552,11 @@ function sendInput(element, text, fix) {
     element.nativeElement.value = text;
     element.nativeElement.dispatchEvent(new Event('input'));
     fix.detectChanges();
-    return fix.whenStable();
 }
 
 function verifyFilterUIPosition(filterUIContainer, grid) {
     const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
-    filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
+        filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
     expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
 }
 
