@@ -155,7 +155,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     ngAfterViewInit() {
         this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute('placeholder');
-        this.inputGroup.disabled = this.nativeElement.hasAttribute('disabled');
+        this.inputGroup.disabled = this.inputGroup.disabled || this.nativeElement.hasAttribute('disabled');
         this.inputGroup.isRequired = this.nativeElement.hasAttribute('required');
 
         // Also check the control's validators for required
