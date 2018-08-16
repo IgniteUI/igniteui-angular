@@ -7,6 +7,7 @@ import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.compo
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxInputGroupModule } from '../input-group';
 
 describe('IgxDatePicker', () => {
     beforeEach(async(() => {
@@ -17,9 +18,10 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerWithCustomFormatterComponent,
                 IgxDatePickerWithPassedDateComponent,
                 IgxDatePickerWIthLocaleComponent,
-                IgxDatePickerNgModelComponent
+                IgxDatePickerNgModelComponent,
+                IgxDatePickerRetemplatedComponent
             ],
-            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule]
+            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule]
         })
         .compileComponents();
     }));
@@ -270,6 +272,16 @@ describe('IgxDatePicker', () => {
         const boundValue = fix.componentInstance.val;
         expect(boundValue).toEqual(expectedRes);
     }));
+
+    it("Retemplate a DatePicker's input group", fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxDatePickerRetemplatedComponent);
+        tick();
+        fix.detectChanges();
+
+        const dom = fix.debugElement;
+        expect(dom.query(By.css('.igx-input-group'))).not.toBeNull();
+        expect(dom.query(By.css('.igx-icon'))).toBeNull();
+    }));
 });
 
 @Component({
@@ -342,3 +354,17 @@ export class IgxDatePickerNgModelComponent {
     public val: Date = new Date(2011, 11, 11);
     @ViewChild(IgxDatePickerComponent) public datePicker: IgxDatePickerComponent;
 }
+
+@Component({
+    template: `
+<igx-datePicker>
+    <ng-template igxDatePickerTemplate let-displayData="displayData">
+        <igx-input-group>
+            <label igxLabel>Date</label>
+            <input igxInput [value]="displayData"/>
+        </igx-input-group>
+    </ng-template>
+</igx-datePicker>
+    `
+})
+export class IgxDatePickerRetemplatedComponent {}
