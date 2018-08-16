@@ -736,7 +736,7 @@ describe('IgxTimePicker', () => {
         fixture.detectChanges();
 
         hourColumn.triggerEventHandler('wheel', event);
-        await wait();
+        await wait(200);
         fixture.detectChanges();
 
         minuteColumn.nativeElement.focus();
@@ -744,7 +744,7 @@ describe('IgxTimePicker', () => {
         fixture.detectChanges();
 
         minuteColumn.triggerEventHandler('wheel', event);
-        await wait();
+        await wait(200);
         fixture.detectChanges();
 
         AMPMColumn.nativeElement.focus();
@@ -752,7 +752,7 @@ describe('IgxTimePicker', () => {
         fixture.detectChanges();
 
         AMPMColumn.triggerEventHandler('wheel', event);
-        await wait();
+        await wait(200);
         fixture.detectChanges();
 
         const timeFromPopupHeader: any = fixture.debugElement.query(By.css('.igx-time-picker__header')).nativeElement.children;
@@ -829,7 +829,7 @@ describe('IgxTimePicker', () => {
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
         UIInteractions.clickElement(timePickerTarget);
-        await wait();
+        await wait(200);
         fixture.detectChanges();
 
         expect(dom.query(By.css('.igx-time-picker--vertical'))).not.toBeNull();
