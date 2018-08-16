@@ -62,6 +62,7 @@ export interface IgxTimePickerValidationFailedEventArgs {
         }
     ],
     selector: 'igx-time-picker',
+    styles: [':host {display: block;}'],
     templateUrl: 'time-picker.component.html'
 })
 export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, DoCheck, AfterViewInit {
