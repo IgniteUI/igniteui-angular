@@ -3925,7 +3925,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowList) {
             return 0;
         }
-        this.gridAPI.escape_editMode(this.id);
+
+        const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editModeCell) {
+            this.gridAPI.escape_editMode(this.id);
+        }
 
         if (this.collapsedHighlightedItem) {
             this.collapsedHighlightedItem = null;
