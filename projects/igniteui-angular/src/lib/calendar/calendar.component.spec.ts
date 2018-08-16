@@ -1231,12 +1231,12 @@ class DateRangesPropertiesTester {
     }
 
     private static testBetween(assignFunc: assignDateRangeDescriptors,
-        testRangesFunc: testDatesRange, minDate: Date, maxDate: Date) {
+        testRangesFunc: testDatesRange, firstDate: Date, secondDate: Date) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const betweenMin = minDate;
-        const betweenMax = maxDate;
+        const betweenMin = firstDate.getTime() > secondDate.getTime() ? secondDate : firstDate;
+        const betweenMax = firstDate.getTime() > secondDate.getTime() ? firstDate : secondDate;
         dateRangeDescriptors.push(
             new DateRangeDescriptor(DateRangeType.Between, [betweenMax, betweenMin]));
         assignFunc(calendar, dateRangeDescriptors);

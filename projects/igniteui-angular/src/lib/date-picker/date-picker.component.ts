@@ -214,12 +214,56 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this._formatViews = Object.assign(this._formatViews, formatViews);
     }
 
+    /**
+     * Gets the disabled dates descriptors.
+     * ```typescript
+     * let disabledDates = this.datepicker.disabledDates;
+     * ```
+     */
     public get disabledDates(): DateRangeDescriptor[] {
         return this._disabledDates;
     }
 
+    /**
+     * Sets the disabled dates' descriptors.
+     * ```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *ngAfterViewInit(){
+     *    this.datePicker.disabledDates = [
+     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
+     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *}
+     *```
+     */
     public set disabledDates(value: DateRangeDescriptor[]) {
         this._disabledDates = value;
+    }
+
+    /**
+     * Gets the special dates descriptors.
+     * ```typescript
+     * let specialDates = this.datepicker.specialDates;
+     * ```
+     */
+    public get specialDates(): DateRangeDescriptor[] {
+        return this._specialDates;
+    }
+
+    /**
+     * Sets the special dates' descriptors.
+     * ```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *ngAfterViewInit(){
+     *    this.datePicker.specialDates = [
+     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
+     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *}
+     *```
+     */
+    public set specialDates(value: DateRangeDescriptor[]) {
+        this._specialDates = value;
     }
 
     /**
@@ -364,6 +408,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     };
 
     private _disabledDates: DateRangeDescriptor[] = null;
+
+    private _specialDates: DateRangeDescriptor[] = null;
 
     @ViewChild(IgxInputDirective) private input: IgxInputDirective;
 
@@ -510,6 +556,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.calendar.locale = this.locale;
         this.calendar.vertical = this.vertical;
         this.calendar.disabledDates = this.disabledDates;
+        this.calendar.specialDates = this.specialDates;
 
         if (this.headerTemplate) {
             this.calendar.headerTemplate = this.headerTemplate;
