@@ -1029,6 +1029,37 @@ describe('IgxGrid - Column Moving', () => {
         expect(grid.visibleColumns[1].field).toEqual('Region');
     }));
 
+    it('Should be able to reoreder columns when a column is grouped.', (async () => {
+        const fixture = TestBed.createComponent(MovableColumnsComponent);
+        fixture.detectChanges();
+
+        fixture.componentInstance.isGroupable = true;
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+
+        // step 1 - group a column
+        grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+        await wait(200);
+        fixture.detectChanges();
+
+        // step 2 - move a column
+        const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[0].nativeElement;
+        UIInteractions.simulatePointerEvent('pointerdown', header, 180, 120);
+        UIInteractions.simulatePointerEvent('pointermove', header, 180, 126);
+        await wait(100);
+        fixture.detectChanges();
+        UIInteractions.simulatePointerEvent('pointermove', header, 350, 135);
+        await wait(100);
+        UIInteractions.simulatePointerEvent('pointerup', header, 350, 135);
+        await wait(100);
+        fixture.detectChanges();
+
+        const columnsList = grid.columnList.toArray();
+        expect(columnsList[0].field).toEqual('Name');
+        expect(columnsList[1].field).toEqual('ID');
+    }));
+
     it('Should not break KB after columns are reordered - selection belongs to the moved column.', (async () => {
         const fixture = TestBed.createComponent(MovableColumnsComponent);
         fixture.detectChanges();
@@ -1105,36 +1136,6 @@ describe('IgxGrid - Column Moving', () => {
         fixture.detectChanges();
 
         expect(grid.getCellByColumn(0, 'LastName').selected).toBeTruthy();
-    }));
-
-    it('Should be able to reoreder columns when a column is grouped.', (async () => {
-        const fixture = TestBed.createComponent(MovableColumnsComponent);
-        fixture.detectChanges();
-
-        fixture.componentInstance.isGroupable = true;
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.grid;
-
-        // step 1 - group a column
-        grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
-        await wait(200);
-        fixture.detectChanges();
-
-        // step 2 - move a column
-        const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[0].nativeElement;
-        UIInteractions.simulatePointerEvent('pointerdown', header, 150, 120);
-        UIInteractions.simulatePointerEvent('pointermove', header, 150, 126);
-        await wait(100);
-        fixture.detectChanges();
-        UIInteractions.simulatePointerEvent('pointermove', header, 400, 126);
-        UIInteractions.simulatePointerEvent('pointerup', header, 400, 126);
-        await wait(100);
-        fixture.detectChanges();
-
-        const columnsList = grid.columnList.toArray();
-        expect(columnsList[0].field).toEqual('Name');
-        expect(columnsList[1].field).toEqual('ID');
     }));
 
     xit('Pinning - should be able to reorder pinned columns among themselves.', fakeAsync(() => {
