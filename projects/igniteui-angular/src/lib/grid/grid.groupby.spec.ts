@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
+import { HelperUtils} from '../test-utils/helper-utils.spec';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -24,45 +25,6 @@ describe('IgxGrid - GroupBy', () => {
     const DISABLED_CHIP = 'igx-chip--disabled';
     const CHIP_REMOVE_ICON = '.igx-chip__remove-icon';
     const CHIP = 'igx-chip';
-    const navigateToIndex = (grid, rowStartIndex, rowEndIndex, cb?, colIndex?) => {
-        const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
-        const row = grid.getRowByIndex(rowStartIndex);
-        const cIndx = colIndex || 0;
-        const colKey = grid.columnList.toArray()[cIndx].field;
-        let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-        if (rowStartIndex === rowEndIndex) {
-            if (cb) { cb(); } return;
-        }
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            code: dir,
-            key: dir
-        });
-        const elem = row instanceof IgxGridGroupByRowComponent ?
-            row : grid.getCellByColumn(row.index, colKey);
-        if (dir === 'ArrowDown') {
-            elem.onKeydownArrowDown(keyboardEvent);
-        } else {
-            elem.onKeydownArrowUp(keyboardEvent);
-        }
-        grid.cdr.detectChanges();
-
-        if (nextRow) {
-            setTimeout(() => {
-                grid.cdr.detectChanges();
-                navigateToIndex(grid, nextRow.index, rowEndIndex, cb, colIndex);
-            }, 10);
-        } else {
-            // else wait for chunk to load.
-            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                next: () => {
-                    grid.cdr.detectChanges();
-                    nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-                    navigateToIndex(grid, nextRow.index, rowEndIndex, cb, colIndex);
-                }
-            });
-        }
-
-    };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -612,10 +574,9 @@ describe('IgxGrid - GroupBy', () => {
         expect(gRow.expanded).toBe(true);
     });
 
-    xit('should allow keyboard navigation through group rows.', (done) => {
+    it('should allow keyboard navigation through group rows.', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
-        const mockEvent = { preventDefault: () => { } };
 
         fix.componentInstance.width = '400px';
         fix.componentInstance.height = '300px';
@@ -625,26 +586,23 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
-        const cbFunc2 = () => {
-            const row = grid.getRowByIndex(0);
-            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
-            expect(row.focused).toBe(true);
-            done();
-        };
-        const cbFunc = () => {
-            fix.detectChanges();
-            const row = grid.getRowByIndex(9);
-            expect(row instanceof IgxGridRowComponent).toBe(true);
-            expect(row.focused).toBe(true);
-            expect(row.cells.toArray()[0].selected).toBe(true);
+        await HelperUtils.navigateVerticallyToIndex(grid, 0, 9);
 
-            navigateToIndex(grid, 9, 0, cbFunc2);
-        };
+        let row = grid.getRowByIndex(9);
+        expect(row instanceof IgxGridRowComponent).toBe(true);
+        expect(row.focused).toBe(true);
+        expect(row.cells.toArray()[0].selected).toBe(true);
 
-        navigateToIndex(grid, 0, 9, cbFunc);
-    });
 
-    it('should persist last selected cell column index when navigation down through group rows.', async (done) => {
+        await HelperUtils.navigateVerticallyToIndex(grid, 9, 0);
+
+        row = grid.getRowByIndex(0);
+        expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+        expect(row.focused).toBe(true);
+
+    }));
+
+    it('should persist last selected cell column index when navigation down through group rows.', async() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '400px';
@@ -657,28 +615,22 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
-        await wait(100);
+        await wait();
+        let cell = grid.getCellByColumn(2, 'Released');
+        cell.onFocus(new Event('focus'));
+
+        await HelperUtils.navigateVerticallyToIndex(grid, 0, 9, 4);
+
+        grid.markForCheck();
         fix.detectChanges();
-        const cbFunc = () => {
-            grid.cdr.detectChanges();
-            setTimeout(() => {
-                const row = grid.getRowByIndex(9);
-                const cell = grid.getCellByColumn(9, 'Released');
-                expect(row instanceof IgxGridRowComponent).toBe(true);
-                expect(row.focused).toBe(true);
-                expect(cell.selected).toBe(true);
-                done();
-            }, 50);
-        };
-        setTimeout(() => {
-            const cell = grid.getCellByColumn(2, 'Released');
-            cell.onFocus(new Event('focus'));
-            fix.detectChanges();
-            navigateToIndex(grid, 0, 9, cbFunc, 4);
-        }, 50);
+        const row = grid.getRowByIndex(9);
+        cell = grid.getCellByColumn(9, 'Released');
+        expect(row instanceof IgxGridRowComponent).toBe(true);
+        expect(row.focused).toBe(true);
+        expect(cell.selected).toBe(true);
     });
 
-    it('should persist last selected cell column index when navigation up through group rows.', (done) => {
+    it('should persist last selected cell column index when navigation up through group rows.', async() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
@@ -692,26 +644,19 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
         grid.verticalScrollContainer.addScrollTop(1000);
-
+        await wait();
         fix.detectChanges();
-        const cbFunc = () => {
-            grid.cdr.detectChanges();
-            setTimeout(() => {
-                const row = grid.getRowByIndex(0);
-                expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
-                expect(row.focused).toBe(true);
-                done();
-            }, 10);
-        };
-        setTimeout(() => {
-            const cell = grid.getCellByColumn(20, 'Released');
-            cell.onFocus(new Event('focus'));
-            fix.detectChanges();
-            navigateToIndex(grid, 20, 0, cbFunc, 4);
-        }, 10);
+        const cell = grid.getCellByColumn(20, 'Released');
+        cell.onFocus(new Event('focus'));
+        fix.detectChanges();
+        await HelperUtils.navigateVerticallyToIndex(grid, 20, 0, 4);
+
+        const row = grid.getRowByIndex(0);
+        expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+        expect(row.focused).toBe(true);
     });
 
-    xit('should clear selection from data cells when a group row is focused via KB navigation.', (done) => {
+    it('should clear selection from data cells when a group row is focused via KB navigation.', async() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         const mockEvent = { preventDefault: () => { } };
@@ -724,22 +669,18 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
-
-        const cbFunc = () => {
-            fix.detectChanges();
-            const row = grid.getRowByIndex(0);
-            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
-            expect(row.focused).toBe(true);
-            const oldSelectedCell = grid.getCellByColumn(2, 'Downloads');
-            expect(cell.selected).toBe(false);
-            done();
-        };
-
         const cell = grid.getCellByColumn(2, 'Downloads');
         cell.onFocus(new Event('focus'));
         fix.detectChanges();
         expect(cell.selected).toBe(true);
-        navigateToIndex(grid, 2, 0, cbFunc);
+        await HelperUtils.navigateVerticallyToIndex(grid, 2, 0);
+
+        fix.detectChanges();
+        const row = grid.getRowByIndex(0);
+        expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+        expect(row.focused).toBe(true);
+        const oldSelectedCell = grid.getCellByColumn(2, 'Downloads');
+        expect(cell.selected).toBe(false);
 
     });
 
@@ -999,7 +940,6 @@ describe('IgxGrid - GroupBy', () => {
         for (const grRow of grRows) {
             expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
-        discardPeriodicTasks();
     }));
 
     // GroupBy + Summaries
@@ -1068,7 +1008,6 @@ describe('IgxGrid - GroupBy', () => {
 
     // GroupBy + Updating
     it('should update the UI when adding/deleting/updating records via the API so that they more to the correct group.', fakeAsync(() => {
-        discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '500px';
@@ -1123,7 +1062,6 @@ describe('IgxGrid - GroupBy', () => {
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(6);
-        discardPeriodicTasks();
     }));
 
     // tslint:disable-next-line:max-line-length
