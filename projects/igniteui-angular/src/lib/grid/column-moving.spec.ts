@@ -20,7 +20,7 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 const COLUMN_HEADER_CLASS = '.igx-grid__th';
 const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__th--fw';
 
-xdescribe('IgxGrid - Column Moving', () => {
+describe('IgxGrid - Column Moving', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
