@@ -7,7 +7,6 @@ import {
     Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, IgxCalendarDateDirective,
     monthRange, weekDay, WEEKDAYS, DateRangeDescriptor, DateRangeType } from './index';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { componentFactoryName } from '@angular/compiler';
 
 describe('IgxCalendar', () => {
     beforeEach(() => {
@@ -995,6 +994,148 @@ describe('IgxCalendar', () => {
             DateRangesPropertiesTester.assignSpecialDatesDescriptors,
             DateRangesPropertiesTester.testSpecialDates
         );
+    });
+
+    it('Should navigate to first enabled date when using "home" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 2)];
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, specificDates),
+            new DateRangeDescriptor(DateRangeType.Weekends));
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 5).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to last enabled date when using "end" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const rangeDates = [new Date(2017, 5, 28), new Date(2017, 5, 30)];
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Between, rangeDates),
+            new DateRangeDescriptor(DateRangeType.Specific, [new Date(2017, 5, 27)]));
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 26).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to first enabled date when using "arrow up" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDates = [new Date(2017, 5, 23), new Date(2017, 5, 16)];
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, specificDates),
+            new DateRangeDescriptor(DateRangeType.Weekends));
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+                fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 9).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to first enabled date when using "arrow down" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDates = [new Date(2017, 5, 8), new Date(2017, 5, 15)];
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, specificDates),
+            new DateRangeDescriptor(DateRangeType.Weekends));
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 22).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to first enabled date when using "arrow left" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Between, rangeDates));
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 1).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to first enabled date when using "arrow right" key.', () => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Between, rangeDates));
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+                fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 30).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
     });
 });
 
