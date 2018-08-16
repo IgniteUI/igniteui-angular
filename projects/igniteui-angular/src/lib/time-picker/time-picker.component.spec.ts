@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxInputGroupModule } from '../input-group';
 
 describe('IgxTimePicker', () => {
     beforeEach(async(() => {
@@ -18,9 +19,10 @@ describe('IgxTimePicker', () => {
                 IgxTimePickerWith24HTimeComponent,
                 IgxTimePickerWithAMPMLeadingZerosTimeComponent,
                 IgxTimePickerWithSpinLoopFalseValueComponent,
-                IgxTimePickerWithItemsDeltaValueComponent
+                IgxTimePickerWithItemsDeltaValueComponent,
+                IgxTimePickerRetemplatedComponent
             ],
-            imports: [IgxTimePickerModule, FormsModule, BrowserAnimationsModule]
+            imports: [IgxTimePickerModule, FormsModule, BrowserAnimationsModule, IgxInputGroupModule]
         })
         .compileComponents();
     }));
@@ -838,6 +840,16 @@ describe('IgxTimePicker', () => {
 
         expect(dialog.offsetWidth).toBeGreaterThan(dialog.offsetHeight);
     }));
+
+    it('TimePicker with retemplated input group (icon removed)', (async() => {
+        const fixture = TestBed.createComponent(IgxTimePickerRetemplatedComponent);
+        wait();
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        expect(dom.query(By.css('.igx-input-group'))).not.toBeNull();
+        expect(dom.query(By.css('.igx-icon'))).toBeNull();
+    }));
 });
 
 @Component({
@@ -931,6 +943,20 @@ export class IgxTimePickerWithItemsDeltaValueComponent {
     public customitemsDelta: any = {hours: 2, minutes: 2};
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
+
+@Component({
+    template: `
+<igx-time-picker>
+    <ng-template igxTimePickerInputGroup let-displayTime="displayTime">
+        <igx-input-group>
+            <label igxLabel>Time</label>
+            <input igxInput [value]="displayTime"/>
+        </igx-input-group>
+    </ng-template>
+</igx-time-picker>
+    `
+})
+export class IgxTimePickerRetemplatedComponent {}
 
 // helper functions
 function findByInnerText(collection, searchText) {
