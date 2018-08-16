@@ -224,7 +224,7 @@ describe('IgxGrid - Summaries', () => {
             }
         });
     });
-    it('should recalculate summary functions on updateRow', () => {
+    fit('should recalculate summary functions on updateRow', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -258,8 +258,8 @@ describe('IgxGrid - Summaries', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
-        const oldMaxValue = 20000;
-        const newMaxValue = 99000;
+        const oldMaxValue = '20,000';
+        const newMaxValue = '99,000';
         const grid = fixture.componentInstance.grid1;
         const summariesUnitOfStock = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))[3];
         const unitsInStockCell = grid.getCellByColumn(0, 'UnitsInStock');
