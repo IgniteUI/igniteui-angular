@@ -19,7 +19,6 @@
             <option [value]="val" [selected]="api.perPage == val" *ngFor="let val of [5, 10, 15, 25, 50, 100, 500]">{{ val }}</option>
         </select>
 </ng-template>
-  
 <div [style.width.px]='calcWidth' class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <igx-chips-area class="igx-chips-area" (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <igx-chip *ngFor="let expr of chipsGoupingExpressions; let last = last;" [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [removable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
@@ -42,7 +41,7 @@
     </igx-chips-area>
 </div>
 
-<div class="igx-grid__thead" igxOverlayOutlet #outlet="overlay-outlet" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
+<div class="igx-grid__thead" igxOverlayOutlet role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
