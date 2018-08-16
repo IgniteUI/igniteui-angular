@@ -266,7 +266,7 @@ export class Calendar {
         if (date.getFullYear() === year) {
             return date.getMonth() > month;
         }
-        
+
         return date.getFullYear() > year;
     }
 }
