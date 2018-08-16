@@ -3885,6 +3885,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
         this.subscribeNext(virtualDir, () => {
+            this.cdr.detectChanges();
             let target;
             row = this.gridAPI.get_row_by_index(this.id, rowIndex);
             target = this.gridAPI.get_cell_by_visible_index(
@@ -3905,7 +3906,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
             target._updateCellSelectionStatus();
-            this.cdr.markForCheck();
         });
     }
 
