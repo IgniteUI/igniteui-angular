@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, ViewChild } from '@angular/core';
+﻿import { Component, DebugElement, ViewChild, AfterViewInit, EventEmitter, OnDestroy } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -418,7 +418,7 @@ describe('IgxGrid - Cell component', () => {
         expect(cell.value).toBe(selectedDate);
     }));
 
-    it('edit mode - leaves cell in edit mode on scroll', async(() => {
+    it('edit mode - leaves cell in edit mode on scroll', (done) => {
         const fixture = TestBed.createComponent(CellEditingScrollTestComponent);
         fixture.detectChanges();
 
@@ -433,26 +433,25 @@ describe('IgxGrid - Cell component', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            const editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
+            let editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
             expect(editableCellId.columnID).toBe(editCellID.columnID);
             expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
             expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
             fixture.componentInstance.scrollTop(1000);
-            return fixture.whenStable();
-        }).then(() => {
-            setTimeout(() => {
+            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
                 fixture.detectChanges();
                 fixture.componentInstance.scrollLeft(400);
-                setTimeout(() => {
+                grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
                     fixture.detectChanges();
-                    const editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
+                    editCellID = cell.gridAPI.get_cell_inEditMode(cell.gridID).cellID;
                     expect(editableCellId.columnID).toBe(editCellID.columnID);
                     expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
                     expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
-                }, 100);
-            }, 100);
+                    done();
+                });
+            });
         });
-    }));
+    });
 
     it('edit mode - exit edit mode and submit when pin/unpin unpin column', fakeAsync(() => {
         const fixture = TestBed.createComponent(CellEditingScrollTestComponent);
@@ -719,7 +718,7 @@ describe('IgxGrid - Cell component', () => {
         });
     }));
 
-    it('should scroll first row into view when pressing arrow up', async(() => {
+    it('should scroll first row into view when pressing arrow up', (done) => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
 
@@ -747,16 +746,17 @@ describe('IgxGrid - Cell component', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            setTimeout(() => {
+            fix.componentInstance.instance.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
                 const scrollContainer = fix.componentInstance.instance.verticalScrollContainer.dc.instance._viewContainer;
                 const scrollContainerOffset = scrollContainer.element.nativeElement.offsetTop;
 
                 expect(scrollContainerOffset).toEqual(0);
                 expect(fix.componentInstance.selectedCell.value).toEqual(0);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
-            }, 100);
+                done();
+            });
         });
-    }));
+    });
 
     it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -796,7 +796,6 @@ describe('IgxGrid - Cell component', () => {
                 expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
                 done();
             }, 10);
-
         };
         // navigate down to 100th row.
         navigateVerticallyToIndex(grid, cell, 100, cbFunc);
@@ -900,6 +899,8 @@ describe('IgxGrid - Cell component', () => {
         const grid = fix.componentInstance.instance;
         const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
         const cell = rows[3].querySelectorAll('igx-grid-cell')[1];
+        const displayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
+        const bottomCellVisibleHeight = displayContainer.parentElement.offsetHeight % grid.rowHeight;
 
         cell.dispatchEvent(new Event('focus'));
         fix.detectChanges();
@@ -910,14 +911,13 @@ describe('IgxGrid - Cell component', () => {
         const curCell = grid.getCellByColumn(3, '1');
         curCell.onKeydownArrowDown(new KeyboardEvent('keydown', { key: 'arrowdown', code: '40' }));
 
-        // We use setTimout to execute scroll events in the event queue
-        setTimeout(() => {
-            const displayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
+        grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+            expect(parseInt(displayContainer.style.top, 10)).toEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
             expect(displayContainer.parentElement.scrollTop).toEqual(0);
             expect(fix.componentInstance.selectedCell.value).toEqual(40);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
             done();
-        }, 100);
+        });
     });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating up', (done) => {
@@ -930,8 +930,7 @@ describe('IgxGrid - Cell component', () => {
         const displayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
 
         fix.componentInstance.scrollTop(25);
-        // We use setTimout to execute scroll events in the event queue
-        setTimeout(() => {
+        grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
             fix.detectChanges();
 
             expect(displayContainer.style.top).toEqual('-25px');
@@ -947,18 +946,16 @@ describe('IgxGrid - Cell component', () => {
 
             const curCell = grid.getCellByColumn(1, '1');
             curCell.onKeydownArrowUp(new KeyboardEvent('keydown', { key: 'arrowup', code: '38' }));
-            fix.detectChanges();
 
-            // We use setTimout to execute scroll events in the event queue
-            setTimeout(() => {
+            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
                 expect(displayContainer.style.top).toEqual('0px');
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(0);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
                 done();
-            }, 100);
-        }, 200);
+            });
+        });
     });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating left', (done) => {
@@ -972,8 +969,7 @@ describe('IgxGrid - Cell component', () => {
         const rowDisplayContainer = rows[1].querySelector('igx-display-container');
 
         fix.componentInstance.scrollLeft(50);
-        // We use setTimout to execute scroll events in the event queue
-        setTimeout(() => {
+        grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
             fix.detectChanges();
 
             expect(rowDisplayContainer.style.left).toEqual('-50px');
@@ -988,14 +984,14 @@ describe('IgxGrid - Cell component', () => {
             const curCell = grid.getCellByColumn(1, '1');
             curCell.onKeydownArrowLeft(new KeyboardEvent('keydown', { key: 'arrowleft', code: '37' }));
 
-            // We use setTimout to execute scroll events in the event queue
-            setTimeout(() => {
+            grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
+                fix.detectChanges();
                 expect(rowDisplayContainer.style.left).toEqual('0px');
                 expect(fix.componentInstance.selectedCell.value).toEqual(0);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('0');
                 done();
-            }, 100);
-        }, 200);
+            });
+        });
     });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating right', (done) => {
@@ -1020,13 +1016,13 @@ describe('IgxGrid - Cell component', () => {
         const curCell = grid.getCellByColumn(1, '2');
         curCell.onKeydownArrowRight(new KeyboardEvent('keydown', { key: 'arrowright', code: '39' }));
 
-        // We use setTimout to execute scroll events in the event queue
-        setTimeout(() => {
+        grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
+            fix.detectChanges();
             expect(rowDisplayContainer.style.left).toEqual('-43px');
             expect(fix.componentInstance.selectedCell.value).toEqual(30);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('3');
             done();
-        }, 100);
+        });
     });
 
     it('When cell in edit mode and try to navigate the caret around the cell text the focus should remain.', async(() => {
