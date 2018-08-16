@@ -42,7 +42,7 @@
     </igx-chips-area>
 </div>
 
-<div class="igx-grid__thead" igxOverlayOutlet role="rowgroup" [style.width.px]='calcWidth' #theadRow>
+<div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
@@ -131,4 +131,6 @@
     <igx-icon fontSet="material" name="group_work" class="igx-drop-area__icon"></igx-icon>
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
+
+<div class="igx-grid__filtering-outlet" igxOverlayOutlet></div>
 
