@@ -10,6 +10,8 @@ All notable changes for each version of this project will be documented in this 
     - Added the ability to define buttons directly in the template
 - `igx-time-picker`:
     - `igxTimePickerInputGroup` - new directive which should be applied on the child `<ng-template>` element when `IgxTimePickerComponent`'s input group is retemplated. 
+- `igx-datePicker`:
+    - `igxDatePickerInputGroup` - new directive which should be applied on the child `<ng-template>` element when `IgxDatePickerComponent`'s input group is retemplated. 
 
 ## 6.1.3
 - **General**
