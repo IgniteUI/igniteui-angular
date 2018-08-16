@@ -210,7 +210,7 @@ export class IgxOverlayService {
     private moveElementToOverlay(info: OverlayInfo) {
         const wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(wrapperElement, info.settings);
-        this.getOverlayElement().appendChild(wrapperElement);
+        this.getOverlayElement(info).appendChild(wrapperElement);
         const elementScrollTop = info.elementRef.nativeElement.scrollTop;
         contentElement.appendChild(info.elementRef.nativeElement);
 
@@ -244,7 +244,10 @@ export class IgxOverlayService {
         return content;
     }
 
-    private getOverlayElement(): HTMLElement {
+    private getOverlayElement(info: OverlayInfo): HTMLElement {
+        if (info.settings.outlet) {
+            return info.settings.outlet.nativeElement;
+        }
         if (!this._overlayElement) {
             this._overlayElement = this._document.createElement('div');
             this._overlayElement.classList.add('igx-overlay');
@@ -281,12 +284,13 @@ export class IgxOverlayService {
 
     private onCloseDone(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
-        if (!this._overlayElement.contains(child)) {
+        const outlet = this.getOverlayElement(info);
+        if (!outlet.contains(child)) {
             console.warn('Component with id:' + info.id + ' is already removed!');
             return;
         }
 
-        this._overlayElement.removeChild(child.parentNode.parentNode);
+        outlet.removeChild(child.parentNode.parentNode);
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);
             info.componentRef.destroy();
@@ -299,7 +303,9 @@ export class IgxOverlayService {
 
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
-        if (this._overlayInfos.length === 0 && this._overlayElement.parentElement) {
+
+        // this._overlayElement.parentElement check just for tests that manually delete the element
+        if (this._overlayInfos.length === 0 && this._overlayElement && this._overlayElement.parentElement) {
             this._overlayElement.parentElement.removeChild(this._overlayElement);
             this._overlayElement = null;
         }
