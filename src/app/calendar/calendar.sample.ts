@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, DateRangeDescriptor, DateRangeType } from '../../../projects/igniteui-angular/src/lib/calendar';
+import { IgxCalendarComponent, DateRangeDescriptor, DateRangeType } from 'igniteui-angular';
 
 @Component({
     selector: 'app-calendar-sample',
@@ -13,6 +13,7 @@ export class CalendarSampleComponent implements OnInit {
             new Date(2018, 8, 2),
             new Date(2018, 8, 8)
         ])];
+
         this.calendar.specialDates = [new DateRangeDescriptor(DateRangeType.Specific, [
             new Date(2018, 7, 4),
             new Date(2018, 7, 14),
