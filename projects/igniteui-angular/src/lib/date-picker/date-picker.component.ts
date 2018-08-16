@@ -13,7 +13,9 @@ import {
     Output,
     ViewChild,
     ViewContainerRef,
-    HostListener
+    HostListener,
+    TemplateRef,
+    Directive
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -28,6 +30,13 @@ import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+@Directive({
+    selector: '[igxDatePickerTemplate]'
+})
+export class IgxDatePickerTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
 
 export interface IFormatViews {
     day?: boolean;
@@ -280,6 +289,18 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @Output()
     public onSelection = new EventEmitter<Date>();
 
+    /*
+     * @hidden
+     */
+    @ViewChild('defaultDatePickerTemplate', { read: TemplateRef })
+    protected defaultDatePickerTemplate: TemplateRef<any>;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective })
+    protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
+
     /**
      *Retruns the formatted date.
      *```typescript
@@ -435,11 +456,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     /**
-     * Emits the open event and update the calendar.
+     * Open the dialog and update the calendar.
      *
      * @hidden
      */
-    public onOpenEvent(): void {
+    public openDialog(): void {
         this.createCalendarRef();
         this.alert.open();
         this._onTouchedCallback();
@@ -465,7 +486,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     public handleDialogCloseAction() {
         this.onClose.emit(this);
         this.calendarRef.destroy();
-        this.input.nativeElement.focus();
+        if (this.input) {
+            this.input.nativeElement.focus();
+        }
     }
 
     /**
@@ -487,8 +510,34 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event) {
-        this.onOpenEvent();
+        this.openDialog();
         event.preventDefault();
+    }
+
+    /**
+     * Gets the input group template.
+     * ```typescript
+     * let template = this.template();
+     * ```
+     * @memberof IgxTimePickerComponent
+     */
+    get template(): TemplateRef<any> {
+        if (this.datePickerTemplateDirective) {
+            return this.datePickerTemplateDirective.template;
+        }
+        return this.defaultDatePickerTemplate;
+    }
+
+    /**
+     * Gets the context passed to the input group template.
+     * @memberof IgxTimePickerComponent
+     */
+    get context() {
+        return {
+            value: this.value,
+            displayData: this.displayData,
+            openDialog: () => { this.openDialog(); }
+        };
     }
 
     private updateCalendarInstance() {
@@ -539,13 +588,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
 class Constants {
     public static readonly DEFAULT_LOCALE_DATE = 'en';
 }
-    /**
-     * The IgxDatePickerModule provides the {@link IgxDatePickerComponent} inside your application.
-     */
+
+/**
+ * The IgxDatePickerModule provides the {@link IgxDatePickerComponent} inside your application.
+ */
 @NgModule({
-    declarations: [IgxDatePickerComponent],
+    declarations: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
     entryComponents: [IgxCalendarComponent],
-    exports: [IgxDatePickerComponent],
+    exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
     imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule]
 })
 export class IgxDatePickerModule { }
