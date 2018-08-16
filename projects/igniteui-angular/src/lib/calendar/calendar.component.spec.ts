@@ -11,7 +11,7 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 describe('IgxCalendar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxCalendarSampleComponent],
+            declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent],
             imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
         });
     });
@@ -1114,7 +1114,7 @@ describe('IgxCalendar', () => {
         });
     }));
 
-    it('Should navigate to first enabled date when using "arrow right" key.', () => {
+    it('Should navigate to first enabled date when using "arrow right" key.', async(() => {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const debugEl = fixture.debugElement;
         const calendar = fixture.componentInstance.calendar;
@@ -1136,7 +1136,54 @@ describe('IgxCalendar', () => {
                 d => getDate(d).getTime() === new Date(2017, 5, 30).getTime())[0];
             expect(date.nativeElement).toBe(document.activeElement);
         });
-    });
+    }));
+
+    it('Should not select disabled dates when having "range" selection', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendaRangeComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const rangeDates = [new Date(2017, 5, 10), new Date(2017, 5, 15)];
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Between, rangeDates));
+        calendar.disabledDates = dateRangeDescriptors;
+        calendar.selection = 'range';
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const fromDate = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 5).getTime())[0];
+            fromDate.nativeElement.click();
+            fixture.detectChanges();
+
+            const toDate = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 20).getTime())[0];
+            toDate.nativeElement.click();
+            fixture.detectChanges();
+
+            const selectedDates = calendar.dates.toArray().filter(d => {
+                const dateTime = getDate(d).getTime();
+                return (dateTime >= new Date(2017, 5, 5).getTime() &&
+                        dateTime <= new Date(2017, 5, 9).getTime()) ||
+                        (dateTime >= new Date(2017, 5, 16).getTime() &&
+                        dateTime <= new Date(2017, 5, 20).getTime());
+            });
+
+            selectedDates.forEach(d => {
+                expect(d.selected).toBe(true);
+                expect(d.isSelectedCSS).toBe(true);
+            });
+
+            const notSelectedDates = calendar.dates.toArray().filter(d => {
+                const dateTime = getDate(d).getTime();
+                return dateTime >= new Date(2017, 5, 10).getTime() &&
+                        dateTime <= new Date(2017, 5, 15).getTime();
+            });
+
+            notSelectedDates.forEach(d => {
+                expect(d.selected).toBe(false);
+                expect(d.isSelectedCSS).toBe(false);
+            });
+        });
+    }));
 });
 
 @Component({
@@ -1146,6 +1193,16 @@ describe('IgxCalendar', () => {
 })
 export class IgxCalendarSampleComponent {
     public model: Date | Date[] = new Date(2017, 5, 13);
+    public viewDate = new Date(2017, 5, 13);
+    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+}
+
+@Component({
+    template: `
+        <igx-calendar [viewDate]="viewDate" selection="range"></igx-calendar>
+    `
+})
+export class IgxCalendaRangeComponent {
     public viewDate = new Date(2017, 5, 13);
     @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
 }
