@@ -50,7 +50,7 @@ The TimePicker has vertical and horizontal layout. By default the `vertical` is 
 The TimePicker input group could be retemplated.
 ```html
 <igx-time-picker>
-    <ng-template igxTimePickerInputGroup let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
+    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
         <igx-input-group (click)="openDialog()">
             <label igxLabel>Time</label>
             <input igxInput [value]="displayTime"/>
