@@ -189,10 +189,10 @@ export class IgxListItemComponent implements IListChild {
 
         if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
             this.showLeftPanTemplate();
-            this.contentLeft = Math.max(this.maxLeft, ev.deltaX);
+            this.setContentElementLeft(Math.max(this.maxLeft, ev.deltaX));
         } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
             this.showRightPanTemplate();
-            this.contentLeft = Math.min(this.maxRight, ev.deltaX);
+            this.setContentElementLeft( Math.min(this.maxRight, ev.deltaX));
         }
     }
 
@@ -204,21 +204,24 @@ export class IgxListItemComponent implements IListChild {
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
-        if (this.contentLeft === 0) {
+
+        // the offset of the current list item content relative to its initial position in the list
+        const relativeOffset = this.contentElement.offsetLeft - this.element.offsetLeft;
+        const widthTriggeringGrip = this.width * this.list.panEndTriggeringTreshold;
+
+        if (relativeOffset === 0) {
             return; // no pannig has occured (yet)
         }
 
         const oldPanState = this._panState;
-        const widthTriggeringGrip = this.width * this.list.panEndTriggeringTreshold;
-
-        if (Math.abs(this.contentLeft) < widthTriggeringGrip) {
-            this.contentLeft = 0;
+        if (Math.abs(relativeOffset) < widthTriggeringGrip) {
+            this.setContentElementLeft(0);
             this._panState = IgxListPanState.NONE;
             this.hideLeftAndRightPanTemplates();
             return;
         }
 
-        const dir = this.contentLeft > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
+        const dir = relativeOffset > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
         const args = { item: this, direction: dir, cancel: false};
 
         if (dir === IgxListPanState.LEFT) {
@@ -228,14 +231,14 @@ export class IgxListItemComponent implements IListChild {
         }
 
         if (args.cancel === true) {
-            this.contentLeft = 0;
+            this.setContentElementLeft(0);
             this._panState = IgxListPanState.NONE;
         } else {
             if (dir === IgxListPanState.LEFT) {
-                this.contentLeft = this.maxLeft;
+                this.setContentElementLeft(this.maxLeft);
                 this._panState = IgxListPanState.LEFT;
             } else {
-                this.contentLeft = this.maxRight;
+                this.setContentElementLeft(this.maxRight);
                 this._panState = IgxListPanState.RIGHT;
             }
         }
@@ -378,14 +381,7 @@ export class IgxListItemComponent implements IListChild {
     /**
      *@hidden
      */
-    private get contentLeft() {
-        return this.contentElement.offsetLeft;
-    }
-
-    /**
-     *@hidden
-     */
-    private set contentLeft(value: number) {
+    private setContentElementLeft(value: number) {
         let val = value + '';
         if (val.indexOf('px') === -1) {
             val += 'px';
