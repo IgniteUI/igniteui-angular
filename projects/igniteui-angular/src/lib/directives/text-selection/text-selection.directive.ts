@@ -9,23 +9,7 @@ export class IgxTextSelectionDirective {
     private selectionState = true;
 
     /**
-     * Determines whether the input element should be selectable through the directive.
-     *
-     * ```html
-     * <!--set-->
-     * <input
-     *   type="text"
-     *   id="firstName"
-     *   [igxTextSelection]="true">
-     * </input>
-     *
-     * <input
-     *   type="text"
-     *   id="lastName"
-     *   igxTextSelection
-     *   [selected]="true">
-     * </input>
-     * ```
+     * Returns whether the input element is selectable through the directive.
      *
      * ```typescript
      * // get
@@ -43,6 +27,25 @@ export class IgxTextSelectionDirective {
         return this.selectionState;
     }
 
+    /**
+     *  Determines whether the input element could be selected through the directive.
+     *
+     *```html
+     * <!--set-->
+     * <input
+     *   type="text"
+     *   id="firstName"
+     *   [igxTextSelection]="true">
+     * </input>
+     *
+     * <input
+     *   type="text"
+     *   id="lastName"
+     *   igxTextSelection
+     *   [selected]="true">
+     * </input>
+     * ```
+     */
     set selected(val: boolean) {
         this.selectionState = val;
     }
@@ -83,7 +86,7 @@ export class IgxTextSelectionDirective {
     constructor(private element: ElementRef) { }
 
     /**
-     * Triggers the selection of the element.
+     * Triggers the selection of the element if it is marked as selectable.
      *
      * ```html
      * <input
