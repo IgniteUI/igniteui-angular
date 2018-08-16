@@ -273,7 +273,7 @@ describe('IgxDatePicker', () => {
         expect(boundValue).toEqual(expectedRes);
     }));
 
-    it("Retemplate a DatePicker's input group", fakeAsync(() => {
+    it('Retemplate a DatePicker input group', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxDatePickerRetemplatedComponent);
         tick();
         fix.detectChanges();
