@@ -29,7 +29,7 @@
             <p class="sample-description">Time picker with templated input group.</p>
             <div class="preview">
                 <igx-time-picker #templatedTimePicker format="h:mm tt" >
-                    <ng-template igxTimePickerInputGroup let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
+                    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
                         <igx-input-group (click)="openDialog()">
                             <label igxLabel>Time</label>
                             <input igxInput [value]="displayTime"/>
