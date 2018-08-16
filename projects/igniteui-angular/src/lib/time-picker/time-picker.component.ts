@@ -298,14 +298,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     /*
      * @hidden
      */
-    @ViewChild('defaultInputGroupTemplate', { read: TemplateRef })
-    protected defaultInputGroupTemplate: TemplateRef<any>;
+    @ViewChild('defaultTimePickerTemplate', { read: TemplateRef })
+    protected defaultTimePickerTemplate: TemplateRef<any>;
 
     /**
      *@hidden
      */
     @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective })
-    protected inputGroupTemplateDirective: IgxTimePickerTemplateDirective;
+    protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
 
     /**
      * @hidden
@@ -1021,10 +1021,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @memberof IgxTimePickerComponent
      */
     get template(): TemplateRef<any> {
-        if (this.inputGroupTemplateDirective) {
-            return this.inputGroupTemplateDirective.template;
+        if (this.timePickerTemplateDirective) {
+            return this.timePickerTemplateDirective.template;
         }
-        return this.defaultInputGroupTemplate;
+        return this.defaultTimePickerTemplate;
     }
 
     /**

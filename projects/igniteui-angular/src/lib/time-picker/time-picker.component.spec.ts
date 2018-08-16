@@ -899,7 +899,7 @@ export class IgxTimePickerWithItemsDeltaValueComponent {
 @Component({
     template: `
 <igx-time-picker>
-    <ng-template igxTimePickerInputGroup let-displayTime="displayTime">
+    <ng-template igxTimePickerTemplate let-displayTime="displayTime">
         <igx-input-group>
             <label igxLabel>Time</label>
             <input igxInput [value]="displayTime"/>
