@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayOutlet` directive introducedto mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
 - `igxButtonGroup`
     - Added the ability to define buttons directly in the template
+- `igx-time-picker`:
+    - `igxTimePickerInputGroup` - new directive which should be applied on the child `<ng-template>` element when `IgxTimePickerComponent`'s input group is retemplated. 
 
 ## 6.1.3
 - **General**
