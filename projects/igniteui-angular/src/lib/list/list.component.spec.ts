@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
@@ -81,7 +81,7 @@ describe('List', () => {
         expect(item.width).toBe(testWidth);
         expect(item.maxLeft).toBe(-testWidth);
         expect(item.maxRight).toBe(testWidth);
-        expect(item.contentLeft).toBe(testLeft);
+        expect(item.element.offsetLeft).toBe(testLeft);
      });
 
     it('should calculate properly item index', () => {
@@ -446,7 +446,43 @@ describe('List', () => {
         });
     }, 5000);
 
-    it('check the panLeftTemplate is visible when left-panning a list item.', () => {
+    it('checking the panLeftTemplate is visible when left-panning a list item.', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Click and drag item left */
+        clickAndDrag(itemNativeElements[1], -0.3);
+        fixture.detectChanges();
+
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('visible');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+    });
+
+    it('checking the panRightTemplate is visible when right-panning a list item.', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Click and drag item right */
+        clickAndDrag(itemNativeElements[1], 0.3);
+        fixture.detectChanges();
+
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('visible');
+    });
+
+    it('checking the panLeftTemplate is not visible when releasing a list item.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -457,14 +493,15 @@ describe('List', () => {
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
 
         /* Pan item left */
-        panItem(itemNativeElements[0], -0.3);
+        panItem(itemNativeElements[1], -0.3);
+        tick(600);
         fixture.detectChanges();
 
-        expect(leftPanTmpl.nativeElement.style.visibility).toBe('visible');
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
-    });
+    }));
 
-    it('check the panRightTemplate is visible when right-panning a list item.', () => {
+    it('checking the panRightTemplate is not visible when releasing a list item.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -475,11 +512,27 @@ describe('List', () => {
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
 
         /* Pan item right */
-        panItem(itemNativeElements[0], 0.3);
+        panItem(itemNativeElements[1], 0.3);
+        tick(600);
         fixture.detectChanges();
 
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
-        expect(rightPanTmpl.nativeElement.style.visibility).toBe('visible');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+    }));
+
+    it('checking the header list item does not have panning and content containers.', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const headers = list.headers;
+        let header;
+        for (let i = 0; i < headers.length; i++) {
+            header = headers[i] as IgxListItemComponent;
+            expect(header.leftPanningTemplateElement).toBeUndefined();
+            expect(header.rightPanningTemplateElement).toBeUndefined();
+            expect(header.contentElement).toBe(null);
+        }
     });
 
     function panRight(item, itemHeight, itemWidth, duration) {
@@ -524,6 +577,22 @@ describe('List', () => {
         });
         itemNativeElement.triggerEventHandler('panend', null);
     }
+
+
+
+
+    function clickAndDrag(itemNativeElement, factorX) {
+        const itemWidth = itemNativeElement.nativeElement.offsetWidth;
+
+        itemNativeElement.triggerEventHandler('panstart', null);
+        itemNativeElement.triggerEventHandler('panmove', {
+            deltaX : factorX * itemWidth, duration : 200
+        });
+        //itemNativeElement.triggerEventHandler('panend', null);
+    }
+
+
+
 
     function clickItem(currentItem: IgxListItemComponent) {
         return Promise.resolve(currentItem.element.click());

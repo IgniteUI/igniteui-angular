@@ -171,7 +171,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panstart', ['$event'])
     panStart(ev) {
-        if (this.isHeader) {
+        if (this.isTrue(this.isHeader)) {
             return;
         }
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
@@ -184,7 +184,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panmove', ['$event'])
     panMove(ev) {
-        if (this.isHeader) {
+        if (this.isTrue(this.isHeader)) {
             return;
         }
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
@@ -207,7 +207,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panend', ['$event'])
     panEnd(ev) {
-        if (this.isHeader) {
+        if (this.isTrue(this.isHeader)) {
             return;
         }
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
@@ -216,7 +216,7 @@ export class IgxListItemComponent implements IListChild {
 
         // the offset of the current list item content relative to its initial position in the list
         const relativeOffset = this.contentElement.offsetLeft - this.element.offsetLeft;
-        const widthTriggeringGrip = this.width * this.list.panEndTriggeringTreshold;
+        const widthTriggeringGrip = this.width * this.list.panEndTriggeringThreshold;
 
         if (relativeOffset === 0) {
             return; // no pannig has occured (yet)

@@ -108,6 +108,7 @@ export class TwoHeadersListComponent extends ListWithPanningComponent {
             <ng-template igxListItemRightPanning>
                 <div>Right</div>
             </ng-template>
+            <igx-list-item [isHeader]="true">Header</igx-list-item>
             <igx-list-item>Item 1</igx-list-item>
             <igx-list-item>Item 2</igx-list-item>
             <igx-list-item>Item 3</igx-list-item>

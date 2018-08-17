@@ -129,13 +129,13 @@ export class IgxListComponent {
     public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
 
     /**
-     * Provides a treshold after which the item's panning will be completed automatically.
+     * Provides a threshold after which the item's panning will be completed automatically.
      * By default this property is set to 0.5 which is 50% of the list item's width.
      * ```typescript
-     * this.list.panEndTriggeringTreshold = 0.8;
+     * this.list.panEndTriggeringThreshold = 0.8;
      * ```
      */
-    public panEndTriggeringTreshold = 0.5;
+    public panEndTriggeringThreshold = 0.5;
 
     /**@hidden*/
     @ViewChild('defaultEmptyList', { read: TemplateRef })
