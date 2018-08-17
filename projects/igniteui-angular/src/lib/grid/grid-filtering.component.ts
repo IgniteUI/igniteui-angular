@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -248,6 +248,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
             }
             this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
+            this._overlaySettings.outlet = grid.outletDirective;
             this.toggleDirective.toggle(this._overlaySettings);
         });
     }
