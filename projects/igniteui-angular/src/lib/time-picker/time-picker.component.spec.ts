@@ -52,7 +52,7 @@ describe('IgxTimePicker', () => {
 
     it('@Input properties', (async () => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
-        await wait(200);
+        await wait(20);
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
@@ -86,7 +86,7 @@ describe('IgxTimePicker', () => {
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
         UIInteractions.clickElement(timePickerTarget);
-        await wait(200);
+        await wait(20);
         fixture.detectChanges();
 
         // get time from dialog header
@@ -833,7 +833,7 @@ describe('IgxTimePicker', () => {
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
         UIInteractions.clickElement(timePickerTarget);
-        await wait(200);
+        await wait(20);
         fixture.detectChanges();
 
         expect(dom.query(By.css('.igx-time-picker--vertical'))).not.toBeNull();
