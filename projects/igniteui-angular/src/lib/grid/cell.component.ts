@@ -974,6 +974,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         const lastCell = this._getLastSelectedCell();
+        this._clearCellSelection();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
         this.grid.navigateUp(rowIndex, this.visibleColumnIndex);
     }
@@ -986,6 +987,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         const lastCell = this._getLastSelectedCell();
+        this._clearCellSelection();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
         this.grid.navigateDown(rowIndex, this.visibleColumnIndex);
     }

@@ -2,7 +2,6 @@
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { take } from 'rxjs/operators';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from './column.component';
@@ -659,7 +658,6 @@ describe('IgxGrid - GroupBy', () => {
     it('should clear selection from data cells when a group row is focused via KB navigation.', async() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
-        const mockEvent = { preventDefault: () => { } };
 
         fix.componentInstance.width = '800px';
         fix.componentInstance.height = '300px';
@@ -670,8 +668,8 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
         const cell = grid.getCellByColumn(2, 'Downloads');
-        cell.onFocus(new Event('focus'));
-        fix.detectChanges();
+        cell.onClick(null);
+        await wait();
         expect(cell.selected).toBe(true);
         await HelperUtils.navigateVerticallyToIndex(grid, 2, 0);
 
@@ -679,9 +677,7 @@ describe('IgxGrid - GroupBy', () => {
         const row = grid.getRowByIndex(0);
         expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
         expect(row.focused).toBe(true);
-        const oldSelectedCell = grid.getCellByColumn(2, 'Downloads');
         expect(cell.selected).toBe(false);
-
     });
 
     // GroupBy + Virtualization integration
