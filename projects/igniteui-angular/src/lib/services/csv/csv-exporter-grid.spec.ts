@@ -15,16 +15,12 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
 describe('CSV Grid Exporter', () => {
-    let originalTimeout;
     let exporter: IgxCsvExporterService;
     let actualData: FileContentData;
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
 
     beforeEach(async(() => {
-        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-
         TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
@@ -43,7 +39,6 @@ describe('CSV Grid Exporter', () => {
     }));
 
     afterEach(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
     });
