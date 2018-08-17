@@ -52,7 +52,7 @@ fdescribe('IgxTimePicker', () => {
 
     it('@Input properties', (async () => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
-        await wait();
+        await wait(200);
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
