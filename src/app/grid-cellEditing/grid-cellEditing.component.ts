@@ -50,7 +50,6 @@ export class GridCellEditingComponent implements AfterContentInit, OnDestroy {
     }
 
     public deleteRow(rowID) {
-        debugger;
         const row = this.gridWithPK.getRowByKey(rowID);
         this.gridWithPK.deleteRow(rowID);
     }
@@ -97,7 +96,6 @@ export class GridCellEditingComponent implements AfterContentInit, OnDestroy {
     public updRecord() {
         const newData = 'UPDATED';
         const selectedCell = this.gridWithPK.selectedCells[0];
-        debugger;
         if (selectedCell) {
             selectedCell.update(newData);
         }
@@ -108,7 +106,6 @@ export class GridCellEditingComponent implements AfterContentInit, OnDestroy {
         row.delete();
     }
     updateRowbyIndex(index) {
-        debugger;
         const row = this.gridWithoutPK.getRowByIndex(index);
         row.update({
             ProductID: index + 53,
@@ -143,7 +140,6 @@ export class GridCellEditingComponent implements AfterContentInit, OnDestroy {
     }
 
     updateSpecificRow() {
-        debugger;
         this.gridWithPK.updateRow({
             ProductID: 225 + 96,
             ProductName: 'UpdatedRow',
