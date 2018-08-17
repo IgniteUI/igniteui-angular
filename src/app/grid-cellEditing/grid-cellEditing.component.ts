@@ -1,4 +1,4 @@
-import {  AfterContentInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
 
 import {
@@ -8,7 +8,7 @@ import {
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
 })
-export class GridCellEditingComponent implements AfterContentInit, OnDestroy {
+export class GridCellEditingComponent {
 
     orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent })
@@ -55,13 +55,6 @@ export class GridCellEditingComponent implements AfterContentInit, OnDestroy {
     }
     public updateCell() {
         this.gridWithPK.updateCell('Updated', 1, 'ProductName');
-    }
-
-    ngAfterContentInit(): void {
-        this.subscribtion = this.gridWithPK.onEditDone.subscribe((editObj) => console.log(editObj));
-    }
-
-    ngOnDestroy(): void {
     }
 
     public updateRow(rowID) {
