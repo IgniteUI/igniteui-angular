@@ -578,9 +578,6 @@ describe('List', () => {
         itemNativeElement.triggerEventHandler('panend', null);
     }
 
-
-
-
     function clickAndDrag(itemNativeElement, factorX) {
         const itemWidth = itemNativeElement.nativeElement.offsetWidth;
 
@@ -588,11 +585,7 @@ describe('List', () => {
         itemNativeElement.triggerEventHandler('panmove', {
             deltaX : factorX * itemWidth, duration : 200
         });
-        //itemNativeElement.triggerEventHandler('panend', null);
     }
-
-
-
 
     function clickItem(currentItem: IgxListItemComponent) {
         return Promise.resolve(currentItem.element.click());
