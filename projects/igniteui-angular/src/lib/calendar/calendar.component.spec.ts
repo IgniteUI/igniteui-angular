@@ -933,6 +933,20 @@ describe('IgxCalendar', () => {
         );
     });
 
+    it('Should disable dates when using multiple ranges.', () => {
+        DateRangesPropertiesTester.testMultipleRanges(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should be able to change disable dates runtime.', () => {
+        DateRangesPropertiesTester.testRangeUpdateRuntime(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
     it('Should mark date as special when using "After" date descriptor.', () => {
         DateRangesPropertiesTester.testAfter(
             DateRangesPropertiesTester.assignSpecialDatesDescriptors,
@@ -995,6 +1009,20 @@ describe('IgxCalendar', () => {
             DateRangesPropertiesTester.testSpecialDates
         );
     });
+
+    it('Should mark dates as special when using multiple ranges.', () => {
+        DateRangesPropertiesTester.testMultipleRanges(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should be able to change special dates runtime.', () => {
+        DateRangesPropertiesTester.testRangeUpdateRuntime(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    })
 
     it('Should navigate to first enabled date when using "home" key.', async(() => {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
@@ -1382,6 +1410,57 @@ class DateRangesPropertiesTester {
         const outOfRangeDates = dates.filter(d => getDate(d).getTime() < firstBetweenMin.getTime() &&
             getDate(d).getTime() > secondBetweenMax.getTime());
         testRangesFunc(inRangeDates, outOfRangeDates);
+    }
+
+    static testMultipleRanges(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        dateRangeDescriptors.push(
+            new DateRangeDescriptor(DateRangeType.Before, [new Date(2017, 5, 1)]));
+        dateRangeDescriptors.push(
+            new DateRangeDescriptor(DateRangeType.After, [new Date(2017, 5, 29)]));
+        dateRangeDescriptors.push(
+            new DateRangeDescriptor(DateRangeType.Weekends));
+        dateRangeDescriptors.push(
+            new DateRangeDescriptor(DateRangeType.Between, [new Date(2017, 5, 1), new Date(2017, 5, 16)]));
+        dateRangeDescriptors.push(
+            new DateRangeDescriptor(DateRangeType.Between, [new Date(2017, 5, 5), new Date(2017, 5, 28)]));
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        const enabledDateTime = new Date(2017, 5, 29).getTime();
+        const inRangesDates = dates.filter(d => getDate(d).getTime() !== enabledDateTime);
+        const outOfRangeDates = dates.filter(d => getDate(d).getTime() === enabledDateTime);
+        testRangesFunc(inRangesDates, outOfRangeDates);
+    }
+
+    static testRangeUpdateRuntime(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDate = new Date(2017, 5, 15);
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, [specificDate]));
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        let inRangesDates = dates.filter(d => getDate(d).getTime() === specificDate.getTime());
+        let outOfRangesDates = dates.filter(d => getDate(d).getTime() !== specificDate.getTime());
+        testRangesFunc(inRangesDates, outOfRangesDates);
+
+        const newSpecificDate = new Date(2017, 5, 16);
+        const newDateRangeDescriptors: DateRangeDescriptor[] = [];
+        newDateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, [newSpecificDate]));
+        assignFunc(calendar, newDateRangeDescriptors);
+        fixture.detectChanges();
+
+        inRangesDates = dates.filter(d => getDate(d).getTime() === newSpecificDate.getTime());
+        outOfRangesDates = dates.filter(d => getDate(d).getTime() !== newSpecificDate.getTime());
+        testRangesFunc(inRangesDates, outOfRangesDates);
     }
 
     static assignDisableDatesDescriptors(component: IgxCalendarComponent,
