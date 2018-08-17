@@ -39,11 +39,11 @@
             <div class="list-sample">
                 <igx-list>
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
-                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let item of navItems | igxFilter: fo1">
+                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems | igxFilter: fo1">
                         <div class="item">
                             <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
                             <span igxLabel>{{item.text}}</span>
-                            <igx-icon name="star" [class.favorite]="item.favorite"></igx-icon>
+                            <igx-icon name="star" [class.favorite]="item.favorite" (click)="toggleFavorite(item)"></igx-icon>
                         </div>
                     </igx-list-item>
                 </igx-list>
@@ -152,7 +152,7 @@
                                 <p class="name">{{item.text}}</p>
                                 <span class="phone">{{item.phone}}</span>
                             </div>
-                            <igx-icon name="star" [class.favorite]="item.favorite"></igx-icon>
+                            <igx-icon name="star" [class.favorite]="item.favorite" (click)="toggleFavorite(item)"></igx-icon>
                         </div>
                     </igx-list-item>
                 </igx-list>

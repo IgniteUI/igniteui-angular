@@ -171,6 +171,9 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panstart', ['$event'])
     panStart(ev) {
+        if (this.isHeader) {
+            return;
+        }
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
@@ -181,6 +184,9 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panmove', ['$event'])
     panMove(ev) {
+        if (this.isHeader) {
+            return;
+        }
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
@@ -201,6 +207,9 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('panend', ['$event'])
     panEnd(ev) {
+        if (this.isHeader) {
+            return;
+        }
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
