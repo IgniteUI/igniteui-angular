@@ -1065,8 +1065,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             const args: IComboSelectionChangeEventArgs = { oldSelection, newSelection };
             this.onSelectionChange.emit(args);
             newSelectionAsSet = new Set();
-            for (let i = 0; i < newSelection.length; i++) {
-                newSelectionAsSet.add(newSelection[i]);
+            for (let i = 0; i < args.newSelection.length; i++) {
+                newSelectionAsSet.add(args.newSelection[i]);
             }
             this.selectionAPI.set_selection(this.id, newSelectionAsSet);
             this.value = this.dataType !== DataTypes.PRIMITIVE ?
