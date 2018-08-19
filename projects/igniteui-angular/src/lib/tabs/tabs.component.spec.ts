@@ -173,35 +173,35 @@ describe('IgxTabs', () => {
         expect(tabs.selectedTabItem).toBe(tab3);
         expect(tab3.isSelected).toBeTruthy();
 
-        // fixture.componentInstance.resetCollectionFourTabs();
-        // await wait(20);
-        // fixture.detectChanges();
+        fixture.componentInstance.resetCollectionFourTabs();
+        await wait(55);
+        fixture.detectChanges();
+        expect(tabs.selectedIndex).toBe(2);
 
-        // await wait(20);
-        // fixture.detectChanges();
-        // expect(tabs.selectedIndex).toBe(2);
+        fixture.componentInstance.resetCollectionOneTab();
+        await wait(20);
+        fixture.detectChanges();
 
-        // await wait(20);
-        // fixture.detectChanges();
+        await wait(50);
+        fixture.detectChanges();
+        expect(tabs.selectedIndex).toBe(0);
 
-        // fixture.componentInstance.resetCollectionOneTab();
-        // await wait(20);
-        // fixture.detectChanges();
+        fixture.componentInstance.resetCollectionTwoTabs();
+        await wait(20);
+        fixture.detectChanges();
 
-        // await wait(20);
-        // fixture.detectChanges();
-        // expect(tabs.selectedIndex).toBe(0);
+        await wait(50);
+        fixture.detectChanges();
+        expect(tabs.selectedIndex).toBe(0);
 
-        // fixture.componentInstance.resetCollectionTwoTabs();
-        // await wait(40);
-        // fixture.detectChanges();
-        // expect(tabs.selectedIndex).toBe(0);
+        fixture.componentInstance.resetToEmptyCollection();
+        await wait(20);
+        fixture.detectChanges();
 
-        // fixture.componentInstance.resetToEmptyCollection();
-        // await wait(100);
-        // fixture.detectChanges();
-        // expect(tabs.groups.length).toBe(0);
-        // expect(tabs.selectedTabItem).toBe(undefined);
+        await wait(50);
+        fixture.detectChanges();
+        expect(tabs.groups.length).toBe(0);
+        expect(tabs.selectedTabItem).toBe(undefined);
     }));
 
     it('should initialize igx-tab custom template', (async () => {
