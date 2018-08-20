@@ -1954,6 +1954,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _columnWidth: string;
     private _columnWidthSetByUser = false;
 
+    private _defaultTargetRecordNumber = 10;
+
     constructor(
         private gridAPI: IgxGridAPIService,
         public selectionAPI: IgxSelectionAPIService,
@@ -3238,6 +3240,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
+    private get defaultTargetBodyHeight(): number {
+        const allItems = this.totalItemCount || this.data.length;
+        return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
+            this.paging ? Math.min(allItems, this.perPage) : allItems);
+    }
+
+    /**
+     * @hidden
+     */
     protected calculateGridHeight() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
 
@@ -3265,7 +3276,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let groupAreaHeight = 0;
         if (this.paging && this.paginator) {
             pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.clientHeight : 0;
+                this.paginator.nativeElement.offsetHeight : 0;
         }
 
         if (!this.summariesHeight) {
@@ -3294,6 +3305,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         toolbarHeight: number, pagingHeight: number, groupAreaHeight: number) {
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
+        if (isNaN(gridHeight)) {
+            return this.defaultTargetBodyHeight;
+        }
 
         return Math.abs(gridHeight - toolbarHeight -
             this.theadRow.nativeElement.offsetHeight -
@@ -3960,7 +3974,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowList) {
             return 0;
         }
-        this.gridAPI.escape_editMode(this.id);
+
+        const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
+        if (editModeCell) {
+            this.gridAPI.escape_editMode(this.id);
+        }
 
         if (this.collapsedHighlightedItem) {
             this.collapsedHighlightedItem = null;
