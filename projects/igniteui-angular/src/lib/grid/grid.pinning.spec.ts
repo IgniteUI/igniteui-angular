@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../calendar/index';
@@ -350,7 +350,6 @@ describe('IgxGrid - Column Pinning ', () => {
     });
 
     it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', fakeAsync(() => {
-        discardPeriodicTasks();
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -399,11 +398,9 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
-        discardPeriodicTasks();
     }));
 
     it('should allow vertical keyboard navigation in pinned area.', fakeAsync(() => {
-        discardPeriodicTasks();
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
@@ -431,11 +428,9 @@ describe('IgxGrid - Column Pinning ', () => {
         grid.cdr.detectChanges();
         expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        discardPeriodicTasks();
     }));
 
     it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', (done) => {
-       // discardPeriodicTasks();
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const mockEvent = { preventDefault: () => { } };

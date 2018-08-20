@@ -293,7 +293,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private _gesturesAttached = false;
-    private _widthCache: { width: number, miniWidth: number } = { width: null, miniWidth: null };
+    private _widthCache: { width: number, miniWidth: number, windowWidth: number } = { width: null, miniWidth: null, windowWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string; } = {
         drawer: 'igx-nav-drawer__aside',
@@ -629,7 +629,7 @@ export class IgxNavigationDrawerComponent implements
         if (!this._resizeObserver) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
-                    this.checkPinThreshold();
+                    this.checkPinThreshold(value);
                 });
         }
     }
@@ -647,6 +647,10 @@ export class IgxNavigationDrawerComponent implements
         let windowWidth;
         if (this.pinThreshold) {
             windowWidth = this.getWindowWidth();
+            if (evt && this._widthCache.windowWidth === windowWidth) {
+                return;
+            }
+            this._widthCache.windowWidth = windowWidth;
             if (!this.pin && windowWidth >= this.pinThreshold) {
                 this.pin = true;
                 this.pinChange.emit(true);

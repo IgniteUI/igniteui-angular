@@ -31,7 +31,7 @@ Provides a way to highlight text elements.
 ### Methods
 | Name | Type | Arguments | Description |
 | :--- |:--- | :--- | :--- |
-| highlight | number | The text that should be highlighted and, optionally, if the search should be case sensitive or not (it defaults to false if it isn't specified). | Clears the existing highlight and highlight the searched text. Returns how many times the element contains the searched text. |
+| highlight | number | The text that should be highlighted and, optionally, if the search should be case sensitive and/or an exact match (both default to false if they aren't specified). | Clears the existing highlight and highlight the searched text. Returns how many times the element contains the searched text. |
 | clearHighlight | void | N/A | Clears any existing highlight |
 | activateIfNecessary | void | N/A | Activates the highlight if it is on the currently active row, column and page |
 | setActiveHighlight (static)| void| The highlight group, the column, row and page of the directive and the index of the highlight | Activates the highlight at a given index (if such highlight exists) |
