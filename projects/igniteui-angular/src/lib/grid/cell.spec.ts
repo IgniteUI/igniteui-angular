@@ -831,16 +831,20 @@ describe('IgxGrid - Cell component', () => {
 
     it('keyboard navigation - should allow navigating up in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
-        const grid = fix.componentInstance.instance;
         fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
         grid.verticalScrollContainer.addScrollTop(5000);
 
         await wait();
         fix.detectChanges();
+
         const cell = grid.getCellByColumn(104, 'index');
         cell.onFocus(new Event('focus'));
         fix.detectChanges();
+
         await HelperUtils.navigateVerticallyToIndex(grid, 104, 0);
+        fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
     });
@@ -861,6 +865,7 @@ describe('IgxGrid - Cell component', () => {
         await navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1);
         expect(fix.componentInstance.selectedCell.columnIndex).toEqual(1);
     });
+
     it('keyboard navigation - should allow horizontal navigation in virtualized grid with pinned cols.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         const cols = [];

@@ -3885,13 +3885,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
         this.subscribeNext(virtualDir, () => {
-            this.cdr.detectChanges();
             let target;
+            this.cdr.detectChanges();
             row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-            target = this.gridAPI.get_cell_by_visible_index(
-                this.id,
-                rowIndex,
-                columnIndex);
+            target = this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
+
             if (!target) {
                 if (dir) {
                     target = dir === 'left' ? row.cells.first : row.cells.last;
@@ -3906,6 +3904,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
             target._updateCellSelectionStatus();
+            this.cdr.detectChanges();
         });
     }
 

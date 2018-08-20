@@ -542,7 +542,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
-    private updateCell = true;
 
     constructor(
         public gridAPI: IgxGridAPIService,
@@ -571,17 +570,18 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             cell.focused = false;
         }
         const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editCell && this.updateCell) {
+        if (editCell) {
             if (editCell.cell.column.field === this.gridAPI.get(this.gridID).primaryKey) {
                 if (editCell.cellID.rowIndex === this.cellID.rowIndex && editCell.cellID.columnID === this.cellID.columnID) {
                     this.previousCellEditMode = false;
                 } else {
                     this.previousCellEditMode = true;
+                    this.gridAPI.submit_value(this.gridID);
                 }
             } else {
                 this.previousCellEditMode = true;
+                this.gridAPI.submit_value(this.gridID);
             }
-            this.gridAPI.submit_value(this.gridID);
             this.cdr.markForCheck();
         } else {
             this.previousCellEditMode = false;
@@ -673,7 +673,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      *@hidden
      */
     focusCell() {
-        this.updateCell = false;
         this._updateCellSelectionStatus();
     }
 
@@ -734,7 +733,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     @HostListener('blur', ['$event'])
     public onBlur(event) {
-        this.updateCell = true;
         this.isFocused = false;
         this.row.focused = false;
     }
