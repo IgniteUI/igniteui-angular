@@ -940,6 +940,13 @@ describe('IgxCalendar', () => {
         );
     });
 
+    it('Should disable previous month with "before" date descriptor', async(() => {
+        DateRangesPropertiesTester.testPreviousMonthRangeAsync(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    }));
+
     it('Should be able to change disable dates runtime.', () => {
         DateRangesPropertiesTester.testRangeUpdateRuntime(
             DateRangesPropertiesTester.assignDisableDatesDescriptors,
@@ -1017,12 +1024,19 @@ describe('IgxCalendar', () => {
         );
     });
 
+    it('Should mark as special previous month with "before" date descriptor', async(() => {
+        DateRangesPropertiesTester.testPreviousMonthRangeAsync(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    }));
+
     it('Should be able to change special dates runtime.', () => {
         DateRangesPropertiesTester.testRangeUpdateRuntime(
             DateRangesPropertiesTester.assignSpecialDatesDescriptors,
             DateRangesPropertiesTester.testSpecialDates
         );
-    })
+    });
 
     it('Should navigate to first enabled date when using "home" key.', async(() => {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
@@ -1461,6 +1475,25 @@ class DateRangesPropertiesTester {
         inRangesDates = dates.filter(d => getDate(d).getTime() === newSpecificDate.getTime());
         outOfRangesDates = dates.filter(d => getDate(d).getTime() !== newSpecificDate.getTime());
         testRangesFunc(inRangesDates, outOfRangesDates);
+    }
+
+    static testPreviousMonthRangeAsync(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const beforeDate = new Date(2017, 5, 13);
+        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Before, [beforeDate]));
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const debugEl = fixture.debugElement;
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'PageUp');
+            fixture.detectChanges();
+            testRangesFunc(calendar.dates.toArray(), []);
+        });
     }
 
     static assignDisableDatesDescriptors(component: IgxCalendarComponent,
