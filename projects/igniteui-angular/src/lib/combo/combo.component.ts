@@ -1017,8 +1017,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             return;
         }
         const newSelection = select ?
-            this.selectionAPI.select_item(this.id, newItem) :
-            this.selectionAPI.deselect_item(this.id, newItem);
+            this.selectionAPI.add_item(this.id, newItem) :
+            this.selectionAPI.delete_item(this.id, newItem);
         this.triggerSelectionChange(newSelection);
     }
 
@@ -1355,7 +1355,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
-            const newSelection = this.selectionAPI.select_items(this.id, newItems, clearCurrentSelection);
+            const newSelection = this.selectionAPI.add_items(this.id, newItems, clearCurrentSelection);
             this.triggerSelectionChange(newSelection);
         }
     }
@@ -1370,7 +1370,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public deselectItems(items: Array<any>) {
         if (items) {
-            const newSelection = this.selectionAPI.deselect_items(this.id, items);
+            const newSelection = this.selectionAPI.delete_items(this.id, items);
             this.triggerSelectionChange(newSelection);
         }
     }
@@ -1385,7 +1385,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public selectAllItems(ignoreFilter?: boolean) {
         const allVisible = this.selectionAPI.get_all_ids(ignoreFilter ? this.data : this.filteredData);
-        const newSelection = this.selectionAPI.select_items(this.id, allVisible);
+        const newSelection = this.selectionAPI.add_items(this.id, allVisible);
         this.triggerSelectionChange(newSelection);
     }
 
@@ -1400,7 +1400,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     public deselectAllItems(ignoreFilter?: boolean) {
         const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
             new Set() :
-            this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
+            this.selectionAPI.delete_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
         this.triggerSelectionChange(newSelection);
     }
 }
