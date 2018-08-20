@@ -93,11 +93,13 @@
     $list-empty-padding: rem(16px);
 
     %igx-list {
+        position: relative;
         display: flex;
         flex-flow: column nowrap;
         background-color: --var($theme, 'background');
         height: 100%;
         overflow: hidden;
+        z-index: 0;
     }
 
     %igx-list-empty {
