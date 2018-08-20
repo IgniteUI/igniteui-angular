@@ -10,6 +10,7 @@ import { Component, DebugElement, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import * as Infragistics from '../../public_api';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare var Simulator: any;
@@ -475,7 +476,7 @@ describe('Navigation Drawer', () => {
             });
         }));
 
-        xit('should update pin based on window width (pinThreshold)', (done) => {
+        it('should update pin based on window width (pinThreshold)', async (done) => {
             const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
             let fixture: ComponentFixture<TestComponentPin>;
             TestBed.overrideComponent(TestComponentPin, {
@@ -484,49 +485,45 @@ describe('Navigation Drawer', () => {
             }});
 
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
-            TestBed.compileComponents().then(() => {
-                fixture = TestBed.createComponent(TestComponentPin);
-                expect(() => fixture.detectChanges()).not.toThrow();
-                return fixture.whenStable();
-            })
-            .then(() => {
+            await TestBed.compileComponents();
+            fixture = TestBed.createComponent(TestComponentPin);
+            // watch for initial pin with 2-way bind expression changed errors
+            expect(() => fixture.detectChanges()).not.toThrow();
+            await fixture.whenStable();
+            // defaults:
+            expect(fixture.componentInstance.viewChild.pin).toBe(false, 'Should be initially unpinned');
+            expect(fixture.componentInstance.pin).toBe(false, 'Parent component pin should update initially');
 
-                // defaults:
-                expect(fixture.componentInstance.viewChild.pin).toBe(false, 'Should be initially unpinned');
-                expect(fixture.componentInstance.pin).toBe(false, 'Parent component pin should update initially');
+            // manual pin override
+            fixture.componentInstance.pin = true;
+            fixture.detectChanges();
+            window.dispatchEvent(new Event('resize'));
+            // wait for debounce
+            await wait(200);
+            expect(fixture.componentInstance.viewChild.pin).toBe(false, `Shouldn't change state on resize if window width is the same`);
+            expect(fixture.componentInstance.pin).toBe(true, 'Parent component pin remain on resize if window width is the same');
+            fixture.componentInstance.pin = true;
+            fixture.detectChanges();
 
-                this.widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
-                window.dispatchEvent(new Event('resize'));
-                // wait for debounce
-                return new Promise((resolve) => {
-                    setTimeout(() => { resolve(); }, 200);
-                });
-            })
-            .then(() => {
-                expect(fixture.componentInstance.viewChild.pin).toBe(true, 'Should pin on window resize over threshold');
-                expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on window resize over threshold');
+            this.widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
+            window.dispatchEvent(new Event('resize'));
+            // wait for debounce
+            await wait(200);
+            expect(fixture.componentInstance.viewChild.pin).toBe(true, 'Should pin on window resize over threshold');
+            expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on window resize over threshold');
 
-                this.widthSpyOverride.and.returnValue(768);
-                window.dispatchEvent(new Event('resize'));
-                // wait for debounce
-                return new Promise((resolve) => {
-                    setTimeout(() => { resolve(); }, 200);
-                });
-            })
-            .then(() => {
-                expect(fixture.componentInstance.viewChild.pin).toBe(false, 'Should un-pin on window resize below threshold');
-                expect(fixture.componentInstance.pin).toBe(false, 'Parent pin update on window resize below threshold');
-                fixture.componentInstance.pinThreshold = 500;
-                expect(() => fixture.detectChanges()).not.toThrow();
-                return fixture.whenStable();
-            })
-            .then(() => {
-                expect(fixture.componentInstance.viewChild.pin).toBe(true, 'Should re-pin on window resize over threshold');
-                expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on re-pin');
-                done();
-            }).catch ((reason) => {
-                return Promise.reject(reason);
-            });
+            this.widthSpyOverride.and.returnValue(768);
+            window.dispatchEvent(new Event('resize'));
+            // wait for debounce
+            await wait(200);
+            expect(fixture.componentInstance.viewChild.pin).toBe(false, 'Should un-pin on window resize below threshold');
+            expect(fixture.componentInstance.pin).toBe(false, 'Parent pin update on window resize below threshold');
+            fixture.componentInstance.pinThreshold = 500;
+            expect(() => fixture.detectChanges()).not.toThrow();
+            await fixture.whenStable();
+            expect(fixture.componentInstance.viewChild.pin).toBe(true, 'Should re-pin on window resize over threshold');
+            expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on re-pin');
+            done();
         });
 
         it('should get correct window width', (done) => {
