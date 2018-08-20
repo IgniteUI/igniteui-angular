@@ -3611,7 +3611,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
                 this.filteredData ?
                     this.selectionAPI.delete_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
-                    [];
+                    new Set();
         this.triggerRowSelectionChange(newSelection, null, event, event.checked);
         this.checkHeaderCheckboxStatus(event.checked);
     }
