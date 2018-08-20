@@ -12,7 +12,7 @@ import { IgxNumberFilteringOperand } from '../../public_api';
 import { DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 
-fdescribe('IgxGrid Component Tests', () => {
+describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
