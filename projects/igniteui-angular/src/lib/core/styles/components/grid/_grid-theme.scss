@@ -1295,4 +1295,8 @@
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
         }
     }
+
+    %igx-grid__filtering-outlet {
+        z-index: 99999;
+    }
 }
