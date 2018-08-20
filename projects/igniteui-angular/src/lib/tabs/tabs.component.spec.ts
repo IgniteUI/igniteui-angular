@@ -114,7 +114,6 @@ describe('IgxTabs', () => {
 
         expect(tabs.selectedIndex).toBe(1);
         expect(tabs.selectedTabItem).toBe(tab2);
-        expect(tabs.selectedIndex).toBe(1);
         expect(tab2.isSelected).toBeTruthy();
         expect(tab1.isSelected).toBeFalsy();
 
