@@ -24,7 +24,6 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         @Inject(forwardRef(() => IgxComboComponent))
         public combo: IgxComboComponent) {
         super(elementRef, cdr, selectionAPI);
-        this.allowItemsFocus = false;
     }
 
     /**
