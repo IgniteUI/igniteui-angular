@@ -99,6 +99,7 @@ export interface IRowSelectionEventArgs {
 export interface ISearchInfo {
     searchText: string;
     caseSensitive: boolean;
+    exactMatch: boolean;
     activeMatchIndex: number;
     matchInfoCache: any[];
 }
@@ -769,7 +770,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-     @Input()
+    @Input()
     public emptyFilteredGridMessage = 'No records found.';
 
     /**
@@ -1560,7 +1561,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public get shouldShowToolbar(): boolean {
         return this.showToolbar &&
-               (this.columnHiding ||
+            (this.columnHiding ||
                 this.columnPinning ||
                 this.exportExcel ||
                 this.exportCsv ||
@@ -1842,6 +1843,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public lastSearchInfo: ISearchInfo = {
         searchText: '',
         caseSensitive: false,
+        exactMatch: false,
         activeMatchIndex: 0,
         matchInfoCache: []
     };
@@ -2644,7 +2646,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
                 if (editableCell && editableCell.cellID.rowID === rowSelector &&
                     editableCell.cellID.columnID === columnId) {
-                        this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
                 }
                 this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
                 this.cdr.markForCheck();
@@ -3009,10 +3011,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
+     * @param exactMatch optionally, if the text should match the entire value  (defaults to false).
      * @memberof IgxGridComponent
      */
-    public findNext(text: string, caseSensitive?: boolean): number {
-        return this.find(text, 1, caseSensitive);
+    public findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        return this.find(text, 1, caseSensitive, exactMatch);
     }
 
     /**
@@ -3023,10 +3026,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ````
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
+     * @param exactMatch optionally, if the text should match the entire value (defaults to false).
      * @memberof IgxGridComponent
      */
-    public findPrev(text: string, caseSensitive?: boolean): number {
-        return this.find(text, -1, caseSensitive);
+    public findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        return this.find(text, -1, caseSensitive, exactMatch);
     }
 
     /**
@@ -3054,7 +3058,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 });
             }
 
-            return this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
+            return this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, this.lastSearchInfo.exactMatch, false);
         } else {
             return 0;
         }
@@ -3071,6 +3075,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.lastSearchInfo = {
             searchText: '',
             caseSensitive: false,
+            exactMatch: false,
             activeMatchIndex: 0,
             matchInfoCache: []
         };
@@ -3865,10 +3870,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this.rowHeight > Math.abs(containerTopOffset) // not the entire row is visible, due to grid offset
                 && verticalScroll.scrollTop // the scrollbar is not at the first item
                 && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
-                    const scrollAmount = containerTopOffset < 0 ?
+                const scrollAmount = containerTopOffset < 0 ?
                     containerTopOffset :
                     -this.rowHeight + Math.abs(containerTopOffset);
-                    this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex);
+                this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex);
             }
             target.nativeElement.focus();
         } else {
@@ -3938,7 +3943,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return col.field + col.width;
     }
 
-    private find(text: string, increment: number, caseSensitive?: boolean, scroll?: boolean) {
+    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
         if (!this.rowList) {
             return 0;
         }
@@ -3958,13 +3963,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         const caseSensitiveResolved = caseSensitive ? true : false;
+        const exactMatchResolved = exactMatch ? true : false;
         let rebuildCache = false;
 
-        if (this.lastSearchInfo.searchText !== text || this.lastSearchInfo.caseSensitive !== caseSensitiveResolved) {
+        if (this.lastSearchInfo.searchText !== text ||
+            this.lastSearchInfo.caseSensitive !== caseSensitiveResolved ||
+            this.lastSearchInfo.exactMatch !== exactMatchResolved) {
             this.lastSearchInfo = {
                 searchText: text,
                 activeMatchIndex: 0,
                 caseSensitive: caseSensitiveResolved,
+                exactMatch: exactMatchResolved,
                 matchInfoCache: []
             };
 
@@ -3977,7 +3986,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.rowList.forEach((row) => {
                 if (row.cells) {
                     row.cells.forEach((c) => {
-                        c.highlightText(text, caseSensitiveResolved);
+                        c.highlightText(text, caseSensitiveResolved, exactMatchResolved);
                     });
                 }
             });
@@ -4083,7 +4092,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             console.warn(
                 'igxGrid - The pinned area exceeds maximum pinned width. ' +
                 'The following columns were unpinned to prevent further issues:' +
-                 newUnpinnedCols.map(col => '"' + col.header + '"').toString() + '. For more info see our documentation.'
+                newUnpinnedCols.map(col => '"' + col.header + '"').toString() + '. For more info see our documentation.'
             );
         }
 
@@ -4133,7 +4142,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else if (start + size <= goal) {
             // scroll so that goal is at end of visible chunk
             if (isColumn) {
-                 directive.getHorizontalScroll().scrollLeft =
+                directive.getHorizontalScroll().scrollLeft =
                     directive.getColumnScrollLeft(goal) -
                     parseInt(directive.igxForContainerSize, 10) +
                     parseInt(this.columns[goal].width, 10);
@@ -4147,6 +4156,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.lastSearchInfo.matchInfoCache = [];
 
         const caseSensitive = this.lastSearchInfo.caseSensitive;
+        const exactMatch = this.lastSearchInfo.exactMatch;
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
@@ -4174,22 +4184,36 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
-                    let occurenceIndex = 0;
-                    let searchIndex = searchValue.indexOf(searchText);
                     const pageIndex = this.paging ? Math.floor(i / this.perPage) : 0;
 
-                    while (searchIndex !== -1) {
-                        this.lastSearchInfo.matchInfoCache.push({
-                            row: rowIndex,
-                            column: j,
-                            page: pageIndex,
-                            index: occurenceIndex++,
-                            groupByRecord: groupByRecord,
-                            item: dataRow
-                        });
+                    if (exactMatch) {
+                        if (searchValue === searchText) {
+                            this.lastSearchInfo.matchInfoCache.push({
+                                row: rowIndex,
+                                column: j,
+                                page: pageIndex,
+                                index: 0,
+                                groupByRecord: groupByRecord,
+                                item: dataRow
+                            });
+                        }
+                    } else {
+                        let occurenceIndex = 0;
+                        let searchIndex = searchValue.indexOf(searchText);
 
-                        searchValue = searchValue.substring(searchIndex + searchText.length);
-                        searchIndex = searchValue.indexOf(searchText);
+                        while (searchIndex !== -1) {
+                            this.lastSearchInfo.matchInfoCache.push({
+                                row: rowIndex,
+                                column: j,
+                                page: pageIndex,
+                                index: occurenceIndex++,
+                                groupByRecord: groupByRecord,
+                                item: dataRow
+                            });
+
+                            searchValue = searchValue.substring(searchIndex + searchText.length);
+                            searchIndex = searchValue.indexOf(searchText);
+                        }
                     }
                 }
             });
@@ -4309,7 +4333,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             } else {
                 this.lastSearchInfo.activeMatchIndex = 0;
-                this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, false);
+                this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, this.lastSearchInfo.exactMatch, false);
             }
         }
     }

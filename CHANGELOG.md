@@ -8,6 +8,12 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayOutlet` directive introducedto mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
 - `igxButtonGroup`
     - Added the ability to define buttons directly in the template
+- `IgxTextHighlightDirective`: The `highlight` method now has a new optional parameter called `exactMatch` (defaults to false).
+    - If its value is false, all occurrences of the search text will be highlighted in the group's value.
+    - If its value is true, the entire group's value should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
+- `IgxGrid`: The `findNext` and `findPrev` methods now have a new optional parameter called `exactMatch` (defaults to false).
+    - If its value is false, all occurrences of the search text will be highlighted in the grid's cells.
+    - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
 
 ## 6.1.3
 - **General**
