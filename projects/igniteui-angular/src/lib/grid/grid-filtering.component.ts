@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -190,7 +190,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 }
             }
 
-            if (!this._secondExpression && this.column.dataType === DataType.Boolean) {
+            if (!this._secondExpression && this.column.dataType === DataType.Boolean && expr.filteringOperands.length < 2) {
                 expr.filteringOperands.push({
                     fieldName: this.column.field,
                     condition: this.expressionsList.toArray()[0].getCondition(this.expressionsList.toArray()[0].conditions[0]),
@@ -248,6 +248,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 this._overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
             }
             this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
+            this._overlaySettings.outlet = grid.outletDirective;
             this.toggleDirective.toggle(this._overlaySettings);
         });
     }

@@ -17,6 +17,7 @@ interface ISearchInfo {
     content: string;
     matchCount: number;
     caseSensitive: boolean;
+    exactMatch: boolean;
 }
 
 export interface IActiveHighlightInfo {
@@ -35,25 +36,78 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     private _lastSearchInfo: ISearchInfo;
     private _div = null;
-    private _observer: MutationObserver;
+    private _observer: MutationObserver = null;
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
 
+    /**
+     * Determines the `CSS` class of the highlight elements.
+     * This allows the developer to provide custom `CSS` to customize the highlight.
+     *
+     * ```html
+     * <div
+     *   igxTextHighlight
+     *   [cssClass]="myClass">
+     * </div>
+     * ```
+     */
     @Input('cssClass')
     public cssClass: string;
 
+    /**
+     * Determines the `CSS` class of the active highlight element.
+     * This allows the developer to provide custom `CSS` to customize the highlight.
+     *
+     * ```html
+     * <div
+     *   igxTextHighlight
+     *   [activeCssClass]="activeHighlightClass">
+     * </div>
+     * ```
+     */
     @Input('activeCssClass')
     public activeCssClass: string;
 
+    /**
+     * @hidden
+     */
     @Input('containerClass')
     public containerClass: string;
 
+    /**
+     * Identifies the highlight within a unique group.
+     * This allows it to have several different highlight groups,
+     * with each of them having their own active highlight.
+     *
+     * ```html
+     * <div
+     *   igxTextHighlight
+     *   [groupName]="myGroupName">
+     * </div>
+     * ```
+     */
     @Input('groupName')
     public groupName = '';
 
     private _value = '';
 
+    /**
+     * The underlying value of the element that will be highlighted.
+     *
+     * ```typescript
+     * // get
+     * const elementValue = this.textHighlight.value;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <div
+     *   igxTextHighlight
+     *   [value]="newValue">
+     * </div>
+     * ```
+     */
     @Input('value')
     public get value(): any {
         return this._value;
@@ -66,24 +120,66 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         }
     }
 
+    /**
+     * The index of the row on which the directive is currently on.
+     *
+     * ```html
+     * <div
+     *   igxTextHighlight
+     *   [row]="0">
+     * </div>
+     * ```
+     */
     @Input('row')
     public row: number;
 
+    /**
+     * The index of the column on which the directive is currently on.
+     *
+     * ```html
+     * <div
+     *   igxTextHighlight
+     *   [column]="0">
+     * </div>
+     * ```
+     */
     @Input('column')
     public column: number;
 
+    /**
+     * The index of the page on which the directive is currently on.
+     * It is used when the component containing the directive supports paging.
+     *
+     * ```html
+     * <div
+     *   igxTextHighlight
+     *   [page]="0">
+     * </div>
+     * ```
+     */
     @Input('page')
     public page: number;
 
+    /**
+     * @hidden
+     */
     public parentElement: any;
 
     private _container: any;
 
+
+    /**
+     * Activates the highlight at a given index.
+     * (if such index exists)
+     */
     public static setActiveHighlight(groupName: string, highlight: IActiveHighlightInfo) {
         IgxTextHighlightDirective.highlightGroupsMap.set(groupName, highlight);
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
     }
 
+    /**
+     * Clears any existing highlight.
+     */
     public static clearActiveHighlight(groupName) {
         IgxTextHighlightDirective.highlightGroupsMap.set(groupName, {
             rowIndex: -1,
@@ -97,35 +193,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
 
-        const callback = (mutationList) => {
-            mutationList.forEach((mutation) => {
-                const removedNodes = new Array(... mutation.removedNodes);
-                removedNodes.forEach((n) => {
-                    if (n === this._container) {
-                        this._nodeWasRemoved = true;
-                        this.clearChildElements(false);
-                    }
-                });
-
-                const addedNodes = new Array(... mutation.addedNodes);
-                addedNodes.forEach((n) => {
-                    if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
-                        this._container = this.parentElement.firstElementChild;
-                        this._nodeWasRemoved = false;
-
-                        this._forceEvaluation = true;
-                        this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
-                        this._forceEvaluation = false;
-
-                        this.activateIfNecessary();
-                    }
-                });
-            });
-        };
-
-        this._observer = new MutationObserver(callback);
-        this._observer.observe(this.parentElement, {childList: true});
-
         IgxTextHighlightDirective.onActiveElementChanged.subscribe((groupName) => {
             if (this.groupName === groupName) {
                 if (this._activeElementIndex !== -1) {
@@ -136,13 +203,21 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         });
     }
 
+    /**
+     * @hidden
+     */
     ngOnDestroy() {
-        this._observer.disconnect();
+        if (this._observer !== null) {
+            this._observer.disconnect();
+        }
     }
 
+    /**
+     * @hidden
+     */
     ngOnChanges(changes: SimpleChanges) {
         if (changes.value && !changes.value.firstChange) {
-            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
+            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
             this.activateIfNecessary();
         }
 
@@ -157,6 +232,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         }
     }
 
+    /**
+     * @hidden
+     */
     ngAfterViewInit() {
         if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
             IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
@@ -171,34 +249,45 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             searchedText: '',
             content: this.value,
             matchCount: 0,
-            caseSensitive: false
+            caseSensitive: false,
+            exactMatch: false
         };
 
         this._container = this.parentElement.firstElementChild;
     }
 
-    public highlight(text: string, caseSensitive?: boolean): number {
+    /**
+     * Clears the existing highlight and highlights the searched text.
+     * Returns how many times the element contains the searched text.
+     */
+    public highlight(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         const caseSensitiveResolved = caseSensitive ? true : false;
+        const exactMatchResolved = exactMatch ? true : false;
 
-        if (this.searchNeedsEvaluation(text, caseSensitiveResolved)) {
+        if (this.searchNeedsEvaluation(text, caseSensitiveResolved, exactMatchResolved)) {
             this._lastSearchInfo.searchedText = text;
             this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
+            this._lastSearchInfo.exactMatch = exactMatchResolved;
             this._lastSearchInfo.content = this.value;
 
             if (text === '' || text === undefined || text === null) {
                 this.clearHighlight();
             } else {
                 this.clearChildElements(true);
-                this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive);
+                this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive, exactMatch);
             }
         } else if (this._nodeWasRemoved) {
             this._lastSearchInfo.searchedText = text;
             this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
+            this._lastSearchInfo.exactMatch = exactMatchResolved;
         }
 
         return this._lastSearchInfo.matchCount;
     }
 
+    /**
+     * Clears any existing highlight.
+     */
     public clearHighlight(): void {
         this.clearChildElements(false);
 
@@ -206,10 +295,54 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         this._lastSearchInfo.matchCount = 0;
     }
 
+    /**
+     * Activates the highlight if it is on the currently active row, column and page.
+     */
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
         if (group.columnIndex === this.column && group.rowIndex === this.row && group.page === this.page) {
             this.activate(group.index);
+        }
+    }
+
+    /**
+     * Attaches a MutationObserver to the parentElement and watches for when the container element is removed/readded to the DOM.
+     * Should be used only when necessary as using many observers may lead to performance degradation.
+     */
+    public observe(): void {
+        if (this._observer === null) {
+            const callback = (mutationList) => {
+                mutationList.forEach((mutation) => {
+                    const removedNodes = new Array(... mutation.removedNodes);
+                    removedNodes.forEach((n) => {
+                        if (n === this._container) {
+                            this._nodeWasRemoved = true;
+                            this.clearChildElements(false);
+                        }
+                    });
+
+                    const addedNodes = new Array(... mutation.addedNodes);
+                    addedNodes.forEach((n) => {
+                        if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
+                            this._container = this.parentElement.firstElementChild;
+                            this._nodeWasRemoved = false;
+
+                            this._forceEvaluation = true;
+                            this.highlight(this._lastSearchInfo.searchedText,
+                                this._lastSearchInfo.caseSensitive,
+                                this._lastSearchInfo.exactMatch);
+                            this._forceEvaluation = false;
+
+                            this.activateIfNecessary();
+                            this._observer.disconnect();
+                            this._observer = null;
+                        }
+                    });
+                });
+            };
+
+            this._observer = new MutationObserver(callback);
+            this._observer.observe(this.parentElement, {childList: true});
         }
     }
 
@@ -261,32 +394,43 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         }
     }
 
-    private getHighlightedText(searchText: string, caseSensitive: boolean) {
+    private getHighlightedText(searchText: string, caseSensitive: boolean, exactMatch: boolean) {
         this.appendDiv();
 
         const stringValue = String(this.value);
         const contentStringResolved = !caseSensitive ? stringValue.toLowerCase() : stringValue;
         const searchTextResolved = !caseSensitive ? searchText.toLowerCase() : searchText;
 
-        let foundIndex = contentStringResolved.indexOf(searchTextResolved, 0);
-        let previousMatchEnd = 0;
         let matchCount = 0;
 
-        while (foundIndex !== -1) {
-            const start = foundIndex;
-            const end = foundIndex + searchTextResolved.length;
+        if (exactMatch) {
+            if (contentStringResolved === searchTextResolved) {
+                // tslint:disable-next-line:max-line-length
+                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue}</span>`);
+                matchCount++;
+            } else {
+                this.appendText(stringValue);
+            }
+        } else {
+            let foundIndex = contentStringResolved.indexOf(searchTextResolved, 0);
+            let previousMatchEnd = 0;
 
-            this.appendText(stringValue.substring(previousMatchEnd, start));
-            // tslint:disable-next-line:max-line-length
-            this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue.substring(start, end)}</span>`);
+            while (foundIndex !== -1) {
+                const start = foundIndex;
+                const end = foundIndex + searchTextResolved.length;
 
-            previousMatchEnd = end;
-            matchCount++;
+                this.appendText(stringValue.substring(previousMatchEnd, start));
+                // tslint:disable-next-line:max-line-length
+                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue.substring(start, end)}</span>`);
 
-            foundIndex = contentStringResolved.indexOf(searchTextResolved, end);
+                previousMatchEnd = end;
+                matchCount++;
+
+                foundIndex = contentStringResolved.indexOf(searchTextResolved, end);
+            }
+
+            this.appendText(stringValue.substring(previousMatchEnd, stringValue.length));
         }
-
-        this.appendText(stringValue.substring(previousMatchEnd, stringValue.length));
 
         return matchCount;
     }
@@ -308,14 +452,15 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         this.renderer.appendChild(this.parentElement, this._div);
     }
 
-    private searchNeedsEvaluation(text: string, caseSensitive: boolean): boolean {
+    private searchNeedsEvaluation(text: string, caseSensitive: boolean, exactMatch: boolean): boolean {
         const searchedText = this._lastSearchInfo.searchedText;
 
         return !this._nodeWasRemoved &&
-                (searchedText === null ||
+            (searchedText === null ||
                 searchedText !== text ||
                 this._lastSearchInfo.content !== this.value ||
                 this._lastSearchInfo.caseSensitive !== caseSensitive ||
+                this._lastSearchInfo.exactMatch !== exactMatch ||
                 this._forceEvaluation);
     }
 }

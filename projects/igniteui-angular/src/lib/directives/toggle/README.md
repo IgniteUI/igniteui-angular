@@ -54,7 +54,7 @@ handlers when the toggle is opened and respectively closed.
 
 The **IgxToggleAction** provides a way for user to Open/Close(toggle) every Component/Directive which implements **IToggleView** interface by providing the reference to this particular Component/Directive or ID which is registered into **IgxNavigationService**. It is also applicable upon **IgxToggle**
 
-You can see it in action [here](http://139.59.168.161/demos/toggle)
+You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle.html)
 
 ## Usage
 ```typescript
@@ -95,6 +95,21 @@ Providing reference from custom component which has already been registered into
 ### Inputs
 | Name       |      Type      |  Description |
 |:----------:|:-------------|:------|
-| `igxToggleAction`| `IToggleView | string` | Determines the target that have to be controled. |
+| `igxToggleAction`| `IToggleView` \| `string` | Determines the target that have to be controled. |
 | `overlaySettings` | `OverlaySettings`| Passes `igxOverlay` settings for applicable targets (`igxToggle`) that control positioning, interaction and scroll behavior.
+| `igxToggleOutlet` | `IgxOverlayOutletDirective` \| `ElementRef`| Determines where the target overlay element should be attached. Shortcut for `overlaySettings.outlet`.
 | `closeOnOutsideClick`| `Boolean` | **Deprecated.** Determines if passed Component/Directive have to be closed when it is clicked outside. |
+
+# IgxOverlayOutlet Directive
+
+The **IgxOverlayOutlet** provides a way to mark an element as an `igxOverlay` outlet container through the component template only.
+Directive instance is exported as `overlay-outlet`, so it can be assigned within the template:
+
+```html
+<div igxOverlayOutlet #outlet="overlay-outlet"></div>
+```
+This allows to provide the `outlet` templates variable as a setting to the toggle action:
+```html
+<button [igxToggleAction]="reference" [igxToggleOutlet]="outlet">Toggle</button>
+<custom-component #reference></custom-component>
+```
