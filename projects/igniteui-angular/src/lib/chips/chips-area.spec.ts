@@ -242,7 +242,12 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointermove',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
 
             setTimeout(() => {
                 const afterDragTop = secondChip.dragDir['_dragGhost'].getBoundingClientRect().top;
@@ -282,7 +287,12 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointermove',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
             fix.detectChanges();
 
             setTimeout(() => {
@@ -325,13 +335,23 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointermove',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
             expect(firstChip.nativeElement.children[1].style.visibility).toEqual('hidden');
-            UIInteractions.simulatePointerEvent('pointerup', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointerup',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
             return fix.whenRenderingDone();
         }).then(() => {
             expect(firstChip.nativeElement.children[1].style.visibility).toEqual('visible');
