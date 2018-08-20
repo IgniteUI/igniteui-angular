@@ -104,7 +104,6 @@ describe('igxCombo', () => {
             expect(combo.placeholder).toEqual('Location');
             expect(combo.searchPlaceholder).toEqual('Enter a Search Term'); // Default;
             expect(combo.filterable).toEqual(true);
-            expect(combo.height).toEqual('400px');
             expect(combo.itemsMaxHeight).toEqual(400);
             expect(combo.itemsWidth).toEqual('399px');
             expect(combo.itemHeight).toEqual(40);
@@ -119,8 +118,6 @@ describe('igxCombo', () => {
             expect(combo.searchPlaceholder).toEqual('Filter');
             combo.filterable = false;
             expect(combo.filterable).toEqual(false);
-            combo.height = '500px';
-            expect(combo.height).toEqual('500px');
             combo.itemsMaxHeight = 500;
             expect(combo.itemsMaxHeight).toEqual(500);
             combo.itemHeight = 50;
