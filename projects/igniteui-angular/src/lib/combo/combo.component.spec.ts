@@ -1481,6 +1481,27 @@ describe('igxCombo', () => {
             expectedOutput += ', ' + combo.data[9];
             expect(inputElement.value).toEqual(expectedOutput);
         }));
+
+        it('Should properly handle selection manipulation through onSelectionChange emit', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            // override selection
+            fixture.componentInstance.onSelectionChange = (event) => {
+                event.newSelection = [];
+            };
+            combo.toggle();
+            tick();
+            // No items are initially selected
+            expect(combo.selectedItems()).toEqual([]);
+            // Select the first 5 items
+            combo.selectItems(fixture.componentInstance.initData.splice(0, 5));
+            tick();
+            fixture.detectChanges();
+            tick();
+            // onSelectionChange fires and overrides the selection to be [];
+            expect(combo.selectedItems()).toEqual([]);
+        }));
     });
 
     describe('Rendering tests: ', () => {
@@ -3059,7 +3080,8 @@ class IgxComboScrollTestComponent {
 @Component({
     template: `
 <igx-combo #combo [placeholder]="'Location'" [data]='items'
-[filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" [allowCustomValues]="true">
+[filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+(onSelectionChange)="onSelectionChange($event)" [allowCustomValues]="true">
 <ng-template #itemTemplate let-display let-key="valueKey">
 <div class="state-card--simple">
 <span class="small-red-circle"></span>
