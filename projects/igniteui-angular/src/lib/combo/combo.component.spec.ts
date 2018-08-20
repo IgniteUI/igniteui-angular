@@ -3142,7 +3142,7 @@ class IgxComboSampleComponent {
     template: `
 <p>Change data to:</p>
 <label id="mockID">Combo Label</label>
-<igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'"
+<igx-combo #combo [placeholder]="'Location'" [data]='items'
 [itemsMaxHeight]='400' [itemsWidth]="'399px'" [itemHeight]='40'
 [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
 [ariaLabelledBy]="'mockID'">
@@ -3293,7 +3293,7 @@ export class LocalService {
 @Component({
     template: `
 <label id="mockID">Combo Label</label>
-<igx-combo #combo [placeholder]="'Products'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
+<igx-combo #combo [placeholder]="'Products'" [data]='items' [itemsMaxHeight]='400'
 [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'"
 [ariaLabelledBy]="'mockID'">
 </igx-combo>
@@ -3369,7 +3369,7 @@ export class IgxComboRemoteBindingTestComponent implements OnInit, AfterViewInit
 @Component({
     template: `
 <label id="mockID">Combo Label</label>
-<igx-combo #combo [height]="'400px'" [itemsMaxHeight]='400'
+<igx-combo #combo [itemsMaxHeight]='400'
 [itemHeight]='40' [width]="'400px'">
 </igx-combo>
 `
@@ -3491,8 +3491,7 @@ export class RemoteDataService {
 @Component({
     template: `
 <label id="mockID">Combo Label</label>
-<igx-combo #combo [placeholder]="'Products'" [data]="data | async" (onDataPreLoad)="dataLoading($event)"
-[height]="'400px'" [itemsMaxHeight]='400'
+<igx-combo #combo [placeholder]="'Products'" [data]="data | async" (onDataPreLoad)="dataLoading($event)" [itemsMaxHeight]='400'
 [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'"
 [ariaLabelledBy]="'mockID'">
 </igx-combo>
