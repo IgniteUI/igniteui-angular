@@ -593,7 +593,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             this.selectionApi.set_selection(this.prevCellSelectionID, sel);
         }
         if (!newSelection) {
-            newSelection = this.selectionApi.select_item(this.cellSelectionID, this.cellID);
+            newSelection = this.selectionApi.add_item(this.cellSelectionID, this.cellID);
         }
         this.selectionApi.set_selection(this.cellSelectionID, newSelection);
     }

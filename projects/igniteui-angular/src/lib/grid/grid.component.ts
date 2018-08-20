@@ -3607,10 +3607,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const newSelection =
             event.checked ?
                 this.filteredData ?
-                    this.selectionAPI.select_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    this.selectionAPI.add_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
                     this.selectionAPI.get_all_ids(this.data, this.primaryKey) :
                 this.filteredData ?
-                    this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
+                    this.selectionAPI.delete_items(this.id, this.selectionAPI.get_all_ids(this._filteredData, this.primaryKey)) :
                     [];
         this.triggerRowSelectionChange(newSelection, null, event, event.checked);
         this.checkHeaderCheckboxStatus(event.checked);
@@ -3753,7 +3753,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
         let newSelection: Set<any>;
-        newSelection = this.selectionAPI.select_items(this.id, rowIDs, clearCurrentSelection);
+        newSelection = this.selectionAPI.add_items(this.id, rowIDs, clearCurrentSelection);
         this.triggerRowSelectionChange(newSelection);
     }
 
@@ -3767,7 +3767,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public deselectRows(rowIDs: any[]) {
         let newSelection: Set<any>;
-        newSelection = this.selectionAPI.deselect_items(this.id, rowIDs);
+        newSelection = this.selectionAPI.delete_items(this.id, rowIDs);
         this.triggerRowSelectionChange(newSelection);
     }
 

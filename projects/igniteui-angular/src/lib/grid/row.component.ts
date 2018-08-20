@@ -245,8 +245,8 @@ export class IgxGridRowComponent implements DoCheck {
      */
     public onCheckboxClick(event) {
         const newSelection = (event.checked) ?
-                            this.selectionAPI.select_item(this.gridID, this.rowID) :
-                            this.selectionAPI.deselect_item(this.gridID, this.rowID);
+                            this.selectionAPI.add_item(this.gridID, this.rowID) :
+                            this.selectionAPI.delete_item(this.gridID, this.rowID);
         this.grid.triggerRowSelectionChange(newSelection, this, event);
     }
 
