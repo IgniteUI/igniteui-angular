@@ -75,6 +75,50 @@ describe('IgxHighlight', () => {
         expect(count).toBe(0);
     });
 
+    it('Should not highlight anything when there is no exact match, regardless of case sensitivity.', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+        let count = component.highlightText('Lorem', false, true);
+        fix.detectChanges();
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        expect(spans.length).toBe(0);
+        expect(count).toBe(0);
+
+        count = component.highlightText('Lorem', false, false);
+        fix.detectChanges();
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        expect(spans.length).toBe(2);
+        expect(count).toBe(2);
+
+        count = component.highlightText('Lorem', true, true);
+        fix.detectChanges();
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        expect(spans.length).toBe(0);
+        expect(count).toBe(0);
+    });
+
+    it('Should not highlight with exact match when the group text has changed.', () => {
+        const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
+        fix.detectChanges();
+
+        const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
+        const count = component.highlightText(
+            'LoReM ipsuM dolor sit AMET, consectetur adipiscing elit. Vestibulum vulputate LucTUS dui ut maximus.' +
+            ' Quisque sed suscipit lorem. Vestibulum sit.',
+            false, true);
+        fix.detectChanges();
+        let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        expect(spans.length).toBe(1);
+        expect(count).toBe(1);
+
+        component.html += ' additionalText';
+        fix.detectChanges();
+        spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
+        expect(spans.length).toBe(0);
+    });
+
     it('Should clear all highlights', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
         fix.detectChanges();
@@ -250,8 +294,8 @@ class HighlightLoremIpsumComponent {
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective })
     public highlight: IgxTextHighlightDirective;
 
-    public highlightText(text: string, caseSensitive?: boolean) {
-        return this.highlight.highlight(text, caseSensitive);
+    public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean) {
+        return this.highlight.highlight(text, caseSensitive, exactMatch);
     }
 
     public clearHighlight() {
