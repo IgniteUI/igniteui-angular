@@ -77,7 +77,7 @@ class TestChipsLabelAndSuffixComponent {
     public chips: QueryList<IgxChipComponent>;
 }
 
-describe('IgxChip', () => {
+xdescribe('IgxChip', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item';
     const CHIP_CONNECTOR = 'igx-chip__connector';
 
