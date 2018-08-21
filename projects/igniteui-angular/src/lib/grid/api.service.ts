@@ -77,7 +77,9 @@ export class IgxGridAPIService {
             this.editCellState.set(gridId, null);
         }
         if (!this.get_cell_inEditMode(gridId) && editMode) {
-            this.editCellState.set(gridId, { cellID: cell.cellID, cell: Object.assign({}, cell) });
+            const cellCopy = Object.assign({}, cell);
+            cellCopy.row = Object.assign({}, cell.row);
+            this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
         }
     }
 
