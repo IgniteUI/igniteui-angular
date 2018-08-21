@@ -48,6 +48,8 @@ describe('CSV Grid Exporter', () => {
         TestMethods.testRawData(currentGrid, (grid) => {
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.simpleGridData);
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -72,6 +74,8 @@ describe('CSV Grid Exporter', () => {
                     wrapper2.verifyData(wrapper2.simpleGridData, 'All 10 rows should have been exported!');
                 });
             });
+        }).catch((err) => {
+            expect(err.message).toBe('');
         });
     }));
 
@@ -97,6 +101,8 @@ describe('CSV Grid Exporter', () => {
                         wrapper2.verifyData(wrapper2.gridTwoDirectors, 'Two rows should have been exported!');
                     });
                 });
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -121,6 +127,8 @@ describe('CSV Grid Exporter', () => {
                 getExportedData(grid, options).then((wrapper2) => {
                     wrapper2.verifyData(wrapper2.simpleGridData, 'All three columns data should have been exported!');
                 });
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -165,6 +173,8 @@ describe('CSV Grid Exporter', () => {
                         });
                     });
                 });
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -178,6 +188,8 @@ describe('CSV Grid Exporter', () => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.gridNameJobTitleID);
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -192,6 +204,8 @@ describe('CSV Grid Exporter', () => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.sortedSimpleGridData);
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -224,6 +238,8 @@ describe('CSV Grid Exporter', () => {
                         });
                     });
                 });
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -234,9 +250,10 @@ describe('CSV Grid Exporter', () => {
         const grid = result.grid;
 
         fix.whenStable().then(() => {
-            fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.gridNameIDJobTitle, 'Name should have been the first field!');
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -251,6 +268,8 @@ describe('CSV Grid Exporter', () => {
             fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyData(wrapper.simpleGridData, 'Name should not have been the first field!');
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
@@ -275,13 +294,14 @@ describe('CSV Grid Exporter', () => {
                 expect(cols[2].header).toBe('JobTitle');
                 expect(cols[2].index).toBe(2);
                 wrapper.verifyData(wrapper.simpleGridData);
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
 
     it('should fire \'onColumnExport\' for each visible grid column.', async(() => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
         const cols = [];
@@ -293,6 +313,7 @@ describe('CSV Grid Exporter', () => {
         options.ignoreColumnsVisibility = false;
 
         fix.whenStable().then(() => {
+            fix.detectChanges();
             getExportedData(grid, options).then((wrapper) => {
                     expect(cols.length).toBe(2);
                     expect(cols[0].header).toBe('Name');
@@ -300,14 +321,14 @@ describe('CSV Grid Exporter', () => {
                     expect(cols[1].header).toBe('JobTitle');
                     expect(cols[1].index).toBe(1);
                     wrapper.verifyData(wrapper.gridNameJobTitle);
-                });
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
-
+        });
     }));
 
     it('should not export columns when \'onColumnExport\' is canceled.', async(() => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
         exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
@@ -317,13 +338,14 @@ describe('CSV Grid Exporter', () => {
         fix.whenStable().then(() => {
             getExportedData(grid, options).then((wrapper) => {
                 wrapper.verifyData('');
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
 
     it('should fire \'onRowExport\' for each grid row.', async(() => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
         const rows = [];
@@ -338,13 +360,14 @@ describe('CSV Grid Exporter', () => {
                     expect(rows[i].index).toBe(i);
                     expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(data[i]));
                 }
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
 
     it('should not export rows when \'onRowExport\' is canceled.', async(() => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
-        fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
         exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
@@ -354,6 +377,8 @@ describe('CSV Grid Exporter', () => {
         fix.whenStable().then(() => {
             getExportedData(grid, options).then((wrapper) => {
                     wrapper.verifyData('');
+            }).catch((err) => {
+                expect(err.message).toBe('');
             });
         });
     }));
