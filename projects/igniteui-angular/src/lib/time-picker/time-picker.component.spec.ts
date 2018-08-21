@@ -99,6 +99,7 @@ describe('IgxTimePicker', () => {
 
     it('Dialog selected element position', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
+        tick();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -126,6 +127,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker open event', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        tick();
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
@@ -143,6 +145,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker Validation Failed event', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithMInMaxTimeValueComponent);
+        tick();
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
@@ -184,6 +187,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker cancel button', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
+        tick();
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
@@ -233,6 +237,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker ValueChanged event', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        tick();
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
@@ -281,6 +286,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker UP Down Keyboard navigation', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
+        tick();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -358,6 +364,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker Left Right Keyboard navigation', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
+        tick();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -430,6 +437,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker Mouse Over', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
+        tick();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -465,6 +473,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker Mouse Wheel', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
+        tick();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -544,6 +553,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker Pan Move', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
+        tick();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -620,6 +630,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker 24 hour format', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWith24HTimeComponent);
+        tick();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -638,6 +649,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker Items in view', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithAMPMLeadingZerosTimeComponent);
+        tick();
         fixture.detectChanges();
         const timePicker = fixture.componentInstance.timePicker;
 
@@ -658,6 +670,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker scroll to end', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithSpinLoopFalseValueComponent);
+        tick();
         fixture.detectChanges();
 
         const initialTime = fixture.componentInstance.dateValue;
@@ -719,6 +732,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker check isSpinLoop with Items Delta', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithItemsDeltaValueComponent);
+        tick();
         fixture.detectChanges();
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
@@ -768,6 +782,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker with not valid element arrow up', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        tick();
         fixture.detectChanges();
 
         const validDate = new Date(2017, 7, 7, 4, 27);
@@ -796,6 +811,7 @@ describe('IgxTimePicker', () => {
 
     it('TimePicker with not valid element arrow down', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        tick();
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
@@ -822,8 +838,8 @@ describe('IgxTimePicker', () => {
     }));
 
     it('TimePicker vertical', fakeAsync(() => {
-
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        tick();
         fixture.detectChanges();
         const dom = fixture.debugElement;
 
@@ -831,7 +847,7 @@ describe('IgxTimePicker', () => {
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
         UIInteractions.clickElement(timePickerTarget);
-        tick(100);
+        tick(200);
         fixture.detectChanges();
 
         expect(dom.query(By.css('.igx-time-picker--vertical'))).not.toBeNull();
@@ -839,6 +855,7 @@ describe('IgxTimePicker', () => {
         const dialog = dom.query(By.css('.igx-dialog__window')).nativeElement;
 
         expect(dialog.offsetWidth).toBeGreaterThan(dialog.offsetHeight);
+        tick();
     }));
 });
 
