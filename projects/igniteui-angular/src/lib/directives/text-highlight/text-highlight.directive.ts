@@ -17,6 +17,7 @@ interface ISearchInfo {
     content: string;
     matchCount: number;
     caseSensitive: boolean;
+    exactMatch: boolean;
 }
 
 export interface IActiveHighlightInfo {
@@ -216,7 +217,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
      */
     ngOnChanges(changes: SimpleChanges) {
         if (changes.value && !changes.value.firstChange) {
-            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
+            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
             this.activateIfNecessary();
         }
 
@@ -248,7 +249,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
             searchedText: '',
             content: this.value,
             matchCount: 0,
-            caseSensitive: false
+            caseSensitive: false,
+            exactMatch: false
         };
 
         this._container = this.parentElement.firstElementChild;
@@ -258,23 +260,26 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
      * Clears the existing highlight and highlights the searched text.
      * Returns how many times the element contains the searched text.
      */
-    public highlight(text: string, caseSensitive?: boolean): number {
+    public highlight(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         const caseSensitiveResolved = caseSensitive ? true : false;
+        const exactMatchResolved = exactMatch ? true : false;
 
-        if (this.searchNeedsEvaluation(text, caseSensitiveResolved)) {
+        if (this.searchNeedsEvaluation(text, caseSensitiveResolved, exactMatchResolved)) {
             this._lastSearchInfo.searchedText = text;
             this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
+            this._lastSearchInfo.exactMatch = exactMatchResolved;
             this._lastSearchInfo.content = this.value;
 
             if (text === '' || text === undefined || text === null) {
                 this.clearHighlight();
             } else {
                 this.clearChildElements(true);
-                this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive);
+                this._lastSearchInfo.matchCount = this.getHighlightedText(text, caseSensitive, exactMatch);
             }
         } else if (this._nodeWasRemoved) {
             this._lastSearchInfo.searchedText = text;
             this._lastSearchInfo.caseSensitive = caseSensitiveResolved;
+            this._lastSearchInfo.exactMatch = exactMatchResolved;
         }
 
         return this._lastSearchInfo.matchCount;
@@ -323,7 +328,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
                             this._nodeWasRemoved = false;
 
                             this._forceEvaluation = true;
-                            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive);
+                            this.highlight(this._lastSearchInfo.searchedText,
+                                this._lastSearchInfo.caseSensitive,
+                                this._lastSearchInfo.exactMatch);
                             this._forceEvaluation = false;
 
                             this.activateIfNecessary();
@@ -387,32 +394,43 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         }
     }
 
-    private getHighlightedText(searchText: string, caseSensitive: boolean) {
+    private getHighlightedText(searchText: string, caseSensitive: boolean, exactMatch: boolean) {
         this.appendDiv();
 
         const stringValue = String(this.value);
         const contentStringResolved = !caseSensitive ? stringValue.toLowerCase() : stringValue;
         const searchTextResolved = !caseSensitive ? searchText.toLowerCase() : searchText;
 
-        let foundIndex = contentStringResolved.indexOf(searchTextResolved, 0);
-        let previousMatchEnd = 0;
         let matchCount = 0;
 
-        while (foundIndex !== -1) {
-            const start = foundIndex;
-            const end = foundIndex + searchTextResolved.length;
+        if (exactMatch) {
+            if (contentStringResolved === searchTextResolved) {
+                // tslint:disable-next-line:max-line-length
+                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue}</span>`);
+                matchCount++;
+            } else {
+                this.appendText(stringValue);
+            }
+        } else {
+            let foundIndex = contentStringResolved.indexOf(searchTextResolved, 0);
+            let previousMatchEnd = 0;
 
-            this.appendText(stringValue.substring(previousMatchEnd, start));
-            // tslint:disable-next-line:max-line-length
-            this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue.substring(start, end)}</span>`);
+            while (foundIndex !== -1) {
+                const start = foundIndex;
+                const end = foundIndex + searchTextResolved.length;
 
-            previousMatchEnd = end;
-            matchCount++;
+                this.appendText(stringValue.substring(previousMatchEnd, start));
+                // tslint:disable-next-line:max-line-length
+                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;font-weight:bold;color:black">${stringValue.substring(start, end)}</span>`);
 
-            foundIndex = contentStringResolved.indexOf(searchTextResolved, end);
+                previousMatchEnd = end;
+                matchCount++;
+
+                foundIndex = contentStringResolved.indexOf(searchTextResolved, end);
+            }
+
+            this.appendText(stringValue.substring(previousMatchEnd, stringValue.length));
         }
-
-        this.appendText(stringValue.substring(previousMatchEnd, stringValue.length));
 
         return matchCount;
     }
@@ -434,14 +452,15 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         this.renderer.appendChild(this.parentElement, this._div);
     }
 
-    private searchNeedsEvaluation(text: string, caseSensitive: boolean): boolean {
+    private searchNeedsEvaluation(text: string, caseSensitive: boolean, exactMatch: boolean): boolean {
         const searchedText = this._lastSearchInfo.searchedText;
 
         return !this._nodeWasRemoved &&
-                (searchedText === null ||
+            (searchedText === null ||
                 searchedText !== text ||
                 this._lastSearchInfo.content !== this.value ||
                 this._lastSearchInfo.caseSensitive !== caseSensitive ||
+                this._lastSearchInfo.exactMatch !== exactMatch ||
                 this._forceEvaluation);
     }
 }
