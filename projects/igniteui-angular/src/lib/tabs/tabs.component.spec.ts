@@ -1,9 +1,8 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
-import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxTabs', () => {
     beforeEach(async(() => {
@@ -14,13 +13,13 @@ describe('IgxTabs', () => {
             .compileComponents();
     }));
 
-    it('should initialize igx-tabs, igx-tabs-group and igx-tab-item', (async () => {
+    it('should initialize igx-tabs, igx-tabs-group and igx-tab-item', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
         let groups: IgxTabsGroupComponent[];
         let tabsItems: IgxTabItemComponent[];
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         groups = tabs.groups.toArray();
@@ -43,14 +42,15 @@ describe('IgxTabs', () => {
             expect(tabsItems[i] instanceof IgxTabItemComponent).toBeTruthy();
             expect(tabsItems[i].relatedGroup).toBe(groups[i]);
         }
+        tick();
     }));
 
-    it('should initialize default values of properties', (async () => {
+    it('should initialize default values of properties', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
         let tabItems;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(0);
@@ -60,7 +60,7 @@ describe('IgxTabs', () => {
             expect(tabs.selectedTabItem).toBe(tabItems[0]);
         };
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         tabItems = tabs.tabs.toArray();
@@ -68,14 +68,14 @@ describe('IgxTabs', () => {
         expect(tabItems[1].disabled).toBe(false);
     }));
 
-    it('should initialize set/get properties', (async () => {
+    it('should initialize set/get properties', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabbar = fixture.componentInstance.tabs;
         const icons = ['library_music', 'video_library', 'library_books'];
         let tabItems;
         let groups;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         tabItems = tabbar.tabs.toArray();
@@ -85,9 +85,10 @@ describe('IgxTabs', () => {
             expect(groups[i].label).toBe('Tab ' + (i + 1));
             expect(groups[i].icon).toBe(icons[i]);
         }
+        tick();
     }));
 
-    it('should select/deselect tabs', (async () => {
+    it('should select/deselect tabs', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
         let tabItems;
@@ -100,7 +101,7 @@ describe('IgxTabs', () => {
             expect(tabs.selectedTabItem).toBe(tab1);
         };
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
         tabItems = tabs.tabs.toArray();
         tab1 = tabItems[0];
@@ -109,7 +110,7 @@ describe('IgxTabs', () => {
         fixture.componentInstance.tabSelectedHandler = () => { };
 
         tab2.select();
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(1);
@@ -118,7 +119,7 @@ describe('IgxTabs', () => {
         expect(tab1.isSelected).toBeFalsy();
 
         tab1.select();
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(0);
@@ -128,11 +129,11 @@ describe('IgxTabs', () => {
 
         // select disabled tab
         tab2.relatedGroup.disabled = true;
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         tab2.select();
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(0);
@@ -141,21 +142,21 @@ describe('IgxTabs', () => {
         expect(tab2.isSelected).toBeFalsy();
     }));
 
-    it('check select selection when tabs collection is modified', (async () => {
+    it('check select selection when tabs collection is modified', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTest2Component);
         const tabs = fixture.componentInstance.tabs;
         let tabItems;
         let tab1: IgxTabItemComponent;
         let tab3: IgxTabItemComponent;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         tabItems = tabs.tabs.toArray();
         tab1 = tabItems[0];
         tab3 = tabItems[2];
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(0);
@@ -165,7 +166,7 @@ describe('IgxTabs', () => {
 
         tab3.select();
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(2);
@@ -173,155 +174,156 @@ describe('IgxTabs', () => {
         expect(tab3.isSelected).toBeTruthy();
 
         fixture.componentInstance.resetCollectionFourTabs();
-        await wait(55);
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
         fixture.componentInstance.resetCollectionOneTab();
-        await wait(20);
+        tick(100);
         fixture.detectChanges();
 
-        await wait(50);
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
 
         fixture.componentInstance.resetCollectionTwoTabs();
-        await wait(20);
+        tick(100);
         fixture.detectChanges();
 
-        await wait(50);
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
 
         fixture.componentInstance.resetToEmptyCollection();
-        await wait(20);
+        tick(100);
         fixture.detectChanges();
 
-        await wait(50);
+        tick(100);
         fixture.detectChanges();
         expect(tabs.groups.length).toBe(0);
         expect(tabs.selectedTabItem).toBe(undefined);
     }));
 
-    it('should initialize igx-tab custom template', (async () => {
+    it('should initialize igx-tab custom template', fakeAsync(() => {
         const fixture = TestBed.createComponent(TemplatedTabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.tabs.length).toBe(3);
         tabs.tabs.forEach((tabItem) => expect(tabItem.relatedGroup.customTabTemplate).toBeDefined());
+        tick();
     }));
 
-    it('should select next/previous tab when pressing right/left arrow', (async () => {
+    it('should select next/previous tab when pressing right/left arrow', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
         let args = { key: 'ArrowRight', bubbles: true };
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(1);
 
         tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
         args = { key: 'ArrowLeft', bubbles: true };
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(1);
     }));
 
-    it('should select first/last tab when pressing home/end button', (async () => {
+    it('should select first/last tab when pressing home/end button', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
 
         let args = { key: 'End', bubbles: true };
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
         args = { key: 'Home', bubbles: true };
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
     }));
 
-    it('should scroll tab area when clicking left/right scroll buttons', (async () => {
+    it('should scroll tab area when clicking left/right scroll buttons', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         fixture.componentInstance.wrapperDiv.nativeElement.style.width = '400px';
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
         window.dispatchEvent(new Event('resize'));
         rightScrollButton.dispatchEvent(new Event('click', { bubbles: true }));
 
-        await wait(100);
+        tick(100);
         fixture.detectChanges();
         expect(tabs.offset).toBeGreaterThan(0);
 
         tabs.scrollLeft(null);
 
-        await wait(100);
+        tick(100);
         fixture.detectChanges();
         expect(tabs.offset).toBe(0);
     }));
 
-    it('should select tab on click', (async () => {
+    it('should select tab on click', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         fixture.componentInstance.wrapperDiv.nativeElement.style.width = '400px';
-        await wait();
+        tick(100);
         fixture.detectChanges();
 
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
     }));
 
-    it('should select third tab by default', (async () => {
+    it('should select third tab by default', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestSelectedTabComponent);
         const tabs = fixture.componentInstance.tabs;
 
-        await wait();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
-        await wait();
+        tick();
         fixture.detectChanges();
         expect(tabs.groups.toArray()[2].isSelected).toBeTruthy();
 
-        await wait();
+        tick();
         fixture.detectChanges();
         expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(320px)');
     }));
