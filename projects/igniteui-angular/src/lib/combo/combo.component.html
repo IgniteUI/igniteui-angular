@@ -33,7 +33,7 @@
                 (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
                 [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
         </igx-input-group>
-        <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate.template : null ; context: {$implicit: this}">
+        <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : null ; context: {$implicit: this}">
         </ng-container>
         <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
             [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
@@ -45,7 +45,7 @@
                         <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true" class="igx-combo__checkbox"></igx-checkbox>
                     </ng-container>
                     <ng-container *ngIf="item.isHeader">
-                        <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate.template : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}"></ng-container>
+                        <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}"></ng-container>
                     </ng-container>
                     <ng-container *ngIf="!item.isHeader">
                         <ng-container #listItem *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};"></ng-container>
@@ -55,17 +55,17 @@
         </div>
         <div class="igx-combo__add" *ngIf="filteredData.length === 0 || isAddButtonVisible()">
             <div class="igx-combo__empty" *ngIf="filteredData.length === 0">
-                <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate.template : empty; context: {$implicit: this}">
+                <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty; context: {$implicit: this}">
                 </ng-container>
             </div>
             <igx-combo-item *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item"
                     igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false" [itemData]="'ADD ITEM'" role="button"
                     aria-label="Add Item">
-                <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate.template : addItemDefault; context: {$implicit: this}">
+                <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$implicit: this}">
                 </ng-container>
             </igx-combo-item>
         </div>
-        <ng-container *ngTemplateOutlet="footerTemplate ? footerTemplate.template : null; context: {$implicit: this}">
+        <ng-container *ngTemplateOutlet="footerTemplate ? footerTemplate : null; context: {$implicit: this}">
         </ng-container>
     </igx-combo-drop-down>
 </div>

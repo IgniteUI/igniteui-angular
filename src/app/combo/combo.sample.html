@@ -32,6 +32,18 @@
                             <div class="display-value--sub"></div>
                         </div>
                     </ng-template>
+                    <ng-template #headerTemplate let-display let-key="valueKey">
+                        <div>This is a header</div>
+                    </ng-template>
+                    <ng-template igxComboFooterTemplate let-display let-key="valueKey">
+                        <div>This is a footer</div>
+                    </ng-template>
+                    <ng-template *ngIf="currentDataType !== 'primitive'" #headerItemTemplate let-display let-key="groupKey">
+                        <div>Group header for {{display[key]}}</div>
+                    </ng-template>
+                    <ng-template igxComboAddItemTemplate let-display let-control>
+                        <button igxButton="flat" igxRipple>Add CUSTOM item</button>
+                    </ng-template>
                 </igx-combo>
             </div>
             <div class="btn-wrapper mb24">
@@ -39,6 +51,17 @@
                     <button class="igx-button--flat" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
                 </div>
             </div>
+            <div class="btn-wrapper mb24">
+                <div class="btn-container">
+                    <button class="igx-button--flat" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
+                </div>
+            </div>
+            <ng-template #customItemTemplate let-display let-key="valueKey">
+                <div class="state-card--simple">
+                    <div class="display-value--main">{{display[key]}}</div>
+                    <div class="display-value--sub">In Region {{display.region}}</div>
+                </div>
+            </ng-template>
         </div>
     </section>
 </div>
