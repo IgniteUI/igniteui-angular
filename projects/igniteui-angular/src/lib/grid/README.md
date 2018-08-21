@@ -240,8 +240,8 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`deselectRows(rowIDs: any[])`|Removes the specified row(s) from the grid's selection in the `selectionAPI`.|
 |`selectAllRows()`|Marks all rows as selected in the grid `selectionAPI`.|
 |`deselectAllRows()`|Sets the grid's row selection in the `selectionAPI` to `[]`.|
-|`findNext(text: string, caseSensitive?: boolean)`|Highlights all occurrences of the specified text and marks the next occurrence as active.|
-|`findPrev(text: string, caseSensitive?: boolean)`|Highlights all occurrences of the specified text and marks the previous occurrence as active.|
+|`findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean)`|Highlights all occurrences of the specified text and marks the next occurrence as active.|
+|`findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean)`|Highlights all occurrences of the specified text and marks the previous occurrence as active.|
 |`clearSearch(text: string, caseSensitive?: boolean)`|Removes all search highlights from the grid.|
 |`refreshSearch()`|Refreshes the current search.|
 |`groupBy(expression: ISortingExpression)`| Groups by a new column based on the provided expression or modifies an existing one.
