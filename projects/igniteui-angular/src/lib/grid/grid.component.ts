@@ -2426,11 +2426,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const fromIndex = list.indexOf(from);
         let toIndex = list.indexOf(to);
 
-        if (pos === DropPosition.BeforeDropTarget && fromIndex < toIndex) {
+        if (pos === DropPosition.BeforeDropTarget) {
             toIndex--;
         }
 
-        if (pos === DropPosition.AfterDropTarget && fromIndex > toIndex) {
+        if (pos === DropPosition.AfterDropTarget) {
             toIndex++;
         }
 
@@ -2478,23 +2478,40 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
+    protected _reorderPinnedColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition) {
+        const pinned = this._pinnedColumns;
+        let dropIndex = pinned.indexOf(to);
+
+        if (position === DropPosition.BeforeDropTarget) {
+            dropIndex--;
+        }
+
+        if (position === DropPosition.AfterDropTarget) {
+            dropIndex++;
+        }
+
+        pinned.splice(dropIndex, 0, ...pinned.splice(pinned.indexOf(from), 1));
+    }
+
+    /**
+     * @hidden
+     */
     protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
         const buffer = parent.children.toArray();
         const fromIndex = buffer.indexOf(from);
         let toIndex = buffer.indexOf(to);
 
-        if (pos === DropPosition.BeforeDropTarget && fromIndex < toIndex) {
+        if (pos === DropPosition.BeforeDropTarget) {
             toIndex--;
         }
 
-        if (pos === DropPosition.AfterDropTarget && fromIndex > toIndex) {
+        if (pos === DropPosition.AfterDropTarget) {
             toIndex++;
         }
 
         buffer.splice(toIndex, 0, ...buffer.splice(fromIndex, 1));
         parent.children.reset(buffer);
     }
-
     /**
      * Moves a column to the specified drop target.
      * ```typescript
@@ -2504,6 +2521,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	  */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
 
+        let position = pos;
+        const fromIndex = column.visibleIndex;
+        const toIndex = dropTarget.visibleIndex;
+
+        if (pos === DropPosition.BeforeDropTarget && fromIndex < toIndex) {
+            position = DropPosition.BeforeDropTarget;
+        } else if (pos === DropPosition.AfterDropTarget && fromIndex > toIndex) {
+            position = DropPosition.AfterDropTarget;
+        } else {
+            position = DropPosition.None;
+        }
+
+
         if ((column.level !== dropTarget.level) ||
             (column.topLevelParent !== dropTarget.topLevelParent)) {
             return;
@@ -2511,23 +2541,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this.gridAPI.submit_value(this.id);
         if (column.level) {
-            this._moveChildColumns(column.parent, column, dropTarget, pos);
+            this._moveChildColumns(column.parent, column, dropTarget, position);
         }
 
         if (dropTarget.pinned && column.pinned) {
-            const pinned = this._pinnedColumns;
-            pinned.splice(pinned.indexOf(dropTarget), 0, ...pinned.splice(pinned.indexOf(column), 1));
+            this._reorderPinnedColumns(column, dropTarget, position);
         }
 
         if (dropTarget.pinned && !column.pinned) {
             column.pin();
+            this._reorderPinnedColumns(column, dropTarget, position);
         }
 
         if (!dropTarget.pinned && column.pinned) {
             column.unpin();
         }
 
-        this._moveColumns(column, dropTarget, pos);
+        this._moveColumns(column, dropTarget, position);
     }
 
     /**
@@ -3582,8 +3612,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected reinitPinStates() {
-        this._pinnedColumns = this.columnList.filter((c) => c.pinned);
-        this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
+        // this._pinnedColumns = this.columnList.filter((c) => c.pinned);
+        // this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
     /**
