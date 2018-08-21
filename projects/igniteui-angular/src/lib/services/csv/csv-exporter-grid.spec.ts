@@ -302,6 +302,7 @@ describe('CSV Grid Exporter', () => {
 
     it('should fire \'onColumnExport\' for each visible grid column.', async(() => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
         const cols = [];
@@ -329,6 +330,7 @@ describe('CSV Grid Exporter', () => {
 
     it('should not export columns when \'onColumnExport\' is canceled.', async(() => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
         exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
@@ -346,6 +348,7 @@ describe('CSV Grid Exporter', () => {
 
     it('should fire \'onRowExport\' for each grid row.', async(() => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
         const rows = [];
@@ -368,6 +371,7 @@ describe('CSV Grid Exporter', () => {
 
     it('should not export rows when \'onRowExport\' is canceled.', async(() => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
         exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {

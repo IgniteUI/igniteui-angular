@@ -118,7 +118,7 @@ class TestChipReorderComponent {
     }
 }
 
-xdescribe('IgxChipsArea', () => {
+describe('IgxChipsArea', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item';
     const CHIP_CONNECTOR = 'igx-chip__connector';
 
