@@ -215,9 +215,11 @@ export class IgxChipComponent implements AfterViewInit {
 
     /**
      * Emits event when the `IgxChipComponent` is selected.
+     * Returns the selected chip reference, whether the event should be canceled,
+     * and what is the next selection state.
      * ```typescript
-     * chipSelect(){
-     *     alert("The chip has been selected.");
+     * chipSelect(event: ChipSelectEventArgs){
+     *     const selectArgs = event;
      * }
      * ```
      * ```html
@@ -225,7 +227,7 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     @Output()
-    public onSelection = new EventEmitter<any>();
+    public onSelection = new EventEmitter<ChipSelectEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` keyboard navigation is being used.
@@ -527,4 +529,10 @@ export class IgxChipComponent implements AfterViewInit {
         event.cancel = true;
     }
     // End chip igxDrop behaviour
+}
+
+export interface ChipSelectEventArgs {
+    owner: IgxChipComponent,
+    cancel: boolean,
+    nextStatus: boolean
 }
