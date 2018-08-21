@@ -16,6 +16,7 @@
 
 <ng-template #defaultDateUI>
     <igx-datePicker
+        [outlet]="grid.outletDirective"
         *ngIf="!unaryCondition"
         [value]="value"
         (onSelection)="onDatePickerValueChanged($event)">

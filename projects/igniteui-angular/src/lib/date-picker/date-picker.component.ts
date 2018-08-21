@@ -13,7 +13,8 @@ import {
     Output,
     ViewChild,
     ViewContainerRef,
-    HostListener
+    HostListener,
+    ElementRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -28,6 +29,8 @@ import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { OverlaySettings } from '../services';
 
 export interface IFormatViews {
     day?: boolean;
@@ -335,6 +338,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      *@hidden
      */
+    @Input()
+    public outlet: IgxOverlayOutletDirective | ElementRef;
+
+    /**
+     *@hidden
+     */
     public get calendar() {
         return this.calendarRef.instance;
     }
@@ -442,7 +451,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      */
     public onOpenEvent(): void {
         this.createCalendarRef();
-        this.alert.open();
+        if (this.outlet) {
+            const overlaySettings: OverlaySettings = {
+                outlet: this.outlet
+            };
+            this.alert.open(overlaySettings);
+        } else {
+            this.alert.open();
+        }
         this._onTouchedCallback();
         this.onOpen.emit(this);
     }
