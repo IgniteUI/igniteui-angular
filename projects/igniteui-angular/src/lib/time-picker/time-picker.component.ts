@@ -734,7 +734,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private _getSelectedTime(): Date {
-        const date = new Date();
+        const date = this.value ? new Date(this.value) : new Date();
         date.setHours(parseInt(this.selectedHour, 10));
         date.setMinutes(parseInt(this.selectedMinute, 10));
         date.setSeconds(0);
@@ -748,7 +748,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private _convertMinMaxValue(value: string): Date {
-        const date = new Date();
+        const date = this.value ? new Date(this.value) : new Date();
         const sections = value.split(/[\s:]+/);
 
         date.setHours(parseInt(sections[0], 10));
