@@ -30,8 +30,8 @@ const STYLES = {
 };
 
 const TYPEDOC = {
-    SRC: './extra/docs/themes/typedoc/src/',
-    DIST: './extra/docs/themes/typedoc/bin/',
+    SRC: './extras/docs/themes/typedoc/src/',
+    DIST: './extras/docs/themes/typedoc/bin/',
     STYLES: {
         ENTRY: './assets/css/main.sass',
         OUT: './assets/css',
@@ -148,7 +148,7 @@ gulp.task('typedoc-styles', ['typedoc:clean-styles'], () => {
 });
 
 gulp.task('typedoc-ts',
-    shell.task('tsc --project ./extra/docs/themes/typedoc/tsconfig.json')
+    shell.task('tsc --project ./extras/docs/themes/typedoc/tsconfig.json')
 );
 
 gulp.task('typedoc-js', ['typedoc-ts'], () => {
