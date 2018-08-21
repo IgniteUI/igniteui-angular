@@ -4,7 +4,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild,
     ElementRef, EventEmitter,
     HostBinding, HostListener, Input, NgModule, OnInit, OnDestroy, Output, QueryList,
-    TemplateRef, ViewChild, ViewChildren, Optional, Self, Inject
+    TemplateRef, ViewChild, ViewChildren, Optional, Self, Inject, Directive
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
 import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.component';
@@ -80,6 +80,42 @@ export interface IComboItemAdditionEvent {
     newCollection: any[];
 }
 
+@Directive({
+    selector: '[igxComboHeaderTemplate]'
+})
+export class IgxComboHeaderTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+@Directive({
+    selector: '[igxComboFooterTemplate]'
+})
+export class IgxComboFooterTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+@Directive({
+    selector: '[igxComboItemTemplate]'
+})
+export class IgxComboItemTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+@Directive({
+    selector: '[igxComboEmptyTemplate]'
+})
+export class IgxComboEmptyTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+@Directive({
+    selector: '[igxComboHeaderItemTemplate]'
+})
+export class IgxComboHeaderItemTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+@Directive({
+    selector: '[igxComboAddItemTemplate]'
+})
+export class IgxComboAddItemTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
 let NEXT_ID = 0;
 const noop = () => { };
 
@@ -215,41 +251,111 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @ViewChild('complex', { read: TemplateRef })
     protected complexTemplate: TemplateRef<any>;
 
+    @ContentChild(IgxComboEmptyTemplateDirective, { read: IgxComboEmptyTemplateDirective })
+    public emptyTemplate: IgxComboEmptyTemplateDirective;
     /**
      * @hidden
      */
     @ContentChild('emptyTemplate', { read: TemplateRef })
-    public emptyTemplate: TemplateRef<any>;
+    public set oldEmptyTemplate(template: TemplateRef<any>) {
+        if (!template) {
+            return;
+        }
+        console.warn(`WARNING: Setting combo empty template with '#emptyTemplate' is deprecated.
+        Use IgxComboEmptyTemplateDirective instead.`);
+        this.emptyTemplate = {
+            template
+        };
+    }
+
+    @ContentChild(IgxComboHeaderTemplateDirective, { read: IgxComboHeaderTemplateDirective })
+    public headerTemplate: IgxComboHeaderTemplateDirective;
 
     /**
      * @hidden
      */
     @ContentChild('headerTemplate', { read: TemplateRef })
-    public headerTemplate: TemplateRef<any>;
+    public set oldHeaderTemplate(template: TemplateRef<any>) {
+        if (!template) {
+            return;
+        }
+        console.warn(`WARNING: Setting combo header template with '#headerTemplate' is deprecated.
+        Use IgxComboHeaderTemplateDirective instead.`);
+        this.headerTemplate = {
+            template
+        };
+    }
 
+
+    @ContentChild(IgxComboFooterTemplateDirective, { read: IgxComboFooterTemplateDirective })
+    public footerTemplate: IgxComboFooterTemplateDirective;
     /**
      * @hidden
      */
     @ContentChild('footerTemplate', { read: TemplateRef })
-    public footerTemplate: TemplateRef<any>;
+    public set oldFooterTemplate(template: TemplateRef<any>) {
+        if (!template) {
+            return;
+        }
+        console.warn(`WARNING: Setting combo footer template with '#footerTemplate' is deprecated.
+        Use IgxComboFooterTemplateDirective instead.`);
+        this.footerTemplate = {
+            template
+        };
+        console.log(this.footerTemplate);
+    }
 
+    @ContentChild(IgxComboItemTemplateDirective, { read: IgxComboItemTemplateDirective })
+    public itemTemplate: IgxComboItemTemplateDirective;
     /**
      * @hidden
      */
     @ContentChild('itemTemplate', { read: TemplateRef })
-    public itemTemplate: TemplateRef<any>;
+    public set oldItemTemplate(template: TemplateRef<any>) {
+        if (!template) {
+            return;
+        }
+        console.warn(`WARNING: Setting combo item template with '#itemTemplate' is deprecated.
+        Use IgxComboItemTemplateDirective instead.`);
+        this.itemTemplate = {
+            template
+        };
+    }
 
+    @ContentChild(IgxComboAddItemTemplateDirective, { read: IgxComboAddItemTemplateDirective })
+    public addItemTemplate: IgxComboAddItemTemplateDirective;
     /**
      * @hidden
      */
     @ContentChild('addItemTemplate', { read: TemplateRef })
-    public addItemTemplate: TemplateRef<any>;
+    public set oldAddItemTemplate(template: TemplateRef<any>) {
+        if (!template) {
+            return;
+        }
+        console.warn(`WARNING: Setting combo add item template with '#addItemTemplate' is deprecated.
+        Use IgxComboAddItemTemplateDirective instead.`);
+        this.addItemTemplate = {
+            template
+        };
+    }
+
+    @ContentChild(IgxComboHeaderItemTemplateDirective, { read: IgxComboHeaderItemTemplateDirective })
+    public headerItemTemplate: IgxComboHeaderItemTemplateDirective;
 
     /**
      * @hidden
      */
     @ContentChild('headerItemTemplate', { read: TemplateRef })
-    public headerItemTemplate: TemplateRef<any>;
+    public set oldHeaderItemTemplate(template: TemplateRef<any>) {
+        if (!template) {
+            return;
+        }
+        console.warn(`WARNING: Setting combo header item template with '#headerItemTemplate' is deprecated.
+        Use IgxComboHeaderItemTemplateDirective instead.`);
+        this.headerItemTemplate = {
+            template
+        };
+    }
 
     /**
      * @hidden
@@ -1070,7 +1176,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             }
             this.selectionAPI.set_selection(this.id, newSelectionAsSet);
             this.value = this.dataType !== DataTypes.PRIMITIVE ?
-            newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
+                newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
                 newSelection.join(', ');
             // this.isHeaderChecked();
             this._onChangeCallback(newSelection);
@@ -1116,7 +1222,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             [this.displayKey]: newValue
         } : newValue;
         if (this.groupKey || this.groupKey === 0) {
-            Object.assign(addedItem, { [this.groupKey] : this.defaultFallbackGroup});
+            Object.assign(addedItem, { [this.groupKey]: this.defaultFallbackGroup });
         }
         const oldCollection = this.data;
         const newCollection = [...this.data];
@@ -1179,14 +1285,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public filter() {
         this.prepare_filtering_expression(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
-        true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
+            true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
     }
 
     /**
      * @hidden
      */
     public ngOnInit() {
-        this._positionCallback =  () => this.dropdown.updateScrollPosition();
+        this._positionCallback = () => this.dropdown.updateScrollPosition();
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
 
@@ -1204,6 +1310,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         if (this.ngControl) {
             this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
+        console.log(this.footerTemplate, this.headerTemplate);
     }
 
     /**
@@ -1255,11 +1362,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public get template(): TemplateRef<any> {
         this._dataType = this.dataType;
-        if (!this.filteredData || !this.filteredData.length) {
-            return this.emptyTemplate;
-        }
         if (this.itemTemplate) {
-            return this.itemTemplate;
+            return this.itemTemplate.template;
         }
         if (this._dataType === DataTypes.COMPLEX) {
             return this.complexTemplate;
@@ -1408,8 +1512,20 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
 
 @NgModule({
     declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent],
-    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent],
+        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent,
+        IgxComboItemTemplateDirective,
+        IgxComboEmptyTemplateDirective,
+        IgxComboHeaderItemTemplateDirective,
+        IgxComboHeaderTemplateDirective,
+        IgxComboFooterTemplateDirective,
+        IgxComboAddItemTemplateDirective],
+    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent,
+        IgxComboItemTemplateDirective,
+        IgxComboEmptyTemplateDirective,
+        IgxComboHeaderItemTemplateDirective,
+        IgxComboHeaderTemplateDirective,
+        IgxComboFooterTemplateDirective,
+        IgxComboAddItemTemplateDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: [IgxSelectionAPIService]
