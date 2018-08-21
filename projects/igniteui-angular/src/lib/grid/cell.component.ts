@@ -672,13 +672,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      *@hidden
      */
-    focusCell() {
-        this._updateCellSelectionStatus();
-    }
-
-    /**
-     *@hidden
-     */
     @HostListener('dblclick', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {
