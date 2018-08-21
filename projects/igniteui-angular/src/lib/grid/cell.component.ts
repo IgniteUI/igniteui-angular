@@ -679,7 +679,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     public ngAfterViewInit() {
         if (this.highlight && this.grid.lastSearchInfo.searchText) {
-            this.highlight.highlight(this.grid.lastSearchInfo.searchText, this.grid.lastSearchInfo.caseSensitive);
+            this.highlight.highlight(this.grid.lastSearchInfo.searchText,
+                this.grid.lastSearchInfo.caseSensitive,
+                this.grid.lastSearchInfo.exactMatch);
             this.highlight.activateIfNecessary();
         }
     }
@@ -1057,8 +1059,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
-    public highlightText(text: string, caseSensitive?: boolean): number {
-        return this.highlight && this.column.searchable ? this.highlight.highlight(text, caseSensitive) : 0;
+    public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        return this.highlight && this.column.searchable ? this.highlight.highlight(text, caseSensitive, exactMatch) : 0;
     }
 
     /**
