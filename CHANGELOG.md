@@ -3,6 +3,7 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
+- `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
 - `IgxOverlayOutlet` directive introducedto mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
