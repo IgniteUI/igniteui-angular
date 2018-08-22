@@ -1,0 +1,88 @@
+////
+/// @group typography
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @type Map - The default type scale.
+/// @link https://material.io/design/typography/the-type-system.html Material Type System.
+/// @prop h1
+/// @prop {String} h1.font-size [rem(96px)]
+/// @prop {Number} h1.font-weight [300]
+/// @prop {String} h1.letter-spacing [rem(-1.5px)]
+/// @prop {String} h1.line-height [rem(112px)]
+/// @prop {String} h1.text-transform [none]
+/// @prop h2
+/// @prop {String} h2.font-size [rem(60px)]
+/// @prop {Number} h2.font-weight [300]
+/// @prop {String} h2.letter-spacing [rem(-.5px)]
+/// @prop {String} h2.line-height [rem(71px)]
+/// @prop {String} h2.text-transform [none]
+/// @prop h3
+/// @prop {String} h3.font-size [rem(48px)]
+/// @prop {Number} h3.font-weight [400]
+/// @prop {String} h3.letter-spacing [normal]
+/// @prop {String} h3.line-height [rem(57px)]
+/// @prop {String} h3.text-transform [none]
+/// @prop h4
+/// @prop {String} h4.font-size [rem(34px)]
+/// @prop {Number} h4.font-weight [400]
+/// @prop {String} h4.letter-spacing [rem(.25px)]
+/// @prop {String} h4.line-height [rem(40px)]
+/// @prop {String} h4.text-transform [none]
+/// @prop h5
+/// @prop {String} h5.font-size [rem(24px)]
+/// @prop {Number} h5.font-weight [600]
+/// @prop {String} h5.letter-spacing [normal]
+/// @prop {String} h5.line-height [rem(28px)]
+/// @prop {String} h5.text-transform [none]
+/// @prop h6
+/// @prop {String} h6.font-size [rem(20px)]
+/// @prop {Number} h6.font-weight [400]
+/// @prop {String} h6.letter-spacing [rem(.15px)]
+/// @prop {String} h6.line-height [rem(24px)]
+/// @prop {String} h6.text-transform [none]
+/// @prop subtitle-1
+/// @prop {String} subtitle-1.font-size [rem(16px)]
+/// @prop {Number} subtitle-1.font-weight [400]
+/// @prop {String} subtitle-1.letter-spacing [rem(.15px)]
+/// @prop {String} subtitle-1.line-height [rem(24px)]
+/// @prop {String} subtitle-1.text-transform [none]
+/// @prop subtitle-2
+/// @prop {String} subtitle-2.font-size [rem(14px)]
+/// @prop {Number} subtitle-2.font-weight [600]
+/// @prop {String} subtitle-2.letter-spacing [rem(-.1px)]
+/// @prop {String} subtitle-2.line-height [rem(28px)]
+/// @prop {String} subtitle-2.text-transform [none]
+/// @prop body-1
+/// @prop {String} body-1.font-size [rem(16px)]
+/// @prop {Number} body-1.font-weight [400]
+/// @prop {String} body-1.letter-spacing [rem(.5px)]
+/// @prop {String} body-1.line-height [rem(28px)]
+/// @prop {String} body-1.text-transform [none]
+/// @prop body-2
+/// @prop {String} body-2.font-size [rem(14px)]
+/// @prop {Number} body-2.font-weight [400]
+/// @prop {String} body-2.letter-spacing [rem(.25px)]
+/// @prop {String} body-2.line-height [rem(20px)]
+/// @prop {String} body-2.text-transform [none]
+/// @prop button
+/// @prop {String} button.font-size [rem(14px)]
+/// @prop {Number} button.font-weight [600]
+/// @prop {String} button.letter-spacing [rem(.4px)]
+/// @prop {String} button.line-height [rem(16px)]
+/// @prop {String} button.text-transform [uppercase]
+/// @prop caption
+/// @prop {String} caption.font-size [rem(12px)]
+/// @prop {Number} caption.font-weight [400]
+/// @prop {String} caption.letter-spacing [rem(.4px)]
+/// @prop {String} caption.line-height [rem(16px)]
+/// @prop {String} caption.text-transform [none]
+/// @prop overline
+/// @prop {String} overline.font-size [rem(10px)]
+/// @prop {Number} overline.font-weight [400]
+/// @prop {String} overline.letter-spacing [rem(1.5px)]
+/// @prop {String} overline.line-height [rem(16px)]
+/// @prop {String} overline.text-transform [uppercase]
+/// @requires igx-type-scale
+$default-type-scale: igx-type-scale() !default;
