@@ -2493,6 +2493,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this._moveColumns(column, dropTarget);
+        this.cdr.detectChanges();
     }
 
     /**
