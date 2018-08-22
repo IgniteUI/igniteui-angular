@@ -1,13 +1,8 @@
 <div>
     <div>
-        igx-collapsible-header
-        <div>
-            igx-collapsible-title
-        </div>
-        <div>
-            igx-collapsible-description
-        </div>
+        <ng-content select="igx-collapsible-header"></ng-content>
     </div>
-
-    <div>Body ng-content</div>
+    <div *ngIf="!collapsed" style="border: 1px solid rgb(216, 14, 122); background-color:gainsboro">
+        <ng-content select="igx-collapsible-body"></ng-content>
+    </div>
 </div>

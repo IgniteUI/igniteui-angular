@@ -1,7 +1,7 @@
 import { IgxCollapsibleComponent } from './../../../projects/igniteui-angular/src/lib/collapsible/collapsible.component';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {
-    //IgxCollapsibleComponent
+    // IgxCollapsibleComponent
 } from 'igniteui-angular';
 
 @Component({

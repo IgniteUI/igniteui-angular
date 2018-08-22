@@ -1,13 +1,5 @@
-<div>
-    <div>
-        igx-collapsible-header
-        <div>
-            igx-collapsible-title
-        </div>
-        <div>
-            igx-collapsible-description
-        </div>
-    </div>
-
-    <div>Body ig-content</div>
+<div tabIndex="1" class="header-content" style="background-color: greenyellow ; height: 30px">
+    <igx-icon fontSet="material" [name]="collapsible.collapsed? 'expand_more':'expand_less'"></igx-icon>
+    <ng-content select="igx-collapsible-title"></ng-content>
+    <ng-content select="igx-collapsible-description"></ng-content>
 </div>

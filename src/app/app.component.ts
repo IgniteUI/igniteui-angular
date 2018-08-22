@@ -61,6 +61,11 @@ export class AppComponent implements OnInit {
             name: 'Combo'
         },
         {
+            link: '/collapsible',
+            icon: 'expand_more',
+            name: 'Collapsible'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'

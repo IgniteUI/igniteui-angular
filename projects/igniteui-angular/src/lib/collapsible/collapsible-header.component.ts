@@ -12,20 +12,35 @@ import {
     OnInit,
     AfterContentInit,
     AfterViewInit,
-    Renderer2
+    Renderer2,
+    Host
 } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxCollapsibleComponent } from './collapsible.component';
 
 @Component({
     selector: 'igx-collapsible-header',
-    templateUrl: 'igx-collapsible-header.component.html'
+    templateUrl: 'collapsible-header.component.html'
 })
 export class IgxCollapsibleHeaderComponent {
      // properties section
 
-    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
+     @Input()
+     @HostBinding('class.igx-collapsible__header--collapsed')
+     public collapsedHeight;
 
-    click (params: any) {
+     @Input()
+     @HostBinding('class.igx-collapsible__header--expanded')
+     public expandedHeight;
 
-    }
+    constructor(@Host() public collapsible: IgxCollapsibleComponent, public cdr: ChangeDetectorRef,
+     public elementRef: ElementRef, private renderer: Renderer2) { }
+
+     @HostListener('keydown.Enter', ['$event'])
+     @HostListener('keydown.Space', ['$event'])
+     @HostListener('click', ['$event'])
+     public onAction(evt: Event) {
+         this.collapsible.toggle();
+         evt.preventDefault();
+     }
 }

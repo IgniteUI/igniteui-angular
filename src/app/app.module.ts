@@ -1,3 +1,4 @@
+import { CollapsibleSampleComponent } from './collapsible/collapsible-sample';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -62,6 +63,9 @@ import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { IgxCollapsibleModule } from 'projects/igniteui-angular/src/lib/collapsible/collapsible.module';
+
+
 
 const components = [
     AppComponent,
@@ -71,6 +75,7 @@ const components = [
     CalendarSampleComponent,
     CardSampleComponent,
     CarouselSampleComponent,
+    CollapsibleSampleComponent,
     ChipsSampleComponent,
     DialogSampleComponent,
     DatePickerSampleComponent,
@@ -131,7 +136,8 @@ const components = [
         IgxColumnHidingModule,
         IgxDragDropModule,
         SharedModule,
-        routing
+        routing,
+        IgxCollapsibleModule
     ],
     providers: [
         LocalService,
