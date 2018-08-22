@@ -66,6 +66,7 @@ function addScrollDivToElement(parent) {
     parent.appendChild(scrollDiv);
 
 }
+
 function getExpectedTopPosition(verticalAlignment: VerticalAlignment, elementRect: DOMRect): number {
     let expectedTop: number;
     switch (verticalAlignment) {
@@ -84,6 +85,7 @@ function getExpectedTopPosition(verticalAlignment: VerticalAlignment, elementRec
     }
     return expectedTop;
 }
+
 function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, elementRect: DOMRect): number {
     let expectedLeft: number;
     switch (horizontalAlignment) {
@@ -693,6 +695,27 @@ describe('igxOverlay', () => {
             expect(200).toEqual(contentRect.top);
 
             overlayInstance.hide(id);
+        }));
+
+        it('fix for #2475 - An error is thrown for IgxOverlay when showing a component' +
+        'instance that is not attached to the DOM', fakeAsync(() => {
+            const fix = TestBed.createComponent(SimpleRefComponent);
+            fix.detectChanges();
+            fix.elementRef.nativeElement.parentElement.removeChild(fix.elementRef.nativeElement);
+            fix.componentInstance.overlay.show(fix.elementRef);
+
+            tick();
+            const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeDefined();
+            expect(overlayDiv.children.length).toEqual(1);
+            const wrapperDiv = overlayDiv.children[0];
+            expect(wrapperDiv).toBeDefined();
+            expect(wrapperDiv.classList.contains(CLASS_OVERLAY_WRAPPER_MODAL)).toBeTruthy();
+            expect(wrapperDiv.children[0].localName).toEqual('div');
+
+            const contentDiv = wrapperDiv.children[0];
+            expect(contentDiv).toBeDefined();
+            expect(contentDiv.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBeTruthy();
         }));
     });
 
