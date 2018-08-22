@@ -5,8 +5,7 @@
 }
 
 .form-title {
-    margin: 0;
-    margin-bottom: 48px;
+    margin-bottom: 16px;
 }
 
 igx-input-group+igx-input-group {

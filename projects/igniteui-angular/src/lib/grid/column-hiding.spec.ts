@@ -40,7 +40,7 @@ describe('Column Hiding UI', () => {
                 IgxButtonModule
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     beforeAll(() => {
@@ -63,12 +63,12 @@ describe('Column Hiding UI', () => {
             columnChooser.onColumnVisibilityChanged.unsubscribe();
         });
 
-        it ('title is initially empty.', () => {
+        it('title is initially empty.', () => {
             const title = columnChooserElement.query(By.css('h4'));
             expect(title).toBe(null);
         });
 
-        it ('title can be successfully changed.', () => {
+        it('title can be successfully changed.', () => {
             columnChooser.title = 'Show/Hide Columns';
             fix.detectChanges();
 
@@ -683,9 +683,9 @@ describe('Column Hiding UI', () => {
             const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
             let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+                - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
             expect(grid.calcHeight).toEqual(expectedHeight);
 
@@ -694,8 +694,8 @@ describe('Column Hiding UI', () => {
             expect(grid.scr.nativeElement.hidden).toBe(true);
 
             expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
+                - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 
             expect(grid.calcHeight).toEqual(expectedHeight);
         });
@@ -1010,8 +1010,8 @@ describe('Column Hiding UI', () => {
         });
 
         it('shows the number of hidden columns.', () => {
-            const btnText = getColumnHidingButton(fix).innerText;
-            expect(btnText.includes('1') && btnText.includes('HIDDEN')).toBe(true);
+            const btnText = getColumnHidingButton(fix).innerText.toLowerCase();
+            expect(btnText.includes('1') && btnText.includes('hidden')).toBe(true);
             expect(getColumnChooserButtonIcon().innerText.toLowerCase()).toBe('visibility_off');
         });
 
@@ -1019,8 +1019,8 @@ describe('Column Hiding UI', () => {
             grid.columns[2].hidden = false;
             fix.detectChanges();
 
-            const btnText = getColumnHidingButton(fix).innerText;
-            expect(btnText.includes('0') && btnText.includes('HIDDEN')).toBe(true);
+            const btnText = getColumnHidingButton(fix).innerText.toLowerCase();
+            expect(btnText.includes('0') && btnText.includes('hidden')).toBe(true);
             expect(getColumnChooserButtonIcon().innerText.toLowerCase()).toBe('visibility');
         });
     });
@@ -1066,7 +1066,7 @@ describe('Column Hiding UI', () => {
 
     function getFilterInput() {
         const inputElement = columnChooserElement.queryAll(By.css('input'))
-                        .find((el) => (el.nativeElement as HTMLInputElement).type === 'text');
+            .find((el) => (el.nativeElement as HTMLInputElement).type === 'text');
 
         return inputElement;
     }
