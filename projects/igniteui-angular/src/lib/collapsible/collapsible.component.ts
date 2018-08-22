@@ -18,6 +18,10 @@ import {
     ContentChild
 } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
+import { IAnimationParams } from './../animations/main';
+
+let NEXT_ID = 0;
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -51,7 +55,24 @@ export class IgxCollapsibleBodyDirective {
     templateUrl: 'collapsible.component.html'
 })
 export class IgxCollapsibleComponent {
-     // properties section
+    /**
+     * Sets/gets the `id` of the collapsible component.
+     * If not set, `id` will have value `"igx-collapsible-0"`;
+     * ```html
+     * <igx-collapsible id = "my-first-collapsible"></igx-collapsible>
+     * ```
+     * ```typescript
+     * let collapsibleId =  this.collapsible.id;
+     * ```
+     * @memberof IgxCollapsibleComponent
+     */
+
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-collapsible-${NEXT_ID++}`;
+
+    @HostBinding('class.igx-collapsible')
+    public cssClass = 'igx-collapsible';
 
     @ContentChild(IgxCollapsibleBodyDirective, { read: IgxCollapsibleBodyDirective })
     public textArea: IgxCollapsibleBodyDirective;
@@ -59,17 +80,29 @@ export class IgxCollapsibleComponent {
     @ViewChild('toggleBtn', { read: ElementRef })
     public toggleBtn: ElementRef;
 
+    /**
+     * An @Input property that set aria-labelledby attribute
+     * ```html
+     *<igx-combo [ariaLabelledBy]="'label1'">
+     * ```
+     */
+    @HostBinding('attr.aria-labelledby')
+    @Input()
+    public ariaLabelledBy: string;
 
     @Input()
     public collapsed;
+
+    @HostBinding('attr.aria-expanded')
+    private get HostState () {
+        return !this.collapsed;
+    }
 
     @Input()
     public disabled;
 
     @Input()
     public headerButtons;
-
-    // @HostBinding('class.igx-chip--disabled')
 
     @Output()
     public onCollapsed = new EventEmitter<any>();
