@@ -11,6 +11,7 @@ import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
+import { UIInteractions} from '../test-utils/ui-interactions.spec';
 
 const selectedCellClass = '.igx-grid__td--selected';
 let data = [
@@ -25,19 +26,6 @@ let data = [
     { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
     { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
 ];
-
-function simulateKeyDown(element, key) {
-    const keyOptions: KeyboardEventInit = {
-        key
-    };
-
-    const keypressEvent = new KeyboardEvent('keydown', keyOptions);
-
-    return new Promise((resolve, reject) => {
-        element.dispatchEvent(keypressEvent);
-        resolve();
-    });
-}
 
 describe('IgxGrid - Row Selection', () => {
 
@@ -202,7 +190,7 @@ describe('IgxGrid - Row Selection', () => {
             fix.detectChanges();
             expect(targetCell.focused).toEqual(true);
             const targetCellDebugElement = fix.debugElement.query(By.css('.igx-grid__td--selected'));
-            simulateKeyDown(targetCellElement, 'ArrowDown').then(() => {
+            UIInteractions.simulateKeyDownEvent(targetCellElement, 'ArrowDown').then(() => {
                 setTimeout(() => {
                     fix.whenStable().then(() => {
                         fix.detectChanges();
