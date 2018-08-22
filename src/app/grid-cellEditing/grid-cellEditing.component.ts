@@ -88,7 +88,9 @@ export class GridCellEditingComponent {
     public updRecord() {
         const newData = 'UPDATED';
         const selectedCell = this.gridWithPK.selectedCells[0];
-        selectedCell.update(newData);
+        if (selectedCell) {
+            selectedCell.update(newData);
+        }
     }
 
     deleteRowbyIndex(index) {

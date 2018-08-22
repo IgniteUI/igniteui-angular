@@ -571,7 +571,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editCell) {
-            if (editCell.cell.column.field === this.gridAPI.get(this.gridID).primaryKey) {
+            if (editCell.cell.column.field === this.grid.primaryKey) {
                 if (editCell.cellID.rowIndex === this.cellID.rowIndex && editCell.cellID.columnID === this.cellID.columnID) {
                     this.previousCellEditMode = false;
                 } else {
@@ -648,7 +648,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
         this.cdr.markForCheck();
-        this.gridAPI.get(this.gridID).refreshSearch();
+        this.grid.refreshSearch();
     }
 
     /**
