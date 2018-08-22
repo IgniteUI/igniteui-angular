@@ -2,6 +2,7 @@
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// If only background color is specified, text/icon color
@@ -221,9 +222,6 @@
     @include igx-root-css-vars($theme);
 
     $button-border: none;
-    $button-font-size: rem(14px, 16px);
-    $button-line-height: 1;
-    $button-font-weight: 600;
     $button-width: rem(88px);
     $button-height: rem(36px);
     $button-padding: 0 rem(16px, 16px);
@@ -247,20 +245,15 @@
     $button-icon-padding: 0;
 
     %igx-button-display {
+        position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        position: relative;
         min-width: $button-width;
         height: $button-height;
         padding: $button-padding;
-        font-size: $button-font-size;
-        font-weight: $button-font-weight;
-        line-height: $button-line-height;
-        text-align: center;
         border: $button-border;
         border-radius: --var($theme, 'button-roundness');
-        text-transform: uppercase;
         cursor: pointer;
         user-select: none;
         outline: none;
@@ -375,3 +368,20 @@
     }
 }
 
+/// Adds typography styles for the igx-button component.
+/// Uses the 'button' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {String} $categories [(text: 'button')] - The category from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-button-typography($type-scale, $categories: (text: 'button')) {
+    $text: map-get($categories, 'text');
+
+    @include igx-scope('.igx-typography') {
+        %igx-button-display {
+            @include igx-type-style($type-scale, $text) {
+                text-align: center
+            }
+        }
+    }
+}

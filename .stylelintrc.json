@@ -1,6 +1,6 @@
 {
     "plugins": ["stylelint-scss"],
-    "ignoreFiles": ["projects/igniteui-angular/src/lib/core/styles/*.md"],
+    "ignoreFiles": ["projects/igniteui-angular/src/lib/core/styles/**/*.md"],
     "rules": {
         "at-rule-blacklist": ["debug", {
             "severity": "warning"
