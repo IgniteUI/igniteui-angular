@@ -58,21 +58,22 @@ export class IgxScrollInertiaDirective implements OnInit {
 
     ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
-            this.element.nativeElement.parentElement.addEventListener('wheel',
+            const targetElem = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
+            targetElem.addEventListener('wheel',
                     (evt) => { this.onWheel(evt); });
-            this.element.nativeElement.parentElement.addEventListener('touchstart',
+            targetElem.addEventListener('touchstart',
                     (evt) => { this.onTouchStart(evt); });
-            this.element.nativeElement.parentElement.addEventListener('touchmove',
+            targetElem.addEventListener('touchmove',
                     (evt) => { this.onTouchMove(evt); });
-            this.element.nativeElement.parentElement.addEventListener('touchend',
+            targetElem.addEventListener('touchend',
                     (evt) => { this.onTouchEnd(evt); });
-            this.element.nativeElement.parentElement.addEventListener('pointerdown',
+            targetElem.addEventListener('pointerdown',
                     (evt) => { this.onPointerDown(evt); });
-            this.element.nativeElement.parentElement.addEventListener('pointerup',
-                    (evt) => { this.onPointerUp(evt); });
-            this.element.nativeElement.parentElement.addEventListener('MSGestureStart',
+            targetElem.addEventListener('pointerup',
+                     (evt) => { this.onPointerUp(evt); });
+            targetElem.addEventListener('MSGestureStart',
                     (evt) => { this.onMSGestureStart(evt); });
-            this.element.nativeElement.parentElement.addEventListener('MSGestureChange',
+            targetElem.addEventListener('MSGestureChange',
                     (evt) => { this.onMSGestureChange(evt); });
         });
     }
@@ -284,7 +285,7 @@ export class IgxScrollInertiaDirective implements OnInit {
         // create gestureObject only one time to prevent overlapping during intertia
         if (!this._gestureObject) {
             this._gestureObject = new MSGesture();
-            this._gestureObject.target = this.element.nativeElement;
+            this._gestureObject.target = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
         }
         this._gestureObject.addPointer(this._pointer);
     }
@@ -318,8 +319,8 @@ export class IgxScrollInertiaDirective implements OnInit {
         this._startY = this.IgxScrollInertiaScrollContainer.scrollTop;
 
 
-        this._touchStartX = event.originalEvent.screenX;
-        this._touchStartY = event.originalEvent.screenY;
+        this._touchStartX = event.screenX;
+        this._touchStartY = event.screenY;
 
         // Vars regarding swipe offset
         this._totalMovedX = 0;
