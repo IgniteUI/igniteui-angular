@@ -41,7 +41,7 @@
                     <ng-template *ngIf="currentDataType !== 'primitive'" #headerItemTemplate let-display let-key="groupKey">
                         <div>Group header for {{display[key]}}</div>
                     </ng-template>
-                    <ng-template igxComboAddItemTemplate let-display let-control>
+                    <ng-template igxComboAddItem let-display let-control>
                         <button igxButton="flat" igxRipple>Add CUSTOM item</button>
                     </ng-template>
                 </igx-combo>
