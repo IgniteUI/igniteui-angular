@@ -125,10 +125,22 @@ export class IgxScrollInertiaDirective implements OnInit {
             this._scrollToX(
                 this._startX + scrollDeltaX * scrollStep
             );
+            const curScrollLeft = this.IgxScrollInertiaScrollContainer.scrollLeft;
+            const maxScrollLeft = parseInt(this.IgxScrollInertiaScrollContainer.children[0].style.width, 10);
+            if (0 < curScrollLeft && curScrollLeft < maxScrollLeft) {
+                // Prevent navigating through pages when scrolling on Mac
+                event.preventDefault();
+            }
         } else if (scrollDeltaY) {
             this._scrollToY(
                 this._startY + scrollDeltaY * scrollStep
             );
+            const curScrollTop = this.IgxScrollInertiaScrollContainer.scrollTop;
+            const maxScrollTop = this.IgxScrollInertiaScrollContainer.children[0].scrollHeight -
+                this.IgxScrollInertiaScrollContainer.offsetHeight;
+            if (0 < curScrollTop && curScrollTop < maxScrollTop) {
+                event.preventDefault();
+            }
         }
 
     }
