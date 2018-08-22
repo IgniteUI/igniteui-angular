@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './index';
 import { IgxColumnGroupComponent } from './column.component';
 import { IgxInputDirective } from '../directives/input/input.directive';
@@ -14,7 +14,7 @@ import {
     MovableColumnsLargeComponent,
     MultiColumnHeadersComponent
  } from '../test-utils/grid-samples.spec';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -31,7 +31,6 @@ describe('IgxGrid - Column Moving', () => {
             ],
             imports: [
                 FormsModule,
-                BrowserAnimationsModule,
                 NoopAnimationsModule,
                 IgxGridModule.forRoot()
             ]
@@ -878,9 +877,7 @@ describe('IgxGrid - Column Moving', () => {
         expect(grid.getCellByColumn(0, 'LastName').selected).toBeTruthy();
     }));
 
-    xit('Pinning - should be able to reorder pinned columns among themselves.', fakeAsync(() => {
-        // pending('The test is currently failing due to issue #2071');
-
+    it('Pinning - should be able to reorder pinned columns among themselves.', fakeAsync(() => {
         const fixture = TestBed.createComponent(MovableColumnsLargeComponent);
         fixture.detectChanges();
 
@@ -895,38 +892,18 @@ describe('IgxGrid - Column Moving', () => {
         let header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[0].nativeElement;
         simulatePointerEvent('pointerdown', header, 50, 25);
         simulatePointerEvent('pointermove', header, 50, 31);
-        tick(100);
-        fixture.detectChanges();
+        tick(20);
         simulatePointerEvent('pointermove', header, 280, 31);
         simulatePointerEvent('pointerup', header, 280, 31);
-        tick(100);
         fixture.detectChanges();
 
         // step 3 - verify pinned columns are reordered correctly
         expect(grid.pinnedColumns[0].field).toEqual('ID');
         expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
         expect(grid.pinnedColumns[2].field).toEqual('Address');
-
-        // step 4 - move another pinned column
-        header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[1].nativeElement;
-        simulatePointerEvent('pointerdown', header, 150, 25);
-        simulatePointerEvent('pointermove', header, 150, 31);
-        tick(100);
-        fixture.detectChanges();
-        simulatePointerEvent('pointermove', header, 230, 31);
-        simulatePointerEvent('pointerup', header, 230, 31);
-        tick(100);
-        fixture.detectChanges();
-
-        // step 5 - verify pinned columns are reordered correctly
-        expect(grid.pinnedColumns[0].field).toEqual('ID');
-        expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
-        expect(grid.pinnedColumns[2].field).toEqual('Address');
     }));
 
-    xit('Pinning - should pin an unpinned column when drag/drop it among pinned columns.', fakeAsync(() => {
-        // pending('The test is currently failing due to issue #2071');
-
+    it('Pinning - should pin an unpinned column when drag/drop it among pinned columns.', fakeAsync(() => {
         const fixture = TestBed.createComponent(MovableColumnsLargeComponent);
         fixture.detectChanges();
 
@@ -940,17 +917,15 @@ describe('IgxGrid - Column Moving', () => {
         const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[3].nativeElement;
         simulatePointerEvent('pointerdown', header, 350, 25);
         simulatePointerEvent('pointermove', header, 350, 31);
-        tick(100);
-        fixture.detectChanges();
+        tick(20);
         simulatePointerEvent('pointermove', header, 130, 31);
         simulatePointerEvent('pointerup', header, 130, 31);
-        tick(100);
         fixture.detectChanges();
 
         // step 3 - verify column is pinned at the correct place
-        expect(grid.pinnedColumns[0].field).toEqual('ID');
+        expect(grid.pinnedColumns[0].field).toEqual('Address');
         expect(grid.pinnedColumns[1].field).toEqual('ContactName');
-        expect(grid.pinnedColumns[2].field).toEqual('Address');
+        expect(grid.pinnedColumns[2].field).toEqual('ID');
         expect(grid.getColumnByName('ContactName').pinned).toBeTruthy();
     }));
 
@@ -975,8 +950,8 @@ describe('IgxGrid - Column Moving', () => {
         fixture.detectChanges();
 
         // step 3 - verify column is unpinned at the correct place
-        expect(grid.pinnedColumns[0].field).toEqual('ContactTitle');
-        expect(grid.pinnedColumns[1].field).toEqual('Address');
+        expect(grid.pinnedColumns[0].field).toEqual('Address');
+        expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
         expect(grid.unpinnedColumns[0].field).toEqual('ID');
         expect(grid.getColumnByName('ID').pinned).toBeFalsy();
     }));
@@ -1008,9 +983,7 @@ describe('IgxGrid - Column Moving', () => {
         expect(grid.getColumnByName('CompanyName').pinned).toBeFalsy();
     }));
 
-    xit('Pinning - Should be able to pin/unpin columns both: programmatically and interactively via drag/drop.', fakeAsync(() => {
-        // pending('The test is currently failing due to issue #2071');
-
+    it('Pinning - Should be able to pin/unpin columns both: programmatically and interactively via drag/drop.', fakeAsync(() => {
         const fixture = TestBed.createComponent(MovableColumnsLargeComponent);
         fixture.detectChanges();
 
@@ -1024,19 +997,17 @@ describe('IgxGrid - Column Moving', () => {
         const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[4].nativeElement;
         simulatePointerEvent('pointerdown', header, 450, 25);
         simulatePointerEvent('pointermove', header, 450, 31);
-        tick(100);
-        fixture.detectChanges();
+        tick(20);
         simulatePointerEvent('pointermove', header, 80, 31);
         simulatePointerEvent('pointerup', header, 80, 31);
-        tick(100);
         fixture.detectChanges();
 
         // step 3 - unpin that column programmatically and verify correct order
-        grid.getColumnByName('Address').unpin();
+        grid.getColumnByName('ID').unpin();
         fixture.detectChanges();
 
-        expect(grid.getColumnByName('Address').pinned).toBeFalsy();
-        expect(grid.unpinnedColumns[2].field).toEqual('Address');
+        expect(grid.getColumnByName('ID').pinned).toBeFalsy();
+        expect(grid.unpinnedColumns[0].field).toEqual('ID');
     }));
 
     it('MCH - should reorder only columns on the same level (top level simple column).', fakeAsync(() => {
