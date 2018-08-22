@@ -135,7 +135,6 @@
     $ripple-size: em(48px);
     $ripple-radius: $ripple-size / 2;
 
-    $label-font-size: em(16px);
     $label-margin: em(8px);
 
     $input-transition: all .2s $ease-in-out-quad;
@@ -149,7 +148,6 @@
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
-        font-size: 16px;
     }
 
     %switch-input {
@@ -236,8 +234,6 @@
     %switch-label {
         display: inline-block;
         color: --var($theme, 'label-color');
-        font-size: $label-font-size;
-        line-height: 1;
         cursor: pointer;
         user-select: none;
         word-wrap: break-all;
@@ -305,6 +301,25 @@
     %switch-ripple--pressed {
         &::after {
             opacity: .12;
+        }
+    }
+}
+
+/// Adds typography styles for the igx-checkbox component.
+/// Uses the 'subtitle-1' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-switch-typography(
+    $type-scale,
+    $categories: (label: 'subtitle-1')
+) {
+    $label: map-get($categories, 'label');
+
+    @include igx-scope('.igx-typography') {
+        %switch-label {
+            @include igx-type-style($type-scale, $label);
         }
     }
 }
