@@ -22,27 +22,27 @@
     }
 
     @include e(item, $mod: selected) {
-        @extend %igx-time-picker__item--selected !optional
+        @extend %igx-time-picker__item--selected !optional;
     }
 
     @include e(item, $m: active) {
-        @extend %igx-time-picker__item--active !optional
+        @extend %igx-time-picker__item--active !optional;
     }
 
     // HOUR
     @include e(hourList) {
-        @extend %igx-time-picker__hourList !optional
+        @extend %igx-time-picker__hourList !optional;
     }
 
 
     // MINUTE
     @include e(minuteList) {
-        @extend %igx-time-picker__minuteList !optional
+        @extend %igx-time-picker__minuteList !optional;
     }
 
     // AM PM
     @include e(ampmList) {
-        @extend %igx-time-picker__ampmList !optional
+        @extend %igx-time-picker__ampmList !optional;
     }
 
     @include e(body) {

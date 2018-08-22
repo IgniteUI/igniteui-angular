@@ -1,21 +1,29 @@
 <div class="wrapper">
-    <igx-grid #grid1 [data]="data" [width]="'1200px'" [height]="'800px'" [rowSelectable]="true">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
-            [hidden]='c.hidden'>
-        </igx-column>
-    </igx-grid>
-    <br />
-    <button igxButton="raised" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
-    <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-    <button igxButton="raised" (click)="toggleColumn('CompanyName')">Pin/Unpin 'CompanyName'</button>
-    <button igxButton="raised" (click)="toggleColumn('City')">Pin/Unpin 'City'</button>
-    <button igxButton="raised" (click)="toggleColumn('Region')">Pin/Unpin 'Region'</button>
-    <button igxButton="raised" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
-    <br/>
-    <button igxButton="raised" (click)="toggleVisibility('Fax')">Visibility 'ID'</button>
-    <button igxButton="raised" (click)="toggleVisibility('ContactName')">Visibility 'ContactName'</button>
-    <button igxButton="raised" (click)="toggleVisibility('ContactTitle')">Visibility 'ContactTitle'</button>
-    <br>
-    <igx-switch [(ngModel)]="grid1.showToolbar">Toolbar</igx-switch>
-    <igx-switch [(ngModel)]="grid1.columnPinning" style="padding-left: 10px">Column Pinning</igx-switch>
+    <app-page-header title="Grid Column Pinning">
+        Allows column to be pinned to the beginning of the grid.
+    </app-page-header>
+    <div class="sample-content">
+        <div class="sample-column">
+        <igx-grid #grid1 [data]="data" [width]="'1200px'" [height]="'800px'" [rowSelectable]="true">
+            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
+                [hidden]='c.hidden'>
+            </igx-column>
+        </igx-grid>
+        <div class="sample-buttons">
+            <button igxButton="raised" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
+            <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
+            <button igxButton="raised" (click)="toggleColumn('CompanyName')">Pin/Unpin 'CompanyName'</button>
+            <button igxButton="raised" (click)="toggleColumn('City')">Pin/Unpin 'City'</button>
+            <button igxButton="raised" (click)="toggleColumn('Region')">Pin/Unpin 'Region'</button>
+            <button igxButton="raised" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
+            <button igxButton="raised" (click)="toggleVisibility('Fax')">Visibility 'ID'</button>
+            <button igxButton="raised" (click)="toggleVisibility('ContactName')">Visibility 'ContactName'</button>
+            <button igxButton="raised" (click)="toggleVisibility('ContactTitle')">Visibility 'ContactTitle'</button>
+        </div>
+        <div class="sample-switches">
+            <igx-switch [(ngModel)]="grid1.showToolbar">Toolbar</igx-switch>
+            <igx-switch [(ngModel)]="grid1.columnPinning" style="padding-left: 10px">Column Pinning</igx-switch>
+        </div>
+        </div>
+    </div>
 </div>

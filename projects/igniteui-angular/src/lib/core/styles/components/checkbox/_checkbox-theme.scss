@@ -86,7 +86,6 @@
 
     @include scale-in-out($start-scale: .9);
 
-    $label-font-size: em(16px);
     $size: em(20px);
     $border-width: 2px;
     $label-margin: em(8px);
@@ -110,7 +109,6 @@
         display: inline-flex;
         flex-flow: row nowrap;
         align-items: center;
-        font-size: rem(16px);
     }
 
     %cbx-display--disabled {
@@ -198,8 +196,6 @@
     %cbx-label {
         display: inline-block;
         color: --var($theme, 'label-color');
-        font-size: $label-font-size;
-        line-height: 1;
         cursor: pointer;
         user-select: none;
         word-wrap: break-all;
@@ -288,6 +284,25 @@
     %cbx-ripple--pressed {
         &::after {
             opacity: .12;
+        }
+    }
+}
+
+/// Adds typography styles for the igx-checkbox component.
+/// Uses the 'subtitle-1' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-checkbox-typography(
+    $type-scale,
+    $categories: (label: 'subtitle-1')
+) {
+    $label: map-get($categories, 'label');
+
+    @include igx-scope('.igx-typography') {
+        %cbx-label {
+            @include igx-type-style($type-scale, $label);
         }
     }
 }
