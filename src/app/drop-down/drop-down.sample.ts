@@ -3,18 +3,21 @@ import {
     IgxDropDownComponent,
     ConnectedPositioningStrategy,
     OverlaySettings,
-    NoOpScrollStrategy
+    NoOpScrollStrategy,
+    IgxOverlayOutletDirective
 } from 'igniteui-angular';
 
 @Component({
     // tslint:disable-next-line:component-selector
     selector: 'drop-down-sample',
     templateUrl: './drop-down.sample.html',
-    styleUrls: ['drop-down.sample.css']
+    styleUrls: ['drop-down.sample.scss']
 })
 export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
     @ViewChild('button') public button: ElementRef;
+
+    @ViewChild(IgxOverlayOutletDirective) public igxOverlayOutlet: IgxOverlayOutletDirective;
 
     items: any[] = [];
 
@@ -116,8 +119,9 @@ export class DropDownSampleComponent implements OnInit {
         const overlaySettings: OverlaySettings = {
             positionStrategy: new ConnectedPositioningStrategy(),
             scrollStrategy: new NoOpScrollStrategy(),
-            closeOnOutsideClick: true,
-            modal: false
+            closeOnOutsideClick: false,
+            modal: false,
+            outlet: this.igxOverlayOutlet
         };
 
         overlaySettings.positionStrategy.settings.target = this.button.nativeElement;

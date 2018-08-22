@@ -129,6 +129,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     protected _displayKey: string | number = '';
     private _dataType = '';
+    private _data = [];
     private _filteredData = [];
     private _children: QueryList<IgxDropDownItemBase>;
     private _dropdownContainer: ElementRef = null;
@@ -543,7 +544,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public data = [];
+    get data() {
+        return this._data;
+    }
+    set data(val: any[]) {
+        this._data = (val) ? val : [];
+    }
 
     /**
      * Combo value data source propery.
@@ -677,21 +683,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             return true;
         }
         return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
-    }
-
-    private _compareFunc(itemToSearch, equalCheck?: boolean) {
-        let compareFunc;
-        const key = this.valueKey;
-
-        // When there is remote data we need to compare valueKey values,
-        // instead of comparing entire itemID objects, because in that case they are not equal by reference.
-        if (this.totalItemCount > 0 && key && this.dataType === DataTypes.COMPLEX) {
-            compareFunc = function(selectedItem) {
-                return equalCheck ? selectedItem[key] === itemToSearch[key] :
-                                    selectedItem[key] !== itemToSearch[key];
-            };
-        }
-        return compareFunc;
     }
 
     /**
@@ -1005,13 +996,30 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return DataTypes.PRIMITIVE;
     }
 
+    /**
+     * @hidden
+     */
+    public get isRemote() {
+        return this.totalItemCount > 0 &&
+            this.valueKey &&
+            this.dataType === DataTypes.COMPLEX;
+    }
+
+    private _stringifyItemID(itemID) {
+        return this.isRemote && typeof itemID === 'object' ? JSON.stringify(itemID) : itemID;
+    }
+
+    private _parseItemID(itemID) {
+        return this.isRemote && typeof itemID === 'string' ? JSON.parse(itemID) : itemID;
+    }
+
     private changeSelectedItem(newItem: any, select?: boolean) {
         if (!newItem && newItem !== 0) {
             return;
         }
         const newSelection = select ?
-            this.selectionAPI.select_item(this.id, newItem, this._compareFunc.apply(this, [newItem, true])) :
-            this.selectionAPI.deselect_item(this.id, newItem, this._compareFunc.apply(this, [newItem, false]));
+            this.selectionAPI.select_item(this.id, newItem) :
+            this.selectionAPI.deselect_item(this.id, newItem);
         this.triggerSelectionChange(newSelection);
     }
 
@@ -1044,20 +1052,25 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isItemSelected(item) {
-        return this.selectionAPI.is_item_selected(this.id, item, this._compareFunc.apply(this, [item, true]));
+        return this.selectionAPI.is_item_selected(this.id, this._stringifyItemID(item));
     }
 
     /**
      * @hidden
      */
-    protected triggerSelectionChange(newSelection) {
+    protected triggerSelectionChange(newSelectionAsSet: Set<any>) {
         const oldSelection = this.dropdown.selectedItem;
+        const newSelection = newSelectionAsSet ? Array.from(newSelectionAsSet) : [];
         if (oldSelection !== newSelection) {
             const args: IComboSelectionChangeEventArgs = { oldSelection, newSelection };
             this.onSelectionChange.emit(args);
-            this.selectionAPI.set_selection(this.id, newSelection);
+            newSelectionAsSet = new Set();
+            for (let i = 0; i < args.newSelection.length; i++) {
+                newSelectionAsSet.add(args.newSelection[i]);
+            }
+            this.selectionAPI.set_selection(this.id, newSelectionAsSet);
             this.value = this.dataType !== DataTypes.PRIMITIVE ?
-                newSelection.map((e) => e[this.displayKey]).join(', ') :
+            newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
                 newSelection.join(', ');
             // this.isHeaderChecked();
             this._onChangeCallback(newSelection);
@@ -1328,7 +1341,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     public selectedItems() {
-        return this.dropdown.selectedItem;
+        const items = this.dropdown.selectedItem;
+        return this.isRemote ? items.map(item => this._parseItemID(item)) : items;
     }
 
     /**
@@ -1342,7 +1356,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
-            const newSelection = clearCurrentSelection ? newItems : this.selectionAPI.select_items(this.id, newItems);
+            const newSelection = this.selectionAPI.select_items(this.id, newItems, clearCurrentSelection);
             this.triggerSelectionChange(newSelection);
         }
     }
@@ -1386,7 +1400,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public deselectAllItems(ignoreFilter?: boolean) {
         const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
-            [] :
+            new Set() :
             this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
         this.triggerSelectionChange(newSelection);
     }

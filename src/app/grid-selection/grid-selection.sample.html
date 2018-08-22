@@ -1,6 +1,5 @@
 <div class="sample-container">
-    <span igxLabel>Toggle Multiple Selection</span>
-    <igx-switch [(ngModel)]="selection" (change)="this.grid1.deselectAllRows()"></igx-switch>
+    <igx-switch [(ngModel)]="selection" (change)="this.grid1.deselectAllRows()">Toggle Multiple Selection</igx-switch>
     <div class="separator"></div>
     <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
             [rowSelectable]="selection" (onSelection)="handleRowSelection($event)"

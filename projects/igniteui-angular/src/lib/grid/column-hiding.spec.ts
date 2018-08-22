@@ -1,47 +1,47 @@
 
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Input, ViewChild } from '@angular/core';
-import { fakeAsync, TestBed, tick, async, discardPeriodicTasks } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar } from '../calendar';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
 import { IgxColumnHidingComponent, IgxColumnHidingModule } from './column-hiding.component';
-import { IgxColumnComponent } from './column.component';
-import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule, IgxGridComponent } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownComponent, IgxDropDownModule } from '../drop-down/drop-down.component';
 import { ColumnDisplayOrder } from './column-chooser-base';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
+import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../test-utils/grid-base-components.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 describe('Column Hiding UI', () => {
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;
     let columnChooserElement: DebugElement;
-    beforeEach(() => {
+
+    const verifyCheckbox = HelperUtils.verifyCheckbox;
+    const getCheckboxInput = HelperUtils.getCheckboxInput;
+    const getCheckboxInputs = HelperUtils.getCheckboxInputs;
+    const getCheckboxElement = HelperUtils.getCheckboxElement;
+    const verifyColumnIsHidden = GridFunctions.verifyColumnIsHidden;
+    const getColumnHidingButton = GridFunctions.getColumnHidingButton;
+
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridWithColumnChooserComponent,
-                ColumnHidingInlineComponent,
-                GridWithGroupColumnsComponent,
-                ColumnHidingToggleComponent
+                ColumnHidingTestComponent,
+                ColumnGroupsHidingTestComponent
             ],
             imports: [
-                BrowserAnimationsModule,
                 NoopAnimationsModule,
                 IgxGridModule.forRoot(),
                 IgxColumnHidingModule,
-                IgxDropDownModule,
                 IgxButtonModule
             ]
         })
-        .compileComponents();
-    });
+            .compileComponents();
+    }));
 
     beforeAll(() => {
         UIInteractions.clearOverlay();
@@ -53,19 +53,22 @@ describe('Column Hiding UI', () => {
 
     describe('', () => {
         beforeEach(() => {
-            fix = TestBed.createComponent(ColumnHidingInlineComponent);
+            fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
         });
+        afterEach(() => {
+            columnChooser.onColumnVisibilityChanged.unsubscribe();
+        });
 
-        it ('title is initially empty.', () => {
+        it('title is initially empty.', () => {
             const title = columnChooserElement.query(By.css('h4'));
             expect(title).toBe(null);
         });
 
-        it ('title can be successfully changed.', () => {
+        it('title can be successfully changed.', () => {
             columnChooser.title = 'Show/Hide Columns';
             fix.detectChanges();
 
@@ -118,9 +121,9 @@ describe('Column Hiding UI', () => {
             expect(colProductName).toBeDefined();
             expect(colProductName.disabled).toBe(true);
 
-            const chkProductName = GridFunctions.getCheckboxElement(columnName, columnChooserElement, fix);
+            const chkProductName = getCheckboxElement(columnName, columnChooserElement, fix);
             expect(chkProductName).toBeDefined();
-            GridFunctions.verifyCheckbox(columnName, false, true, columnChooserElement, fix);
+            verifyCheckbox(columnName, false, true, columnChooserElement, fix);
         });
 
         it('"hiddenColumnsCount" reflects properly the number of hidden columns.', () => {
@@ -132,7 +135,7 @@ describe('Column Hiding UI', () => {
             grid.columns[0].hidden = true;
             expect(columnChooser.hiddenColumnsCount).toBe(1);
 
-            GridFunctions.getCheckboxInput('Released', columnChooserElement, fix).click();
+            getCheckboxInput('Released', columnChooserElement, fix).click();
             expect(columnChooser.hiddenColumnsCount).toBe(2);
         });
 
@@ -143,39 +146,39 @@ describe('Column Hiding UI', () => {
             const colProductName = getColumnChooserItem('ID');
             expect(colProductName).toBeDefined();
             expect(colProductName.disabled).toBe(true);
-            GridFunctions.verifyCheckbox('ID', false, true, columnChooserElement, fix);
+            verifyCheckbox('ID', false, true, columnChooserElement, fix);
 
             grid.columns[0].disableHiding = false;
             fix.detectChanges();
 
             expect(colProductName.disabled).toBe(false);
-            GridFunctions.verifyCheckbox('ID', false, false, columnChooserElement, fix);
+            verifyCheckbox('ID', false, false, columnChooserElement, fix);
         });
 
         it('allows hiding a column whose disabled=undefined.', () => {
             grid.columns[3].disableHiding = undefined;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox('Released', false, false, columnChooserElement, fix);
+            verifyCheckbox('Released', false, false, columnChooserElement, fix);
         });
 
         it('shows all items and buttons disabled when all columns disabled is true.', () => {
             grid.columns.forEach((col) => col.disableHiding = true);
             fix.detectChanges();
 
-            const checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
+            const checkboxes = getCheckboxInputs(columnChooserElement);
 
             expect(checkboxes.filter((chk) => chk.disabled).length).toBe(5);
             expect(checkboxes.filter((chk) => chk.checked).length).toBe(1);
-            expect(GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).checked).toBe(true);
+            expect(getCheckboxInput('Downloads', columnChooserElement, fix).checked).toBe(true);
 
             expect(getButtonDisabledState('Show All')).toBe(true);
             expect(getButtonDisabledState('Hide All')).toBe(true);
         });
 
         it('- toggling column checkbox checked state successfully changes the grid column visibility.', () => {
-            const checkbox = GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ReleaseDate', false, false, columnChooserElement, fix);
+            const checkbox = getCheckboxInput('ReleaseDate', columnChooserElement, fix);
+            verifyCheckbox('ReleaseDate', false, false, columnChooserElement, fix);
 
             const column = grid.getColumnByName('ReleaseDate');
             verifyColumnIsHidden(column, false, 4);
@@ -193,25 +196,25 @@ describe('Column Hiding UI', () => {
 
         it('reflects properly grid column hidden value changes.', () => {
             const name = 'ReleaseDate';
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement, fix);
             const column = grid.getColumnByName(name);
 
             column.hidden = true;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(name, true, false, columnChooserElement, fix);
+            verifyCheckbox(name, true, false, columnChooserElement, fix);
             verifyColumnIsHidden(column, true, 3);
 
             column.hidden = false;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement, fix);
             verifyColumnIsHidden(column, false, 4);
 
             column.hidden = undefined;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement, fix);
             verifyColumnIsHidden(column, undefined, 4);
 
             column.hidden = true;
@@ -221,7 +224,7 @@ describe('Column Hiding UI', () => {
             column.hidden = null;
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement, fix);
             verifyColumnIsHidden(column, null, 4);
         });
 
@@ -231,8 +234,8 @@ describe('Column Hiding UI', () => {
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
 
-            const checkbox = GridFunctions.getCheckboxInput(name, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox(name, true, false, columnChooserElement, fix);
+            const checkbox = getCheckboxInput(name, columnChooserElement, fix);
+            verifyCheckbox(name, true, false, columnChooserElement, fix);
 
             expect(getButtonDisabledState('Show All')).toBe(false);
             expect(getButtonDisabledState('Hide All')).toBe(true);
@@ -260,8 +263,8 @@ describe('Column Hiding UI', () => {
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
 
-            const checkbox = GridFunctions.getCheckboxInput(name, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox(name, false, false, columnChooserElement, fix);
+            const checkbox = getCheckboxInput(name, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement, fix);
             expect(getButtonDisabledState('Show All')).toBe(true);
             expect(getButtonDisabledState('Hide All')).toBe(false);
 
@@ -287,7 +290,7 @@ describe('Column Hiding UI', () => {
 
             expect(getButtonDisabledState('Hide All')).toBe(true);
 
-            GridFunctions.getCheckboxInput('ID', columnChooserElement, fix).click();
+            getCheckboxInput('ID', columnChooserElement, fix).click();
             fix.detectChanges();
 
             expect(getButtonDisabledState('Hide All')).toBe(false);
@@ -299,7 +302,7 @@ describe('Column Hiding UI', () => {
 
             expect(getButtonDisabledState('Show All')).toBe(true);
 
-            GridFunctions.getCheckboxInput('Released', columnChooserElement, fix).click();
+            getCheckboxInput('Released', columnChooserElement, fix).click();
             fix.detectChanges();
 
             expect(getButtonDisabledState('Show All')).toBe(false);
@@ -308,9 +311,9 @@ describe('Column Hiding UI', () => {
         it('- "Hide All" button gets disabled after checking the last unchecked column.', () => {
             expect(getButtonDisabledState('Hide All')).toBe(false);
 
-            GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
-            GridFunctions.getCheckboxInput('Released', columnChooserElement, fix).click();
-            GridFunctions.getCheckboxInput('ID', columnChooserElement, fix).click();
+            getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
+            getCheckboxInput('Released', columnChooserElement, fix).click();
+            getCheckboxInput('ID', columnChooserElement, fix).click();
             fix.detectChanges();
 
             expect(getButtonDisabledState('Hide All')).toBe(true);
@@ -318,7 +321,7 @@ describe('Column Hiding UI', () => {
 
         it('- "Show All" button gets disabled after unchecking the last checked column.', () => {
             expect(getButtonDisabledState('Show All')).toBe(false);
-            GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
+            getCheckboxInput('Downloads', columnChooserElement, fix).click();
             fix.detectChanges();
             expect(getButtonDisabledState('Show All')).toBe(true);
         });
@@ -340,31 +343,31 @@ describe('Column Hiding UI', () => {
                 currentArgs = args;
             });
 
-            GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
+            getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
 
             expect(counter).toBe(1);
             expect(currentArgs.column.field).toBe('ReleaseDate');
             expect(currentArgs.newValue).toBe(true);
 
-            GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
+            getCheckboxInput('ReleaseDate', columnChooserElement, fix).click();
 
             expect(counter).toBe(2);
             expect(currentArgs.column.field).toBe('ReleaseDate');
             expect(currentArgs.newValue).toBe(false);
 
-            GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
+            getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
             expect(counter).toBe(3);
             expect(currentArgs.column.field).toBe('Downloads');
             expect(currentArgs.newValue).toBe(false);
 
-            GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
+            getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
             expect(counter).toBe(4);
             expect(currentArgs.column.field).toBe('Downloads');
             expect(currentArgs.newValue).toBe(true);
 
-            GridFunctions.getCheckboxInput('ProductName', columnChooserElement, fix).click();
+            getCheckboxInput('ProductName', columnChooserElement, fix).click();
 
             expect(counter).toBe(4);
         });
@@ -452,60 +455,64 @@ describe('Column Hiding UI', () => {
             expect(filterInput.placeholder).toBe('@\#&*');
         });
 
-        it('filters columns on every keystroke in filter input.', (done) => {
+        it('filters columns on every keystroke in filter input.', (async () => {
             const filterInput = getFilterInput();
-            UIInteractions.sendInput(filterInput, 'r', fix).then(() => {
-                expect(columnChooser.columnItems.length).toBe(3);
-                UIInteractions.sendInput(filterInput, 're', fix).then(() => {
-                    expect(columnChooser.columnItems.length).toBe(2);
-                    UIInteractions.sendInput(filterInput, 'r', fix).then(() => {
-                        expect(columnChooser.columnItems.length).toBe(3);
-                        UIInteractions.sendInput(filterInput, '', fix).then(() => {
-                            expect(columnChooser.columnItems.length).toBe(5);
-                            done();
-                        });
-                    });
-                });
-            });
-        });
 
-        it('filters columns according to the specified filter criteria.', fakeAsync(() => {
+
+            UIInteractions.sendInput(filterInput, 'r');
+            await wait();
+            expect(columnChooser.columnItems.length).toBe(3);
+
+            UIInteractions.sendInput(filterInput, 're');
+            await wait();
+            expect(columnChooser.columnItems.length).toBe(2);
+
+            UIInteractions.sendInput(filterInput, 'r');
+            await wait();
+            expect(columnChooser.columnItems.length).toBe(3);
+
+            UIInteractions.sendInput(filterInput, '');
+            await wait();
+            expect(columnChooser.columnItems.length).toBe(5);
+        }));
+
+        it('filters columns according to the specified filter criteria.', (async () => {
             columnChooser.filterCriteria = 'd';
-            tick(100);
             fix.detectChanges();
+            await wait();
 
             const filterInput = getFilterInput() ? getFilterInput().nativeElement : undefined;
             expect(filterInput.value).toBe('d');
             expect(columnChooser.columnItems.length).toBe(5);
 
             columnChooser.filterCriteria += 'a';
-            tick(100);
             fix.detectChanges();
+            await wait();
 
             expect(filterInput.value).toBe('da');
             expect(columnChooser.columnItems.length).toBe(1);
 
             columnChooser.filterCriteria = '';
             columnChooser.filterCriteria = 'el';
-            tick(1);
             fix.detectChanges();
+            await wait();
 
             expect(filterInput.value).toBe('el');
             expect(columnChooser.columnItems.length).toBe(2);
 
             columnChooser.filterCriteria = '';
-            tick();
             fix.detectChanges();
+            await wait();
 
             expect(filterInput.value).toBe('');
             expect(columnChooser.columnItems.length).toBe(5);
         }));
 
-        it('- Hide All button operates over the filtered in columns only', fakeAsync(() => {
+        it('- Hide All button operates over the filtered in columns only', (async () => {
             grid.columns[1].disableHiding = false;
             columnChooser.filterCriteria = 're';
-            tick();
             fix.detectChanges();
+            await wait();
 
             const btnHideAll = getButtonElement('Hide All');
             expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
@@ -515,118 +522,112 @@ describe('Column Hiding UI', () => {
             btnHideAll.click();
             fix.detectChanges();
 
-            expect(GridFunctions.getCheckboxInput('Released', columnChooserElement, fix).checked).toBe(true, 'Released is not checked!');
-            expect(GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).checked)
+            expect(getCheckboxInput('Released', columnChooserElement, fix).checked).toBe(true, 'Released is not checked!');
+            expect(getCheckboxInput('ReleaseDate', columnChooserElement, fix).checked)
                 .toBe(true, 'ReleaseDate is not checked!');
             expect(getButtonDisabledState('Hide All')).toBe(true, 'Hide All is not disabled!');
             expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
 
             columnChooser.filterCriteria = 'r';
-            tick();
             fix.detectChanges();
 
+            await wait();
             expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
             expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
 
-            expect(GridFunctions.getCheckboxInput('ProductName', columnChooserElement, fix).checked)
+            expect(getCheckboxInput('ProductName', columnChooserElement, fix).checked)
                 .toBe(false, 'ProductName is not unchecked!');
 
             btnHideAll.click();
             fix.detectChanges();
 
             columnChooser.filterCriteria = '';
-            tick(100);
             fix.detectChanges();
 
+            await wait();
             expect(columnChooser.filterCriteria).toBe('', 'Filter criteria is not empty string!');
-            expect(GridFunctions.getCheckboxInput('ID', columnChooserElement, fix).checked).toBe(false, 'ID is not unchecked!');
-            expect(GridFunctions.getCheckboxInput('ProductName', columnChooserElement, fix).checked)
+            expect(getCheckboxInput('ID', columnChooserElement, fix).checked).toBe(false, 'ID is not unchecked!');
+            expect(getCheckboxInput('ProductName', columnChooserElement, fix).checked)
                 .toBe(true, 'ProductName is not checked!');
 
             expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
             expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
-            discardPeriodicTasks();
         }));
 
-        it('- Show All button operates over the filtered in columns only', fakeAsync(() => {
-            fix.whenStable().then(() => {
-                grid.columns[1].disableHiding = false;
-                columnChooser.hideAllColumns();
-                columnChooser.filterCriteria = 're';
-                tick();
-                fix.detectChanges();
+        it('- Show All button operates over the filtered in columns only', (async () => {
+            grid.columns[1].disableHiding = false;
+            columnChooser.hideAllColumns();
+            columnChooser.filterCriteria = 're';
+            fix.detectChanges();
+            await wait();
 
-                const btnShowAll = getButtonElement('Show All');
-                expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
-                expect(getButtonDisabledState('Hide All')).toBe(true, 'Hide All is not disabled!');
-                expect(columnChooser.columnItems.length).toBe(2);
+            const btnShowAll = getButtonElement('Show All');
+            expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
+            expect(getButtonDisabledState('Hide All')).toBe(true, 'Hide All is not disabled!');
+            expect(columnChooser.columnItems.length).toBe(2);
 
-                btnShowAll.click();
-                fix.detectChanges();
+            btnShowAll.click();
+            fix.detectChanges();
 
-                expect(GridFunctions.getCheckboxInput('Released', columnChooserElement, fix).checked)
-                    .toBe(false, 'Released is not unchecked!');
-                expect(GridFunctions.getCheckboxInput('ReleaseDate', columnChooserElement, fix).checked)
-                    .toBe(false, 'ReleaseDate is not unchecked!');
-                expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
-                expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
+            expect(getCheckboxInput('Released', columnChooserElement, fix).checked)
+                .toBe(false, 'Released is not unchecked!');
+            expect(getCheckboxInput('ReleaseDate', columnChooserElement, fix).checked)
+                .toBe(false, 'ReleaseDate is not unchecked!');
+            expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
+            expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
 
-                columnChooser.filterCriteria = 'r';
-                tick(100);
-                fix.detectChanges();
+            columnChooser.filterCriteria = 'r';
+            fix.detectChanges();
+            await wait();
 
-                expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
-                expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
+            expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
+            expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
 
-                expect(GridFunctions.getCheckboxInput('ProductName', columnChooserElement, fix).checked)
-                    .toBe(true, 'ProductName is not checked!');
+            expect(getCheckboxInput('ProductName', columnChooserElement, fix).checked)
+                .toBe(true, 'ProductName is not checked!');
 
-                btnShowAll.click();
-                fix.detectChanges();
+            btnShowAll.click();
+            fix.detectChanges();
 
-                columnChooser.filterCriteria = '';
-                tick(100);
-                fix.detectChanges();
+            columnChooser.filterCriteria = '';
+            fix.detectChanges();
+            await wait();
 
-                expect(columnChooser.filterCriteria).toBe('', 'Filter criteria is not empty string!');
-                expect(GridFunctions.getCheckboxInput('ID', columnChooserElement, fix).checked).toBe(true, 'ID is not checked!');
-                expect(GridFunctions.getCheckboxInput('ProductName', columnChooserElement, fix).checked)
-                    .toBe(false, 'ProductName is not unchecked!');
+            expect(columnChooser.filterCriteria).toBe('', 'Filter criteria is not empty string!');
+            expect(getCheckboxInput('ID', columnChooserElement, fix).checked).toBe(true, 'ID is not checked!');
+            expect(getCheckboxInput('ProductName', columnChooserElement, fix).checked)
+                .toBe(false, 'ProductName is not unchecked!');
 
-                expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
-                expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
-            });
+            expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
+            expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
         }));
 
-        it('hides the proper columns after filtering and clearing the filter', (done) => {
-            fix.whenStable().then(() => {
-                const filterInput = getFilterInput();
+        it('hides the proper columns after filtering and clearing the filter', (async () => {
+            const filterInput = getFilterInput();
 
-                UIInteractions.sendInput(filterInput, 'a', fix).then(() => {
-                    fix.detectChanges();
-                    expect(getButtonDisabledState('Show All')).toBe(false);
-                    getButtonElement('Show All').click();
-                    fix.detectChanges();
+            UIInteractions.sendInput(filterInput, 'a', fix);
+            await wait();
 
-                    expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
-                    expect(grid.columns[2].hidden).toBe(false, 'Downloads column is not hidden!');
+            expect(getButtonDisabledState('Show All')).toBe(false);
+            getButtonElement('Show All').click();
+            fix.detectChanges();
 
-                    UIInteractions.sendInput(filterInput, '', fix).then(() => {
-                        fix.detectChanges();
-                        expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
-                        expect(grid.columns[0].hidden).toBe(false, 'ID column is not shown!');
-                        GridFunctions.getCheckboxInput('ID', columnChooserElement, fix).click();
-                        fix.detectChanges();
+            expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
+            expect(grid.columns[2].hidden).toBe(false, 'Downloads column is not hidden!');
 
-                        expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
-                        expect(grid.columns[0].hidden).toBe(true, 'ID column is not hidden!');
-                        done();
-                    });
-                });
-            });
-        });
+            UIInteractions.sendInput(filterInput, '', fix);
+            await wait();
 
-        it('fires onColumnVisibilityChanged event after filtering and clearing the filter.', (done) => {
+            expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
+            expect(grid.columns[0].hidden).toBe(false, 'ID column is not shown!');
+            getCheckboxInput('ID', columnChooserElement, fix).click();
+            fix.detectChanges();
+
+            expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
+            expect(grid.columns[0].hidden).toBe(true, 'ID column is not hidden!');
+        }));
+
+        it('fires onColumnVisibilityChanged event after filtering and clearing the filter.', (async () => {
             let counter = 0;
             let currentArgs: IColumnVisibilityChangedEventArgs;
             columnChooser.onColumnVisibilityChanged.subscribe((args: IColumnVisibilityChangedEventArgs) => {
@@ -636,25 +637,23 @@ describe('Column Hiding UI', () => {
 
             const filterInput = getFilterInput();
 
-            UIInteractions.sendInput(filterInput, 'a', fix).then(() => {
-                fix.detectChanges();
-                GridFunctions.getCheckboxInput('Downloads', columnChooserElement, fix).click();
+            UIInteractions.sendInput(filterInput, 'a', fix);
+            await wait();
+            getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
-                expect(counter).toBe(1);
-                expect(currentArgs.column.field).toBe('Downloads');
-                expect(grid.columns[2].hidden).toBe(false);
+            expect(counter).toBe(1);
+            expect(currentArgs.column.field).toBe('Downloads');
+            expect(grid.columns[2].hidden).toBe(false);
 
-                UIInteractions.sendInput(filterInput, '', fix).then(() => {
-                    fix.detectChanges();
-                    GridFunctions.getCheckboxInput('ID', columnChooserElement, fix).click();
+            UIInteractions.sendInput(filterInput, '', fix);
+            await wait();
 
-                    expect(grid.columns[0].hidden).toBe(true);
-                    expect(counter).toBe(2);
-                    expect(currentArgs.column.header).toBe('ID');
-                    done();
-                });
-            });
-        });
+            getCheckboxInput('ID', columnChooserElement, fix).click();
+
+            expect(grid.columns[0].hidden).toBe(true);
+            expect(counter).toBe(2);
+            expect(currentArgs.column.header).toBe('ID');
+        }));
 
         it('styles are applied.', () => {
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
@@ -684,9 +683,9 @@ describe('Column Hiding UI', () => {
             const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
             let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
+                - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
             expect(grid.calcHeight).toEqual(expectedHeight);
 
@@ -695,8 +694,8 @@ describe('Column Hiding UI', () => {
             expect(grid.scr.nativeElement.hidden).toBe(true);
 
             expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
+                - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 
             expect(grid.calcHeight).toEqual(expectedHeight);
         });
@@ -704,8 +703,9 @@ describe('Column Hiding UI', () => {
 
     describe('', () => {
         beforeEach(() => {
-            fix = TestBed.createComponent(GridWithGroupColumnsComponent);
+            fix = TestBed.createComponent(ColumnGroupsHidingTestComponent);
             fix.detectChanges();
+            fix.componentInstance.hasGroupColumns = true;
             grid = fix.componentInstance.grid;
             columnChooser = fix.componentInstance.chooser;
             fix.detectChanges();
@@ -735,79 +735,77 @@ describe('Column Hiding UI', () => {
         });
 
         it('checks & hides all children when hiding their parent.', () => {
-            GridFunctions.getCheckboxInput('Person Details', columnChooserElement, fix).click();
-            columnChooser.cdr.detectChanges();
+            getCheckboxInput('Person Details', columnChooserElement, fix).click();
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
 
             verifyColumnIsHidden(grid.columns[3], true, 4);
             verifyColumnIsHidden(grid.columns[4], true, 4);
             verifyColumnIsHidden(grid.columns[5], true, 4);
 
-            GridFunctions.verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('General Information', false, false, columnChooserElement, fix);
+            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
+            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
 
-            GridFunctions.getCheckboxInput('Person Details', columnChooserElement, fix).click();
-            columnChooser.cdr.detectChanges();
+            getCheckboxInput('Person Details', columnChooserElement, fix).click();
             fix.detectChanges();
 
             verifyColumnIsHidden(grid.columns[3], false, 7);
             verifyColumnIsHidden(grid.columns[4], false, 7);
             verifyColumnIsHidden(grid.columns[5], false, 7);
 
-            GridFunctions.verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ContactName', false, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ContactTitle', false, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
+            verifyCheckbox('ContactName', false, false, columnChooserElement, fix);
+            verifyCheckbox('ContactTitle', false, false, columnChooserElement, fix);
 
-            GridFunctions.verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('General Information', false, false, columnChooserElement, fix);
+            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
+            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
         });
 
         it('checks & hides all descendants when hiding top level parent.', () => {
-            GridFunctions.getCheckboxInput('General Information', columnChooserElement, fix).click();
+            getCheckboxInput('General Information', columnChooserElement, fix).click();
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox('General Information', true, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('CompanyName', true, false, columnChooserElement, fix);
+            verifyCheckbox('General Information', true, false, columnChooserElement, fix);
+            verifyCheckbox('CompanyName', true, false, columnChooserElement, fix);
 
-            GridFunctions.verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
+            verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
 
-            GridFunctions.verifyCheckbox('Missing', false, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ID', false, false, columnChooserElement, fix);
+            verifyCheckbox('Missing', false, false, columnChooserElement, fix);
+            verifyCheckbox('ID', false, false, columnChooserElement, fix);
 
-            GridFunctions.getCheckboxInput('General Information', columnChooserElement, fix).click();
+            getCheckboxInput('General Information', columnChooserElement, fix).click();
             fix.detectChanges();
 
-            GridFunctions.verifyCheckbox('General Information', false, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
+            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
+            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
 
-            GridFunctions.verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ContactName', false, false, columnChooserElement, fix);
-            GridFunctions.verifyCheckbox('ContactTitle', false, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
+            verifyCheckbox('ContactName', false, false, columnChooserElement, fix);
+            verifyCheckbox('ContactTitle', false, false, columnChooserElement, fix);
         });
 
         it('checks/unchecks parent when all children are checked/unchecked.', () => {
-            GridFunctions.verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
 
-            GridFunctions.getCheckboxInput('ContactName', columnChooserElement, fix).click();
+            getCheckboxInput('ContactName', columnChooserElement, fix).click();
             fix.detectChanges();
-            GridFunctions.verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
-            GridFunctions.getCheckboxInput('ContactTitle', columnChooserElement, fix).click();
+            verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
+            getCheckboxInput('ContactTitle', columnChooserElement, fix).click();
             fix.detectChanges();
-            GridFunctions.verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
 
-            GridFunctions.getCheckboxInput('ContactName', columnChooserElement, fix).click();
+            getCheckboxInput('ContactName', columnChooserElement, fix).click();
             fix.detectChanges();
-            GridFunctions.verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
 
-            GridFunctions.getCheckboxInput('ContactTitle', columnChooserElement, fix).click();
+            getCheckboxInput('ContactTitle', columnChooserElement, fix).click();
             fix.detectChanges();
-            GridFunctions.verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
+            verifyCheckbox('Person Details', false, false, columnChooserElement, fix);
         });
 
         it('filters group columns properly.', () => {
@@ -817,27 +815,27 @@ describe('Column Hiding UI', () => {
             expect(columnChooser.columnItems.length).toBe(4);
             expect(getColumnHidingItems().length).toBe(4);
 
-            expect(GridFunctions.getCheckboxElement('General Information', columnChooserElement, fix)).toBeTruthy();
-            expect(GridFunctions.getCheckboxElement('Person Details', columnChooserElement, fix)).toBeTruthy();
+            expect(getCheckboxElement('General Information', columnChooserElement, fix)).toBeTruthy();
+            expect(getCheckboxElement('Person Details', columnChooserElement, fix)).toBeTruthy();
 
-            expect(GridFunctions.getCheckboxElement('ContactName', columnChooserElement, fix)).toBeTruthy();
-            expect(GridFunctions.getCheckboxElement('ContactTitle', columnChooserElement, fix)).toBeTruthy();
+            expect(getCheckboxElement('ContactName', columnChooserElement, fix)).toBeTruthy();
+            expect(getCheckboxElement('ContactTitle', columnChooserElement, fix)).toBeTruthy();
 
             columnChooser.filterCriteria = 'pers';
             fix.detectChanges();
 
             expect(columnChooser.columnItems.length).toBe(2);
             expect(getColumnHidingItems().length).toBe(2);
-            expect(GridFunctions.getCheckboxElement('General Information', columnChooserElement, fix)).toBeTruthy();
-            expect(GridFunctions.getCheckboxElement('Person Details', columnChooserElement, fix)).toBeTruthy();
+            expect(getCheckboxElement('General Information', columnChooserElement, fix)).toBeTruthy();
+            expect(getCheckboxElement('Person Details', columnChooserElement, fix)).toBeTruthy();
 
             columnChooser.filterCriteria = 'mi';
             fix.detectChanges();
 
             expect(columnChooser.columnItems.length).toBe(1);
             expect(getColumnHidingItems().length).toBe(1);
-            expect(GridFunctions.getCheckboxElement('General Information', columnChooserElement, fix)).toBeFalsy();
-            expect(GridFunctions.getCheckboxElement('Missing', columnChooserElement, fix)).toBeTruthy();
+            expect(getCheckboxElement('General Information', columnChooserElement, fix)).toBeFalsy();
+            expect(getCheckboxElement('Missing', columnChooserElement, fix)).toBeTruthy();
         });
 
         it('hides the proper columns when filtering and pressing hide all.', () => {
@@ -853,180 +851,156 @@ describe('Column Hiding UI', () => {
         });
     });
 
-    describe('dropdown', () => {
-        let showButton;
-        let dropDown;
-        beforeEach(async(() => {
-            fix = TestBed.createComponent(ColumnHidingToggleComponent);
-            fix.detectChanges();
-            grid = fix.componentInstance.grid;
-            columnChooser = fix.componentInstance.chooser;
-            columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-            showButton = fix.debugElement.query(By.css('button')).nativeElement;
-            dropDown = fix.componentInstance.dropDown;
-        }));
+    // xdescribe('dropdown', () => {
+    //     let showButton;
+    //     let dropDown;
+    //     beforeEach(() => {
+    //         fix = TestBed.createComponent(ColumnHidingTestComponent);
+    //         fix.detectChanges();
+    //         grid = fix.componentInstance.grid;
+    //         columnChooser = fix.componentInstance.chooser;
+    //         columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
+    //         showButton = fix.debugElement.query(By.css('button')).nativeElement;
+    //         dropDown = fix.componentInstance.dropDown;
+    //     });
 
-        it('is not open by default.', () => {
-            expect(getDropdownDiv()).toBeUndefined();
-            expect(getDropdownDivHidden()).toBeDefined();
-        });
+    //     it('is not open by default.', () => {
+    //         expect(getDropdownDiv()).toBeUndefined();
+    //         expect(getDropdownDivHidden()).toBeDefined();
+    //     });
 
-        it('is opened and closed by executing dropdown\'s toggle() method.', fakeAsync(() => {
-            fix.whenStable().then(() => {
-                dropDown.toggle();
-                tick(100);
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    expect(getDropdownDiv()).toBeDefined();
-                    expect(getDropdownDivHidden()).toBeUndefined();
-                    const items = getColumnHidingItems();
-                    expect(items.length).toBe(5);
+    //     it('is opened and closed by executing dropdown\'s toggle() method.', fakeAsync(() => {
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(getDropdownDiv()).toBeDefined();
+    //         expect(getDropdownDivHidden()).toBeUndefined();
+    //         const items = getColumnHidingItems();
+    //         expect(items.length).toBe(5);
 
-                    dropDown.toggle();
-                    tick(100);
-                    fix.whenStable().then(() => {
-                        fix.detectChanges();
-                        expect(getDropdownDiv()).toBeUndefined();
-                        expect(getDropdownDivHidden()).toBeDefined();
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(getDropdownDiv()).toBeUndefined();
+    //         expect(getDropdownDivHidden()).toBeDefined();
 
-                        dropDown.toggle();
-                        tick(100);
-                        fix.whenStable().then(() => {
-                            fix.detectChanges();
-                            expect(getDropdownDiv()).toBeDefined();
-                            expect(getDropdownDivHidden()).toBeUndefined();
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(getDropdownDiv()).toBeDefined();
+    //         expect(getDropdownDivHidden()).toBeUndefined();
 
-                            dropDown.toggle();
-                            tick(100);
-                            fix.whenStable().then(() => {
-                                fix.detectChanges();
-                                expect(getDropdownDiv()).toBeUndefined();
-                                expect(getDropdownDivHidden()).toBeDefined();
-                            });
-                        });
-                    });
-                });
-            });
-        }));
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(getDropdownDiv()).toBeUndefined();
+    //         expect(getDropdownDivHidden()).toBeDefined();
+    //     }));
 
-        it('onOpened and onOpening events are fired.', fakeAsync(() => {
-            fix.whenStable().then(() => {
-                let opening = 0;
-                let opened = 0;
-                dropDown.onOpening.subscribe(() => {
-                    opening++;
-                });
-                dropDown.onOpened.subscribe(() => {
-                    opened++;
-                });
+    //     it('onOpened and onOpening events are fired.', fakeAsync(() => {
+    //         let opening = 0;
+    //         let opened = 0;
+    //         dropDown.onOpening.subscribe(() => {
+    //             opening++;
+    //         });
+    //         dropDown.onOpened.subscribe(() => {
+    //             opened++;
+    //         });
 
-                dropDown.toggle();
-                tick(100);
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    expect(opening).toBe(1);
-                    expect(opened).toBe(1);
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(opening).toBe(1);
+    //         expect(opened).toBe(1);
 
-                    dropDown.toggle();
-                    tick(100);
-                    fix.whenStable().then(() => {
-                        fix.detectChanges();
-                        expect(opening).toBe(1);
-                        expect(opened).toBe(1);
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(opening).toBe(1);
+    //         expect(opened).toBe(1);
 
-                        dropDown.toggle();
-                        tick(100);
-                        fix.whenStable().then(() => {
-                            fix.detectChanges();
-                            expect(opening).toBe(2);
-                            expect(opened).toBe(2);
-                        });
-                    });
-                });
-            });
-        }));
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(opening).toBe(2);
+    //         expect(opened).toBe(2);
+    //     }));
 
-        it('onClosing and onClosed events are fired.', fakeAsync(() => {
-            fix.whenStable().then(() => {
-                let closing = 0;
-                let closed = 0;
-                dropDown.onClosing.subscribe(() => {
-                    closing++;
-                });
-                dropDown.onClosed.subscribe(() => {
-                    closed++;
-                });
-                dropDown.toggle();
-                tick(100);
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    expect(closing).toBe(0);
-                    expect(closed).toBe(0);
+    //     it('onClosing and onClosed events are fired.', fakeAsync(() => {
+    //         let closing = 0;
+    //         let closed = 0;
+    //         dropDown.onClosing.subscribe(() => {
+    //             closing++;
+    //         });
+    //         dropDown.onClosed.subscribe(() => {
+    //             closed++;
+    //         });
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(closing).toBe(0);
+    //         expect(closed).toBe(0);
 
-                    dropDown.toggle();
-                    tick(100);
-                    fix.whenStable().then(() => {
-                        fix.detectChanges();
-                        expect(closing).toBe(1);
-                        expect(closed).toBe(1);
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(closing).toBe(1);
+    //         expect(closed).toBe(1);
 
-                        dropDown.toggle();
-                        tick(100);
-                        fix.whenStable().then(() => {
-                            fix.detectChanges();
-                            expect(closing).toBe(1);
-                            expect(closed).toBe(1);
+    //         dropDown.toggle();
+    //         tick(100);
+    //         fix.detectChanges();
+    //         expect(closing).toBe(1);
+    //         expect(closed).toBe(1);
 
-                            dropDown.toggle();
-                            tick(100);
-                            fix.whenStable().then(() => {
-                            // TODO: Click outside and verify the drop down is closed (after Overlay)
-                            // grid.nativeElement.click();
-                            // expect(closing).toBe(2);
-                            // expect(closed).toBe(2);
-                            });
-                        });
-                    });
-                });
-            });
-        }));
+    //         dropDown.toggle();
+    //         tick(100);
+    //         // TODO: Click outside and verify the drop down is closed (after Overlay)
+    //         // grid.nativeElement.click();
+    //         // expect(closing).toBe(2);
+    //         // expect(closed).toBe(2);
+    //     }));
 
-        function getDropdownDiv() {
-            const dropdown = fix.debugElement.query(By.css('igx-drop-down'));
-            const dropdownList = dropdown.queryAll(By.css('div.igx-drop-down__list.igx-toggle'))[0];
-            return dropdownList;
-        }
+    //     function getDropdownDiv() {
+    //         const dropdown = fix.debugElement.query(By.css('igx-drop-down'));
+    //         const dropdownList = dropdown.queryAll(By.css('div.igx-drop-down__list.igx-toggle'))[0];
+    //         return dropdownList;
+    //     }
 
-        function getDropdownDivHidden() {
-            const dropdown = fix.debugElement.query(By.css('igx-drop-down'));
-            const dropdownListHidden = dropdown.queryAll(By.css('div.igx-drop-down__list.igx-toggle--hidden'))[0];
-            return dropdownListHidden;
-        }
-    });
+    //     function getDropdownDivHidden() {
+    //         const dropdown = fix.debugElement.query(By.css('igx-drop-down'));
+    //         const dropdownListHidden = dropdown.queryAll(By.css('div.igx-drop-down__list.igx-toggle--hidden'))[0];
+    //         return dropdownListHidden;
+    //     }
+    // });
 
     describe('toolbar button', () => {
-        beforeEach(async(() => {
-            fix = TestBed.createComponent(GridWithColumnChooserComponent);
+        beforeEach(() => {
+            fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            grid.showToolbar = true;
+            grid.toolbarTitle = 'Grid Toolbar Title';
+            grid.hiddenColumnsText = 'Hidden';
+            grid.columnHiding = true;
+            grid.columns[2].hidden = true;
+            fix.componentInstance.showInline = false;
             fix.detectChanges();
 
-            grid.cdr.detectChanges();
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
-        }));
-
+        });
 
         it('is shown when columnHiding is true and hidden - when false.', () => {
             expect(grid.toolbar.columnHidingUI).toBeDefined();
             expect(columnChooserElement).toBeDefined();
-            expect(getColumnChooserButton()).not.toBe(null);
+            expect(getColumnHidingButton(fix)).not.toBe(null);
 
             grid.columnHiding = false;
             fix.detectChanges();
 
             expect(grid.toolbar.columnHidingUI).toBeUndefined();
             expect(columnChooserElement).toBe(null);
-            expect(getColumnChooserButton()).toBeUndefined();
+            expect(getColumnHidingButton(fix)).toBeUndefined();
 
             grid.columnHiding = undefined;
             fix.detectChanges();
@@ -1036,8 +1010,8 @@ describe('Column Hiding UI', () => {
         });
 
         it('shows the number of hidden columns.', () => {
-            const btnText = getColumnChooserButton().innerText;
-            expect(btnText.includes('1') && btnText.includes('HIDDEN')).toBe(true);
+            const btnText = getColumnHidingButton(fix).innerText.toLowerCase();
+            expect(btnText.includes('1') && btnText.includes('hidden')).toBe(true);
             expect(getColumnChooserButtonIcon().innerText.toLowerCase()).toBe('visibility_off');
         });
 
@@ -1045,16 +1019,11 @@ describe('Column Hiding UI', () => {
             grid.columns[2].hidden = false;
             fix.detectChanges();
 
-            const btnText = getColumnChooserButton().innerText;
-            expect(btnText.includes('0') && btnText.includes('HIDDEN')).toBe(true);
+            const btnText = getColumnHidingButton(fix).innerText.toLowerCase();
+            expect(btnText.includes('0') && btnText.includes('hidden')).toBe(true);
             expect(getColumnChooserButtonIcon().innerText.toLowerCase()).toBe('visibility');
         });
     });
-
-    function getColumnChooserButton() {
-        const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
-        return button ? button.nativeElement : undefined;
-    }
 
     function getColumnChooserButtonIcon() {
         const button = fix.debugElement.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
@@ -1097,119 +1066,8 @@ describe('Column Hiding UI', () => {
 
     function getFilterInput() {
         const inputElement = columnChooserElement.queryAll(By.css('input'))
-                        .find((el) => (el.nativeElement as HTMLInputElement).type === 'text');
+            .find((el) => (el.nativeElement as HTMLInputElement).type === 'text');
 
         return inputElement;
     }
-
-    function verifyColumnIsHidden(column: IgxColumnComponent, isHidden: boolean, visibleColumnsCount: number) {
-        expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
-
-        const visibleColumns = column.grid.visibleColumns;
-        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
-        expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
-    }
 });
-
-export class GridData {
-
-    public timeGenerator: Calendar = new Calendar();
-    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-}
-@Component({
-    template: `
-    <div>
-        <igx-column-hiding [columns]="grid1.columns"></igx-column-hiding>
-        ${GridTemplateStrings.declareGrid(`#grid1 [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
-    </div>`
-})
-export class ColumnHidingInlineComponent extends GridData implements AfterViewInit {
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-    @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
-
-    public data = SampleTestData.productInfoData;
-    public height = '500px';
-    public width = '500px';
-
-    constructor(private cdr: ChangeDetectorRef) {
-        super();
-    }
-
-    ngAfterViewInit() {
-        const downloadsColumn = this.grid.getColumnByName('Downloads');
-        const productNameCol = this.grid.getColumnByName('ProductName');
-        downloadsColumn.hidden = true;
-        productNameCol.disableHiding = true;
-        this.cdr.detectChanges();
-    }
-}
-
-@Component({
-    template: `<div>
-    ${GridTemplateStrings.declareGrid(`#grid1 [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
-    <button igxButton (click)="hidingUI.toggle()">Show Column Hiding UI</button>
-    <igx-drop-down #hidingUI>
-        <igx-column-hiding [columns]="grid1.columns"></igx-column-hiding>
-    </igx-drop-down>
-    </div>`
-})
-export class ColumnHidingToggleComponent extends ColumnHidingInlineComponent {
-    @ViewChild(IgxDropDownComponent) public dropDown: IgxColumnHidingComponent;
-}
-
-@Component({
-    template: GridTemplateStrings.declareGrid(
-        `[showToolbar]="true" toolbarTitle="Grid Toolbar Title"
-        [columnHiding]="true" hiddenColumnsText="Hidden"
-        [height]="height" [width]="width"`,
-        ``,
-        ColumnDefinitions.productFilterable)
-})
-export class GridWithColumnChooserComponent extends GridData implements AfterViewInit {
-
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-    @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
-    @ViewChild(IgxDropDownComponent) public dropDown: IgxColumnHidingComponent;
-
-    public data = SampleTestData.productInfoData;
-    public height = '500px';
-    public width = '500px';
-
-    ngAfterViewInit() {
-        const downloadsColumn = this.grid.getColumnByName('Downloads');
-        const productNameCol = this.grid.getColumnByName('ProductName');
-        downloadsColumn.hidden = true;
-        productNameCol.disableHiding = true;
-    }
-}
-
-@Component({
-    template: `<igx-column-hiding [columns]="grid.columns"></igx-column-hiding>
-    <igx-grid [rowSelectable]="false" #grid [data]="data" width="500px" height="500px" displayDensity="compact">
-    <igx-column [movable]="true" [hasSummary]="true" [resizable]="true" [pinned]="true" field="Missing"></igx-column>
-    <igx-column-group [movable]="true" [pinned]="false" header="General Information">
-        <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="CompanyName"></igx-column>
-        <igx-column-group [movable]="true" header="Person Details">
-            <igx-column [movable]="true" [pinned]="false" filterable="true"
-            sortable="true" resizable="true" field="ContactName"></igx-column>
-            <igx-column [movable]="true" [hasSummary]="true" filterable="true" sortable="true"
-            resizable="true" field="ContactTitle"></igx-column>
-        </igx-column-group>
-    </igx-column-group>
-    <igx-column [movable]="true" [hasSummary]="true" [resizable]="true" field="ID" editable="true"></igx-column>
-    </igx-grid>`
-})
-export class GridWithGroupColumnsComponent implements AfterViewInit {
-
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-    @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
-
-    data = SampleTestData.contactInfoData;
-
-    constructor(private cdr: ChangeDetectorRef) {}
-
-    ngAfterViewInit(): void {
-        this.cdr.detectChanges();
-    }
-
-}

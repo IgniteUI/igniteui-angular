@@ -53,8 +53,6 @@
     $toast-padding: rem(16px) rem(24px);
     $toast-margin: rem(42px) auto;
     $toast-border-radius: ($toast-width / 2);
-    $toast-font-size: rem(14px);
-    $toast-line-height: rem(24px);
 
     // @debug $theme;
 
@@ -68,8 +66,6 @@
         margin: $toast-margin;
         padding: $toast-padding;
         min-width: $toast-width;
-        font-size: $toast-font-size;
-        line-height: $toast-line-height;
         color: --var($theme, 'text-color');
         background-color: --var($theme, 'background');
         border-radius: $toast-border-radius;
@@ -88,5 +84,22 @@
 
     %igx-toast--bottom {
         bottom: 0;
+    }
+}
+
+/// Adds typography styles for the igx-toast component.
+/// Uses the 'body-2'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-toast-typography($type-scale, $categories: (text: 'body-2')) {
+    $text: map-get($categories, 'text');
+
+    @include igx-scope('.igx-typography') {
+        %igx-toast-display {
+            @include igx-type-style($type-scale, $text);
+        }
     }
 }

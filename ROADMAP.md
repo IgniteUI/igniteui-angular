@@ -1,28 +1,20 @@
 # Roadmap - Ignite UI for Angular
 
-## Next Milestone
+# Current Milestone
 
 ## Milestone 5 (by November 30th, 2018)
 
-1. Hierarchical Grid  
+1. Hierarchical Grid POC (Proof of concept)  
 2. Tree Grid
 3. Advanced Filtering Dialog
-
-## Current Milestone
-
-## Milestone 3 (by July 6th, 2018)
-
-1. **[DONE]**Grouping
-2. **[DONE]**Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
-3. **[DONE]**Combo
-4. **[DONE]**Column Hiding UI
-5. **[DONE]**Operations UI - column chooser
-6. **[DONE]**Advanced Filtering
-7. **[DONE]**Column Moving
-8. **[DONE]** Update to Angular 6
-9. Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
-10. Design: Data dense theme for data grid 
-
+4. Quick Per-column Search in the igxGrid
+5. Collapsable Item 
+6. Conditional Cell Styling capability 
+7. Typography Updates 
+8. Tooltip
+9. Vertical Tabs
+10. Row Editing with transactions   
+11. Adding Disabled Dates and Special Dates options in igxCalander
 
 # Previous Milestones
 
@@ -57,6 +49,21 @@
 12. **[DONE]** Virtualization
 13. **[DONE]** Charting: Category Chart types Line (Area, Column, Point, StepLine, StepArea, Spline, SplineArea, Waterfall
 14. **[DONE]** Charting: Financial Chart types
+
+
+## Milestone 3 (by July 6th, 2018)
+
+1. **[DONE]**Grouping
+2. **[DONE]**Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
+3. **[DONE]**Combo
+4. **[DONE]**Column Hiding UI
+5. **[DONE]**Operations UI - column chooser
+6. **[DONE]**Advanced Filtering
+7. **[DONE]**Column Moving
+8. **[DONE]** Update to Angular 6
+9. **[DONE]** Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
+10.**[DONE]**Design: Data dense theme for data grid 
+
 
 # Postponed
 1. Collapsible Column Groups with state templating (collapsed state column can be templated)

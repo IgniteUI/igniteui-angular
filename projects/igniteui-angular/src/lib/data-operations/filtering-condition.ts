@@ -114,7 +114,17 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
             name: 'doesNotEqual',
             isUnary: false,
             logic: (target: Date, searchVal: Date) => {
-                return !this.operations.find((element) => element.name === 'equals').logic(target, searchVal);
+                if (!target) {
+                    return true;
+                }
+
+                this.validateInputData(target);
+
+                const targetp = IgxDateFilteringOperand.getDateParts(target, 'yMd');
+                const searchp = IgxDateFilteringOperand.getDateParts(searchVal, 'yMd');
+                return targetp.year !== searchp.year ||
+                    targetp.month !== searchp.month ||
+                    targetp.day !== searchp.day;
             }
         }, {
             name: 'before',

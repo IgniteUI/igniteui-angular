@@ -231,6 +231,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
+
+        if (typeof MSGesture === 'function') {
+            // On Edge and IE when scrolling on touch the page scroll instead of the grid.
+            this.dc.instance._viewContainer.element.nativeElement.style.touchAction = 'none';
+        }
         if (this.igxForOf && this.igxForOf.length) {
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
             if (this.igxForScrollOrientation === 'horizontal') {
@@ -595,7 +600,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const currIndex = Math.round(ratio * count);
+        const ind = ratio * count;
+        // floating point number calculations are flawed so we need to handle rounding errors.
+        const currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
         let endingIndex = this.state.chunkSize + currIndex;
 
         // We update the startIndex before recalculating the chunkSize.
