@@ -245,3 +245,40 @@
 @mixin igx-css-vars($theme) {
     @include css-vars-from-theme($theme);
 }
+
+/// Scopes CSS rules to a predefined top-level parent selector.
+/// Respects specificity and selector scopes.
+/// @access private
+/// @param {String} $parent - The selector to be used as top level scope.
+/// @example scss Apply mixin style rules only when '.igx-typography' selector is present.
+///    @mixin igx-card-typography {
+///       @include igx-scope('.igx-typography') {
+///         // style rules...
+///       }
+///    }
+///
+///    // Later
+///    .my-selector {
+///      @include igx-card-typography();
+///    }
+///
+///    // Generated CSS
+///    // .igx-typography .my-selector {
+///    //    ...styles rules as output by igx-card-typography mixin
+///    // }
+@mixin igx-scope($parent) {
+    @each $selector in & {
+        $len: length($selector);
+        @if $len == null {
+            $parent: $parent;
+        } @else {
+            @for $i from 1 through $len {
+                $parent: append($parent, nth($selector, $i));
+            }
+        }
+
+        @at-root #{$parent} {
+            @content;
+        }
+    }
+}
