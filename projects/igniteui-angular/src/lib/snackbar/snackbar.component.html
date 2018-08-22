@@ -2,6 +2,6 @@
     [@slideInOut]="isVisible">
     <span class="igx-snackbar__message" [@fadeInOut]="isVisible">{{ message }}</span>
     <button class="igx-snackbar__button" igxRipple="white" *ngIf="actionText" [@fadeInOut] (click)="triggerAction()">
-            {{ actionText }}
+        {{ actionText }}
     </button>
 </div>
