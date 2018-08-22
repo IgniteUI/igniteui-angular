@@ -23,7 +23,6 @@ let data = [
     { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
 ];
 
-
 describe('IgxGrid - Row Selection', () => {
 
     beforeEach(async(() => {
