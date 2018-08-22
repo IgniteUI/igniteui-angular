@@ -63,7 +63,6 @@
     $snackbar-min-height: rem(48px);
     $snackbar-padding: rem(7px) rem(24px);
     $snackbar-button-left-margin: rem(24px);
-    $snackbar-font-size: rem(14px);
     $snackbar-button-line-height: rem(16px);
     $snackbar-button-font-weight: 600;
 
@@ -78,10 +77,6 @@
         color: --var($theme, 'text-color');
         background: --var($theme, 'background');
         backface-visibility: hidden;
-    }
-
-    %igx-snackbar-message {
-        font-size: $snackbar-font-size;
     }
 
     %igx-snackbar-button {
@@ -99,6 +94,23 @@
 
         &:hover {
             color: --var($theme, 'button-color');
+        }
+    }
+}
+
+/// Adds typography styles for the igx-snackbar component.
+/// Uses the 'body-2'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-snackbar-typography($type-scale, $categories: (text: 'body-2')) {
+    $text: map-get($categories, 'text');
+
+    @include igx-scope('.igx-typography') {
+        %igx-snackbar-message {
+            @include igx-type-style($type-scale, $text);
         }
     }
 }

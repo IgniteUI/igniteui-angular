@@ -56,7 +56,6 @@
     }
 
     %column-hiding-title {
-        font-size: rem(14px);
         color: --var($theme, 'title-color');
         margin: 0;
         padding: rem(16px) rem(16px) rem(8px);
@@ -76,7 +75,6 @@
 
     %column-hiding-item {
         padding: rem(16px);
-        font-weight: 600;
         min-height: rem(52px);
     }
 
@@ -84,5 +82,22 @@
         display: flex;
         justify-content: flex-end;
         padding: rem(8px) rem(16px);
+    }
+}
+
+/// Adds typography styles for the igx-column-hiding component.
+/// Uses the 'subtitle-1'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(title: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-column-hiding-typography($type-scale, $categories: (title: 'subtitle-1')) {
+    $title: map-get($categories, 'title');
+
+    @include igx-scope('.igx-typography') {
+        %column-hiding-title {
+            @include igx-type-style($type-scale, $title);
+        }
     }
 }
