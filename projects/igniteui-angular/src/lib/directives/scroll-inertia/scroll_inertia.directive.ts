@@ -15,16 +15,16 @@ export class IgxScrollInertiaDirective implements OnInit {
     public wheelStep = 50;
 
     @Input()
-    public inertiaStep = 1;
+    public inertiaStep = 1.5;
 
     @Input()
     public swipeToleranceX = 20;
 
     @Input()
-    public inertiaDeltaY = 2;
+    public inertiaDeltaY = 3;
 
     @Input()
-    public inertiaDeltaX = 1.25;
+    public inertiaDeltaX = 2;
 
     @Input()
     public inertiaDuration = 0.5;
@@ -53,7 +53,6 @@ export class IgxScrollInertiaDirective implements OnInit {
     'msReleasePointerCapture' :
     'releasePointerCapture';
     private _pointer;
-    private _bMixedEnvironment;
     private _nextX;
     private _nextY;
 
@@ -187,8 +186,6 @@ export class IgxScrollInertiaDirective implements OnInit {
 
         /* Handle complex touchmoves when swipe stops but the toch doesn't end and then a swipe is initiated again */
         /* **********************************************************/
-        const speedSlopeX = this._getSpeedSlope(this._savedSpeedsX);
-        const speedSlopeY = this._getSpeedSlope(this._savedSpeedsY);
 
 
         const timeFromLastTouch = (new Date().getTime()) - this._lastTouchEnd;
@@ -265,7 +262,7 @@ export class IgxScrollInertiaDirective implements OnInit {
          // Use the lastMovedX and lastMovedY to determine if the swipe stops without lifting the finger so we don't start inertia
         if ((Math.abs(speedX) > 0.1 || Math.abs(speedY) > 0.1) &&
                         (Math.abs(this._lastMovedX) > 2 || Math.abs(this._lastMovedY) > 2)) {
-                    this._inertiaInit(speedX, speedY, this._bMixedEnvironment);
+                    this._inertiaInit(speedX, speedY);
         }
     }
 
@@ -339,7 +336,7 @@ export class IgxScrollInertiaDirective implements OnInit {
         if (!this.IgxScrollInertiaScrollContainer) {
             return;
         }
-        const touchPos = event.originalEvent,
+        const touchPos = event,
             destX = this._startX + this._touchStartX - touchPos.screenX,
             destY = this._startY + this._touchStartY - touchPos.screenY;
         /* Logic regarding x tolerance to prevent accidental horizontal scrolling when scrolling vertically */
@@ -368,46 +365,7 @@ export class IgxScrollInertiaDirective implements OnInit {
 
         return target;
     }
-    private _getSpeedSlope(inLastFiveSpeeds) {
-        /** slope < 0 means that there is increase in speed and can start inertia */
-        if (inLastFiveSpeeds.length === 0) {
-            /*no movement*/
-            return 1;
-        }
-        if (inLastFiveSpeeds.length < 5) {
-            /* too quick movement */
-            return -1;
-        }
 
-        /** We try to represent the 5 recorded speeds as points on a coordinate system and then calculate the slope similar to a trendline
-        *	Since we only have one value per record, we will represent the values for (x,y) like: (1, speed1),
-            (2, speed2) ,(3, speed3), (4, speed4), (5, speed5)
-        *
-        *	Vars:
-        *	sumXY - sum of the
-        *	sumX - sum of all X coordinates
-        *	sumY - sum of all Y coordinates
-        *	sumXX - numPoints * (pointX[0]^2 + pointX[1]^2 + pointX[2]^2 + pointX[3]^2 + pointX[4]^2 + pointX[5]^2)
-        */
-        const numPoints = inLastFiveSpeeds.length;
-        let sumXY = 0, sumX = 0, sumY = 0, sumXX = 0;
-
-        for (let pointIndex = 0; pointIndex < numPoints ; pointIndex++) {
-            /* pointX - The x coordinate for the [pointIndex] speed */
-            /* pointY - The y coordinate for the [pointIndex] speed */
-            const pointX = pointIndex,
-                pointY = Math.abs(inLastFiveSpeeds[ pointIndex ]);
-
-            sumXY += pointX * pointY;
-            sumX += pointX;
-            sumY += pointY;
-            sumXX += pointX * pointX;
-        }
-
-        const slopeAngle = (numPoints * sumXY - sumX * sumY) / (numPoints * sumXX - sumX * sumX);
-
-        return slopeAngle;
-    }
     private _scrollTo(destX, destY) {
         const curPosX = this.IgxScrollInertiaScrollContainer.scrollLeft;
         const curPosY = this.IgxScrollInertiaScrollContainer.scrollTop;
@@ -424,15 +382,9 @@ export class IgxScrollInertiaDirective implements OnInit {
     private _scrollToY(dest) {
         this.IgxScrollInertiaScrollContainer.scrollTop = dest;
     }
-   private _getScrWidth() {
-       return parseInt( this.IgxScrollInertiaScrollContainer.children[0].style.width, 10);
-   }
 
-   private _getScrHeight() {
-    return parseInt( this.IgxScrollInertiaScrollContainer.children[0].style.height, 10);
-   }
-   private _inertiaInit(speedX, speedY, bDefaultScroll) {
-        const stepModifer = this.inertiaStep,
+   private _inertiaInit(speedX, speedY) {
+    const stepModifer = this.inertiaStep,
         inertiaDuration = this.inertiaDuration;
     let x = 0;
     this._nextX = this.IgxScrollInertiaScrollContainer.scrollLeft;
@@ -467,17 +419,16 @@ export class IgxScrollInertiaDirective implements OnInit {
             if (Math.abs(speedY) >= Math.abs(speedX) * this.inertiaDeltaX) {
                 this._nextY += Math.abs(2 / (x + 0.55) - 0.3) * speedY * 15 * stepModifer;
             }
-
         }
 
-    // If we have mixed environment we use the default behaviour. i.e. touchscreen + mouse
-    this._scrollTo(this._nextX, this._nextY);
+        // If we have mixed environment we use the default behaviour. i.e. touchscreen + mouse
+        this._scrollTo(this._nextX, this._nextY);
 
+        this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
+    };
+
+    // Start inertia and continue it recursively
     this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
-};
-
-// Start inertia and continue it recursively
-this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
    }
 
 }
