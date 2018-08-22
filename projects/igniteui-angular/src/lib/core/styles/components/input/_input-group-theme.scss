@@ -223,26 +223,20 @@
     $group-bundle--box-padding: 0 em(16px);
     $group-bundle-main--box-padding: em(18px);
 
-    $label-font-size: em(16px);
     $label-height: em(18px);
     $required-symbol: '*';
     $required-symbol-margin: 2px;
 
-    $input-font-size: em(16px);
-    $input-line-height: em(16px);
     $input-height: em(32px);
     $input-padding: 0 0 em(8px);
     $input-border-top: em(8px) solid rgba(0, 0, 0, 0);
 
     $textarea-min-height: em(82px);
-    $textarea-line-height: em(22px);
     $textarea-padding: em(16px);
 
     $prefix-height: em(32px);
 
     $_hint-base-font-size: 12px;
-    $hint-font-size: em($_hint-base-font-size);
-    $hint-line-height: em(14px, $_hint-base-font-size);
     $hint-padding-top: em(8px, $_hint-base-font-size);
     $hint--box-margin: em(16px, $_hint-base-font-size);
 
@@ -403,8 +397,6 @@
         position: absolute;
         width: 100%;
         transform: translateY(50%); /* 8px, base is 16px */
-        font-size: $label-font-size; /* 16px, base is 16px */
-        line-height: 1;
         height: $label-height; /* 18px, base is 16px(self) */
         backface-visibility: hidden;
         will-change: transform;
@@ -446,7 +438,6 @@
             font-size: inherit;
             vertical-align: top;
             margin-left: $required-symbol-margin; /* 2px base is 16px */
-            line-height: 1;
         }
     }
 
@@ -454,15 +445,12 @@
         position: relative;
         display: block;
         border: none;
-        font-size: $input-font-size;
-        line-height: $input-line-height;
         height: $input-height; /* 32px, base is 16px */
         padding: $input-padding; /* 8px, base is 16px */
         border-top: $input-border-top;
         width: 100%;
         min-width: 0;
         overflow: visible;
-        font-family: inherit;
         background: transparent;
         color: --var($theme, 'filled-text-color');
         outline-style: none;
@@ -516,7 +504,6 @@
         min-height: $textarea-min-height; /* 3 lines * 22px + 8px bottom padding + 8px top padding */
         margin-right: -#{$textarea-padding}; /* this fixes resizing in chrome !?!? */
         height: auto;
-        line-height: $textarea-line-height; /* 22px, base is 16px */
         resize: vertical;
         overflow: hidden;
 
@@ -538,7 +525,6 @@
         position: relative;
         display: inline-flex;
         align-items: center;
-        line-height: 1;
         height: $prefix-height; /* 32px, base is 16px */
         transition: all $transition-timing;
     }
@@ -610,8 +596,6 @@
         position: relative;
         display: flex;
         justify-content: space-between;
-        font-size: $hint-font-size; /* 12px */
-        line-height: $hint-line-height; /* 13.5px, base is 12px */
         padding-top: $hint-padding-top; /* 8px, base is 12px */
     }
 
@@ -641,5 +625,37 @@
 
     %form-group-helper-item--end {
         order: 1;
+    }
+}
+
+
+/// Adds typography styles for the igx-input-group component.
+/// Uses the 'body-1', 'caption'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-input-group-typography($type-scale, $categories: (
+    helper-text: 'caption',
+    input-text: 'subtitle-1')
+) {
+    $helper-text: map-get($categories, 'helper-text');
+    $input-text: map-get($categories, 'input-text');
+
+    @include igx-scope('.igx-typography') {
+        %form-group-label {
+            @include igx-type-style($type-scale, $input-text) {
+                line-height: 1;
+            }
+        }
+
+        %form-group-input {
+            @include igx-type-style($type-scale, $input-text);
+        }
+
+        %form-group-helper {
+            @include igx-type-style($type-scale, $helper-text);
+        }
     }
 }

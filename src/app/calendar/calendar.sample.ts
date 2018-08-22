@@ -3,7 +3,8 @@ import { IgxCalendarComponent, DateRangeDescriptor, DateRangeType } from 'ignite
 
 @Component({
     selector: 'app-calendar-sample',
-    templateUrl: 'calendar.sample.html'
+    templateUrl: 'calendar.sample.html',
+    styleUrls: ['calendar.sample.scss']
 })
 export class CalendarSampleComponent implements OnInit {
     @ViewChild('calendar') calendar: IgxCalendarComponent;
