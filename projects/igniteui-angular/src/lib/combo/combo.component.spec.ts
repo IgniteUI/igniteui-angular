@@ -45,6 +45,10 @@ const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
 describe('igxCombo', () => {
+    beforeAll(async(() => {
+        // Mock console warn to not show deprecation warnings in log;
+        spyOn(console, 'warn');
+    }));
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
