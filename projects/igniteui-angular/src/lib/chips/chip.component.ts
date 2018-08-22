@@ -532,7 +532,7 @@ export class IgxChipComponent implements AfterViewInit {
 }
 
 export interface ChipSelectEventArgs {
-    owner: IgxChipComponent,
-    cancel: boolean,
-    nextStatus: boolean
+    owner: IgxChipComponent;
+    cancel: boolean;
+    nextStatus: boolean;
 }
