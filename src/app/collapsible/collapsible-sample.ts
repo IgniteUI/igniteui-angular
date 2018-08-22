@@ -14,8 +14,43 @@ export class CollapsibleSampleComponent implements OnInit {
     @ViewChild(IgxCollapsibleComponent) public igxCollapsible: IgxCollapsibleComponent;
     @ViewChild('button') public button: ElementRef;
 
+    public score: number;
+    public data = [];
+    public winningPlayer;
+    private rounds = 5;
+    public get currentScore(): { 'Player 1': number,
+    'Player 2': number} {
+        return this.data.reduce((a, b) => {
+            return {
+                'Player 1': a['Player 1'] + b['Player 1'],
+                'Player 2': a['Player 2'] + b['Player 2'],
+            };
+        });
+    }
+
+    public get getWinningScore(): number {
+        return Math.max(...Object.values(this.currentScore));
+    }
+    public get getWinningPlayer(): string {
+        const currentScore = this.currentScore;
+        return Object.keys(currentScore).sort((a, b) => currentScore[b] - currentScore[a])[0];
+    }
+    private generateScore(): void {
+        for (let i = 0; i < this.rounds; i++) {
+            this.data.push({
+                'Player 1': Math.floor(Math.random() * 10) + 1,
+                'Player 2': Math.floor(Math.random() * 10) + 1
+            });
+        }
+    }
 
     ngOnInit() {
+        this.generateScore();
+    }
+
+    resetScore() {
+        this.data = [];
+        this.generateScore();
     }
 
     constructor() {

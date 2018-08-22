@@ -1,12 +1,17 @@
 <div class="sample-wrapper">
     <h2>WIP</h2>
-    <igx-collapsible>
-        <igx-collapsible-header headerHeight="50px">
-        <igx-collapsible-title>collapsible-title </igx-collapsible-title>
-            <igx-collapsible-description>collapsible-description</igx-collapsible-description>
-        </igx-collapsible-header>
-        <igx-collapsible-body>
-            Body text
-        </igx-collapsible-body>
-    </igx-collapsible>
+    <button igxButton class='igx-button--flat' (click)="resetScore()">Reset score</button>
+    <div style="width: 400px;">
+
+        <igx-collapsible>
+            <igx-collapsible-header headerHeight="50px">
+                <igx-collapsible-title>Current Winning Player:</igx-collapsible-title>
+                <igx-collapsible-description>{{ getWinningPlayer }}</igx-collapsible-description>
+            </igx-collapsible-header>
+            <igx-collapsible-body>
+                <igx-grid [data]="data" [autoGenerate]="true"></igx-grid>
+            </igx-collapsible-body>
+        </igx-collapsible>
+    </div>
+    
 </div>
