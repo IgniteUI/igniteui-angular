@@ -32,7 +32,6 @@ export class IgxCollapsibleHeaderComponent {
             return !this.collapsible.collapsed;
          }
 
-
     constructor(@Host() public collapsible: IgxCollapsibleComponent, public cdr: ChangeDetectorRef,
      public elementRef: ElementRef, private renderer: Renderer2) { }
 

@@ -17,7 +17,7 @@ import {
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { IAnimationParams } from '../animations/main';
-import { slideOutBottom, slideOutTop} from '../animations/main';
+import { slideOutTop, slideInTop } from '../animations/main';
 
 let NEXT_ID = 0;
 
@@ -55,7 +55,7 @@ export class IgxCollapsibleBodyDirective {
 export class IgxCollapsibleComponent {
 
     animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
-        openAnimation: slideOutBottom,
+        openAnimation:  slideInTop,
         closeAnimation: slideOutTop
     };
 
@@ -130,7 +130,7 @@ export class IgxCollapsibleComponent {
     private body: QueryList<ElementRef>;
 
     private playOpenAnimation(cb: () => void) {
-
+        this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(-50px)';
         const animationBuilder = this.builder.build(this.animationSettings.openAnimation);
         const openAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
 
@@ -143,6 +143,7 @@ export class IgxCollapsibleComponent {
     }
 
     private playCloseAnimation(cb: () => void) {
+        this.animationSettings.closeAnimation.options.params.toPosition = 'translateY(-50px)';
         const animationBuilder = this.builder.build(this.animationSettings.closeAnimation);
         const closeAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
 
