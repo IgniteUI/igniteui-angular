@@ -790,6 +790,50 @@ describe('IgxTimePicker', () => {
 
         expect(dialog.offsetWidth).toBeGreaterThan(dialog.offsetHeight);
     }));
+
+    // https://github.com/IgniteUI/igniteui-angular/issues/2470
+    it('TimePicker always use date from value', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxTimePickerWithPassedTimeComponent);
+        tick();
+        fixture.detectChanges();
+        const dom = fixture.debugElement;
+
+        const initialValue = (fixture.componentInstance.timePicker.value);
+        const initialDate = getDateStringFromDateObject(initialValue);
+        const initialTime = initialValue.getHours() + ':' + initialValue.getMinutes();
+
+        const timePickerTarget = dom.query(By.directive(IgxInputDirective));
+        UIInteractions.clickElement(timePickerTarget);
+        tick(100);
+        fixture.detectChanges();
+
+        const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+        const selectHour = hourColumn.children[5];
+
+        const minutesColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+        const selectMinutes = minutesColumn.children[2];
+
+        UIInteractions.clickElement(selectHour);
+        fixture.detectChanges();
+        tick(100);
+        UIInteractions.clickElement(selectMinutes);
+        fixture.detectChanges();
+        tick(100);
+
+        const OkButton = dom.queryAll(By.css('.igx-button--flat'))[1];
+        UIInteractions.clickElement(OkButton);
+        fixture.detectChanges();
+        tick(100);
+
+        const changedValue = (fixture.componentInstance.timePicker.value);
+        const changedDate = getDateStringFromDateObject(changedValue);
+        const changedTime = changedValue.getHours() + ':' + changedValue.getMinutes();
+
+        expect(initialDate).toEqual(changedDate);
+        expect(initialTime).not.toEqual(changedTime);
+        expect(changedTime).toEqual('5:23');
+
+    }));
 });
 
 @Component({
@@ -928,4 +972,12 @@ function findByInnerText(collection, searchText) {
             return element;
         }
     }
+}
+
+function getDateStringFromDateObject(date: Date): string {
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return year + '/' + month + '/' + day;
 }
