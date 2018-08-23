@@ -1,0 +1,10 @@
+{
+    "$schema": "../../common/schema/selector.schema.json",
+    "changes": [
+        {
+            "type": "component",
+            "selector": "igx-datePicker",
+            "replaceWith": "igx-date-picker"
+        }
+    ]
+}
