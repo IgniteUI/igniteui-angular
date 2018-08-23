@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent } from '../grid-common/column.component';
 import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';

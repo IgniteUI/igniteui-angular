@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IgxGridAPIService } from './api.service';
+import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 
 @Component({

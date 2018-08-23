@@ -15,13 +15,13 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
-import { IgxGridAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxGridAPIService } from './grid-api.service';
+import { IgxGridCellComponent } from '../grid-common/cell.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid-common/column.component';
 import { IgxColumnHidingModule } from './column-hiding.component';
 import { IgxGridFilterComponent } from './grid-filtering.component';
-import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridSummaryComponent } from './grid-summary.component';
+import { IgxGridHeaderComponent } from '../grid-common/grid-header.component';
+import { IgxGridSummaryComponent } from '../grid-common/grid-summary.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import {
     IgxCellEditorTemplateDirective,
@@ -34,16 +34,18 @@ import {
     IgxGroupAreaDropDirective,
     IgxColumnMovingService,
     IgxGroupByRowTemplateDirective
-} from './grid.common';
+} from './grid.misc';
 import { IgxGridComponent } from './grid.component';
 import {
-    IgxGridFilterConditionPipe,
-    IgxGridFilteringPipe,
     IgxGridPagingPipe,
     IgxGridPostGroupingPipe,
-    IgxGridPreGroupingPipe,
-    IgxGridSortingPipe
+    IgxGridPreGroupingPipe
 } from './grid.pipes';
+import {
+    IgxGridFilteringPipe,
+    IgxGridFilterConditionPipe,
+    IgxGridSortingPipe
+} from '../grid-common/grid-common.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';

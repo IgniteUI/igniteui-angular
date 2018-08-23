@@ -13,14 +13,13 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { take } from 'rxjs/operators';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxGridAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
-import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
+import { IGridAPIService } from '../grid-common/api.service';
+import { IGridComponent } from '../grid-common/grid-interfaces';
+import { IgxGridCellComponent } from '../grid-common/cell.component';
+import { IgxColumnComponent } from '../grid-common/column.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -177,7 +176,7 @@ export class IgxGridRowComponent implements DoCheck {
      *  </igx-grid>
      * ```
      */
-    get grid(): IgxGridComponent {
+    get grid(): IGridComponent {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -219,7 +218,7 @@ export class IgxGridRowComponent implements DoCheck {
      */
     protected isFocused = false;
 
-    constructor(public gridAPI: IgxGridAPIService,
+    constructor(public gridAPI: IGridAPIService<IGridComponent>,
                 private selectionAPI: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
@@ -278,7 +277,7 @@ export class IgxGridRowComponent implements DoCheck {
                 this.gridAPI.update_row(value, this.gridID, row);
             }
             this.cdr.markForCheck();
-            this.gridAPI.get(this.gridID).refreshSearch();
+            this.gridAPI.refreshSearch(this.gridID);
         }
 
     }
@@ -310,7 +309,7 @@ export class IgxGridRowComponent implements DoCheck {
             this.gridAPI.get(this.gridID).onRowDeleted.emit({ data: row.rowData });
             (this.gridAPI.get(this.gridID) as any)._pipeTrigger++;
             this.cdr.markForCheck();
-            this.gridAPI.get(this.gridID).refreshSearch();
+            this.gridAPI.refreshSearch(this.gridID);
 
             const grid = this.gridAPI.get(this.gridID);
             if (grid.data.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0) {

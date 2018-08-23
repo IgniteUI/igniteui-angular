@@ -16,8 +16,8 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
-import { IgxGridAPIService } from './api.service';
-import { IgxColumnComponent } from './column.component';
+import { IgxGridAPIService } from '../grid-common/api.service';
+import { IgxColumnComponent } from '../grid-common/column.component';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';

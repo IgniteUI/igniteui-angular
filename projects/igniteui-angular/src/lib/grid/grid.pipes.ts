@@ -1,38 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByResult } from '../data-operations/sorting-strategy';
-import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IgxGridAPIService } from './api.service';
+import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
-
-/**
- *@hidden
- */
-@Pipe({
-    name: 'gridSort',
-    pure: true
-})
-export class IgxGridSortingPipe implements PipeTransform {
-
-    constructor(private gridAPI: IgxGridAPIService) { }
-
-    public transform(collection: any[], expressions: ISortingExpression | ISortingExpression[],
-        id: string, pipeTrigger: number): any[] {
-
-        const state = { expressions: [] };
-        state.expressions = this.gridAPI.get(id).sortingExpressions;
-
-        if (!state.expressions.length) {
-            return collection;
-        }
-
-        return DataUtil.sort(cloneArray(collection), state);
-    }
-}
 
 /**
  *@hidden
@@ -128,47 +101,5 @@ export class IgxGridPagingPipe implements PipeTransform {
         };
         this.gridAPI.get(id).pagingState = state;
         return result;
-    }
-}
-
-/**
- *@hidden
- */
-@Pipe({
-    name: 'gridFiltering',
-    pure: true
-})
-export class IgxGridFilteringPipe implements PipeTransform {
-
-    constructor(private gridAPI: IgxGridAPIService) { }
-
-    public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
-        id: string, pipeTrigger: number) {
-        const grid = this.gridAPI.get(id);
-        const state = { expressionsTree: expressionsTree };
-
-        if (!state.expressionsTree ||
-            !state.expressionsTree.filteringOperands ||
-            state.expressionsTree.filteringOperands.length === 0) {
-            return collection;
-        }
-
-        const result = DataUtil.filter(cloneArray(collection), state);
-        grid.filteredData = result;
-        return result;
-    }
-}
-
-/**
- *@hidden
- */
-@Pipe({
-    name: 'filterCondition',
-    pure: true
-})
-export class IgxGridFilterConditionPipe implements PipeTransform {
-
-    public transform(value: string): string {
-        return value.split(/(?=[A-Z])/).join(' ');
     }
 }

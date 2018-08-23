@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { DataType } from '../data-operations/data-util';
 import { IForOfState} from '../directives/for-of/for_of.directive';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent } from '../grid-common/column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 

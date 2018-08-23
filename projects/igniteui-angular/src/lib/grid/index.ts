@@ -1,10 +1,10 @@
-export * from './api.service';
-export * from './cell.component';
+export * from '../grid-common/api.service';
+export * from '../grid-common/cell.component';
 export * from './row.component';
 export * from './groupby-row.component';
-export * from './column.component';
+export * from '../grid-common/column.component';
 export * from './grid.component';
-export * from './grid.common';
+export * from './grid.misc';
 export * from './grid-summary';
 export * from './grid.module';
 export { ColumnDisplayOrder } from './column-chooser-base';

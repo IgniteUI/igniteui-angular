@@ -17,8 +17,8 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
 import { IgxToggleDirective, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { IgxGridAPIService } from './api.service';
-import { IgxColumnComponent } from './column.component';
+import { IgxGridAPIService } from '../grid-common/api.service';
+import { IgxColumnComponent } from '../grid-common/column.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';

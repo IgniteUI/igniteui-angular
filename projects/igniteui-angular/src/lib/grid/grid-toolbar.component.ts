@@ -17,7 +17,7 @@ import {
     IgxExcelExporterService,
     AbsoluteScrollStrategy
 } from '../services/index';
-import { IgxGridAPIService } from './api.service';
+import { IgxGridAPIService } from '../grid-common/api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';

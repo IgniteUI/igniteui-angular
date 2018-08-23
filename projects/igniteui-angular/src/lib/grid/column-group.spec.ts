@@ -3,7 +3,7 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid-common/column.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand} from '../../public_api';
 import { By } from '@angular/platform-browser';

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridAPIService } from './api.service';
+import { IgxGridAPIService } from '../grid-common/api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand } from '../../public_api';
