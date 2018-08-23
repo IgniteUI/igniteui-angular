@@ -889,7 +889,7 @@ describe('IgxGrid - Column Moving', () => {
         fixture.detectChanges();
 
         // step 2 - move a pinned column
-        let header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[0].nativeElement;
+        const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[0].nativeElement;
         simulatePointerEvent('pointerdown', header, 50, 25);
         simulatePointerEvent('pointermove', header, 50, 31);
         tick(20);

@@ -3621,7 +3621,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected reinitPinStates() {
-        // this._pinnedColumns = this.columnList.filter((c) => c.pinned);
+        if (this.columnList.some((col) => col.columnGroup)) {
+            this._pinnedColumns = this.columnList.filter((c) => c.pinned);
+        }
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
