@@ -1,0 +1,19 @@
+.game-board {
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+}
+
+.game-board__collapsible {
+    width: 100%;
+}
+
+.game-board__grid {
+    height: 100%;
+    width: 100%;
+}
+
+.game-board__grid__match {
+    font-weight: 600;
+    font-size: 12px; 
+}

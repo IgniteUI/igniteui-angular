@@ -38,6 +38,7 @@ export class CollapsibleSampleComponent implements OnInit {
     private generateScore(): void {
         for (let i = 0; i < this.rounds; i++) {
             this.data.push({
+                'Game': `Game ${i + 1}`,
                 'Player 1': Math.floor(Math.random() * 10) + 1,
                 'Player 2': Math.floor(Math.random() * 10) + 1
             });

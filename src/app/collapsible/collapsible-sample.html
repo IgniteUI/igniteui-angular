@@ -1,17 +1,25 @@
 <div class="sample-wrapper">
     <h2>WIP</h2>
     <button igxButton class='igx-button--flat' (click)="resetScore()">Reset score</button>
-    <div style="width: 400px;">
-
-        <igx-collapsible>
+    <div class="game-board">
+        <igx-collapsible class="game-board__collapsible">
             <igx-collapsible-header headerHeight="50px">
                 <igx-collapsible-title>Current Winning Player:</igx-collapsible-title>
                 <igx-collapsible-description>{{ getWinningPlayer }}</igx-collapsible-description>
             </igx-collapsible-header>
             <igx-collapsible-body>
-                <igx-grid [data]="data" [autoGenerate]="true"></igx-grid>
+                <igx-grid class="game-board__grid" [data]="data">
+                    <igx-column [sortable]="true" [field]="'Game'" [header]="'Game'" [width]="'30%'" [pinned]="true">
+                        <ng-template igxCell let-value>
+                            <span class="game-board__grid__match">{{value}}</span>
+                        </ng-template>
+                    </igx-column>
+                    <igx-column [sortable]="true" [field]="'Player 1'" [header]="'Score: Player 1'" [width]="'50%'">
+                    </igx-column>
+                    <igx-column [sortable]="true" [field]="'Player 2'" [header]="'Score: Player 2'" [width]="'50%'">
+                    </igx-column>
+                </igx-grid>
             </igx-collapsible-body>
         </igx-collapsible>
     </div>
-    
 </div>
