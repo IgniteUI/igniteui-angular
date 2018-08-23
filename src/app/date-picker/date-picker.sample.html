@@ -5,21 +5,36 @@
             <h4 class="sample-title">Default Date Picker.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
-                <igx-datePicker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
+                <igx-date-picker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
             </div>
         </article>
         <article class="datepicker-column">
             <h4 class="sample-title">Date Picker with passed date.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
-                <igx-datePicker [value]="date"></igx-datePicker>
+                <igx-date-picker [value]="date"></igx-date-picker>
             </div>
         </article>
         <article class="datepicker-column">
             <h4 class="sample-title">Date Picker with passed date and custom formatter.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
-                <igx-datePicker [value]="date" [vertical]="true" [formatter]="formatter"></igx-datePicker>
+                <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter"></igx-date-picker>
+            </div>
+        </article>
+        <article class="datepicker-column">
+            <h4 class="sample-title">Date Picker with retemplated input group.</h4>
+            <p class="sample-description">Detailed description to be added.</p>
+            <div class="preview">
+                <igx-datePicker [value]="date" [vertical]="true" [formatter]="formatter">
+                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
+                        <igx-input-group (click)="openDialog()">
+                            <label igxLabel>Date</label>
+                            <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
+                        </igx-input-group>
+                        <label>{{value}}</label>
+                    </ng-template>
+               </igx-datePicker>
             </div>
         </article>
     </section>

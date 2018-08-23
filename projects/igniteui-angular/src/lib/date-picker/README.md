@@ -1,11 +1,11 @@
-# igx-datePicker Component
+# igx-date-picker Component
 
-The **igx-datePicker** component allows you to choose date from calendar
+The **igx-date-picker** component allows you to choose date from calendar
 which is presented into input field.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)
 
 ## Dependencies
-In order to be able to use **igx-datePicker** you should keep in mind that it is dependent on **BrowserAnimationsModule**,
+In order to be able to use **igx-date-picker** you should keep in mind that it is dependent on **BrowserAnimationsModule**,
 which must be imported **only once** in your application's AppModule, for example:
 ```typescript
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -27,35 +27,47 @@ import { IgxDatePickerComponent } from "igniteui-angular";
 
 Basic initialization
 ```html
-<igx-datePicker></igx-datePicker>
+<igx-date-picker></igx-date-picker>
 ```
 Custom formatter function with passed initial date and locale.
 ```html
-<igx-datePicker [formatter]="customFormatter" [value]="dateValue" [locale]="'en-US'">
-</igx-datePicker>
+<igx-date-picker [formatter]="customFormatter" [value]="dateValue" [locale]="'en-US'">
+</igx-date-picker>
 ```
 
 DatePicker with cancel and today buttons
 ```html
-<igx-datePicker [cancelButtonLabel]="'Close'"[todayButtonLabel]="'Today'">
-</igx-datePicker>
+<igx-date-picker [cancelButtonLabel]="'Close'"[todayButtonLabel]="'Today'">
+</igx-date-picker>
 ```
 
 You have also ability to disable the datePicker
 ```html
-<igx-datePicker [disabled]="false">
-</igx-datePicker>
+<igx-date-picker [disabled]="false">
+</igx-date-picker>
 ```
 
 DatePicker with first day of week set to Monday and an event handler when selection is done.
 ```html
-<igx-datePicker [weekStart]="1" (onSelection)="eventHandler($event)">
-</igx-datePicker>
+<igx-date-picker [weekStart]="1" (onSelection)="eventHandler($event)">
+</igx-date-picker>
 ```
 
 The DatePicker also supports binding through `ngModel` if two-way date-bind is needed.
 ```html
-<igx-datePicker [(ngModel)]="myDateValue">
+<igx-date-picker [(ngModel)]="myDateValue">
+</igx-date-picker>
+```
+
+The DatePicker input group could be retemplated.
+```html
+<igx-datePicker>
+    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
+        <igx-input-group (click)="openDialog()">
+            <label igxLabel>Date</label>
+            <input igxInput [value]="displayData"/>
+        </igx-input-group>
+    </ng-template>
 </igx-datePicker>
 ```
 
