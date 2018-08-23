@@ -4,17 +4,11 @@ import {
     EventEmitter,
     ElementRef,
     HostBinding,
-    HostListener,
     Input,
-    Inject,
     Output,
     ViewChild,
-    OnInit,
-    AfterContentInit,
-    AfterViewInit,
     Renderer2,
     Directive,
-    TemplateRef,
     ContentChild
 } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -91,7 +85,7 @@ export class IgxCollapsibleComponent {
     public ariaLabelledBy: string;
 
     @Input()
-    public collapsed;
+    public collapsed = true;
 
     @HostBinding('attr.aria-expanded')
     private get HostState () {
