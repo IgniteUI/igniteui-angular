@@ -68,13 +68,13 @@
         focused-item-background: igx-color($palette, 'grays', 100),
         focused-item-text-color: igx-color($palette, 'grays', 800),
 
-        selected-item-background: igx-color($palette, 'secondary', 500),
+        selected-item-background: igx-color($palette, 'secondary', 200),
         selected-item-text-color: igx-contrast-color($palette, 'secondary', 500),
 
-        selected-hover-item-background: igx-color($palette, 'secondary', 600),
+        selected-hover-item-background: igx-color($palette, 'secondary', 300),
         selected-hover-item-text-color: igx-contrast-color($palette, 'secondary', 600),
 
-        selected-focus-item-background: igx-color($palette, 'secondary', 600),
+        selected-focus-item-background: igx-color($palette, 'secondary', 300),
         selected-focus-item-text-color: igx-contrast-color($palette, 'secondary', 600),
 
         disabled-item-background: transparent,
@@ -162,11 +162,11 @@
 @mixin igx-drop-down($theme) {
     @include igx-root-css-vars($theme);
 
-    $desktop-item-height: 32px;
-    $mobile-item-height: 48px;
+    $desktop-item-height: 48px;
+    $mobile-item-height: 32px;
 
-    $desktop-item-padding: 24px;
-    $mobile-item-padding: 16px;
+    $desktop-item-padding: 16px;
+    $mobile-item-padding: 8px;
 
     $desktop-header-padding: 16px;
     $mobile-header-padding: 8px;
@@ -185,6 +185,10 @@
         z-index: 1;
         box-shadow: $dd-shadow;
         background: --var($theme, 'background-color');
+
+        igx-input-group {
+            margin-top: -16px !important;
+        }
     }
 
     %igx-drop-down__header,
@@ -193,23 +197,19 @@
         justify-content: flex-start;
         align-items: center;
         width: 100%;
-        height: rem($desktop-item-height);
-        line-height: rem($desktop-item-height);
-        min-height: rem($desktop-item-height);
         white-space: nowrap;
-
-        @media only screen and (max-width: $mobile-break-point) {
-            height: rem($mobile-item-height);
-            line-height: rem($mobile-item-height);
-            min-height: rem($mobile-item-height);
-        }
     }
 
     %igx-drop-down__item {
         color: --var($theme, 'item-text-color');
         cursor: pointer;
+        height: rem($desktop-item-height);
+        min-height: rem($desktop-item-height);
         padding: 0 rem($desktop-item-padding);
+
         @media only screen and (max-width: $mobile-break-point) {
+            height: rem($mobile-item-height);
+            min-height: rem($mobile-item-height);
             padding: 0 rem($mobile-item-padding);
         }
 
@@ -234,12 +234,12 @@
     }
 
     %igx-drop-down__header {
-        font-size: rem(13px);
         color: --var($theme, 'header-text-color');
         pointer-events: none;
-        padding: 0 rem($desktop-header-padding);
+        padding: rem(8px) rem($desktop-header-padding);
+
         @media only screen and (max-width: $mobile-break-point) {
-            padding: 0 rem($mobile-header-padding);
+            padding: rem(8px) rem($mobile-header-padding);
         }
     }
 
@@ -275,6 +275,34 @@
 
         &:hover {
             background: --var($theme, 'disabled-item-background');
+        }
+    }
+}
+
+/// Adds typography styles for the igx-list component.
+/// Uses the 'caption' and 'subtitle-2'
+/// categories from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(header: 'overline', item: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-drop-down-typography(
+    $type-scale,
+    $categories: (
+        header: 'overline',
+        item: 'body-2'
+    )
+) {
+    $header: map-get($categories, 'header');
+    $item: map-get($categories, 'item');
+
+    @include igx-scope('.igx-typography') {
+        %igx-drop-down__header {
+            @include igx-type-style($type-scale, $header);
+        }
+
+        %igx-drop-down__item {
+            @include igx-type-style($type-scale, $item);
         }
     }
 }
