@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import {
     Component,
     ChangeDetectorRef,
@@ -9,11 +10,14 @@ import {
     ViewChild,
     Renderer2,
     Directive,
-    ContentChild
+    ContentChild,
+    QueryList,
+    ViewChildren
 } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
-import { IAnimationParams } from './../animations/main';
+import { IAnimationParams } from '../animations/main';
+import { slideOutBottom, slideOutTop} from '../animations/main';
 
 let NEXT_ID = 0;
 
@@ -49,6 +53,12 @@ export class IgxCollapsibleBodyDirective {
     templateUrl: 'collapsible.component.html'
 })
 export class IgxCollapsibleComponent {
+
+    animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
+        openAnimation: slideOutBottom,
+        closeAnimation: slideOutTop
+    };
+
     /**
      * Sets/gets the `id` of the collapsible component.
      * If not set, `id` will have value `"igx-collapsible-0"`;
@@ -110,16 +120,53 @@ export class IgxCollapsibleComponent {
     @Output()
     public onExpanded = new EventEmitter<any>();
 
-    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
+    constructor(
+        public cdr: ChangeDetectorRef,
+        public elementRef: ElementRef,
+        private renderer: Renderer2,
+        private builder: AnimationBuilder) { }
+
+    @ViewChildren('collapseBody', { read : ElementRef})
+    private body: QueryList<ElementRef>;
+
+    private playOpenAnimation(cb: () => void) {
+
+        const animationBuilder = this.builder.build(this.animationSettings.openAnimation);
+        const openAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
+
+        openAnimationPlayer.onDone(() => {
+            cb();
+            openAnimationPlayer.reset();
+        });
+
+        openAnimationPlayer.play();
+    }
+
+    private playCloseAnimation(cb: () => void) {
+        const animationBuilder = this.builder.build(this.animationSettings.closeAnimation);
+        const closeAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
+
+        closeAnimationPlayer.onDone(() => {
+            cb();
+            closeAnimationPlayer.reset();
+        });
+
+        closeAnimationPlayer.play();
+    }
 
     collapse () {
-        this.onCollapsed.emit();
-        this.collapsed = true;
+        this.playCloseAnimation(
+            () => {
+                this.onCollapsed.emit();
+                this.collapsed = true; }
+            );
     }
 
     expand () {
-        this.onExpanded.emit();
         this.collapsed = false;
+        this.playOpenAnimation(
+            () => { this.onExpanded.emit(); }
+        );
     }
 
     toggle () {

@@ -22,11 +22,16 @@ export class IgxCollapsibleHeaderComponent {
 
      @Input()
      @HostBinding('class.igx-collapsible__header--collapsed')
-     public collapsedHeight;
+     public get isCollapsed () {
+        return this.collapsible.collapsed;
+     }
 
      @Input()
      @HostBinding('class.igx-collapsible__header--expanded')
-     public expandedHeight;
+     public get isExpanded () {
+            return !this.collapsible.collapsed;
+         }
+
 
     constructor(@Host() public collapsible: IgxCollapsibleComponent, public cdr: ChangeDetectorRef,
      public elementRef: ElementRef, private renderer: Renderer2) { }
