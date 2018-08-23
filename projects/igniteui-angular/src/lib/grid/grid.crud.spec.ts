@@ -3,6 +3,7 @@ import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 describe('IgxGrid - CRUD operations', () => {
@@ -17,14 +18,15 @@ describe('IgxGrid - CRUD operations', () => {
                 DefaultCRUDGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
-        }).compileComponents()
-        .then(() => {
-            fix = TestBed.createComponent(DefaultCRUDGridComponent);
-            fix.detectChanges();
-            grid = fix.componentInstance.instance;
-            data = fix.componentInstance.data;
-        });
+        }).compileComponents();
     }));
+
+    beforeEach(() => {
+        fix = TestBed.createComponent(DefaultCRUDGridComponent);
+        fix.detectChanges();
+        grid = fix.componentInstance.instance;
+        data = fix.componentInstance.data;
+    });
 
     it('should support adding rows through the grid API', () => {
         expect(grid.data.length).toEqual(data.length);
@@ -282,6 +284,72 @@ describe('IgxGrid - CRUD operations', () => {
         expect(grid.rowList.length).toBe(0);
     });
 
+    it('should be able to updateRow when PK is defined outside displayContainer', async() => {
+        grid.height = '250px';
+        await wait(50);
+        fix.detectChanges();
+        const rowID = 9;
+        const sampleData = [{ index: 2, value: 2},
+        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
+        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
+        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        sampleData.forEach((record) => grid.addRow(record));
+        fix.detectChanges();
+        const row = grid.getRowByKey(rowID);
+        expect(grid.data.length).toBe(11);
+        expect(row).toBeUndefined();
+
+        grid.updateRow({ index: 97, value: 87}, rowID);
+        fix.detectChanges();
+        expect(grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID)).toBe(-1);
+        expect(grid.data[grid.data.map((record) => record[grid.primaryKey]).indexOf(97)]).toBeDefined();
+    });
+
+    it('should be able to deleteRow when PK is defined outside displayContainer', async() => {
+        grid.height = '250px';
+        await wait(50);
+        fix.detectChanges();
+        const rowID = 9;
+        const sampleData = [{ index: 2, value: 2},
+        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
+        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
+        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        sampleData.forEach((record) => grid.addRow(record));
+        fix.detectChanges();
+        const row = grid.getRowByKey(rowID);
+        expect(grid.data.length).toBe(11);
+        expect(row).toBeUndefined();
+
+        grid.deleteRow(rowID);
+        fix.detectChanges();
+        expect(grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID)).toBe(-1);
+        expect(grid.data.length).toBe(10);
+    });
+
+    it('should be able to updateCell when PK is defined outside displayContainer', async() => {
+        grid.height = '250px';
+        await wait(50);
+        fix.detectChanges();
+        const rowID = 9;
+        const columnName = 'value';
+        const sampleData = [{ index: 2, value: 2},
+        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
+        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
+        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        sampleData.forEach((record) => grid.addRow(record));
+        fix.detectChanges();
+
+        const cell = grid.getCellByKey(rowID, columnName);
+        expect(grid.data.length).toBe(11);
+        expect(cell).toBeUndefined();
+
+        grid.updateCell( 97, rowID, columnName);
+        fix.detectChanges();
+        const row = grid.data[grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID)];
+        expect(row).toBeDefined();
+        expect(row['index']).toBe(rowID);
+        expect(row['value']).toBe(97);
+    });
 });
 
 @Component({
