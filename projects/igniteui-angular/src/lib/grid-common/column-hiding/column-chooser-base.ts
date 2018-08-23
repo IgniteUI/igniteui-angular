@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, HostBinding, Input, OnDestroy } from '@angular/core';
-import { DataUtil } from '../data-operations/data-util';
-import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { FilteringStrategy } from '../data-operations/filtering-strategy';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
+import { FilteringStrategy } from '../../data-operations/filtering-strategy';
 import { ColumnChooserItemBase } from './column-chooser-item-base';
 
 export enum ColumnDisplayOrder {

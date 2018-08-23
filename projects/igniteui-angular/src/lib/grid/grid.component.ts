@@ -40,11 +40,11 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridCellComponent } from '../grid-common/cell.component';
-import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
+import { IColumnVisibilityChangedEventArgs } from '../grid-common/column-hiding/column-hiding-item.directive';
 import { IgxColumnComponent } from '../grid-common/column.component';
-import { ISummaryExpression } from './grid-summary';
+import { ISummaryExpression } from '../grid-common/grid-summary';
 import { IgxGroupByRowTemplateDirective, IgxColumnMovingDragDirective } from './grid.misc';
-import { IgxGridToolbarComponent } from './grid-toolbar.component';
+import { IgxGridToolbarComponent } from '../grid-common/grid-toolbar.component';
 import { IgxGridSortingPipe } from '../grid-common/grid-common.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
@@ -2240,7 +2240,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public getRowByIndex(index: number): IgxGridRowComponent {
-        return this.gridAPI.get_row_by_index(this.id, index);
+        return this.gridAPI.get_row_by_index(this.id, index) as IgxGridRowComponent;
     }
 
     /**
@@ -2253,7 +2253,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public getRowByKey(keyValue: any): IgxGridRowComponent {
-        return this.gridAPI.get_row_by_key(this.id, keyValue);
+        return this.gridAPI.get_row_by_key(this.id, keyValue) as IgxGridRowComponent;
     }
 
     /**

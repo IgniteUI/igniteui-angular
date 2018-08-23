@@ -8,10 +8,10 @@ import {
     Output
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxCheckboxModule } from '../checkbox/checkbox.component';
-import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxCheckboxModule } from '../../checkbox/checkbox.component';
+import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxInputGroupModule } from '../../input-group/input-group.component';
 import { ColumnChooserBase } from './column-chooser-base';
 
 @Component({

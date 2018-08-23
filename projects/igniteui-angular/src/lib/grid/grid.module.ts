@@ -18,11 +18,11 @@ import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridCellComponent } from '../grid-common/cell.component';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid-common/column.component';
-import { IgxColumnHidingModule } from './column-hiding.component';
-import { IgxGridFilterComponent } from './grid-filtering.component';
+import { IgxColumnHidingModule } from '../grid-common/column-hiding/column-hiding.component';
+import { IgxGridFilterComponent } from '../grid-common/grid-filtering.component';
 import { IgxGridHeaderComponent } from '../grid-common/grid-header.component';
 import { IgxGridSummaryComponent } from '../grid-common/grid-summary.component';
-import { IgxGridToolbarComponent } from './grid-toolbar.component';
+import { IgxGridToolbarComponent } from '../grid-common/grid-toolbar.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -50,7 +50,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
-import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
+import { IgxGridFilterExpressionComponent } from '../grid-common/grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
 

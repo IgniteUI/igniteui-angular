@@ -4,13 +4,16 @@ import {
     EventEmitter
 } from '@angular/core';
 
+import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IFilteringOperation } from '../data-operations/filtering-condition';
 
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridRowComponent } from '../grid/row.component';
+import { IgxRowBaseComponent } from './row-base.component';
 
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -18,13 +21,15 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { DisplayDensity } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 
+import { IColumnVisibilityChangedEventArgs } from './column-hiding/column-hiding-item.directive';
+
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
     event: Event;
 }
 
 export interface IGridEditEventArgs {
-    row: IgxGridRowComponent;
+    row: IgxRowBaseComponent<IGridComponent>;
     cell: IgxGridCellComponent;
     currentValue: any;
     newValue: any;
@@ -53,7 +58,7 @@ export interface IColumnResizeEventArgs {
 export interface IRowSelectionEventArgs {
     oldSelection: any[];
     newSelection: any[];
-    row?: IgxGridRowComponent;
+    row?: IgxRowBaseComponent<IGridComponent>;
     event?: Event;
 }
 
@@ -88,7 +93,36 @@ export interface IColumnMovingEndEventArgs {
     cancel: boolean;
 }
 
-export interface IGridComponent {
+export interface IToolbarComponent {
+    exportExcel: boolean;
+    exportCsv: boolean;
+    toolbarTitle: string;
+    exportText: string;
+    exportExcelText: string;
+    exportCsvText: string;
+    columnHidingTitle: string;
+    columnPinningTitle: string;
+
+
+    onToolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
+}
+
+export interface IVirtualizedComponent {
+    verticalScrollContainer: IgxForOfDirective<any>;
+    parentVirtDir: IgxForOfDirective<any>;
+    headerContainer: IgxForOfDirective<any>;
+}
+
+export interface IFilterableComponent {
+    onFilteringDone: EventEmitter<IFilteringExpressionsTree>;
+
+    clearFilter(name?: string);
+    filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean);
+}
+
+export interface IGridComponent extends IToolbarComponent,
+                                        IVirtualizedComponent,
+                                        IFilterableComponent {
     id: string;
     columns: IgxColumnComponent[];
     data: any[];
@@ -96,7 +130,7 @@ export interface IGridComponent {
     filteredSortedData: any[];
     primaryKey: string;
     rowList: QueryList<any>;
-    dataRowList: QueryList<IgxGridRowComponent>;
+    dataRowList: QueryList<IgxRowBaseComponent<IGridComponent>>;
     cdr: ChangeDetectorRef;
     sortingExpressions: ISortingExpression[];
     nativeElement: any;
@@ -114,6 +148,7 @@ export interface IGridComponent {
     hasMovableColumns: boolean;
     pinnedColumns: IgxColumnComponent[];
     unpinnedColumns: IgxColumnComponent[];
+    pinnedColumnsText: string;
     visibleColumns: IgxColumnComponent[];
     headerList: QueryList<IgxGridHeaderComponent>;
     draggedColumn: IgxColumnComponent;
@@ -122,16 +157,20 @@ export interface IGridComponent {
     evenRowCSS: string;
     oddRowCSS: string;
     displayDensity: DisplayDensity | string;
-    rowHeight: number;
-    defaultRowHeight: number;
+    outletDirective: IgxOverlayOutletDirective;
+    hiddenColumnsCount: number;
+    hiddenColumnsText: string;
+    columnHiding: boolean;
+    columnPinning: boolean;
+
     rowSelectable: boolean;
     allRowsSelected: boolean;
-    verticalScrollContainer: IgxForOfDirective<any>;
-    parentVirtDir: IgxForOfDirective<any>;
     selectionAPI: IgxSelectionAPIService;
     unpinnedWidth: number;
-
+    calcHeight: number;
     calcPinnedContainerMaxWidth: number;
+    rowHeight: number;
+    defaultRowHeight: number;
 
     // Events
     onEditDone: EventEmitter<IGridEditEventArgs>;
@@ -145,9 +184,12 @@ export interface IGridComponent {
     markForCheck();
     deselectRows(rowIDs: any[]);
     selectRows(rowIDs: any[], clearCurrentSelection?: boolean);
-    triggerRowSelectionChange(newSelectionAsSet: Set<any>, row?: IgxGridRowComponent, event?: Event, headerStatus?: boolean);
+    triggerRowSelectionChange(newSelectionAsSet: Set<any>,
+        row?: IgxRowBaseComponent<IGridComponent>, event?: Event, headerStatus?: boolean);
     getPinnedWidth(takeHidden?: boolean);
     moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent);
     getCellByKey(rowSelector: any, columnField: string);
     trackColumnChanges(index, col);
+    checkHeaderCheckboxStatus(headerStatus?: boolean);
+    toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs);
 }

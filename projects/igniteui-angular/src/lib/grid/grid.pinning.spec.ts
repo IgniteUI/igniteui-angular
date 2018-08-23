@@ -10,7 +10,6 @@ import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs } from '../grid-common/grid-interfaces';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
-import { first } from 'rxjs/operators';
 import { IgxGridRowComponent } from './row.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 

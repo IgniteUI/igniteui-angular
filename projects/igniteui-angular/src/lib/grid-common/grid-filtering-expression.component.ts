@@ -16,8 +16,8 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
-import { IgxGridAPIService } from '../grid-common/api.service';
-import { IgxColumnComponent } from '../grid-common/column.component';
+import { IGridAPIService } from './api.service';
+import { IGridComponent } from './grid-interfaces';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
@@ -87,7 +87,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     protected unaryConditionChanged = new Subject();
     protected _value = null;
 
-    constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
+    constructor(private zone: NgZone, public gridAPI: IGridAPIService<IGridComponent>, public cdr: ChangeDetectorRef) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
         this.conditionChanged.subscribe(() => this.conditionChangedCallback());
     }

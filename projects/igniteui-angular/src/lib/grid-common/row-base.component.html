@@ -1,5 +1,5 @@
-<ng-container *ngIf="grid.groupingExpressions.length > 0">
-    <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}"></div>
+<ng-container *ngIf="indentation > 0">
+    <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{indentation}}"></div>
 </ng-container>
 <ng-container *ngIf="rowSelectable">
     <div class="igx-grid__cbx-selection">

@@ -16,12 +16,13 @@ import {
     IgxExcelExporterOptions,
     IgxExcelExporterService,
     AbsoluteScrollStrategy
-} from '../services/index';
-import { IgxGridAPIService } from '../grid-common/api.service';
-import { IgxGridComponent } from './grid.component';
+} from '../services';
+import { IGridAPIService } from './api.service';
+import { IGridComponent } from './grid-interfaces';
+import { IgxGridComponent } from '../grid/grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { IgxColumnHidingComponent } from './column-hiding.component';
-import { IgxColumnPinningComponent } from './column-pinning.component';
+import { IgxColumnHidingComponent } from './column-hiding/column-hiding.component';
+import { IgxColumnPinningComponent } from '../grid/column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
 
@@ -151,7 +152,7 @@ export class IgxGridToolbarComponent {
      * const grid = this.igxGrid1.toolbar.grid;
      * ```
      */
-    public get grid(): IgxGridComponent {
+    public get grid(): IGridComponent {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -250,7 +251,7 @@ export class IgxGridToolbarComponent {
         }
     }
 
-    constructor(public gridAPI: IgxGridAPIService,
+    constructor(public gridAPI: IGridAPIService<IGridComponent>,
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService) {

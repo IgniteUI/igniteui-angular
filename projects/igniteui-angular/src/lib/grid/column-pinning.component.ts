@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Directive, Component, EventEmitter, Output, NgModule, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
-import { ColumnChooserBase } from './column-chooser-base';
-import { ColumnChooserItemBase } from './column-chooser-item-base';
+import { ColumnChooserBase } from '../grid-common/column-hiding/column-chooser-base';
+import { ColumnChooserItemBase } from '../grid-common/column-hiding/column-chooser-item-base';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 
 @Directive({

@@ -17,8 +17,8 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from '../grid/grid-summary';
-import { IgxGridRowComponent } from '../grid/row.component';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './grid-summary';
+import { IgxRowBaseComponent } from './row-base.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -599,7 +599,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get cells(): IgxGridCellComponent[] {
-        return this.grid.rowList.filter((row) => row instanceof IgxGridRowComponent)
+        return this.grid.rowList.filter((row) => row instanceof IgxRowBaseComponent)
             .map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
             .reduce((a, b) => a.concat(b), []);
     }
