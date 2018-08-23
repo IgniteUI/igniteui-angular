@@ -20,6 +20,7 @@ export class GridCellEditingComponent {
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
+    private subscribtion;
 
     constructor() {
         const date = new Date();
@@ -50,11 +51,12 @@ export class GridCellEditingComponent {
 
     public deleteRow(rowID) {
         const row = this.gridWithPK.getRowByKey(rowID);
-        row.delete();
+        this.gridWithPK.deleteRow(rowID);
     }
     public updateCell() {
         this.gridWithPK.updateCell('Updated', 1, 'ProductName');
     }
+
     public updateRow(rowID) {
         this.gridWithPK.updateRow({
             ProductID: rowID + 96,
@@ -87,7 +89,9 @@ export class GridCellEditingComponent {
     public updRecord() {
         const newData = 'UPDATED';
         const selectedCell = this.gridWithPK.selectedCells[0];
-        selectedCell.update(newData);
+        if (selectedCell) {
+            selectedCell.update(newData);
+        }
     }
 
     deleteRowbyIndex(index) {
@@ -127,6 +131,23 @@ export class GridCellEditingComponent {
         }
         selectedCell.update(newValue);
     }
+
+    updateSpecificRow() {
+        this.gridWithPK.updateRow({
+            ProductID: 225 + 96,
+            ProductName: 'UpdatedRow',
+            SupplierID: 8,
+            CategoryID: 3,
+            QuantityPerUnit: undefined,
+            UnitPrice: undefined,
+            UnitsInStock: -99 + 225,
+            UnitsOnOrder: 0 + 225,
+            ReorderLevel: -12 + 225,
+            Discontinued: false,
+            OrderDate: new Date('2005-03-17')
+        }, 1);
+    }
+
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
     }
