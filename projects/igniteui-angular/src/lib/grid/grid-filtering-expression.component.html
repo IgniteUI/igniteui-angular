@@ -15,11 +15,11 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker
+    <igx-date-picker
         *ngIf="!unaryCondition"
         [value]="value"
         (onSelection)="onDatePickerValueChanged($event)">
-    </igx-datePicker>
+    </igx-date-picker>
 </ng-template>
 
 <select #select [attr.draggable]="false" (change)="selectionChanged($event.target.value)">
