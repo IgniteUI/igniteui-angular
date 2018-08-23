@@ -86,9 +86,7 @@ export class IgxOverlayService {
         this.onOpening.emit({ id, componentRef: info.componentRef });
 
         info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
-        if (!info.componentRef) {
-            info.hook = this.placeElementHook(info.elementRef.nativeElement);
-        }
+        info.hook = this.placeElementHook(info.elementRef.nativeElement);
 
         this.moveElementToOverlay(info);
         this.updateSize(info);
@@ -202,6 +200,10 @@ export class IgxOverlayService {
     }
 
     private placeElementHook(element: HTMLElement): HTMLElement {
+        if (!element.parentElement) {
+            return null;
+        }
+
         const hook = this._document.createElement('div');
         element.parentElement.insertBefore(hook, element);
         return hook;
