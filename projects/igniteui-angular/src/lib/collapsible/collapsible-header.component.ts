@@ -1,21 +1,13 @@
 import {
     Component,
     ChangeDetectorRef,
-    EventEmitter,
     ElementRef,
     HostBinding,
     HostListener,
     Input,
-    Inject,
-    Output,
-    ViewChild,
-    OnInit,
-    AfterContentInit,
-    AfterViewInit,
     Renderer2,
     Host
 } from '@angular/core';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCollapsibleComponent } from './collapsible.component';
 
 @Component({
@@ -24,6 +16,9 @@ import { IgxCollapsibleComponent } from './collapsible.component';
 })
 export class IgxCollapsibleHeaderComponent {
      // properties section
+
+     @HostBinding('class.igx-collapsible__header')
+     public cssClass = 'igx-collapsible__header';
 
      @Input()
      @HostBinding('class.igx-collapsible__header--collapsed')
