@@ -77,7 +77,9 @@ export class IgxGridAPIService {
             this.editCellState.set(gridId, null);
         }
         if (!this.get_cell_inEditMode(gridId) && editMode) {
-            this.editCellState.set(gridId, { cellID: cell.cellID, cell: Object.assign({}, cell) });
+            const cellCopy = Object.assign({}, cell);
+            cellCopy.row = Object.assign({}, cell.row);
+            this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
         }
     }
 
@@ -105,7 +107,6 @@ export class IgxGridAPIService {
         } else {
             return null;
         }
-
     }
 
     public get_row_by_key(id: string, rowSelector: any): IgxGridRowComponent {
@@ -163,37 +164,46 @@ export class IgxGridAPIService {
     }
 
     public update_cell(id: string, rowID, columnID, editValue) {
-        let cellObj;
+        const grid = this.get(id);
+        const isRowSelected = grid.selectionAPI.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
-        const row = this.get(id).rowList.find((r) => r.rowID === rowID);
-        if (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) {
-            cellObj = editableCell.cell;
-        } else if (row) {
-            cellObj = this.get(id).columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
-        }
-        if (cellObj) {
+        const column = grid.columnList.toArray()[columnID];
+        const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
+        editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
+        const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
+        grid.data.indexOf(rowID);
+        if (rowIndex !== -1) {
             const args: IGridEditEventArgs = {
-                row: cellObj.row, cell: cellObj,
-                currentValue: cellObj.value, newValue: editValue
+                row: cellObj ? cellObj.row : null, cell: cellObj,
+                currentValue: grid.data[rowIndex][column.field], newValue: editValue
             };
-            this.get(id).onEditDone.emit(args);
-            const column = this.get(id).columnList.toArray()[columnID];
-            if (this.get(id).primaryKey) {
-                const index = this.get(id).data.map((record) => record[this.get(id).primaryKey]).indexOf(rowID);
-                this.get(id).data[index][column.field] = args.newValue;
-            } else {
-                this.get(id).data[this.get(id).data.indexOf(rowID)][column.field] = args.newValue;
+            grid.onEditDone.emit(args);
+            grid.data[rowIndex][column.field] = args.newValue;
+            if (grid.primaryKey === column.field && isRowSelected) {
+                grid.selectionAPI.set_selection(id, grid.selectionAPI.deselect_item(id, rowID));
+                grid.selectionAPI.set_selection(id, grid.selectionAPI.select_item(id, args.newValue));
             }
-            (this.get(id) as any)._pipeTrigger++;
+            (grid as any)._pipeTrigger++;
         }
     }
 
-    public update_row(value: any, id: string, row: IgxGridRowComponent): void {
-        const index = this.get(id).data.indexOf(row.rowData);
-        const args: IGridEditEventArgs = { row, cell: null, currentValue: this.get(id).data[index], newValue: value };
-        this.get(id).onEditDone.emit(args);
-        this.get(id).data[index] = args.newValue;
-        (this.get(id) as any)._pipeTrigger++;
+    public update_row(value: any, id: string, rowID: any): void {
+        const grid = this.get(id);
+        const isRowSelected = grid.selectionAPI.is_item_selected(id, rowID);
+        const index = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
+        grid.data.indexOf(rowID);
+        if (index !== -1) {
+            const args: IGridEditEventArgs = { row: this.get_row_by_key(id, rowID), cell: null,
+                currentValue: this.get(id).data[index], newValue: value };
+            grid.onEditDone.emit(args);
+            grid.data[index] = args.newValue;
+            if (isRowSelected) {
+                grid.selectionAPI.set_selection(id, grid.selectionAPI.deselect_item(id, rowID));
+                const newRowID = (grid.primaryKey) ? args.newValue[grid.primaryKey] : args.newValue;
+                grid.selectionAPI.set_selection(id, grid.selectionAPI.select_item(id, newRowID));
+            }
+            (grid as any)._pipeTrigger++;
+        }
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {

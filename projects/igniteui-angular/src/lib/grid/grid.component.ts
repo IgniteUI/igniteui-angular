@@ -2604,23 +2604,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
-            if (row) {
-                const index = this.data.indexOf(row.rowData);
+            const index = this.gridAPI.get(this.id).data.map((record) => record[this.gridAPI.get(this.id).primaryKey]).indexOf(rowSelector);
+            if (index !== -1) {
                 const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                if (editableCell && editableCell.cellID.rowID === rowSelector) {
                     this.gridAPI.escape_editMode(this.id, editableCell.cellID);
                 }
-                if (this.rowSelectable === true) {
-                    this.deselectRows([row.rowID]);
-                }
+                this.onRowDeleted.emit({ data: this.data[index] });
                 this.data.splice(index, 1);
-                this.onRowDeleted.emit({ data: row.rowData });
+                if (this.rowSelectable === true && this.selectionAPI.is_item_selected(this.id, rowSelector)) {
+                    this.deselectRows([rowSelector]);
+                } else {
+                    this.checkHeaderCheckboxStatus();
+                }
                 this._pipeTrigger++;
                 this.cdr.markForCheck();
 
                 this.refreshSearch();
-
                 if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
                     this.page--;
                 }
@@ -2671,22 +2671,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public updateRow(value: any, rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
-            if (row) {
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                if (editableCell && editableCell.cellID.rowID === row.rowID) {
-                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-                }
-                if (this.rowSelectable === true && row.isSelected) {
-                    this.deselectRows([row.rowID]);
-                    this.gridAPI.update_row(value, this.id, row);
-                    this.selectRows([value[this.primaryKey]]);
-                } else {
-                    this.gridAPI.update_row(value, this.id, row);
-                }
-                this.cdr.markForCheck();
-                this.refreshSearch();
+            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+            if (editableCell && editableCell.cellID.rowID === rowSelector) {
+                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
             }
+            this.gridAPI.update_row(value, this.id, rowSelector);
+            this.cdr.markForCheck();
+            this.refreshSearch();
         }
     }
 
