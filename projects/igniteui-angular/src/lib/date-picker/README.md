@@ -59,6 +59,18 @@ The DatePicker also supports binding through `ngModel` if two-way date-bind is n
 </igx-date-picker>
 ```
 
+The DatePicker input group could be retemplated.
+```html
+<igx-datePicker>
+    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
+        <igx-input-group (click)="openDialog()">
+            <label igxLabel>Date</label>
+            <input igxInput [value]="displayData"/>
+        </igx-input-group>
+    </ng-template>
+</igx-datePicker>
+```
+
 # API
 
 ###### Inputs
