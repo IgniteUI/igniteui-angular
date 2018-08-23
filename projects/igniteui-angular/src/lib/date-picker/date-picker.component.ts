@@ -14,7 +14,7 @@ import {
     ViewChild,
     ViewContainerRef,
     HostListener,
-    ElementRef
+    ElementRef,
     TemplateRef,
     Directive
 } from '@angular/core';
