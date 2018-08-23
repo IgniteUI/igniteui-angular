@@ -659,7 +659,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
         this.cdr.markForCheck();
-        this.gridAPI.get(this.gridID).refreshSearch();
+        this.grid.refreshSearch();
     }
 
     /**

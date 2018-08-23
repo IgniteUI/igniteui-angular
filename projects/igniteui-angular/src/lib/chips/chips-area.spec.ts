@@ -10,6 +10,7 @@ import { IgxIconModule } from '../icon/index';
 import { IgxChipsModule } from './chips.module';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
+import { UIInteractions} from '../test-utils/ui-interactions.spec';
 
 @Component({
     template: `
@@ -133,22 +134,6 @@ describe('IgxChipsArea', () => {
         }).compileComponents();
     }));
 
-    function simulatePointerEvent(eventName: string, element, x, y) {
-        const options: PointerEventInit = {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            pointerId: 1
-        };
-        const pointerEvent = new PointerEvent(eventName, options);
-        Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
-        Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
-        return new Promise((resolve, reject) => {
-            element.dispatchEvent(pointerEvent);
-            resolve();
-        });
-    }
-
     it('should add chips when adding data items ', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
@@ -212,12 +197,12 @@ describe('IgxChipsArea', () => {
         const startingX = (startingLeft + startingRight) / 2;
         const startingY = (startingTop + startingBottom) / 2;
 
-        simulatePointerEvent('pointerdown', firstChipElem, startingX, startingY);
+        UIInteractions.simulatePointerEvent('pointerdown', firstChipElem, startingX, startingY);
         fix.detectChanges();
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', firstChipElem, startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointermove', firstChipElem, startingX + 10, startingY + 10);
 
             return fix.whenStable();
         }).then(() => {
@@ -247,17 +232,22 @@ describe('IgxChipsArea', () => {
         const startingX = (startingLeft + startingRight) / 2;
         const startingY = (startingTop + startingBottom) / 2;
 
-        simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
+        UIInteractions.simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
         fix.detectChanges();
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointermove',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
 
             setTimeout(() => {
                 const afterDragTop = secondChip.dragDir['_dragGhost'].getBoundingClientRect().top;
@@ -287,17 +277,22 @@ describe('IgxChipsArea', () => {
         const startingX = (startingLeft + startingRight) / 2;
         const startingY = (startingTop + startingBottom) / 2;
 
-        simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
+        UIInteractions.simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
         fix.detectChanges();
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointermove',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
             fix.detectChanges();
 
             setTimeout(() => {
@@ -330,23 +325,33 @@ describe('IgxChipsArea', () => {
 
         const firstChip = chipComponents[0];
 
-        simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
+        UIInteractions.simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
         fix.detectChanges();
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointermove',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
             expect(firstChip.nativeElement.children[1].style.visibility).toEqual('hidden');
-            simulatePointerEvent('pointerup', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointerup',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
             return fix.whenRenderingDone();
         }).then(() => {
             expect(firstChip.nativeElement.children[1].style.visibility).toEqual('visible');
@@ -385,22 +390,22 @@ describe('IgxChipsArea', () => {
         const secondChipX = (secondChipLeft + secondChipRight) / 2;
         const secondChipY = (secondChipTop + secondChipBottom) / 2;
 
-        simulatePointerEvent('pointerdown', firstChipElem, firstChipX, firstChipY);
+        UIInteractions.simulatePointerEvent('pointerdown', firstChipElem, firstChipX, firstChipY);
         fix.detectChanges();
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', firstChipElem, firstChipX + 10, firstChipY + 10);
+            UIInteractions.simulatePointerEvent('pointermove', firstChipElem, firstChipX + 10, firstChipY + 10);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', firstChip.dragDir['_dragGhost'], secondChipX, secondChipY);
+            UIInteractions.simulatePointerEvent('pointermove', firstChip.dragDir['_dragGhost'], secondChipX, secondChipY);
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
-            simulatePointerEvent('pointerup', firstChip.dragDir['_dragGhost'], secondChipX, secondChipY);
+            UIInteractions.simulatePointerEvent('pointerup', firstChip.dragDir['_dragGhost'], secondChipX, secondChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -445,22 +450,22 @@ describe('IgxChipsArea', () => {
         const secondChipX = (secondChipLeft + secondChipRight) / 2;
         const secondChipY = (secondChipTop + secondChipBottom) / 2;
 
-        simulatePointerEvent('pointerdown', secondChipElem, secondChipX, secondChipY);
+        UIInteractions.simulatePointerEvent('pointerdown', secondChipElem, secondChipX, secondChipY);
         fix.detectChanges();
 
         fix.whenStable().then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChipElem, secondChipX + 10, secondChipY + 10);
+            UIInteractions.simulatePointerEvent('pointermove', secondChipElem, secondChipX + 10, secondChipY + 10);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], firstChipX, firstChipY);
+            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], firstChipX, firstChipY);
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
-            simulatePointerEvent('pointerup', secondChip.dragDir['_dragGhost'], firstChipX, firstChipY);
+            UIInteractions.simulatePointerEvent('pointerup', secondChip.dragDir['_dragGhost'], firstChipX, firstChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -858,20 +863,30 @@ describe('IgxChipsArea', () => {
 
         expect(secondChip.selected).toBeTruthy();
 
-        simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
+        UIInteractions.simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
         fix.detectChanges();
 
         fix.whenStable().then(() => {
-            simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            simulatePointerEvent('pointermove', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointermove',
+                secondChip.dragDir['_dragGhost'],
+                 startingX + xDragDifference,
+                  startingY + yDragDifference
+            );
 
             expect(secondChip.selected).toBeTruthy();
 
-            simulatePointerEvent('pointerup', secondChip.dragDir['_dragGhost'], startingX + xDragDifference, startingY + yDragDifference);
+            UIInteractions.simulatePointerEvent(
+                'pointerup',
+                secondChip.dragDir['_dragGhost'],
+                startingX + xDragDifference,
+                startingY + yDragDifference
+            );
             fix.detectChanges();
             return fix.whenStable();
         })

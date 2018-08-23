@@ -89,8 +89,6 @@
 
     %igx-navbar-title {
         margin: $navbar-title-margin;
-        font-size: $navbar-title-fz;
-        line-height: $navbar-title-lh;
     }
 
     %igx-navbar-bundle {
@@ -112,6 +110,23 @@
             &:hover {
                 color: --var($theme, 'hover-icon-color');
             }
+        }
+    }
+}
+
+/// Adds typography styles for the igx-navbar component.
+/// Uses the 'body-1', 'caption'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(title: 'h6')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-navbar-typography($type-scale, $categories: (title: 'h6')) {
+    $title: map-get($categories, 'title');
+
+    @include igx-scope('.igx-typography') {
+        %igx-navbar-title {
+            @include igx-type-style($type-scale, $title);
         }
     }
 }

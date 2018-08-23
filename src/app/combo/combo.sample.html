@@ -1,5 +1,7 @@
 <div class="sample-wrapper">
     <app-page-header title="Combo" description="Combo lets you choose value from a list"></app-page-header>
+
+  <div class="sample-content">
     <section class="combo-sample">
         <div class="input-wrapper">
             <div class="input-row">
@@ -19,7 +21,7 @@
                             [data]="items"
                             [allowCustomValues]="true"
                             [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
-                            [groupKey]="valueKeyVar ? 'region' : ''">
+                                [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                     <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
                             <div class="display-value--main">{{display[key]}}</div>
@@ -64,4 +66,5 @@
             </ng-template>
         </div>
     </section>
+    </div>
 </div>
