@@ -33,7 +33,7 @@
                 (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
                 [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
         </igx-input-group>
-        <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : null ; context: {$implicit: this}">
+        <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: this}">
         </ng-container>
         <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
             [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
@@ -65,7 +65,7 @@
                 </ng-container>
             </igx-combo-item>
         </div>
-        <ng-container *ngTemplateOutlet="footerTemplate ? footerTemplate : null; context: {$implicit: this}">
+        <ng-container *ngTemplateOutlet="footerTemplate; context: {$implicit: this}">
         </ng-container>
     </igx-combo-drop-down>
 </div>
