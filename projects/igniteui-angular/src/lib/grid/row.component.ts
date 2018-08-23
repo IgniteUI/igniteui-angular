@@ -260,26 +260,13 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     public update(value: any) {
-        const primaryKey = this.gridAPI.get(this.gridID).primaryKey;
-        const row = (primaryKey !== null && primaryKey !== undefined) ?
-            this.gridAPI.get_row_by_key(this.gridID, this.rowID) :
-            this.gridAPI.get_row_by_index(this.gridID, this.index);
-        if (row) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-            if (editableCell && editableCell.cellID.rowID === row.rowID) {
-                this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-            }
-            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
-                this.gridAPI.get(this.gridID).deselectRows([row.rowID]);
-                this.gridAPI.update_row(value, this.gridID, row);
-                this.gridAPI.get(this.gridID).selectRows([row.rowID]);
-            } else {
-                this.gridAPI.update_row(value, this.gridID, row);
-            }
-            this.cdr.markForCheck();
-            this.gridAPI.refreshSearch(this.gridID);
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editableCell && editableCell.cellID.rowID === this.rowID) {
+            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
-
+        this.gridAPI.update_row(value, this.gridID, this.rowID);
+        this.cdr.markForCheck();
+        this.grid.refreshSearch();
     }
 
     /**
@@ -292,29 +279,24 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     public delete() {
-        const primaryKey = this.gridAPI.get(this.gridID).primaryKey;
-        const row = (primaryKey !== null && primaryKey !== undefined) ?
-            this.gridAPI.get_row_by_key(this.gridID, this.rowID) :
-            this.gridAPI.get_row_by_index(this.gridID, this.index);
-        if (row) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-            if (editableCell && editableCell.cellID.rowID === row.rowID) {
-                this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-            }
-            if (this.gridAPI.get(this.gridID).rowSelectable === true && row.isSelected) {
-                this.gridAPI.get(this.gridID).deselectRows(row.rowID);
-            }
-            const index = this.gridAPI.get(this.gridID).data.indexOf(row.rowData);
-            this.gridAPI.get(this.gridID).data.splice(index, 1);
-            this.gridAPI.get(this.gridID).onRowDeleted.emit({ data: row.rowData });
-            (this.gridAPI.get(this.gridID) as any)._pipeTrigger++;
-            this.cdr.markForCheck();
-            this.gridAPI.refreshSearch(this.gridID);
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (editableCell && editableCell.cellID.rowID === this.rowID) {
+            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+        }
+        const index = this.grid.data.indexOf(this.rowData);
+        this.grid.onRowDeleted.emit({ data: this.rowData });
+        this.grid.data.splice(index, 1);
+        if (this.grid.rowSelectable === true && this.isSelected) {
+            this.grid.deselectRows([this.rowID]);
+        } else {
+            this.grid.checkHeaderCheckboxStatus();
+        }
+        (this.grid as any)._pipeTrigger++;
+        this.cdr.markForCheck();
+        this.grid.refreshSearch();
 
-            const grid = this.gridAPI.get(this.gridID);
-            if (grid.data.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0) {
-                grid.page--;
-            }
+        if (this.grid.data.length % this.grid.perPage === 0 && this.grid.isLastPage && this.grid.page !== 0) {
+            this.grid.page--;
         }
     }
 

@@ -67,8 +67,8 @@
         item-hover-color: igx-color($palette, 'grays', 700),
         item-hover-background: igx-color($palette, 'grays', 200),
 
-        item-active-color: igx-color($palette, 'grays', 800),
         item-active-icon-color: igx-color($palette, 'primary', 500),
+        item-active-color: igx-color($palette, 'primary', 500),
         item-active-background: igx-color($palette, 'grays', 200),
 
         indicator-color: igx-color($palette, 'primary', 500),
@@ -90,12 +90,12 @@
         $item-hover-color: text-contrast($item-hover-background);
     }
 
-    @if not($item-active-color) and $item-active-background {
-        $item-active-color: text-contrast($item-active-background);
-    }
-
     @if not($item-active-icon-color) and $item-active-background {
         $item-active-icon-color: text-contrast($item-active-background);
+    }
+
+    @if not($item-active-color) and $item-active-icon-color {
+        $item-active-color: $item-active-icon-color;
     }
 
     @if not($button-color) and $button-background {
@@ -158,8 +158,6 @@
     $item-padding: 0 rem(24px);
     $tabs-height: rem(48px);
     $tabs-height-icon: rem(77px);
-    $label-font-size: rem(14px, 16px);
-    $label-line-height: rem(16px, 16px);
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
     $icon-label-space: rem(10px);
 
@@ -348,8 +346,6 @@
 
     %igx-tabs__item-label {
         @include ellipsis();
-        font-size: $label-font-size;
-        line-height: $label-line-height;
         max-width: 100%;
         text-align: center;
 
@@ -375,6 +371,23 @@
         %igx-tabs__header-menu-item {
             min-height: $tabs-height-icon;
             height: $tabs-height-icon;
+        }
+    }
+}
+
+/// Adds typography styles for the igx-tabs component.
+/// Uses the 'subtitle-2'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(label: 'button')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-tabs-typography($type-scale, $categories: (label: 'button')) {
+    $label: map-get($categories, 'label');
+
+    @include igx-scope('.igx-typography') {
+        %igx-tabs__item-label {
+            @include igx-type-style($type-scale, $label);
         }
     }
 }
