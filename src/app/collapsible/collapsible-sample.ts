@@ -47,16 +47,30 @@ export class CollapsibleSampleComponent implements OnInit {
 
     ngOnInit() {
         this.generateScore();
+        this.igxCollapsible.onCollapsed.subscribe((e) => {
+            this.onCollapsing(e);
+        });
+        this.igxCollapsible.onExpanded.subscribe((e) => {
+            this.onExpanding(e);
+        });
     }
 
-    resetScore() {
+    resetScore(event: Event) {
         this.data = [];
+        event.stopPropagation();
         this.generateScore();
     }
 
     constructor() {
     }
 
-    onOpening(event) {
+    onCollapsing(event) {
+        console.log(`I'm collapsing!`, event);
+    }
+    onExpanding(event) {
+        console.log(`I'm expanding!`, event);
+    }
+    onInterraction(event) {
+        console.log(`Header's touched!`, event);
     }
 }

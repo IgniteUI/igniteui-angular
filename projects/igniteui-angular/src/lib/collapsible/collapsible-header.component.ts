@@ -6,10 +6,15 @@ import {
     HostListener,
     Input,
     Renderer2,
-    Host
+    Host,
+    EventEmitter,
+    Output
 } from '@angular/core';
 import { IgxCollapsibleComponent } from './collapsible.component';
 
+export interface ICollapsibleEventArgs {
+    event: Event;
+}
 @Component({
     selector: 'igx-collapsible-header',
     templateUrl: 'collapsible-header.component.html'
@@ -17,8 +22,16 @@ import { IgxCollapsibleComponent } from './collapsible.component';
 export class IgxCollapsibleHeaderComponent {
      // properties section
 
+     @Input()
+     @HostBinding('attr.tabindex')
+     public tabIndex = 0;
+
+    @Output()
+    public onInterraction = new EventEmitter<ICollapsibleEventArgs>();
+
      @HostBinding('class.igx-collapsible__header')
      public cssClass = 'igx-collapsible__header';
+
 
      @Input()
      @HostBinding('class.igx-collapsible__header--collapsed')
@@ -32,14 +45,19 @@ export class IgxCollapsibleHeaderComponent {
             return !this.collapsible.collapsed;
          }
 
+    @Input()
+    @HostBinding('attr.aria-labelledby')
+    public ariaLabelledBy: string;
+
     constructor(@Host() public collapsible: IgxCollapsibleComponent, public cdr: ChangeDetectorRef,
      public elementRef: ElementRef, private renderer: Renderer2) { }
 
      @HostListener('keydown.Enter', ['$event'])
      @HostListener('keydown.Space', ['$event'])
      @HostListener('click', ['$event'])
-     public onAction(evt: Event) {
-         this.collapsible.toggle();
+     public onAction(evt?: Event) {
+        this.onInterraction.emit({ event: evt });
+         this.collapsible.toggle(evt);
          evt.preventDefault();
      }
 }

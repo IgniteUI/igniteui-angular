@@ -18,16 +18,23 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { IAnimationParams } from '../animations/main';
 import { slideOutTop, slideInTop } from '../animations/main';
+import { ICollapsibleEventArgs } from './collapsible-header.component';
 
 let NEXT_ID = 0;
-
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: 'igx-collapsible-header'
+})
+export class IgxCollapsibleHeaderDirective {
+    constructor (public element: ElementRef<any>) {}
+}
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: 'igx-collapsible-title'
 })
 export class IgxCollapsibleTitleDirective {
 
-    constructor( template: ElementRef<any>) { }
+    constructor(public element: ElementRef<any>) { }
 }
 
 @Directive({
@@ -36,7 +43,7 @@ export class IgxCollapsibleTitleDirective {
 })
 export class IgxCollapsibleDescriptionDirective {
 
-    constructor( template: ElementRef<any>) { }
+    constructor(public element: ElementRef<any>) { }
 }
 
 @Directive({
@@ -45,7 +52,7 @@ export class IgxCollapsibleDescriptionDirective {
 })
 export class IgxCollapsibleBodyDirective {
 
-    constructor( template: ElementRef<any>) { }
+    constructor(public element: ElementRef<any>) { }
 }
 
 @Component({
@@ -109,7 +116,7 @@ export class IgxCollapsibleComponent {
     public headerButtons;
 
     @Output()
-    public onCollapsed = new EventEmitter<any>();
+    public onCollapsed = new EventEmitter<ICollapsibleEventArgs>();
 
     // @Output()
     // public onCollapsing = new EventEmitter<any>();
@@ -118,7 +125,7 @@ export class IgxCollapsibleComponent {
     // public onExpanding = new EventEmitter<any>();
 
     @Output()
-    public onExpanded = new EventEmitter<any>();
+    public onExpanded = new EventEmitter<ICollapsibleEventArgs>();
 
     constructor(
         public cdr: ChangeDetectorRef,
@@ -155,26 +162,26 @@ export class IgxCollapsibleComponent {
         closeAnimationPlayer.play();
     }
 
-    collapse () {
+    collapse (evt?: Event) {
         this.playCloseAnimation(
             () => {
-                this.onCollapsed.emit();
+                this.onCollapsed.emit({event: evt});
                 this.collapsed = true; }
             );
     }
 
-    expand () {
+    expand (evt?: Event) {
         this.collapsed = false;
         this.playOpenAnimation(
-            () => { this.onExpanded.emit(); }
+            () => { this.onExpanded.emit({event: evt}); }
         );
     }
 
-    toggle () {
+    toggle (evt?: Event) {
         if (this.collapsed) {
-            this.expand();
+            this.expand(evt);
         } else  {
-            this.collapse();
+            this.collapse(evt);
         }
     }
 }
