@@ -6,7 +6,7 @@
 <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [autoGenerate]="false" [displayDensity]="density" width="800px" height="550px" [paging]="true"  [rowSelectable]="true">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val >
-            <button (click)="deleteRow(cell.cellID.rowID)">Delete</button>
+            <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
             <button (click)="updateRow(cell.cellID.rowID)">Update</button>
         </ng-template>
     </igx-column>
