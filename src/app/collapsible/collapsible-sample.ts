@@ -1,5 +1,7 @@
-import { IgxCollapsibleComponent } from 'igniteui-angular';
+import { IgxCollapsibleComponent, slideInTop, slideOutTop, scaleInTop,
+    scaleInVerBottom, scaleInVerTop, scaleOutVerBottom, scaleOutVerTop } from 'igniteui-angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { AnimationReferenceMetadata } from '@angular/animations';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -12,6 +14,28 @@ export class CollapsibleSampleComponent implements OnInit {
     public igxCollapsible: IgxCollapsibleComponent;
     @ViewChild('button') public button: ElementRef;
 
+    public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
+        openAnimation:  Object.assign(scaleInVerTop, {
+            options: {
+                params: Object.assign(scaleInVerTop.options.params, {
+                    startOpacity: 0.5,
+                    fromScale: 0,
+                    duration: '250ms'
+                })
+            }
+        }),
+        closeAnimation: Object.assign(scaleOutVerTop, {
+            options: {
+                params: Object.assign(scaleOutVerTop.options.params, {
+                    startOpacity: 1,
+                    endOpacity: 0.5,
+                    fromScale: 1,
+                    toScale: 0,
+                    duration: '350ms'
+                })
+            }
+        })
+    };
     public templatedIcon = false;
     public score: number;
     public data = [];

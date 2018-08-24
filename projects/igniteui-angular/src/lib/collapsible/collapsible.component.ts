@@ -29,8 +29,17 @@ let NEXT_ID = 0;
 })
 export class IgxCollapsibleComponent {
 
-    animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
-        openAnimation:  slideInTop,
+    @Input()
+    public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
+        openAnimation:  Object.assign(slideInTop, {
+            fromScale: 0,
+            toScale: 1,
+            fromPosition: 'translateY(0px)',
+            toPosition: 'translateY(0px)',
+            startOpacity: 0.7,
+            endOpacity: 1,
+            easing: `cubic-bezier(0.895, 0.030, 0.685, 0.220)`
+        }),
         closeAnimation: slideOutTop
     };
 
