@@ -44,6 +44,8 @@ export interface IChipEnterDragAreaEventArgs {
     originalEvent: IgxDropEnterEventArgs;
 }
 
+let CHIP_ID = 0;
+
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
@@ -51,13 +53,14 @@ export interface IChipEnterDragAreaEventArgs {
 export class IgxChipComponent implements AfterViewInit {
 
     /**
-     * An @Input property that sets the value of `id` attribute.
+     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-chip [id]="'igx-chip-1'"></igx-chip>
      * ```
      */
+    @HostBinding('attr.id')
     @Input()
-    public id;
+    public id = `igx-chip-${CHIP_ID++}`;
 
     /**
      * An @Input property that defines if the `IgxChipComponent` can be dragged in order to change it's position.
