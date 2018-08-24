@@ -23,6 +23,8 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { DisplayDensity } from '../core/utils';
 
+let CHIP_ID = 0;
+
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
@@ -30,13 +32,14 @@ import { DisplayDensity } from '../core/utils';
 export class IgxChipComponent implements AfterViewInit {
 
     /**
-     * An @Input property that sets the value of `id` attribute.
+     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-chip [id]="'igx-chip-1'"></igx-chip>
      * ```
      */
+    @HostBinding('attr.id')
     @Input()
-    public id;
+    public id = `igx-chip-${CHIP_ID++}`;
 
     /**
      * An @Input property that defines if the `IgxChipComponent` can be dragged in order to change it's position.
@@ -297,18 +300,15 @@ export class IgxChipComponent implements AfterViewInit {
      * }
      * ```
      */
+    @Input()
     public get selected() {
         return this._selected;
     }
 
     /**
      * Sets the `IgxChipComponent` to be selected.
-     * ```typescript
-     * @ViewChild('myChip')
-     * public chip: IgxChipComponent;
-     * ngAfterViewInit(){
-     *     this.chip.selected = true;
-     * }
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
      * ```
      */
     public set selected(newValue: boolean) {
@@ -317,7 +317,7 @@ export class IgxChipComponent implements AfterViewInit {
             nextStatus: false,
             cancel: false
         };
-        if (newValue && this.selectable && !this._selected) {
+        if (newValue && !this._selected) {
             onSelectArgs.nextStatus = true;
             this.onSelection.emit(onSelectArgs);
 

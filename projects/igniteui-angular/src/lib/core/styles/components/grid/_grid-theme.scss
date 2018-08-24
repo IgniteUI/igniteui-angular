@@ -684,6 +684,12 @@
             width: 100%;
             margin-top: -16px;
         }
+
+        %form-group-input {
+            // ignore global typography
+            font-size: $grid-cell-fs !important;
+            line-height: $grid-cell-lh !important;
+        }
     }
 
     %grid-cell--pinned {
@@ -1294,5 +1300,9 @@
         %igx-grid__group-row-compact--padding-level-#{$i} {
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
         }
+    }
+
+    %igx-grid__filtering-outlet {
+        z-index: 99999;
     }
 }

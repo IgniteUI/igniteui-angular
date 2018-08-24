@@ -2,6 +2,7 @@
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 ///
@@ -82,7 +83,6 @@
 
     $card-title-fz: em(24px, 16px);
     $card-title-line-height: em(24px, 16px);
-    $card-subtitle-fz: em(14px, 16px);
     $card-subtitle-line-height: em(24px, 16px);
     $card-content-fz: em(14px, 16px);
     $card-content-lh: (20px, 16px);
@@ -116,7 +116,6 @@
         display: flex;
         flex-flow: row wrap;
         align-items: center;
-        // flex: 1 0 100%;
         flex-basis: 100%;
         padding: $card-heading-padding;
         color: --var($theme, 'header-text-color');
@@ -129,19 +128,11 @@
     %igx-card-header-title {
         margin: $card-heading-margin;
         flex-basis: 100%;
-        font-size: $card-title-fz;
-        line-height: $card-title-line-height;
-    }
-
-    %igx-card-header-title--small {
-        font-size: $card-subtitle-fz;
     }
 
     %igx-card-header-subtitle {
         margin: $card-subtitle-margin;
         color: --var($theme, 'subtitle-text-color');
-        font-size: $card-subtitle-fz;
-        line-height: $card-subtitle-line-height;
     }
 
     %igx-card-tgroup {
@@ -156,8 +147,6 @@
     %igx-card-content-text {
         margin: $card-content-margin;
         color: --var($theme, 'content-text-color');
-        font-size: $card-content-fz;
-        line-height: $card-content-lh;
     }
 
     %igx-card-media {
@@ -205,5 +194,42 @@
 
     %igx-card-actions-igroup--end {
         margin-left: auto;
+    }
+}
+
+/// Adds typography styles for the igx-card component.
+/// Uses the 'h5', 'subtitle-2' and 'body-2'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(title: 'h5', title-small: 'subtitle-2', subtitle: 'subtitle-2', content: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-card-typography($type-scale, $categories: (
+    title: 'h5',
+    title-small: 'subtitle-2',
+    subtitle: 'subtitle-2',
+    content: 'body-2')
+) {
+    $title: map-get($categories, 'title');
+    $title-small: map-get($categories, 'title-small');
+    $subtitle: map-get($categories, 'subtitle');
+    $content: map-get($categories, 'content');
+
+    @include igx-scope('.igx-typography') {
+        %igx-card-header-title {
+            @include igx-type-style($type-scale, $title);
+        }
+
+        %igx-card-header-title--small {
+            @include igx-type-style($type-scale, $title-small);
+        }
+
+        %igx-card-header-subtitle {
+            @include igx-type-style($type-scale, $subtitle);
+        }
+
+        %igx-card-content-text {
+            @include igx-type-style($type-scale, $content);
+        }
     }
 }

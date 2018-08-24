@@ -1481,6 +1481,27 @@ describe('igxCombo', () => {
             expectedOutput += ', ' + combo.data[9];
             expect(inputElement.value).toEqual(expectedOutput);
         }));
+
+        it('Should properly handle selection manipulation through onSelectionChange emit', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            // override selection
+            fixture.componentInstance.onSelectionChange = (event) => {
+                event.newSelection = [];
+            };
+            combo.toggle();
+            tick();
+            // No items are initially selected
+            expect(combo.selectedItems()).toEqual([]);
+            // Select the first 5 items
+            combo.selectItems(fixture.componentInstance.initData.splice(0, 5));
+            tick();
+            fixture.detectChanges();
+            tick();
+            // onSelectionChange fires and overrides the selection to be [];
+            expect(combo.selectedItems()).toEqual([]);
+        }));
     });
 
     describe('Rendering tests: ', () => {
@@ -1607,37 +1628,37 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(combo.collapsed).toBeFalsy();
-            // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines
+            // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
             expect(combo.itemHeight).toEqual(32); // Default value for itemHeight
             expect(combo.itemsMaxHeight).toEqual(320); // Default value for itemsMaxHeight
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.' + CSS_CLASS_CONTENT));
             expect(dropdownList.nativeElement.clientHeight).toEqual(320);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(32);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
-            combo.itemHeight = 47;
+            combo.itemHeight = 48;
             tick();
             fix.detectChanges();
-            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemHeight).toEqual(48);
             expect(combo.itemsMaxHeight).toEqual(320);
             expect(dropdownList.nativeElement.clientHeight).toEqual(320);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemsMaxHeight = 438;
             tick();
             fix.detectChanges();
-            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemHeight).toEqual(48);
             expect(combo.itemsMaxHeight).toEqual(438);
             expect(dropdownList.nativeElement.clientHeight).toEqual(438);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemsMaxHeight = 1171;
             tick();
             fix.detectChanges();
-            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemHeight).toEqual(48);
             expect(combo.itemsMaxHeight).toEqual(1171);
             expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemHeight = 83;
             tick();
@@ -3057,7 +3078,8 @@ class IgxComboScrollTestComponent {
 @Component({
     template: `
 <igx-combo #combo [placeholder]="'Location'" [data]='items'
-[filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'" [allowCustomValues]="true">
+[filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
+(onSelectionChange)="onSelectionChange($event)" [allowCustomValues]="true">
 <ng-template #itemTemplate let-display let-key="valueKey">
 <div class="state-card--simple">
 <span class="small-red-circle"></span>
