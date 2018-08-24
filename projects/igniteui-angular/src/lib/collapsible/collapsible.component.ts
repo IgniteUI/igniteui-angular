@@ -109,8 +109,8 @@ export class IgxCollapsibleComponent {
         return !this.collapsed;
     }
 
-    @Input()
-    public disabled;
+    @HostBinding('class.igx-collapsible--disabled')
+    @Input() public disabled = false;
 
     @Input()
     public headerButtons;

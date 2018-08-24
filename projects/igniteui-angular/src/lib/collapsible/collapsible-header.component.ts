@@ -56,7 +56,11 @@ export class IgxCollapsibleHeaderComponent {
      @HostListener('keydown.Space', ['$event'])
      @HostListener('click', ['$event'])
      public onAction(evt?: Event) {
-        this.onInterraction.emit({ event: evt });
+         if (this.collapsible.disabled) {
+            evt.stopPropagation();
+            return;
+         }
+         this.onInterraction.emit({ event: evt });
          this.collapsible.toggle(evt);
          evt.preventDefault();
      }

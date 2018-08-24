@@ -5,7 +5,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon';
 import { IgxCollapsibleComponent, IgxCollapsibleDescriptionDirective, IgxCollapsibleTitleDirective,
-     IgxCollapsibleBodyDirective } from './collapsible.component';
+     IgxCollapsibleBodyDirective, IgxCollapsibleHeaderDirective } from './collapsible.component';
 import { IgxCollapsibleHeaderComponent } from './collapsible-header.component';
 
 
@@ -13,6 +13,7 @@ import { IgxCollapsibleHeaderComponent } from './collapsible-header.component';
   declarations: [
     IgxCollapsibleComponent,
     IgxCollapsibleHeaderComponent,
+    IgxCollapsibleHeaderDirective,
     IgxCollapsibleDescriptionDirective,
     IgxCollapsibleTitleDirective,
     IgxCollapsibleBodyDirective
