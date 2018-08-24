@@ -178,7 +178,7 @@ The chip can be focused using the `Tab` key or by clicking on them. Chips can be
 | `onMoveEnd` | `any` | Fired when the chip moving(dragging) end. |
 | `onRemove ` | `any` | Fired when the chip remove button is clicked. |
 | `onClick ` | `any` | Fired when the chip is clicked instead of dragged. |
-| `onSelection` | `ChipSelectEventArgs` | Fired when the chip is being selected. |
+| `onSelection` | `IChipSelectEventArgs` | Fired when the chip is being selected. |
 | `onKeyDown ` | `any` | Fired when the chip keyboard navigation is being used. |
 | `onDragEnter ` | `any` | Fired when another chip has entered the current chip area. |
 

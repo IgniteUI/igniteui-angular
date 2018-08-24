@@ -227,7 +227,7 @@ export class IgxChipComponent implements AfterViewInit {
      * Returns the selected chip reference, whether the event should be canceled,
      * and what is the next selection state.
      * ```typescript
-     * chipSelect(event: ChipSelectEventArgs){
+     * chipSelect(event: IChipSelectEventArgs){
      *     const selectArgs = event;
      * }
      * ```
