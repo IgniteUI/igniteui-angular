@@ -1,4 +1,13 @@
-    <igx-icon fontSet="material" [name]="collapsible.collapsed? 'expand_more':'expand_less'"></igx-icon>
-    <ng-content select="igx-collapsible-title"></ng-content>
-    <ng-content select="igx-collapsible-description"></ng-content>
-    <ng-content></ng-content>
+<ng-template #iconContainer>
+    <ng-content *ngIf="iconTemplate" select="igx-collapsible-button"></ng-content>
+    <igx-icon *ngIf="!iconTemplate" fontSet="material" [name]="collapsible.collapsed? 'expand_more':'expand_less'"></igx-icon>
+</ng-template>
+<ng-container *ngIf="buttonPosition === 'left'">
+    <ng-container *ngTemplateOutlet="iconContainer"></ng-container>
+</ng-container>
+<ng-content select="igx-collapsible-title"></ng-content>
+<ng-content select="igx-collapsible-description"></ng-content>
+<ng-content></ng-content>
+<ng-container *ngIf="buttonPosition === 'right'">
+    <ng-container *ngTemplateOutlet="iconContainer"></ng-container>
+</ng-container>

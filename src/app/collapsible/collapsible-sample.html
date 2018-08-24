@@ -2,11 +2,17 @@
     <app-page-header title="Collapsible" description="Collapsible lets you display content with a toggleable details view"></app-page-header>
     <section>
         <div class="game-board">
-            <igx-collapsible class="game-board__collapsible">
-                <igx-collapsible-header (onInterraction)="onInterraction($event)">
+            <igx-collapsible
+            (onCollapsed)="handleCollapsed($event)"
+            (onExpanded)="handleExpanded($event)" #collapsibleComponent class="game-board__collapsible">
+                <igx-collapsible-header [buttonPosition]="'right'" (onInterraction)="onInterraction($event)">
                     <igx-collapsible-title>Current Winning Player:</igx-collapsible-title>
                     <igx-collapsible-description>{{ getWinningPlayer }}</igx-collapsible-description>
                     <button igxButton class='igx-button--flat' (click)="resetScore($event)">Reset score</button>
+                    <igx-collapsible-button *ngIf="templatedIcon">
+                        <!-- <igx-icon fontSet="material" [name]="collapsed() ? 'arrow_drop_down':'arrow_drop_up'"></igx-icon> -->
+                        {{collapsed() ? 'Expand':'Collapse'}}
+                    </igx-collapsible-button>
                 </igx-collapsible-header>
                 <igx-collapsible-body>
                     <igx-grid class="game-board__grid" [data]="data">
@@ -23,23 +29,6 @@
                 </igx-collapsible-body>
             </igx-collapsible>
         </div>
+        <button igxButton class="igx-button--raised" (click)="templateIcon()">{{ templatedIcon ? 'Disabled' : 'Enable'}} icon template</button>
     </section>
-    <!-- <section>
-        <igx-collapsible>
-            <igx-collapsible-header>
-                <igx-collapsible-title>
-                    Title
-                </igx-collapsible-title>
-                <igx-collapsible-title>
-                    Simple Description
-                </igx-collapsible-title>
-                <div class="additional-content">
-                    Additional Content
-                </div>
-            </igx-collapsible-header>
-        <igx-collapsible-body>
-            Very detailed and extensive description regarding the simple title and further elaborating on the simple description.
-        </igx-collapsible-body>
-        </igx-collapsible>
-    </section> -->
 </div>

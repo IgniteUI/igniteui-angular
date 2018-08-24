@@ -4,10 +4,12 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon';
-import { IgxCollapsibleComponent, IgxCollapsibleDescriptionDirective, IgxCollapsibleTitleDirective,
-     IgxCollapsibleBodyDirective } from './collapsible.component';
+import { IgxCollapsibleComponent } from './collapsible.component';
 import { IgxCollapsibleHeaderComponent } from './collapsible-header.component';
-
+import { IgxCollapsibleDescriptionDirective, IgxCollapsibleTitleDirective,
+  IgxCollapsibleBodyDirective,
+  IgxCollapsibleHeaderDirective,
+  IgxCollapsibleButtonDirective } from './collapsible.directives';
 
 @NgModule({
   declarations: [
@@ -15,8 +17,9 @@ import { IgxCollapsibleHeaderComponent } from './collapsible-header.component';
     IgxCollapsibleHeaderComponent,
     IgxCollapsibleDescriptionDirective,
     IgxCollapsibleTitleDirective,
-    IgxCollapsibleBodyDirective
-
+    IgxCollapsibleBodyDirective,
+    IgxCollapsibleButtonDirective,
+    IgxCollapsibleHeaderDirective
   ],
   entryComponents: [
   ],
@@ -25,7 +28,9 @@ import { IgxCollapsibleHeaderComponent } from './collapsible-header.component';
     IgxCollapsibleHeaderComponent,
     IgxCollapsibleDescriptionDirective,
     IgxCollapsibleTitleDirective,
-    IgxCollapsibleBodyDirective
+    IgxCollapsibleBodyDirective,
+    IgxCollapsibleButtonDirective,
+    IgxCollapsibleHeaderDirective
   ],
   imports: [
     CommonModule,
@@ -36,9 +41,4 @@ import { IgxCollapsibleHeaderComponent } from './collapsible-header.component';
   ]
 })
 export class IgxCollapsibleModule {
-    public static forRoot() {
-        return {
-            ngModule: IgxCollapsibleModule
-        };
-    }
 }
