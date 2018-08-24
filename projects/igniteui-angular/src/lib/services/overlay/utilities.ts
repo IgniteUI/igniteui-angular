@@ -48,7 +48,7 @@ export interface OverlayEventArgs {
 }
 
 /** @hidden */
-export function getPointFromPositionsSettings(settings: PositionSettings): Point {
+export function getPointFromPositionsSettings(settings: PositionSettings, overlayWrapper: HTMLElement): Point {
     let result: Point = new Point(0, 0);
 
     if (settings.target instanceof HTMLElement) {
@@ -58,6 +58,13 @@ export function getPointFromPositionsSettings(settings: PositionSettings): Point
     } else if (settings.target instanceof Point) {
         result = settings.target;
     }
+
+    //  if for some reason overlayWrapper is not at 0,0 position, e.g. overlay is in outlet
+    //  which is in element with transform,perspective or filter set, we should translate the result
+    //  accordingly
+    const overlayWrapperPosition = overlayWrapper.getBoundingClientRect();
+    result.x -= overlayWrapperPosition.left;
+    result.y -= overlayWrapperPosition.top;
 
     return result;
 }
