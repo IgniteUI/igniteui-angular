@@ -279,9 +279,9 @@ export class IgxChipsAreaComponent implements DoCheck {
      * @hidden
      */
     protected onChipSelectionChange(event) {
-        if (event.nextStatus) {
+        if (event.selected) {
             this.selectedChips.push(event.owner);
-        } else if (!event.nextStatus) {
+        } else if (!event.selected) {
             this.selectedChips = this.selectedChips.filter((chip) => {
                 return chip.id !== event.owner.id;
             });
