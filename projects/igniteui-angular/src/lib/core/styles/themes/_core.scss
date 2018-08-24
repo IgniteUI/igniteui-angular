@@ -56,8 +56,7 @@
 @import '../components/time-picker/time-picker-component';
 
 /// Includes the base for each theme.
-/// Currently it only includes typography.
 @mixin igx-core() {
     @include normalize();
-    @include igx-typography($config: ('font-family': 'Titillium Web'));
+    @include igx-typography();
 }

@@ -24,5 +24,20 @@
                 <igx-time-picker format="H:mm" ></igx-time-picker>
             </div>
         </article>
+        <article class="timepicker-column">
+            <h4 class="sample-title">Templated time picker.</h4>
+            <p class="sample-description">Time picker with templated input group.</p>
+            <div class="preview">
+                <igx-time-picker #templatedTimePicker format="h:mm tt" >
+                    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
+                        <igx-input-group (click)="openDialog()">
+                            <label igxLabel>Time</label>
+                            <input igxInput [value]="displayTime"/>
+                        </igx-input-group>
+                        <label>{{value}}</label>
+                    </ng-template>
+                </igx-time-picker>
+            </div>
+        </article>
     </section>
 </div>

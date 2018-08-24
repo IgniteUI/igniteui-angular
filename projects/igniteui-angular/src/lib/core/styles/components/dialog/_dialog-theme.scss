@@ -58,17 +58,8 @@
     @include igx-root-css-vars($theme);
 
     $dialog-min-width: rem(280px);
-
-    $dialog-title-font-size: rem(20px);
-    $dialog-title-line-height: rem(16px);
     $dialog-title-padding: rem(24px) rem(24px) rem(12px) rem(24px);
-    $dialog-title-font-weight: 600;
-
-    $dialog-message-font-size: rem(16px);
-    $dialog-message-line-height: rem(18px);
-
     $dialog-message-padding: rem(12px) rem(24px);
-    $dialog-message-font-weight: 400;
     $dialog-actions-padding: rem(8px);
 
     %igx-dialog-display {
@@ -98,17 +89,12 @@
 
     %igx-dialog-title {
         color: --var($theme, 'title-color');
-        font-size: $dialog-title-font-size;
-        line-height: $dialog-title-line-height;
         padding: $dialog-title-padding;
-        font-weight: $dialog-title-font-weight;
     }
 
     %igx-dialog-content {
         color: --var($theme, 'message-color');
         max-width: 40ch;
-        font-size: $dialog-message-font-size;
-        line-height: $dialog-message-line-height;
         padding: $dialog-message-padding;
     }
 
@@ -120,6 +106,30 @@
 
         button ~ button {
             margin-left: rem(8px);
+        }
+    }
+}
+
+/// Adds typography styles for the igx-dialog component.
+/// Uses the 'h6' and 'body-1' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(title: 'h6', content: 'body-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-dialog-typography($type-scale, $categories: (
+    title: 'h6',
+    content: 'body-1')
+) {
+    $title: map-get($categories, 'title');
+    $content: map-get($categories, 'content');
+
+    @include igx-scope('.igx-typography') {
+        %igx-dialog-title {
+            @include igx-type-style($type-scale, $title);
+        }
+
+        %igx-dialog-content {
+            @include igx-type-style($type-scale, $content);
         }
     }
 }

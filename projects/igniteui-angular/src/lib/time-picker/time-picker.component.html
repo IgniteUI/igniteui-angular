@@ -1,10 +1,13 @@
-<igx-input-group (click)="onClick()">
-    <igx-prefix>
-        <igx-icon>access_time</igx-icon>
-    </igx-prefix>
-    <label igxLabel>Time</label>
-    <input #input igxInput [value]="displayTime" [disabled]="disabled" tabindex="0" readonly />
-</igx-input-group>
+<ng-template #defaultTimePickerTemplate>
+    <igx-input-group (click)="openDialog()">
+        <igx-prefix>
+            <igx-icon>access_time</igx-icon>
+        </igx-prefix>
+        <label igxLabel>Time</label>
+        <input igxInput [value]="displayTime" [disabled]="disabled" tabindex="0" readonly />
+    </igx-input-group>
+</ng-template>
+<ng-container *ngTemplateOutlet="template; context: context"></ng-container>
 <ng-container *ngTemplateOutlet="scroll"></ng-container>
 <ng-template #scroll>
     <igx-dialog class="igx-time-picker__dialog-popup" closeOnOutsideSelect="true" [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="cancelButtonClick()"
