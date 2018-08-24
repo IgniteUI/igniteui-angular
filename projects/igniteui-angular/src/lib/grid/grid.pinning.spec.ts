@@ -9,8 +9,9 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
-import { first } from '../../../../../node_modules/rxjs/operators';
+import { first } from 'rxjs/operators';
 import { IgxGridRowComponent } from './row.component';
+import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Column Pinning ', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -349,121 +350,128 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[3].parent.name).toEqual('igx-display-container');
     });
 
-    it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', fakeAsync(() => {
+    it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', async () => {
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
+        // fix.componentInstance.columnPinningHandler = (event) => {};
+        fix.detectChanges();
+        await wait();
+
         grid.getColumnByName('CompanyName').pinned = true;
         grid.getColumnByName('ContactName').pinned = true;
 
-        fix.detectChanges();
+        // fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
-        const mockEvent = { preventDefault: () => { }, stopPropagation: () => { } };
 
         cell.triggerEventHandler('focus', {});
-        tick();
+        await wait();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        cell.triggerEventHandler('keydown.arrowright', mockEvent);
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(30);
         fix.detectChanges();
         expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         cell = cells[1];
 
-        cell.triggerEventHandler('keydown.arrowright', mockEvent);
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(30);
         fix.detectChanges();
         expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
         cell = cells[2];
 
-        cell.triggerEventHandler('keydown.arrowleft', mockEvent);
-        tick();
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
+        await wait(30);
         fix.detectChanges();
         expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         cell.triggerEventHandler('blur', {});
+        await wait();
         cell = cells[0];
 
-        cell.triggerEventHandler('keydown.arrowright', mockEvent);
-        tick();
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(30);
         fix.detectChanges();
         cell = cells[1];
 
-        cell.triggerEventHandler('keydown.arrowright', mockEvent);
-        tick();
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(30);
         fix.detectChanges();
         expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
-    }));
+    });
 
-    it('should allow vertical keyboard navigation in pinned area.', fakeAsync(() => {
+    it('should allow vertical keyboard navigation in pinned area.', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
-        const mockEvent = { preventDefault: () => { }, stopPropagation: () => { } };
 
         cell.triggerEventHandler('focus', {});
-        tick();
+        await wait();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
-        cell.triggerEventHandler('keydown.arrowdown', mockEvent);
-        tick();
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
+        await wait(30);
         grid.cdr.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
         cell = cells[6];
-        cell.triggerEventHandler('keydown.arrowup', mockEvent);
-        tick();
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
+        await wait(30);
         grid.cdr.detectChanges();
+
         expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-    }));
+    });
 
-    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', (done) => {
+    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', async () => {
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
-        const mockEvent = { preventDefault: () => { } };
+
+        await wait();
         const grid = fix.componentInstance.instance;
         grid.getColumnByName('CompanyName').pinned = true;
         grid.getColumnByName('ContactName').pinned = true;
         fix.detectChanges();
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
+
         cell.triggerEventHandler('focus', {});
+        await wait();
         fix.detectChanges();
+
         expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        cell.triggerEventHandler('keydown.control.arrowright', null);
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { ctrlKey: true, key: 'arrowright'}));
+        await wait(30);
         fix.detectChanges();
 
-        grid.onSelection.pipe(first()).subscribe(() => {
-            cell.componentInstance.row.cdr.detectChanges();
-            expect(fix.componentInstance.selectedCell.value).toEqual(null);
-            expect(fix.componentInstance.selectedCell.column.field).toMatch('Region');
+        expect(fix.componentInstance.selectedCell.value).toEqual('030-0076545');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
-            cell = cells[cells.length - 1];
-            cell.triggerEventHandler('keydown.control.arrowleft', null);
-            fix.detectChanges();
+        cell = cells[cells.length - 1];
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { ctrlKey: true, key: 'arrowleft'}));
+        await wait(30);
+        fix.detectChanges();
 
-            // It won't scroll left since the next selected cell will be in the pinned area
-            fix.whenStable().then(() => {
-                expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-                done();
-            });
-        });
+        // It won't scroll left since the next selected cell will be in the pinned area
+        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     });
 
     it('should allow hiding/showing pinned column.', () => {

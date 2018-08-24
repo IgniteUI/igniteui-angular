@@ -167,7 +167,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     private _container: any;
 
-
     /**
      * Activates the highlight at a given index.
      * (if such index exists)
