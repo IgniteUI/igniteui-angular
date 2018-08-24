@@ -8,6 +8,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxStringFilteringOperand} from '../../public_api';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -1104,7 +1105,7 @@ describe('IgxGrid - multi-column headers', () => {
         testGroupsAndColumns(18, 11);
     });
 
-    it('summaries - verify summaries when there are grouped columns', async(() => {
+    it('summaries - verify summaries when there are grouped columns', (async () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
@@ -1118,23 +1119,20 @@ describe('IgxGrid - multi-column headers', () => {
                 col.hasSummary = true;
             }
         });
-
+        await wait();
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
-            expect(summaries.length).toBe(7);
-            let index = 0;
-            grid.visibleColumns.forEach((col) => {
-                if (!col.columnGroup && index < 7) {
-                    expect(col.hasSummary).toBeTruthy();
-                    const labels = summaries[index].queryAll(By.css('.igx-grid-summary__label'));
-                    expect(labels.length).toBe(1);
-                    expect(labels[0].nativeElement.innerText).toBe('Count');
-                    index++;
-                }
-            });
+        const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
+        expect(summaries.length).toBe(7);
+        let index = 0;
+        grid.visibleColumns.forEach((col) => {
+            if (!col.columnGroup && index < 7) {
+                expect(col.hasSummary).toBeTruthy();
+                const labels = summaries[index].queryAll(By.css('.igx-grid-summary__label'));
+                expect(labels.length).toBe(1);
+                expect(labels[0].nativeElement.innerText).toBe('Count');
+                index++;
+            }
         });
     }));
 

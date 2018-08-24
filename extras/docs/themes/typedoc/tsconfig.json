@@ -1,0 +1,19 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "sourceMap": false,
+        "declaration": true,
+        "removeComments": true,
+        "outFile": "src/assets/js/main.js"
+    },
+    "include": [
+        "src/assets/js/src/lib/**/*.ts",
+        "src/assets/js/src/typedoc/Application.ts",
+        "src/assets/js/src/typedoc/components/**/*.ts",
+        "src/assets/js/src/typedoc/services/**/*.ts",
+        "src/assets/js/src/typedoc/utils/**/*.ts",
+        "src/assets/js/src/~bootstrap.ts"
+    ]
+}
