@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
-import { IgxIconModule } from '../icon';
+import { IgxIconModule } from '../icon/index';
 import { IgxCollapsibleComponent } from './collapsible.component';
 import { IgxCollapsibleHeaderComponent } from './collapsible-header.component';
 import { IgxCollapsibleDescriptionDirective, IgxCollapsibleTitleDirective,
