@@ -57,7 +57,7 @@ export class IgxDropEventArgs {
     cancel: boolean;
 }
 
-export interface IDragStartEventArgs{
+export interface IDragStartEventArgs {
     owner: IgxDragDirective;
     cancel: boolean;
 }
