@@ -49,7 +49,8 @@ export class GridCellEditingComponent {
         });
     }
 
-    public deleteRow(rowID) {
+    public deleteRow(event, rowID) {
+        event.stopPropagation();
         const row = this.gridWithPK.getRowByKey(rowID);
         this.gridWithPK.deleteRow(rowID);
     }
