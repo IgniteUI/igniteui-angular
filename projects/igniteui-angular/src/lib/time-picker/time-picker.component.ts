@@ -14,20 +14,22 @@ import {
     Output,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
     AfterViewInit,
-    DoCheck
+    DoCheck,
+    ContentChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxInputDirective } from '../directives/input/input.directive';
 import {
     IgxAmPmItemDirective,
     IgxHourItemDirective,
     IgxItemListDirective,
-    IgxMinuteItemDirective
+    IgxMinuteItemDirective,
+    IgxTimePickerTemplateDirective
 } from './time-picker.directives';
 import { Subscription } from 'rxjs';
 
@@ -294,10 +296,22 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     @ViewChild('ampmList')
     public ampmList: ElementRef;
 
+    /*
+     * @hidden
+     */
+    @ViewChild('defaultTimePickerTemplate', { read: TemplateRef })
+    protected defaultTimePickerTemplate: TemplateRef<any>;
+
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective })
+    protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
+
     /**
      * @hidden
      */
-    @ViewChild('input')
+    @ViewChild(IgxInputDirective, { read: ElementRef })
     private _input: ElementRef;
 
     /**
@@ -386,9 +400,16 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     /**
-     * @hidden
+     * opens the dialog.
+     * ```html
+     *<igx-time-picker #tp></igx-time-picker>
+     * ```
+     * ```typescript
+     * @ViewChild('tp', { read: IgxTimePickerComponent }) tp: IgxTimePickerComponent;
+     * tp.openDialog();
+     * ```
      */
-    public onClick(): void {
+    public openDialog(timePicker: IgxTimePickerComponent = this): void {
         if (this.value) {
             const foramttedTime = this._formatTime(this.value, this.format);
             const sections = foramttedTime.split(/[\s:]+/);
@@ -453,7 +474,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      * @hidden
      */
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         this.dialogClosed = this._alert.toggleRef.onClosed.pipe().subscribe((ev) => this.handleDialogCloseAction());
     }
 
@@ -479,7 +500,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     public handleDialogCloseAction() {
-        this._input.nativeElement.focus();
+        if (this._input) {
+            this._input.nativeElement.focus();
+        }
         this.onClose.emit(this);
     }
 
@@ -734,7 +757,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private _getSelectedTime(): Date {
-        const date = new Date();
+        const date = this.value ? new Date(this.value) : new Date();
         date.setHours(parseInt(this.selectedHour, 10));
         date.setMinutes(parseInt(this.selectedMinute, 10));
         date.setSeconds(0);
@@ -748,7 +771,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     private _convertMinMaxValue(value: string): Date {
-        const date = new Date();
+        const date = this.value ? new Date(this.value) : new Date();
         const sections = value.split(/[\s:]+/);
 
         date.setHours(parseInt(sections[0], 10));
@@ -945,7 +968,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onKeydownSpace(event) {
-        this.onClick();
+        this.openDialog();
         event.preventDefault();
     }
 
@@ -990,6 +1013,32 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
     public ampmInView(): string[] {
         return this._ampmView.filter((ampm) => ampm !== '');
     }
+
+    /**
+     * Gets the input group template.
+     * ```typescript
+     * let template = this.template();
+     * ```
+     * @memberof IgxTimePickerComponent
+     */
+    get template(): TemplateRef<any> {
+        if (this.timePickerTemplateDirective) {
+            return this.timePickerTemplateDirective.template;
+        }
+        return this.defaultTimePickerTemplate;
+    }
+
+    /**
+     * Gets the context passed to the input group template.
+     * @memberof IgxTimePickerComponent
+     */
+    get context() {
+        return {
+            value: this.value,
+            displayTime: this.displayTime,
+            openDialog: () => { this.openDialog(); }
+        };
+    }
 }
 
 /**
@@ -1001,10 +1050,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         IgxHourItemDirective,
         IgxItemListDirective,
         IgxMinuteItemDirective,
-        IgxAmPmItemDirective
+        IgxAmPmItemDirective,
+        IgxTimePickerTemplateDirective
     ],
     exports: [
-        IgxTimePickerComponent
+        IgxTimePickerComponent,
+        IgxTimePickerTemplateDirective
     ],
     imports: [
         CommonModule,

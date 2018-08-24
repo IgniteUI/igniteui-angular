@@ -66,6 +66,7 @@ function addScrollDivToElement(parent) {
     parent.appendChild(scrollDiv);
 
 }
+
 function getExpectedTopPosition(verticalAlignment: VerticalAlignment, elementRect: DOMRect): number {
     let expectedTop: number;
     switch (verticalAlignment) {
@@ -84,6 +85,7 @@ function getExpectedTopPosition(verticalAlignment: VerticalAlignment, elementRec
     }
     return expectedTop;
 }
+
 function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, elementRect: DOMRect): number {
     let expectedLeft: number;
     switch (horizontalAlignment) {
@@ -693,6 +695,27 @@ describe('igxOverlay', () => {
             expect(200).toEqual(contentRect.top);
 
             overlayInstance.hide(id);
+        }));
+
+        it('fix for #2475 - An error is thrown for IgxOverlay when showing a component' +
+        'instance that is not attached to the DOM', fakeAsync(() => {
+            const fix = TestBed.createComponent(SimpleRefComponent);
+            fix.detectChanges();
+            fix.elementRef.nativeElement.parentElement.removeChild(fix.elementRef.nativeElement);
+            fix.componentInstance.overlay.show(fix.elementRef);
+
+            tick();
+            const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeDefined();
+            expect(overlayDiv.children.length).toEqual(1);
+            const wrapperDiv = overlayDiv.children[0];
+            expect(wrapperDiv).toBeDefined();
+            expect(wrapperDiv.classList.contains(CLASS_OVERLAY_WRAPPER_MODAL)).toBeTruthy();
+            expect(wrapperDiv.children[0].localName).toEqual('div');
+
+            const contentDiv = wrapperDiv.children[0];
+            expect(contentDiv).toBeDefined();
+            expect(contentDiv.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBeTruthy();
         }));
     });
 
@@ -1621,10 +1644,10 @@ describe('igxOverlay', () => {
                     const expectedLeft = horizontalDirection === HorizontalAlignment.Left ?
                         buttonRect.right - overlayRect.width :
                         getExpectedLeftPosition(horizontalAlignment, buttonRect);
-                    expect(overlayRect.top).toEqual(expectedTop);
-                    expect(overlayRect.bottom).toEqual(overlayRect.top + overlayRect.height);
-                    expect(overlayRect.left).toEqual(expectedLeft);
-                    expect(overlayRect.right).toEqual(overlayRect.left + overlayRect.width);
+                    expect(overlayRect.top.toFixed(1)).toEqual(expectedTop.toFixed(1));
+                    expect(overlayRect.bottom.toFixed(1)).toEqual((overlayRect.top + overlayRect.height).toFixed(1));
+                    expect(overlayRect.left.toFixed(1)).toEqual(expectedLeft.toFixed(1));
+                    expect(overlayRect.right.toFixed(1)).toEqual((overlayRect.left + overlayRect.width).toFixed(1));
                     fix.componentInstance.overlay.hideAll();
                 }
             }));
@@ -1687,10 +1710,10 @@ describe('igxOverlay', () => {
                             verticalDirection === VerticalAlignment.Top) ?
                             getExpectedLeftPosition(horizontalAlignment, buttonRect) :
                             buttonRect.right;
-                    expect(overlayRect.top).toEqual(expectedTop);
-                    expect(overlayRect.bottom).toEqual(overlayRect.top + overlayRect.height);
-                    expect(overlayRect.left).toEqual(expectedLeft);
-                    expect(overlayRect.right).toEqual(overlayRect.left + overlayRect.width);
+                    expect(overlayRect.top.toFixed(1)).toEqual(expectedTop.toFixed(1));
+                    expect(overlayRect.bottom.toFixed(1)).toEqual((overlayRect.top + overlayRect.height).toFixed(1));
+                    expect(overlayRect.left.toFixed(1)).toEqual(expectedLeft.toFixed(1));
+                    expect(overlayRect.right.toFixed(1)).toEqual((overlayRect.left + overlayRect.width).toFixed(1));
                     expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
                     fix.componentInstance.overlay.hideAll();
                 }
@@ -1776,12 +1799,12 @@ describe('igxOverlay', () => {
                 const componentEl_2 = overlayWrapper_2.children[0].children[0];
                 const componentRect_1 = componentEl_1.getBoundingClientRect();
                 const componentRect_2 = componentEl_2.getBoundingClientRect();
-                expect(componentRect_1.left).toEqual(buttonRect.left + buttonRect.width / 2);
-                expect(componentRect_1.left).toEqual(componentRect_2.left);
-                expect(componentRect_1.top).toEqual(buttonRect.top + buttonRect.height);
-                expect(componentRect_1.top).toEqual(componentRect_2.top);
-                expect(componentRect_1.width).toEqual(componentRect_2.width);
-                expect(componentRect_1.height).toEqual(componentRect_2.height);
+                expect(componentRect_1.left.toFixed(1)).toEqual((buttonRect.left + buttonRect.width / 2).toFixed(1));
+                expect(componentRect_1.left.toFixed(1)).toEqual(componentRect_2.left.toFixed(1));
+                expect(componentRect_1.top.toFixed(1)).toEqual((buttonRect.top + buttonRect.height).toFixed(1));
+                expect(componentRect_1.top.toFixed(1)).toEqual(componentRect_2.top.toFixed(1));
+                expect(componentRect_1.width.toFixed(1)).toEqual(componentRect_2.width.toFixed(1));
+                expect(componentRect_1.height.toFixed(1)).toEqual(componentRect_2.height.toFixed(1));
             }));
 
         // When adding more than one component to show in igx-overlay and the options used will not fit the component in the
@@ -1865,8 +1888,8 @@ describe('igxOverlay', () => {
                     set: {
                         styles: [`button {
                             position: absolute;
-                            top: 98%;
-                            left:98%;
+                            top: 120%;
+                            left:120%;
                         }`]
                     }
                 }).createComponent(EmptyPageComponent);

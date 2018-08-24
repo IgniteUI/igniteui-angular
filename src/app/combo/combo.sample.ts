@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { IgxComboComponent } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { NgModule } from '@angular/core';
@@ -39,7 +39,9 @@ export class ComboSampleComponent implements OnInit {
     public items: any[] = [];
     public valueKeyVar = 'field';
     public currentDataType = '';
-
+    @ViewChild('customItemTemplate', {read: TemplateRef})
+    private customItemTemplate;
+    private initialItemTemplate: TemplateRef<any> = null;
     constructor() {
 
         const division = {
@@ -112,5 +114,11 @@ export class ComboSampleComponent implements OnInit {
         this.igxCombo.onSearchInput.subscribe((e) => {
             console.log(e);
         });
+    }
+
+    changeItemTemplate() {
+        const comboTemplate = this.initialItemTemplate ? null : this.igxCombo.itemTemplate;
+        this.igxCombo.itemTemplate = this.initialItemTemplate ? this.initialItemTemplate : this.customItemTemplate ;
+        this.initialItemTemplate = comboTemplate;
     }
 }
