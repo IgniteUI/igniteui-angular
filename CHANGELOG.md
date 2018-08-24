@@ -21,6 +21,7 @@ All notable changes for each version of this project will be documented in this 
     - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
 -   `IgxChip`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - **Breaking change** `nextStatus` is renamed to `selected`.
 -   `IgxChipArea`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
 ## 6.1.3
