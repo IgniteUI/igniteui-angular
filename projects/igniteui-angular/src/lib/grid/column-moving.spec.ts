@@ -14,7 +14,7 @@ import {
     MovableColumnsLargeComponent,
     MultiColumnHeadersComponent
  } from '../test-utils/grid-samples.spec';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -801,13 +801,12 @@ describe('IgxGrid - Column Moving', () => {
         expect(columnsList[1].field).toEqual('ID');
     }));
 
-    it('Should not break KB after columns are reordered - selection belongs to the moved column.', fakeAsync(() => {
+    it('Should not break KB after columns are reordered - selection belongs to the moved column.', (async () => {
         const fixture = TestBed.createComponent(MovableColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        const mockEvent = { preventDefault: () => { }, stopPropagation: () => { } };
 
         // step 1 - select a cell from 'ID' column
         let cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
@@ -818,10 +817,9 @@ describe('IgxGrid - Column Moving', () => {
         const header = headers[0].nativeElement;
         simulatePointerEvent('pointerdown', header, 150, 65);
         simulatePointerEvent('pointermove', header, 156, 71);
-        tick(20);
+        await wait();
         simulatePointerEvent('pointermove', header, 330, 75);
         simulatePointerEvent('pointerup', header, 330, 75);
-        tick(20);
         fixture.detectChanges();
 
         const columnsList = grid.columnList.toArray();
@@ -831,21 +829,18 @@ describe('IgxGrid - Column Moving', () => {
 
         // step 3 - navigate right and verify cell selection is updated
         cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
-        cell.triggerEventHandler('keydown.arrowright', mockEvent);
-        cell.triggerEventHandler('keyup.arrowright', mockEvent);
-        tick(20);
-        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(20);
 
         expect(grid.getCellByColumn(0, 'LastName').selected).toBeTruthy();
     }));
 
-    it('Should not break KB after columns are reordered - selection does not belong to the moved column.', fakeAsync(() => {
+    it('Should not break KB after columns are reordered - selection does not belong to the moved column.', (async() => {
         const fixture = TestBed.createComponent(MovableColumnsComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        const mockEvent = { preventDefault: () => { }, stopPropagation: () => { } };
 
         // step 1 - select a cell from 'ID' column
         let cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
@@ -856,10 +851,9 @@ describe('IgxGrid - Column Moving', () => {
         const header = headers[0].nativeElement;
         simulatePointerEvent('pointerdown', header, 150, 65);
         simulatePointerEvent('pointermove', header, 156, 71);
-        tick(20);
+        await wait();
         simulatePointerEvent('pointermove', header, 480, 75);
         simulatePointerEvent('pointerup', header, 480, 75);
-        tick(20);
         fixture.detectChanges();
 
         const columnsList = grid.columnList.toArray();
@@ -869,10 +863,8 @@ describe('IgxGrid - Column Moving', () => {
 
         // step 3 - navigate and verify cell selection is updated
         cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-        cell.triggerEventHandler('keydown.arrowright', mockEvent);
-        cell.triggerEventHandler('keyup.arrowright', mockEvent);
-        tick(20);
-        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        await wait(20);
 
         expect(grid.getCellByColumn(0, 'LastName').selected).toBeTruthy();
     }));
@@ -1274,12 +1266,11 @@ describe('IgxGrid - Column Moving', () => {
         expect(columnsList[4].field).toEqual('Missing');
     }));
 
-    it('MCH - should not break selection and keyboard navigation navigation when reordering columns .', fakeAsync(() => {
+    it('MCH - should not break selection and keyboard navigation navigation when reordering columns .', (async() => {
         const fixture = TestBed.createComponent(MultiColumnHeadersComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
-        const mockEvent = { preventDefault: () => { }, stopPropagation: () => { } };
 
         // step 1 - select a cell from 'ContactName' column
         const cell = grid.getCellByColumn(0, 'ContactName');
@@ -1290,20 +1281,17 @@ describe('IgxGrid - Column Moving', () => {
         const header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[1].nativeElement;
         simulatePointerEvent('pointerdown', header, 300, 25);
         simulatePointerEvent('pointermove', header, 300, 31);
-        tick(20);
+        await wait();
         simulatePointerEvent('pointermove', header, 560, 50);
         simulatePointerEvent('pointerup', header, 560, 50);
-        tick(20);
         fixture.detectChanges();
 
         expect(grid.getCellByColumn(0, 'ContactName').selected).toBeTruthy();
 
         // step 3 - navigate right and verify cell selection is updated
         const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
-        cellEl.triggerEventHandler('keydown.arrowright', mockEvent);
-        cellEl.triggerEventHandler('keyup.arrowright', mockEvent);
-        tick(20);
-        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellEl.nativeElement, true);
+        await wait(20);
 
         expect(grid.getCellByColumn(0, 'ContactTitle').selected).toBeTruthy();
     }));
