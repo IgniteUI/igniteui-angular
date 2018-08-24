@@ -358,14 +358,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('100px');
+        expect(grid.columns[0].width).toEqual('102px');
 
         resizeArea = headers[1].componentInstance.resizeArea.nativeElement;
         UIInteractions.simulateMouseEvent('dblclick', resizeArea, 248, 5);
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[1].width).toEqual('207px');
+        expect(grid.columns[1].width).toEqual('195px');
 
         resizeArea = headers[2].componentInstance.resizeArea.nativeElement;
         UIInteractions.simulateMouseEvent('dblclick', resizeArea, 305, 5);
@@ -438,7 +438,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[2].width).toEqual('97px');
+        expect(grid.columns[2].width).toEqual('92px');
     }));
 
     it('should autoresize pinned column on double click - edge case.', fakeAsync(() => {
@@ -517,11 +517,11 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[1].width).toEqual('207px');
+        expect(grid.columns[1].width).toEqual('195px');
         expect(fixture.componentInstance.count).toEqual(2);
         expect(fixture.componentInstance.column).toBe(grid.columns[1]);
         expect(fixture.componentInstance.prevWidth).toEqual('150');
-        expect(fixture.componentInstance.newWidth).toEqual('207px');
+        expect(fixture.componentInstance.newWidth).toEqual('195px');
     }));
 
     it('should update grid after resizing a column to be bigger.', fakeAsync(() => {
@@ -639,7 +639,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(column.width).toEqual('102px');
+        expect(column.width).toEqual('95px');
     }));
 
     it('should autosize last pinned column programmatically.', fakeAsync(() => {
@@ -653,7 +653,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(column.width).toEqual('97px');
+        expect(column.width).toEqual('92px');
     }));
 
     it('should autosize templated column programmatically.', fakeAsync(() => {
@@ -670,7 +670,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('89px');
     }));
 
-    it('should autosize filtarable/sortable/resizable/movable column programmatically.', fakeAsync(() => {
+    it('should autosize filterable/sortable/resizable/movable column programmatically.', fakeAsync(() => {
         const fixture = TestBed.createComponent(MultiColumnHeadersComponent);
         fixture.detectChanges();
 
@@ -680,7 +680,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         column.autosize();
         tick();
         fixture.detectChanges();
-        expect(column.width).toEqual('133px');
+        expect(column.width).toEqual('128px');
     }));
 
     it('should autosize MCHs programmatically.', fakeAsync(() => {
@@ -693,7 +693,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         column.autosize();
         tick();
         fixture.detectChanges();
-        expect(column.width).toEqual('257px');
+        expect(column.width).toEqual('239px');
 
         column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ContactName')[0];
         expect(column.width).toEqual('100px');
@@ -701,7 +701,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         column.autosize();
         tick();
         fixture.detectChanges();
-        expect(column.width).toEqual('159px');
+        expect(column.width).toEqual('148px');
 
         column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'Region')[0];
         expect(column.width).toEqual('150px');
@@ -709,7 +709,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         column.autosize();
         tick();
         fixture.detectChanges();
-        expect(column.width).toEqual('90px');
+        expect(column.width).toEqual('85px');
 
         column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'Country')[0];
         expect(column.width).toEqual('90px');
@@ -717,7 +717,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         column.autosize();
         tick();
         fixture.detectChanges();
-        expect(column.width).toEqual('116px');
+        expect(column.width).toEqual('111px');
     }));
 });
 

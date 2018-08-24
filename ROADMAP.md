@@ -53,16 +53,16 @@
 
 ## Milestone 3 (by July 6th, 2018)
 
-1. **[DONE]**Grouping
-2. **[DONE]**Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
-3. **[DONE]**Combo
-4. **[DONE]**Column Hiding UI
-5. **[DONE]**Operations UI - column chooser
-6. **[DONE]**Advanced Filtering
-7. **[DONE]**Column Moving
+1. **[DONE]** Grouping
+2. **[DONE]** Grid Multi-column Headers [issue](https://github.com/IgniteUI/igniteui-angular/issues/488)
+3. **[DONE]** Combo
+4. **[DONE]** Column Hiding UI
+5. **[DONE]** Operations UI - column chooser
+6. **[DONE]** Advanced Filtering
+7. **[DONE]** Column Moving
 8. **[DONE]** Update to Angular 6
 9. **[DONE]** Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
-10.**[DONE]**Design: Data dense theme for data grid 
+10.**[DONE]** Design: Data dense theme for data grid 
 
 
 # Postponed

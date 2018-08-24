@@ -1,44 +1,47 @@
 <div class="sample-wrapper">
     <app-page-header title="Combo" description="Combo lets you choose value from a list"></app-page-header>
-    <section class="combo-sample">
-        <div class="input-wrapper">
-            <div class="input-row">
-                <igx-input-group type="box" class="input-container">
-                    <input igxInput name="fristName" placeholder="First Name"/>
-                </igx-input-group>
-                <igx-input-group type="box" class="input-container">
-                    <input igxInput name="lastName" placeholder="Last Name"/>
-                </igx-input-group>
-                <igx-input-group type="box" class="input-container">
-                    <input igxInput name="age" placeholder="Age"/>
-                </igx-input-group>
-            </div>
-            <div class="input-row">
-                <igx-combo class="input-container" placeholder="Location(s)"
-                            (onAddition)="handleAddition($event)"
-                            [data]="items"
-                            [allowCustomValues]="true"
-                            [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
-                            [groupKey]="valueKeyVar ? 'region' : ''">
-                    <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
-                        <div class="state-card--simple">
-                            <div class="display-value--main">{{display[key]}}</div>
-                            <div class="display-value--sub">{{display.region}}</div>
-                        </div>
-                    </ng-template>
-                    <ng-template *ngIf="currentDataType === 'primitive'" #itemTemplate let-display let-key="valueKey">
-                        <div class="state-card--simple">
-                            <div class="display-value--main">{{display}}</div>
-                            <div class="display-value--sub"></div>
-                        </div>
-                    </ng-template>
-                </igx-combo>
-            </div>
-            <div class="btn-wrapper mb24">
-                <div class="btn-container">
-                    <button class="igx-button--flat" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
+
+  <div class="sample-content">
+        <section class="combo-sample">
+            <div class="input-wrapper">
+                <div class="input-row">
+                    <igx-input-group type="box" class="input-container">
+                        <input igxInput name="fristName" placeholder="First Name"/>
+                    </igx-input-group>
+                    <igx-input-group type="box" class="input-container">
+                        <input igxInput name="lastName" placeholder="Last Name"/>
+                    </igx-input-group>
+                    <igx-input-group type="box" class="input-container">
+                        <input igxInput name="age" placeholder="Age"/>
+                    </igx-input-group>
+                </div>
+                <div class="input-row">
+                    <igx-combo class="input-container" placeholder="Location(s)"
+                                (onAddition)="handleAddition($event)"
+                                [data]="items"
+                                [allowCustomValues]="true"
+                                [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
+                                [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                        <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
+                            <div class="state-card--simple">
+                                <div class="display-value--main">{{display[key]}}</div>
+                                <div class="display-value--sub">{{display.region}}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template *ngIf="currentDataType === 'primitive'" #itemTemplate let-display let-key="valueKey">
+                            <div class="state-card--simple">
+                                <div class="display-value--main">{{display}}</div>
+                                <div class="display-value--sub"></div>
+                            </div>
+                        </ng-template>
+                    </igx-combo>
+                </div>
+                <div class="btn-wrapper mb24">
+                    <div class="btn-container">
+                        <button class="igx-button--flat" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </div>
