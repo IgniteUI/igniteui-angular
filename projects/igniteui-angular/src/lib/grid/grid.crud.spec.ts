@@ -18,14 +18,15 @@ describe('IgxGrid - CRUD operations', () => {
                 DefaultCRUDGridComponent
             ],
             imports: [IgxGridModule.forRoot()]
-        }).compileComponents()
-        .then(() => {
-            fix = TestBed.createComponent(DefaultCRUDGridComponent);
-            fix.detectChanges();
-            grid = fix.componentInstance.instance;
-            data = fix.componentInstance.data;
-        });
+        }).compileComponents();
     }));
+
+    beforeEach(() => {
+        fix = TestBed.createComponent(DefaultCRUDGridComponent);
+        fix.detectChanges();
+        grid = fix.componentInstance.instance;
+        data = fix.componentInstance.data;
+    });
 
     it('should support adding rows through the grid API', () => {
         expect(grid.data.length).toEqual(data.length);
