@@ -64,6 +64,7 @@ export * from './lib/grid/index';
 export * from './lib/icon/index';
 export * from './lib/input-group/index';
 export * from './lib/list/index';
+export * from './lib/collapsible/index';
 export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/index';
 export * from './lib/progressbar/progressbar.component';

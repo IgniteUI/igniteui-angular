@@ -8,13 +8,23 @@ import {
     Renderer2,
     Host,
     EventEmitter,
-    Output
+    Output,
+    ContentChild,
+    TemplateRef
 } from '@angular/core';
 import { IgxCollapsibleComponent } from './collapsible.component';
+import { IgxCollapsibleButtonDirective } from './collapsible.directives';
 
 export interface ICollapsibleEventArgs {
     event: Event;
 }
+
+export enum BUTTON_POSITION {
+    LEFT = 'left',
+    NONE = 'none',
+    RIGHT = 'right'
+}
+
 @Component({
     selector: 'igx-collapsible-header',
     templateUrl: 'collapsible-header.component.html'
@@ -22,9 +32,23 @@ export interface ICollapsibleEventArgs {
 export class IgxCollapsibleHeaderComponent {
      // properties section
 
-     @Input()
-     @HostBinding('attr.tabindex')
-     public tabIndex = 0;
+     private _iconTemplate = false;
+
+    @ContentChild(IgxCollapsibleButtonDirective)
+    public set iconTemplate(val: any) {
+        this._iconTemplate = <boolean>val;
+    }
+
+    public get iconTemplate(): any {
+        return this._iconTemplate;
+    }
+
+    @Input()
+    public buttonPosition: BUTTON_POSITION = BUTTON_POSITION.LEFT;
+
+    @Input()
+    @HostBinding('attr.tabindex')
+    public tabIndex = 0;
 
     @Output()
     public onInterraction = new EventEmitter<ICollapsibleEventArgs>();

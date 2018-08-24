@@ -19,41 +19,9 @@ import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, An
 import { IAnimationParams } from '../animations/main';
 import { slideOutTop, slideInTop } from '../animations/main';
 import { ICollapsibleEventArgs } from './collapsible-header.component';
+import { IgxCollapsibleBodyDirective } from './collapsible.directives';
 
 let NEXT_ID = 0;
-@Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'igx-collapsible-header'
-})
-export class IgxCollapsibleHeaderDirective {
-    constructor (public element: ElementRef<any>) {}
-}
-@Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'igx-collapsible-title'
-})
-export class IgxCollapsibleTitleDirective {
-
-    constructor(public element: ElementRef<any>) { }
-}
-
-@Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'igx-collapsible-description'
-})
-export class IgxCollapsibleDescriptionDirective {
-
-    constructor(public element: ElementRef<any>) { }
-}
-
-@Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: 'igx-collapsible-body'
-})
-export class IgxCollapsibleBodyDirective {
-
-    constructor(public element: ElementRef<any>) { }
-}
 
 @Component({
     selector: 'igx-collapsible',
@@ -85,7 +53,7 @@ export class IgxCollapsibleComponent {
     @HostBinding('class.igx-collapsible')
     public cssClass = 'igx-collapsible';
 
-    @ContentChild(IgxCollapsibleBodyDirective, { read: IgxCollapsibleBodyDirective })
+    @ContentChild(IgxCollapsibleBodyDirective, { read: ElementRef })
     public textArea: IgxCollapsibleBodyDirective;
 
     @ViewChild('toggleBtn', { read: ElementRef })
@@ -105,7 +73,7 @@ export class IgxCollapsibleComponent {
     public collapsed = true;
 
     @HostBinding('attr.aria-expanded')
-    private get HostState () {
+    public get hostState () {
         return !this.collapsed;
     }
 
