@@ -23,6 +23,7 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxDragDirective, IgxDropEnterEventArgs } from '../directives/dragdrop/dragdrop.directive';
 import { DisplayDensity } from '../core/utils';
 
+
 export interface IBaseChipEventArgs {
     owner: IgxChipComponent;
 }
@@ -42,6 +43,12 @@ export interface IChipEnterDragAreaEventArgs {
     targetChip: IgxChipComponent;
     dragChip: IgxChipComponent;
     originalEvent: IgxDropEnterEventArgs;
+}
+
+export interface IChipSelectEventArgs {
+    owner: IgxChipComponent;
+    cancel: boolean;
+    selected: boolean;
 }
 
 let CHIP_ID = 0;
@@ -243,9 +250,11 @@ export class IgxChipComponent implements AfterViewInit {
 
     /**
      * Emits event when the `IgxChipComponent` is selected.
+     * Returns the selected chip reference, whether the event should be canceled,
+     * and what is the next selection state.
      * ```typescript
-     * chipSelect(){
-     *     alert("The chip has been selected.");
+     * chipSelect(event: IChipSelectEventArgs){
+     *     const selectArgs = event;
      * }
      * ```
      * ```html
@@ -253,7 +262,7 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     @Output()
-    public onSelection = new EventEmitter<any>();
+    public onSelection = new EventEmitter<IChipSelectEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` keyboard navigation is being used.
@@ -341,13 +350,13 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     public set selected(newValue: boolean) {
-        const onSelectArgs = {
+        const onSelectArgs: IChipSelectEventArgs = {
             owner: this,
-            nextStatus: false,
+            selected: false,
             cancel: false
         };
         if (newValue && !this._selected) {
-            onSelectArgs.nextStatus = true;
+            onSelectArgs.selected = true;
             this.onSelection.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
