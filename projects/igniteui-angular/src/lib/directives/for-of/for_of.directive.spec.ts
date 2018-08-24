@@ -22,6 +22,7 @@ import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
 import { take } from 'rxjs/operators';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -345,10 +346,10 @@ describe('IgxForOf directive -', () => {
             expect(rows.length).toBe(8);
         });
 
-        it('should scroll to wheel event correctly', () => {
-            /* The height of the row is set to 50px so scrolling by 100px should render the third record */
-            fix.componentInstance.parentVirtDir.testOnWheel(0, 100);
-            fix.componentInstance.parentVirtDir.testOnScroll(verticalScroller);
+        it('should scroll to wheel event correctly', async() => {
+            /* 120 is default mousewheel on Chrome, scroll 2 records down */
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, 2 * 120);
+            await wait();
 
             const firstInnerDisplayContainer = displayContainer.children[0].querySelector('igx-display-container');
             expect(firstInnerDisplayContainer).not.toBeNull();
@@ -646,7 +647,7 @@ describe('IgxForOf directive -', () => {
             expect(colsRendered.length).toBe(7);
         });
 
-        it('should scroll down when using touch events', () => {
+        it('should scroll down when using touch events', async() => {
             let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
@@ -654,14 +655,19 @@ describe('IgxForOf directive -', () => {
                     .toBe(fix.componentInstance.data[i][1].toString());
             }
 
-            expect(() => {
-                fix.componentInstance.parentVirtDir.testOnTouchStart();
-                fix.componentInstance.parentVirtDir.testOnTouchMove(0, 500);
-                // Trigger onScroll
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            await expect(async() => {
+                const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
+                UIInteractions.simulateTouchStartEvent(
+                    dcElem,
+                    200,
+                    200
+                );
+                UIInteractions.simulateTouchMoveEvent(dcElem, 200, -300);
+                fix.detectChanges();
+                await wait();
                 fix.detectChanges();
             }).not.toThrow();
-
+            await wait();
             rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
@@ -679,8 +685,10 @@ describe('IgxForOf directive -', () => {
             }
 
             expect(() => {
-                fix.componentInstance.childVirtDirs.first.testOnTouchStart();
-                fix.componentInstance.childVirtDirs.first.testOnTouchMove(1000, 0);
+                const dcElem = fix.componentInstance.childVirtDirs.first.dc.instance._viewContainer.element.nativeElement;
+                UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
+                UIInteractions.simulateTouchMoveEvent(dcElem, -800, 0);
+                // fix.componentInstance.childVirtDirs.first.testOnTouchMove(1000, 0);
                 // Trigger onScroll
                 fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
                 fix.detectChanges();
@@ -1006,28 +1014,6 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         const event = new Event('scroll');
         Object.defineProperty(event, 'target', { value: target, enumerable: true });
         super.onHScroll(event);
-    }
-
-    public testOnWheel(_deltaX: number, _deltaY: number) {
-        const event = new WheelEvent('wheel', { deltaX: _deltaX, deltaY: _deltaY });
-        super.onWheel(event);
-    }
-
-    public testOnTouchStart() {
-        const touchEventObject = {
-            changedTouches: [{ screenX: 200, screenY: 200 }]
-        };
-
-        super.onTouchStart(touchEventObject);
-    }
-
-    public testOnTouchMove(movedX: number, movedY: number) {
-        const touchEventObject = {
-            changedTouches: [{ screenX: 200 - movedX, screenY: 200 - movedY }],
-            preventDefault: () => { }
-        };
-
-        super.onTouchMove(touchEventObject);
     }
 
     public testApplyChanges(changes: IterableChanges<T>) {
