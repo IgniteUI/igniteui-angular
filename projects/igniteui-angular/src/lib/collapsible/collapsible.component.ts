@@ -137,7 +137,7 @@ export class IgxCollapsibleComponent {
     private body: QueryList<ElementRef>;
 
     private playOpenAnimation(cb: () => void) {
-        this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(-50px)';
+        this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(0px)';
         const animationBuilder = this.builder.build(this.animationSettings.openAnimation);
         const openAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
 
@@ -150,7 +150,7 @@ export class IgxCollapsibleComponent {
     }
 
     private playCloseAnimation(cb: () => void) {
-        this.animationSettings.closeAnimation.options.params.toPosition = 'translateY(-50px)';
+        this.animationSettings.closeAnimation.options.params.toPosition = 'translateY(0px)';
         const animationBuilder = this.builder.build(this.animationSettings.closeAnimation);
         const closeAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
 
