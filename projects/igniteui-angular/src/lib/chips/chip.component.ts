@@ -23,11 +23,11 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxDragDirective, IgxDropEnterEventArgs } from '../directives/dragdrop/dragdrop.directive';
 import { DisplayDensity } from '../core/utils';
 
-export interface IBaseChipEventArgs{
+export interface IBaseChipEventArgs {
     owner: IgxChipComponent;
 }
 
-export interface IChipClickEventArgs extends IBaseChipEventArgs{
+export interface IChipClickEventArgs extends IBaseChipEventArgs {
     cancel: boolean;
 }
 
@@ -38,7 +38,7 @@ export interface IChipKeyDownEventArgs extends IChipClickEventArgs {
     key: string;
 }
 
-export interface IChipEnterDragAreaEventArgs{
+export interface IChipEnterDragAreaEventArgs {
     targetChip: IgxChipComponent;
     dragChip: IgxChipComponent;
     originalEvent: IgxDropEnterEventArgs;

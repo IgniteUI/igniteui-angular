@@ -31,11 +31,11 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon';
 import { IgxConnectorDirective } from './connector.directive';
 
-export interface IChipReorderEventArgs{
+export interface IChipReorderEventArgs {
     chipsArray: IgxChipComponent[];
 }
 
-export interface IChipSelectEventArgs{
+export interface IChipSelectEventArgs {
     owner: IgxChipsAreaComponent;
     newSelection: IgxChipComponent[];
 }
