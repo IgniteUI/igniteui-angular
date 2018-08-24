@@ -25,13 +25,14 @@ describe('IgxGrid - Grid Sorting', () => {
             ],
             imports: [IgxGridModule.forRoot()]
         })
-        .compileComponents()
-        .then(() => {
-            fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
-            fixture.detectChanges();
-            grid = fixture.componentInstance.grid;
-        });
+        .compileComponents();
     }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
+        fixture.detectChanges();
+        grid = fixture.componentInstance.grid;
+    });
 
     it('Should sort grid ascending by column name', () => {
         const currentColumn = 'Name';

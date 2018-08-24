@@ -48,7 +48,8 @@ export class GridCellEditingComponent {
         });
     }
 
-    public deleteRow(rowID) {
+    public deleteRow(event, rowID) {
+        event.stopPropagation();
         const row = this.gridWithPK.getRowByKey(rowID);
         row.delete();
     }
@@ -87,7 +88,9 @@ export class GridCellEditingComponent {
     public updRecord() {
         const newData = 'UPDATED';
         const selectedCell = this.gridWithPK.selectedCells[0];
-        selectedCell.update(newData);
+        if (selectedCell) {
+            selectedCell.update(newData);
+        }
     }
 
     deleteRowbyIndex(index) {
