@@ -10,7 +10,7 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../test-utils/grid-samples.spec';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 
-xdescribe('IgxGrid - search API', () => {
+describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     let fix, component, grid, fixNativeElement;
 
