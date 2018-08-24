@@ -23,6 +23,13 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { DisplayDensity } from '../core/utils';
 
+export interface IChipSelectEventArgs {
+    owner: IgxChipComponent;
+    cancel: boolean;
+    selected: boolean;
+}
+
+
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
@@ -227,7 +234,7 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     @Output()
-    public onSelection = new EventEmitter<ChipSelectEventArgs>();
+    public onSelection = new EventEmitter<IChipSelectEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` keyboard navigation is being used.
@@ -311,13 +318,13 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     public set selected(newValue: boolean) {
-        const onSelectArgs = {
+        const onSelectArgs: IChipSelectEventArgs = {
             owner: this,
-            nextStatus: false,
+            selected: false,
             cancel: false
         };
         if (newValue && !this._selected) {
-            onSelectArgs.nextStatus = true;
+            onSelectArgs.selected = true;
             this.onSelection.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
@@ -529,10 +536,4 @@ export class IgxChipComponent implements AfterViewInit {
         event.cancel = true;
     }
     // End chip igxDrop behaviour
-}
-
-export interface ChipSelectEventArgs {
-    owner: IgxChipComponent;
-    cancel: boolean;
-    nextStatus: boolean;
 }

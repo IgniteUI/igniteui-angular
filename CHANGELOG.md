@@ -19,7 +19,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`: The `findNext` and `findPrev` methods now have a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the grid's cells.
     - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
-
+-   `IgxChip`
+    - Introduced event argument types to all `EventEmitter` `@Output`s.
+-   `IgxChipArea`
+    - Introduced event argument types to all `EventEmitter` `@Output`s.
 ## 6.1.3
 - **General**
     - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.
