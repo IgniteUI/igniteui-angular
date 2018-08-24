@@ -20,8 +20,29 @@
 } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
-import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { IgxDragDirective, IgxDropEnterEventArgs } from '../directives/dragdrop/dragdrop.directive';
 import { DisplayDensity } from '../core/utils';
+
+export interface IBaseChipEventArgs{
+    owner: IgxChipComponent;
+}
+
+export interface IChipClickEventArgs extends IBaseChipEventArgs{
+    cancel: boolean;
+}
+
+export interface IChipKeyDownEventArgs extends IChipClickEventArgs {
+    altKey: boolean;
+    shiftKey: boolean;
+    ctrlKey: boolean;
+    key: string;
+}
+
+export interface IChipEnterDragAreaEventArgs{
+    targetChip: IgxChipComponent;
+    dragChip: IgxChipComponent;
+    originalEvent: IgxDropEnterEventArgs;
+}
 
 @Component({
     selector: 'igx-chip',
@@ -159,59 +180,63 @@ export class IgxChipComponent implements AfterViewInit {
 
     /**
      * Emits event when the `IgxChipComponent` moving starts.
+     * Returns the moving `IgxChipComponent`.
      * ```typescript
-     * moveStarted(){
-     *     alert("The moving has started.");
+     * moveStarted(event){
+     *     let movingChip = event;
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onMoveStart)="moveStarted()">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onMoveStart)="moveStarted($event)">
      * ```
      */
     @Output()
-    public onMoveStart = new EventEmitter<any>();
+    public onMoveStart = new EventEmitter<IBaseChipEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` moving ends.
+     * Returns the moved `IgxChipComponent`.
      * ```typescript
-     * moveEnded(){
-     *     alert("The moving has ended.");
+     * moveEnded(event){
+     *     let movedChip = event.
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onMoveEnd)="moveEnded()">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onMoveEnd)="moveEnded($event)">
      * ```
      */
     @Output()
-    public onMoveEnd = new EventEmitter<any>();
+    public onMoveEnd = new EventEmitter<IBaseChipEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` is removed.
+     * Returns the removed `IgxChipComponent`.
      * ```typescript
-     * remove(){
-     *     alert("The chip has been removed.");
+     * remove(event){
+     *     let removedChip = event
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onRemove)="remove()">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onRemove)="remove($event)">
      * ```
      */
     @Output()
-    public onRemove = new EventEmitter<any>();
+    public onRemove = new EventEmitter<IBaseChipEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` is clicked.
+     * Returns the clicked `IgxChipComponent`, whether the event should be canceled.
      * ```typescript
-     * chipClick(){
-     *     alert("The chip has been clicked.");
+     * chipClick(event){
+     *     let clickedChip = event.owner;
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onClick)="chipClick()">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onClick)="chipClick($event)">
      * ```
      */
     @Output()
-    public onClick = new EventEmitter<any>();
+    public onClick = new EventEmitter<IChipClickEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` is selected.
@@ -229,31 +254,35 @@ export class IgxChipComponent implements AfterViewInit {
 
     /**
      * Emits event when the `IgxChipComponent` keyboard navigation is being used.
+     * Returns the focused/selected `IgxChipComponent`, whether the event should be canceled,
+     * if the `alt`, `shift` or `control` key is pressed and the pressed key name.
      * ```typescript
-     * chipKeyDown(){
-     *     alert("The chip keyboard navigation has been used.");
+     * chipKeyDown(event){
+     *     keyDown = event.key;
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onKeyDown)="chipKeyDown()">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onKeyDown)="chipKeyDown($event)">
      * ```
      */
     @Output()
-    public onKeyDown = new EventEmitter<any>();
+    public onKeyDown = new EventEmitter<IChipKeyDownEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` has entered the `IgxChipsAreaComponent`.
+     * Returns the target `IgxChipComponent` the drag `IgxChipComponent` as  well as
+     * original drop event arguments.
      * ```typescript
-     * chipEnter(){
-     *     alert("The chip has entered the chiparea.");
+     * chipEnter(event){
+     *     targetChip = event.targetChip;
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onDragEnter)="chipEnter()">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onDragEnter)="chipEnter($event)">
      * ```
      */
     @Output()
-    public onDragEnter = new EventEmitter<any>();
+    public onDragEnter = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
      * @hidden
@@ -379,7 +408,7 @@ export class IgxChipComponent implements AfterViewInit {
      * @hidden
      */
     public onChipKeyDown(event) {
-        const keyDownArgs = {
+        const keyDownArgs: IChipKeyDownEventArgs = {
             owner: this,
             altKey: event.altKey,
             ctrlKey: event.ctrlKey,
@@ -489,7 +518,7 @@ export class IgxChipComponent implements AfterViewInit {
      * @hidden
      */
     public onChipDragClicked() {
-        const clickEventArgs = {
+        const clickEventArgs: IChipClickEventArgs = {
             owner: this,
             cancel: false
         };
@@ -511,10 +540,10 @@ export class IgxChipComponent implements AfterViewInit {
             return;
         }
 
-        const eventArgs = {
+        const eventArgs: IChipEnterDragAreaEventArgs = {
             targetChip: this,
             dragChip: event.dragData.chip,
-            detail: event
+            originalEvent: event
         };
         this.onDragEnter.emit(eventArgs);
     }
