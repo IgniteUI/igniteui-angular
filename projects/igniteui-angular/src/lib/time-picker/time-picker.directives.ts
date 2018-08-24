@@ -326,3 +326,10 @@ export class IgxAmPmItemDirective {
         }
     }
 }
+
+@Directive({
+    selector: '[igxTimePickerTemplate]'
+})
+export class IgxTimePickerTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
