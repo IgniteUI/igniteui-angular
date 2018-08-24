@@ -3,10 +3,10 @@
 <div class="density-chooser" style="margin-bottom: 16px">
     <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
-<igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [autoGenerate]="false" [displayDensity]="density" width="800px" height="550px" [paging]="true">
+<igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [autoGenerate]="false" [displayDensity]="density" width="800px" height="550px" [paging]="true"  [rowSelectable]="true">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val >
-            <button (click)="deleteRow(cell.cellID.rowID)">Delete</button>
+            <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
             <button (click)="updateRow(cell.cellID.rowID)">Update</button>
         </ng-template>
     </igx-column>
@@ -33,7 +33,7 @@
 <button (click)="hideColumn()">Hide/Show OrderDate</button>
 
 <h3>Grid without PK</h3>
-<igx-grid #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [paging]="true">
+<igx-grid #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [paging]="true"  [rowSelectable]="true">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val >
             <button (click)="deleteRowbyIndex(cell.cellID.rowIndex)">Delete</button>
