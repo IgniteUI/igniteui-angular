@@ -31,14 +31,18 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon';
 import { IgxConnectorDirective } from './connector.directive';
 
+export interface IBaseChipAreaEventArgs {
+    owner: IgxChipsAreaComponent;
+}
+
 export interface IChipReorderEventArgs {
     chipsArray: IgxChipComponent[];
 }
 
-export interface IChipSelectEventArgs {
-    owner: IgxChipsAreaComponent;
+export interface IChipSelectEventArgs extends IBaseChipAreaEventArgs {
     newSelection: IgxChipComponent[];
 }
+
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
@@ -112,7 +116,7 @@ export class IgxChipsAreaComponent implements DoCheck {
      * ```
      */
     @Output()
-    public onMoveStart = new EventEmitter<any>();
+    public onMoveStart = new EventEmitter<IBaseChipAreaEventArgs>();
 
     /**
      * Emits an event after an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
@@ -126,7 +130,7 @@ export class IgxChipsAreaComponent implements DoCheck {
      * ```
      */
     @Output()
-    public onMoveEnd = new EventEmitter<any>();
+    public onMoveEnd = new EventEmitter<IBaseChipAreaEventArgs>();
 
     /**
      * Holds the `IgxChipComponent` in the `IgxChipsAreaComponent`.
@@ -216,7 +220,9 @@ export class IgxChipsAreaComponent implements DoCheck {
             chip.areaMovingPerforming = true;
             chip.cdr.detectChanges();
         });
-        this.onMoveStart.emit();
+        this.onMoveStart.emit({
+                owner: this
+        });
     }
 
     /**
@@ -227,7 +233,9 @@ export class IgxChipsAreaComponent implements DoCheck {
             chip.areaMovingPerforming = false;
             chip.cdr.detectChanges();
         });
-        this.onMoveEnd.emit();
+        this.onMoveEnd.emit({
+            owner: this
+        });
     }
 
     /**

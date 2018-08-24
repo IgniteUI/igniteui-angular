@@ -57,6 +57,11 @@ export class IgxDropEventArgs {
     cancel: boolean;
 }
 
+export interface IDragStartEventArgs{
+    owner: IgxDragDirective;
+    cancel: boolean;
+}
+
 @Directive({
     selector: '[igxDrag]'
 })
@@ -133,7 +138,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public dragStart = new EventEmitter<any>();
+    public dragStart = new EventEmitter<IDragStartEventArgs>();
 
     /**
      * Event triggered when the draggable element is released.
@@ -468,7 +473,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      */
     public onPointerMove(event) {
         if (this._clicked) {
-            const dragStartArgs = {
+            const dragStartArgs: IDragStartEventArgs = {
                 owner: this,
                 cancel: false
             };
