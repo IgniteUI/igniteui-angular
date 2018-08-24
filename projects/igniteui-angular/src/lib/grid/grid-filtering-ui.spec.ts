@@ -8,7 +8,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxFilteringOperand, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from '../../public_api';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
@@ -1367,21 +1367,23 @@ describe('IgxGrid - Filtering actions', () => {
         // scroll horizontally to the right, so ProductName column is out of view
         const horScroll = grid.parentVirtDir.getHorizontalScroll();
         horScroll.scrollLeft = 1000;
+        await wait(100);
         fix.detectChanges();
 
         // scroll horizontally to the left, so ProductName is back in view
         horScroll.scrollLeft = 0;
+        await wait(100);
         fix.detectChanges();
 
         // click filter icon
         const filterButton = fix.debugElement.queryAll(By.css('igx-grid-filter'))[0];
         const filterIcon = filterButton.query(By.css('igx-icon'));
         filterIcon.triggerEventHandler('mousedown', null);
-        fix.detectChanges();
         filterIcon.nativeElement.click();
+        await wait(100);
         fix.detectChanges();
 
-        await fix.whenStable();
+        // await fix.whenStable();
 
         const filterUI = fix.debugElement.query(By.css('.igx-filtering__options'));
         // verify 'And' button is selected
