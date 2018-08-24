@@ -31,6 +31,14 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon';
 import { IgxConnectorDirective } from './connector.directive';
 
+export interface IChipReorderEventArgs{
+    chipsArray: IgxChipComponent[];
+}
+
+export interface IChipSelectEventArgs{
+    owner: IgxChipsAreaComponent;
+    newSelection: IgxChipComponent[];
+}
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
@@ -65,6 +73,7 @@ export class IgxChipsAreaComponent implements DoCheck {
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` are reordered.
+     * Returns an array of `IgxChipComponent`s.
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder()"></igx-chips-area>
      * ```
@@ -75,10 +84,11 @@ export class IgxChipsAreaComponent implements DoCheck {
      * ```
      */
     @Output()
-    public onReorder = new EventEmitter<any>();
+    public onReorder = new EventEmitter<IChipReorderEventArgs>();
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected.
+     * Returns an array of selected `IgxChipComponent`s and the `IgxChipAreaComponent`.
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onSelection)="selection()"></igx-chips-area>
      * ```
@@ -88,7 +98,7 @@ export class IgxChipsAreaComponent implements DoCheck {
      * }
      */
     @Output()
-    public onSelection = new EventEmitter<any>();
+    public onSelection = new EventEmitter<IChipSelectEventArgs>();
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
@@ -268,7 +278,7 @@ export class IgxChipsAreaComponent implements DoCheck {
         }
         this.modifiedChipsArray = result;
 
-        const eventData = {
+        const eventData: IChipReorderEventArgs = {
             chipsArray: this.modifiedChipsArray
         };
         this.onReorder.emit(eventData);
