@@ -25,88 +25,75 @@ describe('Excel Exporter', () => {
                 GridIDNameJobTitleComponent
             ],
             imports: [IgxGridModule.forRoot()]
-        }).compileComponents().then(() => {
-            exporter = new IgxExcelExporterService();
-            actualData = new FileContentData();
-            options = new IgxExcelExporterOptions('GridExcelExport');
-
-            // Set column width to a specific value to workaround the issue where
-            // different platforms measure text differently
-            options.columnWidth = 50;
-
-            // Spy the saveBlobToFile method so the files are not really created
-            spyOn(ExportUtilities as any, 'saveBlobToFile');
-        });
+        }).compileComponents();
     }));
+
+    beforeEach(() => {
+        exporter = new IgxExcelExporterService();
+        actualData = new FileContentData();
+        options = new IgxExcelExporterOptions('GridExcelExport');
+
+        // Set column width to a specific value to workaround the issue where
+        // different platforms measure text differently
+        options.columnWidth = 50;
+
+        // Spy the saveBlobToFile method so the files are not really created
+        spyOn(ExportUtilities as any, 'saveBlobToFile');
+    });
 
     afterEach(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
     });
 
-    it('should export grid as displayed.', async(() => {
+    it('should export grid as displayed.', async () => {
         const currentGrid: IgxGridComponent = null;
-        TestMethods.testRawData(currentGrid, (grid) => {
+        TestMethods.testRawData(currentGrid, async (grid) => {
 
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyStructure();
-                // wrapper.verifyTemplateFilesContent();
-                wrapper.verifyDataFilesContent(actualData.simpleGridData);
-            });
+            const wrapper = await getExportedData(grid, options);
+            wrapper.verifyStructure();
+            // wrapper.verifyTemplateFilesContent();
+            wrapper.verifyDataFilesContent(actualData.simpleGridData);
         });
-    }));
+    });
 
-    it('should honor \'ignoreFiltering\' option.', (done) => {
+    it('should honor \'ignoreFiltering\' option.', async () => {
         const result = TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
         expect(grid.rowList.length).toEqual(1);
 
         options.ignoreFiltering = false;
+        fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row only should have been exported!');
+        let wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row only should have been exported!');
 
-                options.ignoreFiltering = true;
-                fix.detectChanges();
-                getExportedData(grid, options).then((wrapper2) => {
-                    wrapper2.verifyDataFilesContent(actualData.simpleGridData, 'All 10 rows should have been exported!');
-                    done();
-                });
-            });
-        });
+        options.ignoreFiltering = true;
+        fix.detectChanges();
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All 10 rows should have been exported!');
     });
 
-    it('should honor filter criteria changes.', (done) => {
+    it('should honor filter criteria changes.', async () => {
         const result = TestMethods.createGridAndFilter();
         const fix = result.fixture;
         const grid = result.grid;
         expect(grid.rowList.length).toEqual(1);
-
         options.ignoreFiltering = false;
 
-        fix.whenStable().then(() => {
+        let wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row should have been exported!');
 
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row should have been exported!');
+        grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
+        fix.detectChanges();
 
-                grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
-                fix.detectChanges();
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    expect(grid.rowList.length).toEqual(2, 'Invalid number of rows after filtering!');
-                    getExportedData(grid, options).then((wrapper2) => {
-                        wrapper2.verifyDataFilesContent(actualData.simpleGridDataDirectors, 'Two rows should have been exported!');
-                        done();
-                    });
-                });
-            });
-        });
+        expect(grid.rowList.length).toEqual(2, 'Invalid number of rows after filtering!');
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridDataDirectors, 'Two rows should have been exported!');
     });
 
-    it('should honor \'ignoreColumnsVisibility\' option.', (done) => {
+    it('should honor \'ignoreColumnsVisibility\' option.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -114,24 +101,19 @@ describe('Excel Exporter', () => {
         grid.columns[0].hidden = true;
         options.ignoreColumnsOrder = true;
         options.ignoreColumnsVisibility = false;
+        fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
+        expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+        let wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
-                options.ignoreColumnsVisibility = true;
-                fix.detectChanges();
-                getExportedData(grid, options).then((wrapper2) => {
-                    wrapper2.verifyDataFilesContent(actualData.simpleGridData, 'All three columns should have been exported!');
-                    done();
-                });
-            });
-        });
+        options.ignoreColumnsVisibility = true;
+        fix.detectChanges();
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All three columns should have been exported!');
     });
 
-    it('should honor columns visibility changes.', (done) => {
+    it('should honor columns visibility changes.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -139,202 +121,151 @@ describe('Excel Exporter', () => {
         options.ignoreColumnsOrder = true;
         options.ignoreColumnsVisibility = false;
 
-        fix.whenStable().then(() => {
-            expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
+        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        let wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
-                grid.columns[0].hidden = true;
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
-                    getExportedData(grid, options).then((wrapper2) => {
-                        wrapper2.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
+        grid.columns[0].hidden = true;
+        fix.detectChanges();
 
-                        grid.columns[0].hidden = false;
-                        fix.whenStable().then(() => {
-                            fix.detectChanges();
-                            expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
-                            getExportedData(grid, options).then((wrapper3) => {
-                                wrapper3.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
+        expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
-                                grid.columns[0].hidden = undefined;
-                                fix.whenStable().then(() => {
-                                    fix.detectChanges();
-                                    expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
-                                    getExportedData(grid, options).then((wrapper4) => {
-                                        wrapper4.verifyDataFilesContent(actualData.simpleGridData,
-                                            'All columns should have been exported!');
+        grid.columns[0].hidden = false;
+        fix.detectChanges();
 
-                                        done();
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
+        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
+
+        grid.columns[0].hidden = undefined;
+        fix.detectChanges();
+
+        expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
     });
 
-    it('should honor columns declaration order.', (done) => {
+    it('should honor columns declaration order.', async () => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitleID);
-                done();
-            });
-        });
+        const wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitleID);
     });
 
-    it('should honor \'ignorePinning\' option.', (done) => {
+    it('should honor \'ignorePinning\' option.', async () => {
         const result = TestMethods.createGridAndPinColumn([1]);
         const fix = result.fixture;
         const grid = result.grid;
 
         options.ignorePinning = false;
+        fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyStructure();
-                // wrapper.verifyTemplateFilesContent();
-                wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
+        let wrapper = await getExportedData(grid, options);
+        wrapper.verifyStructure();
+        // wrapper.verifyTemplateFilesContent();
+        wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
 
-                options.ignorePinning = true;
-                fix.detectChanges();
-                getExportedData(grid, options).then((wrapper2) => {
-                    wrapper2.verifyDataFilesContent(actualData.gridNameIDJobTitle, 'No frozen columns should have been exported!');
-                });
-                done();
-            });
-        });
+        options.ignorePinning = true;
+        fix.detectChanges();
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.gridNameIDJobTitle, 'No frozen columns should have been exported!');
     });
 
-    it('should honor pinned state changes.', (done) => {
+    it('should honor pinned state changes.', async () => {
         const result = TestMethods.createGridAndPinColumn([1]);
         const fix = result.fixture;
         const grid = result.grid;
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
+        let wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
 
-                grid.columns[1].pinned = false;
-                fix.detectChanges();
-                getExportedData(grid, options).then((wrapper2) => {
-                    wrapper2.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
-                });
-                done();
-            });
-        });
+        grid.columns[1].pinned = false;
+        fix.detectChanges();
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
     });
 
-    it('should honor applied sorting.', (done) => {
+    it('should honor applied sorting.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
         grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
+        fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
-                grid.clearSort();
-                fix.detectChanges();
-                done();
-            });
-        });
+        const wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
+
+        // XXX : ???? What's the point of this?
+        grid.clearSort();
+        fix.detectChanges();
     });
 
-    it('should honor changes in applied sorting.', (done) => {
+    it('should honor changes in applied sorting.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
         grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
+        fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
-                wrapper.verifyDataFilesContent(actualData.simpleGridSortByName,
-                    'Ascending sorted data should have been exported.');
+        let wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridSortByName, 'Ascending sorted data should have been exported.');
 
-                grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
+        fix.detectChanges();
 
-                fix.whenStable().then(() => {
-                    fix.detectChanges();
-                    getExportedData(grid, options).then((wrapper2) => {
-                        wrapper2.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true),
-                        'Descending sorted data should have been exported.');
+        wrapper = await getExportedData(grid, options);
+        wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
 
-                        grid.clearSort();
-                        grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true});
+        grid.clearSort();
+        grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true});
+        fix.detectChanges();
 
-                        fix.whenStable().then(() => {
-                            fix.detectChanges();
-                            getExportedData(grid, options).then((wrapper3) => {
-                                // wrapper3.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(false),
-                                // "Unsorted data should have been exported.");
-                                done();
-                            });
-                        });
-                    });
-                });
-            });
-        });
+        // wrapper = await getExportedData(grid, options);
+        // wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(false), 'Unsorted data should have been exported.');
     });
 
-    it('should export all columns with the width specified in options.', (done) => {
+    it('should export all columns with the width specified in options.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
         grid.columns[1].hidden = true;
         grid.columns[2].hidden = true;
         const columnWidths = [100, 200, 0, undefined, null];
+        fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            setColWidthAndExport(grid, options, fix, columnWidths[0]).then(() => {
-                setColWidthAndExport(grid, options, fix, columnWidths[1]).then(() => {
-                    setColWidthAndExport(grid, options, fix, columnWidths[2]).then(() => {
-                        setColWidthAndExport(grid, options, fix, columnWidths[3]).then(() => {
-                            setColWidthAndExport(grid, options, fix, columnWidths[4]);
-                            done();
-                        });
-                    });
-                });
-            });
-        });
+        await setColWidthAndExport(grid, options, fix, columnWidths[0]);
+        await setColWidthAndExport(grid, options, fix, columnWidths[1]);
+        await setColWidthAndExport(grid, options, fix, columnWidths[2]);
+        await setColWidthAndExport(grid, options, fix, columnWidths[3]);
+        await setColWidthAndExport(grid, options, fix, columnWidths[4]);
     });
 
-    it('should export all rows with the height specified in options.', (done) => {
+    it('should export all rows with the height specified in options.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
 
         const rowHeights = [20, 40, 0, undefined, null];
 
-        fix.whenStable().then(() => {
-            setRowHeightAndExport(grid, options, fix, rowHeights[0]).then(() => {
-                setRowHeightAndExport(grid, options, fix, rowHeights[1]).then(() => {
-                    setRowHeightAndExport(grid, options, fix, rowHeights[2]).then(() => {
-                        setRowHeightAndExport(grid, options, fix, rowHeights[3]).then(() => {
-                            setRowHeightAndExport(grid, options, fix, rowHeights[4]);
-                            done();
-                        });
-                    });
-                });
-            });
-        });
+        await setRowHeightAndExport(grid, options, fix, rowHeights[0]);
+        await setRowHeightAndExport(grid, options, fix, rowHeights[1]);
+        await setRowHeightAndExport(grid, options, fix, rowHeights[2]);
+        await setRowHeightAndExport(grid, options, fix, rowHeights[3]);
+        await setRowHeightAndExport(grid, options, fix, rowHeights[4]);
     });
 
-    it('should fire \'onColumnExport\' for each grid column.', (done) => {
+    it('should fire \'onColumnExport\' for each grid column.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
 
         const cols = [];
@@ -342,23 +273,20 @@ describe('Excel Exporter', () => {
             cols.push({ header: value.header, index: value.columnIndex });
         });
 
-        fix.whenStable().then(() => {
-            getExportedData(grid, options).then(() => {
-                expect(cols.length).toBe(3);
-                expect(cols[0].header).toBe('ID');
-                expect(cols[0].index).toBe(0);
-                expect(cols[1].header).toBe('Name');
-                expect(cols[1].index).toBe(1);
-                expect(cols[2].header).toBe('JobTitle');
-                expect(cols[2].index).toBe(2);
-                done();
-            });
-        });
+        await getExportedData(grid, options);
+        expect(cols.length).toBe(3);
+        expect(cols[0].header).toBe('ID');
+        expect(cols[0].index).toBe(0);
+        expect(cols[1].header).toBe('Name');
+        expect(cols[1].index).toBe(1);
+        expect(cols[2].header).toBe('JobTitle');
+        expect(cols[2].index).toBe(2);
     });
 
-    it('should fire \'onColumnExport\' for each visible grid column.', (done) => {
+    it('should fire \'onColumnExport\' for each visible grid column.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
 
         const cols = [];
@@ -368,43 +296,37 @@ describe('Excel Exporter', () => {
 
         grid.columns[0].hidden = true;
         options.ignoreColumnsVisibility = false;
+        fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            getExportedData(grid, options).then((wrapper) => {
-                expect(cols.length).toBe(2);
-                expect(cols[0].header).toBe('Name');
-                expect(cols[0].index).toBe(0);
-                expect(cols[1].header).toBe('JobTitle');
-                expect(cols[1].index).toBe(1);
-                wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
-                done();
-            });
-        });
-
+        const wrapper = await getExportedData(grid, options);
+        expect(cols.length).toBe(2);
+        expect(cols[0].header).toBe('Name');
+        expect(cols[0].index).toBe(0);
+        expect(cols[1].header).toBe('JobTitle');
+        expect(cols[1].index).toBe(1);
+        wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
     });
 
-    it('should not export columns when \'onColumnExport\' is canceled.', (done) => {
+    it('should not export columns when \'onColumnExport\' is canceled.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
 
         exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
             value.cancel = true;
         });
 
-        fix.whenStable().then(() => {
-            getExportedData(grid, options).then((wrapper) => {
-                expect(wrapper.hasValues).toBe(false);
-                wrapper.verifyStructure();
-                wrapper.verifyTemplateFilesContent();
-                done();
-            });
-        });
+        const wrapper = await getExportedData(grid, options);
+        expect(wrapper.hasValues).toBe(false);
+        wrapper.verifyStructure();
+        wrapper.verifyTemplateFilesContent();
     });
 
-    it('should fire \'onRowExport\' for each grid row.', (done) => {
+    it('should fire \'onRowExport\' for each grid row.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
         const data = SampleTestData.personJobData();
 
@@ -413,38 +335,31 @@ describe('Excel Exporter', () => {
             rows.push({ data: value.rowData, index: value.rowIndex });
         });
 
-        fix.whenStable().then(() => {
-            getExportedData(grid, options).then(() => {
-                expect(rows.length).toBe(10);
-                for (let i = 0; i < rows.length; i++) {
-                    expect(rows[i].index).toBe(i);
-                    expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(data[i]));
-                }
-                done();
-            });
-        });
+        await getExportedData(grid, options);
+        expect(rows.length).toBe(10);
+        for (let i = 0; i < rows.length; i++) {
+            expect(rows[i].index).toBe(i);
+            expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(data[i]));
+        }
     });
 
-    it('should not export rows when \'onRowExport\' is canceled.', (done) => {
+    it('should not export rows when \'onRowExport\' is canceled.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
 
         exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
             value.cancel = true;
         });
 
-        fix.whenStable().then(() => {
-            getExportedData(grid, options).then((wrapper) => {
-                expect(wrapper.hasValues).toBe(false);
-                wrapper.verifyStructure();
-                wrapper.verifyTemplateFilesContent();
-                done();
-            });
-        });
+        const wrapper = await getExportedData(grid, options);
+        expect(wrapper.hasValues).toBe(false);
+        wrapper.verifyStructure();
+        wrapper.verifyTemplateFilesContent();
     });
 
-    it('shouldn\'t affect grid sort expressions', (done) => {
+    it('shouldn\'t affect grid sort expressions', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -453,18 +368,14 @@ describe('Excel Exporter', () => {
         grid.columns[1].sortable = true;
         grid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
         const sortField = grid.sortingExpressions[0].fieldName;
+        fix.detectChanges();
 
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            getExportedData(grid, options).then((wrapper) => {
-                fix.detectChanges();
-                getExportedData(grid, options).then((wrapper2) => {
-                    const sortFieldAfterExport = grid.sortingExpressions[0].fieldName;
-                    expect(sortField).toBe(sortFieldAfterExport);
-                    done();
-                });
-            });
-        });
+        let wrapper = await getExportedData(grid, options);
+        fix.detectChanges();
+
+        wrapper = await getExportedData(grid, options);
+        const sortFieldAfterExport = grid.sortingExpressions[0].fieldName;
+        expect(sortField).toBe(sortFieldAfterExport);
     });
 
     function getExportedData(grid: IgxGridComponent, exportOptions: IgxExcelExporterOptions) {

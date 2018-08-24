@@ -2493,6 +2493,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this._moveColumns(column, dropTarget);
+        this.cdr.detectChanges();
     }
 
     /**
@@ -3809,7 +3810,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 const scrollAmount = targetEndTopOffset - containerHeight;
                 this.performVerticalScroll(scrollAmount, rowIndex, columnIndex);
             } else {
-                target.nativeElement.focus();
+                if (row instanceof IgxGridGroupByRowComponent) {
+                    target.nativeElement.focus();
+                } else {
+                    (target as any)._updateCellSelectionStatus();
+                }
             }
         } else {
             const contentHeight = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
@@ -3844,7 +3849,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     -this.rowHeight + Math.abs(containerTopOffset);
                     this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex);
             }
-            target.nativeElement.focus();
+            if (row instanceof IgxGridGroupByRowComponent) {
+                target.nativeElement.focus();
+            } else {
+                (target as any)._updateCellSelectionStatus();
+            }
         } else {
             const scrollOffset =
                 -parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
@@ -3868,25 +3877,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
         this.subscribeNext(virtualDir, () => {
-            this.cdr.detectChanges();
             let target;
+            this.cdr.detectChanges();
             row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-            target = this.gridAPI.get_cell_by_visible_index(
-                this.id,
-                rowIndex,
-                columnIndex);
+            target = this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
+
             if (!target) {
                 if (dir) {
                     target = dir === 'left' ? row.cells.first : row.cells.last;
                 } else if (row instanceof IgxGridGroupByRowComponent) {
                     target = row.groupContent;
+                    target.nativeElement.focus();
+                    return;
                 } else if (row) {
                     target = row.cells.first;
                 } else {
                     return;
                 }
             }
-            target.nativeElement.focus();
+            target._updateCellSelectionStatus();
+            this.cdr.detectChanges();
         });
     }
 
@@ -4391,43 +4401,4 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.verticalScrollContainer.scrollPrevPage();
         this.nativeElement.focus();
     }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event) {
-        event.preventDefault();
-        this.verticalScrollContainer.addScrollTop(this.rowHeight);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event) {
-        event.preventDefault();
-        this.verticalScrollContainer.addScrollTop(-(this.rowHeight));
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowleft', ['$event'])
-    public onKeydownArrowLeft(event) {
-        event.preventDefault();
-        const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
-        horVirtScroll.scrollLeft -= MINIMUM_COLUMN_WIDTH;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowright', ['$event'])
-    public onKeydownArrowRight(event) {
-        event.preventDefault();
-        const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
-        horVirtScroll.scrollLeft += MINIMUM_COLUMN_WIDTH;
-    }
-
 }
