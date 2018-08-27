@@ -1188,14 +1188,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
                     break;
                 case (DateRangeType.Weekdays):
                     const day = date.getDay();
-                    if (day !== 0 && day !== 6) {
+                    if (day % 6 !== 0) {
                         return true;
                     }
 
                     break;
                 case (DateRangeType.Weekends):
                     const weekday = date.getDay();
-                    if (weekday === 0 || weekday === 6) {
+                    if (weekday % 6 === 0) {
                         return true;
                     }
 
