@@ -19,7 +19,6 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { Subject, animationFrameScheduler as rAF, fromEvent } from 'rxjs';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -553,7 +552,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public _updateCellSelectionStatus(fireFocus = true) {
         this._clearCellSelection();
         this._saveCellSelection();
-        if (this.column.editable && this.previousCellEditMode) {
+        const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
+        if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
             this.inEditMode = true;
         }
         this.selected = true;
@@ -572,7 +572,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editCell) {
-            if (editCell.cell.column.field === this.gridAPI.get(this.gridID).primaryKey) {
+            if (editCell.cell.column.field === this.grid.primaryKey) {
                 if (editCell.cellID.rowIndex === this.cellID.rowIndex && editCell.cellID.columnID === this.cellID.columnID) {
                     this.previousCellEditMode = false;
                 } else {
