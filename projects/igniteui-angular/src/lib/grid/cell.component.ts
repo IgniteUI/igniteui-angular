@@ -552,7 +552,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public _updateCellSelectionStatus(fireFocus = true) {
         this._clearCellSelection();
         this._saveCellSelection();
-        if (this.column.editable && this.previousCellEditMode) {
+        const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
+        if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
             this.inEditMode = true;
         }
         this.selected = true;
