@@ -1043,7 +1043,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     @Output()
-    public onGroupingDone = new EventEmitter<any>();
+    public onGroupingDone = new EventEmitter<ISortingExpression[]>();
 
     /**
      * Emitted when a new chunk fo data is loaded from virtualization.
@@ -1053,7 +1053,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<any>();
+    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Emitted when `IgxColumnComponent` is resized.
