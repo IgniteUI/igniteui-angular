@@ -1,20 +1,19 @@
-import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy } from '@angular/core';
+
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
-import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { IgxExpansionPanelModule } from './expansion-panel.module';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxGridComponent, IgxGridModule } from '../grid';
 import { IgxListComponent, IgxListModule } from '../list';
-import { IgxInputDirective } from '../directives/input/input.directive';
-import { IgxGridAPIService } from '../grid/api.service';
+
+const CSS_CLASS_PANEL = 'igx-expansion-panel';
+const CSS_CLASS_HEADER = 'igx-expansion-panel__header';
+const CSS_CLASS_HEADER_COLLAPSED = 'igx-expansion-panel__header--collapsed';
+const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
@@ -82,6 +81,20 @@ describe('igxExpansionPanel', () => {
             expect(panel.ariaLabelledBy).toEqual('test label area');
             panel.headerButtons = false;
             expect(panel.headerButtons).toEqual(false);
+        });
+        it('Should properly set base classes', () => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const header = document.getElementsByClassName(CSS_CLASS_HEADER);
+            const headerCollapsed = document.getElementsByClassName(CSS_CLASS_HEADER_COLLAPSED);
+            const headerExpanded = document.getElementsByClassName(CSS_CLASS_HEADER_EXPANDED);
+            const panelClass = document.getElementsByClassName(CSS_CLASS_PANEL);
+            expect(header.length).toEqual(1);
+            expect(headerCollapsed.length).toEqual(1); // Initially collapsed;
+            expect(headerExpanded.length).toEqual(0);
+            expect(panelClass.length).toEqual(1);
+            expect(header[0]).toEqual(headerCollapsed[0]); // Both classes are applied to the header
         });
     });
 
