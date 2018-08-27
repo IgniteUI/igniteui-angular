@@ -282,7 +282,7 @@
         transition: $transition;
         background: --var($theme, 'chip-background');
         border: 1px solid transparent;
-        justify-content: space-between;
+        justify-content: center;
 
         &:hover,
         &:focus{
@@ -336,8 +336,14 @@
     %igx-chip__text {
         color: --var($theme, 'text-color');
         font-size: rem(12px);
-        margin-right: rem(16px);
+        flex: 1 0 0;
+        text-align: center;
+
         @include ellipsis();
+
+        + %igx-chip__remove-icon {
+            margin-left: rem(16px);
+        }
     }
 
     %igx-icon-display {
@@ -352,6 +358,7 @@
         &%igx-chip__order-icon {
             color: --var($theme, 'order-icon-color');
             margin-right: rem(4px);
+            margin-left: rem(16px);
         }
 
         &%igx-chip__remove-icon {
