@@ -64,7 +64,7 @@ import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
-import { CollapsibleSampleComponent } from './collapsible/collapsible-sample';
+import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 
 
 const components = [
@@ -75,7 +75,7 @@ const components = [
     CalendarSampleComponent,
     CardSampleComponent,
     CarouselSampleComponent,
-    CollapsibleSampleComponent,
+    ExpansionPanelSampleComponent,
     ChipsSampleComponent,
     DialogSampleComponent,
     DatePickerSampleComponent,

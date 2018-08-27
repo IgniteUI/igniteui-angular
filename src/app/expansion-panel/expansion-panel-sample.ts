@@ -1,17 +1,17 @@
-import { IgxCollapsibleComponent, slideInTop, slideOutTop, scaleInTop,
+import { IgxExpansionPanelComponent, slideInTop, slideOutTop, scaleInTop,
     scaleInVerBottom, scaleInVerTop, scaleOutVerBottom, scaleOutVerTop } from 'igniteui-angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AnimationReferenceMetadata } from '@angular/animations';
 
 @Component({
     // tslint:disable-next-line:component-selector
-    selector: 'collapsible-sample',
-    templateUrl: './collapsible-sample.html',
-    styleUrls: ['collapsible-sample.scss']
+    selector: 'expansion-panel-sample',
+    templateUrl: './expansion-panel-sample.html',
+    styleUrls: ['expansion-panel-sample.scss']
 })
-export class CollapsibleSampleComponent implements OnInit {
-    @ViewChild(IgxCollapsibleComponent)
-    public igxCollapsible: IgxCollapsibleComponent;
+export class ExpansionPanelSampleComponent implements OnInit {
+    @ViewChild(IgxExpansionPanelComponent)
+    public igxExpansionPanel: IgxExpansionPanelComponent;
     @ViewChild('button') public button: ElementRef;
 
     public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
@@ -79,7 +79,7 @@ export class CollapsibleSampleComponent implements OnInit {
     }
 
     collapsed() {
-        return this.igxCollapsible && this.igxCollapsible.collapsed;
+        return this.igxExpansionPanel && this.igxExpansionPanel.collapsed;
     }
 
     constructor() {
