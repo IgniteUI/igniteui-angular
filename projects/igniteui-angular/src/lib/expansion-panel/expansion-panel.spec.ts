@@ -6,6 +6,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
+import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxExpansionPanelModule } from './expansion-panel.module';
 import { IgxGridComponent, IgxGridModule } from '../grid';
 import { IgxListComponent, IgxListModule } from '../list';
@@ -28,7 +29,8 @@ describe('igxExpansionPanel', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxExpansionPanelGridComponent,
-                IgxExpansionPanelListComponent
+                IgxExpansionPanelListComponent,
+                IgxExpansionPanelSampleComponent
             ],
             imports: [
                 IgxExpansionPanelModule,
@@ -43,7 +45,7 @@ describe('igxExpansionPanel', () => {
     }));
 
 
-    describe('General tests: ', () => {
+    fdescribe('General tests: ', () => {
         it('Should initialize the expansion panel component properly', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -96,6 +98,56 @@ describe('igxExpansionPanel', () => {
             expect(panelClass.length).toEqual(1);
             expect(header[0]).toEqual(headerCollapsed[0]); // Both classes are applied to the header
         });
+
+        it('Should properly emit events', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const header = fixture.componentInstance.header;
+            const mockEvent = new Event('click');
+            expect(panel).toBeTruthy();
+            expect(header).toBeTruthy();
+            expect(header.panel.disabled).toEqual(false);
+            expect(header.panel).toEqual(panel);
+            expect(header.onInterraction).toBeDefined();
+
+            spyOn(panel.onCollapsed, 'emit');
+            spyOn(panel.onExpanded, 'emit');
+            spyOn(header.onInterraction, 'emit');
+            spyOn(panel, 'toggle').and.callThrough();
+            spyOn(panel, 'expand').and.callThrough();
+            spyOn(panel, 'collapse').and.callThrough();
+
+            header.onAction(mockEvent);
+            tick();
+            expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(0); // Initially collapsed
+            expect(header.onInterraction.emit).toHaveBeenCalledTimes(1);
+            expect(panel.toggle).toHaveBeenCalledTimes(1);
+            expect(panel.toggle).toHaveBeenCalledWith(mockEvent);
+            expect(panel.expand).toHaveBeenCalledTimes(1);
+            expect(panel.expand).toHaveBeenCalledWith(mockEvent);
+            expect(panel.collapse).toHaveBeenCalledTimes(0);
+            expect(panel.onExpanded.emit).toHaveBeenCalledWith({event: mockEvent});
+            expect(header.onInterraction.emit).toHaveBeenCalledWith({event: mockEvent});
+
+            header.onAction(mockEvent);
+            tick();
+            expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1); // First Collapse
+            expect(header.onInterraction.emit).toHaveBeenCalledTimes(2);
+            expect(panel.toggle).toHaveBeenCalledTimes(2);
+            expect(panel.toggle).toHaveBeenCalledWith(mockEvent);
+            expect(panel.expand).toHaveBeenCalledTimes(1);
+            expect(panel.collapse).toHaveBeenCalledTimes(1);
+            expect(panel.collapse).toHaveBeenCalledWith(mockEvent);
+            expect(panel.onCollapsed.emit).toHaveBeenCalledWith({event: mockEvent});
+
+            panel.disabled = true;
+            header.onAction(mockEvent);
+            tick(); // No additional calls, because panel.disabled === true
+            expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1);
+            expect(header.onInterraction.emit).toHaveBeenCalledTimes(2);
+            expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
+        }));
     });
 
     describe('Expansion tests: ', () => {
@@ -338,3 +390,34 @@ export class IgxExpansionPanelListComponent {
     public expansionPanel: IgxExpansionPanelComponent;
 }
 
+
+@Component({
+    template: `
+<igx-expansion-panel>
+    <igx-expansion-panel-header headerHeight="50px">
+        <igx-expansion-panel-title>Example Title</igx-expansion-panel-title>
+        <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
+    </igx-expansion-panel-header>
+    <igx-expansion-panel-body>
+    Example body
+    </igx-expansion-panel-body>
+</igx-expansion-panel>
+`
+})
+export class IgxExpansionPanelSampleComponent {
+    public disabled = false;
+    public collapsed = true;
+
+    public handleExpanded() {
+    }
+    public handleCollapsed() {
+
+    }
+    public handleInterraction() {
+
+    }
+    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
+    public header: IgxExpansionPanelHeaderComponent;
+    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
+    public panel: IgxExpansionPanelComponent;
+}
