@@ -137,4 +137,19 @@ export class UIInteractions {
             resolve();
         });
     }
+
+    public static simulateTouchEndEvent(element, movedX, movedY) {
+        const touchInit = {
+            identifier: 0,
+            target: element,
+            pageX: movedX,
+            pageY: movedY
+        };
+        const t = new Touch(touchInit);
+        const touchEventObject = new TouchEvent('touchend', {touches: [t]});
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(touchEventObject);
+            resolve();
+        });
+    }
 }

@@ -224,6 +224,7 @@ export class IgxScrollInertiaDirective implements OnInit {
         }
         this._lastTouchEnd = new Date().getTime();
         this._lastMovedX = this._lastTouchX - touch.pageX;
+        this._lastMovedY = this._lastTouchY - touch.pageY;
         this._lastTouchX = touch.pageX;
         this._lastTouchY = touch.pageY;
 
