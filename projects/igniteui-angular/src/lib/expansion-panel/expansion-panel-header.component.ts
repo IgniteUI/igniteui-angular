@@ -43,6 +43,14 @@ export class IgxExpansionPanelHeaderComponent {
         return this._iconTemplate;
     }
 
+    @HostBinding('attr.aria-role')
+    @Input()
+    public role = 'heading';
+
+    @HostBinding('attr.aria-controls')
+    @Input()
+    public controls = this.panel.id;
+
     @Input()
     public buttonPosition: BUTTON_POSITION = BUTTON_POSITION.LEFT;
 
@@ -64,14 +72,11 @@ export class IgxExpansionPanelHeaderComponent {
      }
 
      @Input()
+     @HostBinding('attr.aria-expanded')
      @HostBinding('class.igx-expansion-panel__header--expanded')
      public get isExpanded () {
             return !this.panel.collapsed;
          }
-
-    @Input()
-    @HostBinding('attr.aria-labelledby')
-    public ariaLabelledBy: string;
 
     constructor(@Host() public panel: IgxExpansionPanelComponent, public cdr: ChangeDetectorRef,
      public elementRef: ElementRef, private renderer: Renderer2) { }

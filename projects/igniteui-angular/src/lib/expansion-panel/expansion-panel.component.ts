@@ -18,8 +18,8 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { IAnimationParams } from '../animations/main';
 import { slideOutTop, slideInTop } from '../animations/main';
-import { IExpansionPanelEventArgs } from './expansion-panel-header.component';
-import { IgxExpansionPanelBodyDirective } from './expansion-panel.directives';
+import { IExpansionPanelEventArgs, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
+import { IgxExpansionPanelBodyDirective, IgxExpansionPanelHeaderDirective } from './expansion-panel.directives';
 
 let NEXT_ID = 0;
 
@@ -62,31 +62,22 @@ export class IgxExpansionPanelComponent {
     @HostBinding('class.igx-expansion-panel')
     public cssClass = 'igx-expansion-panel';
 
-    @ContentChild(IgxExpansionPanelBodyDirective, { read: ElementRef })
-    public textArea: IgxExpansionPanelBodyDirective;
+    // @ContentChild(IgxExpansionPanelBodyDirective, { read: ElementRef })
+    // public textArea: IgxExpansionPanelBodyDirective;
 
-    @ViewChild('toggleBtn', { read: ElementRef })
-    public toggleBtn: ElementRef;
-
-    /**
-     * An @Input property that set aria-labelledby attribute
-     * ```html
-     *<igx-combo [ariaLabelledBy]="'label1'">
-     * ```
-     */
-    @HostBinding('attr.aria-labelledby')
     @Input()
-    public ariaLabelledBy: string;
+    @HostBinding('attr.aria-role')
+    public role = 'region';
 
     @Input()
     public collapsed = true;
 
-    @HostBinding('attr.aria-expanded')
-    public get hostState () {
-        return !this.collapsed;
+    @HostBinding('attr.aria-disabled')
+    @HostBinding('class.igx-expansion-panel--disabled')
+    public get isDisabled () {
+        return this.disabled;
     }
 
-    @HostBinding('class.igx-expansion-panel--disabled')
     @Input() public disabled = false;
 
     @Input()
@@ -105,6 +96,8 @@ export class IgxExpansionPanelComponent {
     public onExpanded = new EventEmitter<IExpansionPanelEventArgs>();
 
     constructor(
+        @ContentChild(IgxExpansionPanelHeaderComponent)
+        public header: IgxExpansionPanelHeaderComponent,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         private renderer: Renderer2,
@@ -112,6 +105,10 @@ export class IgxExpansionPanelComponent {
 
     @ViewChildren('collapseBody', { read : ElementRef})
     private body: QueryList<ElementRef>;
+
+    @Input()
+    @HostBinding('attr.aria-labelledby')
+    //public ariaLabelledBy = this.header.id; //TODO header.id
 
     private playOpenAnimation(cb: () => void) {
         this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(0px)';
