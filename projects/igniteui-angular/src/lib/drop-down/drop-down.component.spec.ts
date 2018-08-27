@@ -952,7 +952,7 @@ describe('IgxDropDown ', () => {
             igxDropDown.open();
             tick();
 
-            expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(44);
+            expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(116);
         }));
 
         it('Should set isSelected via igxDropDownIteComponent', fakeAsync(() => {

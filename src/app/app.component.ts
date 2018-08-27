@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
         {
             link: '/collapsible',
             icon: 'expand_more',
-            name: 'Collapsible'
+            name: 'ExpansionPanel'
         },
         {
             link: '/datePicker',

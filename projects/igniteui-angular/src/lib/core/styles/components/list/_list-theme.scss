@@ -88,14 +88,9 @@
 
     // @debug $theme;
 
-    $list-header-font-size: em(13px);
-    $list-header-font-weight: normal;
-    $list-header-height: em(48px);
-    $list-header-line-height: em(48px);
-    $list-item-height: em(48px);
-    $list-item-font-size: em(16px);
-    $list-item-padding: em(8px) em(16px);
-    $list-empty-padding: em(16px, 16px);
+    $list-item-height: rem(48px);
+    $list-item-padding: rem(8px) rem(16px);
+    $list-empty-padding: rem(16px);
 
     %igx-list {
         position: relative;
@@ -129,10 +124,6 @@
         align-items: center;
         color: --var($theme, 'header-text-color');
         background-color: --var($theme, 'header-background');
-        font-size: $list-header-font-size;
-        font-weight: $list-header-font-weight;
-        height: $list-header-height;
-        line-height: $list-header-line-height;
         padding: $list-item-padding;
         user-select: none;
     }
@@ -144,7 +135,6 @@
         justify-content: center;
         padding: $list-item-padding;
         min-height: $list-item-height;
-        font-size: $list-item-font-size;
         color: --var($theme, 'item-text-color');
         background-color: --var($theme, 'item-background');
         z-index: 2;
@@ -158,5 +148,33 @@
 
     %igx-list-item--inactive {
         transition: left .3s $ease-out-quad;
+    }
+}
+
+/// Adds typography styles for the igx-list component.
+/// Uses the 'caption' and 'subtitle-1'
+/// categories from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(header: 'overline', item: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-list-typography(
+    $type-scale,
+    $categories: (
+        header: 'overline',
+        item: 'subtitle-1'
+    )
+) {
+    $header: map-get($categories, 'header');
+    $item: map-get($categories, 'item');
+
+    @include igx-scope('.igx-typography') {
+        %igx-list-header {
+            @include igx-type-style($type-scale, $header);
+        }
+
+        %igx-list-item {
+            @include igx-type-style($type-scale, $item);
+        }
     }
 }

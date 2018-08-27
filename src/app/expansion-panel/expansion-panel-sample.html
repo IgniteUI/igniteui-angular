@@ -1,0 +1,34 @@
+<div class="sample-wrapper">
+    <app-page-header title="Expansion Panel" description="IgxExpansionPanel lets you display content with a toggleable details view"></app-page-header>
+    <section>
+        <div class="game-board">
+            <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible" [disabled]="false"
+            (onCollapsed)="handleCollapsed($event)"
+            (onExpanded)="handleExpanded($event)" #collapsibleComponent>
+                <igx-expansion-panel-header [buttonPosition]="'right'" (onInterraction)="onInterraction($event)">
+                    <igx-expansion-panel-title>Current Winning Player:</igx-expansion-panel-title>
+                    <igx-expansion-panel-description>{{ getWinningPlayer }}</igx-expansion-panel-description>
+                    <button igxButton class='igx-button--flat' (click)="resetScore($event)">Reset score</button>
+                    <igx-expansion-panel-button *ngIf="templatedIcon">
+                        <!-- <igx-icon fontSet="material" [name]="collapsed() ? 'arrow_drop_down':'arrow_drop_up'"></igx-icon> -->
+                        {{collapsed() ? 'Expand':'Collapse'}}
+                    </igx-expansion-panel-button>
+                </igx-expansion-panel-header>
+                <igx-expansion-panel-body>
+                    <igx-grid class="game-board__grid" [data]="data">
+                        <igx-column [sortable]="true" [field]="'Game'" [header]="'Game'" [width]="'120px'" [pinned]="true">
+                            <ng-template igxCell let-value>
+                                <span class="game-board__grid__match">{{value}}</span>
+                            </ng-template>
+                        </igx-column>
+                        <igx-column [sortable]="true" [field]="'Player 1'" [header]="'Score: Player 1'">
+                        </igx-column>
+                        <igx-column [sortable]="true" [field]="'Player 2'" [header]="'Score: Player 2'">
+                        </igx-column>
+                    </igx-grid>
+                </igx-expansion-panel-body>
+            </igx-expansion-panel>
+        </div>
+        <button igxButton class="igx-button--raised" (click)="templateIcon()">{{ templatedIcon ? 'Disabled' : 'Enable'}} icon template</button>
+    </section>
+</div>

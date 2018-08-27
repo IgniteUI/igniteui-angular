@@ -122,7 +122,6 @@
         width: 100%;
         padding: 0;
         color: inherit;
-        font-size: initial;
         line-height: initial;
     }
 
@@ -151,7 +150,6 @@
     %igx-time-picker__column {
         max-width: 64px;
         height: 325px;
-        font-size: 16px;
         padding: 0;
         cursor: pointer;
         display: flex;
@@ -187,7 +185,7 @@
     }
 
     %igx-time-picker__item--selected {
-        font-size: 24px;
+        font-size: rem(24px);
         color: --var($theme, 'selected-text-color');
     }
 
@@ -202,7 +200,6 @@
 
     %igx-time-picker__header-ampm {
         color: --var($theme, 'header-time-period-color');
-        font-size: rem(16px);
     }
 
     %igx-time-picker__header--vertical {
@@ -222,12 +219,42 @@
 
     %igx-time-picker__header-hour {
         color: --var($theme, 'header-hour-text-color');
-        font-size: rem(40px);
         display: flex;
     }
 
     %igx-time-picker__header-ampm,
     %igx-time-picker__header-hour {
         margin: 0;
+    }
+}
+
+/// Adds typography styles for the igx-calendar component.
+/// Uses the 'h4', 'subtitle-1' and 'body-1'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(header-time-period: 'subtitle-1', header-hour: 'h4', content: 'body-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-time-picker-typography($type-scale, $categories: (
+    header-time-period: 'subtitle-1',
+    header-hour: 'h4',
+    content: 'body-1')
+) {
+    $time-period: map-get($categories, 'header-time-period');
+    $header-hour: map-get($categories, 'header-hour');
+    $content: map-get($categories, 'content');
+
+    @include igx-scope('.igx-typography') {
+        %igx-time-picker__header-ampm {
+            @include igx-type-style($type-scale, $time-period);
+        }
+
+        %igx-time-picker__header-hour {
+            @include igx-type-style($type-scale, $header-hour);
+        }
+
+        %igx-time-picker__column {
+            @include igx-type-style($type-scale, $content);
+        }
     }
 }
