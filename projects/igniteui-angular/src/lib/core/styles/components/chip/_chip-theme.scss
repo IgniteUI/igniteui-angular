@@ -336,8 +336,7 @@
     %igx-chip__text {
         color: --var($theme, 'text-color');
         font-size: rem(12px);
-        flex: 1 0 0;
-        text-align: center;
+        flex: 1 0 0%;
 
         @include ellipsis();
 
