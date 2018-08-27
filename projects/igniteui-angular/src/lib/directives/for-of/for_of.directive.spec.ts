@@ -676,6 +676,34 @@ describe('IgxForOf directive -', () => {
             }
         });
 
+        it('should apply inertia when swiping via touch interaction.', async() => {
+            const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
+            // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
+            await UIInteractions.simulateTouchStartEvent(
+                dcElem,
+                0,
+                -150
+            );
+            await wait(1);
+            await UIInteractions.simulateTouchMoveEvent(dcElem, 0, -180);
+            await UIInteractions.simulateTouchEndEvent(dcElem, 0, -200);
+            fix.detectChanges();
+
+            // wait for inertia to complete
+            await wait(1500);
+            fix.detectChanges();
+            const scrStepArray = fix.componentInstance.parentVirtDir.scrStepArray;
+            expect(scrStepArray.length).toEqual(61);
+
+            // check if inertia first accelerates then decelerate
+            const first = scrStepArray[0];
+            const mid = scrStepArray[10];
+            const end = scrStepArray[60];
+
+            expect(first).toBeLessThan(mid);
+            expect(end).toBeLessThan(mid);
+        });
+
         it('should scroll left when using touch events', () => {
             let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < rowsRendered.length; i++) {
@@ -990,6 +1018,17 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public changeDet: ChangeDetectorRef,
         public zone: NgZone) {
         super(viewContainer, template, differs, fResolver, changeDet, zone);
+    }
+    public scrStepArray = [];
+    public scrTopArray = [];
+    public onScroll(evt) {
+        let calcScrollStep;
+        const ind = this.scrTopArray.length - 1;
+        const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
+        this.scrTopArray.push(evt.target.scrollTop);
+        calcScrollStep = evt.target.scrollTop - prevScrTop;
+        this.scrStepArray.push(calcScrollStep);
+        super.onScroll(evt);
     }
 
     public testScrollPrev() {
