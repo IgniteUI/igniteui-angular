@@ -16,6 +16,13 @@ import { IgxListComponent, IgxListModule } from '../list';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxGridAPIService } from '../grid/api.service';
 
+const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
+const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
+const CSS_CLASS_PANEL_BODY = 'igx-expansion-panel-body';
+const CSS_CLASS_PANEL_HEADER_COLLAPSED = 'igx-expansion-panel__header--collapsed';
+const CSS_CLASS_LIST = 'igx-list';
+const CSS_CLASS_PANEL_BUTTON = 'igx-icon';
+
 describe('igxExpansionPanel', () => {
     beforeEach(async(() => {
         // TestBed.resetTestingModule();
@@ -37,7 +44,7 @@ describe('igxExpansionPanel', () => {
     }));
 
 
-    fdescribe('General tests: ', () => {
+    describe('General tests: ', () => {
         it('Should initialize the expansion panel component properly', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -76,6 +83,177 @@ describe('igxExpansionPanel', () => {
             panel.headerButtons = false;
             expect(panel.headerButtons).toEqual(false);
         });
+    });
+
+    describe('Expansion tests: ', () => {
+        function verifyPanelExpansionState(
+            collapsed: boolean,
+            panel: IgxExpansionPanelComponent,
+            panelContainer: any,
+            panelHeader: HTMLElement,
+            button: HTMLElement) {
+            expect(panel.collapsed).toEqual(collapsed);
+            const ariaExpanded = collapsed ? 'false' : 'true';
+            expect(panelContainer.getAttribute('aria-expanded')).toMatch(ariaExpanded);
+            expect(panelHeader.classList.contains(CSS_CLASS_PANEL_HEADER_COLLAPSED)).toEqual(collapsed);
+            const iconName = collapsed ? 'expand_more' : 'expand_less';
+            expect(button.getAttribute('ng-reflect-icon-name')).toMatch(iconName);
+            if (collapsed) {
+                expect(panelContainer.children[1].children.length).toEqual(0);
+            } else {
+                const panelBody = panelContainer.getElementsByTagName(CSS_CLASS_PANEL_BODY)[0];
+                expect(panelBody).toBeDefined();
+                const list = panelBody.getElementsByTagName(CSS_CLASS_LIST)[0];
+                expect(list).toBeDefined();
+            }
+        }
+        it('Should change panel expansion state on header interaction', fakeAsync(() => {
+            const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
+            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            panelHeader.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            panelHeader.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            panelHeader.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+        }));
+        it('Should change panel expansion state on button clicking', fakeAsync(() => {
+            const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
+            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            button.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            button.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            button.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+        }));
+        it('Should change panel expansion state using API methods', fakeAsync(() => {
+            const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
+            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            panel.expand();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            panel.collapse();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            panel.expand();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            panel.collapse();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+        }));
+        it('Should change panel expansion state using toggle method', fakeAsync(() => {
+            const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
+            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+        }));
+        it('Should change panel expansion', fakeAsync(() => {
+            const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
+            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            panel.expand();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            panelHeader.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            button.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            panel.collapse();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+
+            panelHeader.click();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
+        }));
     });
 });
 
@@ -124,6 +302,9 @@ export class IgxExpansionPanelGridComponent {
 <igx-expansion-panel #expansionPanel>
 <igx-expansion-panel-header headerHeight="50px">
 <igx-expansion-panel-title>Product List</igx-expansion-panel-title>
+<igx-expansion-panel-button *ngIf="templatedIcon">
+                        {{collapsed() ? 'Expand':'Collapse'}}
+                    </igx-expansion-panel-button>
 </igx-expansion-panel-header>
 <igx-expansion-panel-body>
 <igx-list>
@@ -140,7 +321,7 @@ export class IgxExpansionPanelGridComponent {
 `
 })
 export class IgxExpansionPanelListComponent {
-    @ViewChild('expansionPanel', { read: IgxExpansionPanelComponent })
+    @ViewChild('expansionPanel', { read: IgxExpansionPanelHeaderComponent })
     public expansionPanel: IgxExpansionPanelComponent;
 }
 
