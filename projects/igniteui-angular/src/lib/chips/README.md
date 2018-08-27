@@ -172,15 +172,15 @@ The chip can be focused using the `Tab` key or by clicking on them. Chips can be
 | `color` | `string` | Sets the chip background color. |
 
 ### Outputs
-| Name | Return Type | Description |
+| Name | Argument Type | Description |
 |:--:|:---|:---|
-| `onMoveStart` | `any` | Fired when the chip moving(dragging) starts. |
-| `onMoveEnd` | `any` | Fired when the chip moving(dragging) end. |
-| `onRemove ` | `any` | Fired when the chip remove button is clicked. |
-| `onClick ` | `any` | Fired when the chip is clicked instead of dragged. |
+| `onMoveStart` | `IBaseChipEventArgs` | Fired when the chip moving(dragging) starts. |
+| `onMoveEnd` | `IBaseChipEventArgs` | Fired when the chip moving(dragging) end. |
+| `onRemove ` | `IBaseChipEventArgs` | Fired when the chip remove button is clicked. |
+| `onClick ` | `IChipClickEventArgs` | Fired when the chip is clicked instead of dragged. |
 | `onSelection` | `IChipSelectEventArgs` | Fired when the chip is being selected. |
-| `onKeyDown ` | `any` | Fired when the chip keyboard navigation is being used. |
-| `onDragEnter ` | `any` | Fired when another chip has entered the current chip area. |
+| `onKeyDown ` | `IChipKeyDownEventArgs` | Fired when the chip keyboard navigation is being used. |
+| `onDragEnter ` | `IChipEnterDragAreaEventArgs` | Fired when another chip has entered the current chip area. |
 
 ## IgxChipsAreaComponent
 
@@ -191,12 +191,12 @@ The chip can be focused using the `Tab` key or by clicking on them. Chips can be
 | `height ` | `number` | Sets the height of the chip area. |
 
 ### Outputs
-| Name | Return Type | Description |
+| Name | Argument Type | Description |
 |:--:|:---|:---|
-| `onReorder ` | `any` | Fired when the chip moving(dragging) starts. |
-| `onSelection ` | `any` | Fired when the chip moving(dragging) end. |
-| `onMoveStart  ` | `any` | Fired when the chip remove button is clicked. |
-| `onMoveEnd ` | `any` | Fired when the chip is clicked instead of dragged. |
+| `onReorder ` | `IChipReorderEventArgs` | Fired when the chip moving(dragging) starts. |
+| `onSelection ` | `IChipSelectEventArgs` | Fired when the chip moving(dragging) end. |
+| `onMoveStart  ` | `IBaseChipAreaEventArgs` | Fired when the chip remove button is clicked. |
+| `onMoveEnd ` | `IBaseChipAreaEventArgs` | Fired when the chip is clicked instead of dragged. |
 
 ### Properties
 | Name   | Return Type | Description |
