@@ -268,6 +268,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         event.preventDefault();
         event.stopPropagation();
 
+        this._removeOnDestroy = false;
         this.cms.column = this.column;
         this.ghostImageClass = this._ghostImageClass;
 

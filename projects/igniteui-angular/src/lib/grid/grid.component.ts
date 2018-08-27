@@ -2560,7 +2560,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (!dropTarget.pinned && column.pinned) {
             column.unpin();
-            position = pos;
+
+            const list = this.columnList.toArray();
+            const fi = list.indexOf(column);
+            const ti = list.indexOf(dropTarget);
+
+            if (pos === DropPosition.BeforeDropTarget && fi < ti) {
+                position = DropPosition.BeforeDropTarget;
+            } else if (pos === DropPosition.AfterDropTarget && fi > ti) {
+                position = DropPosition.AfterDropTarget;
+            } else {
+                position = DropPosition.None;
+            }
         }
 
         this._moveColumns(column, dropTarget, position);
@@ -3613,7 +3624,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected reinitPinStates() {
-        if (this.columnList.some((col) => col.columnGroup)) {
+        if (this.hasColumnGroups) {
             this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         }
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);

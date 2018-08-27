@@ -363,6 +363,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      */
     protected _destroy = new Subject<boolean>();
 
+    /**
+     * @hidden
+     */
+    protected _removeOnDestroy = true;
+
     constructor(public cdr: ChangeDetectorRef, public element: ElementRef, public zone: NgZone, public renderer: Renderer2) {
     }
 
@@ -416,6 +421,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._destroy.next(true);
         this._destroy.complete();
+
+        if (this._dragGhost && this._removeOnDestroy) {
+            this._dragGhost.parentNode.removeChild(this._dragGhost);
+            this._dragGhost = null;
+        }
     }
 
     /**
