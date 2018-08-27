@@ -108,7 +108,7 @@ export class IgxExpansionPanelComponent {
 
     @Input()
     @HostBinding('attr.aria-labelledby')
-    //public ariaLabelledBy = this.header.id; //TODO header.id
+    public ariaLabelledBy = ''; // this.header.id; //TODO header.id
 
     private playOpenAnimation(cb: () => void) {
         this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(0px)';
