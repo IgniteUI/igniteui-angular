@@ -13,7 +13,7 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxRowBaseComponent } from './row-base.component';
+import { IgxRowComponent } from './row.component';
 
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -29,7 +29,7 @@ export interface IGridCellEventArgs {
 }
 
 export interface IGridEditEventArgs {
-    row: IgxRowBaseComponent<IGridComponent>;
+    row: IgxRowComponent<IGridComponent>;
     cell: IgxGridCellComponent;
     currentValue: any;
     newValue: any;
@@ -58,7 +58,7 @@ export interface IColumnResizeEventArgs {
 export interface IRowSelectionEventArgs {
     oldSelection: any[];
     newSelection: any[];
-    row?: IgxRowBaseComponent<IGridComponent>;
+    row?: IgxRowComponent<IGridComponent>;
     event?: Event;
 }
 
@@ -130,7 +130,7 @@ export interface IGridComponent extends IToolbarComponent,
     filteredSortedData: any[];
     primaryKey: string;
     rowList: QueryList<any>;
-    dataRowList: QueryList<IgxRowBaseComponent<IGridComponent>>;
+    dataRowList: QueryList<IgxRowComponent<IGridComponent>>;
     cdr: ChangeDetectorRef;
     sortingExpressions: ISortingExpression[];
     nativeElement: any;
@@ -185,7 +185,7 @@ export interface IGridComponent extends IToolbarComponent,
     deselectRows(rowIDs: any[]);
     selectRows(rowIDs: any[], clearCurrentSelection?: boolean);
     triggerRowSelectionChange(newSelectionAsSet: Set<any>,
-        row?: IgxRowBaseComponent<IGridComponent>, event?: Event, headerStatus?: boolean);
+        row?: IgxRowComponent<IGridComponent>, event?: Event, headerStatus?: boolean);
     getPinnedWidth(takeHidden?: boolean);
     moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent);
     getCellByKey(rowSelector: any, columnField: string);

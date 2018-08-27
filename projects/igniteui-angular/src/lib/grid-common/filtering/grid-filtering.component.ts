@@ -14,18 +14,17 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { DataType } from '../data-operations/data-util';
-import { IgxToggleDirective, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { IGridAPIService } from './api.service';
-import { IGridComponent } from './grid-interfaces';
-import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
+import { Subscription } from 'rxjs';
+import { DataType } from '../../data-operations/data-util';
+import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IGridAPIService } from '../api.service';
+import { IGridComponent } from '../grid-interfaces';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IgxButtonGroupComponent } from '../../buttonGroup/buttonGroup.component';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { OverlaySettings, HorizontalAlignment } from '../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
-import { IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
+import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
+import { OverlaySettings, HorizontalAlignment } from '../../services/overlay/utilities';
+import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 /**
  *@hidden
  */
@@ -272,14 +271,18 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     protected isFilteringApplied(): boolean {
-        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+        const grid = this.gridAPI.get(this.gridID);
+        if (grid) {
+            const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
 
-        if (expr) {
-            if (expr instanceof FilteringExpressionsTree) {
-                return expr.filteringOperands.length > 0;
+            if (expr) {
+                if (expr instanceof FilteringExpressionsTree) {
+                    return expr.filteringOperands.length > 0;
+                }
+                return true;
             }
-            return true;
         }
+
         return false;
     }
 

@@ -5,7 +5,6 @@ import {
     Component,
     DoCheck,
     ElementRef,
-    EventEmitter,
     HostBinding,
     HostListener,
     Input,
@@ -21,7 +20,7 @@ import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IGridAPIService } from './api.service';
 import { IGridComponent } from './grid-interfaces';
 import { IgxColumnComponent } from './column.component';
-import { IgxColumnMovingService } from '../grid/grid.misc';
+import { IgxColumnMovingService } from './grid-common.misc';
 import { isFirefox } from '../core/utils';
 
 /**

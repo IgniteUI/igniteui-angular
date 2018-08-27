@@ -2,11 +2,11 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef,
     Component, DoCheck, HostBinding, Input
 } from '@angular/core';
-import { DisplayDensity } from '../core/utils';
-import { DataType } from '../data-operations/data-util';
-import { IGridAPIService } from './api.service';
-import { IGridComponent } from './grid-interfaces';
-import { IgxColumnComponent } from './column.component';
+import { DisplayDensity } from '../../core/utils';
+import { DataType } from '../../data-operations/data-util';
+import { IGridAPIService } from '../api.service';
+import { IGridComponent } from '../grid-interfaces';
+import { IgxColumnComponent } from '../column.component';
 /**
  *@hidden
  */

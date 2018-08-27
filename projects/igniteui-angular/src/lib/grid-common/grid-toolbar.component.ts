@@ -19,10 +19,9 @@ import {
 } from '../services';
 import { IGridAPIService } from './api.service';
 import { IGridComponent } from './grid-interfaces';
-import { IgxGridComponent } from '../grid/grid.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding/column-hiding.component';
-import { IgxColumnPinningComponent } from '../grid/column-pinning.component';
+import { IgxColumnPinningComponent } from './column-pinning/column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
 

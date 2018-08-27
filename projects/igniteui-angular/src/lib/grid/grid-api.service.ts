@@ -128,7 +128,7 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
 
     public refreshSearch(id: string, updateActiveInfo?: boolean) {
         const grid = this.get(id);
-        if (grid.lastSearchInfo.searchText) {
+        if (grid && grid.lastSearchInfo.searchText) {
             this.rebuildMatchCache(id);
 
             if (updateActiveInfo) {
@@ -158,7 +158,7 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
 
     public find(id: string, text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
         const grid = this.get(id);
-        if (!grid.rowList) {
+        if (!grid || !grid.rowList) {
             return 0;
         }
 
@@ -441,7 +441,7 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
 
     public restoreHighlight(id: string): void {
         const grid = this.get(id);
-        if (grid.lastSearchInfo.searchText) {
+        if (grid && grid.lastSearchInfo.searchText) {
             const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(grid.id);
             const matchInfo = grid.lastSearchInfo.matchInfoCache[grid.lastSearchInfo.activeMatchIndex];
             const data = grid.filteredSortedData;

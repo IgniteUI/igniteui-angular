@@ -23,10 +23,10 @@ import { IgxColumnComponent } from './column.component';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    selector: 'igx-grid-row',
-    templateUrl: './row-base.component.html'
+    selector: 'igx-row',
+    templateUrl: './row.component.html'
 })
-export abstract class IgxRowBaseComponent<T extends IGridComponent> implements DoCheck {
+export class IgxRowComponent<T extends IGridComponent> implements DoCheck {
 
     /**
      *  The data passed to the row component.
@@ -202,7 +202,9 @@ export abstract class IgxRowBaseComponent<T extends IGridComponent> implements D
         return this.element.nativeElement;
     }
 
-    abstract get indentation();
+    public get indentation() {
+        return 0;
+    }
 
     /**
      * @hidden

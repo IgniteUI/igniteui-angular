@@ -5,6 +5,8 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { IGroupByResult } from '../data-operations/sorting-strategy';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './grid-api.service';
+import { IGridComponent } from '../grid-common/grid-interfaces';
+import { IGridAPIService } from '../grid-common/api.service';
 import { IgxGridComponent } from './grid.component';
 
 /**
@@ -15,8 +17,11 @@ import { IgxGridComponent } from './grid.component';
     pure: true
 })
 export class IgxGridPreGroupingPipe implements PipeTransform {
+    private gridAPI: IgxGridAPIService;
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(gridAPI: IGridAPIService<IGridComponent>) {
+        this.gridAPI = <IgxGridAPIService>gridAPI;
+    }
 
     public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
@@ -48,8 +53,11 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
     pure: true
 })
 export class IgxGridPostGroupingPipe implements PipeTransform {
+    private gridAPI: IgxGridAPIService;
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(gridAPI: IGridAPIService<IGridComponent>) {
+        this.gridAPI = <IgxGridAPIService>gridAPI;
+    }
 
     public transform(collection: IGroupByResult, expression: ISortingExpression | ISortingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
@@ -81,8 +89,11 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
     pure: true
 })
 export class IgxGridPagingPipe implements PipeTransform {
+    private gridAPI: IgxGridAPIService;
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(gridAPI: IGridAPIService<IGridComponent>) {
+        this.gridAPI = <IgxGridAPIService>gridAPI;
+    }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 

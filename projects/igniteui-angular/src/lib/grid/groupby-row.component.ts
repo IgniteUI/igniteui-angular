@@ -12,6 +12,8 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
+import { IGridAPIService } from '../grid-common/api.service';
+import { IGridComponent} from '../grid-common/grid-interfaces';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,11 +22,14 @@ import { IgxGridComponent } from './grid.component';
     templateUrl: './groupby-row.component.html'
 })
 export class IgxGridGroupByRowComponent {
+    public gridAPI: IgxGridAPIService;
 
-    constructor(public gridAPI: IgxGridAPIService,
+    constructor(gridAPI: IGridAPIService<IGridComponent>,
                 private selectionAPI: IgxSelectionAPIService,
                 public element: ElementRef,
-                public cdr: ChangeDetectorRef) { }
+                public cdr: ChangeDetectorRef) {
+                    this.gridAPI = <IgxGridAPIService>gridAPI;
+                }
 
     /**
      * @hidden

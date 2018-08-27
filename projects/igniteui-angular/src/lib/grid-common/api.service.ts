@@ -5,7 +5,7 @@ import { IFilteringExpression, FilteringLogic } from '../data-operations/filteri
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { IgxRowBaseComponent } from './row-base.component';
+import { IgxRowComponent } from './row.component';
 import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
 import { IGridEditEventArgs, IGridComponent } from './grid-interfaces';
 
@@ -13,7 +13,7 @@ import { IGridEditEventArgs, IGridComponent } from './grid-interfaces';
  *@hidden
  */
 @Injectable()
-export abstract class IGridAPIService <T extends IGridComponent> {
+export class IGridAPIService <T extends IGridComponent> {
 
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, T> = new Map<string, T>();
@@ -106,7 +106,7 @@ export abstract class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    public get_row_by_key(id: string, rowSelector: any): IgxRowBaseComponent<IGridComponent>  {
+    public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IGridComponent>  {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -115,7 +115,7 @@ export abstract class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    public get_row_by_index(id: string, rowIndex: number): IgxRowBaseComponent<IGridComponent> {
+    public get_row_by_index(id: string, rowIndex: number): IgxRowComponent<IGridComponent> {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
@@ -347,7 +347,12 @@ export abstract class IGridAPIService <T extends IGridComponent> {
         });
     }
 
-    protected abstract remove_grouping_expression(id: string, fieldName: string);
-    public abstract refreshSearch(id: string, updateHighlight?: boolean);
+    protected remove_grouping_expression(id: string, fieldName: string) {
+
+    }
+
+    public refreshSearch(id: string, updateHighlight?: boolean) {
+
+    }
 
 }

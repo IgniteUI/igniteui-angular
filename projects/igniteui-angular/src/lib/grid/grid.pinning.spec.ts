@@ -10,7 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs } from '../grid-common/grid-interfaces';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
-import { IgxGridRowComponent } from './row.component';
+import { IgxGridRowComponent } from './grid-row.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Column Pinning ', () => {

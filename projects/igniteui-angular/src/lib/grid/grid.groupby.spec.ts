@@ -6,10 +6,11 @@ import { IgxStringFilteringOperand } from '../data-operations/filtering-conditio
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from '../grid-common/column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxColumnMovingDragDirective, IgxGroupAreaDropDirective } from './grid.misc';
+import { IgxGroupAreaDropDirective } from './grid.misc';
+import { IgxColumnMovingDragDirective } from '../grid-common/grid-common.misc';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
-import { IgxGridRowComponent } from './row.component';
+import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../test-utils/helper-utils.spec';

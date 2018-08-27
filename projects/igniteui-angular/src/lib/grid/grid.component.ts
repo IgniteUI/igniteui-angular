@@ -35,19 +35,20 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxForOfDirective, IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridCellComponent } from '../grid-common/cell.component';
 import { IColumnVisibilityChangedEventArgs } from '../grid-common/column-hiding/column-hiding-item.directive';
 import { IgxColumnComponent } from '../grid-common/column.component';
-import { ISummaryExpression } from '../grid-common/grid-summary';
-import { IgxGroupByRowTemplateDirective, IgxColumnMovingDragDirective } from './grid.misc';
+import { ISummaryExpression } from '../grid-common/summaries/grid-summary';
+import { IgxGroupByRowTemplateDirective } from './grid.misc';
+import { IgxColumnMovingDragDirective } from '../grid-common/grid-common.misc';
 import { IgxGridToolbarComponent } from '../grid-common/grid-toolbar.component';
 import { IgxGridSortingPipe } from '../grid-common/grid-common.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridRowComponent } from './row.component';
+import { IgxGridRowComponent } from './grid-row.component';
 import { IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from '../grid-common/grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -67,6 +68,7 @@ import {
     ISearchInfo,
     IGridComponent
 } from '../grid-common/grid-interfaces';
+import { IGridAPIService } from '../grid-common/api.service';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -1370,14 +1372,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    get virtualizationState() {
+    get virtualizationState(): IForOfState {
         return this.verticalScrollContainer.state;
     }
 
     /**
      * @hidden
      */
-    set virtualizationState(state) {
+    set virtualizationState(state: IForOfState) {
         this.verticalScrollContainer.state = state;
     }
 
@@ -1881,9 +1883,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _columnWidthSetByUser = false;
 
     private _defaultTargetRecordNumber = 10;
+    private gridAPI: IgxGridAPIService;
 
     constructor(
-        private gridAPI: IgxGridAPIService,
+        gridAPI: IGridAPIService<IGridComponent>,
         public selectionAPI: IgxSelectionAPIService,
         private elementRef: ElementRef,
         private zone: NgZone,
@@ -1892,6 +1895,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
         private viewRef: ViewContainerRef) {
+
+        this.gridAPI = <IgxGridAPIService>gridAPI;
 
         this.resizeHandler = () => {
             this.calculateGridSizes();
@@ -1903,6 +1908,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public ngOnInit() {
+        console.log('onInit');
         this.gridAPI.register(this);
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
