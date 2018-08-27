@@ -18,16 +18,16 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { IAnimationParams } from '../animations/main';
 import { slideOutTop, slideInTop } from '../animations/main';
-import { ICollapsibleEventArgs } from './collapsible-header.component';
-import { IgxCollapsibleBodyDirective } from './collapsible.directives';
+import { IExpansionPanelEventArgs } from './expansion-panel-header.component';
+import { IgxExpansionPanelBodyDirective } from './expansion-panel.directives';
 
 let NEXT_ID = 0;
 
 @Component({
-    selector: 'igx-collapsible',
-    templateUrl: 'collapsible.component.html'
+    selector: 'igx-expansion-panel',
+    templateUrl: 'expansion-panel.component.html'
 })
-export class IgxCollapsibleComponent {
+export class IgxExpansionPanelComponent {
 
     @Input()
     public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
@@ -45,25 +45,25 @@ export class IgxCollapsibleComponent {
 
     /**
      * Sets/gets the `id` of the collapsible component.
-     * If not set, `id` will have value `"igx-collapsible-0"`;
+     * If not set, `id` will have value `"igx-expansion-panel-0"`;
      * ```html
-     * <igx-collapsible id = "my-first-collapsible"></igx-collapsible>
+     * <igx-expansion-panel id = "my-first-expansion-panel"></igx-expansion-panel>
      * ```
      * ```typescript
-     * let collapsibleId =  this.collapsible.id;
+     * let panelId =  this.panel.id;
      * ```
-     * @memberof IgxCollapsibleComponent
+     * @memberof IgxExpansionPanelComponent
      */
 
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-collapsible-${NEXT_ID++}`;
+    public id = `igx-expansion-panel-${NEXT_ID++}`;
 
-    @HostBinding('class.igx-collapsible')
-    public cssClass = 'igx-collapsible';
+    @HostBinding('class.igx-expansion-panel')
+    public cssClass = 'igx-expansion-panel';
 
-    @ContentChild(IgxCollapsibleBodyDirective, { read: ElementRef })
-    public textArea: IgxCollapsibleBodyDirective;
+    @ContentChild(IgxExpansionPanelBodyDirective, { read: ElementRef })
+    public textArea: IgxExpansionPanelBodyDirective;
 
     @ViewChild('toggleBtn', { read: ElementRef })
     public toggleBtn: ElementRef;
@@ -86,14 +86,14 @@ export class IgxCollapsibleComponent {
         return !this.collapsed;
     }
 
-    @HostBinding('class.igx-collapsible--disabled')
+    @HostBinding('class.igx-expansion-panel--disabled')
     @Input() public disabled = false;
 
     @Input()
     public headerButtons;
 
     @Output()
-    public onCollapsed = new EventEmitter<ICollapsibleEventArgs>();
+    public onCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
 
     // @Output()
     // public onCollapsing = new EventEmitter<any>();
@@ -102,7 +102,7 @@ export class IgxCollapsibleComponent {
     // public onExpanding = new EventEmitter<any>();
 
     @Output()
-    public onExpanded = new EventEmitter<ICollapsibleEventArgs>();
+    public onExpanded = new EventEmitter<IExpansionPanelEventArgs>();
 
     constructor(
         public cdr: ChangeDetectorRef,

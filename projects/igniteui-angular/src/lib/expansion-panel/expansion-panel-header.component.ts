@@ -12,10 +12,10 @@ import {
     ContentChild,
     TemplateRef
 } from '@angular/core';
-import { IgxCollapsibleComponent } from './collapsible.component';
-import { IgxCollapsibleButtonDirective } from './collapsible.directives';
+import { IgxExpansionPanelComponent } from './expansion-panel.component';
+import { IgxExpansionPanelButtonDirective } from './expansion-panel.directives';
 
-export interface ICollapsibleEventArgs {
+export interface IExpansionPanelEventArgs {
     event: Event;
 }
 
@@ -26,15 +26,15 @@ export enum BUTTON_POSITION {
 }
 
 @Component({
-    selector: 'igx-collapsible-header',
-    templateUrl: 'collapsible-header.component.html'
+    selector: 'igx-expansion-panel-header',
+    templateUrl: 'expansion-panel-header.component.html'
 })
-export class IgxCollapsibleHeaderComponent {
+export class IgxExpansionPanelHeaderComponent {
      // properties section
 
      private _iconTemplate = false;
 
-    @ContentChild(IgxCollapsibleButtonDirective)
+    @ContentChild(IgxExpansionPanelButtonDirective)
     public set iconTemplate(val: any) {
         this._iconTemplate = <boolean>val;
     }
@@ -51,41 +51,41 @@ export class IgxCollapsibleHeaderComponent {
     public tabIndex = 0;
 
     @Output()
-    public onInterraction = new EventEmitter<ICollapsibleEventArgs>();
+    public onInterraction = new EventEmitter<IExpansionPanelEventArgs>();
 
-     @HostBinding('class.igx-collapsible__header')
-     public cssClass = 'igx-collapsible__header';
+     @HostBinding('class.igx-expansion-panel__header')
+     public cssClass = 'igx-expansion-panel__header';
 
 
      @Input()
-     @HostBinding('class.igx-collapsible__header--collapsed')
+     @HostBinding('class.igx-expansion-panel__header--collapsed')
      public get isCollapsed () {
-        return this.collapsible.collapsed;
+        return this.panel.collapsed;
      }
 
      @Input()
-     @HostBinding('class.igx-collapsible__header--expanded')
+     @HostBinding('class.igx-expansion-panel__header--expanded')
      public get isExpanded () {
-            return !this.collapsible.collapsed;
+            return !this.panel.collapsed;
          }
 
     @Input()
     @HostBinding('attr.aria-labelledby')
     public ariaLabelledBy: string;
 
-    constructor(@Host() public collapsible: IgxCollapsibleComponent, public cdr: ChangeDetectorRef,
+    constructor(@Host() public panel: IgxExpansionPanelComponent, public cdr: ChangeDetectorRef,
      public elementRef: ElementRef, private renderer: Renderer2) { }
 
      @HostListener('keydown.Enter', ['$event'])
      @HostListener('keydown.Space', ['$event'])
      @HostListener('click', ['$event'])
      public onAction(evt?: Event) {
-         if (this.collapsible.disabled) {
+         if (this.panel.disabled) {
             evt.stopPropagation();
             return;
          }
          this.onInterraction.emit({ event: evt });
-         this.collapsible.toggle(evt);
+         this.panel.toggle(evt);
          evt.preventDefault();
      }
 }
