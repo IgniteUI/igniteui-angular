@@ -23,6 +23,14 @@ import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { DisplayDensity } from '../core/utils';
 
+export interface IChipSelectEventArgs {
+    owner: IgxChipComponent;
+    cancel: boolean;
+    selected: boolean;
+}
+
+let CHIP_ID = 0;
+
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
@@ -30,13 +38,14 @@ import { DisplayDensity } from '../core/utils';
 export class IgxChipComponent implements AfterViewInit {
 
     /**
-     * An @Input property that sets the value of `id` attribute.
+     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-chip [id]="'igx-chip-1'"></igx-chip>
      * ```
      */
+    @HostBinding('attr.id')
     @Input()
-    public id;
+    public id = `igx-chip-${CHIP_ID++}`;
 
     /**
      * An @Input property that defines if the `IgxChipComponent` can be dragged in order to change it's position.
@@ -215,9 +224,11 @@ export class IgxChipComponent implements AfterViewInit {
 
     /**
      * Emits event when the `IgxChipComponent` is selected.
+     * Returns the selected chip reference, whether the event should be canceled,
+     * and what is the next selection state.
      * ```typescript
-     * chipSelect(){
-     *     alert("The chip has been selected.");
+     * chipSelect(event: IChipSelectEventArgs){
+     *     const selectArgs = event;
      * }
      * ```
      * ```html
@@ -225,7 +236,7 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     @Output()
-    public onSelection = new EventEmitter<any>();
+    public onSelection = new EventEmitter<IChipSelectEventArgs>();
 
     /**
      * Emits event when the `IgxChipComponent` keyboard navigation is being used.
@@ -309,13 +320,13 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     public set selected(newValue: boolean) {
-        const onSelectArgs = {
+        const onSelectArgs: IChipSelectEventArgs = {
             owner: this,
-            nextStatus: false,
+            selected: false,
             cancel: false
         };
         if (newValue && !this._selected) {
-            onSelectArgs.nextStatus = true;
+            onSelectArgs.selected = true;
             this.onSelection.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
