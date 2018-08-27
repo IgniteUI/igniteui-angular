@@ -39,7 +39,7 @@ export interface IChipReorderEventArgs {
     chipsArray: IgxChipComponent[];
 }
 
-export interface IChipSelectEventArgs extends IBaseChipAreaEventArgs {
+export interface IChipAreaSelectEventArgs extends IBaseChipAreaEventArgs {
     newSelection: IgxChipComponent[];
 }
 
@@ -102,7 +102,7 @@ export class IgxChipsAreaComponent implements DoCheck {
      * }
      */
     @Output()
-    public onSelection = new EventEmitter<IChipSelectEventArgs>();
+    public onSelection = new EventEmitter<IChipAreaSelectEventArgs>();
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
