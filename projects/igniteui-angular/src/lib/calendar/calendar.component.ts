@@ -45,14 +45,9 @@ export enum DateRangeType {
     Weekends
 }
 
-export class DateRangeDescriptor {
+export interface DateRangeDescriptor {
     type: DateRangeType;
-    dateRange: Date[];
-
-    constructor(type: DateRangeType, dateRange: Date[] = null) {
-        this.type = type;
-        this.dateRange = dateRange;
-    }
+    dateRange?: Date[];
 }
 
 export class CalendarHammerConfig extends HammerGestureConfig {
@@ -1158,9 +1153,8 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         const dateInMs = date.getTime();
 
         for (const descriptor of ranges) {
-            const dRanges = descriptor.dateRange === null ? null :
-                descriptor.dateRange.map(r => new Date(r.getFullYear(),
-                    r.getMonth(), r.getDate()));
+            const dRanges = descriptor.dateRange ? descriptor.dateRange.map(
+                r => new Date(r.getFullYear(), r.getMonth(), r.getDate())) : undefined;
             switch (descriptor.type) {
                 case (DateRangeType.After):
                     if (dateInMs > dRanges[0].getTime()) {

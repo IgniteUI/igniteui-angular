@@ -358,7 +358,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
     /**
-     *Retruns the formatted date.
+     *Returns the formatted date.
      *```typescript
      *@ViewChild("MyDatePicker")
      *public datePicker: IgxDatePickerComponent;

@@ -1044,8 +1044,8 @@ describe('IgxCalendar', () => {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 2)];
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, specificDates),
-            new DateRangeDescriptor(DateRangeType.Weekends));
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
+            {type: DateRangeType.Weekends});
         calendar.disabledDates = dateRangeDescriptors;
         fixture.detectChanges();
 
@@ -1066,8 +1066,8 @@ describe('IgxCalendar', () => {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const rangeDates = [new Date(2017, 5, 28), new Date(2017, 5, 30)];
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Between, rangeDates),
-            new DateRangeDescriptor(DateRangeType.Specific, [new Date(2017, 5, 27)]));
+        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates },
+            {type: DateRangeType.Specific, dateRange: [new Date(2017, 5, 27)]});
         calendar.disabledDates = dateRangeDescriptors;
         fixture.detectChanges();
 
@@ -1088,8 +1088,8 @@ describe('IgxCalendar', () => {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const specificDates = [new Date(2017, 5, 23), new Date(2017, 5, 16)];
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, specificDates),
-            new DateRangeDescriptor(DateRangeType.Weekends));
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
+            { type: DateRangeType.Weekends });
         calendar.disabledDates = dateRangeDescriptors;
         fixture.detectChanges();
 
@@ -1113,8 +1113,8 @@ describe('IgxCalendar', () => {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const specificDates = [new Date(2017, 5, 8), new Date(2017, 5, 15)];
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, specificDates),
-            new DateRangeDescriptor(DateRangeType.Weekends));
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates},
+            { type: DateRangeType.Weekends });
         calendar.disabledDates = dateRangeDescriptors;
         fixture.detectChanges();
 
@@ -1138,7 +1138,7 @@ describe('IgxCalendar', () => {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Between, rangeDates));
+        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
         calendar.disabledDates = dateRangeDescriptors;
         fixture.detectChanges();
 
@@ -1162,7 +1162,7 @@ describe('IgxCalendar', () => {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Between, rangeDates));
+        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
         calendar.disabledDates = dateRangeDescriptors;
         fixture.detectChanges();
 
@@ -1185,7 +1185,7 @@ describe('IgxCalendar', () => {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const rangeDates = [new Date(2017, 5, 10), new Date(2017, 5, 15)];
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Between, rangeDates));
+        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
         calendar.disabledDates = dateRangeDescriptors;
         calendar.selection = 'range';
         fixture.detectChanges();
@@ -1281,8 +1281,8 @@ class DateRangesPropertiesTester {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const afterDate = new Date(2017, 5, 13);
-        const afterDateRangeDescriptor = new DateRangeDescriptor(
-            DateRangeType.After, [afterDate]);
+        const afterDateRangeDescriptor: DateRangeDescriptor = {
+            type: DateRangeType.After, dateRange:  [afterDate] };
         dateRangeDescriptors.push(afterDateRangeDescriptor);
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
@@ -1299,8 +1299,8 @@ class DateRangesPropertiesTester {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const beforeDate = new Date(2017, 5, 13);
-        const beforeDateRangeDescriptor = new DateRangeDescriptor(
-            DateRangeType.Before, [beforeDate]);
+        const beforeDateRangeDescriptor: DateRangeDescriptor = {
+            type: DateRangeType.Before, dateRange: [beforeDate] };
         dateRangeDescriptors.push(beforeDateRangeDescriptor);
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
@@ -1337,7 +1337,7 @@ class DateRangesPropertiesTester {
         const betweenMin = firstDate.getTime() > secondDate.getTime() ? secondDate : firstDate;
         const betweenMax = firstDate.getTime() > secondDate.getTime() ? firstDate : secondDate;
         dateRangeDescriptors.push(
-            new DateRangeDescriptor(DateRangeType.Between, [betweenMax, betweenMin]));
+            { type: DateRangeType.Between, dateRange: [betweenMax, betweenMin] });
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
 
@@ -1356,7 +1356,7 @@ class DateRangesPropertiesTester {
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 10),
             new Date(2017, 5, 20), new Date(2017, 5, 21), new Date(2017, 5, 22)];
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, specificDates));
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
 
@@ -1373,7 +1373,7 @@ class DateRangesPropertiesTester {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] =
-            [new DateRangeDescriptor(DateRangeType.Weekdays)];
+            [{ type: DateRangeType.Weekdays }];
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
 
@@ -1390,7 +1390,7 @@ class DateRangesPropertiesTester {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] =
-            [new DateRangeDescriptor(DateRangeType.Weekends)];
+            [{ type: DateRangeType.Weekends }];
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
 
@@ -1412,9 +1412,9 @@ class DateRangesPropertiesTester {
         const secondBetweenMin = new Date(2017, 5, 7);
         const secondBetweenMax = new Date(2017, 5, 15);
         dateRangeDescriptors.push(
-            new DateRangeDescriptor(DateRangeType.Between, [firstBetweenMin, firstBetweenMax]));
+            {type: DateRangeType.Between, dateRange: [firstBetweenMin, firstBetweenMax] });
         dateRangeDescriptors.push(
-            new DateRangeDescriptor(DateRangeType.Between, [secondBetweenMin, secondBetweenMax]));
+            { type: DateRangeType.Between, dateRange: [secondBetweenMin, secondBetweenMax] });
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
 
@@ -1432,15 +1432,15 @@ class DateRangesPropertiesTester {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         dateRangeDescriptors.push(
-            new DateRangeDescriptor(DateRangeType.Before, [new Date(2017, 5, 1)]));
+            { type: DateRangeType.Before, dateRange: [new Date(2017, 5, 1)] });
         dateRangeDescriptors.push(
-            new DateRangeDescriptor(DateRangeType.After, [new Date(2017, 5, 29)]));
+            { type: DateRangeType.After, dateRange: [new Date(2017, 5, 29)] });
         dateRangeDescriptors.push(
-            new DateRangeDescriptor(DateRangeType.Weekends));
+            { type: DateRangeType.Weekends });
         dateRangeDescriptors.push(
-            new DateRangeDescriptor(DateRangeType.Between, [new Date(2017, 5, 1), new Date(2017, 5, 16)]));
+            { type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 16)] });
         dateRangeDescriptors.push(
-            new DateRangeDescriptor(DateRangeType.Between, [new Date(2017, 5, 5), new Date(2017, 5, 28)]));
+            { type: DateRangeType.Between, dateRange: [new Date(2017, 5, 5), new Date(2017, 5, 28)] });
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
 
@@ -1457,7 +1457,7 @@ class DateRangesPropertiesTester {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const specificDate = new Date(2017, 5, 15);
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, [specificDate]));
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: [specificDate] });
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
 
@@ -1468,7 +1468,7 @@ class DateRangesPropertiesTester {
 
         const newSpecificDate = new Date(2017, 5, 16);
         const newDateRangeDescriptors: DateRangeDescriptor[] = [];
-        newDateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Specific, [newSpecificDate]));
+        newDateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: [newSpecificDate] });
         assignFunc(calendar, newDateRangeDescriptors);
         fixture.detectChanges();
 
@@ -1483,7 +1483,7 @@ class DateRangesPropertiesTester {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const beforeDate = new Date(2017, 5, 13);
-        dateRangeDescriptors.push(new DateRangeDescriptor(DateRangeType.Before, [beforeDate]));
+        dateRangeDescriptors.push({ type: DateRangeType.Before, dateRange: [beforeDate] });
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
 
