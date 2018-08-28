@@ -10,7 +10,7 @@ import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.compo
 import { IgxExpansionPanelModule } from './expansion-panel.module';
 import { IgxGridComponent, IgxGridModule } from '../grid';
 import { IgxListComponent, IgxListModule } from '../list';
-
+import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 const CSS_CLASS_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_HEADER = 'igx-expansion-panel__header';
 const CSS_CLASS_HEADER_COLLAPSED = 'igx-expansion-panel__header--collapsed';
@@ -30,7 +30,8 @@ describe('igxExpansionPanel', () => {
             declarations: [
                 IgxExpansionPanelGridComponent,
                 IgxExpansionPanelListComponent,
-                IgxExpansionPanelSampleComponent
+                IgxExpansionPanelSampleComponent,
+                HeaderlessComponent
             ],
             imports: [
                 IgxExpansionPanelModule,
@@ -45,7 +46,7 @@ describe('igxExpansionPanel', () => {
     }));
 
 
-    fdescribe('General tests: ', () => {
+    describe('General tests: ', () => {
         it('Should initialize the expansion panel component properly', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -124,8 +125,8 @@ describe('igxExpansionPanel', () => {
             expect(panel.expand).toHaveBeenCalledTimes(1);
             expect(panel.expand).toHaveBeenCalledWith(mockEvent);
             expect(panel.collapse).toHaveBeenCalledTimes(0);
-            expect(panel.onExpanded.emit).toHaveBeenCalledWith({event: mockEvent});
-            expect(header.onInteraction.emit).toHaveBeenCalledWith({event: mockEvent});
+            expect(panel.onExpanded.emit).toHaveBeenCalledWith({ event: mockEvent });
+            expect(header.onInteraction.emit).toHaveBeenCalledWith({ event: mockEvent });
 
             header.onAction(mockEvent);
             tick();
@@ -136,7 +137,7 @@ describe('igxExpansionPanel', () => {
             expect(panel.expand).toHaveBeenCalledTimes(1);
             expect(panel.collapse).toHaveBeenCalledTimes(1);
             expect(panel.collapse).toHaveBeenCalledWith(mockEvent);
-            expect(panel.onCollapsed.emit).toHaveBeenCalledWith({event: mockEvent});
+            expect(panel.onCollapsed.emit).toHaveBeenCalledWith({ event: mockEvent });
 
             header.disabled = true;
             header.onAction(mockEvent);
@@ -175,7 +176,7 @@ describe('igxExpansionPanel', () => {
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             panelHeader.click();
@@ -199,7 +200,7 @@ describe('igxExpansionPanel', () => {
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             button.click();
@@ -223,7 +224,7 @@ describe('igxExpansionPanel', () => {
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             panel.expand();
@@ -253,7 +254,7 @@ describe('igxExpansionPanel', () => {
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             panel.toggle();
@@ -283,7 +284,7 @@ describe('igxExpansionPanel', () => {
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
-            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            const button = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             panel.expand();
@@ -316,6 +317,60 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
         }));
+
+        describe('Aria tests', () => {
+            it('Should properly apply default aria properties', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+                fixture.detectChanges();
+                const panel = fixture.componentInstance.panel;
+                const panelElement = panel.elementRef.nativeElement;
+                const header = fixture.componentInstance.header;
+                const headerElement = header.elementRef.nativeElement;
+                const title = fixture.componentInstance.title;
+                // IgxExpansionPanelHeaderComponent host
+                expect(headerElement.getAttribute('aria-level')).toEqual('3');
+                expect(headerElement.getAttribute('role')).toEqual('heading');
+                // Body of IgxExpansionPanelComponent
+                expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
+                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
+                // Button of IgxExpansionPanelHeaderComponent
+                expect(headerElement.lastElementChild.getAttribute('role')).toEqual('button');
+                expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
+                expect(headerElement.firstElementChild.getAttribute('aria-expanded')).toEqual('false');
+                expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
+                // Disabled
+                header.disabled = true;
+                expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
+                panel.expand();
+                tick();
+                fixture.detectChanges();
+                // tslint:disable-next-line:no-debugger
+                debugger;
+                expect(headerElement.firstElementChild.getAttribute('aria-expanded')).toEqual('true');
+            }));
+
+            it('Should properly apply aria properties if no header is shown', fakeAsync(() => {
+                const fixture = TestBed.createComponent(HeaderlessComponent);
+                fixture.detectChanges();
+                const panel = fixture.componentInstance.panel;
+                const panelElement = panel.elementRef.nativeElement;
+                const header = fixture.componentInstance.header;
+                expect(header).toBeFalsy();
+                const title = fixture.componentInstance.title;
+                expect(title).toBeFalsy();
+                // tslint:disable-next-line:no-debugger
+                debugger;
+                // Body of IgxExpansionPanelComponent
+                expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
+                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
+                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panelElement.id}-region`);
+                panel.expand();
+                tick();
+                fixture.detectChanges();
+                // tslint:disable-next-line:no-debugger
+                debugger;
+            }));
+        });
     });
 });
 
@@ -390,7 +445,9 @@ export class IgxExpansionPanelListComponent {
 
 @Component({
     template: `
-<igx-expansion-panel>
+<igx-expansion-panel
+    (onCollapsed)="handleCollapsing($event)"
+    (onExpanded)="handleExpanded($event)">
     <igx-expansion-panel-header headerHeight="50px">
         <igx-expansion-panel-title>Example Title</igx-expansion-panel-title>
         <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
@@ -408,13 +465,31 @@ export class IgxExpansionPanelSampleComponent {
     public header: IgxExpansionPanelHeaderComponent;
     @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
     public panel: IgxExpansionPanelComponent;
-    public handleExpanded() {
+    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
+    public title: IgxExpansionPanelTitleDirective;
+    public handleExpanded(event?) {
     }
-    public handleCollapsed() {
-
+    public handleCollapsed(event?) {
     }
     public handleInterraction() {
-
     }
+}
+
+@Component({
+    template: `<igx-expansion-panel>
+    <igx-expansion-panel-body>
+    Example body
+    </igx-expansion-panel-body>
+    </igx-expansion-panel>`
+})
+class HeaderlessComponent {
+    public disabled = false;
+    public collapsed = true;
+    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
+    public header: IgxExpansionPanelHeaderComponent;
+    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
+    public panel: IgxExpansionPanelComponent;
+    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
+    public title: IgxExpansionPanelTitleDirective;
 
 }
