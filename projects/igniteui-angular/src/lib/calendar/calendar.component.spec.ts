@@ -1,15 +1,19 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { async, TestBed, } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar, ICalendarDate, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from './index';
+import {
+    Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, IgxCalendarDateDirective,
+    monthRange, weekDay, WEEKDAYS } from './index';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
 describe('IgxCalendar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [IgxCalendarModule]
+            declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent],
+            imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
         });
     });
 
@@ -171,11 +175,11 @@ describe('IgxCalendar', () => {
         beforeEach(
             async(() => {
                 TestBed.configureTestingModule({
-                    declarations: [IgxCalendarRenderingComponent],
+                    declarations: [IgxCalendarSampleComponent],
                     imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
                 }).compileComponents()
                 .then(() => {
-                    fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+                    fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                  });
             })
@@ -224,7 +228,7 @@ describe('IgxCalendar', () => {
         });
 
         it('should properly set formatOptions and formatViews', () => {
-            fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
+            fixture = TestBed.createComponent(IgxCalendarSampleComponent);
             fixture.componentInstance.viewDate = new Date(2018, 8, 17);
             fixture.componentInstance.model = new Date();
             fixture.detectChanges();
@@ -867,6 +871,362 @@ describe('IgxCalendar', () => {
             }, 500);
         }));
     });
+
+    it('Should disable date when using "After" date descriptor.', () => {
+        DateRangesPropertiesTester.testAfter(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates);
+    });
+
+    it('Should disable date when using "Before" date descriptor.', () => {
+        DateRangesPropertiesTester.testBefore(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable date when using "Between" date descriptor with min date declared first.', () => {
+        DateRangesPropertiesTester.testBetweenWithMinDateFirst(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable date when using "Between" date descriptor with max date declared first.', () => {
+        DateRangesPropertiesTester.testBetweenWithMaxDateFirst(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable date when using "Between" date descriptor with min and max the same.', () => {
+        DateRangesPropertiesTester.testBetweenWithMinMaxTheSame(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable date when using overlapping "Between" ranges.', () => {
+        DateRangesPropertiesTester.testOverlappingBetweens(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable date when using "Specific" date descriptor.', () => {
+        DateRangesPropertiesTester.testSpecific(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable date when using "Weekdays" date descriptor.', () => {
+        DateRangesPropertiesTester.testWeekdays(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable date when using "Weekends" date descriptor.', () => {
+        DateRangesPropertiesTester.testWeekends(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable dates when using multiple ranges.', () => {
+        DateRangesPropertiesTester.testMultipleRanges(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should disable previous month with "before" date descriptor', async(() => {
+        DateRangesPropertiesTester.testPreviousMonthRangeAsync(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    }));
+
+    it('Should be able to change disable dates runtime.', () => {
+        DateRangesPropertiesTester.testRangeUpdateRuntime(
+            DateRangesPropertiesTester.assignDisableDatesDescriptors,
+            DateRangesPropertiesTester.testDisabledDates
+        );
+    });
+
+    it('Should mark date as special when using "After" date descriptor.', () => {
+        DateRangesPropertiesTester.testAfter(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark date as special when using "Before" date descriptor.', () => {
+        DateRangesPropertiesTester.testBefore(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark date as special when using "Between" date descriptor with min date declared first.', () => {
+        DateRangesPropertiesTester.testBetweenWithMinDateFirst(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark date as special when using "Between" date descriptor with max date declared first.', () => {
+        DateRangesPropertiesTester.testBetweenWithMaxDateFirst(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark date as special when using "Between" date descriptor with min and max the same.', () => {
+        DateRangesPropertiesTester.testBetweenWithMinMaxTheSame(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark date as special when using overlapping "Between" ranges.', () => {
+        DateRangesPropertiesTester.testOverlappingBetweens(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark date as special when using "Specific" date descriptor.', () => {
+        DateRangesPropertiesTester.testSpecific(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark date as special when using "Weekdays" date descriptor.', () => {
+        DateRangesPropertiesTester.testWeekdays(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark date as special when using "Weekends" date descriptor.', () => {
+        DateRangesPropertiesTester.testWeekends(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark dates as special when using multiple ranges.', () => {
+        DateRangesPropertiesTester.testMultipleRanges(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should mark as special previous month with "before" date descriptor', async(() => {
+        DateRangesPropertiesTester.testPreviousMonthRangeAsync(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    }));
+
+    it('Should be able to change special dates runtime.', () => {
+        DateRangesPropertiesTester.testRangeUpdateRuntime(
+            DateRangesPropertiesTester.assignSpecialDatesDescriptors,
+            DateRangesPropertiesTester.testSpecialDates
+        );
+    });
+
+    it('Should navigate to first enabled date when using "home" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 2)];
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
+            {type: DateRangeType.Weekends});
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 5).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to last enabled date when using "end" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const rangeDates = [new Date(2017, 5, 28), new Date(2017, 5, 30)];
+        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates },
+            {type: DateRangeType.Specific, dateRange: [new Date(2017, 5, 27)]});
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 26).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to first enabled date when using "arrow up" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDates = [new Date(2017, 5, 23), new Date(2017, 5, 16)];
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
+            { type: DateRangeType.Weekends });
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+                fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 9).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to first enabled date when using "arrow down" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDates = [new Date(2017, 5, 8), new Date(2017, 5, 15)];
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates},
+            { type: DateRangeType.Weekends });
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 22).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to first enabled date when using "arrow left" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
+        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 1).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should navigate to first enabled date when using "arrow right" key.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const debugEl = fixture.debugElement;
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
+        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
+        calendar.disabledDates = dateRangeDescriptors;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+                fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 30).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+    }));
+
+    it('Should not select disabled dates when having "range" selection', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendaRangeComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const rangeDates = [new Date(2017, 5, 10), new Date(2017, 5, 15)];
+        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
+        calendar.disabledDates = dateRangeDescriptors;
+        calendar.selection = 'range';
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const fromDate = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 5).getTime())[0];
+            fromDate.nativeElement.click();
+            fixture.detectChanges();
+
+            const toDate = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 20).getTime())[0];
+            toDate.nativeElement.click();
+            fixture.detectChanges();
+
+            const selectedDates = calendar.dates.toArray().filter(d => {
+                const dateTime = getDate(d).getTime();
+                return (dateTime >= new Date(2017, 5, 5).getTime() &&
+                        dateTime <= new Date(2017, 5, 9).getTime()) ||
+                        (dateTime >= new Date(2017, 5, 16).getTime() &&
+                        dateTime <= new Date(2017, 5, 20).getTime());
+            });
+
+            selectedDates.forEach(d => {
+                expect(d.selected).toBe(true);
+                expect(d.isSelectedCSS).toBe(true);
+            });
+
+            const notSelectedDates = calendar.dates.toArray().filter(d => {
+                const dateTime = getDate(d).getTime();
+                return dateTime >= new Date(2017, 5, 10).getTime() &&
+                        dateTime <= new Date(2017, 5, 15).getTime();
+            });
+
+            notSelectedDates.forEach(d => {
+                expect(d.selected).toBe(false);
+                expect(d.isSelectedCSS).toBe(false);
+            });
+        });
+    }));
 });
 
 @Component({
@@ -874,8 +1234,294 @@ describe('IgxCalendar', () => {
         <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
     `
 })
-export class IgxCalendarRenderingComponent {
+export class IgxCalendarSampleComponent {
     public model: Date | Date[] = new Date(2017, 5, 13);
     public viewDate = new Date(2017, 5, 13);
     @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+}
+
+@Component({
+    template: `
+        <igx-calendar [viewDate]="viewDate" selection="range"></igx-calendar>
+    `
+})
+export class IgxCalendaRangeComponent {
+    public viewDate = new Date(2017, 5, 13);
+    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+}
+
+class DateTester {
+    // tests whether a date is disabled or not
+    static testDatesAvailability(dates: IgxCalendarDateDirective[], disabled: boolean) {
+        for (const date of dates) {
+            expect(date.isDisabled).toBe(disabled,
+                date.date.date.toLocaleDateString() + ' is not disabled');
+            expect(date.isDisabledCSS).toBe(disabled,
+                date.date.date.toLocaleDateString() + ' is not with disabled style');
+        }
+    }
+
+    // tests whether a dates is special or not
+    static testDatesSpeciality(dates: IgxCalendarDateDirective[], special: boolean): void {
+        for (const date of dates) {
+            expect(date.isSpecial).toBe(special);
+            expect(date.isSpecialCSS).toBe(special);
+        }
+    }
+}
+
+type assignDateRangeDescriptors = (component: IgxCalendarComponent,
+    dateRangeDescriptors: DateRangeDescriptor[]) => void;
+type testDatesRange = (inRange: IgxCalendarDateDirective[],
+    outOfRange: IgxCalendarDateDirective[]) => void;
+
+class DateRangesPropertiesTester {
+    static testAfter(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const afterDate = new Date(2017, 5, 13);
+        const afterDateRangeDescriptor: DateRangeDescriptor = {
+            type: DateRangeType.After, dateRange:  [afterDate] };
+        dateRangeDescriptors.push(afterDateRangeDescriptor);
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        const inRangeDates = dates.filter(d => getDate(d).getTime() > afterDate.getTime());
+        const outOfRangeDates = dates.filter(d => getDate(d).getTime() <= afterDate.getTime());
+        testRangesFunc(inRangeDates, outOfRangeDates);
+    }
+
+    static testBefore(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const beforeDate = new Date(2017, 5, 13);
+        const beforeDateRangeDescriptor: DateRangeDescriptor = {
+            type: DateRangeType.Before, dateRange: [beforeDate] };
+        dateRangeDescriptors.push(beforeDateRangeDescriptor);
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        const inRangeDates = dates.filter(d => getDate(d).getTime() < beforeDate.getTime());
+        const outOfRangeDates = dates.filter(d => getDate(d).getTime() >= beforeDate.getTime());
+        testRangesFunc(inRangeDates, outOfRangeDates);
+    }
+
+    static testBetweenWithMinDateFirst(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        this.testBetween(assignFunc, testRangesFunc,
+            new Date(2017, 5, 13), new Date(2017, 5, 20));
+    }
+
+    static testBetweenWithMaxDateFirst(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        this.testBetween(assignFunc, testRangesFunc,
+            new Date(2017, 5, 20), new Date(2017, 5, 13));
+    }
+
+    static testBetweenWithMinMaxTheSame(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        this.testBetween(assignFunc, testRangesFunc,
+            new Date(2017, 5, 20), new Date(2017, 5, 20));
+    }
+
+    private static testBetween(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange, firstDate: Date, secondDate: Date) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const betweenMin = firstDate.getTime() > secondDate.getTime() ? secondDate : firstDate;
+        const betweenMax = firstDate.getTime() > secondDate.getTime() ? firstDate : secondDate;
+        dateRangeDescriptors.push(
+            { type: DateRangeType.Between, dateRange: [betweenMax, betweenMin] });
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        const inRangeDates = dates.filter(d => getDate(d).getTime() >= betweenMin.getTime() &&
+            getDate(d).getTime() <= betweenMax.getTime());
+        const outOfRangeDates = dates.filter(d => getDate(d).getTime() < betweenMin.getTime() &&
+            getDate(d).getTime() > betweenMax.getTime());
+        testRangesFunc(inRangeDates, outOfRangeDates);
+    }
+
+    static testSpecific(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 10),
+            new Date(2017, 5, 20), new Date(2017, 5, 21), new Date(2017, 5, 22)];
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const specificDatesSet = new Set<number>();
+        specificDates.map(d => specificDatesSet.add(d.getTime()));
+        const dates = calendar.dates.toArray();
+        const inRangeDates = dates.filter(d => specificDatesSet.has(getDate(d).getTime()));
+        const outOfRangeDates = dates.filter(d => !specificDatesSet.has(getDate(d).getTime()));
+        testRangesFunc(inRangeDates, outOfRangeDates);
+    }
+
+    static testWeekdays(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] =
+            [{ type: DateRangeType.Weekdays }];
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        const inRangeDates = dates.filter(d => d.date.date.getDay() !== 0 &&
+            d.date.date.getDay() !== 6);
+        const outOfRangeDates = dates.filter(d => d.date.date.getDay() === 0 ||
+           d.date.date.getDay() === 6);
+        testRangesFunc(inRangeDates, outOfRangeDates);
+    }
+
+    static testWeekends(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] =
+            [{ type: DateRangeType.Weekends }];
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        const inRangeDates = dates.filter(d => d.date.date.getDay() === 0 ||
+            d.date.date.getDay() === 6);
+        const outOfRangeDates = dates.filter(d => d.date.date.getDay() !== 0 &&
+            d.date.date.getDay() !== 6);
+        testRangesFunc(inRangeDates, outOfRangeDates);
+    }
+
+    static testOverlappingBetweens(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const firstBetweenMin = new Date(2017, 5, 5);
+        const firstBetweenMax = new Date(2017, 5, 10);
+        const secondBetweenMin = new Date(2017, 5, 7);
+        const secondBetweenMax = new Date(2017, 5, 15);
+        dateRangeDescriptors.push(
+            {type: DateRangeType.Between, dateRange: [firstBetweenMin, firstBetweenMax] });
+        dateRangeDescriptors.push(
+            { type: DateRangeType.Between, dateRange: [secondBetweenMin, secondBetweenMax] });
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        const inRangeDates = dates.filter(d => getDate(d).getTime() >= firstBetweenMin.getTime() &&
+            getDate(d).getTime() <= secondBetweenMax.getTime());
+        const outOfRangeDates = dates.filter(d => getDate(d).getTime() < firstBetweenMin.getTime() &&
+            getDate(d).getTime() > secondBetweenMax.getTime());
+        testRangesFunc(inRangeDates, outOfRangeDates);
+    }
+
+    static testMultipleRanges(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        dateRangeDescriptors.push(
+            { type: DateRangeType.Before, dateRange: [new Date(2017, 5, 1)] });
+        dateRangeDescriptors.push(
+            { type: DateRangeType.After, dateRange: [new Date(2017, 5, 29)] });
+        dateRangeDescriptors.push(
+            { type: DateRangeType.Weekends });
+        dateRangeDescriptors.push(
+            { type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 16)] });
+        dateRangeDescriptors.push(
+            { type: DateRangeType.Between, dateRange: [new Date(2017, 5, 5), new Date(2017, 5, 28)] });
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        const enabledDateTime = new Date(2017, 5, 29).getTime();
+        const inRangesDates = dates.filter(d => getDate(d).getTime() !== enabledDateTime);
+        const outOfRangeDates = dates.filter(d => getDate(d).getTime() === enabledDateTime);
+        testRangesFunc(inRangesDates, outOfRangeDates);
+    }
+
+    static testRangeUpdateRuntime(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const specificDate = new Date(2017, 5, 15);
+        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: [specificDate] });
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.dates.toArray();
+        let inRangesDates = dates.filter(d => getDate(d).getTime() === specificDate.getTime());
+        let outOfRangesDates = dates.filter(d => getDate(d).getTime() !== specificDate.getTime());
+        testRangesFunc(inRangesDates, outOfRangesDates);
+
+        const newSpecificDate = new Date(2017, 5, 16);
+        const newDateRangeDescriptors: DateRangeDescriptor[] = [];
+        newDateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: [newSpecificDate] });
+        assignFunc(calendar, newDateRangeDescriptors);
+        fixture.detectChanges();
+
+        inRangesDates = dates.filter(d => getDate(d).getTime() === newSpecificDate.getTime());
+        outOfRangesDates = dates.filter(d => getDate(d).getTime() !== newSpecificDate.getTime());
+        testRangesFunc(inRangesDates, outOfRangesDates);
+    }
+
+    static testPreviousMonthRangeAsync(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const beforeDate = new Date(2017, 5, 13);
+        dateRangeDescriptors.push({ type: DateRangeType.Before, dateRange: [beforeDate] });
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+            const debugEl = fixture.debugElement;
+            const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'PageUp');
+            fixture.detectChanges();
+            testRangesFunc(calendar.dates.toArray(), []);
+        });
+    }
+
+    static assignDisableDatesDescriptors(component: IgxCalendarComponent,
+        dateRangeDescriptors: DateRangeDescriptor[]) {
+        component.disabledDates = dateRangeDescriptors;
+    }
+
+    static testDisabledDates(inRange: IgxCalendarDateDirective[],
+        outOfRange: IgxCalendarDateDirective[]) {
+        DateTester.testDatesAvailability(inRange, true);
+        DateTester.testDatesAvailability(outOfRange, false);
+    }
+
+    static assignSpecialDatesDescriptors(component: IgxCalendarComponent,
+        dateRangeDescriptors: DateRangeDescriptor[]) {
+        component.specialDates = dateRangeDescriptors;
+    }
+
+    static testSpecialDates(inRange: IgxCalendarDateDirective[],
+        outOfRange: IgxCalendarDateDirective[]) {
+        DateTester.testDatesSpeciality(inRange, true);
+        DateTester.testDatesSpeciality(outOfRange, false);
+    }
+}
+
+function getDate(dateDirective: IgxCalendarDateDirective) {
+    const fullDate = dateDirective.date.date;
+    const date = new Date(fullDate.getFullYear(), fullDate.getMonth(), fullDate.getDate());
+    return date;
 }
