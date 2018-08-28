@@ -13,7 +13,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
-import { IgxExpansionPanelButtonDirective } from './expansion-panel.directives';
+import { IgxExpansionPanelButtonDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 
 export interface IExpansionPanelEventArgs {
     event: Event;
@@ -24,6 +24,8 @@ export enum BUTTON_POSITION {
     NONE = 'none',
     RIGHT = 'right'
 }
+
+//let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-expansion-panel-header',
@@ -43,11 +45,26 @@ export class IgxExpansionPanelHeaderComponent {
         return this._iconTemplate;
     }
 
-    @HostBinding('attr.aria-role')
+    @ContentChild(IgxExpansionPanelTitleDirective)
+    public title: IgxExpansionPanelTitleDirective;
+
+    @HostBinding('attr.aria-labelledby')
+    @Input()
+    public labelledby = this.title.id; //?? TODO reference to title directive text
+
+    // @HostBinding('attr.id')
+    // @Input()
+    // public id = `igx-expansion-panel-header-${NEXT_ID++}`; //May not be needed
+
+    @HostBinding('attr.aria-level')//OK
+    @Input()
+    public lv = '2';
+
+    @HostBinding('attr.aria-role')//OK
     @Input()
     public role = 'heading';
 
-    @HostBinding('attr.aria-controls')
+    @HostBinding('attr.aria-controls')//OK
     @Input()
     public controls = this.panel.id;
 
@@ -72,7 +89,7 @@ export class IgxExpansionPanelHeaderComponent {
      }
 
      @Input()
-     @HostBinding('attr.aria-expanded')
+     @HostBinding('attr.aria-expanded')//OK
      @HostBinding('class.igx-expansion-panel__header--expanded')
      public get isExpanded () {
             return !this.panel.collapsed;

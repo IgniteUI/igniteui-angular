@@ -19,7 +19,7 @@ import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, An
 import { IAnimationParams } from '../animations/main';
 import { slideOutTop, slideInTop } from '../animations/main';
 import { IExpansionPanelEventArgs, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IgxExpansionPanelBodyDirective, IgxExpansionPanelHeaderDirective } from './expansion-panel.directives';
+import { IgxExpansionPanelBodyDirective, IgxExpansionPanelHeaderDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 
 let NEXT_ID = 0;
 
@@ -66,7 +66,7 @@ export class IgxExpansionPanelComponent {
     // public textArea: IgxExpansionPanelBodyDirective;
 
     @Input()
-    @HostBinding('attr.aria-role')
+    @HostBinding('attr.aria-role') //OK
     public role = 'region';
 
     @Input()
@@ -106,9 +106,12 @@ export class IgxExpansionPanelComponent {
     @ViewChildren('collapseBody', { read : ElementRef})
     private body: QueryList<ElementRef>;
 
+    @ContentChild(IgxExpansionPanelTitleDirective)
+    public title: IgxExpansionPanelTitleDirective;
+
     @Input()
     @HostBinding('attr.aria-labelledby')
-    //public ariaLabelledBy = this.header.id; //TODO header.id
+    public labelledby = this.title.id; //??TODO reference to the title directive text
 
     private playOpenAnimation(cb: () => void) {
         this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(0px)';
