@@ -742,18 +742,37 @@ export class PinnedColumnsComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="600px" height="600px"`, ``, ColumnDefinitions.pinnedThreeOfEight)
+    template: GridTemplateStrings.declareGrid(`width="600px" height="600px"`, ``,
+        `<igx-column [field]="'Released'" [pinned]="true" width="100px" dataType="boolean" [resizable]="true"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [pinned]="true" width="100px" dataType="date" [resizable]="true"
+            [formatter]="returnVal"></igx-column>
+        <igx-column [field]="'Items'" [pinned]="true" width="100px" dataType="string" [resizable]="true"></igx-column>
+        <igx-column [field]="'ID'" [width]="'100px'" [header]="'ID'" [resizable]="true"></igx-column>
+        <igx-column [field]="'ProductName'" width="25px" [maxWidth]="'100px'" dataType="string" [resizable]="true"></igx-column>
+        <igx-column [field]="'Test'" width="100px" dataType="string" [resizable]="true">
+            <ng-template igxCell>
+                <div></div>
+            </ng-template>
+        </igx-column>
+        <igx-column [field]="'Downloads'" width="100px" dataType="number" [resizable]="true"></igx-column>
+        <igx-column [field]="'Category'" width="100px" dataType="string" [resizable]="true"></igx-column>`
+    )
 })
 export class LargePinnedColGridComponent implements OnInit {
 
     timeGenerator: Calendar = new Calendar();
     today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
     data = [];
+    value: any;
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 
     ngOnInit() {
         this.data = SampleTestData.generateProductData(75);
+    }
+
+    public returnVal() {
+        return this.value;
     }
 }
 
