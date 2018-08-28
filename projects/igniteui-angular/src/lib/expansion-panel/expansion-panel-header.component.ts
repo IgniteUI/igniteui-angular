@@ -50,7 +50,7 @@ export class IgxExpansionPanelHeaderComponent {
 
     @HostBinding('attr.aria-labelledby')
     @Input()
-    public labelledby = this.title.id; //?? TODO reference to title directive text
+    public labelledby = this.title ? this.title.id : null; //?? TODO reference to title directive text
 
     // @HostBinding('attr.id')
     // @Input()
@@ -58,7 +58,7 @@ export class IgxExpansionPanelHeaderComponent {
 
     @HostBinding('attr.aria-level')//OK
     @Input()
-    public lv = '2';
+    public lv = '3';
 
     @HostBinding('attr.aria-role')//OK
     @Input()
@@ -71,29 +71,22 @@ export class IgxExpansionPanelHeaderComponent {
     @Input()
     public buttonPosition: BUTTON_POSITION = BUTTON_POSITION.LEFT;
 
-    @Input()
-    @HostBinding('attr.tabindex')
-    public tabIndex = 0;
-
     @Output()
-    public onInterraction = new EventEmitter<IExpansionPanelEventArgs>();
+    public onInteraction = new EventEmitter<IExpansionPanelEventArgs>();
 
      @HostBinding('class.igx-expansion-panel__header')
      public cssClass = 'igx-expansion-panel__header';
 
-
-     @Input()
-     @HostBinding('class.igx-expansion-panel__header--collapsed')
-     public get isCollapsed () {
-        return this.panel.collapsed;
-     }
-
-     @Input()
      @HostBinding('attr.aria-expanded')//OK
      @HostBinding('class.igx-expansion-panel__header--expanded')
      public get isExpanded () {
             return !this.panel.collapsed;
          }
+
+    @Input()
+    @HostBinding('attr.aria-disabled')
+    @HostBinding('class.igx-expansion-panel--disabled')
+    public disabled = false;
 
     constructor(@Host() public panel: IgxExpansionPanelComponent, public cdr: ChangeDetectorRef,
      public elementRef: ElementRef, private renderer: Renderer2) { }
@@ -102,11 +95,11 @@ export class IgxExpansionPanelHeaderComponent {
      @HostListener('keydown.Space', ['$event'])
      @HostListener('click', ['$event'])
      public onAction(evt?: Event) {
-         if (this.panel.disabled) {
+         if (this.disabled) {
             evt.stopPropagation();
             return;
          }
-         this.onInterraction.emit({ event: evt });
+         this.onInteraction.emit({ event: evt });
          this.panel.toggle(evt);
          evt.preventDefault();
      }

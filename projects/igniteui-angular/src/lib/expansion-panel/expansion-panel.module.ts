@@ -19,8 +19,7 @@ import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
     IgxExpansionPanelBodyDirective,
-    IgxExpansionPanelButtonDirective,
-    IgxExpansionPanelHeaderDirective
+    IgxExpansionPanelButtonDirective
   ],
   entryComponents: [
   ],

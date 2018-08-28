@@ -89,14 +89,11 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
             const header = document.getElementsByClassName(CSS_CLASS_HEADER);
-            const headerCollapsed = document.getElementsByClassName(CSS_CLASS_HEADER_COLLAPSED);
             const headerExpanded = document.getElementsByClassName(CSS_CLASS_HEADER_EXPANDED);
             const panelClass = document.getElementsByClassName(CSS_CLASS_PANEL);
             expect(header.length).toEqual(1);
-            expect(headerCollapsed.length).toEqual(1); // Initially collapsed;
             expect(headerExpanded.length).toEqual(0);
             expect(panelClass.length).toEqual(1);
-            expect(header[0]).toEqual(headerCollapsed[0]); // Both classes are applied to the header
         });
 
         it('Should properly emit events', fakeAsync(() => {
@@ -109,11 +106,11 @@ describe('igxExpansionPanel', () => {
             expect(header).toBeTruthy();
             expect(header.panel.disabled).toEqual(false);
             expect(header.panel).toEqual(panel);
-            expect(header.onInterraction).toBeDefined();
+            expect(header.onInteraction).toBeDefined();
 
             spyOn(panel.onCollapsed, 'emit');
             spyOn(panel.onExpanded, 'emit');
-            spyOn(header.onInterraction, 'emit');
+            spyOn(header.onInteraction, 'emit');
             spyOn(panel, 'toggle').and.callThrough();
             spyOn(panel, 'expand').and.callThrough();
             spyOn(panel, 'collapse').and.callThrough();
@@ -121,19 +118,19 @@ describe('igxExpansionPanel', () => {
             header.onAction(mockEvent);
             tick();
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(0); // Initially collapsed
-            expect(header.onInterraction.emit).toHaveBeenCalledTimes(1);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(1);
             expect(panel.toggle).toHaveBeenCalledTimes(1);
             expect(panel.toggle).toHaveBeenCalledWith(mockEvent);
             expect(panel.expand).toHaveBeenCalledTimes(1);
             expect(panel.expand).toHaveBeenCalledWith(mockEvent);
             expect(panel.collapse).toHaveBeenCalledTimes(0);
             expect(panel.onExpanded.emit).toHaveBeenCalledWith({event: mockEvent});
-            expect(header.onInterraction.emit).toHaveBeenCalledWith({event: mockEvent});
+            expect(header.onInteraction.emit).toHaveBeenCalledWith({event: mockEvent});
 
             header.onAction(mockEvent);
             tick();
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1); // First Collapse
-            expect(header.onInterraction.emit).toHaveBeenCalledTimes(2);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(2);
             expect(panel.toggle).toHaveBeenCalledTimes(2);
             expect(panel.toggle).toHaveBeenCalledWith(mockEvent);
             expect(panel.expand).toHaveBeenCalledTimes(1);
@@ -145,7 +142,7 @@ describe('igxExpansionPanel', () => {
             header.onAction(mockEvent);
             tick(); // No additional calls, because panel.disabled === true
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1);
-            expect(header.onInterraction.emit).toHaveBeenCalledTimes(2);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(2);
             expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
         }));
     });

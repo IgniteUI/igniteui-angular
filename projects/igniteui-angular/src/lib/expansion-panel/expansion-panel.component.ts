@@ -19,7 +19,7 @@ import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, An
 import { IAnimationParams } from '../animations/main';
 import { slideOutTop, slideInTop } from '../animations/main';
 import { IExpansionPanelEventArgs, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IgxExpansionPanelBodyDirective, IgxExpansionPanelHeaderDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
+import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 
 let NEXT_ID = 0;
 
@@ -28,6 +28,7 @@ let NEXT_ID = 0;
     templateUrl: 'expansion-panel.component.html'
 })
 export class IgxExpansionPanelComponent {
+    private _title: string;
 
     @Input()
     public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
@@ -72,14 +73,6 @@ export class IgxExpansionPanelComponent {
     @Input()
     public collapsed = true;
 
-    @HostBinding('attr.aria-disabled')
-    @HostBinding('class.igx-expansion-panel--disabled')
-    public get isDisabled () {
-        return this.disabled;
-    }
-
-    @Input() public disabled = false;
-
     @Input()
     public headerButtons;
 
@@ -96,8 +89,6 @@ export class IgxExpansionPanelComponent {
     public onExpanded = new EventEmitter<IExpansionPanelEventArgs>();
 
     constructor(
-        @ContentChild(IgxExpansionPanelHeaderComponent)
-        public header: IgxExpansionPanelHeaderComponent,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         private renderer: Renderer2,
@@ -107,11 +98,17 @@ export class IgxExpansionPanelComponent {
     private body: QueryList<ElementRef>;
 
     @ContentChild(IgxExpansionPanelTitleDirective)
-    public title: IgxExpansionPanelTitleDirective;
+    public title;
 
     @Input()
     @HostBinding('attr.aria-labelledby')
-    public labelledby = this.title.id; //??TODO reference to the title directive text
+    public set labelledby (val: string) {
+        this._title = val;
+    }
+
+    public get labelledby (): string {
+        return this.title ? this.title.id : this._title;
+    }
 
     private playOpenAnimation(cb: () => void) {
         this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(0px)';

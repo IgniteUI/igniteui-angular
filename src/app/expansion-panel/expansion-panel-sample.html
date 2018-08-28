@@ -2,10 +2,10 @@
     <app-page-header title="Expansion Panel" description="IgxExpansionPanel lets you display content with a toggleable details view"></app-page-header>
     <section>
         <div class="game-board">
-            <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible" [disabled]="false"
+            <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible"
             (onCollapsed)="handleCollapsed($event)"
             (onExpanded)="handleExpanded($event)" #collapsibleComponent>
-                <igx-expansion-panel-header [buttonPosition]="'right'" (onInterraction)="onInterraction($event)">
+                <igx-expansion-panel-header [buttonPosition]="'right'" (onInterraction)="onInterraction($event)" [disabled]="false">
                     <igx-expansion-panel-title>Current Winning Player:</igx-expansion-panel-title>
                     <igx-expansion-panel-description>{{ getWinningPlayer }}</igx-expansion-panel-description>
                     <button igxButton class='igx-button--flat' (click)="resetScore($event)">Reset score</button>
