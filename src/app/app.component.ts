@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
             name: 'Combo'
         },
         {
-            link: '/collapsible',
+            link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
         },

@@ -84,7 +84,7 @@ const appRoutes = [
         component: ComboSampleComponent
     },
     {
-        path: 'collapsible',
+        path: 'expansionPanel',
         component: ExpansionPanelSampleComponent
     },
     {

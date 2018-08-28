@@ -45,7 +45,7 @@ export class IgxExpansionPanelComponent {
     };
 
     /**
-     * Sets/gets the `id` of the collapsible component.
+     * Sets/gets the `id` of the expansion panel component.
      * If not set, `id` will have value `"igx-expansion-panel-0"`;
      * ```html
      * <igx-expansion-panel id = "my-first-expansion-panel"></igx-expansion-panel>
@@ -63,9 +63,6 @@ export class IgxExpansionPanelComponent {
     @HostBinding('class.igx-expansion-panel')
     public cssClass = 'igx-expansion-panel';
 
-    // @ContentChild(IgxExpansionPanelBodyDirective, { read: ElementRef })
-    // public textArea: IgxExpansionPanelBodyDirective;
-
     @Input()
     public collapsed = true;
 
@@ -74,12 +71,6 @@ export class IgxExpansionPanelComponent {
 
     @Output()
     public onCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
-
-    // @Output()
-    // public onCollapsing = new EventEmitter<any>();
-
-    // @Output()
-    // public onExpanding = new EventEmitter<any>();
 
     @Output()
     public onExpanded = new EventEmitter<IExpansionPanelEventArgs>();
