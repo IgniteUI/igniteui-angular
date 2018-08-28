@@ -123,7 +123,6 @@ export interface IFilterableComponent {
 export interface IGridComponent extends IToolbarComponent,
                                         IVirtualizedComponent,
                                         IFilterableComponent {
-    id: string;
     columns: IgxColumnComponent[];
     data: any[];
     filteredData: any[];
@@ -140,7 +139,7 @@ export interface IGridComponent extends IToolbarComponent,
     isLastPage: boolean;
     filteringExpressionsTree: IFilteringExpressionsTree;
     // TODO: currently the search is tighltly coupled with the grouping functionality of the grid
-    // due to its dependence on row indexes ang the group by rows changing the indexes of the data rows.
+    // due to its dependence on row indexes and the group by rows changing the indexes of the data rows.
     // It would be dificult to make it work for both grid and treeGrid without a rework (making the directive work with the data item)
     lastSearchInfo: ISearchInfo;
     summariesHeight: number;
