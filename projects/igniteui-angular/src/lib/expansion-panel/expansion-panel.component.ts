@@ -67,10 +67,6 @@ export class IgxExpansionPanelComponent {
     // public textArea: IgxExpansionPanelBodyDirective;
 
     @Input()
-    @HostBinding('attr.aria-role') //OK
-    public role = 'region';
-
-    @Input()
     public collapsed = true;
 
     @Input()
@@ -101,7 +97,6 @@ export class IgxExpansionPanelComponent {
     public title;
 
     @Input()
-    @HostBinding('attr.aria-labelledby')
     public set labelledby (val: string) {
         this._title = val;
     }
