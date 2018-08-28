@@ -84,8 +84,11 @@ export class IgxExpansionPanelComponent {
     @ViewChildren('collapseBody', { read : ElementRef})
     private body: QueryList<ElementRef>;
 
-    @ContentChild(IgxExpansionPanelTitleDirective)
-    public title;
+    @ContentChild(IgxExpansionPanelTitleDirective, {read: IgxExpansionPanelTitleDirective })
+    public title: IgxExpansionPanelTitleDirective;
+
+    @Input()
+    public label = '';
 
     @Input()
     public set labelledby (val: string) {

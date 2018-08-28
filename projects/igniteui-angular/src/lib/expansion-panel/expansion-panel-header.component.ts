@@ -32,8 +32,7 @@ export enum BUTTON_POSITION {
 })
 export class IgxExpansionPanelHeaderComponent {
      // properties section
-
-     private _iconTemplate = false;
+    private _iconTemplate = false;
 
     @ContentChild(IgxExpansionPanelButtonDirective)
     public set iconTemplate(val: any) {
@@ -59,9 +58,9 @@ export class IgxExpansionPanelHeaderComponent {
     @Input()
     public role = 'heading';
 
-
-    @Input()
-    public controls = this.panel.id;
+    public get controls (): string {
+        return this.panel.id;
+    }
 
     @Input()
     public buttonPosition: BUTTON_POSITION = BUTTON_POSITION.LEFT;
