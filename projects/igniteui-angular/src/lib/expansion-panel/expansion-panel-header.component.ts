@@ -25,7 +25,6 @@ export enum BUTTON_POSITION {
     RIGHT = 'right'
 }
 
-// let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-expansion-panel-header',
@@ -50,21 +49,17 @@ export class IgxExpansionPanelHeaderComponent {
 
     @HostBinding('attr.aria-labelledby')
     @Input()
-    public labelledby = this.title ? this.title.id : null; // ?? TODO reference to title directive text
+    public labelledby = this.title ? this.title.id : null;
 
-    // @HostBinding('attr.id')
-    // @Input()
-    // public id = `igx-expansion-panel-header-${NEXT_ID++}`; //May not be needed
-
-    @HostBinding('attr.aria-level')// OK
+    @HostBinding('attr.aria-level')
     @Input()
     public lv = '3';
 
-    @HostBinding('attr.aria-role')// OK
+    @HostBinding('attr.role')
     @Input()
     public role = 'heading';
 
-    @HostBinding('attr.aria-controls')// OK
+
     @Input()
     public controls = this.panel.id;
 
@@ -77,14 +72,13 @@ export class IgxExpansionPanelHeaderComponent {
      @HostBinding('class.igx-expansion-panel__header')
      public cssClass = 'igx-expansion-panel__header';
 
-     @HostBinding('attr.aria-expanded')// OK
+
      @HostBinding('class.igx-expansion-panel__header--expanded')
      public get isExpanded () {
             return !this.panel.collapsed;
          }
 
     @Input()
-    @HostBinding('attr.aria-disabled')
     @HostBinding('class.igx-expansion-panel--disabled')
     public disabled = false;
 
@@ -93,6 +87,7 @@ export class IgxExpansionPanelHeaderComponent {
 
      @HostListener('keydown.Enter', ['$event'])
      @HostListener('keydown.Space', ['$event'])
+     @HostListener('keydown.Spacebar', ['$event'])
      @HostListener('click', ['$event'])
      public onAction(evt?: Event) {
          if (this.disabled) {
