@@ -25,6 +25,7 @@ export enum BUTTON_POSITION {
     RIGHT = 'right'
 }
 
+
 @Component({
     selector: 'igx-expansion-panel-header',
     templateUrl: 'expansion-panel-header.component.html'
@@ -58,6 +59,7 @@ export class IgxExpansionPanelHeaderComponent {
     @Input()
     public role = 'heading';
 
+
     @Input()
     public controls = this.panel.id;
 
@@ -69,6 +71,7 @@ export class IgxExpansionPanelHeaderComponent {
 
      @HostBinding('class.igx-expansion-panel__header')
      public cssClass = 'igx-expansion-panel__header';
+
 
      @HostBinding('class.igx-expansion-panel__header--expanded')
      public get isExpanded () {
