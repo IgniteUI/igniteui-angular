@@ -166,6 +166,13 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
+    get dataType(): any {
+        return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event) {
         const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
