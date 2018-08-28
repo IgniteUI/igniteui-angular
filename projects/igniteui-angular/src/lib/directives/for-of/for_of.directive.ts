@@ -1014,6 +1014,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;
+            this.hScroll.style.width = this.igxForContainerSize + 'px';
             this.hScroll.children[0].style.width = totalWidth + 'px';
         }
         if (this.igxForScrollOrientation === 'vertical') {
@@ -1036,18 +1037,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _recalcOnContainerChange(changes: SimpleChanges) {
         this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
         this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
-
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
-        if (this.hCache) {
-            this.state.startIndex = 0;
-            if (this.hScroll.scrollLeft !== 0) {
-                this.scrollTo(0);
-            } else {
-                this.fixedUpdateAllCols(0);
-            }
-            this.cdr.detectChanges();
-            return;
+        if (this.hCache && this.hScroll.scrollLeft !== 0) {
+            // Updating horizontal chunks and offsets based on the new scrollLeft
+            const scrollOffset = this.fixedUpdateAllCols(this.hScroll.scrollLeft);
+            this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
     }
 
