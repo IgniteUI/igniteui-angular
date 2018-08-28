@@ -22,21 +22,28 @@
 //
 #tsd-filter
     position: relative
-    display: inline-block
-    height: $TOOLBAR_HEIGHT
-    vertical-align: bottom
+    font-size: 14px
+    padding: 16px 0
 
     .no-filter &
         display: none
 
     .tsd-filter-group
-        display: inline-block
-        height: $TOOLBAR_HEIGHT
-        vertical-align: bottom
-        white-space: nowrap
+        display: flex
+        flex-flow: column nowrap
 
     input
         display: none
+
+    label,
+    .tsd-select-label
+        display: flex
+        align-items: center
+
+    .tsd-select-list
+        li
+            display: flex
+            align-items: center
 
     +size-xs-sm
         .tsd-filter-group
@@ -59,7 +66,6 @@
             .from-has-options &
                 animation: fade-out 0.2s
 
-        label,
-        .tsd-select
-            display: block
-            padding-right: 20px
+        // label,
+        // .tsd-select
+        //     padding-right: 20px

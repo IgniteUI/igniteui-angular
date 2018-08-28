@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="{{relativeURL "assets/css/main.css"}}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/zhy2hpz.css">
 </head>
 <body>
 
@@ -15,10 +17,46 @@
 
 <div class="container container-main">
     <div class="row">
-        <div class="col-8 col-content">
-            {{{contents}}}
-        </div>
-        <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+        <div class="col-2 col-menu menu-sticky-wrap menu-highlight">
+
+            <div id="tsd-search" class="tsd-search" data-index="{{relativeURL "assets/js/search.js"}}" data-base="{{relativeURL "./"}}">
+                <div class="field">
+                    <label for="tsd-search-field" class="material-icons">search</label>
+                    <input id="tsd-search-field" type="text" placeholder="Search API..."/>
+                </div>
+
+                <ul class="results">
+                    <li class="state loading">Preparing search index...</li>
+                    <li class="state failure">The search index is not available</li>
+                </ul>
+            </div>
+
+            <div id="tsd-filter">
+                <div class="tsd-filter-group">
+                    <div class="tsd-select" id="tsd-filter-visibility">
+                        <span class="tsd-select-label">All</span>
+                        <ul class="tsd-select-list">
+                            <li data-value="public">Public</li>
+                            <li data-value="protected">Public/Protected</li>
+                            <li data-value="private" class="selected">All</li>
+                        </ul>
+                    </div>
+
+                    <input type="checkbox" id="tsd-filter-inherited" checked />
+                    <label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+
+                    {{#unless settings.excludeExternals}}
+                        <input type="checkbox" id="tsd-filter-externals" checked />
+                        <label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+                    {{/unless}}
+
+                    {{#unless settings.excludeNotExported}}
+                        <input type="checkbox" id="tsd-filter-only-exported" />
+                        <label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+                    {{/unless}}
+                </div>
+            </div>
+
             <nav class="tsd-navigation primary">
                 <ul>
                     {{#each navigation.children}}
@@ -34,6 +72,31 @@
                     {{/each}}
                 </ul>
             </nav>
+        </div>
+
+        <div class="col-10 col-content">
+
+            <div class="tsd-page-title">
+                <div class="container">
+                    <ul class="tsd-breadcrumb">
+                        {{#with model}}{{> breadcrumb}}{{/with}}
+                    </ul>
+                    <h1>{{#compact}}
+                        {{model.kindString}}&nbsp;
+                        {{model.name}}
+                        {{#if model.typeParameters}}
+                            &lt;
+                            {{#each model.typeParameters}}
+                                {{#if @index}},&nbsp;{{/if}}
+                                {{name}}
+                            {{/each}}
+                            &gt;
+                        {{/if}}
+                    {{/compact}}</h1>
+                </div>
+            </div>
+
+            {{{contents}}}
         </div>
     </div>
 </div>
