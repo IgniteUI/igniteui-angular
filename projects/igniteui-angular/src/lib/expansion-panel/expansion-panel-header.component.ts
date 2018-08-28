@@ -25,7 +25,7 @@ export enum BUTTON_POSITION {
     RIGHT = 'right'
 }
 
-//let NEXT_ID = 0;
+// let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-expansion-panel-header',
@@ -50,21 +50,21 @@ export class IgxExpansionPanelHeaderComponent {
 
     @HostBinding('attr.aria-labelledby')
     @Input()
-    public labelledby = this.title ? this.title.id : null; //?? TODO reference to title directive text
+    public labelledby = this.title ? this.title.id : null; // ?? TODO reference to title directive text
 
     // @HostBinding('attr.id')
     // @Input()
     // public id = `igx-expansion-panel-header-${NEXT_ID++}`; //May not be needed
 
-    @HostBinding('attr.aria-level')//OK
+    @HostBinding('attr.aria-level')// OK
     @Input()
     public lv = '3';
 
-    @HostBinding('attr.aria-role')//OK
+    @HostBinding('attr.aria-role')// OK
     @Input()
     public role = 'heading';
 
-    @HostBinding('attr.aria-controls')//OK
+    @HostBinding('attr.aria-controls')// OK
     @Input()
     public controls = this.panel.id;
 
@@ -77,7 +77,7 @@ export class IgxExpansionPanelHeaderComponent {
      @HostBinding('class.igx-expansion-panel__header')
      public cssClass = 'igx-expansion-panel__header';
 
-     @HostBinding('attr.aria-expanded')//OK
+     @HostBinding('attr.aria-expanded')// OK
      @HostBinding('class.igx-expansion-panel__header--expanded')
      public get isExpanded () {
             return !this.panel.collapsed;

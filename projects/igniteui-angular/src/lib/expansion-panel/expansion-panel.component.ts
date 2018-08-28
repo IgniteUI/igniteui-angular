@@ -67,7 +67,7 @@ export class IgxExpansionPanelComponent {
     // public textArea: IgxExpansionPanelBodyDirective;
 
     @Input()
-    @HostBinding('attr.aria-role') //OK
+    @HostBinding('attr.aria-role') // OK
     public role = 'region';
 
     @Input()
