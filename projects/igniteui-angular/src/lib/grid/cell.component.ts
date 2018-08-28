@@ -550,7 +550,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
-    public _updateCellSelectionStatus(fireFocus = true) {
+    public _updateCellSelectionStatus(fireFocus = true, event) {
         this._clearCellSelection();
         this._saveCellSelection();
         if (this.column.editable && this.previousCellEditMode) {
@@ -562,6 +562,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         if (fireFocus) {
             this.nativeElement.focus();
         }
+        this.grid.onSelection.emit({ cell: this, event });
     }
 
     private _clearCellSelection() {
@@ -693,7 +694,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('click', ['$event'])
     public onClick(event) {
         if (!this.selected) {
-            this._updateCellSelectionStatus();
+            this._updateCellSelectionStatus(true, event);
         }
         this.grid.onCellClick.emit({
             cell: this,
@@ -717,11 +718,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     @HostListener('focus', ['$event'])
     public onFocus(event) {
-        this._updateCellSelectionStatus(false);
-        this.grid.onSelection.emit({
-            cell: this,
-            event
-        });
+        if (!this.selected) {
+            this._updateCellSelectionStatus(false, event);
+        }
     }
 
     /**
@@ -744,63 +743,63 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         switch (key) {
             case 'tab':
                 if (shift) {
-                    this.onShiftTabKey();
+                    this.onShiftTabKey(event);
                     break;
                 }
-                this.onTabKey();
+                this.onTabKey(event);
                 break;
             case 'arrowleft':
             case 'left':
                 if (this.inEditMode) { return; }
                 if (ctrl) {
-                    this.onKeydownCtrlArrowLeft();
+                    this.onKeydownCtrlArrowLeft(event);
                     break;
                 }
-                this.onKeydownArrowLeft();
+                this.onKeydownArrowLeft(event);
                 break;
             case 'arrowright':
             case 'right':
                 if (this.inEditMode) { return; }
                 if (ctrl) {
-                    this.onKeydownCtrlArrowRight();
+                    this.onKeydownCtrlArrowRight(event);
                     break;
                 }
-                this.onKeydownArrowRight();
+                this.onKeydownArrowRight(event);
                 break;
             case 'arrowup':
             case 'up':
                 if (this.inEditMode) { return; }
-                this.onKeydownArrowUp();
+                this.onKeydownArrowUp(event);
                 break;
             case 'arrowdown':
             case 'down':
                 if (this.inEditMode) { return; }
-                this.onKeydownArrowDown();
+                this.onKeydownArrowDown(event);
                 break;
             case 'enter':
             case 'f2':
-                this.onKeydownEnterEditMode();
+                this.onKeydownEnterEditMode(event);
                 break;
             case 'escape':
             case 'esc':
-                this.onKeydownExitEditMode();
+                this.onKeydownExitEditMode(event);
                 break;
             default:
                 return;
         }
     }
 
-    public onShiftTabKey() {
+    public onShiftTabKey(event) {
         if (this.isFirstCell) {
             this.selectionApi.set_selection(this.cellSelectionID, new Set());
             this.grid.markForCheck();
             return;
         } else {
-            this.onKeydownArrowLeft();
+            this.onKeydownArrowLeft(event);
         }
     }
 
-    public onKeydownArrowLeft() {
+    public onKeydownArrowLeft(event) {
 
         const rowIndex = this.rowIndex;
         const columnIndex = this.visibleColumnIndex - 1;
@@ -823,7 +822,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                     horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex);
                 } else {
                     // Target cell is fully visible. Just focus it.
-                    target._updateCellSelectionStatus();
+                    target._updateCellSelectionStatus(true, event);
                     bVirtSubscribe = false;
                 }
             } else {
@@ -845,11 +844,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    public onKeydownCtrlArrowLeft() {
+    public onKeydownCtrlArrowLeft(event) {
 
         if (this.grid.pinnedColumns.length) {
             const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
-            target._updateCellSelectionStatus();
+            target._updateCellSelectionStatus(true, event);
             return;
         }
 
@@ -866,21 +865,21 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             .pipe(first())
             .subscribe(() => {
                 const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, columnIndex);
-                target._updateCellSelectionStatus();
+                target._updateCellSelectionStatus(true, event);
         });
     }
 
-    public onTabKey() {
+    public onTabKey(event) {
         if (this.isLastCell) {
             this.selectionApi.set_selection(this.cellSelectionID, new Set());
             this.grid.markForCheck();
             return;
         } else {
-            this.onKeydownArrowRight();
+            this.onKeydownArrowRight(event);
         }
     }
 
-    public onKeydownArrowRight() {
+    public onKeydownArrowRight(event) {
 
         const visibleColumns = this.grid.visibleColumns.filter(c => !c.columnGroup);
         const rowIndex = this.rowIndex;
@@ -918,7 +917,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
                     if (oldScrollLeft === horVirtScroll.scrollLeft && oldScrollLeft !== targetScrollLeft) {
                         // There is nowhere to scroll more. Don't subscribe since there won't be triggered event.
-                        target._updateCellSelectionStatus();
+                        target._updateCellSelectionStatus(true, event);
                         bVirtSubscribe = false;
                     }
                 } else if (!target.isPinned && targetStartLeftOffset < 0) {
@@ -926,7 +925,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                     horVirtScroll.scrollLeft = 0;
                 } else {
                     // Target cell is fully visible. Just focus it.
-                    target._updateCellSelectionStatus();
+                    target._updateCellSelectionStatus(true, event);
                     bVirtSubscribe = false;
                 }
             } else {
@@ -944,7 +943,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    public onKeydownCtrlArrowRight() {
+    public onKeydownCtrlArrowRight(event) {
         const columnIndex = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
 
         const lastCell = this.row.cells.last;
@@ -958,11 +957,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             .pipe(first())
             .subscribe(() => {
                 const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, columnIndex);
-                target._updateCellSelectionStatus();
+                target._updateCellSelectionStatus(true, event);
         });
     }
 
-    public onKeydownArrowUp() {
+    public onKeydownArrowUp(event) {
         if (this.rowIndex === 0) {
             return;
         }
@@ -973,7 +972,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.grid.navigateUp(rowIndex, this.visibleColumnIndex);
     }
 
-    public onKeydownArrowDown() {
+    public onKeydownArrowDown(event) {
         const virtDir = this.grid.verticalScrollContainer;
         const count = virtDir.totalItemCount || virtDir.igxForOf.length;
         if (this.rowIndex + 1 === count) {
@@ -986,21 +985,21 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.grid.navigateDown(rowIndex, this.visibleColumnIndex);
     }
 
-    public onKeydownEnterEditMode() {
+    public onKeydownEnterEditMode(event) {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.gridAPI.submit_value(this.gridID);
             } else {
                 this.inEditMode = true;
             }
-            this._updateCellSelectionStatus();
+            this._updateCellSelectionStatus(true, event);
         }
     }
 
-    public onKeydownExitEditMode() {
+    public onKeydownExitEditMode(event) {
         if (this.column.editable) {
             this.inEditMode = false;
-            this._updateCellSelectionStatus();
+            this._updateCellSelectionStatus(true, event);
             this.grid.cdr.detectChanges();
         }
     }
