@@ -1125,7 +1125,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         switch (this.selection) {
             case 'single':
             case 'multi':
-                this.selectDate(value);
+                if (!this.isDateDisabled(value)) {
+                    this.selectDate(value);
+                }
+
                 break;
             case 'range':
                 this.selectRange(value, true);
