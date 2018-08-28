@@ -21,6 +21,7 @@ import {
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
 let NEXT_ID = 0;
 
@@ -34,20 +35,6 @@ export enum CalendarSelection {
     SINGLE = 'single',
     MULTI = 'multi',
     RANGE = 'range'
-}
-
-export enum DateRangeType {
-    After,
-    Before,
-    Between,
-    Specific,
-    Weekdays,
-    Weekends
-}
-
-export interface DateRangeDescriptor {
-    type: DateRangeType;
-    dateRange?: Date[];
 }
 
 export class CalendarHammerConfig extends HammerGestureConfig {

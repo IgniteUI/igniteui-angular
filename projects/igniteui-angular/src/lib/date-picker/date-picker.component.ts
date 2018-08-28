@@ -23,8 +23,7 @@ import {
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarModule,
     IgxCalendarSubheaderTemplateDirective,
-    WEEKDAYS,
-    DateRangeDescriptor
+    WEEKDAYS
 } from '../calendar/index';
 import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component';
 import { IgxIconModule } from '../icon/index';
@@ -32,6 +31,7 @@ import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DeprecateClass } from '../core/deprecateDecorators';
+import { DateRangeDescriptor } from '../core/dates/dateRange';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'

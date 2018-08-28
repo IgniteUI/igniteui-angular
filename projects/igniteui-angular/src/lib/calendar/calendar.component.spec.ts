@@ -5,8 +5,9 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, IgxCalendarDateDirective,
-    monthRange, weekDay, WEEKDAYS, DateRangeDescriptor, DateRangeType } from './index';
+    monthRange, weekDay, WEEKDAYS } from './index';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
 describe('IgxCalendar', () => {
     beforeEach(() => {

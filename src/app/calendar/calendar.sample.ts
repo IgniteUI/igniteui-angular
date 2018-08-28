@@ -10,16 +10,16 @@ export class CalendarSampleComponent implements OnInit {
     @ViewChild('calendar') calendar: IgxCalendarComponent;
 
     ngOnInit() {
-        this.calendar.disabledDates = [new DateRangeDescriptor(DateRangeType.Between, [
+        this.calendar.disabledDates = [{ type: DateRangeType.Between, dateRange:  [
             new Date(2018, 8, 2),
             new Date(2018, 8, 8)
-        ])];
+        ]}];
 
-        this.calendar.specialDates = [new DateRangeDescriptor(DateRangeType.Specific, [
+        this.calendar.specialDates = [{ type: DateRangeType.Specific, dateRange: [
             new Date(2018, 7, 4),
             new Date(2018, 7, 14),
             new Date(2018, 7, 15),
             new Date(2018, 8, 14)
-        ])];
+        ]}];
     }
 }
