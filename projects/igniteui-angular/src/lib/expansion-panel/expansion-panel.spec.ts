@@ -30,8 +30,7 @@ describe('igxExpansionPanel', () => {
             declarations: [
                 IgxExpansionPanelGridComponent,
                 IgxExpansionPanelListComponent,
-                IgxExpansionPanelSampleComponent,
-                HeaderlessComponent
+                IgxExpansionPanelSampleComponent
             ],
             imports: [
                 IgxExpansionPanelModule,
@@ -318,7 +317,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
         }));
 
-        describe('Aria tests', () => {
+        fdescribe('Aria tests', () => {
             it('Should properly apply default aria properties', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
                 fixture.detectChanges();
@@ -348,7 +347,11 @@ describe('igxExpansionPanel', () => {
             }));
 
             it('Should properly apply aria properties if no header is shown', fakeAsync(() => {
-                const fixture = TestBed.createComponent(HeaderlessComponent);
+                const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+                fixture.detectChanges();
+                fixture.componentInstance.showBody = false;
+                fixture.componentInstance.showHeader = false;
+                fixture.componentInstance.showTitle = false;
                 fixture.detectChanges();
                 const panel = fixture.componentInstance.panel;
                 const panelElement = panel.elementRef.nativeElement;
@@ -387,6 +390,33 @@ describe('igxExpansionPanel', () => {
                 fixture.detectChanges();
                 tick();
                 expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual('example-title-id');
+            }));
+
+            it('Should update properly label the control region', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+                fixture.detectChanges();
+                const panel = fixture.componentInstance.panel;
+                const panelElement = panel.elementRef.nativeElement;
+                const title = fixture.componentInstance.title;
+                panel.expand();
+                tick();
+                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
+                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
+                fixture.componentInstance.showTitle = false;
+                tick();
+                fixture.detectChanges();
+                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
+                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
+                panel.label = 'custom-test-label';
+                tick();
+                fixture.detectChanges();
+                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
+                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`custom-test-label`);
+                panel.label = '';
+                tick();
+                fixture.detectChanges();
+                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
+                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
             }));
         });
     });
@@ -466,11 +496,11 @@ export class IgxExpansionPanelListComponent {
 <igx-expansion-panel
     (onCollapsed)="handleCollapsing($event)"
     (onExpanded)="handleExpanded($event)">
-    <igx-expansion-panel-header headerHeight="50px">
-        <igx-expansion-panel-title>Example Title</igx-expansion-panel-title>
+    <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
+        <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
         <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
     </igx-expansion-panel-header>
-    <igx-expansion-panel-body>
+    <igx-expansion-panel-body *ngIf="showBody">
     Example body
     </igx-expansion-panel-body>
 </igx-expansion-panel>
@@ -479,6 +509,9 @@ export class IgxExpansionPanelListComponent {
 export class IgxExpansionPanelSampleComponent {
     public disabled = false;
     public collapsed = true;
+    public showTitle = true;
+    public showBody = true;
+    public showHeader = true;
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
     @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
@@ -491,23 +524,4 @@ export class IgxExpansionPanelSampleComponent {
     }
     public handleInterraction() {
     }
-}
-
-@Component({
-    template: `<igx-expansion-panel>
-    <igx-expansion-panel-body>
-    Example body
-    </igx-expansion-panel-body>
-    </igx-expansion-panel>`
-})
-class HeaderlessComponent {
-    public disabled = false;
-    public collapsed = true;
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
-    public header: IgxExpansionPanelHeaderComponent;
-    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
-    public panel: IgxExpansionPanelComponent;
-    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
-    public title: IgxExpansionPanelTitleDirective;
-
 }
