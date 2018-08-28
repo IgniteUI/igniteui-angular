@@ -536,7 +536,7 @@ fdescribe('igxExpansionPanel', () => {
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
         }));
 
-        describe('Aria tests', () => {
+        fdescribe('Aria tests', () => {
             it('Should properly apply default aria properties', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
                 fixture.detectChanges();
