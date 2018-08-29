@@ -5,14 +5,14 @@
             <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible"
             (onCollapsed)="handleCollapsed($event)"
             (onExpanded)="handleExpanded($event)" #collapsibleComponent>
-                <igx-expansion-panel-header [buttonPosition]="'right'" (onInterraction)="onInterraction($event)" [disabled]="false">
+                <igx-expansion-panel-header [iconPosition]="'right'" (onInterraction)="onInterraction($event)" [disabled]="false">
                     <igx-expansion-panel-title>Current Winning Player:</igx-expansion-panel-title>
                     <igx-expansion-panel-description>{{ getWinningPlayer }}</igx-expansion-panel-description>
                     <button igxButton class='igx-button--flat' (click)="resetScore($event)">Reset score</button>
-                    <igx-expansion-panel-button *ngIf="templatedIcon">
+                    <igx-expansion-panel-icon *ngIf="templatedIcon">
                         <!-- <igx-icon fontSet="material" [name]="collapsed() ? 'arrow_drop_down':'arrow_drop_up'"></igx-icon> -->
                         {{collapsed() ? 'Expand':'Collapse'}}
-                    </igx-expansion-panel-button>
+                    </igx-expansion-panel-icon>
                 </igx-expansion-panel-header>
                 <igx-expansion-panel-body>
                     <igx-grid class="game-board__grid" [data]="data">

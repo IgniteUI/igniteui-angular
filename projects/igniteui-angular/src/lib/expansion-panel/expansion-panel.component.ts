@@ -66,9 +66,6 @@ export class IgxExpansionPanelComponent {
     @Input()
     public collapsed = true;
 
-    @Input()
-    public headerButtons;
-
     @Output()
     public onCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
 

@@ -34,7 +34,7 @@ export class IgxExpansionPanelBodyDirective {
 
 @Directive({
     // tslint:disable-next-line:directive-selector
-    selector: 'igx-expansion-panel-button'
+    selector: 'igx-expansion-panel-icon'
 })
-export class IgxExpansionPanelButtonDirective {
+export class IgxExpansionPanelIconDirective {
 }

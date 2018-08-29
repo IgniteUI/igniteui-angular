@@ -9,7 +9,7 @@ import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.compo
 import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
   IgxExpansionPanelBodyDirective,
   IgxExpansionPanelHeaderDirective,
-  IgxExpansionPanelButtonDirective } from './expansion-panel.directives';
+  IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
     IgxExpansionPanelBodyDirective,
-    IgxExpansionPanelButtonDirective
+    IgxExpansionPanelIconDirective
   ],
   entryComponents: [
   ],
@@ -29,7 +29,7 @@ import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
     IgxExpansionPanelBodyDirective,
-    IgxExpansionPanelButtonDirective,
+    IgxExpansionPanelIconDirective,
     IgxExpansionPanelHeaderDirective
   ],
   imports: [
