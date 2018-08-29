@@ -6,7 +6,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
-import { IgxExpansionPanelHeaderComponent, BUTTON_POSITION } from './expansion-panel-header.component';
+import { ICON_POSITION, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxExpansionPanelModule } from './expansion-panel.module';
 import { IgxGridComponent, IgxGridModule } from '../grid';
 import { IgxListComponent, IgxListModule } from '../list';
@@ -20,7 +20,7 @@ const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
 const CSS_CLASS_LIST = 'igx-list';
 const CSS_CLASS_PANEL_BUTTON = 'igx-icon';
 
-describe('igxExpansionPanel', () => {
+fdescribe('igxExpansionPanel', () => {
     beforeEach(async(() => {
         // TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -538,35 +538,35 @@ describe('igxExpansionPanel', () => {
             const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
             const headerButton = panelHeader.querySelector('div [role = \'button\']');
 
-            expect(header.buttonPosition).toEqual('left');
+            expect(header.iconPosition).toEqual('left');
             expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
             expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
             expect(headerButton.children[0].getBoundingClientRect().left).
             toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
 
-            header.buttonPosition = BUTTON_POSITION.NONE;
+            header.iconPosition = ICON_POSITION.NONE;
             fixture.detectChanges();
-            expect(header.buttonPosition).toEqual('none');
+            expect(header.iconPosition).toEqual('none');
             expect(headerButton.children.length).toEqual(1);
             expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
 
-            header.buttonPosition = BUTTON_POSITION.RIGHT;
+            header.iconPosition = ICON_POSITION.RIGHT;
             fixture.detectChanges();
-            expect(header.buttonPosition).toEqual('right');
+            expect(header.iconPosition).toEqual('right');
             expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
             expect(headerButton.children[1].nodeName).toEqual('IGX-ICON');
             expect(headerButton.children[0].getBoundingClientRect().left).
             toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
 
-            header.buttonPosition = BUTTON_POSITION.NONE;
+            header.iconPosition = ICON_POSITION.NONE;
             fixture.detectChanges();
-            expect(header.buttonPosition).toEqual('none');
+            expect(header.iconPosition).toEqual('none');
             expect(headerButton.children.length).toEqual(1);
             expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
 
-            header.buttonPosition = BUTTON_POSITION.LEFT;
+            header.iconPosition = ICON_POSITION.LEFT;
             fixture.detectChanges();
-            expect(header.buttonPosition).toEqual('left');
+            expect(header.iconPosition).toEqual('left');
             expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
             expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
             expect(headerButton.children[0].getBoundingClientRect().left).
@@ -723,9 +723,6 @@ export class IgxExpansionPanelGridComponent {
 <igx-expansion-panel #expansionPanel>
 <igx-expansion-panel-header headerHeight="50px">
 <igx-expansion-panel-title>Product List</igx-expansion-panel-title>
-<igx-expansion-panel-button *ngIf="templatedIcon">
-                        {{collapsed() ? 'Expand':'Collapse'}}
-                    </igx-expansion-panel-button>
 </igx-expansion-panel-header>
 <igx-expansion-panel-body>
 <igx-list>
