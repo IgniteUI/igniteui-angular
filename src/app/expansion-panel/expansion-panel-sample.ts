@@ -1,5 +1,5 @@
 import { IgxExpansionPanelComponent, slideInTop, slideOutTop, scaleInTop,
-    scaleInVerBottom, scaleInVerTop, scaleOutVerBottom, scaleOutVerTop } from 'igniteui-angular';
+    scaleInVerBottom, scaleInVerTop, scaleOutVerBottom, scaleOutVerTop, ICON_POSITION } from 'igniteui-angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AnimationReferenceMetadata } from '@angular/animations';
 
@@ -40,6 +40,7 @@ export class ExpansionPanelSampleComponent implements OnInit {
     public score: number;
     public data = [];
     public winningPlayer;
+    public iconPosition = 'left';
     private rounds = 5;
     public get currentScore(): { 'Player 1': number,
     'Player 2': number} {
@@ -97,5 +98,9 @@ export class ExpansionPanelSampleComponent implements OnInit {
 
     templateIcon() {
         this.templatedIcon = !this.templatedIcon;
+    }
+
+    toggleLeftRight() {
+        this.iconPosition = this.iconPosition === 'left' ? 'right' : 'left';
     }
 }

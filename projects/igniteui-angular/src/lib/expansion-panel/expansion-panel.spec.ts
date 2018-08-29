@@ -20,7 +20,7 @@ const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
 const CSS_CLASS_LIST = 'igx-list';
 const CSS_CLASS_PANEL_BUTTON = 'igx-icon';
 
-fdescribe('igxExpansionPanel', () => {
+describe('igxExpansionPanel', () => {
     beforeEach(async(() => {
         // TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -573,108 +573,134 @@ fdescribe('igxExpansionPanel', () => {
             toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
         });
 
-        describe('Aria tests', () => {
-            it('Should properly apply default aria properties', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
-                fixture.detectChanges();
-                const panel = fixture.componentInstance.panel;
-                const panelElement = panel.elementRef.nativeElement;
-                const header = fixture.componentInstance.header;
-                const headerElement = header.elementRef.nativeElement;
-                const title = fixture.componentInstance.title;
-                // IgxExpansionPanelHeaderComponent host
-                expect(headerElement.getAttribute('aria-level')).toEqual('3');
-                expect(headerElement.getAttribute('role')).toEqual('heading');
-                // Body of IgxExpansionPanelComponent
-                expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
-                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
-                // Button of IgxExpansionPanelHeaderComponent
-                expect(headerElement.lastElementChild.getAttribute('role')).toEqual('button');
-                expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
-                expect(headerElement.firstElementChild.getAttribute('aria-expanded')).toEqual('false');
-                expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
-                // Disabled
-                header.disabled = true;
-                expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
-                panel.expand();
-                tick();
-                fixture.detectChanges();
-                expect(headerElement.firstElementChild.getAttribute('aria-expanded')).toEqual('true');
-            }));
+        it('Should override the default icon when an icon template is passed', () => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const header = fixture.componentInstance.header;
+            const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
+            const headerButton = panelHeader.querySelector('div [role = \'button\']');
+            header.iconPosition = ICON_POSITION.LEFT;
+            fixture.detectChanges();
 
-            it('Should properly apply aria properties if no header is shown', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
-                fixture.detectChanges();
-                fixture.componentInstance.showBody = false;
-                fixture.componentInstance.showHeader = false;
-                fixture.componentInstance.showTitle = false;
-                fixture.detectChanges();
-                const panel = fixture.componentInstance.panel;
-                const panelElement = panel.elementRef.nativeElement;
-                const header = fixture.componentInstance.header;
-                expect(header).toBeFalsy();
-                const title = fixture.componentInstance.title;
-                expect(title).toBeFalsy();
-                // Body of IgxExpansionPanelComponent
-                expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
-                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
-                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panelElement.id}-region`);
-                panel.expand();
-                tick();
-                fixture.detectChanges();
-            }));
+            expect(headerButton.children.length).toEqual(3);
+            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
 
-            it('Should update aria properties recording to external change', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
-                fixture.detectChanges();
-                const panel = fixture.componentInstance.panel;
-                const panelElement = panel.elementRef.nativeElement;
-                const header = fixture.componentInstance.header;
-                const headerElement = header.elementRef.nativeElement;
-                const title = fixture.componentInstance.title;
-                // Body of IgxExpansionPanelComponent
-                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
-                // Button of IgxExpansionPanelHeaderComponent
-                expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
-                panel.id = 'example-test-panel-id';
-                tick();
-                fixture.detectChanges();
-                tick();
-                expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual('example-test-panel-id');
-                title.id = 'example-title-id';
-                tick();
-                fixture.detectChanges();
-                tick();
-                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual('example-title-id');
-            }));
+            fixture.componentInstance.customIcon = true;
+            fixture.detectChanges();
 
-            it('Should update properly label the control region', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
-                fixture.detectChanges();
-                const panel = fixture.componentInstance.panel;
-                const panelElement = panel.elementRef.nativeElement;
-                const title = fixture.componentInstance.title;
-                panel.expand();
-                tick();
-                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
-                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
-                fixture.componentInstance.showTitle = false;
-                tick();
-                fixture.detectChanges();
-                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
-                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
-                panel.label = 'custom-test-label';
-                tick();
-                fixture.detectChanges();
-                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
-                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`custom-test-label`);
-                panel.label = '';
-                tick();
-                fixture.detectChanges();
-                expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
-                expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
-            }));
+            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-ICON');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+
+            fixture.componentInstance.customIcon = false;
+            fixture.detectChanges();
+
+            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
         });
+    });
+
+    describe('Aria tests', () => {
+        it('Should properly apply default aria properties', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const panelElement = panel.elementRef.nativeElement;
+            const header = fixture.componentInstance.header;
+            const headerElement = header.elementRef.nativeElement;
+            const title = fixture.componentInstance.title;
+            // IgxExpansionPanelHeaderComponent host
+            expect(headerElement.getAttribute('aria-level')).toEqual('3');
+            expect(headerElement.getAttribute('role')).toEqual('heading');
+            // Body of IgxExpansionPanelComponent
+            expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
+            expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
+            // Button of IgxExpansionPanelHeaderComponent
+            expect(headerElement.lastElementChild.getAttribute('role')).toEqual('button');
+            expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
+            expect(headerElement.firstElementChild.getAttribute('aria-expanded')).toEqual('false');
+            expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
+            // Disabled
+            header.disabled = true;
+            expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
+            panel.expand();
+            tick();
+            fixture.detectChanges();
+            expect(headerElement.firstElementChild.getAttribute('aria-expanded')).toEqual('true');
+        }));
+
+        it('Should properly apply aria properties if no header is shown', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            fixture.componentInstance.showBody = false;
+            fixture.componentInstance.showHeader = false;
+            fixture.componentInstance.showTitle = false;
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const panelElement = panel.elementRef.nativeElement;
+            const header = fixture.componentInstance.header;
+            expect(header).toBeFalsy();
+            const title = fixture.componentInstance.title;
+            expect(title).toBeFalsy();
+            // Body of IgxExpansionPanelComponent
+            expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
+            expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
+            expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panelElement.id}-region`);
+            panel.expand();
+            tick();
+            fixture.detectChanges();
+        }));
+
+        it('Should update aria properties recording to external change', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const panelElement = panel.elementRef.nativeElement;
+            const header = fixture.componentInstance.header;
+            const headerElement = header.elementRef.nativeElement;
+            const title = fixture.componentInstance.title;
+            // Body of IgxExpansionPanelComponent
+            expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
+            // Button of IgxExpansionPanelHeaderComponent
+            expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
+            panel.id = 'example-test-panel-id';
+            tick();
+            fixture.detectChanges();
+            tick();
+            expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual('example-test-panel-id');
+            title.id = 'example-title-id';
+            tick();
+            fixture.detectChanges();
+            tick();
+            expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual('example-title-id');
+        }));
+
+        it('Should properly label the control region', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const panelElement = panel.elementRef.nativeElement;
+            const title = fixture.componentInstance.title;
+            panel.expand();
+            tick();
+            expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
+            expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
+            fixture.componentInstance.showTitle = false;
+            tick();
+            fixture.detectChanges();
+            expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
+            expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
+            panel.label = 'custom-test-label';
+            tick();
+            fixture.detectChanges();
+            expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
+            expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`custom-test-label`);
+            panel.label = '';
+            tick();
+            fixture.detectChanges();
+            expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
+            expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
+        }));
     });
 });
 
@@ -754,6 +780,9 @@ export class IgxExpansionPanelListComponent {
     <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
         <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
         <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
+        <igx-expansion-panel-icon *ngIf="customIcon">
+            <span class="custom-test-icon">TEST_ICON</span>
+        </igx-expansion-panel-icon>
     </igx-expansion-panel-header>
     <igx-expansion-panel-body *ngIf="showBody">
     Example body
@@ -767,6 +796,7 @@ export class IgxExpansionPanelSampleComponent {
     public showTitle = true;
     public showBody = true;
     public showHeader = true;
+    public customIcon = false;
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
     @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })

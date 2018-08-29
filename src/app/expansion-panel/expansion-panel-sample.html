@@ -5,7 +5,7 @@
             <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible"
             (onCollapsed)="handleCollapsed($event)"
             (onExpanded)="handleExpanded($event)" #collapsibleComponent>
-                <igx-expansion-panel-header [iconPosition]="'right'" (onInterraction)="onInterraction($event)" [disabled]="false">
+                <igx-expansion-panel-header [iconPosition]="iconPosition" (onInterraction)="onInterraction($event)" [disabled]="false">
                     <igx-expansion-panel-title>Current Winning Player:</igx-expansion-panel-title>
                     <igx-expansion-panel-description>{{ getWinningPlayer }}</igx-expansion-panel-description>
                     <button igxButton class='igx-button--flat' (click)="resetScore($event)">Reset score</button>
@@ -30,5 +30,6 @@
             </igx-expansion-panel>
         </div>
         <button igxButton class="igx-button--raised" (click)="templateIcon()">{{ templatedIcon ? 'Disabled' : 'Enable'}} icon template</button>
+        <button igxButton class="igx-button--raised" (click)="toggleLeftRight()">Current Position: {{ iconPosition }}</button>
     </section>
 </div>
