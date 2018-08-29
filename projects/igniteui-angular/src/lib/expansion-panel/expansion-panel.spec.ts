@@ -6,7 +6,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
-import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
+import { IgxExpansionPanelHeaderComponent, BUTTON_POSITION } from './expansion-panel-header.component';
 import { IgxExpansionPanelModule } from './expansion-panel.module';
 import { IgxGridComponent, IgxGridModule } from '../grid';
 import { IgxListComponent, IgxListModule } from '../list';
@@ -534,6 +534,50 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
         }));
+        it('Should display expand/collapse button according to its position', () => {
+            const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const header = fixture.componentInstance.header;
+            const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
+            const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
+            const button =  fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_BUTTON) as HTMLElement;
+            const headerButton = panelHeader.querySelector('div [role = \'button\']');
+
+            expect(header.buttonPosition).toEqual('left');
+            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(headerButton.children[0].getBoundingClientRect().left).
+            toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
+
+            header.buttonPosition = BUTTON_POSITION.NONE;
+            fixture.detectChanges();
+            expect(header.buttonPosition).toEqual('none');
+            expect(headerButton.children.length).toEqual(1);
+            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+
+            header.buttonPosition = BUTTON_POSITION.RIGHT;
+            fixture.detectChanges();
+            expect(header.buttonPosition).toEqual('right');
+            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[0].getBoundingClientRect().left).
+            toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
+
+            header.buttonPosition = BUTTON_POSITION.NONE;
+            fixture.detectChanges();
+            expect(header.buttonPosition).toEqual('none');
+            expect(headerButton.children.length).toEqual(1);
+            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+
+            header.buttonPosition = BUTTON_POSITION.LEFT;
+            fixture.detectChanges();
+            expect(header.buttonPosition).toEqual('left');
+            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(headerButton.children[0].getBoundingClientRect().left).
+            toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
+        });
 
         describe('Aria tests', () => {
             it('Should properly apply default aria properties', fakeAsync(() => {
