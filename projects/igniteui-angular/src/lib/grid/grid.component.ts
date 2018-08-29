@@ -620,26 +620,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @HostBinding('style.height')
     @Input()
-    public get height() {
-        return this._height;
-    }
+    public height: string;
 
-    /**
-     * Sets the height of the `IgxGridComponent`.
-     * ```html
-     * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    public set height(value: any) {
-        if (this._height !== value) {
-            this._height = value;
-            requestAnimationFrame(() => {
-                this.calculateGridHeight();
-                this.cdr.markForCheck();
-            });
-        }
-    }
+    @Input()
+    public visibleRows: number = 10;
 
     /**
      * Returns the width of the `IgxGridComponent`.
@@ -1926,7 +1910,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private columnListDiffer;
     private _hiddenColumnsText = '';
     private _pinnedColumnsText = '';
-    private _height = '100%';
     private _width = '100%';
     private _rowHeight;
     private _displayDensity = DisplayDensity.comfortable;
@@ -3188,16 +3171,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected _derivePossibleHeight() {
-        if ((this._height && this._height.indexOf('%') === -1) || !this._height) {
-            return;
-        }
-        if (!this.nativeElement.parentNode.clientHeight) {
-            const viewPortHeight = document.documentElement.clientHeight;
-            this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
-        } else {
-            const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
-        }
         this.calculateGridHeight();
         this.cdr.detectChanges();
     }
@@ -3226,51 +3199,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridHeight() {
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-
-        // TODO: Calculate based on grid density
-        if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight + 1}px`;
-        }
-
-        if (!this._height) {
-            this.calcHeight = null;
-            if (this.hasSummarizedColumns && !this.summariesHeight) {
-                this.summariesHeight = this.summaries ?
-                    this.calcMaxSummaryHeight() : 0;
-            }
-            return;
-        }
-
-        let toolbarHeight = 0;
-        if (this.showToolbar && this.toolbarHtml != null) {
-            toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                this.toolbarHtml.nativeElement.offsetHeight : 0;
-        }
-
-        let pagingHeight = 0;
-        let groupAreaHeight = 0;
-        if (this.paging && this.paginator) {
-            pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.offsetHeight : 0;
-        }
-
+        this.calcHeight = this.visibleRows * this.rowHeight;
         if (!this.summariesHeight) {
             this.summariesHeight = this.summaries ?
                 this.calcMaxSummaryHeight() : 0;
-        }
-
-        if (this.groupArea) {
-            groupAreaHeight = this.groupArea.nativeElement.offsetHeight;
-        }
-
-        if (this._height && this._height.indexOf('%') !== -1) {
-            /*height in %*/
-            this.calcHeight = this._calculateGridBodyHeight(
-                parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight, groupAreaHeight);
-        } else {
-            this.calcHeight = this._calculateGridBodyHeight(
-                parseInt(this._height, 10), toolbarHeight, pagingHeight, groupAreaHeight);
         }
     }
 

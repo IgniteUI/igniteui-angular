@@ -36,6 +36,7 @@ import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-colum
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
+import { GridHeightTestComponent } from './grid-height-test/grid-height-test.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
@@ -234,6 +235,10 @@ const appRoutes = [
     {
         path: 'gridRemoteVirtualization',
         component: GridVirtualizationSampleComponent
+    },
+    {
+        path: 'gridHeightTest',
+        component: GridHeightTestComponent
     },
     {
         path: 'buttonGroup',

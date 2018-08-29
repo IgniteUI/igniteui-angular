@@ -101,6 +101,11 @@ export class AppComponent implements OnInit {
             name: 'Grid GroupBy'
         },
         {
+            link: '/gridHeightTest',
+            icon: 'view_column',
+            name: 'Grid Height Test'
+        },
+        {
             link: '/gridColumnResizing',
             icon: 'view_column',
             name: 'Grid Column Resizing'
