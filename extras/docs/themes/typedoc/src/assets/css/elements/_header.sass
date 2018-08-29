@@ -1,16 +1,18 @@
 .tsd-header
     position: fixed
-    display: flex
     width: 100%
     height: $TOOLBAR_HEIGHT
     background: $TOOLBAR_COLOR
-    padding: 0 15px
     z-index: 99
-    align-items: center
+
+    .tsd-header-content
+        display: flex
+        justify-content: space-between
+        padding: 0 15px
+        align-items: center
 
     &-logo
         display: inline-flex
-        align-items: center
         font-size: 18px
         font-weight: 400
 
