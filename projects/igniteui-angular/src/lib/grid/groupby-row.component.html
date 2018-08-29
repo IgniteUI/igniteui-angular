@@ -15,7 +15,19 @@
             <span class="igx-group-label__column-name">
             {{ groupRow.expression.fieldName }}:
             </span>
-            <span class="igx-group-label__text">{{ groupRow.value }}</span>
+
+            <ng-container *ngIf="dataType === 'boolean' || dataType === 'string'; else default" >
+                <span class="igx-group-label__text">{{ groupRow.value }}</span>
+            </ng-container>
+            <ng-template #default>
+                <ng-container *ngIf="dataType === 'number'">
+                    <span class="igx-group-label__text">{{ groupRow.value | number }}</span>
+                </ng-container>
+                <ng-container *ngIf="dataType === 'date'">
+                    <span class="igx-group-label__text">{{ groupRow.value | date }}</span>
+                </ng-container>
+            </ng-template>
+
             <igx-badge [value]="groupRow.records.length" class='igx-group-label__count-badge'></igx-badge>
         </div>
     </ng-template>

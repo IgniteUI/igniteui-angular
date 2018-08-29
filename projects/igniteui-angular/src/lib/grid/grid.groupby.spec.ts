@@ -146,6 +146,17 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows.length).toEqual(4);
         expect(dataRows.length).toEqual(8);
 
+        const expectedValue1 = groupRows[1].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const actualValue1 = groupRows[1].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        const expectedValue2 = groupRows[2].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const actualValue2 = groupRows[2].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+        const expectedValue3 = groupRows[3].nativeElement.nextElementSibling.querySelectorAll('igx-grid-cell')[3].textContent;
+        const actualValue3 = groupRows[3].element.nativeElement.querySelector('.igx-group-label__text').textContent;
+
+        expect(actualValue1).toEqual(expectedValue1);
+        expect(actualValue2).toEqual(expectedValue2);
+        expect(actualValue3).toEqual(expectedValue3);
+
         checkGroups(
             groupRows,
             [null, fix.componentInstance.prevDay, fix.componentInstance.today, fix.componentInstance.nextDay]);
@@ -2024,8 +2035,10 @@ export class DefaultGridComponent extends DataParent {
             [data]="data"
             [paging]="true">
             <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
+                dataType="date"></igx-column>
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"
+                dataType="number"></igx-column>
             <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
         </igx-grid>
