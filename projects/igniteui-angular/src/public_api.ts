@@ -77,6 +77,7 @@ export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 
 /**
- * Exporter services and classes
+ * Exporter services, classes, interfaces and enums
  */
 export * from './lib/services/index';
+export * from './lib/core/dates';

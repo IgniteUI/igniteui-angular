@@ -31,6 +31,7 @@ import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DeprecateClass } from '../core/deprecateDecorators';
+import { DateRangeDescriptor } from '../core/dates/dateRange';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'
@@ -225,6 +226,58 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     /**
+     * Gets the disabled dates descriptors.
+     * ```typescript
+     * let disabledDates = this.datepicker.disabledDates;
+     * ```
+     */
+    public get disabledDates(): DateRangeDescriptor[] {
+        return this._disabledDates;
+    }
+
+    /**
+     * Sets the disabled dates' descriptors.
+     * ```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *ngAfterViewInit(){
+     *    this.datePicker.disabledDates = [
+     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
+     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *}
+     *```
+     */
+    public set disabledDates(value: DateRangeDescriptor[]) {
+        this._disabledDates = value;
+    }
+
+    /**
+     * Gets the special dates descriptors.
+     * ```typescript
+     * let specialDates = this.datepicker.specialDates;
+     * ```
+     */
+    public get specialDates(): DateRangeDescriptor[] {
+        return this._specialDates;
+    }
+
+    /**
+     * Sets the special dates' descriptors.
+     * ```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *ngAfterViewInit(){
+     *    this.datePicker.specialDates = [
+     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
+     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *}
+     *```
+     */
+    public set specialDates(value: DateRangeDescriptor[]) {
+        this._specialDates = value;
+    }
+
+    /**
      *An @Input proeprty that sets the orientation of the `IgxDatePickerComponent` header.
      *```html
      *<igx-date-picker [vertical]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
@@ -305,7 +358,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
     /**
-     *Retruns the formatted date.
+     *Returns the formatted date.
      *```typescript
      *@ViewChild("MyDatePicker")
      *public datePicker: IgxDatePickerComponent;
@@ -370,11 +423,16 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         weekday: 'short',
         year: 'numeric'
     };
+
     private _formatViews = {
         day: false,
         month: true,
         year: false
     };
+
+    private _disabledDates: DateRangeDescriptor[] = null;
+
+    private _specialDates: DateRangeDescriptor[] = null;
 
     @ViewChild(IgxInputDirective) private input: IgxInputDirective;
 
@@ -548,6 +606,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
         this.calendar.formatViews = this._formatViews;
         this.calendar.locale = this.locale;
         this.calendar.vertical = this.vertical;
+        this.calendar.disabledDates = this.disabledDates;
+        this.calendar.specialDates = this.specialDates;
 
         if (this.headerTemplate) {
             this.calendar.headerTemplate = this.headerTemplate;
