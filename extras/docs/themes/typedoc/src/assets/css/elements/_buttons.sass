@@ -1,9 +1,12 @@
 %tsd-button
     display: inline-flex
     font-size: 12px
+    text-align: center
+    justify-content: center
     border: 1px solid transparent
     padding: 9px 16px
     outline: none
+    white-space: nowrap
     transition: all .25s ease-in-out
 
     > a
@@ -13,6 +16,7 @@
 
 .tsd-button
     @extend %tsd-button
+    width: 100%
     color: #fff
     background: #09f
     border: 1px solid #09f

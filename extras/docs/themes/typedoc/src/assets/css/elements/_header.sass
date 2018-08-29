@@ -7,17 +7,33 @@
 
     .tsd-header-content
         display: flex
-        height: $TOOLBAR_HEIGHT
+        flex-direction: column
+        flex-wrap: nowrap
         background: $TOOLBAR_COLOR
         justify-content: space-between
         padding: 0 15px
         align-items: center
         border-bottom: 1px solid rgba(white, .1)
 
+        +size-md-lg
+            flex-direction: row
+            justify-content: space-between
+            height: $TOOLBAR_HEIGHT
+
+    .tsd-header-group
+        display: flex
+        width: 100%
+        align-items: center
+        justify-content: space-between
+
     &-logo
         display: inline-flex
+        align-items: center
+        align-self: flex-start
         font-size: 18px
         font-weight: 400
+        margin: 0
+        height: 50px
 
         > .title
             color: #fff
@@ -32,3 +48,53 @@
             padding: 4px 8px
             margin-left: 12px
             font-weight: 500
+
+.tsd-nav-toggle
+    button
+        background-color: #333
+        border: 1px solid #333
+        color: #fff
+        padding: 4px
+        outline-style: none
+        transition: background .25s ease-in-out
+
+        &:hover
+            background: transparent
+
+        +size-md-lg
+            display: none
+
+.tsd-nav
+    display: none
+    flex-flow: column nowrap
+    align-items: center
+    width: 100%
+    flex: 1
+    list-style: none
+    margin: 0
+    padding: 16px
+    border-top: 1px solid rgba(white, .1)
+    box-shadow: 0 -1px 0 black
+
+    &-item
+        width: 100%
+        text-align: center
+
+    &-item + &-item
+        margin-top: 10px
+
+    +size-md-lg
+        display: flex
+        flex-flow: row nowrap
+        border: none
+        box-shadow: none
+        padding: 0
+        width: auto
+        flex: 0
+
+        &-item
+            width: initial
+
+        &-item + &-item
+            margin-top: 0
+            margin-left: 10px
