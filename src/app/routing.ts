@@ -15,6 +15,7 @@ import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
+import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
@@ -121,6 +122,10 @@ const appRoutes = [
     {
         path: 'list',
         component: ListSampleComponent
+    },
+    {
+        path: 'listPanning',
+        component: ListPanningSampleComponent
     },
     {
         path: 'listPerformance',

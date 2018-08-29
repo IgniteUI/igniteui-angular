@@ -40,7 +40,7 @@ export interface IListItemClickEventArgs {
 export interface IListItemPanningEventArgs {
     item: IgxListItemComponent;
     direction: IgxListPanState;
-    cancel: boolean;
+    keepItem: boolean;
 }
 
 /**
@@ -207,7 +207,7 @@ export class IgxListComponent {
      * Emits an event within the current list when left pan gesture is executed on a list item.
      * Provides a reference to an object of type `IListItemPanningEventArgs` as an event argument.
      * ```html
-     * <igx-list [allowLeftPanning]="true" (onLeftPan) = "onLeftPan($event)"></igx-list>
+     * <igx-list [allowLeftPanning]="true" (onLeftPan)="onLeftPan($event)"></igx-list>
      * ```
      * @memberof IgxListComponent
      */
@@ -218,7 +218,7 @@ export class IgxListComponent {
      * Emits an event within the current list when right pan gesture is executed on a list item.
      * Provides a reference to an object of type `IListItemPanningEventArgs` as an event argument.
      * ```html
-     * <igx-list [allowRightPanning]="true" (onRightPan) = "onRightPan($event)"></igx-list>
+     * <igx-list [allowRightPanning]="true" (onRightPan)="onRightPan($event)"></igx-list>
      * ```
      * @memberof IgxListComponent
      */

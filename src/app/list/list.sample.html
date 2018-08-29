@@ -133,31 +133,6 @@
                 </igx-list>
             </div>
         </article>
-
-        <article class="sample-column">
-            <h4 class="sample-title">Swipe left or right</h4>
-            <div class="list-sample">
-                <igx-list [allowLeftPanning]="true" [allowRightPanning]="true" height="300">
-                    <ng-template igxListItemLeftPanning>
-                        <div class="listItemLeftPanningStyle">SMS</div>
-                    </ng-template>
-                    <ng-template igxListItemRightPanning>
-                        <div class="listItemRightPanningStyle">Dial</div>
-                    </ng-template>
-                    <igx-list-item [isHeader]="true">Contacts</igx-list-item>
-                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems | igxFilter: fo1">
-                        <div class="item">
-                            <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
-                            <div class="person">
-                                <p class="name">{{item.text}}</p>
-                                <span class="phone">{{item.phone}}</span>
-                            </div>
-                            <igx-icon name="star" [class.favorite]="item.favorite" (click)="toggleFavorite(item)"></igx-icon>
-                        </div>
-                    </igx-list-item>
-                </igx-list>
-            </div>
-        </article>
         
     </section>
 
