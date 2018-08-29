@@ -93,45 +93,10 @@ export interface IColumnMovingEndEventArgs {
     cancel: boolean;
 }
 
-export interface IToolbarComponent {
-    exportExcel: boolean;
-    exportCsv: boolean;
-    toolbarTitle: string;
-    exportText: string;
-    exportExcelText: string;
-    exportCsvText: string;
-    columnHidingTitle: string;
-    columnPinningTitle: string;
-
-
-    onToolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
-}
-
-export interface IComponent {
+export interface IGridComponent {
     id: string;
     nativeElement: any;
     cdr: ChangeDetectorRef;
-}
-
-export interface IVirtualizedComponent {
-    verticalScrollContainer: IgxForOfDirective<any>;
-    parentVirtDir: IgxForOfDirective<any>;
-    headerContainer: IgxForOfDirective<any>;
-}
-
-export interface IFilterableComponent {
-    filteredData: any[];
-
-    onFilteringDone: EventEmitter<IFilteringExpressionsTree>;
-
-    clearFilter(name?: string);
-    filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean);
-}
-
-export interface IGridComponent extends IComponent,
-                                        IToolbarComponent,
-                                        IVirtualizedComponent,
-                                        IFilterableComponent {
     columns: IgxColumnComponent[];
     data: any[];
     filteredSortedData: any[];
@@ -167,7 +132,7 @@ export interface IGridComponent extends IComponent,
     hiddenColumnsText: string;
     columnHiding: boolean;
     columnPinning: boolean;
-
+    filteredData: any[];
     rowSelectable: boolean;
     allRowsSelected: boolean;
     selectionAPI: IgxSelectionAPIService;
@@ -176,13 +141,41 @@ export interface IGridComponent extends IComponent,
     calcPinnedContainerMaxWidth: number;
     rowHeight: number;
     defaultRowHeight: number;
+    verticalScrollContainer: IgxForOfDirective<any>;
+    parentVirtDir: IgxForOfDirective<any>;
+    headerContainer: IgxForOfDirective<any>;
+    exportExcel: boolean;
+    exportCsv: boolean;
+    toolbarTitle: string;
+    exportText: string;
+    exportExcelText: string;
+    exportCsvText: string;
+    columnHidingTitle: string;
+    columnPinningTitle: string;
 
     // Events
+    onCellClick: EventEmitter<IGridCellEventArgs>;
+    onSelection: EventEmitter<IGridCellEventArgs>;
+    onRowSelectionChange: EventEmitter<IRowSelectionEventArgs>;
+    onColumnPinning: EventEmitter<IPinColumnEventArgs>;
     onEditDone: EventEmitter<IGridEditEventArgs>;
+    onColumnInit: EventEmitter<IgxColumnComponent>;
+    onSortingDone: EventEmitter<ISortingExpression>;
+    onFilteringDone: EventEmitter<IFilteringExpressionsTree>;
+    onPagingDone: EventEmitter<IPageEventArgs>;
+    onRowAdded: EventEmitter<IRowDataEventArgs>;
     onRowDeleted: EventEmitter<IRowDataEventArgs>;
+    onDataPreLoad: EventEmitter<any>;
+    onColumnResized: EventEmitter<IColumnResizeEventArgs>;
+    onContextMenu: EventEmitter<IGridCellEventArgs>;
+    onDoubleClick: EventEmitter<IGridCellEventArgs>;
+    onColumnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
     onColumnMovingStart: EventEmitter<IColumnMovingStartEventArgs>;
     onColumnMoving: EventEmitter<IColumnMovingEventArgs>;
     onColumnMovingEnd: EventEmitter<IColumnMovingEndEventArgs>;
+    // TODO check densitiyChanged.
+    // onDensityChanged: EventEmitter<any>;
+    onToolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
 
     // Methods
     reflow();
@@ -197,4 +190,6 @@ export interface IGridComponent extends IComponent,
     trackColumnChanges(index, col);
     checkHeaderCheckboxStatus(headerStatus?: boolean);
     toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs);
+    clearFilter(name?: string);
+    filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean);
 }

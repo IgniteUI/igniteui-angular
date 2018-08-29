@@ -27,10 +27,17 @@ import {
     IColumnMovingStartEventArgs,
     IColumnMovingEventArgs,
     IColumnMovingEndEventArgs,
-    IGridToolbarExportEventArgs
+    IGridToolbarExportEventArgs,
+    IRowSelectionEventArgs,
+    IPinColumnEventArgs,
+    IColumnResizeEventArgs,
+    IGridCellEventArgs,
+    IPageEventArgs
 } from './grid-interfaces';
 
 export class EmptyMockGrid implements IGridComponent {
+    id: string;    nativeElement: any;
+    cdr: ChangeDetectorRef;
     columns: IgxColumnComponent[];
     data: any[];
     filteredSortedData: any[];
@@ -63,6 +70,7 @@ export class EmptyMockGrid implements IGridComponent {
     hiddenColumnsText: string;
     columnHiding: boolean;
     columnPinning: boolean;
+    filteredData: any[];
     rowSelectable: boolean;
     allRowsSelected: boolean;
     selectionAPI: IgxSelectionAPIService;
@@ -71,14 +79,9 @@ export class EmptyMockGrid implements IGridComponent {
     calcPinnedContainerMaxWidth: number;
     rowHeight: number;
     defaultRowHeight: number;
-    onEditDone: EventEmitter<IGridEditEventArgs>;
-    onRowDeleted: EventEmitter<IRowDataEventArgs>;
-    onColumnMovingStart: EventEmitter<IColumnMovingStartEventArgs>;
-    onColumnMoving: EventEmitter<IColumnMovingEventArgs>;
-    onColumnMovingEnd: EventEmitter<IColumnMovingEndEventArgs>;
-    id = 'mock-grid';
-    nativeElement: any;
-    cdr: ChangeDetectorRef;
+    verticalScrollContainer: IgxForOfDirective<any>;
+    parentVirtDir: IgxForOfDirective<any>;
+    headerContainer: IgxForOfDirective<any>;
     exportExcel: boolean;
     exportCsv: boolean;
     toolbarTitle: string;
@@ -87,12 +90,26 @@ export class EmptyMockGrid implements IGridComponent {
     exportCsvText: string;
     columnHidingTitle: string;
     columnPinningTitle: string;
-    onToolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
-    verticalScrollContainer: IgxForOfDirective<any>;
-    parentVirtDir: IgxForOfDirective<any>;
-    headerContainer: IgxForOfDirective<any>;
-    filteredData: any[];
+    onCellClick: EventEmitter<IGridCellEventArgs>;
+    onSelection: EventEmitter<IGridCellEventArgs>;
+    onRowSelectionChange: EventEmitter<IRowSelectionEventArgs>;
+    onColumnPinning: EventEmitter<IPinColumnEventArgs>;
+    onEditDone: EventEmitter<IGridEditEventArgs>;
+    onColumnInit: EventEmitter<IgxColumnComponent>;
+    onSortingDone: EventEmitter<ISortingExpression>;
     onFilteringDone: EventEmitter<IFilteringExpressionsTree>;
+    onPagingDone: EventEmitter<IPageEventArgs>;
+    onRowAdded: EventEmitter<IRowDataEventArgs>;
+    onRowDeleted: EventEmitter<IRowDataEventArgs>;
+    onDataPreLoad: EventEmitter<any>;
+    onColumnResized: EventEmitter<IColumnResizeEventArgs>;
+    onContextMenu: EventEmitter<IGridCellEventArgs>;
+    onDoubleClick: EventEmitter<IGridCellEventArgs>;
+    onColumnVisibilityChanged: EventEmitter<IColumnVisibilityChangedEventArgs>;
+    onColumnMovingStart: EventEmitter<IColumnMovingStartEventArgs>;
+    onColumnMoving: EventEmitter<IColumnMovingEventArgs>;
+    onColumnMovingEnd: EventEmitter<IColumnMovingEndEventArgs>;
+    onToolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
     reflow() {
         throw new Error('Method not implemented.');
     }
