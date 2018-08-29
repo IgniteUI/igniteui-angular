@@ -1,6 +1,9 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgxCheckboxComponent } from '../../public_api';
+import { IgxCheckboxComponent, IgxGridComponent } from '../../public_api';
+import { wait } from '../test-utils/ui-interactions.spec';
+import { take } from 'rxjs/operators';
+import { IgxGridGroupByRowComponent } from '../grid/groupby-row.component';
 
 export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {
@@ -44,4 +47,51 @@ export class HelperUtils {
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
     }
+
+    public static navigateVerticallyToIndex = (
+        grid: IgxGridComponent,
+        rowStartIndex: number,
+        rowEndIndex: number,
+        colIndex?: number) => new Promise(async(resolve, reject) => {
+        const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
+        const row = grid.getRowByIndex(rowStartIndex);
+        const cIndx = colIndex || 0;
+        const colKey = grid.columnList.toArray()[cIndx].field;
+        let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+        const elem = row instanceof IgxGridGroupByRowComponent ?
+            row : grid.getCellByColumn(row.index, colKey);
+        if (rowStartIndex === rowEndIndex) {
+            if (!elem.focused) {
+                elem.nativeElement.focus();
+            }
+            resolve();
+            return;
+        }
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: dir,
+            key: dir
+        });
+
+        if (dir === 'ArrowDown') {
+            (elem as any).onKeydownArrowDown(keyboardEvent);
+        } else {
+            (elem as any).onKeydownArrowUp(keyboardEvent);
+        }
+
+        if (nextRow) {
+            await wait(10);
+            HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
+            .then(() => { resolve(); });
+        } else {
+            // else wait for chunk to load.
+            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                next: async() => {
+                    nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+                    HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
+                    .then(() => { resolve(); });
+                }
+            });
+        }
+
+    })
 }

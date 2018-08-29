@@ -7,11 +7,12 @@ import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, 
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../core/utils';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Grid Toolbar', () => {
     let fixture;
     let grid;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -26,13 +27,14 @@ describe('IgxGrid - Grid Toolbar', () => {
                 IgxCsvExporterService
             ]
         })
-        .compileComponents()
-        .then(() => {
-            fixture = TestBed.createComponent(GridToolbarTestPage1Component);
-            fixture.detectChanges();
-            grid = fixture.componentInstance.grid1;
-        });
+        .compileComponents();
     }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        fixture.detectChanges();
+        grid = fixture.componentInstance.grid1;
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

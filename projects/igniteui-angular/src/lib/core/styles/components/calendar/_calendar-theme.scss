@@ -220,30 +220,18 @@
 @mixin igx-calendar($theme) {
     @include igx-root-css-vars($theme);
 
-    $cal-header-year-fs: em(18px);
-    $cal-header-year-lh: em(16px);
     $cal-header-year-margin: 0;
-    $cal-header-date-fs: em(38px);
-    $cal-header-date-lh: em(22px);
     $cal-header-date-margin: 0;
     $cal-header-padding: em(16px);
 
-    $cal-picker-date-fs: em(18px);
-    $cal-picker-date-lh: em(22px);
-    $cal-picker-date-fw: 600;
     $cal-picker-padding: em(16px);
 
     $cal-value-w: em(40px);
     $cal-value-h: $cal-value-w;
     $cal-value-br: $cal-value-w / 2;
     $cal-value-margin: em(2px);
-    $cal-value-fs: em(16px);
-    $cal-value-lh: $cal-value-h;
     $cal-value-fw: 600;
 
-    $cal-value-year-fs: em(18px);
-    $cal-value-year-current-fs: em(24px);
-    $cal-value-year-hover-fs: em(27px);
     $cal-value-month-margin: 0 em(12px);
     $cal-value-month-height: em(91px);
 
@@ -282,15 +270,12 @@
     %cal-header-year {
         margin: $cal-header-year-margin;
         color: currentColor;
-        font-size: $cal-header-year-fs;
         opacity: .8;
     }
 
     %cal-header-date {
         display: flex;
         margin: $cal-header-date-margin;
-        font-size: $cal-header-date-fs;
-        line-height: $cal-header-date-lh;
 
         .date-text {
             @include ellipsis();
@@ -335,9 +320,6 @@
     }
 
     %cal-picker-date {
-        font-size: $cal-picker-date-fs;
-        line-height: $cal-picker-date-lh;
-        font-weight: $cal-picker-date-fw;
         color: --var($theme, 'picker-text-color');
         text-align: center;
     }
@@ -367,14 +349,13 @@
     }
 
     %cal-value {
-        @include ellipsis();
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: $cal-value-w;
         height: $cal-value-h;
         min-width: 2ch;
-        font-size: $cal-value-fs;
         margin: $cal-value-margin;
-        line-height: $cal-value-lh;
-        text-align: center;
         border-radius: $cal-value-br;
         color: --var($theme, 'content-text-color');
         cursor: pointer;
@@ -397,13 +378,11 @@
         margin: 0;
         justify-content: center;
         align-items: center;
-        font-size: $cal-value-year-fs;
         min-width: 8ch;
-        height: em(44px);
+        height: rem(52px);
     }
 
     %cal-value--year-current {
-        font-size: $cal-value-year-current-fs;
         color: --var($theme, 'year-current-text-color');
     }
 
@@ -437,15 +416,60 @@
         position: relative;
         color: --var($theme, 'date-selected-text-color');
         background-color: --var($theme, 'date-selected-background') !important;
-        font-weight: $cal-value-fw;
+        font-weight: $cal-value-fw !important;
     }
 
     %cal-value--current {
         color: --var($theme, 'date-current-text-color');
-        font-weight: $cal-value-fw;
+        font-weight: $cal-value-fw !important;
     }
 
     %cal-value--hover {
         background-color: --var($theme, 'date-hover-background');
+    }
+}
+
+/// Adds typography styles for the igx-calendar component.
+/// Uses the 'h4', 'subtitle-1' and 'body-1'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(header-year: 'subtitle-1', header-date: 'h4', picker-date: 'subtitle-1', content: 'body-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-calendar-typography($type-scale, $categories: (
+    header-year: 'subtitle-1',
+    header-date: 'h4',
+    picker-date: 'subtitle-1',
+    content: 'body-1')
+) {
+    $header-year: map-get($categories, 'header-year');
+    $header-date: map-get($categories, 'header-date');
+    $picker-date: map-get($categories, 'picker-date');
+    $content: map-get($categories, 'content');
+
+    @include igx-scope('.igx-typography') {
+        %cal-header-year {
+            @include igx-type-style($type-scale, $header-year);
+        }
+
+        %cal-header-date {
+            @include igx-type-style($type-scale, $header-date) {
+                line-height: rem(42px);
+            }
+        }
+
+        %cal-picker-date {
+            @include igx-type-style($type-scale, $picker-date);
+        }
+
+        %cal-value {
+            @include igx-type-style($type-scale, $content);
+        }
+
+        %cal-value--year-current {
+            @include igx-type-style($type-scale, $content) {
+                font-size: rem(24px);
+            }
+        }
     }
 }
