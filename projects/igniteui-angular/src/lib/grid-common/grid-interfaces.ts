@@ -107,6 +107,12 @@ export interface IToolbarComponent {
     onToolbarExporting: EventEmitter<IGridToolbarExportEventArgs>;
 }
 
+export interface IComponent {
+    id: string;
+    nativeElement: any;
+    cdr: ChangeDetectorRef;
+}
+
 export interface IVirtualizedComponent {
     verticalScrollContainer: IgxForOfDirective<any>;
     parentVirtDir: IgxForOfDirective<any>;
@@ -114,25 +120,25 @@ export interface IVirtualizedComponent {
 }
 
 export interface IFilterableComponent {
+    filteredData: any[];
+
     onFilteringDone: EventEmitter<IFilteringExpressionsTree>;
 
     clearFilter(name?: string);
     filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean);
 }
 
-export interface IGridComponent extends IToolbarComponent,
+export interface IGridComponent extends IComponent,
+                                        IToolbarComponent,
                                         IVirtualizedComponent,
                                         IFilterableComponent {
     columns: IgxColumnComponent[];
     data: any[];
-    filteredData: any[];
     filteredSortedData: any[];
     primaryKey: string;
     rowList: QueryList<any>;
     dataRowList: QueryList<IgxRowComponent<IGridComponent>>;
-    cdr: ChangeDetectorRef;
     sortingExpressions: ISortingExpression[];
-    nativeElement: any;
     paging: boolean;
     page: number;
     perPage: number;

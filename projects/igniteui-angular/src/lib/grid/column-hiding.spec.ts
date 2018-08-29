@@ -3,7 +3,6 @@ import { DebugElement } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from '../grid-common/column-hiding/column-hiding-item.directive';
 import { IgxColumnHidingComponent, IgxColumnHidingModule } from '../grid-common/column-hiding/column-hiding.component';
 import { IgxGridModule, IgxGridComponent } from './index';

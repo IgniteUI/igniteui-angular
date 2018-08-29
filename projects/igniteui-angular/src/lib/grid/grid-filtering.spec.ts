@@ -1,8 +1,8 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar, ICalendarDate } from '../calendar/calendar';
+import { Calendar } from '../calendar/calendar';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
