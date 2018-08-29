@@ -25,6 +25,9 @@ import {
     ViewContainerRef
 } from '@angular/core';
 
+import { auditTime, sampleTime } from 'rxjs/operators';
+import { fromEvent, animationFrameScheduler as afs } from 'rxjs';
+
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
@@ -163,6 +166,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _pointerCapture;
     private _gestureObject;
 
+    /**
+     * The default time for which the scroll event will be audited.
+     * Audit is similar to Throttle, but emits the last value from the silenced time window, instead of the first value.
+     * This will limit the rate of which the scroll event is handled to optimize performance on fast scrolling.
+     */
+    private auditTime = 10;
+
     private get _isScrolledToBottom() {
         if (!this.getVerticalScroll()) {
             return true;
@@ -263,7 +273,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this._maxHeight = this._calcMaxBrowserHeight();
             this.vh.instance.height = this.igxForOf ? this._calcHeight() : 0;
             this._zone.runOutsideAngular(() => {
-                this.vh.instance.elementRef.nativeElement.addEventListener('scroll', (evt) => { this.onScroll(evt); });
+                fromEvent(this.vh.instance.elementRef.nativeElement, 'scroll')
+                    .pipe(auditTime(this.auditTime, afs))
+                    .subscribe((evt) => { this.onScroll(evt); });
                 this.dc.instance._viewContainer.element.nativeElement.addEventListener('wheel',
                     (evt) => { this.onWheel(evt); });
                 this.dc.instance._viewContainer.element.nativeElement.addEventListener('touchstart',
@@ -291,11 +303,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.hvh.instance.width = totalWidth;
                 this.hScroll = this.hvh.instance.elementRef.nativeElement;
                 this._zone.runOutsideAngular(() => {
-                    this.hvh.instance.elementRef.nativeElement.addEventListener('scroll', this.func);
+                    fromEvent(this.hScroll, 'scroll')
+                    .pipe(sampleTime(0, afs))
+                    .subscribe(this.func);
                 });
             } else {
                 this._zone.runOutsideAngular(() => {
-                    this.hScroll.addEventListener('scroll', this.func);
+                    fromEvent(this.hScroll, 'scroll')
+                    .pipe(sampleTime(0, afs))
+                    .subscribe(this.func);
                     this.dc.instance._viewContainer.element.nativeElement.addEventListener('wheel',
                         (evt) => { this.onWheel(evt); });
                     this.dc.instance._viewContainer.element.nativeElement.addEventListener('touchstart',
