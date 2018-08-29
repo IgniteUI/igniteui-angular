@@ -1,12 +1,14 @@
 .tsd-header
     position: fixed
+    display: flex
+    flex-flow: column nowrap
     width: 100%
-    height: $TOOLBAR_HEIGHT
-    background: $TOOLBAR_COLOR
     z-index: 99
 
     .tsd-header-content
         display: flex
+        height: $TOOLBAR_HEIGHT
+        background: $TOOLBAR_COLOR
         justify-content: space-between
         padding: 0 15px
         align-items: center
