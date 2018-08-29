@@ -4,13 +4,13 @@
     <ng-content *ngIf="iconTemplate" select="igx-expansion-panel-button"></ng-content>
     <igx-icon *ngIf="!iconTemplate" fontSet="material" [name]="panel.collapsed? 'expand_more':'expand_less'"></igx-icon>
 </ng-template>
-<ng-container *ngIf="buttonPosition === 'left'">
+<ng-container *ngIf="iconPosition === 'left'">
     <ng-container *ngTemplateOutlet="iconContainer"></ng-container>
 </ng-container>
 <ng-content select="igx-expansion-panel-title"></ng-content>
 <ng-content select="igx-expansion-panel-description"></ng-content>
 <ng-content></ng-content>
-<ng-container *ngIf="buttonPosition === 'right'">
+<ng-container *ngIf="iconPosition === 'right'">
     <ng-container *ngTemplateOutlet="iconContainer"></ng-container>
 </ng-container>
 </div>

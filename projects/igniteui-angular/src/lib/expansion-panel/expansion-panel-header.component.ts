@@ -13,13 +13,13 @@ import {
     TemplateRef
 } from '@angular/core';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
-import { IgxExpansionPanelButtonDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
+import { IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 
 export interface IExpansionPanelEventArgs {
     event: Event;
 }
 
-export enum BUTTON_POSITION {
+export enum ICON_POSITION {
     LEFT = 'left',
     NONE = 'none',
     RIGHT = 'right'
@@ -34,7 +34,7 @@ export class IgxExpansionPanelHeaderComponent {
      // properties section
     private _iconTemplate = false;
 
-    @ContentChild(IgxExpansionPanelButtonDirective)
+    @ContentChild(IgxExpansionPanelIconDirective)
     public set iconTemplate(val: any) {
         this._iconTemplate = <boolean>val;
     }
@@ -63,7 +63,7 @@ export class IgxExpansionPanelHeaderComponent {
     }
 
     @Input()
-    public buttonPosition: BUTTON_POSITION = BUTTON_POSITION.LEFT;
+    public iconPosition: ICON_POSITION = ICON_POSITION.LEFT;
 
     @Output()
     public onInteraction = new EventEmitter<IExpansionPanelEventArgs>();

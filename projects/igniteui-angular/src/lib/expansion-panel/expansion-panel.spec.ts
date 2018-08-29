@@ -51,13 +51,10 @@ describe('igxExpansionPanel', () => {
             expect(fixture.componentInstance).toBeDefined();
             expect(panel).toBeDefined();
             // expect(panel.toggleBtn).toBeDefined();
-            // expect(panel.headerButtons).toBeDefined();
             expect(header.disabled).toBeDefined();
             expect(header.disabled).toEqual(false);
             // expect(panel.ariaLabelledBy).toBeDefined();
             // expect(panel.ariaLabelledBy).toEqual('');
-            // expect(panel.headerButtons).toBeDefined();
-            // expect(panel.headerButtons).toEqual(true);
             expect(panel.animationSettings).toBeDefined();
             expect(panel.collapsed).toBeDefined();
             expect(panel.collapsed).toBeTruthy();
@@ -72,15 +69,12 @@ describe('igxExpansionPanel', () => {
             // expect(panel.disabled).toEqual(false);
             // expect(panel.collapsed).toEqual(true);
             // // expect(panel.ariaLabelledBy).toEqual('');
-            // // expect(panel.headerButtons).toEqual(true);
             // panel.disabled = true;
             // expect(panel.disabled).toEqual(true);
             panel.collapsed = false;
             expect(panel.collapsed).toEqual(false);
             // panel.labelledby = 'test label area';
             // expect(panel.labelledby).toEqual('test label area');
-            panel.headerButtons = false;
-            expect(panel.headerButtons).toEqual(false);
         });
         it('Should properly set base classes', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
