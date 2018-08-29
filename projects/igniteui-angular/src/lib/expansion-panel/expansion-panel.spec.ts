@@ -20,15 +20,14 @@ const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
 const CSS_CLASS_LIST = 'igx-list';
 const CSS_CLASS_PANEL_BUTTON = 'igx-icon';
 
-fdescribe('igxExpansionPanel', () => {
+describe('igxExpansionPanel', () => {
     beforeEach(async(() => {
         // TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
                 IgxExpansionPanelGridComponent,
                 IgxExpansionPanelListComponent,
-                IgxExpansionPanelSampleComponent,
-                HeaderlessComponent
+                IgxExpansionPanelSampleComponent
             ],
             imports: [
                 IgxExpansionPanelModule,
@@ -536,7 +535,7 @@ fdescribe('igxExpansionPanel', () => {
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
         }));
 
-        fdescribe('Aria tests', () => {
+        describe('Aria tests', () => {
             it('Should properly apply default aria properties', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
                 fixture.detectChanges();
@@ -746,21 +745,4 @@ export class IgxExpansionPanelSampleComponent {
     public handleInterraction() {
     }
 }
-@Component({
-    template: `<igx-expansion-panel>
-    <igx-expansion-panel-body>
-    Example body
-    </igx-expansion-panel-body>
-    </igx-expansion-panel>`
-})
-class HeaderlessComponent {
-    public disabled = false;
-    public collapsed = true;
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
-    public header: IgxExpansionPanelHeaderComponent;
-    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
-    public panel: IgxExpansionPanelComponent;
-    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
-    public title: IgxExpansionPanelTitleDirective;
 
-}
