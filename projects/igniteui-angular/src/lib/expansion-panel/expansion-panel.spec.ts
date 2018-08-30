@@ -619,6 +619,32 @@ fdescribe('igxExpansionPanel', () => {
             expect(headerButton.children[0].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
         });
+
+        it('Should override the default icon when an icon template is passed', () => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const header = fixture.componentInstance.header;
+            const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
+            const headerButton = panelHeader.querySelector('div [role = \'button\']');
+            header.iconPosition = ICON_POSITION.LEFT;
+            fixture.detectChanges();
+
+            expect(headerButton.children.length).toEqual(3);
+            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+
+            fixture.componentInstance.customIcon = true;
+            fixture.detectChanges();
+
+            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-ICON');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+
+            fixture.componentInstance.customIcon = false;
+            fixture.detectChanges();
+
+            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+        });
     });
 
     describe('Aria tests', () => {
@@ -696,7 +722,7 @@ fdescribe('igxExpansionPanel', () => {
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual('example-title-id');
         }));
 
-        it('Should update properly label the control region', fakeAsync(() => {
+        it('Should properly label the control region', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
@@ -965,6 +991,9 @@ export class IgxExpansionPanelListComponent {
     <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
         <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
         <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
+        <igx-expansion-panel-icon *ngIf="customIcon">
+            <span class="custom-test-icon">TEST_ICON</span>
+        </igx-expansion-panel-icon>
     </igx-expansion-panel-header>
     <igx-expansion-panel-body *ngIf="showBody">
     Example body
@@ -978,6 +1007,7 @@ export class IgxExpansionPanelSampleComponent {
     public showTitle = true;
     public showBody = true;
     public showHeader = true;
+    public customIcon = false;
     @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
     @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })

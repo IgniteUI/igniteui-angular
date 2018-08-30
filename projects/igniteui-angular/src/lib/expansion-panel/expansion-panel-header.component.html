@@ -1,7 +1,7 @@
 
 <div tabindex="0" role = "button" [attr.aria-disabled] = "disabled" [attr.aria-expanded] = "isExpanded" [attr.aria-controls] = "controls">
 <ng-template #iconContainer>
-    <ng-content *ngIf="iconTemplate" select="igx-expansion-panel-button"></ng-content>
+    <ng-content *ngIf="iconTemplate" select="igx-expansion-panel-icon"></ng-content>
     <igx-icon *ngIf="!iconTemplate" fontSet="material" [name]="panel.collapsed? 'expand_more':'expand_less'"></igx-icon>
 </ng-template>
 <ng-container *ngIf="iconPosition === 'left'">
