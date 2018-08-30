@@ -869,7 +869,7 @@ describe('IgxCalendar', () => {
     });
 
     it('Deselect using API. Should deselect in "single" selection mode.', () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const calendar = fixture.componentInstance.calendar;
         fixture.detectChanges();
 
@@ -888,7 +888,7 @@ describe('IgxCalendar', () => {
     });
 
     it('Deselect using API. Should deselect in "multi" selection mode.', async(() => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const ci = fixture.componentInstance;
         const calendar = ci.calendar;
         ci.model = [];
@@ -923,7 +923,7 @@ describe('IgxCalendar', () => {
     }));
 
     it('Deselect using API. Should deselect in "range" selection mode.', async(() => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const ci = fixture.componentInstance;
         const calendar = ci.calendar;
         ci.model = [];
@@ -973,7 +973,7 @@ describe('IgxCalendar', () => {
     }));
 
     it('Deselect using API. Should deselect all in "single" mode.', () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const calendar = fixture.componentInstance.calendar;
         fixture.detectChanges();
 
@@ -992,7 +992,7 @@ describe('IgxCalendar', () => {
     });
 
     it('Deselect using API. Should deselect all in "multi" mode.', async(() => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const ci = fixture.componentInstance;
         const calendar = ci.calendar;
         ci.model = [];
@@ -1022,7 +1022,7 @@ describe('IgxCalendar', () => {
     }));
 
     it('Deselect using API. Should deselect all in "range" mode.', async(() => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const ci = fixture.componentInstance;
         const calendar = ci.calendar;
         ci.model = [];
