@@ -282,6 +282,24 @@ describe('IgxDatePicker', () => {
         expect(dom.query(By.css('.igx-input-group'))).not.toBeNull();
         expect(dom.query(By.css('.igx-icon'))).toBeNull();
     }));
+
+    it('Should be able to deselect using the API.', () => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        const datePicker = fix.componentInstance.datePicker;
+        fix.detectChanges();
+
+        const date = new Date(Date.now());
+        datePicker.selectDate(date);
+        datePicker.openDialog();
+        fix.detectChanges();
+
+        expect(datePicker.value).toBe(date);
+
+        datePicker.deselectDate();
+        fix.detectChanges();
+
+        expect(datePicker.value).toBe(null);
+    });
 });
 
 @Component({
