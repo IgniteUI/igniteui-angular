@@ -603,7 +603,8 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
                 `[height]="height" [width]="width" [rowSelectable]="enableRowSelection" [autoGenerate]="autoGenerate"`,
-                '', ColumnDefinitions.movableColumns)}</div>`
+                EventSubscriptions.onColumnMovingStart + EventSubscriptions.onColumnMoving + EventSubscriptions.onColumnMovingEnd,
+                ColumnDefinitions.movableColumns)}</div>`
 })
 export class MovableColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData();
@@ -612,8 +613,41 @@ export class MovableColumnsComponent extends BasicGridComponent {
     isFilterable = false;
     isSortable = false;
     isResizable = false;
+    isEditable = false;
+    isHidden = false;
+    isGroupable = false;
     width = '500px';
     height = '300px';
+    count = 0;
+    countStart = 0;
+    countEnd = 0;
+    cancel = false;
+    source: IgxColumnComponent;
+    target: IgxColumnComponent;
+
+    onColumnMovingStarted(event) {
+        this.countStart++;
+        this.source = event.source;
+    }
+
+    onColumnMoving(event) {
+        this.count++;
+        this.source = event.source;
+
+        if (this.cancel) {
+            event.cancel = true;
+        }
+    }
+
+    onColumnMovingEnded(event) {
+        this.countEnd++;
+        this.source = event.source;
+        this.target = event.target;
+
+        if (event.target.field === 'Region') {
+            event.cancel = true;
+        }
+    }
 }
 
 @Component({
@@ -627,18 +661,20 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate"`,
+    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate" [paging]="paging"`,
         EventSubscriptions.onColumnInit, '')}`
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
-    data = SampleTestData.contactInfoData();
+    data = SampleTestData.contactInfoDataFull();
 
     width = '500px';
     height = '400px';
+    paging = false;
 
     public columnInit(column: IgxColumnComponent) {
         column.movable = true;
+        column.sortable = true;
         column.width = '100px';
     }
 
@@ -653,6 +689,7 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 })
 export class MultiColumnHeadersComponent extends BasicGridComponent {
     data = SampleTestData.contactInfoDataFull();
+    isPinned = false;
 }
 
 @Component({

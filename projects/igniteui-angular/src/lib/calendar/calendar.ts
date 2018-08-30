@@ -254,6 +254,7 @@ export class Calendar {
             isPrevMonth: this.isPreviousMonth(date, year, month)
         };
     }
+
     private isPreviousMonth(date: Date, year: number, month: number): boolean {
         if (date.getFullYear() === year) {
             return date.getMonth() < month;
@@ -265,6 +266,7 @@ export class Calendar {
         if (date.getFullYear() === year) {
             return date.getMonth() > month;
         }
+
         return date.getFullYear() > year;
     }
 }
