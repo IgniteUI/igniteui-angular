@@ -43,3 +43,6 @@ Thumbs.db
 src/**/*.js
 src/**/*.js.map
 src/**/*.css.map
+
+# Typedoc Theme
+extras/docs/themes/typedoc/bin

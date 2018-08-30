@@ -12,15 +12,35 @@ All notable changes for each version of this project will be documented in this 
 - `igx-time-picker`:
     - `igxTimePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxTimePickerComponent`'s input group is retemplated. 
 - `igx-datePicker`:
-    - `igxDatePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxDatePickerComponent`'s input group is retemplated. 
+    - `igxDatePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxDatePickerComponent`'s input group is retemplated.
+    - Introduced `disabledDates`. This property is exposed from the `igx-calendar` component.
+    - Introduced `specialDates`. This property is exposed from the `igx-calendar` component.
 - `IgxTextHighlightDirective`: The `highlight` method now has a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the group's value.
     - If its value is true, the entire group's value should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
 - `IgxGrid`: The `findNext` and `findPrev` methods now have a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the grid's cells.
     - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
+- `IgxChip`
+    - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+- `IgxChipArea`
+    - Introduced event argument types to all `EventEmitter` `@Output`s.
+- `IgxCombo`
+    - Added the following directives for `TemplateRef` assignment for combo templates (item, footer, etc.):
+        - Added `IgxComboItemDirective`. Use `[igxComboItem]` in markup to assing a TemplateRef to `combo.itemTemplate`.
+        - Added `IgxComboHeaderDirective`. Use `[igxComboHeader]` in markup to assing a TemplateRef to `combo.headerTemplate`.
+        - Added `IgxComboFooterDirective`. Use `[igxComboFooter]` in markup to assing a TemplateRef to `combo.footerTemplate`.
+        - Added `IgxComboEmptyDirective`. Use `[igxComboEmpty]` in markup to assing a TemplateRef to `combo.emptyTemplate`.
+        - Added `IgxComboAddItemirective`. Use `[igxComboAddItem]` in markup to assing a TemplateRef to `combo.addItemTemplate`.
+        - Added `IgxComboHeaderItemDirective`. Use `[igxComboHeaderItem]` in markup to assing a TemplateRef to `combo.headerItemTemplate`.
+    - **Breaking change** Assigning templates with the following template ref variables is now deprecated in favor of the new directives:
+            `#itemTemplate`, `#headerTemplate`, `#footerTemplate`, `#emptyTemplate`, `#addItemTemplate`, `#headerItemTemplate`.
 - `IgxDropDown`
     - **Breaking change** `allowItemsFocus` default value is changed to `false`.
+- `igx-calendar`:
+    - Introduced `disabledDates` property which allows a user to disable dates based on various rules: before or after a date, weekends, workdays, specific dates and ranges. The disabled dates cannot be selected and have a distinguishable style.
+    - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
 
 ## 6.1.3
 - **General**

@@ -20,11 +20,10 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
 
   // we no longer use the element inside the position() as its dimensions are cached in rect
   position(contentElement: HTMLElement, size: { width: number, height: number}, document?: Document, initialCall?: boolean): void {
-    const eWidth = size.width;
-    const eHeight = size.height;
+    const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
 
-    contentElement.style.top = getPointFromPositionsSettings(this.settings).y + this.settings.verticalDirection * size.height + 'px';
-    contentElement.style.left = getPointFromPositionsSettings(this.settings).x + this.settings.horizontalDirection * size.width + 'px';
+    contentElement.style.top = startPoint.y + this.settings.verticalDirection * size.height + 'px';
+    contentElement.style.left = startPoint.x + this.settings.horizontalDirection * size.width + 'px';
   }
 }
 
