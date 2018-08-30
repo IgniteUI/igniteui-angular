@@ -233,7 +233,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
         }
 
-        this.gridAPI.restoreHighlight(this.id);
+        this.gridAPI.refreshSearch(this.id, true);
     }
 
     /**
@@ -303,39 +303,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     set groupingExpansionState(value) {
-        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
-
-        let highlightItem = null;
-        if (this.lastSearchInfo.collapsedHighlightedItem) {
-            highlightItem = this.lastSearchInfo.collapsedHighlightedItem.item;
-        } else if (this.lastSearchInfo.matchInfoCache.length) {
-            highlightItem = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex].item;
-        }
-
         this._groupingExpandState = cloneArray(value);
 
-        this.refreshSearch();
-
-        if (highlightItem !== null && this.groupingExpressions.length) {
-            const index = this.filteredSortedData.indexOf(highlightItem);
-            const groupRow = this.gridAPI.getGroupByRecords(this.id)[index];
-
-            if (!this.isExpandedGroup(groupRow)) {
-                IgxTextHighlightDirective.clearActiveHighlight(this.id);
-                this.lastSearchInfo.collapsedHighlightedItem = {
-                    info: activeInfo,
-                    item: highlightItem
-                };
-            } else if (this.lastSearchInfo.collapsedHighlightedItem !== null) {
-                const collapsedInfo = this.lastSearchInfo.collapsedHighlightedItem.info;
-                IgxTextHighlightDirective.setActiveHighlight(this.id, {
-                    columnIndex: collapsedInfo.columnIndex,
-                    rowIndex: collapsedInfo.rowIndex,
-                    index: collapsedInfo.index,
-                    page: collapsedInfo.page
-                });
-            }
-        }
         this.cdr.detectChanges();
     }
 
@@ -443,8 +412,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this._perPage = val;
         this.page = 0;
-
-        this.gridAPI.restoreHighlight(this.id);
     }
 
     /**
@@ -1362,7 +1329,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
 
-        this.gridAPI.restoreHighlight(this.id);
+        this.gridAPI.refreshSearch(this.id, true);
     }
 
     /**
@@ -1791,7 +1758,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         caseSensitive: false,
         exactMatch: false,
         activeMatchIndex: 0,
-        collapsedHighlightedItem: null,
         matchInfoCache: []
     };
 
@@ -1908,7 +1874,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public ngOnInit() {
-        console.log('onInit');
         this.gridAPI.register(this);
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
@@ -2379,28 +2344,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const fi = list.indexOf(from);
         const ti = list.indexOf(to);
 
-        let activeColumn = null;
-        let activeColumnIndex = -1;
-
-        if (this.lastSearchInfo.searchText) {
-            const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
-            activeColumnIndex = activeInfo.columnIndex;
-
-            if (activeColumnIndex !== -1) {
-                activeColumn = list[activeColumnIndex];
-            }
-        }
-
         list.splice(ti, 0, ...list.splice(fi, 1));
         const newList = this._resetColumnList(list);
         this.columnList.reset(newList);
         this.columnList.notifyOnChanges();
         this._columns = this.columnList.toArray();
-
-        if (activeColumn !== null && activeColumn !== undefined) {
-            const newIndex = newList.indexOf(activeColumn);
-            IgxColumnComponent.updateHighlights(activeColumnIndex, newIndex, this.id, this.gridAPI);
-        }
     }
 
     /**
@@ -2669,7 +2617,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
         this.onGroupingDone.emit(this.sortingExpressions);
 
-        this.gridAPI.restoreHighlight(this.id);
+        this.gridAPI.refreshSearch(this.id, true);
     }
 
     /**
@@ -2685,7 +2633,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
 
-        this.gridAPI.restoreHighlight(this.id);
+        this.gridAPI.refreshSearch(this.id, true);
     }
 
     /**

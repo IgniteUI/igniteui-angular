@@ -183,17 +183,6 @@ export class IgxColumnComponent implements AfterContentInit {
             }
             this.check();
             if (this.grid) {
-                const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
-                const oldIndex = activeInfo.columnIndex;
-
-                if (this.grid.lastSearchInfo.searchText) {
-                    if (this.index <= oldIndex) {
-                        const newIndex = this.hidden ? oldIndex - 1 : oldIndex + 1;
-                        IgxColumnComponent.updateHighlights(oldIndex, newIndex, this.gridID, this.gridAPI);
-                    } else if (oldIndex === -1 && !this.hidden) {
-                        this.gridAPI.refreshSearch(this.gridID);
-                    }
-                }
                 if (this.hasSummary) {
                     this.grid.summariesHeight = 0;
                 }
@@ -754,21 +743,6 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    public static updateHighlights(oldIndex: number, newIndex: number, gridID: string, gridAPI: IGridAPIService<IGridComponent>) {
-        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(gridID);
-
-        if (activeInfo && activeInfo.columnIndex === oldIndex) {
-            IgxTextHighlightDirective.setActiveHighlight(gridID, {
-                columnIndex: newIndex,
-                rowIndex: activeInfo.rowIndex,
-                index: activeInfo.index,
-                page: activeInfo.page,
-            });
-
-            gridAPI.refreshSearch(gridID, true);
-        }
-    }
-
     constructor(
         public gridAPI: IGridAPIService<IGridComponent>,
         public cdr: ChangeDetectorRef,
@@ -816,27 +790,6 @@ export class IgxColumnComponent implements AfterContentInit {
                     this.filters = IgxStringFilteringOperand;
                     break;
             }
-        }
-    }
-    /**
-     * Updates the highlights when a column index is changed.
-     * ```typescript
-     * this.column.updateHighlights(1, 3);
-     * ```
-     * @memberof IgxColumnComponent
-     */
-    public updateHighlights(oldIndex: number, newIndex: number) {
-        const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
-
-        if (activeInfo && activeInfo.columnIndex === oldIndex) {
-            IgxTextHighlightDirective.setActiveHighlight(this.grid.id, {
-                columnIndex: newIndex,
-                rowIndex: activeInfo.rowIndex,
-                index: activeInfo.index,
-                page: activeInfo.page,
-            });
-
-            this.gridAPI.refreshSearch(this.gridID, true);
         }
     }
     /**
@@ -896,8 +849,6 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         grid.cdr.detectChanges();
-        const newIndex = this.visibleIndex;
-        IgxColumnComponent.updateHighlights(oldIndex, newIndex, this.gridID, this.gridAPI);
         return true;
     }
     /**
@@ -945,8 +896,6 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.reinitPinStates();
 
         grid.cdr.detectChanges();
-        const newIndex = this.visibleIndex;
-        IgxColumnComponent.updateHighlights(oldIndex, newIndex, this.gridID, this.gridAPI);
         return true;
     }
     /**

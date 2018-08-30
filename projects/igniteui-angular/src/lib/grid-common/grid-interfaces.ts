@@ -67,7 +67,6 @@ export interface ISearchInfo {
     caseSensitive: boolean;
     exactMatch: boolean;
     activeMatchIndex: number;
-    collapsedHighlightedItem: any;
     matchInfoCache: any[];
 }
 

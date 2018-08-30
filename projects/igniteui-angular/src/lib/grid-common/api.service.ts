@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray } from '../core/utils';
-import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
+import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxRowComponent } from './row.component';
 import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
 import { IGridEditEventArgs, IGridComponent } from './grid-interfaces';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 /**
  *@hidden
@@ -347,12 +349,218 @@ export class IGridAPIService <T extends IGridComponent> {
         });
     }
 
+    public refreshSearch(id: string, updateActiveInfo?: boolean) {
+        const grid = this.get(id);
+        if (grid && grid.lastSearchInfo.searchText) {
+            this.rebuildMatchCache(id);
+
+            if (updateActiveInfo) {
+                const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(id);
+                grid.lastSearchInfo.matchInfoCache.forEach((match, i) => {
+                    if (match.column === activeInfo.columnID &&
+                        match.row === activeInfo.rowID &&
+                        match.index === activeInfo.index) {
+                            grid.lastSearchInfo.activeMatchIndex = i;
+                    }
+                });
+            }
+
+            return this.find(
+                id,
+                grid.lastSearchInfo.searchText,
+                0,
+                grid.lastSearchInfo.caseSensitive,
+                grid.lastSearchInfo.exactMatch,
+                false
+            );
+        } else {
+            return 0;
+        }
+    }
+
+    public find(id: string, text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
+        const grid = this.get(id);
+        if (!grid || !grid.rowList) {
+            return 0;
+        }
+
+        const editModeCell = this.get_cell_inEditMode(id);
+        if (editModeCell) {
+            this.escape_editMode(id);
+        }
+
+        if (!text) {
+            this.clearSearch(id);
+            return 0;
+        }
+
+        const caseSensitiveResolved = caseSensitive ? true : false;
+        const exactMatchResolved = exactMatch ? true : false;
+        let rebuildCache = false;
+
+        if (grid.lastSearchInfo.searchText !== text ||
+            grid.lastSearchInfo.caseSensitive !== caseSensitiveResolved ||
+            grid.lastSearchInfo.exactMatch !== exactMatchResolved) {
+            grid.lastSearchInfo = {
+                searchText: text,
+                activeMatchIndex: 0,
+                caseSensitive: caseSensitiveResolved,
+                exactMatch: exactMatchResolved,
+                matchInfoCache: []
+            };
+
+            rebuildCache = true;
+        } else {
+            grid.lastSearchInfo.activeMatchIndex += increment;
+        }
+
+        if (rebuildCache) {
+            grid.dataRowList.forEach((row) => {
+                row.cells.forEach((c) => {
+                    c.highlightText(text, caseSensitiveResolved, exactMatchResolved);
+                });
+            });
+
+            this.rebuildMatchCache(id);
+        }
+
+        if (grid.lastSearchInfo.activeMatchIndex >= grid.lastSearchInfo.matchInfoCache.length) {
+            grid.lastSearchInfo.activeMatchIndex = 0;
+        } else if (grid.lastSearchInfo.activeMatchIndex < 0) {
+            grid.lastSearchInfo.activeMatchIndex = grid.lastSearchInfo.matchInfoCache.length - 1;
+        }
+
+        if (grid.lastSearchInfo.matchInfoCache.length) {
+            const matchInfo = grid.lastSearchInfo.matchInfoCache[grid.lastSearchInfo.activeMatchIndex];
+
+            IgxTextHighlightDirective.setActiveHighlight(id, {
+                columnID: matchInfo.column,
+                rowID: matchInfo.row,
+                index: matchInfo.index,
+            });
+
+            if (scroll !== false) {
+                this.scrollTo(id, matchInfo.row, matchInfo.column);
+            }
+        } else {
+            IgxTextHighlightDirective.clearActiveHighlight(id);
+        }
+
+        return grid.lastSearchInfo.matchInfoCache.length;
+    }
+
+    public clearSearch(id: string) {
+        this.get(id).lastSearchInfo = {
+            searchText: '',
+            caseSensitive: false,
+            exactMatch: false,
+            activeMatchIndex: 0,
+            matchInfoCache: []
+        };
+
+        this.get(id).dataRowList.forEach((row) => {
+            row.cells.forEach((c) => {
+                c.clearHighlight();
+            });
+        });
+    }
+
+    protected scrollTo(id: string, row: any, column: any): void {
+        const grid = this.get(id);
+        const rowIndex = grid.filteredSortedData.indexOf(row);
+        let columnIndex = this.get_column_by_name(id, column).visibleIndex;
+
+        if (grid.paging) {
+            grid.page = Math.floor(rowIndex / grid.perPage);
+        }
+
+        this.scrollDirective(id, grid.verticalScrollContainer, rowIndex);
+
+        const scrollRow = grid.rowList.find(r => r.virtDirRow);
+        const virtDir = scrollRow ? scrollRow.virtDirRow : null;
+
+        if (grid.pinnedColumns.length) {
+            if (columnIndex >= grid.pinnedColumns.length) {
+                columnIndex -= grid.pinnedColumns.length;
+                this.scrollDirective(id, virtDir, columnIndex);
+            }
+        } else {
+            this.scrollDirective(id, virtDir, columnIndex);
+        }
+    }
+
+    private scrollDirective(id: string, directive: IgxForOfDirective<any>, goal: number): void {
+        if (!directive) {
+            return;
+        }
+        const grid = this.get(id);
+        const state = directive.state;
+        const start = state.startIndex;
+        const isColumn = directive.igxForScrollOrientation === 'horizontal';
+
+        const size = directive.getItemCountInView();
+
+        if (start >= goal) {
+            // scroll so that goal is at beggining of visible chunk
+            directive.scrollTo(goal);
+        } else if (start + size <= goal) {
+            // scroll so that goal is at end of visible chunk
+            if (isColumn) {
+                directive.getHorizontalScroll().scrollLeft =
+                    directive.getColumnScrollLeft(goal) -
+                    parseInt(directive.igxForContainerSize, 10) +
+                    parseInt(grid.columns[goal].width, 10);
+            } else {
+                directive.scrollTo(goal - size + 1);
+            }
+        }
+    }
+
+    private rebuildMatchCache(id: string) {
+        const grid = this.get(id);
+        grid.lastSearchInfo.matchInfoCache = [];
+
+        const caseSensitive = grid.lastSearchInfo.caseSensitive;
+        const exactMatch = grid.lastSearchInfo.exactMatch;
+        const searchText = caseSensitive ? grid.lastSearchInfo.searchText : grid.lastSearchInfo.searchText.toLowerCase();
+        const data = grid.filteredSortedData;
+        const columnItems = grid.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+
+        data.forEach((dataRow) => {
+            columnItems.forEach((c) => {
+                const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
+                if (value !== undefined && value !== null && c.searchable) {
+                    let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
+
+                    if (exactMatch) {
+                        if (searchValue === searchText) {
+                            grid.lastSearchInfo.matchInfoCache.push({
+                                row: dataRow,
+                                column: c.field,
+                                index: 0,
+                            });
+                        }
+                    } else {
+                        let occurenceIndex = 0;
+                        let searchIndex = searchValue.indexOf(searchText);
+
+                        while (searchIndex !== -1) {
+                            grid.lastSearchInfo.matchInfoCache.push({
+                                row: dataRow,
+                                column: c.field,
+                                index: occurenceIndex++,
+                            });
+
+                            searchValue = searchValue.substring(searchIndex + searchText.length);
+                            searchIndex = searchValue.indexOf(searchText);
+                        }
+                    }
+                }
+            });
+        });
+    }
+
     protected remove_grouping_expression(id: string, fieldName: string) {
 
     }
-
-    public refreshSearch(id: string, updateHighlight?: boolean) {
-
-    }
-
 }

@@ -4,7 +4,7 @@ import { IgxColumnComponent } from './column.component';
 import { QueryList } from '@angular/core';
 import { IgxRowComponent } from './row.component';
 
-fdescribe('API Service - unit tests', () => {
+describe('API Service - unit tests', () => {
     let service: MockGridService;
     let grid: MockGrid;
 
