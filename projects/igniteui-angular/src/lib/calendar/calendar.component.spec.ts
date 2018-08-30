@@ -9,7 +9,8 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 describe('IgxCalendar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [IgxCalendarModule]
+            declarations: [IgxCalendarRenderingComponent],
+            imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
         });
     });
 
