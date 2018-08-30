@@ -179,7 +179,7 @@ export class IgxChipComponent implements AfterViewInit {
     }
 
     /**
-     * Emits event when the `IgxChipComponent` moving starts.
+     * Emits an event when the `IgxChipComponent` moving starts.
      * Returns the moving `IgxChipComponent`.
      * ```typescript
      * moveStarted(event){
@@ -194,7 +194,7 @@ export class IgxChipComponent implements AfterViewInit {
     public onMoveStart = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` moving ends.
+     * Emits an event when the `IgxChipComponent` moving ends.
      * Returns the moved `IgxChipComponent`.
      * ```typescript
      * moveEnded(event){
@@ -209,7 +209,7 @@ export class IgxChipComponent implements AfterViewInit {
     public onMoveEnd = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` is removed.
+     * Emits an event when the `IgxChipComponent` is removed.
      * Returns the removed `IgxChipComponent`.
      * ```typescript
      * remove(event){
@@ -224,7 +224,7 @@ export class IgxChipComponent implements AfterViewInit {
     public onRemove = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` is clicked.
+     * Emits an event when the `IgxChipComponent` is clicked.
      * Returns the clicked `IgxChipComponent`, whether the event should be canceled.
      * ```typescript
      * chipClick(event){
@@ -239,10 +239,10 @@ export class IgxChipComponent implements AfterViewInit {
     public onClick = new EventEmitter<IChipClickEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` is selected.
+     * Emits an event when the `IgxChipComponent` is selected.
      * ```typescript
      * chipSelect(){
-     *     alert("The chip has been selected.");
+     *     let selectedChip = event.owner;
      * }
      * ```
      * ```html
@@ -253,12 +253,12 @@ export class IgxChipComponent implements AfterViewInit {
     public onSelection = new EventEmitter<any>();
 
     /**
-     * Emits event when the `IgxChipComponent` keyboard navigation is being used.
+     * Emits an event when the `IgxChipComponent` keyboard navigation is being used.
      * Returns the focused/selected `IgxChipComponent`, whether the event should be canceled,
      * if the `alt`, `shift` or `control` key is pressed and the pressed key name.
      * ```typescript
      * chipKeyDown(event){
-     *     keyDown = event.key;
+     *     let keyDown = event.key;
      * }
      * ```
      * ```html
@@ -269,12 +269,12 @@ export class IgxChipComponent implements AfterViewInit {
     public onKeyDown = new EventEmitter<IChipKeyDownEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` has entered the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent` the drag `IgxChipComponent` as  well as
-     * original drop event arguments.
+     * Emits an event when the `IgxChipComponent` has entered the `IgxChipsAreaComponent`.
+     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * the original drop event arguments.
      * ```typescript
      * chipEnter(event){
-     *     targetChip = event.targetChip;
+     *     let targetChip = event.targetChip;
      * }
      * ```
      * ```html
