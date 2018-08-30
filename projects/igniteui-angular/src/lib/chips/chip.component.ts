@@ -251,12 +251,12 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * Emits an event when the `IgxChipComponent` is selected.
      * ```typescript
-     * chipSelect(){
+     * chipSelect(event){
      *     let selectedChip = event.owner;
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onSelection)="chipSelect()">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onSelection)="chipSelect($event)">
      * ```
      */
     @Output()
