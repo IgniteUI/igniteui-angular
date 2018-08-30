@@ -182,8 +182,8 @@ export class IgxChipComponent implements AfterViewInit {
      * Emits an event when the `IgxChipComponent` moving starts.
      * Returns the moving `IgxChipComponent`.
      * ```typescript
-     * moveStarted(event){
-     *     let movingChip = event;
+     * moveStarted(event: IBaseChipEventArgs){
+     *     let movingChip = event.owner;
      * }
      * ```
      * ```html
@@ -197,8 +197,8 @@ export class IgxChipComponent implements AfterViewInit {
      * Emits an event when the `IgxChipComponent` moving ends.
      * Returns the moved `IgxChipComponent`.
      * ```typescript
-     * moveEnded(event){
-     *     let movedChip = event.
+     * moveEnded(event: IBaseChipEventArgs){
+     *     let movedChip = event.owner;
      * }
      * ```
      * ```html
@@ -212,8 +212,8 @@ export class IgxChipComponent implements AfterViewInit {
      * Emits an event when the `IgxChipComponent` is removed.
      * Returns the removed `IgxChipComponent`.
      * ```typescript
-     * remove(event){
-     *     let removedChip = event
+     * remove(event: IBaseChipEventArgs){
+     *     let removedChip = event.owner;
      * }
      * ```
      * ```html
@@ -227,7 +227,7 @@ export class IgxChipComponent implements AfterViewInit {
      * Emits an event when the `IgxChipComponent` is clicked.
      * Returns the clicked `IgxChipComponent`, whether the event should be canceled.
      * ```typescript
-     * chipClick(event){
+     * chipClick(event: IChipClickEventArgs){
      *     let clickedChip = event.owner;
      * }
      * ```
@@ -241,7 +241,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * Emits an event when the `IgxChipComponent` is selected.
      * ```typescript
-     * chipSelect(event){
+     * chipSelect(event: IChipSelectEventArgs){
      *     let selectedChip = event.owner;
      * }
      * ```
@@ -257,7 +257,7 @@ export class IgxChipComponent implements AfterViewInit {
      * Returns the focused/selected `IgxChipComponent`, whether the event should be canceled,
      * if the `alt`, `shift` or `control` key is pressed and the pressed key name.
      * ```typescript
-     * chipKeyDown(event){
+     * chipKeyDown(event: IChipKeyDownEventArgs){
      *     let keyDown = event.key;
      * }
      * ```
@@ -273,7 +273,7 @@ export class IgxChipComponent implements AfterViewInit {
      * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
      * the original drop event arguments.
      * ```typescript
-     * chipEnter(event){
+     * chipEnter(event: IChipEnterDragAreaEventArgs){
      *     let targetChip = event.targetChip;
      * }
      * ```
