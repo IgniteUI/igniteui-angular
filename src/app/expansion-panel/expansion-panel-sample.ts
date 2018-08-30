@@ -39,7 +39,7 @@ export class ExpansionPanelSampleComponent implements OnInit {
     public score: number;
     public data = [];
     public winningPlayer;
-    public iconPosition = 'left';
+    public iconPosition = 'right';
     private rounds = 5;
     public get currentScore(): { 'Player 1': number,
     'Player 2': number} {
@@ -100,6 +100,6 @@ export class ExpansionPanelSampleComponent implements OnInit {
     }
 
     toggleLeftRight() {
-        this.iconPosition = this.iconPosition === 'left' ? 'right' : 'left';
+        this.iconPosition = this.iconPosition === 'right' ? 'left' : 'right' ;
     }
 }
