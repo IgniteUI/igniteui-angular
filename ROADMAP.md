@@ -5,7 +5,7 @@
 ## Milestone 5 (by November 30th, 2018)
 
 1. Hierarchical Grid POC (Proof of concept) [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)
-2. Tree Grid
+2. Tree Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2530)
 3. Advanced Filtering Dialog
 4. Quick Per-column Search in the igxGrid
 5. Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
