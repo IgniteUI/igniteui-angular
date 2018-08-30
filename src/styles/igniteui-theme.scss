@@ -41,4 +41,29 @@ $exclude: (
 @include igx-core();
 @include igx-theme($default-palette, $exclude, $legacy-support: true);
 
-@include igx-color-classes('background-color');
+/// Typography samples
+// $button-type-style: igx-type-style(
+//     $font-weight: 700,
+//     $text-transform: lowercase,
+//     $font-family: 'Roboto'
+// );
+
+// $h5-style: igx-type-style($font-size: rem(18px));
+// $overline-style: igx-type-style($font-family: 'Dosis', $font-size: 14px);
+// $my-type-scale: igx-type-scale($overline: $caption-style, $button: $button-type-style);
+// $my-type-scale-1: igx-type-scale($h5: $h5-style, $overline: $overline-style);
+
+// @include igx-typography($type-scale: $my-type-scale);
+
+// @include igx-color-classes('background-color');
+
+// .my-cool-card {
+//     @include igx-card-typography($my-type-scale-1, (title: 'overline'));
+// }
+
+// .h1-mod {
+//     @include igx-type-style($my-type-scale, 'h1') {
+//         font-family: 'Arial', serif;
+//         color: red;
+//     }
+// }

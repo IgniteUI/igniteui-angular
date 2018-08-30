@@ -112,6 +112,16 @@ export class IgxGridGroupByRowComponent {
     }
 
     /**
+     * Returns a reference to the underlying HTML element.
+     * ```typescript
+     * const groupRowElement = this.nativeElement;
+     * ```
+     */
+    get nativeElement(): HTMLElement {
+        return this.element.nativeElement;
+    }
+
+    /**
      * Returns the style classes applied to the group rows.
      * ```typescript
      * const groupCssStyles = this.grid1.rowList.first.styleClasses;
@@ -151,6 +161,13 @@ export class IgxGridGroupByRowComponent {
      */
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
+    }
+
+    /**
+     * @hidden
+     */
+    get dataType(): any {
+        return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
     }
 
     /**

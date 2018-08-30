@@ -1628,37 +1628,37 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(combo.collapsed).toBeFalsy();
-            // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines
+            // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
             expect(combo.itemHeight).toEqual(32); // Default value for itemHeight
             expect(combo.itemsMaxHeight).toEqual(320); // Default value for itemsMaxHeight
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.' + CSS_CLASS_CONTENT));
             expect(dropdownList.nativeElement.clientHeight).toEqual(320);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(32);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
-            combo.itemHeight = 47;
+            combo.itemHeight = 48;
             tick();
             fix.detectChanges();
-            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemHeight).toEqual(48);
             expect(combo.itemsMaxHeight).toEqual(320);
             expect(dropdownList.nativeElement.clientHeight).toEqual(320);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemsMaxHeight = 438;
             tick();
             fix.detectChanges();
-            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemHeight).toEqual(48);
             expect(combo.itemsMaxHeight).toEqual(438);
             expect(dropdownList.nativeElement.clientHeight).toEqual(438);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemsMaxHeight = 1171;
             tick();
             fix.detectChanges();
-            expect(combo.itemHeight).toEqual(47);
+            expect(combo.itemHeight).toEqual(48);
             expect(combo.itemsMaxHeight).toEqual(1171);
             expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemHeight = 83;
             tick();
@@ -3080,17 +3080,17 @@ class IgxComboScrollTestComponent {
 <igx-combo #combo [placeholder]="'Location'" [data]='items'
 [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
 (onSelectionChange)="onSelectionChange($event)" [allowCustomValues]="true">
-<ng-template #itemTemplate let-display let-key="valueKey">
+<ng-template igxComboItem let-display let-key="valueKey">
 <div class="state-card--simple">
 <span class="small-red-circle"></span>
 <div class="display-value--main">State: {{display[key]}}</div>
 <div class="display-value--sub">Region: {{display.region}}</div>
 </div>
 </ng-template>
-<ng-template #headerTemplate>
+<ng-template igxComboHeader>
 <div class="header-class">This is a header</div>
 </ng-template>
-<ng-template #footerTemplate>
+<ng-template igxComboFooter>
 <div class="footer-class">This is a footer</div>
 </ng-template>
 </igx-combo>
