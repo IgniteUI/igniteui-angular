@@ -276,7 +276,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this.column.grid.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
-        const currSelection = this.column.grid.selectionAPI.get_selection_first(this.column.gridID + '-cell');
+        const currSelection = this.column.grid.selection.first_item(this.column.gridID + '-cell');
         if (currSelection) {
             this.cms.selection = {
                 column: this.column.grid.columnList.toArray()[currSelection.columnID],
@@ -516,7 +516,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
 
-                this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cell', new Set([{
+                this.column.grid.selection.set(this.column.gridID + '-cell', new Set([{
                     rowID: this.cms.selection.rowID,
                     columnID: colID
                 }]));
