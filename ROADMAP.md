@@ -62,7 +62,7 @@
 7. **[DONE]** Column Moving
 8. **[DONE]** Update to Angular 6
 9. **[DONE]** Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
-10.**[DONE]** Design: Data dense theme for data grid 
+10. **[DONE]** Design: Data dense theme for data grid 
 
 
 # Postponed
