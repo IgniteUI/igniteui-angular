@@ -4,17 +4,17 @@
 
 ## Milestone 5 (by November 30th, 2018)
 
-1. Hierarchical Grid POC (Proof of concept)  
+1. Hierarchical Grid POC (Proof of concept) [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)
 2. Tree Grid
 3. Advanced Filtering Dialog
 4. Quick Per-column Search in the igxGrid
-5. Collapsable Item 
-6. Conditional Cell Styling capability 
+5. Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
+6. Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
 7. Typography Updates 
-8. Tooltip
-9. Vertical Tabs
-10. Row Editing with transactions   
-11. Adding Disabled Dates and Special Dates options in igxCalander
+8. Tooltip [issue](https://github.com/IgniteUI/igniteui-angular/issues/1710)
+9. Vertical Tabs - Canceled 
+10. Row Editing with transactions [issie](https://github.com/IgniteUI/igniteui-angular/issues/566)
+11. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
 
 # Previous Milestones
 
