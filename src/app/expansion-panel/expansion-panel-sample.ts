@@ -1,5 +1,4 @@
-import { IgxExpansionPanelComponent, slideInTop, slideOutTop, scaleInTop,
-    scaleInVerBottom, scaleInVerTop, scaleOutVerBottom, scaleOutVerTop, ICON_POSITION } from 'igniteui-angular';
+import { IgxExpansionPanelComponent, scaleInVerTop, scaleOutVerTop } from 'igniteui-angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AnimationReferenceMetadata } from '@angular/animations';
 
