@@ -76,7 +76,7 @@ export class IgxChipsAreaComponent implements DoCheck {
     public height: number;
 
     /**
-     * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` are reordered.
+     * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` are reordered.
      * Returns an array of `IgxChipComponent`s.
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder()"></igx-chips-area>
