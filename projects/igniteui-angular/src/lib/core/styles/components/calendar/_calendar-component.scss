@@ -109,6 +109,21 @@
         }
     }
 
+    @include e(date, 'special') {
+        @extend %cal-value !optional;
+        @extend %cal-value--special !optional;
+    }
+
+    @include e(date, 'disabled') {
+        @extend %cal-value !optional;
+        @extend %cal-value--disabled !optional;
+    }
+
+    @include e(date, $mods: ('disabled', 'inactive')) {
+        @extend %cal-value !optional;
+        @extend %cal-value--disabled !optional;
+    }
+
     @include e(year) {
         @extend %cal-value !optional;
         @extend %cal-value--year !optional;
