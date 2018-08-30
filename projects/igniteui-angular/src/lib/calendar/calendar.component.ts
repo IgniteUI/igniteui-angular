@@ -733,6 +733,40 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
+     * Deselects date(s) (based on the selection type).
+     *```typescript
+     * this.calendar.deselectDate(new Date(`2018-06-12`));
+     *````
+     */
+    public deselectDate(value?: Date | Date[]) {
+        if (value === null || value === undefined) {
+            this.selectedDates = this.selection === 'single' ? null : [];
+            return;
+        }
+
+        const datesInMsToDeselect: Set<number> = new Set<number>();
+        if (Array.isArray(value)) {
+            for (const date of value) {
+                datesInMsToDeselect.add(this.getDateOnlyInMs(date));
+            }
+        } else {
+            datesInMsToDeselect.add(this.getDateOnlyInMs(value));
+        }
+
+        if (Array.isArray(this.selectedDates)) {
+            for (let i = 0; i < this.selectedDates.length; i++) {
+                if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
+                    this.selectedDates.splice(i, 1);
+                }
+            }
+        } else if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates))) {
+            this.selectedDates = null;
+        }
+
+        this._onChangeCallback(this.selectedDates);
+    }
+
+    /**
      * @hidden
      */
     public generateWeekHeader(): string[] {
@@ -1037,6 +1071,12 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             return;
         }
         this._viewDate = this.calendarModel.timedelta(this._viewDate, 'year', delta);
+    }
+    /**
+     *@hidden
+     */
+    private getDateOnlyInMs(date: Date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
     }
     /**
      *@hidden
