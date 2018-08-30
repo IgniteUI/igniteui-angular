@@ -7,15 +7,13 @@ import { GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec'
 
 export class TestMethods {
 
-    public static async testRawData(myGrid: IgxGridComponent, action: (grid) => void) {
+    public static testRawData(myGrid: IgxGridComponent, action: (grid) => void) {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         myGrid = fix.componentInstance.grid;
 
-        fix.whenStable().then(() => {
-            expect(myGrid.rowList.length).toEqual(10, 'Invalid number of rows initialized!');
-            action(myGrid);
-        });
+        expect(myGrid.rowList.length).toEqual(10, 'Invalid number of rows initialized!');
+        action(myGrid);
     }
 
     /* Creates an instance of GridDeclarationComponent; If filterParams is not specified,

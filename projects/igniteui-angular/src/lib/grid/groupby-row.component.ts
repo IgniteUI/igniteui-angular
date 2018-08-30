@@ -22,7 +22,7 @@ import { IgxGridComponent } from './grid.component';
 export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: IgxGridAPIService,
-                private selectionAPI: IgxSelectionAPIService,
+                private selection: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
@@ -112,6 +112,16 @@ export class IgxGridGroupByRowComponent {
     }
 
     /**
+     * Returns a reference to the underlying HTML element.
+     * ```typescript
+     * const groupRowElement = this.nativeElement;
+     * ```
+     */
+    get nativeElement(): HTMLElement {
+        return this.element.nativeElement;
+    }
+
+    /**
      * Returns the style classes applied to the group rows.
      * ```typescript
      * const groupCssStyles = this.grid1.rowList.first.styleClasses;
@@ -151,6 +161,13 @@ export class IgxGridGroupByRowComponent {
      */
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
+    }
+
+    /**
+     * @hidden
+     */
+    get dataType(): any {
+        return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
     }
 
     /**
@@ -197,14 +214,14 @@ export class IgxGridGroupByRowComponent {
     }
 
     private _getSelectedColIndex() {
-        const cell = this.selectionAPI.get_selection_first(this.gridID + '-cell');
+        const cell = this.selection.first_item(this.gridID + '-cell');
         if (cell) {
             return cell.columnID;
         }
     }
 
     private _getPrevSelectedColIndex() {
-        const prevCell = this.selectionAPI.get_selection_first(this.gridID + '-prev-cell');
+        const prevCell = this.selection.first_item(this.gridID + '-prev-cell');
         if (prevCell) {
             return prevCell.columnID;
         }

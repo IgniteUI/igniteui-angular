@@ -7,7 +7,7 @@
 
 /// Grid Summary Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background-color [rgba(0, 0, 0, .02)] - The summaries background color.
+/// @param {Color} $background-color [#f4f4f4] - The summaries background color is inherited form igx-grid__tfoot
 /// @param {Color} $label-color [primary 500] - The summaries label color.
 /// @param {Color} $result-color [rgba(0, 0, 0, .74)] - The summaries value/result color.
 /// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The summaries border color.
