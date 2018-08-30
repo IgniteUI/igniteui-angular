@@ -37,6 +37,7 @@ export interface IBaseChipAreaEventArgs {
 
 export interface IChipReorderEventArgs {
     chipsArray: IgxChipComponent[];
+    isValid: boolean;
 }
 
 export interface IChipAreaSelectEventArgs extends IBaseChipAreaEventArgs {
@@ -79,11 +80,11 @@ export class IgxChipsAreaComponent implements DoCheck {
      * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` are reordered.
      * Returns an array of `IgxChipComponent`s.
      * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder()"></igx-chips-area>
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder($event)"></igx-chips-area>
      * ```
      * ```typescript
-     * public changedOrder(){
-     *      alert("The order has been changed!");
+     * public changedOrder(event: IChipReorderEventArgs){
+     *      let chips: IgxChipComponent[] = event.chipsArray;
      * }
      * ```
      */
@@ -94,11 +95,11 @@ export class IgxChipsAreaComponent implements DoCheck {
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected.
      * Returns an array of selected `IgxChipComponent`s and the `IgxChipAreaComponent`.
      * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onSelection)="selection()"></igx-chips-area>
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onSelection)="selection($event)"></igx-chips-area>
      * ```
      * ```typescript
-     * public selection(){
-     *      alert("A chip has been selected!");
+     * public selection(event: IChipAreaSelectEventArgs){
+     *      let selectedChips: IgxChipComponent[] = event.newSelection;
      * }
      */
     @Output()
@@ -107,11 +108,11 @@ export class IgxChipsAreaComponent implements DoCheck {
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
      * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveStart)="moveStart()"></igx-chips-area>
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveStart)="moveStart($event)"></igx-chips-area>
      * ```
      * ```typescript
-     * moveStart(){
-     *      alert("A chip has started moving!");
+     * moveStart(event: IBaseChipAreaEventArgs){
+     *      let chipArea = event.owner;
      * }
      * ```
      */
@@ -121,11 +122,11 @@ export class IgxChipsAreaComponent implements DoCheck {
     /**
      * Emits an event after an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
      * ```html
-     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveEnd)="moveEnd()"></igx-chips-area>
+     * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveEnd)="moveEnd($event)"></igx-chips-area>
      * ```
      * ```typescript
-     * moveEnd(){
-     *      alert("A chip has been moved!");
+     * moveEnd(event: IBaseChipAreaEventArgs){
+     *      let chipArea = event.owner;
      * }
      * ```
      */
@@ -287,7 +288,8 @@ export class IgxChipsAreaComponent implements DoCheck {
         this.modifiedChipsArray = result;
 
         const eventData: IChipReorderEventArgs = {
-            chipsArray: this.modifiedChipsArray
+            chipsArray: this.modifiedChipsArray,
+            isValid: true
         };
         this.onReorder.emit(eventData);
         return true;
