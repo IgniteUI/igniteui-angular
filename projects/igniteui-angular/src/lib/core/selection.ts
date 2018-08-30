@@ -9,7 +9,7 @@ export class IgxSelectionAPIService {
      * Get current component selection.
      * @param componentID ID of the component.
      */
-    public get_selection(componentID: string): Set<any> {
+    public get(componentID: string): Set<any> {
         return this.selection.get(componentID);
     }
 
@@ -18,16 +18,24 @@ export class IgxSelectionAPIService {
      * @param componentID ID of the component.
      * @param newSelection The new component selection to be set.
      */
-    public set_selection(componentID: string, newSelection: Set<any>) {
+    public set(componentID: string, newSelection: Set<any>) {
         this.selection.set(componentID, newSelection);
+    }
+
+    /**
+     * Clears selection for component.
+     * @param componentID ID of the component.
+     */
+    public clear(componentID: string) {
+        this.selection.set(componentID, this.get_empty());
     }
 
     /**
      * Get current component selection length.
      * @param componentID ID of the component.
      */
-    public get_selection_length(componentID: string): number {
-        const sel = this.get_selection(componentID);
+    public size(componentID: string): number {
+        const sel = this.get(componentID);
         return sel ? sel.size : 0;
     }
 
@@ -44,10 +52,10 @@ export class IgxSelectionAPIService {
      */
     public add_item(componentID: string, itemID, sel?: Set<any>): Set<any> {
         if (!sel) {
-            sel = new Set(this.get_selection(componentID));
+            sel = new Set(this.get(componentID));
         }
         if (sel === undefined) {
-            sel = new Set();
+            sel = this.get_empty();
         }
         sel.add(itemID);
         return sel;
@@ -67,7 +75,7 @@ export class IgxSelectionAPIService {
     public add_items(componentID: string, itemIDs: any[], clearSelection?: boolean): Set<any> {
         let selection: Set<any>;
         if (clearSelection) {
-            selection = new Set();
+            selection = this.get_empty();
         }
         itemIDs.forEach((item) => selection = this.add_item(componentID, item, selection));
         return selection;
@@ -80,7 +88,7 @@ export class IgxSelectionAPIService {
      * @param sel Used internally only by the selection (select_items method) to accumulate selection for multiple items.
      */
     public select_item(componentID: string, itemID, sel?: Set<any>) {
-        this.set_selection(componentID, this.add_item(componentID, itemID, sel));
+        this.set(componentID, this.add_item(componentID, itemID, sel));
     }
 
     /**
@@ -90,7 +98,7 @@ export class IgxSelectionAPIService {
      * @param clearSelection If true it will clear previous selection.
      */
     public select_items(componentID: string, itemID: any[], clearSelection?: boolean) {
-        this.set_selection(componentID, this.add_items(componentID, itemID, clearSelection));
+        this.set(componentID, this.add_items(componentID, itemID, clearSelection));
     }
 
     /**
@@ -106,7 +114,7 @@ export class IgxSelectionAPIService {
      */
     public delete_item(componentID: string, itemID, sel?: Set<any>) {
         if (!sel) {
-            sel = new Set(this.get_selection(componentID));
+            sel = new Set(this.get(componentID));
         }
         if (sel === undefined) {
             return;
@@ -138,7 +146,7 @@ export class IgxSelectionAPIService {
      * @param sel Used internally only by the selection (deselect_items method) to accumulate selection for multiple items.
      */
     public deselect_item(componentID: string, itemID, sel?: Set<any>) {
-        this.set_selection(componentID, this.delete_item(componentID, itemID, sel));
+        this.set(componentID, this.delete_item(componentID, itemID, sel));
     }
 
     /**
@@ -147,7 +155,7 @@ export class IgxSelectionAPIService {
      * @param itemIDs Array of IDs of the items to add to component selection.
      */
     public deselect_items(componentID: string, itemID: any[], clearSelection?: boolean) {
-        this.set_selection(componentID, this.delete_items(componentID, itemID));
+        this.set(componentID, this.delete_items(componentID, itemID));
     }
 
     /**
@@ -158,7 +166,7 @@ export class IgxSelectionAPIService {
      * @returns If item is selected.
      */
     public is_item_selected(componentID: string, itemID): boolean {
-        const sel = this.get_selection(componentID);
+        const sel = this.get(componentID);
         if (!sel) {
             return false;
         }
@@ -173,8 +181,8 @@ export class IgxSelectionAPIService {
      *
      * @returns First element in the set.
      */
-    public get_selection_first(componentID: string) {
-        const sel = this.get_selection(componentID);
+    public first_item(componentID: string) {
+        const sel = this.get(componentID);
         if (sel && sel.size > 0) {
             return sel.values().next().value;
        }
@@ -188,7 +196,7 @@ export class IgxSelectionAPIService {
      * @returns If all items are selected.
      */
     public are_all_selected(componentID: string, data): boolean {
-        return this.get_selection_length(componentID) === data.length;
+        return this.size(componentID) === data.length;
     }
 
     /**
@@ -199,7 +207,7 @@ export class IgxSelectionAPIService {
      * @returns If there is any item selected.
      */
     public are_none_selected(componentID: string): boolean {
-        return this.get_selection_length(componentID) === 0;
+        return this.size(componentID) === 0;
     }
 
     /**
@@ -211,5 +219,13 @@ export class IgxSelectionAPIService {
      */
     public get_all_ids(data, primaryKey?) {
         return primaryKey ? data.map((x) => x[primaryKey]) : data;
+    }
+
+    /**
+     * Returns empty selection collection.
+     * @returns empty set.
+    */
+    public get_empty() {
+        return new Set();
     }
 }
