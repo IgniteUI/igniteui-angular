@@ -2493,6 +2493,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this._moveColumns(column, dropTarget);
+        this.cdr.detectChanges();
     }
 
     /**
@@ -2584,23 +2585,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
-            if (row) {
-                const index = this.data.indexOf(row.rowData);
+            const index = this.gridAPI.get(this.id).data.map((record) => record[this.gridAPI.get(this.id).primaryKey]).indexOf(rowSelector);
+            if (index !== -1) {
                 const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                if (editableCell && editableCell.cellID.rowID === row.rowID) {
+                if (editableCell && editableCell.cellID.rowID === rowSelector) {
                     this.gridAPI.escape_editMode(this.id, editableCell.cellID);
                 }
-                if (this.rowSelectable === true) {
-                    this.deselectRows([row.rowID]);
-                }
+                this.onRowDeleted.emit({ data: this.data[index] });
                 this.data.splice(index, 1);
-                this.onRowDeleted.emit({ data: row.rowData });
+                if (this.rowSelectable === true && this.selectionAPI.is_item_selected(this.id, rowSelector)) {
+                    this.deselectRows([rowSelector]);
+                } else {
+                    this.checkHeaderCheckboxStatus();
+                }
                 this._pipeTrigger++;
                 this.cdr.markForCheck();
 
                 this.refreshSearch();
-
                 if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
                     this.page--;
                 }
@@ -2651,22 +2652,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public updateRow(value: any, rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const row = this.gridAPI.get_row_by_key(this.id, rowSelector);
-            if (row) {
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                if (editableCell && editableCell.cellID.rowID === row.rowID) {
-                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-                }
-                if (this.rowSelectable === true && row.isSelected) {
-                    this.deselectRows([row.rowID]);
-                    this.gridAPI.update_row(value, this.id, row);
-                    this.selectRows([value[this.primaryKey]]);
-                } else {
-                    this.gridAPI.update_row(value, this.id, row);
-                }
-                this.cdr.markForCheck();
-                this.refreshSearch();
+            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+            if (editableCell && editableCell.cellID.rowID === rowSelector) {
+                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
             }
+            this.gridAPI.update_row(value, this.id, rowSelector);
+            this.cdr.markForCheck();
+            this.refreshSearch();
         }
     }
 
@@ -3818,7 +3810,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 const scrollAmount = targetEndTopOffset - containerHeight;
                 this.performVerticalScroll(scrollAmount, rowIndex, columnIndex);
             } else {
-                target.nativeElement.focus();
+                if (row instanceof IgxGridGroupByRowComponent) {
+                    target.nativeElement.focus();
+                } else {
+                    (target as any)._updateCellSelectionStatus();
+                }
             }
         } else {
             const contentHeight = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
@@ -3853,7 +3849,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     -this.rowHeight + Math.abs(containerTopOffset);
                     this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex);
             }
-            target.nativeElement.focus();
+            if (row instanceof IgxGridGroupByRowComponent) {
+                target.nativeElement.focus();
+            } else {
+                (target as any)._updateCellSelectionStatus();
+            }
         } else {
             const scrollOffset =
                 -parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
@@ -3877,25 +3877,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
         this.subscribeNext(virtualDir, () => {
-            this.cdr.detectChanges();
             let target;
+            this.cdr.detectChanges();
             row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-            target = this.gridAPI.get_cell_by_visible_index(
-                this.id,
-                rowIndex,
-                columnIndex);
+            target = this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
+
             if (!target) {
                 if (dir) {
                     target = dir === 'left' ? row.cells.first : row.cells.last;
                 } else if (row instanceof IgxGridGroupByRowComponent) {
                     target = row.groupContent;
+                    target.nativeElement.focus();
+                    return;
                 } else if (row) {
                     target = row.cells.first;
                 } else {
                     return;
                 }
             }
-            target.nativeElement.focus();
+            target._updateCellSelectionStatus();
+            this.cdr.detectChanges();
         });
     }
 
@@ -4400,43 +4401,4 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.verticalScrollContainer.scrollPrevPage();
         this.nativeElement.focus();
     }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event) {
-        event.preventDefault();
-        this.verticalScrollContainer.addScrollTop(this.rowHeight);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event) {
-        event.preventDefault();
-        this.verticalScrollContainer.addScrollTop(-(this.rowHeight));
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowleft', ['$event'])
-    public onKeydownArrowLeft(event) {
-        event.preventDefault();
-        const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
-        horVirtScroll.scrollLeft -= MINIMUM_COLUMN_WIDTH;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowright', ['$event'])
-    public onKeydownArrowRight(event) {
-        event.preventDefault();
-        const horVirtScroll = this.parentVirtDir.getHorizontalScroll();
-        horVirtScroll.scrollLeft += MINIMUM_COLUMN_WIDTH;
-    }
-
 }
