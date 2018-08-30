@@ -12,7 +12,7 @@
 6. Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
 7. Typography Updates 
 8. Tooltip [issue](https://github.com/IgniteUI/igniteui-angular/issues/1710)
-9. Vertical Tabs - Canceled 
+9. **[Removed]** Vertical Tabs - material doesn't define vertical tabs 
 10. Row Editing with transactions [issie](https://github.com/IgniteUI/igniteui-angular/issues/566)
 11. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
 
