@@ -50,7 +50,10 @@
             font-weight: 500
 
 .tsd-nav-toggle
-    button
+    label
+        display: inline-flex
+        justify-content: center
+        align-items: center
         background-color: #333
         border: 1px solid #333
         color: #fff
@@ -64,8 +67,18 @@
         +size-md-lg
             display: none
 
+    input[type='checkbox']
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate3d(-50%, -50%, 0)
+        z-index: -1
+
+    input[type='checkbox']:checked ~ .tsd-nav
+        transform: translateY(0)
+
 .tsd-nav
-    display: none
+    position: absolute
     flex-flow: column nowrap
     align-items: center
     width: 100%
@@ -73,8 +86,16 @@
     list-style: none
     margin: 0
     padding: 16px
+    background: #222
     border-top: 1px solid rgba(white, .1)
     box-shadow: 0 -1px 0 black
+    box-sizing: border-box
+    top: 110px
+    left: 0
+    right: 0
+    transform: translateY(-110px)
+    z-index: -1
+    transition: transform .25s ease-in-out
 
     &-item
         width: 100%
@@ -84,6 +105,7 @@
         margin-top: 10px
 
     +size-md-lg
+        position: relative
         display: flex
         flex-flow: row nowrap
         border: none
@@ -91,6 +113,12 @@
         padding: 0
         width: auto
         flex: 0
+        top: initial
+        left: initial
+        right: initial
+        transform: translateY(0)
+        z-index: initial
+        transition: none
 
         &-item
             width: initial
