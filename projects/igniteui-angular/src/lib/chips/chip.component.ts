@@ -44,6 +44,12 @@ export interface IChipEnterDragAreaEventArgs {
     originalEvent: IgxDropEnterEventArgs;
 }
 
+export interface IChipSelectEventArgs {
+    owner: IgxChipComponent;
+    cancel: boolean;
+    selected: boolean;
+}
+
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
