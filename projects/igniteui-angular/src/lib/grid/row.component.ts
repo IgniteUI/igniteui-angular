@@ -113,7 +113,7 @@ export class IgxGridRowComponent implements DoCheck {
     protected isFocused = false;
 
     constructor(public gridAPI: IgxGridAPIService,
-                private selectionAPI: IgxSelectionAPIService,
+                private selection: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
@@ -130,8 +130,8 @@ export class IgxGridRowComponent implements DoCheck {
 
     public onCheckboxClick(event) {
         const newSelection = (event.checked) ?
-                            this.selectionAPI.add_item(this.gridID, this.rowID) :
-                            this.selectionAPI.delete_item(this.gridID, this.rowID);
+                            this.selection.add_item(this.gridID, this.rowID) :
+                            this.selection.delete_item(this.gridID, this.rowID);
         this.grid.triggerRowSelectionChange(newSelection, this, event);
     }
 
@@ -175,8 +175,8 @@ export class IgxGridRowComponent implements DoCheck {
 
     public ngDoCheck() {
         this.isSelected = this.rowSelectable ?
-            this.grid.allRowsSelected ? true : this.selectionAPI.is_item_selected(this.gridID, this.rowID) :
-            this.selectionAPI.is_item_selected(this.gridID, this.rowID);
+            this.grid.allRowsSelected ? true : this.selection.is_item_selected(this.gridID, this.rowID) :
+            this.selection.is_item_selected(this.gridID, this.rowID);
         this.cdr.markForCheck();
         if (this.checkboxElement) {
             this.checkboxElement.checked = this.isSelected;
