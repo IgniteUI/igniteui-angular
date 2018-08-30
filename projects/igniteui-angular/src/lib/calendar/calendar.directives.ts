@@ -155,6 +155,14 @@ export class IgxCalendarDateDirective {
         return day === 0 || day === 6;
     }
 
+    get isDisabled(): boolean {
+        return this.calendar.isDateDisabled(this.date.date);
+    }
+
+    get isSpecial(): boolean {
+        return this.calendar.isDateSpecial(this.date.date);
+    }
+
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
@@ -181,6 +189,16 @@ export class IgxCalendarDateDirective {
     @HostBinding('class.igx-calendar__date--weekend')
     get isWeekendCSS(): boolean {
         return this.isWeekend;
+    }
+
+    @HostBinding('class.igx-calendar__date--disabled')
+    get isDisabledCSS(): boolean {
+        return this.isDisabled;
+    }
+
+    @HostBinding('class.igx-calendar__date--special')
+    get isSpecialCSS(): boolean {
+        return this.isSpecial;
     }
 
     private _selected = false;
