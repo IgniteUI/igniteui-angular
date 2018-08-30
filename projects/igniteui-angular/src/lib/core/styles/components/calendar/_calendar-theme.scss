@@ -41,6 +41,11 @@
 /// @param {Color} $date-current-text-color [secondary 500] - The text color for the current date.
 /// @param {Color} $date-hover-background [rgba(0, 0, 0, .08)] - The hover date background color.
 ///
+/// @param {Color} $date-special-background [rgba(0, 0, 0, .87)] - The background color used for special dates.
+/// @param {Color} $date-special-text-color [rgba(0, 0, 0, .04] - The text color used for special dates.
+///
+/// @param {Color} $date-disabled-text-color [rgba(0, 0, 0, .23)] - The text color for disabled dates.
+///
 /// @requires igx-color
 /// @requires igx-contrast-color
 /// @requires text-contrast
@@ -81,7 +86,12 @@
     $date-selected-text-color: null,
 
     $date-current-text-color: null,
-    $date-hover-background: null
+    $date-hover-background: null,
+
+    $date-special-background: null,
+    $date-special-text-color: null,
+
+    $date-disabled-text-color: null
 ) {
     $default-theme: (
         name: 'igx-calendar',
@@ -99,7 +109,7 @@
         picker-text-hover-color: igx-color($palette, 'secondary', 500),
 
         inactive-text-color: igx-color($palette, 'grays', 400),
-        weekend-text-color: igx-color($palette, 'grays', 400),
+        weekend-text-color: igx-color($palette, 'grays', 500),
 
         year-current-text-color: igx-color($palette, 'secondary', 500),
         month-current-text-color: igx-color($palette, 'secondary', 500),
@@ -111,7 +121,12 @@
         date-selected-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         date-current-text-color: igx-color($palette, 'secondary', 500),
-        date-hover-background: igx-color($palette, 'grays', 200)
+        date-hover-background: igx-color($palette, 'grays', 200),
+
+        date-special-background: igx-color($palette, 'grays', 100),
+        date-special-text-color: igx-color($palette, 'grays', 900),
+
+        date-disabled-text-color: rgba(hexrgba(igx-color($palette, 'grays', 500)), .6)
     );
 
 
@@ -163,6 +178,14 @@
         $date-current-text-color: $header-background;
     }
 
+    @if not($date-special-background) and $content-background {
+        $date-special-background: rgba(text-contrast($content-background), .04);
+    }
+
+    @if not($date-special-text-color) and $date-special-background {
+        $date-special-text-color: text-contrast($date-special-background);
+    }
+
     @if not($year-hover-text-color) and $header-background {
         $year-hover-text-color: $header-background;
     }
@@ -207,7 +230,12 @@
         date-selected-text-color: $date-selected-text-color,
 
         date-current-text-color: $date-current-text-color,
-        date-hover-background: $date-hover-background
+        date-hover-background: $date-hover-background,
+
+        date-special-text-color: $date-special-text-color,
+        date-special-background: $date-special-background,
+
+        date-disabled-text-color: $date-disabled-text-color
     ));
 }
 
@@ -371,6 +399,18 @@
 
     %cal-value--weekend {
         color: --var($theme, 'weekend-text-color');
+    }
+
+    %cal-value--special {
+        color: --var($theme, 'date-special-text-color');
+        background: --var($theme, 'date-special-background');
+        font-weight: $cal-value-fw;
+    }
+
+    %cal-value--disabled {
+        pointer-events: none;
+        color: --var($theme, 'date-disabled-text-color');
+        cursor: not-allowed;
     }
 
     %cal-value--year {
