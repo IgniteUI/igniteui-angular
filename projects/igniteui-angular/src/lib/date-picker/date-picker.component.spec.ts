@@ -290,7 +290,6 @@ describe('IgxDatePicker', () => {
 
         const date = new Date(Date.now());
         datePicker.selectDate(date);
-        datePicker.openDialog();
         fix.detectChanges();
 
         expect(datePicker.value).toBe(date);
