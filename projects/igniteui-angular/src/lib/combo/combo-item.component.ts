@@ -44,7 +44,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
     constructor(
         @Inject(forwardRef(() => IgxComboDropDownComponent)) public dropDown: IgxComboDropDownComponent,
         protected elementRef: ElementRef,
-        protected selectionAPI: IgxSelectionAPIService
+        protected selection: IgxSelectionAPIService
     ) {
         super(dropDown, elementRef);
     }

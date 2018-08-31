@@ -19,7 +19,6 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { Subject, animationFrameScheduler as rAF, fromEvent } from 'rxjs';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -546,14 +545,15 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(
         public gridAPI: IgxGridAPIService,
-        public selectionApi: IgxSelectionAPIService,
+        public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
     public _updateCellSelectionStatus(fireFocus = true) {
         this._clearCellSelection();
         this._saveCellSelection();
-        if (this.column.editable && this.previousCellEditMode) {
+        const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
+        if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
             this.inEditMode = true;
         }
         this.selected = true;
@@ -572,7 +572,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editCell) {
-            if (editCell.cell.column.field === this.gridAPI.get(this.gridID).primaryKey) {
+            if (editCell.cell.column.field === this.grid.primaryKey) {
                 if (editCell.cellID.rowIndex === this.cellID.rowIndex && editCell.cellID.columnID === this.cellID.columnID) {
                     this.previousCellEditMode = false;
                 } else {
@@ -587,22 +587,22 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.previousCellEditMode = false;
         }
-        this._saveCellSelection(new Set());
+        this._saveCellSelection(this.selection.get_empty());
     }
 
     private _saveCellSelection(newSelection?: Set<any>) {
-        const sel = this.selectionApi.get_selection(this.cellSelectionID);
+        const sel = this.selection.get(this.cellSelectionID);
         if (sel && sel.size > 0) {
-            this.selectionApi.set_selection(this.prevCellSelectionID, sel);
+            this.selection.set(this.prevCellSelectionID, sel);
         }
         if (!newSelection) {
-            newSelection = this.selectionApi.select_item(this.cellSelectionID, this.cellID);
+            newSelection = this.selection.add_item(this.cellSelectionID, this.cellID);
         }
-        this.selectionApi.set_selection(this.cellSelectionID, newSelection);
+        this.selection.set(this.cellSelectionID, newSelection);
     }
 
     private _getLastSelectedCell() {
-        const cellID = this.selectionApi.get_selection_first(this.cellSelectionID);
+        const cellID = this.selection.first_item(this.cellSelectionID);
         if (cellID) {
             return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);
         }
@@ -616,7 +616,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     public isCellSelected() {
-        const selectedCellID = this.selectionApi.get_selection_first(this.cellSelectionID);
+        const selectedCellID = this.selection.first_item(this.cellSelectionID);
         if (selectedCellID) {
             return this.cellID.rowID === selectedCellID.rowID &&
                 this.cellID.columnID === selectedCellID.columnID;
@@ -792,7 +792,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public onShiftTabKey() {
         if (this.isFirstCell) {
-            this.selectionApi.set_selection(this.cellSelectionID, new Set());
+            this.selection.clear(this.cellSelectionID);
             this.grid.markForCheck();
             return;
         } else {
@@ -872,7 +872,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public onTabKey() {
         if (this.isLastCell) {
-            this.selectionApi.set_selection(this.cellSelectionID, new Set());
+            this.selection.clear(this.cellSelectionID);
             this.grid.markForCheck();
             return;
         } else {

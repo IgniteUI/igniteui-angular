@@ -368,6 +368,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      */
     protected _destroy = new Subject<boolean>();
 
+    /**
+     * @hidden
+     */
+    protected _removeOnDestroy = true;
+
     constructor(public cdr: ChangeDetectorRef, public element: ElementRef, public zone: NgZone, public renderer: Renderer2) {
     }
 
@@ -420,9 +425,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      */
     ngOnDestroy() {
         this._destroy.next(true);
-        this._destroy.unsubscribe();
+        this._destroy.complete();
 
-        if (this._dragGhost) {
+        if (this._dragGhost && this._removeOnDestroy) {
             this._dragGhost.parentNode.removeChild(this._dragGhost);
             this._dragGhost = null;
         }
@@ -617,6 +622,10 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             }
         }
 
+        if (topDropArea) {
+            this.dispatchEvent(topDropArea, 'igxDragOver', eventArgs);
+        }
+
         if (topDropArea &&
             (!this._lastDropArea || (this._lastDropArea && !this._lastDropArea.isEqualNode(topDropArea)))) {
             if (this._lastDropArea) {
@@ -705,7 +714,6 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             this.element.nativeElement.style.transitionDuration = '0.0s';
             this._dragStarted = false;
             this.returnMoveEnd.emit();
-            this.cdr.detectChanges();
         }
     }
 
@@ -743,7 +751,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 @Directive({
     selector: '[igxDrop]'
 })
-export class IgxDropDirective {
+export class IgxDropDirective implements OnInit, OnDestroy {
 
     /** Event triggered when dragged element enters the area of the element.
      * ```html
@@ -799,13 +807,37 @@ export class IgxDropDirective {
     @HostBinding('class.dragOver')
     public dragover = false;
 
-    constructor(public element: ElementRef, private _renderer: Renderer2) {
+    /**
+     * @hidden
+     */
+    protected _destroy = new Subject<boolean>();
+
+    constructor(public element: ElementRef, private _renderer: Renderer2, private _zone: NgZone) {
+    }
+
+    ngOnInit() {
+        this._zone.runOutsideAngular(() => {
+            fromEvent(this.element.nativeElement, 'igxDragEnter').pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onDragEnter(res as CustomEvent<IgxDragCustomEventDetails>));
+
+            fromEvent(this.element.nativeElement, 'igxDragLeave').pipe(takeUntil(this._destroy)).subscribe((res) => this.onDragLeave(res));
+            fromEvent(this.element.nativeElement, 'igxDragOver').pipe(takeUntil(this._destroy)).subscribe((res) => this.onDragOver(res));
+        });
+    }
+
+    ngOnDestroy() {
+        this._destroy.next(true);
+        this._destroy.complete();
     }
 
     /**
      * @hidden
      */
-    @HostListener('igxDragEnter', ['$event'])
+    public onDragOver(event) { }
+
+    /**
+     * @hidden
+     */
     public onDragEnter(event: CustomEvent<IgxDragCustomEventDetails>) {
         this.dragover = true;
         const eventArgs: IgxDropEnterEventArgs = {
@@ -823,7 +855,6 @@ export class IgxDropDirective {
     /**
      * @hidden
      */
-    @HostListener('igxDragLeave', ['$event'])
     public onDragLeave(event) {
         this.dragover = false;
         const eventArgs: IgxDropLeaveEventArgs = {
