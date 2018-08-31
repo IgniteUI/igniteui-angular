@@ -8,7 +8,7 @@ import {
 
 @Component({
     selector: 'igx-display-container',
-    template: '<ng-template #display_container></ng-template>'
+    template: '<ng-template #display_container igxScrollInertia [IgxScrollInertiaScrollContainer]="scrollContainer"></ng-template>'
 })
 export class DisplayContainerComponent {
     @ViewChild('display_container', { read: ViewContainerRef })
@@ -19,6 +19,8 @@ export class DisplayContainerComponent {
 
     @HostBinding('class.igx-display-container--inactive')
     public notVirtual = true;
+
+    public scrollContainer;
 
     constructor(public cdr: ChangeDetectorRef, public _viewContainer: ViewContainerRef) { }
 }
