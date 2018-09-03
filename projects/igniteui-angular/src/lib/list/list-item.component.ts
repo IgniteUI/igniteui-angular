@@ -177,12 +177,6 @@ export class IgxListItemComponent implements IListChild {
         if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
             return;
         }
-        const isPanningToLeft = ev.deltaX < 0;
-        if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
-            this.showLeftPanTemplate();
-        } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
-            this.showRightPanTemplate();
-        }
     }
 
     /**
@@ -198,8 +192,10 @@ export class IgxListItemComponent implements IListChild {
         }
         const isPanningToLeft = ev.deltaX < 0;
         if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
+            this.showLeftPanTemplate();
             this.setContentElementLeft(Math.max(this.maxLeft, ev.deltaX));
         } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
+            this.showRightPanTemplate();
             this.setContentElementLeft(Math.min(this.maxRight, ev.deltaX));
         }
     }

@@ -535,6 +535,40 @@ describe('List', () => {
         }
     });
 
+    it('checking the list item is returning back in the list when canceling the pan left event', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        list.onLeftPan.subscribe((args) => {
+            args.keepItem = true;
+        });
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItem(itemNativeElements[1], -0.6);
+        fixture.detectChanges();
+
+        expect(firstItem.panState).toBe(IgxListPanState.NONE);
+    });
+
+    it('checking the list item is returning back in the list when canceling the pan right event', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        list.onRightPan.subscribe((args) => {
+            args.keepItem = true;
+        });
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItem(itemNativeElements[1], 0.6);
+        fixture.detectChanges();
+
+        expect(firstItem.panState).toBe(IgxListPanState.NONE);
+    });
+
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
             deltaX: itemWidth * 0.6,
@@ -571,7 +605,9 @@ describe('List', () => {
     function panItem(itemNativeElement, factorX) {
         const itemWidth = itemNativeElement.nativeElement.offsetWidth;
 
-        itemNativeElement.triggerEventHandler('panstart', null);
+        itemNativeElement.triggerEventHandler('panstart', {
+            deltaX : factorX < 0 ? -10 : 10
+        });
         itemNativeElement.triggerEventHandler('panmove', {
             deltaX : factorX * itemWidth, duration : 200
         });
@@ -581,7 +617,9 @@ describe('List', () => {
     function clickAndDrag(itemNativeElement, factorX) {
         const itemWidth = itemNativeElement.nativeElement.offsetWidth;
 
-        itemNativeElement.triggerEventHandler('panstart', null);
+        itemNativeElement.triggerEventHandler('panstart', {
+            deltaX : factorX < 0 ? -10 : 10
+        });
         itemNativeElement.triggerEventHandler('panmove', {
             deltaX : factorX * itemWidth, duration : 200
         });

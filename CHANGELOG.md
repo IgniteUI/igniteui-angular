@@ -19,6 +19,12 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`: The `findNext` and `findPrev` methods now have a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the grid's cells.
     - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
+- `IgxList`:
+    - the control now supports **ng-templates** which are shown "under" a list item when it is left or right panned. The templates are distinguished using the `igxListItemLeftPanning` and `igxListItemRightPanning` directives set on the templates.
+    - the IgxList's `onLeftPan` and `onRightPan` events now have an argument of type `IListItemPanningEventArgs` (instead of `IgxListItemComponent`). The event argument has the following fields:
+        - **item** of type `IgxListItemComponent`
+        - **direction** of type `IgxListPanState`
+        - **keepItem** of type `boolean`
 
 ## 6.1.3
 - **General**
