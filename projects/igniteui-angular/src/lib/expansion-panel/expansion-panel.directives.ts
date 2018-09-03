@@ -16,6 +16,9 @@ export class IgxExpansionPanelTitleDirective {
     @Input()
     @HostBinding('attr.id')
     public id = `igx-expansion-panel-header-title-${NEXT_ID++}`;
+
+    @HostBinding('class.igx-expansion-panel__header-title')
+    public cssClass = `igx-expansion-panel__header-title`;
 }
 
 @Directive({
@@ -23,6 +26,8 @@ export class IgxExpansionPanelTitleDirective {
     selector: 'igx-expansion-panel-description'
 })
 export class IgxExpansionPanelDescriptionDirective {
+    @HostBinding('class.igx-expansion-panel__header-description')
+    public cssClass = `igx-expansion-panel__header-description`;
 }
 
 @Directive({

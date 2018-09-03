@@ -9,8 +9,7 @@ import {
     Host,
     EventEmitter,
     Output,
-    ContentChild,
-    TemplateRef
+    ContentChild
 } from '@angular/core';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
@@ -96,5 +95,18 @@ export class IgxExpansionPanelHeaderComponent {
          this.onInteraction.emit({ event: evt });
          this.panel.toggle(evt);
          evt.preventDefault();
+     }
+
+     public iconPositionClass(): string {
+        switch (this.iconPosition) {
+            case (ICON_POSITION.LEFT):
+                return `igx-expansion-panel__header-icon--start`;
+            case (ICON_POSITION.RIGHT):
+                return `igx-expansion-panel__header-icon--end`;
+            case (ICON_POSITION.NONE):
+                return `igx-expansion-panel__header-icon--none`;
+            default:
+                return '';
+        }
      }
 }

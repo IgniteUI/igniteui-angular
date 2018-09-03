@@ -17,3 +17,17 @@
     font-weight: 600;
     font-size: 12px; 
 }
+
+.igx-expansion-panel__header-icon--start {
+    width: 56px;
+    order: -1;
+}
+.igx-expansion-panel__header-icon--end {
+    width: 56px;
+    order: 5;
+}
+.igx-expansion-panel__header-icon--none {
+    width: 56px;
+    display: none;
+    visibility: hidden;
+}
