@@ -35,6 +35,8 @@ export class IgxExpansionPanelDescriptionDirective {
     selector: 'igx-expansion-panel-body'
 })
 export class IgxExpansionPanelBodyDirective {
+    @HostBinding('class.igx-expansion-panel__header-body')
+    public cssClass = `igx-expansion-panel__header-body`;
 }
 
 @Directive({
