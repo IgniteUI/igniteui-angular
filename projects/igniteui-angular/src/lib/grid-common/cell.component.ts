@@ -195,7 +195,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
-    get grid(): any {
+    get grid(): IGridComponent {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -841,7 +841,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this.grid._focusNextCell(this.rowIndex, columnIndex, 'left');
+                this.grid.focusNextCell(this.rowIndex, columnIndex, 'left');
             }
         }
     }
@@ -862,7 +862,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        this.grid.scrollTo(this.rowIndex, columnIndex, this.grid.paging ? this.grid.page : 0);
+        this.grid.scrollTo(this.rowIndex, columnIndex);
         this.row.virtDirRow.onChunkLoad
             .pipe(first())
             .subscribe(() => {
@@ -940,7 +940,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this.grid._focusNextCell(this.rowIndex, columnIndex, 'right');
+                this.grid.focusNextCell(this.rowIndex, columnIndex, 'right');
             }
         }
     }
@@ -954,7 +954,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        this.grid.scrollTo(this.rowIndex, columnIndex, this.grid.paging ? this.grid.page : 0);
+        this.grid.scrollTo(this.rowIndex, columnIndex);
         this.row.virtDirRow.onChunkLoad
             .pipe(first())
             .subscribe(() => {

@@ -26,6 +26,20 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         });
     }
 
+    public onAfterContentInit(id: string) {
+        const grid = this.get(id);
+        if (grid.groupTemplate) {
+            grid.groupRowTemplate = grid.groupTemplate.template;
+        }
+
+        super.onAfterContentInit(id);
+    }
+
+    public getGroupAreaHeight(id: string): number {
+        const grid = this.get(id);
+        return grid.groupArea ? grid.groupArea.nativeElement.offsetHeight : 0;
+    }
+
     protected remove_grouping_expression(id, fieldName) {
         const groupingExpressions = this.get(id).groupingExpressions;
         const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
@@ -116,7 +130,7 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         this.get(id).groupingExpansionState = expansionState;
     }
 
-    protected scrollTo(id: string, row: any, column: any): void {
+    public scrollTo(id: string, row: any, column: any): void {
         const grid = this.get(id);
         if (grid.groupingExpressions && grid.groupingExpressions.length) {
             const groupByRecords = this.getGroupByRecords(id);
