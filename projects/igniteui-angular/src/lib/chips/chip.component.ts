@@ -256,7 +256,7 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     @Output()
-    public onSelection = new EventEmitter<any>();
+    public onSelection = new EventEmitter<IChipSelectEventArgs>();
 
     /**
      * Emits an event when the `IgxChipComponent` keyboard navigation is being used.
@@ -345,13 +345,13 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     public set selected(newValue: boolean) {
-        const onSelectArgs = {
+        const onSelectArgs: IChipSelectEventArgs = {
             owner: this,
-            nextStatus: false,
+            selected: false,
             cancel: false
         };
         if (newValue && !this._selected) {
-            onSelectArgs.nextStatus = true;
+            onSelectArgs.selected = true;
             this.onSelection.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
