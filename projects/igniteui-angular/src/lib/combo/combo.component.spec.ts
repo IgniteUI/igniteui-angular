@@ -3080,17 +3080,17 @@ class IgxComboScrollTestComponent {
 <igx-combo #combo [placeholder]="'Location'" [data]='items'
 [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
 (onSelectionChange)="onSelectionChange($event)" [allowCustomValues]="true">
-<ng-template #itemTemplate let-display let-key="valueKey">
+<ng-template igxComboItem let-display let-key="valueKey">
 <div class="state-card--simple">
 <span class="small-red-circle"></span>
 <div class="display-value--main">State: {{display[key]}}</div>
 <div class="display-value--sub">Region: {{display.region}}</div>
 </div>
 </ng-template>
-<ng-template #headerTemplate>
+<ng-template igxComboHeader>
 <div class="header-class">This is a header</div>
 </ng-template>
-<ng-template #footerTemplate>
+<ng-template igxComboFooter>
 <div class="footer-class">This is a footer</div>
 </ng-template>
 </igx-combo>

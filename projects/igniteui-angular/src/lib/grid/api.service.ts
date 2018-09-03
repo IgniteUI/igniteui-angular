@@ -165,7 +165,7 @@ export class IgxGridAPIService {
 
     public update_cell(id: string, rowID, columnID, editValue) {
         const grid = this.get(id);
-        const isRowSelected = grid.selectionAPI.is_item_selected(id, rowID);
+        const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
         const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
@@ -180,8 +180,8 @@ export class IgxGridAPIService {
             grid.onEditDone.emit(args);
             grid.data[rowIndex][column.field] = args.newValue;
             if (grid.primaryKey === column.field && isRowSelected) {
-                grid.selectionAPI.set_selection(id, grid.selectionAPI.deselect_item(id, rowID));
-                grid.selectionAPI.set_selection(id, grid.selectionAPI.select_item(id, args.newValue));
+                grid.selection.deselect_item(id, rowID);
+                grid.selection.select_item(id, args.newValue);
             }
             (grid as any)._pipeTrigger++;
         }
@@ -189,7 +189,7 @@ export class IgxGridAPIService {
 
     public update_row(value: any, id: string, rowID: any): void {
         const grid = this.get(id);
-        const isRowSelected = grid.selectionAPI.is_item_selected(id, rowID);
+        const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const index = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
         grid.data.indexOf(rowID);
         if (index !== -1) {
@@ -198,9 +198,9 @@ export class IgxGridAPIService {
             grid.onEditDone.emit(args);
             grid.data[index] = args.newValue;
             if (isRowSelected) {
-                grid.selectionAPI.set_selection(id, grid.selectionAPI.deselect_item(id, rowID));
+                grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? args.newValue[grid.primaryKey] : args.newValue;
-                grid.selectionAPI.set_selection(id, grid.selectionAPI.select_item(id, newRowID));
+                grid.selection.select_item(id, newRowID);
             }
             (grid as any)._pipeTrigger++;
         }
