@@ -717,6 +717,26 @@ describe('igxOverlay', () => {
             expect(contentDiv).toBeDefined();
             expect(contentDiv.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBeTruthy();
         }));
+
+        it('fix for #2486 - filtering dropdown is not correctly positioned', fakeAsync(() => {
+            const fix = TestBed.createComponent(WidthTestOverlayComponent);
+            fix.debugElement.nativeElement.style.transform = 'translatex(100px)';
+
+            fix.detectChanges();
+            tick();
+
+            fix.componentInstance.overlaySettings.outlet = fix.componentInstance.elementRef;
+
+            const buttonElement: HTMLElement = fix.componentInstance.buttonElement.nativeElement;
+            buttonElement.click();
+
+            fix.detectChanges();
+            tick();
+
+            const wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+            expect(wrapper.getBoundingClientRect().left).toBe(100);
+            expect(fix.componentInstance.customComponent.nativeElement.getBoundingClientRect().left).toBe(400);
+        }));
     });
 
     describe('Integration tests: ', () => {
@@ -2560,20 +2580,22 @@ export class TwoButtonsComponent {
 })
 export class WidthTestOverlayComponent {
 
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+    constructor(
+        @Inject(IgxOverlayService) public overlay: IgxOverlayService,
+        public elementRef: ElementRef
+    ) { }
 
     @ViewChild('button') buttonElement: ElementRef;
     @ViewChild('myCustomComponent') customComponent: ElementRef;
+    public overlaySettings: OverlaySettings = {};
     click(event) {
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: new ConnectedPositioningStrategy(),
-            scrollStrategy: new NoOpScrollStrategy(),
-            closeOnOutsideClick: true,
-            modal: false
-        };
+        this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
+        this.overlaySettings.scrollStrategy = new NoOpScrollStrategy();
+        this.overlaySettings.closeOnOutsideClick = true;
+        this.overlaySettings.modal = false;
 
-        overlaySettings.positionStrategy.settings.target = this.buttonElement.nativeElement;
-        this.overlay.show(this.customComponent, overlaySettings);
+        this.overlaySettings.positionStrategy.settings.target = this.buttonElement.nativeElement;
+        this.overlay.show(this.customComponent, this.overlaySettings);
     }
 }
 

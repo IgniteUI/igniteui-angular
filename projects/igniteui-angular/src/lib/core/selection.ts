@@ -1,67 +1,120 @@
 export class IgxSelectionAPIService {
-    // If primaryKey is defined, then multiple selection is based on the primaryKey, and it is array of numbers, strings, etc.
-    // If the primaryKey is omitted, then selection is based on the item data
+    /**
+     * If primaryKey is defined, then multiple selection is based on the primaryKey, and it is array of numbers, strings, etc.
+     * If the primaryKey is omitted, then selection is based on the item data
+     */
     protected selection: Map<string,  Set<any>> = new Map<string, Set<any>>();
 
-    public get_selection(componentID: string): Set<any> {
+    /**
+     * Get current component selection.
+     * @param componentID ID of the component.
+     */
+    public get(componentID: string): Set<any> {
         return this.selection.get(componentID);
     }
 
-    public set_selection(componentID: string, currSelection: Set<any>) {
-        this.selection.set(componentID, currSelection);
+    /**
+     * Set new component selection.
+     * @param componentID ID of the component.
+     * @param newSelection The new component selection to be set.
+     */
+    public set(componentID: string, newSelection: Set<any>) {
+        this.selection.set(componentID, newSelection);
     }
 
-    public get_selection_length(componentID: string): number {
-        const sel = this.get_selection(componentID);
+    /**
+     * Clears selection for component.
+     * @param componentID ID of the component.
+     */
+    public clear(componentID: string) {
+        this.selection.set(componentID, this.get_empty());
+    }
+
+    /**
+     * Get current component selection length.
+     * @param componentID ID of the component.
+     */
+    public size(componentID: string): number {
+        const sel = this.get(componentID);
         return sel ? sel.size : 0;
     }
 
     /**
-     * Add item to component selection using item's ID.
+     * Creates new selection that consist of the new item added to the current component selection.
+     * The returned collection is new Set,
+     * therefore if you want to update component selection you need to call in addition the set_selection() method
+     * or instead use the select_item() one.
      * @param componentID ID of the component, which we add new item to.
      * @param itemID ID of the item to add to component selection.
-     * @param sel Used internally only by the selection (select_items method) to accumulate selection for multiple items.
+     * @param sel Used internally only by the selection (add_items method) to accumulate selection for multiple items.
      *
-     * @returns selection after the new item is added
+     * @returns Selection after the new item is added.
      */
-    public select_item(componentID: string, itemID, sel?: Set<any>): Set<any> {
+    public add_item(componentID: string, itemID, sel?: Set<any>): Set<any> {
         if (!sel) {
-            sel = new Set(this.get_selection(componentID));
+            sel = new Set(this.get(componentID));
         }
         if (sel === undefined) {
-            sel = new Set();
+            sel = this.get_empty();
         }
         sel.add(itemID);
         return sel;
     }
 
     /**
-     * Add items to component selection using their IDs.
+     * Creates new selection that consist of the new items added to the current component selection.
+     * The returned collection is new Set,
+     * therefore if you want to update component selection you need to call in addition the set_selection() method
+     * or instead use the select_items() one.
      * @param componentID ID of the component, which we add new items to.
      * @param itemIDs Array of IDs of the items to add to component selection.
+     * @param clearSelection If true it will clear previous selection.
      *
-     * @returns selection after the new item is added
+     * @returns Selection after the new items are added.
      */
-    public select_items(componentID: string, itemIDs: any[], clearSelection?: boolean): Set<any> {
+    public add_items(componentID: string, itemIDs: any[], clearSelection?: boolean): Set<any> {
         let selection: Set<any>;
         if (clearSelection) {
-            selection = new Set();
+            selection = this.get_empty();
         }
-        itemIDs.forEach((item) => selection = this.select_item(componentID, item, selection));
+        itemIDs.forEach((item) => selection = this.add_item(componentID, item, selection));
         return selection;
     }
 
     /**
-     * Remove item from component selection using item's ID.
+     * Add item to the current component selection.
+     * @param componentID ID of the component, which we add new item to.
+     * @param itemID ID of the item to add to component selection.
+     * @param sel Used internally only by the selection (select_items method) to accumulate selection for multiple items.
+     */
+    public select_item(componentID: string, itemID, sel?: Set<any>) {
+        this.set(componentID, this.add_item(componentID, itemID, sel));
+    }
+
+    /**
+     * Add items to the current component selection.
+     * @param componentID ID of the component, which we add new items to.
+     * @param itemIDs Array of IDs of the items to add to component selection.
+     * @param clearSelection If true it will clear previous selection.
+     */
+    public select_items(componentID: string, itemID: any[], clearSelection?: boolean) {
+        this.set(componentID, this.add_items(componentID, itemID, clearSelection));
+    }
+
+    /**
+     * Creates new selection that consist of the new items excluded from the current component selection.
+     * The returned collection is new Set,
+     * therefore if you want to update component selection you need to call in addition the set_selection() method
+     * or instead use the deselect_item() one.
      * @param componentID ID of the component, which we remove items from.
      * @param itemID ID of the item to remove from component selection.
-     * @param sel Used internally only by the selection (deselect_items method) to accumulate deselected items.
+     * @param sel Used internally only by the selection (delete_items method) to accumulate deselected items.
      *
-     * @returns selection after the item is removed
+     * @returns Selection after the item is removed.
      */
-    public deselect_item(componentID: string, itemID, sel?: Set<any>) {
+    public delete_item(componentID: string, itemID, sel?: Set<any>) {
         if (!sel) {
-            sel = new Set(this.get_selection(componentID));
+            sel = new Set(this.get(componentID));
         }
         if (sel === undefined) {
             return;
@@ -71,42 +124,108 @@ export class IgxSelectionAPIService {
     }
 
     /**
-     * Remove items from component selection using their IDs.
+     * Creates new selection that consist of the new items removed to the current component selection.
+     * The returned collection is new Set,
+     * therefore if you want to update component selection you need to call in addition the set_selection() method
+     * or instead use the deselect_items() one.
      * @param componentID ID of the component, which we remove items from.
      * @param itemID ID of the items to remove from component selection.
      *
-     * @returns selection after the item is removed
+     * @returns Selection after the items are removed.
      */
-    public deselect_items(componentID: string, itemIDs: any[]): Set<any> {
+    public delete_items(componentID: string, itemIDs: any[]): Set<any> {
         let selection: Set<any>;
-        itemIDs.forEach((deselectedItem) => selection = this.deselect_item(componentID, deselectedItem, selection));
+        itemIDs.forEach((deselectedItem) => selection = this.delete_item(componentID, deselectedItem, selection));
         return selection;
     }
 
-    public is_item_selected(componentID: string, itemID) {
-        const sel = this.get_selection(componentID);
+    /**
+     * Remove item from the current component selection.
+     * @param componentID ID of the component, which we remove item from.
+     * @param itemID ID of the item to remove from component selection.
+     * @param sel Used internally only by the selection (deselect_items method) to accumulate selection for multiple items.
+     */
+    public deselect_item(componentID: string, itemID, sel?: Set<any>) {
+        this.set(componentID, this.delete_item(componentID, itemID, sel));
+    }
+
+    /**
+     * Remove items to the current component selection.
+     * @param componentID ID of the component, which we add new items to.
+     * @param itemIDs Array of IDs of the items to add to component selection.
+     */
+    public deselect_items(componentID: string, itemID: any[], clearSelection?: boolean) {
+        this.set(componentID, this.delete_items(componentID, itemID));
+    }
+
+    /**
+     * Check if the item is selected in the component selection.
+     * @param componentID ID of the component.
+     * @param itemID ID of the item to search.
+     *
+     * @returns If item is selected.
+     */
+    public is_item_selected(componentID: string, itemID): boolean {
+        const sel = this.get(componentID);
         if (!sel) {
             return false;
         }
         return sel.has(itemID);
     }
 
-    public get_selection_first(componentID: string) {
-        const sel = this.get_selection(componentID);
+    /**
+     * Get first element in the selection.
+     * This is correct when we have only one item in the collection (for single selection purposes)
+     * and the method returns that item.
+     * @param componentID ID of the component.
+     *
+     * @returns First element in the set.
+     */
+    public first_item(componentID: string) {
+        const sel = this.get(componentID);
         if (sel && sel.size > 0) {
             return sel.values().next().value;
        }
     }
 
+    /**
+     * Returns whether all items are selected.
+     * @param componentID ID of the component.
+     * @param data Entire data array.
+     *
+     * @returns If all items are selected.
+     */
+    public are_all_selected(componentID: string, data): boolean {
+        return this.size(componentID) === data.length;
+    }
+
+    /**
+     * Returns whether any of the items is selected.
+     * @param componentID ID of the component.
+     * @param data Entire data array.
+     *
+     * @returns If there is any item selected.
+     */
+    public are_none_selected(componentID: string): boolean {
+        return this.size(componentID) === 0;
+    }
+
+    /**
+     * Get all primary key values from a data array. If there isn't a primary key defined that the entire data is returned instead.
+     * @param data Entire data array.
+     * @param primaryKey Data primary key.
+     *
+     * @returns Array of identifiers, either primary key values or the entire data array.
+     */
     public get_all_ids(data, primaryKey?) {
         return primaryKey ? data.map((x) => x[primaryKey]) : data;
     }
 
-    public are_all_selected(componentID: string, data): boolean {
-        return this.get_selection_length(componentID) === data.length;
-    }
-
-    public are_none_selected(componentID: string): boolean {
-        return this.get_selection_length(componentID) === 0;
+    /**
+     * Returns empty selection collection.
+     * @returns empty set.
+    */
+    public get_empty() {
+        return new Set();
     }
 }
