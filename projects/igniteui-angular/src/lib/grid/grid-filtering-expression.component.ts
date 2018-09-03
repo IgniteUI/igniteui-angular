@@ -206,6 +206,6 @@ export class IgxGridFilterExpressionComponent implements OnDestroy, AfterViewIni
 
     public onDatePickerValueChanged(): void {
         this.expression.condition = this.getCondition(this.select.nativeElement.value);
-        this.onExpressionChanged.emit();
+        this.value = value;
     }
 }
