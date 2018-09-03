@@ -24,7 +24,13 @@ import { CommonModule } from '@angular/common';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { cloneArray } from '../core/utils';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxChipComponent } from './chip.component';
+import {
+    IgxChipComponent,
+    IChipSelectEventArgs,
+    IChipKeyDownEventArgs,
+    IChipEnterDragAreaEventArgs,
+    IBaseChipEventArgs
+} from './chip.component';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
@@ -161,11 +167,11 @@ export class IgxChipsAreaComponent implements DoCheck {
             const changes = this._differ.diff(this.chipsList.toArray());
             if (changes) {
                 changes.forEachAddedItem((addedChip) => {
-                    addedChip.item.onMoveStart.subscribe(() => {
-                        this.onChipMoveStart();
+                    addedChip.item.onMoveStart.subscribe((args) => {
+                        this.onChipMoveStart(args);
                     });
-                    addedChip.item.onMoveEnd.subscribe(() => {
-                        this.onChipMoveEnd();
+                    addedChip.item.onMoveEnd.subscribe((args) => {
+                        this.onChipMoveEnd(args);
                     });
                     addedChip.item.onDragEnter.subscribe((args) => {
                         this.onChipDragEnter(args);
@@ -187,7 +193,7 @@ export class IgxChipsAreaComponent implements DoCheck {
     /**
      * @hidden
      */
-    protected onChipKeyDown(event) {
+    protected onChipKeyDown(event: IChipKeyDownEventArgs) {
         let orderChanged = false;
         const chipsArray = this.chipsList.toArray();
         const dragChipIndex = chipsArray.findIndex((el) => el === event.owner);
@@ -216,7 +222,7 @@ export class IgxChipsAreaComponent implements DoCheck {
     /**
      * @hidden
      */
-    protected onChipMoveStart() {
+    protected onChipMoveStart(event: IBaseChipEventArgs) {
         this.chipsList.forEach((chip) => {
             chip.areaMovingPerforming = true;
             chip.cdr.detectChanges();
@@ -229,7 +235,7 @@ export class IgxChipsAreaComponent implements DoCheck {
     /**
      * @hidden
      */
-    protected onChipMoveEnd() {
+    protected onChipMoveEnd(event: IBaseChipEventArgs) {
         this.chipsList.forEach((chip) => {
             chip.areaMovingPerforming = false;
             chip.cdr.detectChanges();
@@ -242,7 +248,7 @@ export class IgxChipsAreaComponent implements DoCheck {
     /**
      * @hidden
      */
-    protected onChipDragEnter(event) {
+    protected onChipDragEnter(event: IChipEnterDragAreaEventArgs) {
         const dropChipRect = event.targetChip.elementRef.nativeElement.getBoundingClientRect();
         const dropChipIndex = this.chipsList.toArray().findIndex((el) => el === event.targetChip);
         const dragChipIndex = this.chipsList.toArray().findIndex((el) => el === event.dragChip);
@@ -298,7 +304,7 @@ export class IgxChipsAreaComponent implements DoCheck {
     /**
      * @hidden
      */
-    protected onChipSelectionChange(event) {
+    protected onChipSelectionChange(event: IChipSelectEventArgs) {
         if (event.selected) {
             this.selectedChips.push(event.owner);
         } else if (!event.selected) {
