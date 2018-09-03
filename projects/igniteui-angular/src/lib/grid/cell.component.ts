@@ -18,7 +18,7 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { Subject, animationFrameScheduler as rAF, fromEvent } from 'rxjs';
+import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 /**
@@ -275,6 +275,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     get inEditMode(): boolean {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        this.cdr.markForCheck();
         if (editableCell) {
             return this.cellID.rowID === editableCell.cellID.rowID &&
                 this.cellID.columnID === editableCell.cellID.columnID;
@@ -631,6 +632,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.cellSelectionID = `${this.gridID}-cell`;
         this.prevCellSelectionID = `${this.gridID}-prev-cell`;
         this.keydown$.subscribe((event: KeyboardEvent) => this.dispatchEvent(event));
+        combineLatest([this.row.virtDirRow.onChunkLoad, this.grid.verticalScrollContainer.onChunkLoad])
+            .pipe(takeUntil(this.destroy$)).subscribe(() => this.cdr.markForCheck());
     }
 
     /**
@@ -836,7 +839,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this.grid._focusNextCell(this.rowIndex, columnIndex, 'left');
+                this.grid._focusNextCell(this.rowIndex, columnIndex, 'left', event);
             }
         }
     }
@@ -853,7 +856,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
         const firstCell = this.row.cells.first;
         if (firstCell.visibleColumnIndex === columnIndex) {
-            firstCell._updateCellSelectionStatus();
+            firstCell._updateCellSelectionStatus(true, event);
             return;
         }
 
@@ -935,7 +938,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
              * We do this because it takes time to detect change in scrollLeft of an element
              */
             if (bVirtSubscribe) {
-                this.grid._focusNextCell(this.rowIndex, columnIndex, 'right');
+                this.grid._focusNextCell(this.rowIndex, columnIndex, 'right', event);
             }
         }
     }
@@ -945,7 +948,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
         const lastCell = this.row.cells.last;
         if (lastCell.visibleColumnIndex === columnIndex) {
-            lastCell._updateCellSelectionStatus();
+            lastCell._updateCellSelectionStatus(true, event);
             return;
         }
 
@@ -964,9 +967,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         const lastCell = this._getLastSelectedCell();
-        this._clearCellSelection();
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
-        this.grid.navigateUp(rowIndex, this.visibleColumnIndex);
+        this.grid.navigateUp(rowIndex, this.visibleColumnIndex, event);
     }
 
     public onKeydownArrowDown(event) {
@@ -977,9 +979,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         const lastCell = this._getLastSelectedCell();
-        this._clearCellSelection();
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
-        this.grid.navigateDown(rowIndex, this.visibleColumnIndex);
+        this.grid.navigateDown(rowIndex, this.visibleColumnIndex, event);
     }
 
     public onKeydownEnterEditMode(event) {
@@ -989,15 +990,13 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             } else {
                 this.inEditMode = true;
             }
-            this._updateCellSelectionStatus(true, event);
         }
     }
 
     public onKeydownExitEditMode(event) {
         if (this.column.editable) {
             this.inEditMode = false;
-            this._updateCellSelectionStatus(true, event);
-            this.grid.cdr.detectChanges();
+            this.nativeElement.focus();
         }
     }
 
