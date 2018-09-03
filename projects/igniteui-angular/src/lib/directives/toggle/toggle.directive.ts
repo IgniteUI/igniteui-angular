@@ -258,7 +258,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     selector: '[igxToggleAction]'
 })
 export class IgxToggleActionDirective implements OnInit {
-    private _overlayDefaults: OverlaySettings;
+    protected _overlayDefaults: OverlaySettings;
 
     /**
      * Provide settings that control the toggle overlay positioning, interaction and scroll behavior.
@@ -333,7 +333,7 @@ export class IgxToggleActionDirective implements OnInit {
         return this._target;
     }
 
-    private _target: IToggleView | string;
+    protected _target: IToggleView | string;
 
     constructor(private element: ElementRef, @Optional() private navigationService: IgxNavigationService) { }
 

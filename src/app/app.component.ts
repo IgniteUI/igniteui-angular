@@ -252,6 +252,11 @@ export class AppComponent implements OnInit {
             link: '/mask',
             icon: 'view_column',
             name: 'Mask Directive'
+        },
+        {
+            link: '/tooltip',
+            icon: 'info',
+            name: 'Tooltip'
         }
     ];
 

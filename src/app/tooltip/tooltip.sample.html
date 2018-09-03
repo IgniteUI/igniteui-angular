@@ -1,0 +1,57 @@
+<div class="sample-wrapper">
+    <app-page-header title="Tooltip">
+        Displays tooltip to the user for a specific element.
+    </app-page-header>
+    <section class="sample-content">
+        <article class="sample-column">
+            <h4 class="sample-title">Basic tooltip</h4>
+            <div style="display: flex;">
+
+                
+                <!-- #buttonAction="toggle-action" [igxToggleAction]="dropdown" -->
+                <button #button="tooltip" [igxTooltip]="ref" [overlaySettings]="settings" tooltipClass="tooltip" showDelay="300" hideDelay="300"
+                        >
+                    Hover me
+                </button>
+
+                <!-- Tooltip Element -->
+                <p #ref="toggle" igxToggle>
+                    Hello there, this is a tooltip!
+                </p>
+
+                <!-- Dropdown Element -->
+                <!-- <div #dropdown="toggle" igxToggle style="z-index: 999">
+                    <img src="assets/images/rsrcs/igniteui-angular_logo.svg" />
+                </div> -->
+
+
+                <button (click)="showTooltip()" style="margin-left: 300px">Show Tooltip</button>
+                <button (click)="hideTooltip()">Hide Tooltip</button>
+                <button (click)="test()">test</button>
+
+            </div>
+        </article>
+    </section>
+    <section class="sample-content">
+        <article class="sample-column">
+            <h4 class="sample-title">Grid with tooltips</h4>
+            <div>
+                <igx-grid [data]="data" width="600px" height="400px" [autoGenerate]="false">
+                    <igx-column [field]="'Name'" dataType="string">
+                        <ng-template igxCell let-val>
+                            <span [igxTooltip]="tp" tooltipClass="tooltip" showDelay="1000" hideDelay="100" style="border: solid black 1px;">
+                                {{val}}
+                            </span>
+
+                            <p #tp="toggle" igxToggle>
+                                {{val}} tooltip
+                            </p>
+                        </ng-template>
+                    </igx-column>
+                    <igx-column [field]="'LastName'" dataType="string"></igx-column>
+                    <igx-column [field]="'Age'" dataType="string"></igx-column>
+                </igx-grid>
+            </div>
+        </article>
+    </section>
+</div>

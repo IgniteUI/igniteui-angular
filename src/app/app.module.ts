@@ -62,6 +62,7 @@ import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 
 const components = [
     AppComponent,
@@ -115,7 +116,8 @@ const components = [
     ColorsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
-    RadioSampleComponent
+    RadioSampleComponent,
+    TooltipSampleComponent
 ];
 
 @NgModule({

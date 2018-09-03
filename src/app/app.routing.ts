@@ -37,6 +37,7 @@ import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 
 
 const appRoutes = [
@@ -197,6 +198,10 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    },
+    {
+        path: 'tooltip',
+        component: TooltipSampleComponent
     }
 ];
 
