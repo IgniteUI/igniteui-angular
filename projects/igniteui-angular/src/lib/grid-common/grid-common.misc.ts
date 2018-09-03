@@ -123,7 +123,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 export class IgxColumnMovingService {
     private _icon: any;
     private _column: IgxColumnComponent;
-    private _target: IgxColumnComponent;
 
     public cancelDrop: boolean;
     public selection: {
@@ -140,15 +139,6 @@ export class IgxColumnMovingService {
         }
     }
 
-    get target(): IgxColumnComponent {
-        return this._target;
-    }
-    set target(val: IgxColumnComponent) {
-        if (val) {
-            this._target = val;
-        }
-    }
-
     get icon(): any {
         return this._icon;
     }
@@ -158,6 +148,16 @@ export class IgxColumnMovingService {
         }
     }
 }
+
+/**
+ * @hidden
+ */
+export enum DropPosition {
+    BeforeDropTarget,
+    AfterDropTarget,
+    None
+}
+
 /**
  * @hidden
  */
@@ -213,6 +213,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         event.preventDefault();
         event.stopPropagation();
 
+        this._removeOnDestroy = false;
         this.cms.column = this.column;
         this.ghostImageClass = this._ghostImageClass;
 
@@ -221,7 +222,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this.column.grid.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
-        const currSelection = this.column.grid.selectionAPI.get_selection_first(this.column.gridID + '-cell');
+        const currSelection = this.column.grid.selection.first_item(this.column.gridID + '-cell');
         if (currSelection) {
             this.cms.selection = {
                 column: this.column.grid.columns[currSelection.columnID],
@@ -346,19 +347,47 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 
+    private _dropPos: DropPosition;
     private _dropIndicator: any = null;
+    private _lastDropIndicator: any = null;
     private _column: IgxColumnComponent;
     private _hVirtDir: IgxForOfDirective<any>;
     private _dragLeave = new Subject<boolean>();
     private _dropIndicatorClass = 'igx-grid__th-drop-indicator--active';
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2, private cms: IgxColumnMovingService) {
-        super(elementRef, renderer);
+    constructor(private elementRef: ElementRef, private renderer: Renderer2, private zone: NgZone, private cms: IgxColumnMovingService) {
+        super(elementRef, renderer, zone);
     }
 
     public ngOnDestroy() {
         this._dragLeave.next(true);
-        this._dragLeave.unsubscribe();
+        this._dragLeave.complete();
+    }
+
+    public onDragOver(event) {
+        if (this.isDropTarget &&
+            this.cms.column !== this.column &&
+            this.cms.column.level === this.column.level &&
+            this.cms.column.parent === this.column.parent) {
+
+            if (this._lastDropIndicator) {
+                this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
+            }
+
+            const pos = this.elementRef.nativeElement.getBoundingClientRect().left + parseFloat(this.column.width) / 2;
+
+            if (event.detail.pageX < pos) {
+                this._dropPos = DropPosition.BeforeDropTarget;
+                this._lastDropIndicator = this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
+            } else {
+                this._dropPos = DropPosition.AfterDropTarget;
+                this._lastDropIndicator = this._dropIndicator = this.elementRef.nativeElement.lastElementChild;
+            }
+
+            if (this.cms.icon.innerText !== 'block') {
+                this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
+            }
+        }
     }
 
     public onDragEnter(event) {
@@ -373,11 +402,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.cms.column.parent === this.column.parent) {
 
                 if (!this.column.pinned || (this.column.pinned && this.cms.column.pinned)) {
-                    this._dropIndicator = this.cms.column.index < this.column.index ? this.elementRef.nativeElement.lastElementChild :
-                        this.elementRef.nativeElement.firstElementChild;
-
-                    this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
-
                     this.cms.icon.innerText = 'swap_horiz';
                 }
 
@@ -386,9 +410,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
                     if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
                         this.cms.icon.innerText = 'lock';
-
-                        this._dropIndicator = this.elementRef.nativeElement.firstElementChild;
-                        this.renderer.addClass(this._dropIndicator, this._dropIndicatorClass);
                     } else {
                         this.cms.icon.innerText = 'block';
                     }
@@ -456,12 +477,12 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                     return;
             }
 
-            this.column.grid.moveColumn(this.cms.column, this.column);
+            this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 
             if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columns.indexOf(this.cms.selection.column);
 
-                this.column.grid.selectionAPI.set_selection(this.column.gridID + '-cell', new Set([{
+                this.column.grid.selection.set(this.column.gridID + '-cell', new Set([{
                     rowID: this.cms.selection.rowID,
                     columnID: colID
                 }]));
@@ -477,6 +498,51 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
+        }
+    }
+}
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxGroupAreaDrop]'
+})
+export class IgxGroupAreaDropDirective extends IgxDropDirective {
+
+    constructor(private elementRef: ElementRef, private renderer: Renderer2, private zone: NgZone) {
+        super(elementRef, renderer, zone);
+    }
+
+    @HostBinding('class.igx-drop-area--hover')
+    public hovered = false;
+
+
+    public onDragEnter(event) {
+        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+        const column: IgxColumnComponent = drag.column;
+        const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+        if (column.groupable && !isGrouped) {
+            drag.icon.innerText = 'group_work';
+            this.hovered = true;
+        } else {
+            drag.icon.innerText = 'block';
+            this.hovered = false;
+        }
+    }
+
+    public onDragLeave(event) {
+        event.detail.owner.icon.innerText = 'block';
+        this.hovered = false;
+    }
+
+    public onDragDrop(event) {
+        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+        if (drag instanceof IgxColumnMovingDragDirective) {
+            const column: IgxColumnComponent = drag.column;
+            const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+            if (column.groupable && !isGrouped) {
+                column.grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
+            }
         }
     }
 }

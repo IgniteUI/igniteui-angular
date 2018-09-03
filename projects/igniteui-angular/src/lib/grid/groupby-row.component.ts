@@ -25,7 +25,7 @@ export class IgxGridGroupByRowComponent {
     public gridAPI: IgxGridAPIService;
 
     constructor(gridAPI: IGridAPIService<IGridComponent>,
-                private selectionAPI: IgxSelectionAPIService,
+                private selection: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) {
                     this.gridAPI = <IgxGridAPIService>gridAPI;
@@ -171,6 +171,13 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
+    get dataType(): any {
+        return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('keydown.arrowdown', ['$event'])
     public onKeydownArrowDown(event) {
         const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
@@ -212,14 +219,14 @@ export class IgxGridGroupByRowComponent {
     }
 
     private _getSelectedColIndex() {
-        const cell = this.selectionAPI.get_selection_first(this.gridID + '-cell');
+        const cell = this.selection.first_item(this.gridID + '-cell');
         if (cell) {
             return cell.columnID;
         }
     }
 
     private _getPrevSelectedColIndex() {
-        const prevCell = this.selectionAPI.get_selection_first(this.gridID + '-prev-cell');
+        const prevCell = this.selection.first_item(this.gridID + '-prev-cell');
         if (prevCell) {
             return prevCell.columnID;
         }

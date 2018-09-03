@@ -258,19 +258,19 @@ describe('IgxGrid - Summaries', () => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
-        const oldMaxValue = 20000;
-        const newMaxValue = 99000;
+        const oldMaxValue = '20,000';
+        const newMaxValue = '99,000';
         const grid = fixture.componentInstance.grid1;
         const summariesUnitOfStock = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))[3];
         const unitsInStockCell = grid.getCellByColumn(0, 'UnitsInStock');
 
         let maxValue = summariesUnitOfStock.query(By.css('[title=\'Max\']')).nativeElement.nextSibling.innerText;
-        expect(+maxValue).toBe(oldMaxValue);
-        unitsInStockCell.update(newMaxValue);
+        expect(maxValue).toBe(oldMaxValue);
+        unitsInStockCell.update(99000);
         fixture.detectChanges();
 
         maxValue = summariesUnitOfStock.query(By.css('[title=\'Max\']')).nativeElement.nextSibling.innerText;
-        expect(+maxValue).toBe(newMaxValue);
+        expect(maxValue).toBe(newMaxValue);
 
     });
     it('should display all active summaries after column pinning', () => {

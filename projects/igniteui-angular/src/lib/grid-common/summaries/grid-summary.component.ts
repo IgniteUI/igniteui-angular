@@ -103,4 +103,7 @@ export class IgxGridSummaryComponent implements DoCheck {
         }
     }
 
+    public isNumber(res) {
+        return typeof res === 'number';
+    }
 }
