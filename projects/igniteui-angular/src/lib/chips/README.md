@@ -193,10 +193,10 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 ### Outputs
 | Name | Argument Type | Description |
 |:--:|:---|:---|
-| `onReorder ` | `IChipReorderEventArgs` | Fired when the chip moving(dragging) starts. |
-| `onSelection ` | `IChipAreaSelectEventArgs` | Fired when the chip moving(dragging) ends. |
-| `onMoveStart  ` | `IBaseChipAreaEventArgs` | Fired when the chip remove button is clicked. |
-| `onMoveEnd ` | `IBaseChipAreaEventArgs` | Fired when the chip is clicked instead of dragged. |
+| `onReorder ` | `IChipsAreaReorderEventArgs` | Fired when the chip moving(dragging) starts. |
+| `onSelection ` | `IChipsAreaSelectEventArgs` | Fired when the chip moving(dragging) ends. |
+| `onMoveStart  ` | `IBaseChipsAreaEventArgs` | Fired when the chip remove button is clicked. |
+| `onMoveEnd ` | `IBaseChipsAreaEventArgs` | Fired when the chip is clicked instead of dragged. |
 
 ### Properties
 | Name   | Return Type | Description |

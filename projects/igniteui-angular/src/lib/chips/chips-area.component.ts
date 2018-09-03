@@ -37,16 +37,16 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon';
 import { IgxConnectorDirective } from './connector.directive';
 
-export interface IBaseChipAreaEventArgs {
+export interface IBaseChipsAreaEventArgs {
     owner: IgxChipsAreaComponent;
 }
 
-export interface IChipReorderEventArgs {
+export interface IChipsAreaReorderEventArgs {
     chipsArray: IgxChipComponent[];
     isValid: boolean;
 }
 
-export interface IChipAreaSelectEventArgs extends IBaseChipAreaEventArgs {
+export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
     newSelection: IgxChipComponent[];
 }
 
@@ -89,13 +89,13 @@ export class IgxChipsAreaComponent implements DoCheck {
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder($event)"></igx-chips-area>
      * ```
      * ```typescript
-     * public changedOrder(event: IChipReorderEventArgs){
+     * public changedOrder(event: IChipsAreaReorderEventArgs){
      *      let chips: IgxChipComponent[] = event.chipsArray;
      * }
      * ```
      */
     @Output()
-    public onReorder = new EventEmitter<IChipReorderEventArgs>();
+    public onReorder = new EventEmitter<IChipsAreaReorderEventArgs>();
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected.
@@ -104,12 +104,12 @@ export class IgxChipsAreaComponent implements DoCheck {
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onSelection)="selection($event)"></igx-chips-area>
      * ```
      * ```typescript
-     * public selection(event: IChipAreaSelectEventArgs){
+     * public selection(event: IChipsAreaSelectEventArgs){
      *      let selectedChips: IgxChipComponent[] = event.newSelection;
      * }
      */
     @Output()
-    public onSelection = new EventEmitter<IChipAreaSelectEventArgs>();
+    public onSelection = new EventEmitter<IChipsAreaSelectEventArgs>();
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
@@ -117,13 +117,13 @@ export class IgxChipsAreaComponent implements DoCheck {
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveStart)="moveStart($event)"></igx-chips-area>
      * ```
      * ```typescript
-     * moveStart(event: IBaseChipAreaEventArgs){
+     * moveStart(event: IBaseChipsAreaEventArgs){
      *      let chipArea = event.owner;
      * }
      * ```
      */
     @Output()
-    public onMoveStart = new EventEmitter<IBaseChipAreaEventArgs>();
+    public onMoveStart = new EventEmitter<IBaseChipsAreaEventArgs>();
 
     /**
      * Emits an event after an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
@@ -131,13 +131,13 @@ export class IgxChipsAreaComponent implements DoCheck {
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveEnd)="moveEnd($event)"></igx-chips-area>
      * ```
      * ```typescript
-     * moveEnd(event: IBaseChipAreaEventArgs){
+     * moveEnd(event: IBaseChipsAreaEventArgs){
      *      let chipArea = event.owner;
      * }
      * ```
      */
     @Output()
-    public onMoveEnd = new EventEmitter<IBaseChipAreaEventArgs>();
+    public onMoveEnd = new EventEmitter<IBaseChipsAreaEventArgs>();
 
     /**
      * Holds the `IgxChipComponent` in the `IgxChipsAreaComponent`.
@@ -293,7 +293,7 @@ export class IgxChipsAreaComponent implements DoCheck {
         }
         this.modifiedChipsArray = result;
 
-        const eventData: IChipReorderEventArgs = {
+        const eventData: IChipsAreaReorderEventArgs = {
             chipsArray: this.modifiedChipsArray,
             isValid: true
         };
