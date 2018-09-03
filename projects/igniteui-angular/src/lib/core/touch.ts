@@ -4,8 +4,7 @@ import { DOCUMENT, ɵgetDOM as getDOM } from '@angular/platform-browser';
 const EVENT_SUFFIX = 'precise';
 
 /**
- * Touch gestures manager based on Hammer.js
- * Use with caution, this will track references for single manager per element. Very TBD. Much TODO.
+ *@hidden
  */
 @Injectable()
 export class HammerGesturesManager {
