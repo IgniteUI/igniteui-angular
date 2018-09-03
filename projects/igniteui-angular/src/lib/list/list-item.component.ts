@@ -217,7 +217,7 @@ export class IgxListItemComponent implements IListChild {
         const widthTriggeringGrip = this.width * this.list.panEndTriggeringThreshold;
 
         if (relativeOffset === 0) {
-            return; // no pannig has occured (yet)
+            return; // no panning has occured
         }
 
         const oldPanState = this._panState;

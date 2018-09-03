@@ -135,6 +135,7 @@ export class IgxListComponent {
      * this.list.panEndTriggeringThreshold = 0.8;
      * ```
      */
+    @Input()
     public panEndTriggeringThreshold = 0.5;
 
     /**@hidden*/
