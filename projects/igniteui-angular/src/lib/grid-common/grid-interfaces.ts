@@ -22,6 +22,7 @@ import { DisplayDensity } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 
 import { IColumnVisibilityChangedEventArgs } from './column-hiding/column-hiding-item.directive';
+import { DropPosition } from './grid-common.misc';
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -96,6 +97,7 @@ export interface IGridComponent {
     id: string;
     nativeElement: any;
     cdr: ChangeDetectorRef;
+    selection: IgxSelectionAPIService;
     columns: IgxColumnComponent[];
     data: any[];
     filteredSortedData: any[];
@@ -134,7 +136,6 @@ export interface IGridComponent {
     filteredData: any[];
     rowSelectable: boolean;
     allRowsSelected: boolean;
-    selectionAPI: IgxSelectionAPIService;
     unpinnedWidth: number;
     calcHeight: number;
     calcPinnedContainerMaxWidth: number;
@@ -184,7 +185,7 @@ export interface IGridComponent {
     triggerRowSelectionChange(newSelectionAsSet: Set<any>,
         row?: IgxRowComponent<IGridComponent>, event?: Event, headerStatus?: boolean);
     getPinnedWidth(takeHidden?: boolean);
-    moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent);
+    moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos?: DropPosition);
     getCellByKey(rowSelector: any, columnField: string);
     trackColumnChanges(index, col);
     checkHeaderCheckboxStatus(headerStatus?: boolean);

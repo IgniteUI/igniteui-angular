@@ -83,8 +83,8 @@ export class IgxCellEditorTemplateDirective {
 export class IgxGroupAreaDropDirective extends IgxDropDirective {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: IGridAPIService<IGridComponent>, elementRef: ElementRef, renderer: Renderer2) {
-        super(elementRef, renderer);
+    constructor(gridAPI: IGridAPIService<IGridComponent>, elementRef: ElementRef, renderer: Renderer2, _zone: NgZone) {
+        super(elementRef, renderer, _zone);
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
