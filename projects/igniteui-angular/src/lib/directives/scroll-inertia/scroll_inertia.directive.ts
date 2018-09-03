@@ -129,7 +129,7 @@ export class IgxScrollInertiaDirective implements OnInit {
             const maxScrollLeft = parseInt(this.IgxScrollInertiaScrollContainer.children[0].style.width, 10);
             if (0 < curScrollLeft && curScrollLeft < maxScrollLeft) {
                 // Prevent navigating through pages when scrolling on Mac
-                event.preventDefault();
+                evt.preventDefault();
             }
         } else if (scrollDeltaY) {
             this._scrollToY(
@@ -139,7 +139,7 @@ export class IgxScrollInertiaDirective implements OnInit {
             const maxScrollTop = this.IgxScrollInertiaScrollContainer.children[0].scrollHeight -
                 this.IgxScrollInertiaScrollContainer.offsetHeight;
             if (0 < curScrollTop && curScrollTop < maxScrollTop) {
-                event.preventDefault();
+                evt.preventDefault();
             }
         }
 
