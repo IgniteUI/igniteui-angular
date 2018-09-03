@@ -208,10 +208,8 @@
     %igx-drop-down__item {
         color: --var($theme, 'item-text-color');
         cursor: pointer;
+        height: rem($desktop-item-height);
         padding: 0 rem($desktop-item-padding);
-        @media only screen and (max-width: $mobile-break-point) {
-            padding: 0 rem($mobile-item-padding);
-        }
 
         &:focus {
             outline: 0;

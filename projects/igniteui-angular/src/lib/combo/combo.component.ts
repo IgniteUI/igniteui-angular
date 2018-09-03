@@ -496,7 +496,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public itemHeight = 32;
+    public itemHeight = 48;
 
     /**
      * @hidden
