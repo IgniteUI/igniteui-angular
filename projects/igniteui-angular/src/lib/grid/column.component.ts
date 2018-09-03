@@ -193,9 +193,7 @@ export class IgxColumnComponent implements AfterContentInit {
                     this.grid.summariesHeight = 0;
                 }
 
-                if (!value) {
-                    this.grid.columnsWithNoSetWidths.push(this);
-                } else if (this.grid.columnsWithNoSetWidths.indexOf(this) !== -1) {
+                if (value && this.grid.columnsWithNoSetWidths.indexOf(this) !== -1) {
                     const colIndex = this.grid.columnsWithNoSetWidths.indexOf(this);
                     this.grid.columnsWithNoSetWidths.splice(colIndex, 1);
                 }
