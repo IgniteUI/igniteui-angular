@@ -167,7 +167,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selectionAPI: IgxSelectionAPIService,
+        protected selection: IgxSelectionAPIService,
         @Self() @Optional() public ngControl: NgControl) {
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
@@ -1123,8 +1123,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             return;
         }
         const newSelection = select ?
-            this.selectionAPI.select_item(this.id, newItem) :
-            this.selectionAPI.deselect_item(this.id, newItem);
+            this.selection.add_item(this.id, newItem) :
+            this.selection.delete_item(this.id, newItem);
         this.triggerSelectionChange(newSelection);
     }
 
@@ -1157,7 +1157,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public isItemSelected(item) {
-        return this.selectionAPI.is_item_selected(this.id, this._stringifyItemID(item));
+        return this.selection.is_item_selected(this.id, this._stringifyItemID(item));
     }
 
     /**
@@ -1169,11 +1169,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         if (oldSelection !== newSelection) {
             const args: IComboSelectionChangeEventArgs = { oldSelection, newSelection };
             this.onSelectionChange.emit(args);
-            newSelectionAsSet = new Set();
+            newSelectionAsSet = this.selection.get_empty();
             for (let i = 0; i < args.newSelection.length; i++) {
                 newSelectionAsSet.add(args.newSelection[i]);
             }
-            this.selectionAPI.set_selection(this.id, newSelectionAsSet);
+            this.selection.set(this.id, newSelectionAsSet);
             this.value = this.dataType !== DataTypes.PRIMITIVE ?
                 newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
                 newSelection.join(', ');
@@ -1458,7 +1458,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
-            const newSelection = this.selectionAPI.select_items(this.id, newItems, clearCurrentSelection);
+            const newSelection = this.selection.add_items(this.id, newItems, clearCurrentSelection);
             this.triggerSelectionChange(newSelection);
         }
     }
@@ -1473,7 +1473,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public deselectItems(items: Array<any>) {
         if (items) {
-            const newSelection = this.selectionAPI.deselect_items(this.id, items);
+            const newSelection = this.selection.delete_items(this.id, items);
             this.triggerSelectionChange(newSelection);
         }
     }
@@ -1487,8 +1487,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     public selectAllItems(ignoreFilter?: boolean) {
-        const allVisible = this.selectionAPI.get_all_ids(ignoreFilter ? this.data : this.filteredData);
-        const newSelection = this.selectionAPI.select_items(this.id, allVisible);
+        const allVisible = this.selection.get_all_ids(ignoreFilter ? this.data : this.filteredData);
+        const newSelection = this.selection.add_items(this.id, allVisible);
         this.triggerSelectionChange(newSelection);
     }
 
@@ -1502,8 +1502,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public deselectAllItems(ignoreFilter?: boolean) {
         const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
-            new Set() :
-            this.selectionAPI.deselect_items(this.id, this.selectionAPI.get_all_ids(this.filteredData));
+            this.selection.get_empty() :
+            this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData));
         this.triggerSelectionChange(newSelection);
     }
 }
