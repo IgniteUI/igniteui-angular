@@ -2,7 +2,7 @@ import { ITransaction, IChange, IState, ChangeType } from './utilities';
 
 export class IgxTransactionBaseService implements ITransaction {
     private _changes: IChange[] = [];
-    private _undone: IChange[] = [];
+    private _undone: { change: IChange, originalValue: any }[] = [];
     private _states: Map<any, IState> = new Map();
 
     constructor() {
@@ -49,27 +49,30 @@ export class IgxTransactionBaseService implements ITransaction {
 
     public reset() {
         this._changes = [];
+        this._states = new Map();
+        this._undone = [];
     }
 
     public undo() {
         if (this._changes.length > 0) {
             const change: IChange = this._changes.pop();
-            this._undone.push(change);
+            const length = this._undone.push({ change: change, originalValue: undefined });
             const currentlyLastChange = [...this._changes].reverse().find(c => c.id === change.id);
-            const state = this._states.get(currentlyLastChange.id);
             if (currentlyLastChange) {
-                this.updateCurrentState(currentlyLastChange, state.originalValue);
+                const state = this._states.get(currentlyLastChange.id);
+                this.updateCurrentState(currentlyLastChange, state ? state.originalValue : undefined);
+                this._undone[length - 1].originalValue = state ? state.originalValue : undefined;
             } else {
-                if (state) {
-                    this._states.delete(change.id);
-                }
+                this._states.delete(change.id);
             }
         }
     }
 
     public redo() {
         if (this._undone.length > 0) {
-            this._changes.push(this._undone.pop());
+            const undone = this._undone.pop();
+            this.updateCurrentState(undone.change, undone.originalValue);
+            this._changes.push(undone.change);
         }
     }
 

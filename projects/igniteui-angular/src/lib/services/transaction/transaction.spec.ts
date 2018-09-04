@@ -7,10 +7,76 @@ describe('Transactions', () => {
     fit('Add ADD type change - all possible paths', fakeAsync(() => {
         const trans = new IgxTransactionBaseService();
         expect(trans).toBeDefined();
-        const change: IChange = { id: '1', type: ChangeType.ADD, newValue: 1 };
-        trans.add(change);
-        expect(trans.get('1')).toEqual(change);
-        expect(trans.getAll()).toEqual([change]);
-        expect(trans.currentState().get(change.id)).toEqual({ value: change.newValue, originalValue: undefined, type: change.type });
+
+        // ADD
+        const addChange: IChange = { id: '1', type: ChangeType.ADD, newValue: 1 };
+        trans.add(addChange);
+        expect(trans.get('1')).toEqual(addChange);
+        expect(trans.getAll()).toEqual([addChange]);
+        expect(trans.currentState().get(addChange.id)).toEqual({
+            value: addChange.newValue,
+            originalValue: undefined,
+            type: addChange.type
+        });
+        trans.reset();
+        expect(trans.getAll()).toEqual([]);
+        expect(trans.currentState()).toEqual(new Map());
+
+        // ADD -> Undo
+        trans.add(addChange);
+        trans.undo();
+        expect(trans.getAll()).toEqual([]);
+        expect(trans.currentState()).toEqual(new Map());
+        trans.reset();
+
+        // ADD -> Undo -> Redo
+        trans.add(addChange);
+        trans.undo();
+        trans.redo();
+        expect(trans.getAll()).toEqual([addChange]);
+        expect(trans.currentState().get(addChange.id)).toEqual({
+            value: addChange.newValue,
+            originalValue: undefined,
+            type: addChange.type
+        });
+        trans.reset();
+
+        // ADD -> DELETE
+        trans.add(addChange);
+        const deleteChange: IChange = { id: '1', type: ChangeType.DELETE, newValue: 1 };
+        trans.add(deleteChange);
+        expect(trans.getAll()).toEqual([addChange, deleteChange]);
+        expect(trans.currentState()).toEqual(new Map());
+        trans.reset();
+
+        // ADD -> DELETE -> Undo
+        trans.add(addChange);
+        trans.add(deleteChange);
+        trans.undo();
+        expect(trans.getAll()).toEqual([addChange]);
+        expect(trans.currentState().get(addChange.id)).toEqual({
+            value: addChange.newValue,
+            originalValue: undefined,
+            type: addChange.type
+        });
+        trans.reset();
+
+        // ADD -> DELETE -> Undo -> Redo
+        trans.add(addChange);
+        trans.add(deleteChange);
+        trans.undo();
+        trans.redo();
+        expect(trans.getAll()).toEqual([addChange, deleteChange]);
+        expect(trans.currentState()).toEqual(new Map());
+        trans.reset();
+
+        // ADD -> DELETE -> Undo -> Undo
+        trans.add(addChange);
+        trans.add(deleteChange);
+        trans.undo();
+        trans.undo();
+        expect(trans.getAll()).toEqual([]);
+        expect(trans.currentState()).toEqual(new Map());
+        trans.reset();
     }));
 });
