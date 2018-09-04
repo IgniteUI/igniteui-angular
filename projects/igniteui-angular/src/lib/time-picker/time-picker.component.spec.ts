@@ -913,6 +913,31 @@ describe('IgxTimePicker', () => {
         expect(changedTime).toEqual('5:23');
 
     }));
+
+    it('TimePicker default selected value in dialog', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+        tick();
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+
+        const timePickerTarget = dom.query(By.directive(IgxInputDirective));
+        UIInteractions.clickElement(timePickerTarget);
+        tick(100);
+        fixture.detectChanges();
+
+        const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+        const selectHour = hourColumn.children[3];
+        expect(selectHour.nativeElement.innerText).toBe('04');
+
+        const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+        const selectMinute = minuteColumn.children[3];
+        expect(selectMinute.nativeElement.innerText).toBe('00');
+
+        const AMPMColumn: any = dom.query(By.css('.igx-time-picker__ampmList'));
+        const selectAMPM = AMPMColumn.children[3];
+        expect(selectAMPM.nativeElement.innerText).toBe('AM');
+    }));
 });
 
 @Component({
