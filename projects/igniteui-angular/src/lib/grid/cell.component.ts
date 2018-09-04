@@ -564,8 +564,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             this.inEditMode = true;
         }
         this.selected = true;
-        this.focused = true;
-        this.row.focused = true;
         if (fireFocus) {
             this.nativeElement.focus();
         }
@@ -639,12 +637,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.prevCellSelectionID = `${this.gridID}-prev-cell`;
         this.keydown$.subscribe((event: KeyboardEvent) => this.dispatchEvent(event));
         combineLatest([this.row.virtDirRow.onChunkLoad, this.grid.verticalScrollContainer.onChunkLoad])
-            .pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this.cdr.markForCheck();
-                if (this.selected) {
-                    this.nativeElement.focus();
-                }
-            });
+            .pipe(takeUntil(this.destroy$)).subscribe(() => this.cdr.markForCheck());
     }
 
     /**
@@ -731,6 +724,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     @HostListener('focus', ['$event'])
     public onFocus(event) {
+        this.focused = true;
+        this.row.focused = true;
         if (!this.selected) {
             this._updateCellSelectionStatus(false, event);
         }
