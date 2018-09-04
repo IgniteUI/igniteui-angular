@@ -29,6 +29,7 @@ import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
+import {IgxScrollInertiaModule} from './../scroll-inertia/scroll_inertia.directive';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
@@ -264,20 +265,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.vh.instance.height = this.igxForOf ? this._calcHeight() : 0;
             this._zone.runOutsideAngular(() => {
                 this.vh.instance.elementRef.nativeElement.addEventListener('scroll', (evt) => { this.onScroll(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener('wheel',
-                    (evt) => { this.onWheel(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener('touchstart',
-                    (evt) => { this.onTouchStart(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener('touchmove',
-                    (evt) => { this.onTouchMove(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener('pointerdown',
-                    (evt) => { this.onPointerDown(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener('pointerup',
-                    (evt) => { this.onPointerUp(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener('MSGestureStart',
-                    (evt) => { this.onMSGestureStart(evt); });
-                this.dc.instance._viewContainer.element.nativeElement.addEventListener('MSGestureChange',
-                    (evt) => { this.onMSGestureChange(evt); });
+                this.dc.instance.scrollContainer = this.vh.instance.elementRef.nativeElement;
             });
         }
 
@@ -292,24 +280,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.hScroll = this.hvh.instance.elementRef.nativeElement;
                 this._zone.runOutsideAngular(() => {
                     this.hvh.instance.elementRef.nativeElement.addEventListener('scroll', this.func);
+                    this.dc.instance.scrollContainer = this.hScroll;
                 });
             } else {
                 this._zone.runOutsideAngular(() => {
                     this.hScroll.addEventListener('scroll', this.func);
-                    this.dc.instance._viewContainer.element.nativeElement.addEventListener('wheel',
-                        (evt) => { this.onWheel(evt); });
-                    this.dc.instance._viewContainer.element.nativeElement.addEventListener('touchstart',
-                        (evt) => { this.onTouchStart(evt); });
-                    this.dc.instance._viewContainer.element.nativeElement.addEventListener('touchmove',
-                        (evt) => { this.onTouchMove(evt); });
-                    this.dc.instance._viewContainer.element.nativeElement.addEventListener('pointerdown',
-                        (evt) => { this.onPointerDown(evt); });
-                    this.dc.instance._viewContainer.element.nativeElement.addEventListener('pointerup',
-                        (evt) => { this.onPointerUp(evt); });
-                    this.dc.instance._viewContainer.element.nativeElement.addEventListener('MSGestureStart',
-                        (evt) => { this.onMSGestureStart(evt); });
-                    this.dc.instance._viewContainer.element.nativeElement.addEventListener('MSGestureChange',
-                        (evt) => { this.onMSGestureChange(evt); });
+                    this.dc.instance.scrollContainer = this.hScroll;
                 });
             }
 
@@ -688,142 +664,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
-     * @hidden
-     * Function that is called when scrolling with the mouse wheel or using touchpad
-     */
-    protected onWheel(event) {
-        if (this.igxForScrollOrientation === 'horizontal' && Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-            const scrollStepX = 10;
-            this.hScroll.scrollLeft += Math.sign(event.deltaX) * scrollStepX;
-
-            const curScrollLeft = this.hScroll.scrollLeft;
-            const maxScrollLeft = parseInt(this.hScroll.children[0].style.width, 10);
-            if (0 < curScrollLeft && curScrollLeft < maxScrollLeft) {
-                // Prevent navigating through pages when scrolling on Mac
-                event.preventDefault();
-            }
-        } else if (this.igxForScrollOrientation === 'vertical' && Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-            const scrollStepY = /Edge/.test(navigator.userAgent) ? 25 : 100;
-            this.vh.instance.elementRef.nativeElement.scrollTop += Math.sign(event.deltaY) * scrollStepY / this._virtHeightRatio;
-
-            const curScrollTop = this.vh.instance.elementRef.nativeElement.scrollTop;
-            const maxScrollTop = this.vh.instance.height - this.vh.instance.elementRef.nativeElement.offsetHeight;
-            if (0 < curScrollTop && curScrollTop < maxScrollTop) {
-                event.preventDefault();
-            }
-        }
-    }
-
-    /**
-     * @hidden
-     * Function that is called the first moment we start interacting with the content on a touch device
-     */
-    protected onTouchStart(event) {
-        if (typeof MSGesture === 'function') {
-            return false;
-        }
-        if (this.igxForScrollOrientation === 'horizontal') {
-            this._lastTouchX = event.changedTouches[0].screenX;
-        } else if (this.igxForScrollOrientation === 'vertical') {
-            this._lastTouchY = event.changedTouches[0].screenY;
-        }
-    }
-
-    /**
-     * @hidden
-     * Function that is called when we need to scroll the content based on touch interactions
-     */
-    protected onTouchMove(event) {
-        if (typeof MSGesture === 'function') {
-            return false;
-        }
-
-        if (this.igxForScrollOrientation === 'horizontal') {
-            const movedX = this._lastTouchX - event.changedTouches[0].screenX;
-
-            this.hScroll.scrollLeft += movedX;
-            this._lastTouchX = event.changedTouches[0].screenX;
-        } else if (this.igxForScrollOrientation === 'vertical') {
-            const maxScrollTop = this.vh.instance.elementRef.nativeElement.children[0].offsetHeight -
-                this.dc.instance._viewContainer.element.nativeElement.offsetHeight;
-            const movedY = this._lastTouchY - event.changedTouches[0].screenY;
-
-            this.vh.instance.elementRef.nativeElement.scrollTop += movedY;
-
-            if (this.vh.instance.elementRef.nativeElement.scrollTop !== 0 &&
-                this.vh.instance.elementRef.nativeElement.scrollTop !== maxScrollTop) {
-                event.preventDefault();
-            }
-
-            this._lastTouchY = event.changedTouches[0].screenY;
-        }
-    }
-
-    /**
-     * @hidden
-     * Function that is called when we need to detect touch starting on a touch device on IE/Edge
-     */
-    protected onPointerDown(event) {
-        if (!event || (event.pointerType !== 2 && event.pointerType !== 'touch') ||
-            typeof MSGesture !== 'function') {
-            return true;
-        }
-
-        if (!this._gestureObject) {
-            this._gestureObject = new MSGesture();
-            this._gestureObject.target = this.dc.instance._viewContainer.element.nativeElement;
-        }
-
-        event.target.setPointerCapture(this._pointerCapture = event.pointerId);
-        this._gestureObject.addPointer(this._pointerCapture);
-    }
-
-    /**
-     * @hidden
-     * Function that is called when we need to detect touch ending on a touch device on IE/Edge
-     */
-    protected onPointerUp(event) {
-        if (!this._pointerCapture) {
-            return true;
-        }
-
-        event.target.releasePointerCapture(this._pointerCapture);
-        delete this._pointerCapture;
-    }
-
-    /**
-     * @hidden
-     *  Function that is called when a gesture begins on IE/Edge
-     */
-    protected onMSGestureStart(event) {
-        if (this.igxForScrollOrientation === 'horizontal') {
-            this._lastTouchX = event.screenX;
-        } else if (this.igxForScrollOrientation === 'vertical') {
-            this._lastTouchY = event.screenY;
-        }
-        return false;
-    }
-
-    /**
-     * @hidden
-     * Function that is called when a we need to scroll based on the gesture performed on IE/Edge
-     */
-    protected onMSGestureChange(event) {
-        if (this.igxForScrollOrientation === 'horizontal') {
-            const movedX = this._lastTouchX - event.screenX;
-            this.hScroll.scrollLeft += movedX;
-
-            this._lastTouchX = event.screenX;
-        } else if (this.igxForScrollOrientation === 'vertical') {
-            const movedY = this._lastTouchY - event.screenY;
-            this.vh.instance.elementRef.nativeElement.scrollTop += movedY;
-
-            this._lastTouchY = event.screenY;
-        }
-        return false;
-    }
-
-    /**
      * Gets the function used to track changes in the items collection.
      * By default the object references are compared. However this can be optimized if you have unique identifier
      * value that can be used for the comparison instead of the object ref or if you have some other property values
@@ -1148,7 +988,7 @@ export interface IForOfState {
     declarations: [IgxForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     exports: [IgxForOfDirective],
-    imports: [CommonModule]
+    imports: [IgxScrollInertiaModule, CommonModule]
 })
 
 export class IgxForOfModule {
