@@ -933,10 +933,11 @@ describe('IgxCalendar', () => {
 
         const startDate = calendar.viewDate;
         const endDate = new Date(calendar.viewDate);
-        endDate.setDate(endDate.getDate() + 7);
+        endDate.setDate(endDate.getDate() + 14);
 
-        const evenDates: Date[] = [],
-            oddDates: Date[] = [];
+        const startDateDeselect = new Date(startDate);
+        const endDateDeselect = new Date(endDate);
+        endDateDeselect.setDate(endDate.getDate() - 7);
 
         fixture.whenStable().then(() => {
             fixture.detectChanges();
@@ -948,27 +949,26 @@ describe('IgxCalendar', () => {
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
-            for (let i = 0; i < 7; i++) {
-                if ((startDate.getDate() + i) % 2 === 0) {
-                    evenDates.push(new Date(startDate.getFullYear(), startDate.getMonth(),
-                        startDate.getDate() + i));
-                } else {
-                    oddDates.push(new Date(startDate.getFullYear(), startDate.getMonth(),
-                        startDate.getDate() + i));
-                }
-            }
-
-            calendar.deselectDate(evenDates);
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
             return fixture.whenStable();
         }).then(() => {
             fixture.detectChanges();
             const selectedDates: Date[] = calendar.value as Date[];
             const selectedDatesMs = selectedDates.map(d => new Date(
                 d.getFullYear(), d.getMonth(), d.getDate()).getTime());
-            const oddDatesInMs = oddDates.map(d => new Date(
+            expect(selectedDates.length).toBe(7);
+            const expectedSelectedDates = [];
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(endDate);
+                date.setDate(date.getDate() - i);
+                expectedSelectedDates.push(date);
+            }
+
+            const expectedSelectedDatesInMs = expectedSelectedDates.map(d => new Date(
                 d.getFullYear(), d.getMonth(), d.getDate()).getTime());
-            for (const oddDate of oddDatesInMs) {
-                expect(selectedDatesMs.indexOf(oddDate)).toBeGreaterThan(-1);
+            for (const expectedSelectedDate of expectedSelectedDatesInMs) {
+                expect(selectedDatesMs.indexOf(expectedSelectedDate)).toBeGreaterThan(-1);
             }
         });
     }));

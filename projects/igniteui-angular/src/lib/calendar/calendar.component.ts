@@ -744,26 +744,17 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             return;
         }
 
-        const datesInMsToDeselect: Set<number> = new Set<number>();
-        if (Array.isArray(value)) {
-            for (const date of value) {
-                datesInMsToDeselect.add(this.getDateOnlyInMs(date));
-            }
-        } else {
-            datesInMsToDeselect.add(this.getDateOnlyInMs(value));
+        switch (this.selection) {
+            case 'single':
+                this.deselectSingle(value as Date);
+                break;
+            case 'multi':
+                this.deselectMultiple(value as Date[]);
+                break;
+            case 'range':
+                this.deselectRange(value as Date[]);
+                break;
         }
-
-        if (Array.isArray(this.selectedDates)) {
-            for (let i = 0; i < this.selectedDates.length; i++) {
-                if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
-                    this.selectedDates.splice(i, 1);
-                }
-            }
-        } else if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates))) {
-            this.selectedDates = null;
-        }
-
-        this._onChangeCallback(this.selectedDates);
     }
 
     /**
@@ -1031,6 +1022,65 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             }
         }
         this._onChangeCallback(this.selectedDates);
+    }
+
+    /**
+     * Performs a single deselection.
+     * @hidden
+     */
+    private deselectSingle(value: Date) {
+        if (this.selectedDates !== null && value !== null &&
+            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates)) {
+            this.selectedDates = null;
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
+
+    /**
+     * Performs a multiple deselection.
+     * @hidden
+     */
+    private deselectMultiple(value: Date[]) {
+        if (value === null) {
+            return;
+        }
+
+        value = value.filter(v => v !== null);
+        const selectedDatesCount = this.selectedDates.length;
+        const datesInMsToDeselect: Set<number> = new Set<number>(
+            value.map(v => this.getDateOnlyInMs(v)));
+
+        for (let i = this.selectedDates.length - 1; i >= 0; i--) {
+            if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
+                this.selectedDates.splice(i, 1);
+            }
+        }
+
+        if (this.selectedDates.length !== selectedDatesCount) {
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
+
+    /**
+     * Performs a range deselection.
+     *@hidden
+     */
+    private deselectRange(value: Date[]) {
+        if (value === null) {
+            return;
+        }
+
+        value = value.filter(v => v !== null);
+        if (value.length < 2) {
+            return;
+        }
+
+        value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+        const start = value.shift();
+        const end = value.pop();
+
+        const deselectRange = [start, ...this.generateDateRange(start, end)];
+        this.deselectMultiple(deselectRange);
     }
 
     /**
