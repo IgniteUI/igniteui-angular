@@ -190,7 +190,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     set id(value: string) {
-        this.selectionAPI.set_selection(value, this.selectionAPI.get_selection(this.id));
+        this.selection.set(value, this.selection.get(this.id));
         this._id = value;
         this.toggleDirective.id = value;
     }
@@ -214,12 +214,12 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     public get selectedItem(): any {
-        const selectedItem = this.selectionAPI.get_selection_first(this.id);
+        const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
             if (selectedItem.isSelected) {
                 return selectedItem;
             }
-            this.selectionAPI.set_selection(this.id, new Set());
+            this.selection.clear(this.id);
         }
         return null;
     }
@@ -285,7 +285,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selectionAPI: IgxSelectionAPIService) { }
+        protected selection: IgxSelectionAPIService) { }
 
     /**
      * Select an item by index
@@ -400,7 +400,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      */
     ngOnInit() {
         this.toggleDirective.id = this.id;
-        this.selectionAPI.set_selection(this.id, new Set());
+        this.selection.clear(this.id);
     }
 
 
@@ -493,7 +493,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
             newSelection = this._focusedItem;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection };
-        this.selectionAPI.set_selection(this.id, new Set([newSelection]));
+        this.selection.set(this.id, new Set([newSelection]));
 
         this.onSelection.emit(args);
     }
@@ -685,8 +685,8 @@ export class IgxDropDownComponent extends IgxDropDownBase {
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selectionAPI: IgxSelectionAPIService) {
-        super(elementRef, cdr, selectionAPI);
+        protected selection: IgxSelectionAPIService) {
+        super(elementRef, cdr, selection);
     }
 
     protected changeSelectedItem(newSelection?: IgxDropDownItemComponent) {

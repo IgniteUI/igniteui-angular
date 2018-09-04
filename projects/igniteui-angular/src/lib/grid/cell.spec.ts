@@ -374,6 +374,25 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value).toBe(cellValue);
             }));
 
+            it('should not throw errors when update cell to value, which does not match filter criteria', (async () => {
+                grid.filter('personNumber', 1, IgxStringFilteringOperand.instance().condition('equals'));
+                fixture.detectChanges();
+
+                const cell = grid.getCellByColumn(0, 'personNumber');
+                const cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[4];
+                const previousCell = grid.getCellByColumn(0, 'birthday');
+
+                cellDomPK.triggerEventHandler('dblclick', {});
+                await wait();
+                expect(cell.inEditMode).toBe(true);
+
+                const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
+                UIInteractions.sendInput(editTemplate, 9);
+                await wait();
+
+                expect (() => previousCell.onClick({})).not.toThrow();
+            }));
+
             it('should exit edit mode on sorting', (async () => {
                 const cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
