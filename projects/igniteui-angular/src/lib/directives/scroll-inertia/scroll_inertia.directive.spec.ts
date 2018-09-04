@@ -121,6 +121,73 @@ describe('Scroll Inertia Directive ', () => {
 
     });
 
+    it('should stop inertia if another touch event is initiated while inertia is executing.', async() => {
+        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        let evt = {
+            touches: [{
+                pageX: 0,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        scrInertiaDir.onTouchStart(evt);
+
+        evt = {
+            touches: [{
+                pageX: 0,
+                pageY: -100
+            }],
+            preventDefault: () => {}
+        };
+        await wait(10);
+        scrInertiaDir.onTouchMove(evt);
+
+        scrInertiaDir.onTouchEnd(evt);
+        await wait(10);
+
+        // don't wait for inertia to end. Instead start another touch interaction.
+        evt = {
+            touches: [{
+                pageX: 0,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        scrInertiaDir.onTouchStart(evt);
+
+        const scrContainer = fix.componentInstance.scrollContainer;
+        expect(scrContainer.nativeElement.scrollTop).toBeLessThan(1000);
+    });
+
+    it('should honor the defined swipeToleranceX.', async() => {
+        // if scroll is initiated on Y and on X within the defined tolerance no scrolling should occur on X.
+        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        let evt = {
+            touches: [{
+                pageX: 0,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        scrInertiaDir.onTouchStart(evt);
+        evt = {
+            touches: [{
+                pageX: -10,
+                pageY: -50
+            }],
+            preventDefault: () => {}
+        };
+        await wait(10);
+        scrInertiaDir.onTouchMove(evt);
+
+        scrInertiaDir.onTouchEnd(evt);
+
+        await wait(1500);
+        const scrContainer = fix.componentInstance.scrollContainer;
+        expect(scrContainer.nativeElement.scrollLeft).toEqual(0);
+        expect(scrContainer.nativeElement.scrollTop).toBeGreaterThan(100);
+    });
+
     it('should change scroll left for related scrollbar on touch start/move/end', async() => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
         let evt = {
@@ -271,6 +338,17 @@ describe('Scroll Inertia Directive ', () => {
         window['MSGesture'] = msGesture;
     });
 
+    it('should not throw error when calling pointerDown/pointerUp if there is no associated scrollbar.', () => {
+        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        scrInertiaDir.IgxScrollInertiaScrollContainer = null;
+        const evt = {
+            pointerType: 2,
+            target: {},
+            pointerId: 0
+        };
+        expect (() => scrInertiaDir.onPointerDown(evt)).not.toThrow();
+        expect (() => scrInertiaDir.onPointerUp(evt)).not.toThrow();
+    });
 });
 
     /** igxScroll inertia for testing */
