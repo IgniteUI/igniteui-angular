@@ -1183,7 +1183,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
     /**
      * Performs a range deselection.
-     *@hidden
+     * @hidden
      */
     private deselectRange(value: Date[]) {
         if (value === null) {
@@ -1204,7 +1204,6 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
-     * Performs a range deselection.
      * @hidden
      */
     private selectDateFromClient(value: Date) {
