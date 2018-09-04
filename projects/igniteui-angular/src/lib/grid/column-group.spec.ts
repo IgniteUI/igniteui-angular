@@ -14,7 +14,7 @@ const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
-describe('IgxGrid - multi-column headers', () => {
+fdescribe('IgxGrid - multi-column headers', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

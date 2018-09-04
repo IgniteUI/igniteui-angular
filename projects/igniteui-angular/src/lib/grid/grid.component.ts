@@ -3283,8 +3283,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
 
-        const columnsWithSetWidths = this.visibleColumns.filter(c => c.widthSetByUser);
-        const columnsToSize = this.visibleColumns.length - columnsWithSetWidths.length;
+        const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
+
+        const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
+        const columnsToSize = visibleChildColumns.length - columnsWithSetWidths.length;
 
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
