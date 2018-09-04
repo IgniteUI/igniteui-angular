@@ -254,8 +254,10 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     public set width(value: string) {
-        this.widthSetByUser = true;
-        this._width = value;
+        if (value) {
+            this.widthSetByUser = true;
+            this._width = value;
+        }
     }
     /**
      * Sets/gets the maximum `width` of the column.
