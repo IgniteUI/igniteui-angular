@@ -193,13 +193,6 @@ export class IgxColumnComponent implements AfterContentInit {
                     this.grid.summariesHeight = 0;
                 }
 
-                if (!value) {
-                    this.grid.columnsWithNoSetWidths.push(this);
-                } else if (this.grid.columnsWithNoSetWidths.indexOf(this) !== -1) {
-                    const colIndex = this.grid.columnsWithNoSetWidths.indexOf(this);
-                    this.grid.columnsWithNoSetWidths.splice(colIndex, 1);
-                }
-
                 this.grid.reflow();
             }
         }
@@ -251,7 +244,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public get width(): string {
-        return this._width;
+        return this.widthSetByUser ? this._width : this.defaultWidth;
     }
     /**
      * Sets the `width` of the column.
@@ -261,14 +254,8 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     public set width(value: string) {
+        this.widthSetByUser = true;
         this._width = value;
-
-        if (this.grid && this.grid.columnsWithNoSetWidths !== null) {
-            const index = this.grid.columnsWithNoSetWidths.indexOf(this);
-            if (index !== -1) {
-                this.grid.columnsWithNoSetWidths.splice(index, 1);
-            }
-        }
     }
     /**
      * Sets/gets the maximum `width` of the column.
@@ -664,6 +651,17 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         return lvl;
     }
+
+    /**
+     * hidden
+     */
+    public defaultWidth: string;
+
+    /**
+     * hidden
+     */
+    public widthSetByUser: boolean;
+
     /**
      * Sets/gets the parent column.
      * ```typescript
