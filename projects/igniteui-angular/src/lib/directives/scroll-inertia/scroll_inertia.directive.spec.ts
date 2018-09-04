@@ -24,7 +24,7 @@ import { IgxScrollInertiaModule, IgxScrollInertiaDirective } from './scroll_iner
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
-fdescribe('Scroll Inertia Directive - Unit Tests', () => {
+describe('Scroll Inertia Directive ', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
     beforeEach(async(() => {
@@ -196,6 +196,43 @@ fdescribe('Scroll Inertia Directive - Unit Tests', () => {
         const scrContainer = fix.componentInstance.scrollContainer;
         expect(scrContainer.nativeElement.scrollLeft).toEqual(80);
     });
+
+    // Unit tests for inertia function.
+    it('inertia should accelerate and then deccelerate vertically.', async() => {
+        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+
+        // vertical inertia
+        scrInertiaDir._inertiaInit(0, 1);
+
+        await wait(1500);
+        const scrTopStepArray = fix.componentInstance.scrTopStepArray;
+        expect(scrTopStepArray.length).toEqual(57);
+
+        const first = scrTopStepArray[0];
+        const mid = scrTopStepArray[9];
+        const end = scrTopStepArray[56];
+
+        expect(first).toBeLessThan(mid);
+        expect(end).toBeLessThan(mid);
+    });
+
+    it('inertia should accelerate and then deccelerate vertically.', async() => {
+        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+
+        // vertical inertia
+        scrInertiaDir._inertiaInit(1, 0);
+
+        await wait(1500);
+        const scrLeftStepArray = fix.componentInstance.scrLeftStepArray;
+        expect(scrLeftStepArray.length).toEqual(57);
+
+        const first = scrLeftStepArray[0];
+        const mid = scrLeftStepArray[9];
+        const end = scrLeftStepArray[56];
+
+        expect(first).toBeLessThan(mid);
+        expect(end).toBeLessThan(mid);
+    });
 });
 
     /** igxScroll inertia for testing */
@@ -235,6 +272,10 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
     public onMSGestureChange(evt) {
         return super.onMSGestureChange(evt);
     }
+
+    public _inertiaInit(speedX, speedY) {
+        super._inertiaInit(speedX, speedY);
+    }
 }
 
 /** igxScroll inertia component */
@@ -244,13 +285,18 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
             <ng-template igxTestScrollInertia #scrInertiaContainer></ng-template>
         </div>
         <div #scrBar [style.height]='height' style='overflow: auto; width: 50px; float:right;'>
-            <div [style.height]='innerHeight' [style.width]='innerHeight'></div>
+            <div [style.height]='innerHeight' [style.width]='innerWidth'></div>
         </div>
     `
 })
 export class ScrollInertiaComponent implements AfterViewInit {
     public height = '500px';
     public innerHeight = '5000px';
+    public innerWidth = '5000px';
+    public scrTopArray = [];
+    public scrTopStepArray = [];
+    public scrLeftArray = [];
+    public scrLeftStepArray = [];
 
     @ViewChild('container') public container: ElementRef;
     @ViewChild('scrBar') public scrollContainer: ElementRef;
@@ -260,5 +306,22 @@ export class ScrollInertiaComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
+
+        this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => { this.onScroll(evt); });
     }
+
+    public onScroll(evt) {
+        let calcScrollStep, calcScrollLeftStep;
+        const ind = this.scrTopArray.length - 1;
+        const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
+        const prevScrLeft = ind < 0 ? 0 : this.scrLeftArray[ind];
+        this.scrTopArray.push(evt.target.scrollTop);
+        this.scrLeftArray.push(evt.target.scrollLeft);
+        calcScrollStep = evt.target.scrollTop - prevScrTop;
+        calcScrollLeftStep = evt.target.scrollLeft - prevScrLeft;
+        this.scrTopStepArray.push(calcScrollStep);
+        this.scrLeftStepArray.push(calcScrollLeftStep);
+    }
+
+
 }
