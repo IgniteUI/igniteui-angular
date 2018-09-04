@@ -14,11 +14,12 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-date-picker
+    <igx-datePicker
+        [outlet]="grid.outletDirective"
         *ngIf="!unaryCondition"
         [value]="value"
         (onSelection)="onDatePickerValueChanged($event)">
-    </igx-date-picker>
+    </igx-datePicker>
 </ng-template>
 
 <select #select [attr.draggable]="false" (change)="selectionChanged($event.target.value)">
