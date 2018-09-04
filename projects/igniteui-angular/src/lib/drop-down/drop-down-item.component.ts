@@ -30,9 +30,24 @@ export class IgxDropDownItemBase {
     }
 
     /**
-     * @hidden
+     * Gets/sets the value of the item if the item is databound
+     *
+     * ```typescript
+     * // usage in IgxDropDownItemComponent
+     * // get
+     * let mySelectedItemValue = this.dropdown.selectedItem.value;
+     *
+     * // set
+     * let mySelectedItem = this.dropdown.selectedItem;
+     * mySelectedItem.value = { id: 123, name: 'Example Name' }
+     *
+     * // usage in IgxComboItemComponent
+     * // get
+     * let myComboItemValue = this.combo.items[0].value;
+     * ```
      */
-    public itemData: any;
+    @Input()
+    public value: any;
 
     /**
      * @hidden
