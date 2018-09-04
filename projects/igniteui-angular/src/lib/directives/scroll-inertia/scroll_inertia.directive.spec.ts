@@ -216,10 +216,10 @@ describe('Scroll Inertia Directive ', () => {
         expect(end).toBeLessThan(mid);
     });
 
-    it('inertia should accelerate and then deccelerate vertically.', async() => {
+    it('inertia should accelerate and then deccelerate horizontally.', async() => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
-        // vertical inertia
+        // horizontal inertia
         scrInertiaDir._inertiaInit(1, 0);
 
         await wait(1500);
@@ -233,6 +233,44 @@ describe('Scroll Inertia Directive ', () => {
         expect(first).toBeLessThan(mid);
         expect(end).toBeLessThan(mid);
     });
+
+     // Unit tests for Pointer Down/Pointer Up - IE/Edge specific
+    it('should prepare MSGesture on PointerDown to handle touch interactions on IE/Edge and should release them on PointerUp.', () => {
+        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        const targetElem = {
+            setPointerCapture: (arg) => {},
+            releasePointerCapture: (arg) => {}
+        };
+        const pointerId = 100;
+        spyOn(targetElem, 'setPointerCapture');
+        spyOn(targetElem, 'releasePointerCapture');
+        const msGesture = window['MSGesture'];
+        if (!msGesture) {
+            // if MSGesture does not exist create a dummy obj to use instead.
+            window['MSGesture'] = () => {
+                return {
+                    addPointer: (arg) => {}
+                };
+            };
+        }
+
+
+        const evt = {
+            pointerType: 2,
+            target: targetElem,
+            pointerId: pointerId
+        };
+        scrInertiaDir.onPointerDown(evt);
+
+        expect(targetElem.setPointerCapture).toHaveBeenCalledWith(pointerId);
+
+        scrInertiaDir.onPointerUp(evt);
+        expect(targetElem.releasePointerCapture).toHaveBeenCalledWith(pointerId);
+
+        // restore original MSGesture state
+        window['MSGesture'] = msGesture;
+    });
+
 });
 
     /** igxScroll inertia for testing */
