@@ -6,9 +6,7 @@ import {
     EventEmitter,
     HostBinding,
     Input,
-    NgZone,
     OnDestroy,
-    OnInit,
     Output,
     TemplateRef,
     ViewChild,
@@ -17,7 +15,6 @@ import {
 import { Subject } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
-import { IgxColumnComponent } from './column.component';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
@@ -32,7 +29,7 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
     selector: 'igx-grid-filter-expression',
     templateUrl: './grid-filtering-expression.component.html'
 })
-export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, AfterViewInit {
+export class IgxGridFilterExpressionComponent implements OnDestroy, AfterViewInit {
 
     @Input()
     get column() {
@@ -41,30 +38,32 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
 
     set column(val) {
         this._column = val;
-        if (this.expression) {
-            this.expression.fieldName = val.field;
-        }
+
+        this.expression.fieldName = val.field;
+        this.expression.ignoreCase = val.filteringIgnoreCase;
+        this.expression.condition = this.getCondition(this.conditions[0]);
     }
 
     @Input()
     get value() {
-        return this._value;
+        return this.expression ? this.expression.searchVal : null;
     }
 
     set value(val) {
         if (!val && val !== 0) {
-            this._value = null;
+            this.expression.searchVal = null;
         } else {
-            this._value = this.transformValue(val);
+            this.expression.searchVal = this.transformValue(val);
         }
-        this.expression.searchVal = this._value;
+
+        this.onExpressionChanged.emit();
     }
 
     @Input()
     public name;
 
     @Output()
-    public onExpressionChanged = new EventEmitter<IFilteringExpression>();
+    public onExpressionChanged = new EventEmitter();
 
     @ViewChild('defaultFilterUI', { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
@@ -85,19 +84,16 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     public expression: IFilteringExpression;
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
-    protected _value = null;
 
-    constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
+    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
         this.conditionChanged.subscribe(() => this.conditionChangedCallback());
-    }
 
-    public ngOnInit() {
         this.expression = {
-            fieldName: this.column.field,
-            condition: this.getCondition(this.conditions[0]),
-            searchVal: this.value,
-            ignoreCase: this.column.filteringIgnoreCase
+            fieldName: null,
+            condition: null,
+            searchVal: null,
+            ignoreCase: null
         };
     }
 
@@ -105,10 +101,10 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
         if (this.name === 'secondExpr') {
             const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
             if (expr && (expr as FilteringExpressionsTree).filteringOperands[1]) {
-                this.value = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).searchVal;
+                this.expression.searchVal = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).searchVal;
                 this.expression.condition = ((expr as FilteringExpressionsTree).filteringOperands[1] as IFilteringExpression).condition;
             } else {
-                this.value = null;
+                this.expression.searchVal = null;
                 this.expression.condition = this.getCondition(this.conditions[0]);
             }
             this.cdr.detectChanges();
@@ -134,12 +130,12 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
 
     public conditionChangedCallback(): void {
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
-            this.onExpressionChanged.emit(this.expression);
+            this.onExpressionChanged.emit();
         }
     }
 
     public unaryConditionChangedCallback(): void {
-        this.onExpressionChanged.emit(this.expression);
+        this.onExpressionChanged.emit();
     }
 
     public isActive(value): boolean {
@@ -190,10 +186,6 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
         }
     }
 
-    public onInputChanged(value): void {
-        this.updateExpression(value);
-    }
-
     public focusInput(): void {
         if (this.input) {
             this.input.nativeElement.focus();
@@ -202,9 +194,9 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
 
     public clearFiltering(resetCondition: boolean): void {
         this.expression.condition = resetCondition ? undefined : this.expression.condition;
-        this.value = null;
+        this.expression.searchVal = null;
         if (!resetCondition) {
-            this.onExpressionChanged.emit(this.expression);
+            this.onExpressionChanged.emit();
         }
         this.cdr.detectChanges();
     }
@@ -214,12 +206,7 @@ export class IgxGridFilterExpressionComponent implements OnInit, OnDestroy, Afte
     }
 
     public onDatePickerValueChanged(value): void {
-        this.updateExpression(value);
-    }
-
-    private updateExpression(value): void {
         this.expression.condition = this.getCondition(this.select.nativeElement.value);
         this.value = value;
-        this.onExpressionChanged.emit(this.expression);
     }
 }
