@@ -4,7 +4,7 @@ import { ITransaction, IChange, IState, ChangeType } from './utilities';
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 
 describe('Transactions', () => {
-    fit('Add ADD type change - all possible paths', fakeAsync(() => {
+    it('Add ADD type change - all possible paths', fakeAsync(() => {
         const trans = new IgxTransactionBaseService();
         expect(trans).toBeDefined();
 
@@ -77,6 +77,43 @@ describe('Transactions', () => {
         trans.undo();
         expect(trans.getAll()).toEqual([]);
         expect(trans.currentState()).toEqual(new Map());
+        trans.reset();
+
+        // ADD -> UPDATE
+        trans.add(addChange);
+        const updateChange: IChange = { id: '1', type: ChangeType.UPDATE, newValue: 2 };
+        trans.add(updateChange);
+        expect(trans.getAll()).toEqual([addChange, updateChange]);
+        expect(trans.currentState().get(addChange.id)).toEqual({
+            value: updateChange.newValue,
+            originalValue: undefined,
+            type: addChange.type
+        });
+        trans.reset();
+
+        // ADD -> UPDATE -> Undo
+        trans.add(addChange);
+        trans.add(updateChange);
+        trans.undo();
+        expect(trans.getAll()).toEqual([addChange]);
+        expect(trans.currentState().get(addChange.id)).toEqual({
+            value: addChange.newValue,
+            originalValue: undefined,
+            type: addChange.type
+        });
+        trans.reset();
+
+        // ADD -> UPDATE -> Undo -> Redo
+        trans.add(addChange);
+        trans.add(updateChange);
+        trans.undo();
+        trans.redo();
+        expect(trans.getAll()).toEqual([addChange, updateChange]);
+        expect(trans.currentState().get(addChange.id)).toEqual({
+            value: updateChange.newValue,
+            originalValue: undefined,
+            type: addChange.type
+        });
         trans.reset();
     }));
 });
