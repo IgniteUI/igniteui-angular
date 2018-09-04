@@ -397,7 +397,7 @@ export class IgxScrollInertiaDirective implements OnInit {
         this.IgxScrollInertiaScrollContainer.scrollTop = dest;
     }
 
-   private _inertiaInit(speedX, speedY) {
+   protected _inertiaInit(speedX, speedY) {
     const stepModifer = this.inertiaStep,
         inertiaDuration = this.inertiaDuration;
     let x = 0;
