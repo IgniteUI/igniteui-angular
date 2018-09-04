@@ -1034,7 +1034,7 @@ describe('IgxDropDown ', () => {
 @Component({
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
-    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)"
+    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" [allowItemsFocus]="true"
     (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
         <igx-drop-down-item *ngFor="let item of items">
@@ -1073,7 +1073,7 @@ class IgxDropDownTestComponent {
     template: `
     <button (click)="toggleDropDown()">Show</button>
     <button (click)="selectItem5()">Select 5</button>
-    <igx-drop-down igxDropDownItemNavigation #scrollDropDown>
+    <igx-drop-down igxDropDownItemNavigation #scrollDropDown [allowItemsFocus]="true">
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>
@@ -1223,7 +1223,7 @@ class IgxDropDownTestEmptyListComponent {
 @Component({
     template: `
     <button (click)="selectItem5()">Select 5</button>
-    <igx-drop-down igxDropDownItemNavigation #scrollDropDown>
+    <igx-drop-down igxDropDownItemNavigation #scrollDropDown [allowItemsFocus]="true">
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>
@@ -1422,7 +1422,7 @@ class IgxDropDownTabsTestComponent {
 
 @Component({
     template: ` <input #inputElement [igxDropDownItemNavigation]="dropdownElement" class='test-input' type='text' value='Focus Me!'/>
-    <igx-drop-down #dropdownElement [width]="'400px'" [height]="'400px'">
+    <igx-drop-down #dropdownElement [width]="'400px'" [height]="'400px'" [allowItemsFocus]="true">
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>
