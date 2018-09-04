@@ -7,15 +7,15 @@
 </div>
 
 <div igxToggle
-    (onOpening)="refresh()"
+    (onOpening)="openDialog()"
     (onOpened)="focusFirstInput()"
-    (onClosed)="refresh()"
+    (onClosed)="closeDialog()"
     #directive="toggle"
     class="igx-filtering__options">
 
     <igx-grid-filter-expression
         name="firstExpr"
-        (onExpressionChanged)="onExpressionChanged($event)"
+        (onExpressionChanged)="onExpressionChanged()"
         [column]="column">
     </igx-grid-filter-expression>
 
@@ -30,7 +30,7 @@
     <igx-grid-filter-expression
         *ngIf="isSecondConditionVisible"
         name="secondExpr"
-        (onExpressionChanged)="onExpressionChanged($event)"
+        (onExpressionChanged)="onExpressionChanged()"
         [column]="column">
     </igx-grid-filter-expression>
 
