@@ -1,25 +1,15 @@
 ﻿import {
     Component,
     ChangeDetectorRef,
-    Directive,
     EventEmitter,
     ElementRef,
-    forwardRef,
     HostBinding,
-    HostListener,
     Input,
-    Inject,
-    NgModule,
     Output,
-    Provider,
     ViewChild,
-    OnInit,
-    AfterContentInit,
     AfterViewInit,
     Renderer2
 } from '@angular/core';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { IgxDragDirective, IgxDropEnterEventArgs } from '../directives/dragdrop/dragdrop.directive';
 import { DisplayDensity } from '../core/utils';
 
