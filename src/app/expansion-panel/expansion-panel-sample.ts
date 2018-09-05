@@ -19,7 +19,7 @@ export class ExpansionPanelSampleComponent implements OnInit {
                 params: Object.assign(scaleInVerTop.options.params, {
                     startOpacity: 0.5,
                     fromScale: 0,
-                    duration: '250ms'
+                    duration: '300ms'
                 })
             }
         }),
@@ -30,7 +30,7 @@ export class ExpansionPanelSampleComponent implements OnInit {
                     endOpacity: 0.5,
                     fromScale: 1,
                     toScale: 0,
-                    duration: '350ms'
+                    duration: '300ms'
                 })
             }
         })
