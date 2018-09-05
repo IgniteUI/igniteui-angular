@@ -1629,19 +1629,19 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.collapsed).toBeFalsy();
             // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines
-            expect(combo.itemHeight).toEqual(32); // Default value for itemHeight
-            expect(combo.itemsMaxHeight).toEqual(320); // Default value for itemsMaxHeight
+            expect(combo.itemHeight).toEqual(48); // Default value for itemHeight
+            expect(combo.itemsMaxHeight).toEqual(480); // Default value for itemsMaxHeight
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.' + CSS_CLASS_CONTENT));
-            expect(dropdownList.nativeElement.clientHeight).toEqual(320);
-            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(32);
+            expect(dropdownList.nativeElement.clientHeight).toEqual(480);
+            expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemHeight = 47;
             tick();
             fix.detectChanges();
             expect(combo.itemHeight).toEqual(47);
-            expect(combo.itemsMaxHeight).toEqual(320);
-            expect(dropdownList.nativeElement.clientHeight).toEqual(320);
+            expect(combo.itemsMaxHeight).toEqual(480);
+            expect(dropdownList.nativeElement.clientHeight).toEqual(480);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(47);
 
             combo.itemsMaxHeight = 438;
