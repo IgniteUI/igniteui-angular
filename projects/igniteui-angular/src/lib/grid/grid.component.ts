@@ -969,17 +969,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onGroupingDone = new EventEmitter<any>();
+    public onGroupingDone = new EventEmitter<ISortingExpression[]>();
 
     /**
-     * Emitted when a new chunk fo data is loaded from virtualization.
+     * Emitted when a new chunk of data is loaded from virtualization.
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<any>();
+    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Emitted when `IgxColumnComponent` is resized.
@@ -1115,6 +1115,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
     public groupTemplate: IgxGroupByRowTemplateDirective;
 
+
+    @ViewChildren('row')
+    private _rowList:  QueryList<any>;
+
     /**
      * A list of `IgxGridRowComponent`.
      * ```typescript
@@ -1122,8 +1126,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    @ViewChildren('row')
-    public rowList: QueryList<any>;
+    public get rowList() {
+        const res = new QueryList<any>();
+        if (!this._rowList) {
+            return res;
+        }
+        const rList = this._rowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(rList);
+        return res;
+    }
+
+    @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
+    private _dataRowList: QueryList<any>;
 
     /**
      * A list of `IgxGridRowComponent`, currently rendered.
@@ -1132,8 +1148,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
-    public dataRowList: QueryList<any>;
+    public get dataRowList() {
+        const res = new QueryList<any>();
+        if (!this._dataRowList) {
+            return res;
+        }
+        const rList = this._dataRowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(rList);
+        return res;
+    }
+
+    @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
+    private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
     /**
      * A list of all group rows.
@@ -1142,8 +1170,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
-    public groupsRowList: QueryList<IgxGridGroupByRowComponent>;
+    public get groupsRowList() {
+        const res = new QueryList<any>();
+        if (!this._groupsRowList) {
+            return res;
+        }
+        const rList = this._groupsRowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(rList);
+        return res;
+    }
+
 
     /**
      * A template reference for the template when the filtered `IgxGridComponent` is empty.
@@ -3169,6 +3207,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
     }
+
+     /**
+     * @hidden
+     */
+    public getContext(rowData): any {
+        return {
+            $implicit: rowData,
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+        };
+    }
+
 
     /**
      * @hidden

@@ -40,7 +40,7 @@ import { IgxGridFilterExpressionComponent } from './filtering/grid-filtering-exp
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxRowComponent } from './row.component';
 import { IGridAPIService } from './api.service';
-
+import { IgxTemplateOutletModule } from '../directives/template-outlet/template_outlet.directive';
 
 @NgModule({
     declarations: [
@@ -78,6 +78,7 @@ import { IGridAPIService } from './api.service';
       IgxColumnResizerDirective,
       IgxColumnMovingDragDirective,
       IgxColumnMovingDropDirective,
+      IgxTemplateOutletModule,
       IgxButtonModule,
       IgxDatePickerModule,
       IgxIconModule,
@@ -109,6 +110,7 @@ import { IGridAPIService } from './api.service';
       IgxToggleModule,
       IgxForOfModule,
       IgxTextHighlightModule,
+      IgxTemplateOutletModule,
       IgxBadgeModule,
       IgxTextSelectionModule,
       IgxCheckboxModule,

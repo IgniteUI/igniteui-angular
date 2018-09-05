@@ -7,7 +7,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    NgZone,
     OnDestroy,
     OnInit,
     QueryList,
@@ -16,7 +15,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IGridAPIService } from '../api.service';
 import { IGridComponent } from '../grid-interfaces';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -44,7 +43,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     get filterCSS(): string {
-        if (this.dialogShowing) {
+        if (this.isDialogVisible) {
             return 'igx-filtering__toggle--active';
         }
         if (this.isFilteringApplied()) {
@@ -62,13 +61,13 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         return `igx-filtering`;
     }
 
-    public dialogShowing = false;
     public filteringLogicOptions: any[];
     public isSecondConditionVisible = false;
     protected chunkLoaded = new Subscription();
     protected columnMoving = new Subscription();
+    private isDialogVisible = false;
     private MINIMUM_VIABLE_SIZE = 240;
-    private _secondExpression = null;
+    private _secondExpressionCache = null;
     private _overlaySettings: OverlaySettings = {
         positionStrategy: new ConnectedPositioningStrategy(),
         modal: false,
@@ -79,7 +78,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     protected toggleDirective: IgxToggleDirective;
 
     @ViewChildren(IgxGridFilterExpressionComponent, { read: IgxGridFilterExpressionComponent })
-    protected expressionsList: QueryList<IgxGridFilterExpressionComponent>;
+    protected expressionComponents: QueryList<IgxGridFilterExpressionComponent>;
 
     @ViewChild('logicOperators', { read: IgxButtonGroupComponent })
     protected logicOperators: IgxButtonGroupComponent;
@@ -125,45 +124,52 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         this.columnMoving.unsubscribe();
     }
 
-    public refresh() {
-        this.dialogShowing = !this.dialogShowing;
-        if (this.dialogShowing) {
-            this.expressionsList.toArray()[0].focusInput();
-
-            const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
-
-            if (expr && expr instanceof FilteringExpressionsTree) {
-                const firstExpr = this.expressionsList.toArray()[0];
-                firstExpr.value = (expr.filteringOperands[0] as IFilteringExpression).searchVal;
-                firstExpr.expression.condition = (expr.filteringOperands[0] as IFilteringExpression).condition;
-                const secondExpr = this.expressionsList.toArray()[1];
-                if (expr.filteringOperands.length > 1) {
-                    if (secondExpr) {
-                        secondExpr.value = (expr.filteringOperands[1] as IFilteringExpression).searchVal;
-                        secondExpr.expression.condition =
-                            (expr.filteringOperands[1] as IFilteringExpression).condition;
-                    }
-                    this.isSecondConditionVisible = true;
-                    this.logicOperators.selectedIndexes = [];
-                    this.logicOperators.selectButton(expr.operator);
-                } else if (secondExpr) {
-                    secondExpr.value = null;
-                    secondExpr.expression.condition = secondExpr.getCondition(secondExpr.conditions[0]);
+    public openDialog() {
+        const expr = this.gridAPI.get(this.gridID).filteringExpressionsTree.find(this.column.field);
+        if (expr && expr instanceof FilteringExpressionsTree) {
+            const firstExprComponent = this.expressionComponents.first;
+            const firstFilteringOperand = expr.filteringOperands[0] as IFilteringExpression;
+            firstExprComponent.expression.searchVal = firstFilteringOperand.searchVal;
+            firstExprComponent.expression.condition = firstFilteringOperand.condition;
+            const secondExprComponent = this.expressionComponents.length > 1 ? this.expressionComponents.last : null;
+            if (expr.filteringOperands.length > 1) {
+                this.isSecondConditionVisible = true;
+                if (secondExprComponent) {
+                    const secondFilteringOperand = expr.filteringOperands[1] as IFilteringExpression;
+                    secondExprComponent.expression.searchVal = secondFilteringOperand.searchVal;
+                    secondExprComponent.expression.condition = secondFilteringOperand.condition;
                 }
-            } else {
-                this.expressionsList.forEach(el => {
-                    el.value = null;
-                    el.expression.condition = el.getCondition(el.conditions[0]);
-                });
+                this.logicOperators.selectedIndexes = [];
+                this.logicOperators.selectButton(expr.operator);
+            } else if (secondExprComponent) {
+                this.isSecondConditionVisible = false;
+                secondExprComponent.expression.searchVal = null;
+                secondExprComponent.expression.condition = secondExprComponent.getCondition(secondExprComponent.conditions[0]);
             }
+        } else {
+            this.isSecondConditionVisible = false;
+            if (this.logicOperators.selectedIndexes.length > 0) {
+                this.logicOperators.deselectButton(this.logicOperators.selectedIndexes[0]);
+            }
+            this.expressionComponents.forEach(el => {
+                el.expression.searchVal = null;
+                el.expression.condition = el.getCondition(el.conditions[0]);
+            });
         }
-        this._secondExpression = null;
-        this.expressionsList.forEach(el => el.cdr.markForCheck());
+
+        this.expressionComponents.forEach(el => el.cdr.markForCheck());
         this.cdr.detectChanges();
+
+        this.isDialogVisible = true;
+    }
+
+    public closeDialog() {
+        this.isDialogVisible = false;
+        this._secondExpressionCache = null;
     }
 
     public clearFiltering(): void {
-        this.expressionsList.forEach(el => {
+        this.expressionComponents.forEach(el => {
             el.clearFiltering(true);
             el.cdr.markForCheck();
         });
@@ -176,23 +182,28 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     public onSelectLogicOperator(event): void {
+        if (!this.isDialogVisible) {
+            return;
+        }
+
         this.isSecondConditionVisible = true;
         const grid = this.gridAPI.get(this.gridID);
         const expr = grid.filteringExpressionsTree.find(this.column.field) as FilteringExpressionsTree;
+
         if (expr) {
             if (this.logicOperators.selectedIndexes.length > 1) {
                 expr.operator = this.logicOperators.selectedIndexes[1];
             } else {
                 expr.operator = this.logicOperators.selectedIndexes[0];
-                if (this._secondExpression && this._secondExpression.condition) {
-                    expr.filteringOperands.push(this._secondExpression);
+                if (this._secondExpressionCache && this._secondExpressionCache.condition) {
+                    expr.filteringOperands.push(this._secondExpressionCache);
                 }
             }
 
-            if (!this._secondExpression && this.column.dataType === DataType.Boolean && expr.filteringOperands.length < 2) {
+            if (!this._secondExpressionCache && this.column.dataType === DataType.Boolean && expr.filteringOperands.length < 2) {
                 expr.filteringOperands.push({
                     fieldName: this.column.field,
-                    condition: this.expressionsList.toArray()[0].getCondition(this.expressionsList.toArray()[0].conditions[0]),
+                    condition: this.expressionComponents.first.getCondition(this.expressionComponents.first.conditions[0]),
                     searchVal: null,
                     ignoreCase: this.column.filteringIgnoreCase
                 });
@@ -203,20 +214,25 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
                 grid.onFilteringDone.emit(expr);
             }
         }
+
         requestAnimationFrame(() => {
             this.cdr.detectChanges();
         });
     }
 
     public onUnSelectLogicOperator(event): void {
+        if (!this.isDialogVisible) {
+            return;
+        }
+
         if (this.logicOperators.selectedIndexes.length === 0) {
             this.isSecondConditionVisible = false;
-            if (this.expressionsList.toArray()[1].expression.searchVal || this.expressionsList.toArray()[1].isUnaryCondition()) {
-                this._secondExpression = this._createNewExpression(this.expressionsList.toArray()[1].expression);
+            if (this.expressionComponents.last.expression.searchVal || this.expressionComponents.last.isUnaryCondition()) {
+                this._secondExpressionCache = this._createNewExpression(this.expressionComponents.last.expression);
             } else {
-                this._secondExpression = null;
+                this._secondExpressionCache = null;
             }
-            this.expressionsList.toArray()[1].clearFiltering(true);
+            this.expressionComponents.last.clearFiltering(true);
             this._filter();
 
             const grid = this.gridAPI.get(this.gridID);
@@ -257,7 +273,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
         event.stopPropagation();
     }
 
-    public onExpressionChanged(expression: IFilteringExpression): void {
+    public onExpressionChanged(): void {
         const grid = this.gridAPI.get(this.gridID);
         this._filter();
         const expr = grid.filteringExpressionsTree.find(this.column.field);
@@ -265,8 +281,8 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     public focusFirstInput(): void {
-        if (this.dialogShowing) {
-            this.expressionsList.toArray()[0].focusInput();
+        if (this.isDialogVisible) {
+            this.expressionComponents.first.focusInput();
         }
     }
 
@@ -305,7 +321,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
             expr.filteringOperands = [];
         }
 
-        this.expressionsList.forEach(el => {
+        this.expressionComponents.forEach(el => {
             if (el.expression.searchVal || el.expression.searchVal === 0 || el.isUnaryCondition()) {
                 const newExpression = this._createNewExpression(el.expression);
                 expr.filteringOperands.push(newExpression);

@@ -1190,21 +1190,27 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
     });
 
-    it('Clicking And/Or button shows second select and input for adding second condition', () => {
+    it('Clicking And/Or button shows second select and input for adding second condition', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[2];
 
-        filterIcon.nativeElement.click();
+        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
+
+        UIInteractions.clickElement(filterIcon);
+        tick(50);
         fix.detectChanges();
 
-        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
-        andButton.nativeElement.click();
+        UIInteractions.clickElement(andButton);
+        tick(50);
         fix.detectChanges();
 
         const secondExpr = fix.debugElement.queryAll(By.css('igx-grid-filter-expression'))[1];
         expect(secondExpr.attributes['name']).toEqual('secondExpr');
-    });
+
+        discardPeriodicTasks();
+    }));
 
     it('Unselecting And/Or hides second condition UI and removes the second filter expression', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
@@ -1313,15 +1319,15 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(8);
 
-        filterIcon.nativeElement.click();
+        UIInteractions.clickElement(filterIcon);
+        tick(50);
         fix.detectChanges();
-        tick();
 
         verifyFilterUIPosition(filterUIContainer, grid);
 
-        andButton.nativeElement.click();
+        UIInteractions.clickElement(andButton);
+        tick(50);
         fix.detectChanges();
-        tick();
 
         const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
         sendInput(input, 'g', fix);
