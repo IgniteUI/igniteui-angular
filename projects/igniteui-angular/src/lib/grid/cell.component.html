@@ -4,12 +4,7 @@
         <div class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>
     </ng-container>
     <ng-template #default>
-        <ng-container *ngIf="column.dataType === 'number'">
-            <div class="igx-grid__td-text">{{ value | number }}</div>
-        </ng-container>
-        <ng-container *ngIf="column.dataType === 'date'">
-            <div class="igx-grid__td-text">{{ value | date }}</div>
-        </ng-container>
+        <div class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal) : (value | igxdate) }}</div>
     </ng-template>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">

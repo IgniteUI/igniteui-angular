@@ -1,4 +1,4 @@
-﻿import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT, DatePipe, DecimalPipe } from '@angular/common';
 import {
     ChangeDetectorRef,
     Directive,
@@ -9,6 +9,8 @@ import {
     Injectable,
     Input,
     NgZone,
+    Pipe,
+    PipeTransform,
     OnDestroy,
     OnInit,
     Output,
@@ -579,3 +581,34 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         }
     }
 }
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'igxdate'
+})
+export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
+    transform(value: any): string {
+        if (value && value instanceof Date) {
+            return super.transform(value);
+        } else {
+            return value;
+        }
+    }
+}
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'igxdecimal'
+})
+export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
+    transform(value: any): string {
+        if (value && typeof value === 'number') {
+            return super.transform(value);
+        } else {
+            return value;
+        }
+    }
+}
+
