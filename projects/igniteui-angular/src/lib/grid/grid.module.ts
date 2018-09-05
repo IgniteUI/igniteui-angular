@@ -22,7 +22,7 @@ import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component'
 import { IgxColumnHidingModule } from './column-hiding.component';
 import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridSummaryComponent } from './grid-summary.component';
+import { IgxGridSummaryComponent} from './grid-summary.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import {
     IgxCellEditorTemplateDirective,
@@ -36,7 +36,7 @@ import {
     IgxColumnMovingService,
     IgxGroupByRowTemplateDirective
 } from './grid.common';
-import { IgxGridComponent } from './grid.component';
+import { IgxGridComponent, IgxDecimalPipeComponent, IgxDatePipeComponent  } from './grid.component';
 import {
     IgxGridFilterConditionPipe,
     IgxGridFilteringPipe,
@@ -63,6 +63,8 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxGridGroupByRowComponent,
     IgxGridHeaderComponent,
     IgxGridSummaryComponent,
+    IgxDatePipeComponent,
+    IgxDecimalPipeComponent,
     IgxGridToolbarComponent,
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
