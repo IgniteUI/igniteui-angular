@@ -99,14 +99,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public value: any;
 
-    private get isFirstCell(): boolean {
-        return this.visibleColumnIndex === 0;
-    }
-
-    private get isLastCell(): boolean {
-        return this.visibleColumnIndex === this.grid.visibleColumns[this.grid.visibleColumns.length - 1];
-    }
-
     /**
      * Sets/gets the highlight class of the cell.
      * Default value is `"igx-highlight"`.
@@ -538,6 +530,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     private keydown$ = fromEvent(this.nativeElement, 'keydown')
         .pipe(
             tap((event: KeyboardEvent) => {
+                if (event.key === 'Tab') {
+                    event.preventDefault();
+                }
                 if (this.inEditMode) {
                     event.stopPropagation();
                     return;
@@ -545,9 +540,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (this.isNavigationKey(event.key.toLowerCase())) {
                     event.preventDefault();
                     event.stopPropagation();
-                }
-                if (event.key === 'Tab') {
-                    event.preventDefault();
                 }
             }),
             takeUntil(this.destroy$),
@@ -806,13 +798,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onShiftTabKey(event) {
-        if (this.isFirstCell) {
-            this.selection.clear(this.cellSelectionID);
-            this.grid.markForCheck();
-            return;
-        } else {
-            this.onKeydownArrowLeft(event);
-        }
+        this.onKeydownArrowLeft(event);
     }
 
     public onKeydownArrowLeft(event) {
@@ -886,13 +872,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onTabKey(event) {
-        if (this.isLastCell) {
-            this.selection.clear(this.cellSelectionID);
-            this.grid.markForCheck();
-            return;
-        } else {
-            this.onKeydownArrowRight(event);
-        }
+        this.onKeydownArrowRight(event);
     }
 
     public onKeydownArrowRight(event) {
