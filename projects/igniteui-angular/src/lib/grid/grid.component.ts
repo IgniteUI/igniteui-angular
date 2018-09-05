@@ -1043,17 +1043,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     @Output()
-    public onGroupingDone = new EventEmitter<any>();
+    public onGroupingDone = new EventEmitter<ISortingExpression[]>();
 
     /**
-     * Emitted when a new chunk fo data is loaded from virtualization.
+     * Emitted when a new chunk of data is loaded from virtualization.
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
      * @memberof IgxGridComponent
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<any>();
+    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Emitted when `IgxColumnComponent` is resized.
@@ -3838,7 +3838,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public navigateDown(rowIndex: number, columnIndex: number) {
+    public navigateDown(rowIndex: number, columnIndex: number, event?) {
         const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const target = row instanceof IgxGridGroupByRowComponent ?
             row.groupContent :
@@ -3857,12 +3857,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const targetEndTopOffset = row.element.nativeElement.offsetTop + this.rowHeight + containerTopOffset;
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 const scrollAmount = targetEndTopOffset - containerHeight;
-                this.performVerticalScroll(scrollAmount, rowIndex, columnIndex);
+                this.performVerticalScroll(scrollAmount, rowIndex, columnIndex, event);
             } else {
                 if (row instanceof IgxGridGroupByRowComponent) {
                     target.nativeElement.focus();
                 } else {
-                    (target as any)._updateCellSelectionStatus();
+                    (target as any)._updateCellSelectionStatus(true, event);
                 }
             }
         } else {
@@ -3870,14 +3870,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const scrollOffset = parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const lastRowOffset = contentHeight + scrollOffset - this.calcHeight;
             const scrollAmount = this.rowHeight + lastRowOffset;
-            this.performVerticalScroll(scrollAmount, rowIndex, columnIndex);
+            this.performVerticalScroll(scrollAmount, rowIndex, columnIndex, event);
         }
     }
 
     /**
      * @hidden
      */
-    public navigateUp(rowIndex: number, columnIndex: number) {
+    public navigateUp(rowIndex: number, columnIndex: number, event?) {
         const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const target = row instanceof IgxGridGroupByRowComponent ?
             row.groupContent :
@@ -3896,18 +3896,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     const scrollAmount = containerTopOffset < 0 ?
                     containerTopOffset :
                     -this.rowHeight + Math.abs(containerTopOffset);
-                    this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex);
+                this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex, event);
             }
             if (row instanceof IgxGridGroupByRowComponent) {
                 target.nativeElement.focus();
             } else {
-                (target as any)._updateCellSelectionStatus();
+                (target as any)._updateCellSelectionStatus(true, event);
             }
         } else {
             const scrollOffset =
                 -parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scrollAmount = this.rowHeight + scrollOffset;
-            this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex);
+            this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex, event);
         }
     }
 
@@ -3922,7 +3922,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         event.target.scrollTop = 0;
     }
 
-    private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {
+    private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string, event?) {
         let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
         this.subscribeNext(virtualDir, () => {
@@ -3944,8 +3944,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     return;
                 }
             }
-            target._updateCellSelectionStatus();
-            this.cdr.detectChanges();
+            target._updateCellSelectionStatus(true, event);
         });
     }
 
@@ -3957,10 +3956,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
     }
 
-    private performVerticalScroll(amount: number, rowIndex: number, columnIndex: number) {
+    private performVerticalScroll(amount: number, rowIndex: number, columnIndex: number, event?) {
         const scrolled = this.verticalScrollContainer.addScrollTop(amount);
         if (scrolled) {
-            this._focusNextCell(rowIndex, columnIndex);
+            this._focusNextCell(rowIndex, columnIndex, undefined, event);
         }
     }
 
