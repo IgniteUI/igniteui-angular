@@ -41,6 +41,7 @@ All notable changes for each version of this project will be documented in this 
 - **General**
     - `IgxChip`
         - Introduced event argument types to all `EventEmitter` `@Output`s.
+        - A chip can now be selected with the API with the new `selected` input. The `selected` input overrides the `selectable` input value.
         - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
     - `IgxChipArea`
         - Introduced event argument types to all `EventEmitter` `@Output`s.
