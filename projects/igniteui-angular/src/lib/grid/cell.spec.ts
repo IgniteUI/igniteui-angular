@@ -41,9 +41,9 @@ describe('IgxGrid - Cell component', () => {
             // else call arrow up/down
             // cell.nativeElement.dispatchEvent(keyboardEvent);
             if (dir === 'ArrowRight') {
-                cell.onKeydownArrowRight();
+                cell.onKeydownArrowRight(keyboardEvent);
             } else {
-                cell.onKeydownArrowLeft();
+                cell.onKeydownArrowLeft(keyboardEvent);
             }
 
             grid.cdr.detectChanges();
@@ -940,7 +940,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
         const curCell = grid.getCellByColumn(3, '1');
-        curCell.onKeydownArrowDown();
+        curCell.onKeydownArrowDown(null);
 
         grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
             expect(parseInt(displayContainer.style.top, 10)).toEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
@@ -976,7 +976,7 @@ describe('IgxGrid - Cell component', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
             const curCell = grid.getCellByColumn(1, '1');
-            curCell.onKeydownArrowUp();
+            curCell.onKeydownArrowUp(null);
 
             grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
                 expect(displayContainer.style.top).toEqual('0px');
@@ -1013,7 +1013,7 @@ describe('IgxGrid - Cell component', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
             const curCell = grid.getCellByColumn(1, '1');
-            curCell.onKeydownArrowLeft();
+            curCell.onKeydownArrowLeft(null);
 
             grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
                 fix.detectChanges();
@@ -1045,7 +1045,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('2');
 
         const curCell = grid.getCellByColumn(1, '2');
-        curCell.onKeydownArrowRight();
+        curCell.onKeydownArrowRight(null);
 
         grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
             fix.detectChanges();
