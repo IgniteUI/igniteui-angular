@@ -4,31 +4,26 @@
     </app-page-header>
     <section class="sample-content">
         <article class="sample-column">
-            <h4 class="sample-title">Basic tooltip</h4>
-            <div style="display: flex;">
-
-                
-                <!-- #buttonAction="toggle-action" [igxToggleAction]="dropdown" -->
-                <button #button="tooltip" [igxTooltip]="ref" [overlaySettings]="settings" tooltipClass="tooltip" showDelay="300" hideDelay="300"
+            <h4 class="sample-title">Simple tooltip</h4>
+            <div style="display: flex;">                
+                <button igxButton="raised"
+                        #button="tooltipAction" [igxTooltipAction]="ref" [overlaySettings]="settings"
+                        tooltipClass="tooltip" showDelay="300" hideDelay="300"
+                        (onTooltipOpening)="opening()" (onTooltipOpened)="opened()"
+                        (onTooltipClosing)="closing()" (onTooltipClosed)="closed()"
                         >
                     Hover me
                 </button>
 
-                <!-- Tooltip Element -->
-                <p #ref="toggle" igxToggle>
+                <div #ref="tooltip" igxTooltip>
                     Hello there, this is a tooltip!
-                </p>
+                </div>
 
-                <!-- Dropdown Element -->
-                <!-- <div #dropdown="toggle" igxToggle style="z-index: 999">
-                    <img src="assets/images/rsrcs/igniteui-angular_logo.svg" />
-                </div> -->
-
-
-                <button (click)="showTooltip()" style="margin-left: 300px">Show Tooltip</button>
-                <button (click)="hideTooltip()">Hide Tooltip</button>
-                <button (click)="test()">test</button>
-
+                <div class="leftMargin">
+                    <div class="switch"><igx-switch [(ngModel)]="button.tooltipDisabled">Disable tooltip</igx-switch></div>
+                    <div><button class="btn" (click)="showTooltip()" >Show Tooltip</button></div>
+                    <div><button class="btn" (click)="hideTooltip()">Hide Tooltip</button></div>
+                </div>
             </div>
         </article>
     </section>
@@ -39,11 +34,11 @@
                 <igx-grid [data]="data" width="600px" height="400px" [autoGenerate]="false">
                     <igx-column [field]="'Name'" dataType="string">
                         <ng-template igxCell let-val>
-                            <span [igxTooltip]="tp" tooltipClass="tooltip" showDelay="1000" hideDelay="100" style="border: solid black 1px;">
+                            <span [igxTooltipAction]="tp" tooltipClass="tooltip">
                                 {{val}}
                             </span>
 
-                            <p #tp="toggle" igxToggle>
+                            <p #tp="tooltip" igxTooltip>
                                 {{val}} tooltip
                             </p>
                         </ng-template>

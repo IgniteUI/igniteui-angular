@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { IgxToggleActionDirective, IgxTooltipDirective, OverlaySettings, ConnectedPositioningStrategy, IgxToggleDirective, GlobalPositionStrategy } from 'projects/igniteui-angular/src/public_api';
+import { IgxTooltipActionDirective, OverlaySettings, AutoPositionStrategy } from 'projects/igniteui-angular/src/public_api';
 
 @Component({
     selector: 'app-tooltip-sample',
@@ -8,21 +8,10 @@ import { IgxToggleActionDirective, IgxTooltipDirective, OverlaySettings, Connect
 })
 export class TooltipSampleComponent implements OnInit, AfterViewInit {
 
-    // @ViewChild('ref')
-    // public toggle: IgxToggleDirective;
-
-
-
-    @ViewChild("button") public tooltip: IgxTooltipDirective;
-    @ViewChild("buttonAction") public action: IgxToggleActionDirective;
+    @ViewChild("button") public tooltipAction: IgxTooltipActionDirective;
 
     settings: OverlaySettings = {        
-        positionStrategy: new ConnectedPositioningStrategy(),
-        closeOnOutsideClick: false,
-        modal: false
-    };
-
-    cellsettings: OverlaySettings = {                
+        positionStrategy: new AutoPositionStrategy(),
         closeOnOutsideClick: false,
         modal: false
     };
@@ -44,30 +33,21 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.settings.positionStrategy.settings.target = this.tooltip.nativeElement;
+        this.settings.positionStrategy.settings.target = this.tooltipAction.nativeElement;
         this.settings.positionStrategy.settings.openAnimation = null;
         this.settings.positionStrategy.settings.closeAnimation = null;
-
-        // this.action.overlaySettings = this.settings;
-        // this.tooltip.overlaySettings = this.settings;
     }
 
     showTooltip() {
-
-        // this.settings.positionStrategy.settings.target = this.tooltip.nativeElement;
-
-        // this.toggle.open(settings);
-
-        // this.tooltip.overlaySettings = this.settings;
-        this.tooltip.open();
+        this.tooltipAction.openTooltip();
     }
 
     hideTooltip() {
-        // this.toggle.close();
-        this.tooltip.close();
+        this.tooltipAction.closeTooltip();
     }
 
-    test() {
-        this.action.onClick();
-    }
+    opening() { console.log("opening" + " collapsed:" + this.tooltipAction.tooltipHidden); }
+    opened() { console.log("opened" + " collapsed:" + this.tooltipAction.tooltipHidden); }
+    closing() { console.log("closing" + " collapsed:" + this.tooltipAction.tooltipHidden); }
+    closed() { console.log("closed" + " collapsed:" + this.tooltipAction.tooltipHidden); }
 }
