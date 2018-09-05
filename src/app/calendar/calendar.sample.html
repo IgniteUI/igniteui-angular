@@ -5,16 +5,21 @@
         <article class="sample-column">
             <div class="calendar-sample">
                 <h4 class="sample-title">Default Calendar</h4>
+                <button igxButton igxRipple type="raised" (click)="select()">Select</button>
+                <button igxButton igxRipple type="raised" (click)="deselect()">Deselect</button>
                 <igx-card>
-                    <igx-calendar weekStart="1"></igx-calendar>
+                    <igx-calendar #calendar1 weekStart="1" selection="single"></igx-calendar>
                 </igx-card>
             </div>
             <div class="calendar-sample">
                 <h4 class="sample-title">Range Calendar</h4>
                 <igx-card>
-                    <igx-calendar weekStart="1" selection="range"></igx-calendar>
+                    <igx-calendar #calendar weekStart="1" selection="range"></igx-calendar>
                 </igx-card>
             </div>
         </article>
     </section>
 </div>
+
+
+

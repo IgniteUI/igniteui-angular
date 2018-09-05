@@ -435,6 +435,22 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     /**
+     * Deselects the calendar date.
+     *```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *ngAfterViewInit(){
+     *this.datePicker.deselectDate();
+     *}
+     * ```
+     * @memberOf {@link IgxDatePickerComponent}
+     */
+    public deselectDate() {
+        this.value = null;
+        this._onChangeCallback(null);
+    }
+
+    /**
      * Emits the open event and update the calendar.
      *
      * @hidden
