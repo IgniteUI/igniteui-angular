@@ -2,7 +2,7 @@ import { IgxTransactionBaseService } from './transaction-base';
 import { ITransaction, TransactionType } from './utilities';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
-fdescribe('IgxTransaction', () => {
+describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
         it('Add ADD type change - all feasible paths', () => {
             const trans = new IgxTransactionBaseService();
@@ -280,7 +280,7 @@ fdescribe('IgxTransaction', () => {
         });
 
         it('Update data when data is list of objects', () => {
-            const originalData = SampleTestData.generateProductData(100);
+            const originalData = SampleTestData.generateProductData(50);
             const trans = new IgxTransactionBaseService();
             expect(trans).toBeDefined();
 
@@ -308,8 +308,33 @@ fdescribe('IgxTransaction', () => {
             trans.update(originalData);
             expect(originalData.find(i => i.ID === 1).Category).toBe('Some new value');
             expect(originalData.find(i => i.ID === 10)).toBeUndefined();
-            expect(originalData.length).toBe(100);
-            expect(originalData[99]).toEqual(newItem1.newValue);
+            expect(originalData.length).toBe(50);
+            expect(originalData[49]).toEqual(newItem1.newValue);
+        });
+
+        it('Update data when data is list of primitives', () => {
+            const originalData = SampleTestData.generateListOfPrimitiveValues(50, 'String');
+            const trans = new IgxTransactionBaseService();
+            expect(trans).toBeDefined();
+
+            const item0Update1: ITransaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row' };
+            trans.add(item0Update1, originalData[1]);
+
+            const item10Delete: ITransaction = { id: 10, type: TransactionType.DELETE, newValue: null };
+            trans.add(item10Delete, originalData[10]);
+
+            const newItem1: ITransaction = {
+                id: 'add1', type: TransactionType.ADD, newValue: 'Added Row'
+            };
+
+            trans.add(newItem1, undefined);
+
+            trans.update(originalData);
+            expect(originalData[1]).toBe('Updated Row');
+            expect(originalData.find(i => i === 'Row 10')).toBeUndefined();
+            expect(originalData.length).toBe(50);
+            expect(originalData[49]).toEqual('Added Row');
+
         });
     });
 });

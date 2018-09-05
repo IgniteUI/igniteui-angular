@@ -151,7 +151,7 @@ export class IgxTransactionBaseService implements ITransactionService {
         if (typeof state.originalValue === 'object') {
             Object.assign(state.originalValue, state.value);
         } else {
-            const index = data.indexOf(i => i === state.originalValue);
+            const index = data.findIndex(i => i === state.originalValue);
             if (0 <= index && index < data.length) {
                 data[index] = state.value;
             }

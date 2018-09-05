@@ -801,6 +801,25 @@ export class SampleTestData {
         }];
     }
 
+    /**
+     * Generates simple array of primitve values
+     * @param rows Number of items to add to the array
+     * @param type The type of the items
+     */
+    public static generateListOfPrimitiveValues(rows: number, type: Number|String|Boolean): any[] {
+        const data: any[] = [];
+        for (let row = 0; row < rows; row++) {
+            if (type === 'Number') {
+                data.push(row);
+            } else if (type === 'String') {
+                data.push(`Row ${row}`);
+            } else if (type === 'Boolean') {
+                data.push(row % 7 === 0);
+            }
+        }
+        return data;
+    }
+
     /* Gets the name of the identifier column if exists. */
     private static getIDColumnName(dataItem: any) {
         if (!dataItem) {
