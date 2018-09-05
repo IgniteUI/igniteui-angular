@@ -6,13 +6,15 @@ All notable changes for each version of this project will be documented in this 
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
-- `IgxOverlayOutlet` directive introducedto mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
+- `IgxOverlayOutlet` directive introduced to mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
 - `igxButtonGroup`
     - Added the ability to define buttons directly in the template
 - `igx-time-picker`:
     - `igxTimePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxTimePickerComponent`'s input group is retemplated. 
 - `igx-datePicker`:
-    - `igxDatePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxDatePickerComponent`'s input group is retemplated. 
+    - `igxDatePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxDatePickerComponent`'s input group is retemplated.
+    - Introduced `disabledDates`. This property is exposed from the `igx-calendar` component.
+    - Introduced `specialDates`. This property is exposed from the `igx-calendar` component.
 - `IgxTextHighlightDirective`: The `highlight` method now has a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the group's value.
     - If its value is true, the entire group's value should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
@@ -34,6 +36,11 @@ All notable changes for each version of this project will be documented in this 
         - Added `IgxComboHeaderItemDirective`. Use `[igxComboHeaderItem]` in markup to assing a TemplateRef to `combo.headerItemTemplate`.
     - **Breaking change** Assigning templates with the following template ref variables is now deprecated in favor of the new directives:
             `#itemTemplate`, `#headerTemplate`, `#footerTemplate`, `#emptyTemplate`, `#addItemTemplate`, `#headerItemTemplate`.
+- `IgxDropDown`
+    - **Breaking change** `allowItemsFocus` default value is changed to `false`.
+- `igx-calendar`:
+    - Introduced `disabledDates` property which allows a user to disable dates based on various rules: before or after a date, weekends, workdays, specific dates and ranges. The disabled dates cannot be selected and have a distinguishable style.
+    - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
 
 ## 6.1.3
 - **General**
