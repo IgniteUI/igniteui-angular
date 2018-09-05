@@ -535,7 +535,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (event.key === 'Tab') {
                     event.preventDefault();
                 }
-                if (this.inEditMode) {
+                if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
                     event.stopPropagation();
                     return;
                 }
