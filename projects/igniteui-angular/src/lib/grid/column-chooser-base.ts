@@ -7,8 +7,8 @@ import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { ColumnChooserItemBase } from './column-chooser-item-base';
 
 export enum ColumnDisplayOrder {
-    Alphabetical,
-    DisplayOrder
+    Alphabetical = 'Alphabetical',
+    DisplayOrder = 'DisplayOrder'
 }
 
 export abstract class ColumnChooserBase implements OnDestroy {

@@ -889,7 +889,7 @@ export class IgxColumnComponent implements AfterContentInit {
             grid.reinitPinStates();
         }
 
-        grid.markForCheck();
+        grid.cdr.detectChanges();
         const newIndex = this.visibleIndex;
         IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
@@ -938,7 +938,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.reinitPinStates();
 
-        grid.markForCheck();
+        grid.cdr.detectChanges();
         const newIndex = this.visibleIndex;
         IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;

@@ -1,14 +1,14 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar, ICalendarDate } from '../calendar/calendar';
+import { Calendar } from '../calendar/calendar';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxFilteringOperand, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from '../../public_api';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
@@ -1190,21 +1190,27 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
     });
 
-    it('Clicking And/Or button shows second select and input for adding second condition', () => {
+    it('Clicking And/Or button shows second select and input for adding second condition', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css('igx-grid-filter'))[2];
 
-        filterIcon.nativeElement.click();
+        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
+
+        UIInteractions.clickElement(filterIcon);
+        tick(50);
         fix.detectChanges();
 
-        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
-        andButton.nativeElement.click();
+        UIInteractions.clickElement(andButton);
+        tick(50);
         fix.detectChanges();
 
         const secondExpr = fix.debugElement.queryAll(By.css('igx-grid-filter-expression'))[1];
         expect(secondExpr.attributes['name']).toEqual('secondExpr');
-    });
+
+        discardPeriodicTasks();
+    }));
 
     it('Unselecting And/Or hides second condition UI and removes the second filter expression', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
@@ -1313,15 +1319,15 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(8);
 
-        filterIcon.nativeElement.click();
+        UIInteractions.clickElement(filterIcon);
+        tick(50);
         fix.detectChanges();
-        tick();
 
         verifyFilterUIPosition(filterUIContainer, grid);
 
-        andButton.nativeElement.click();
+        UIInteractions.clickElement(andButton);
+        tick(50);
         fix.detectChanges();
-        tick();
 
         const input = filterUIContainer.queryAll(By.directive(IgxInputDirective))[1];
         sendInput(input, 'g', fix);
@@ -1341,6 +1347,7 @@ describe('IgxGrid - Filtering actions', () => {
     it('Should display populated filter dialog without redrawing it', async () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
         grid.width = '400px';
         grid.getColumnByName('ID').width = '50px';
@@ -1363,19 +1370,21 @@ describe('IgxGrid - Filtering actions', () => {
         // scroll horizontally to the right, so ProductName column is out of view
         const horScroll = grid.parentVirtDir.getHorizontalScroll();
         horScroll.scrollLeft = 1000;
+        await wait(100);
         fix.detectChanges();
         // scroll horizontally to the left, so ProductName is back in view
         horScroll.scrollLeft = 0;
+        await wait(100);
         fix.detectChanges();
         // click filter icon
         const filterButton = fix.debugElement.queryAll(By.css('igx-grid-filter'))[0];
         const filterIcon = filterButton.query(By.css('igx-icon'));
         filterIcon.triggerEventHandler('mousedown', null);
-        fix.detectChanges();
         filterIcon.nativeElement.click();
+        await wait(100);
         fix.detectChanges();
 
-        await fix.whenStable();
+        // await fix.whenStable();
 
         const filterUI = fix.debugElement.query(By.css('.igx-filtering__options'));
         // verify 'And' button is selected
