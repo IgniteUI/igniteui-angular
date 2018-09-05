@@ -100,11 +100,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public value: any;
 
     private get isFirstCell(): boolean {
-        return this.columnIndex === 0 || (this.isPinned && this.visibleColumnIndex === 0);
+        return this.visibleColumnIndex === 0;
     }
 
     private get isLastCell(): boolean {
-        return this.columnIndex === this.grid.columns.length - 1;
+        return this.visibleColumnIndex === this.grid.visibleColumns[this.grid.visibleColumns.length - 1];
     }
 
     /**
