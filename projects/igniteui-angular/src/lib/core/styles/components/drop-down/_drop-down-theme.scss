@@ -162,17 +162,6 @@
 @mixin igx-drop-down($theme) {
     @include igx-root-css-vars($theme);
 
-    $desktop-item-height: 32px;
-    $mobile-item-height: 48px;
-
-    $desktop-item-padding: 24px;
-    $mobile-item-padding: 16px;
-
-    $desktop-header-padding: 16px;
-    $mobile-header-padding: 8px;
-
-    $mobile-break-point: 600px;
-
     $dd-shadow: igx-elevation($elevations, 3);
 
     %igx-drop-down {
@@ -193,23 +182,16 @@
         justify-content: flex-start;
         align-items: center;
         width: 100%;
-        height: rem($desktop-item-height);
-        line-height: rem($desktop-item-height);
-        min-height: rem($desktop-item-height);
+        height: rem(32px);
+        line-height: rem(32px);
+        min-height: rem(32px);
         white-space: nowrap;
-
-        @media only screen and (max-width: $mobile-break-point) {
-            height: rem($mobile-item-height);
-            line-height: rem($mobile-item-height);
-            min-height: rem($mobile-item-height);
-        }
     }
 
     %igx-drop-down__item {
         color: --var($theme, 'item-text-color');
         cursor: pointer;
-        height: rem($desktop-item-height);
-        padding: 0 rem($desktop-item-padding);
+        padding: 0 rem(24px);
 
         &:focus {
             outline: 0;
@@ -235,10 +217,7 @@
         font-size: rem(13px);
         color: --var($theme, 'header-text-color');
         pointer-events: none;
-        padding: 0 rem($desktop-header-padding);
-        @media only screen and (max-width: $mobile-break-point) {
-            padding: 0 rem($mobile-header-padding);
-        }
+        padding: 0 rem(16px);
     }
 
     %igx-drop-down__item--focused {
