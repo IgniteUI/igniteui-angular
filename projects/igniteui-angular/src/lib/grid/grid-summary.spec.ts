@@ -611,9 +611,11 @@ describe('IgxGrid - Summaries', () => {
 
         const grid = fixture.componentInstance.grid1;
         const summariesUnitOfStock = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))[3];
-        const unitsInStockCell = grid.getCellByColumn(0, 'UnitsInStock');
+        const summariesOrderDate = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))[4];
 
         const maxValue = summariesUnitOfStock.query(By.css('[title=\'Sum\']')).nativeElement.nextSibling.innerText;
+        const earliest = summariesOrderDate.query(By.css('[title=\'Earliest\']')).nativeElement.nextSibling.innerText;
+        expect(earliest).toBe('5/17/1990');
         expect(maxValue).toBe('39,004');
 
         const filterUIContainer = fixture.debugElement.query(By.css('igx-grid-filter'));
@@ -826,6 +828,22 @@ class DealsSummary extends IgxNumberSummaryOperand {
     }
 }
 
+class EarliestSummary extends IgxDateSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'earliest') {
+                obj.summaryResult = new Intl.DateTimeFormat('en-US').format(obj.summaryResult);
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
 @Component({
     template: `
         <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'">
@@ -837,7 +855,8 @@ class DealsSummary extends IgxNumberSummaryOperand {
             </igx-column>
             <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true" [summaries]="dealsSummary">
             </igx-column>
-            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="hasSummary">
+            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true"
+                [summaries]="earliest">
             </igx-column>
         </igx-grid>
     `
@@ -859,4 +878,5 @@ export class CustomSummariesComponent {
     @ViewChild('grid1', { read: IgxGridComponent })
     public grid1: IgxGridComponent;
     public dealsSummary = DealsSummary;
+    public earliest = EarliestSummary;
 }
