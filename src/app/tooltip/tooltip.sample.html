@@ -8,7 +8,7 @@
             <div style="display: flex;">                
                 <button igxButton="raised"
                         #button="tooltipAction" [igxTooltipAction]="ref" [overlaySettings]="settings"
-                        tooltipClass="tooltip" showDelay="300" hideDelay="300"
+                        showDelay="300" hideDelay="300"
                         (onTooltipOpening)="opening()" (onTooltipOpened)="opened()"
                         (onTooltipClosing)="closing()" (onTooltipClosed)="closed()"
                         >
@@ -34,7 +34,7 @@
                 <igx-grid [data]="data" width="600px" height="400px" [autoGenerate]="false">
                     <igx-column [field]="'Name'" dataType="string">
                         <ng-template igxCell let-val>
-                            <span [igxTooltipAction]="tp" tooltipClass="tooltip">
+                            <span [igxTooltipAction]="tp">
                                 {{val}}
                             </span>
 
