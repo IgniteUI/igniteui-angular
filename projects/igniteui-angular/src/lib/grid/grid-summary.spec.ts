@@ -826,12 +826,6 @@ class DealsSummary extends IgxNumberSummaryOperand {
     }
 }
 
-// export interface IgxSummaryResult {
-//     key: string;
-//     label: string;
-//     summaryResult: any;
-// }
-
 @Component({
     template: `
         <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'">
