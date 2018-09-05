@@ -625,7 +625,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public  get rowHeight()  {
+    public get rowHeight() {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
@@ -1117,7 +1117,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
 
     @ViewChildren('row')
-    private _rowList:  QueryList<any>;
+    private _rowList: QueryList<any>;
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -1418,7 +1418,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth =  this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -3208,9 +3208,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     public getContext(rowData): any {
         return {
             $implicit: rowData,

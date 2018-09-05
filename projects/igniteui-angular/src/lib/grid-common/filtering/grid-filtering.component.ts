@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
-import { IgxToggleDirective, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { IGridAPIService } from '../api.service';
 import { IGridComponent } from '../grid-interfaces';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';

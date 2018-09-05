@@ -713,7 +713,7 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.columnList.reset(columns);
     }
 
-        /**
+    /**
      * @hidden
      */
     protected calcMaxSummaryHeight(id: string) {
@@ -846,9 +846,9 @@ export class IGridAPIService <T extends IGridComponent> {
             grid.scr.nativeElement.clientHeight);
     }
 
-        /**
+    /**
      * @hidden
-     */
+    */
     private defaultTargetBodyHeight(id: string): number {
         const grid = this.get(id);
         const allItems = grid.totalItemCount || grid.data.length;
