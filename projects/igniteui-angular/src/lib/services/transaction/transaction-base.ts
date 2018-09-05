@@ -56,12 +56,13 @@ export class IgxTransactionBaseService implements ITransaction {
     public undo() {
         if (this._changes.length > 0) {
             const change: IChange = this._changes.pop();
-            const length = this._undone.push({ change: change, originalValue: undefined });
+            const state = this._states.get(change.id);
+            const originalValue = state ? state.originalValue : undefined;
+
+            this._undone.push({ change, originalValue });
             const currentlyLastChange = [...this._changes].reverse().find(c => c.id === change.id);
             if (currentlyLastChange) {
-                const state = this._states.get(currentlyLastChange.id);
-                this.updateCurrentState(currentlyLastChange, state ? state.originalValue : undefined);
-                this._undone[length - 1].originalValue = state ? state.originalValue : undefined;
+                this.updateCurrentState(currentlyLastChange, originalValue);
             } else {
                 this._states.delete(change.id);
             }
@@ -114,27 +115,31 @@ export class IgxTransactionBaseService implements ITransaction {
         //  if ChangeType is ADD simply add change to _states;
         //  if ChangeType is DELETE:
         //    - if there is state with this id of type ADD remove it from the _states;
-        //    - if there is state with this id of type UPDATE change it type to DELETE;
+        //    - if there is state with this id of type UPDATE change its type to DELETE;
         //    - if there is no state with this id add change to _states;
         //  if ChangeType is UPDATE:
         //    - if there is state with this id set state value to the change value;
+        //    - if there is state with this id and state type is DELETE change its type to UPDATE
         //    - if there is no state with this id add change to _states;
         switch (change.type) {
             case ChangeType.DELETE:
                 if (state && state.type === ChangeType.ADD) {
                     this._states.delete(change.id);
+                    return;
                 } else if (state && state.type === ChangeType.UPDATE) {
+                    state.value = change.newValue;
                     state.type = ChangeType.DELETE;
+                    return;
                 }
-                return;
+                break;
             case ChangeType.UPDATE:
                 if (state) {
                     state.value = change.newValue;
+                    if (state.type === ChangeType.DELETE) {
+                        state.type = ChangeType.UPDATE;
+                    }
+                    return;
                 }
-                if (state.type === ChangeType.DELETE) {
-                    state.type = ChangeType.UPDATE;
-                }
-                return;
         }
 
         this._states.set(change.id, { value: change.newValue, originalValue: originalValue, type: change.type });
