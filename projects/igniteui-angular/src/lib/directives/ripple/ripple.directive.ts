@@ -4,79 +4,79 @@ import { Directive, ElementRef, HostListener, Input, NgModule, NgZone, Renderer2
     selector: '[igxRipple]'
 })
 export class IgxRippleDirective {
-/**
- * Sets/gets the ripple target.
- * ```html
- * <div  #rippleContainer class="div-1" igxRipple [igxRippleTarget] = "'.div-1'"></div>
- * ```
- * ```typescript
- * @ViewChild('rippleContainer', {read: IgxRippleDirective})
- * public ripple: IgxRippleDirective;
- * let rippleTarget = this.ripple.rippleTarget;
- * ```
- * Can set the ripple to activate on a child element inside the parent where igxRipple is defined.
- * ```html
- * <div #rippleContainer [igxRippleTarget] = "'#child"'>
- *  <button id="child">Click</button>
- * </div>
- * ```
- * @memberof IgxRippleDirective
- */
-@Input('igxRippleTarget')
+    /**
+     * Sets/gets the ripple target.
+     * ```html
+     * <div  #rippleContainer class="div-1" igxRipple [igxRippleTarget] = "'.div-1'"></div>
+     * ```
+     * ```typescript
+     * @ViewChild('rippleContainer', {read: IgxRippleDirective})
+     * public ripple: IgxRippleDirective;
+     * let rippleTarget = this.ripple.rippleTarget;
+     * ```
+     * Can set the ripple to activate on a child element inside the parent where igxRipple is defined.
+     * ```html
+     * <div #rippleContainer [igxRippleTarget] = "'#child"'>
+     *  <button id="child">Click</button>
+     * </div>
+     * ```
+     * @memberof IgxRippleDirective
+     */
+    @Input('igxRippleTarget')
     public rippleTarget = '';
-/**
- * Sets/gets the ripple color.
- * ```html
- * <button #rippleContainer [igxRipple] = "'red'" ></button>
- * ```
- * ```typescript
- * @ViewChild('rippleContainer', {read: IgxRippleDirective})
- * public ripple: IgxRippleDirective;
- * let rippleColor = this.ripple.rippleColor;
- * ```
- * @memberof IgxRippleDirective
- */
-@Input('igxRipple')
+    /**
+     * Sets/gets the ripple color.
+     * ```html
+     * <button #rippleContainer [igxRipple] = "'red'" ></button>
+     * ```
+     * ```typescript
+     * @ViewChild('rippleContainer', {read: IgxRippleDirective})
+     * public ripple: IgxRippleDirective;
+     * let rippleColor = this.ripple.rippleColor;
+     * ```
+     * @memberof IgxRippleDirective
+     */
+    @Input('igxRipple')
     public rippleColor: string;
-/**
- * Sets/gets the ripple duration(in milliseconds).
- * Default value is `600`.
- * ```html
- * <button #rippleContainer igxRipple [igxRippleDuration] = "800"></button>
- * ```
- * ```typescript
- * @ViewChild('rippleContainer', {read: IgxRippleDirective})
- * public ripple: IgxRippleDirective;
- * let rippleDuration = this.ripple.rippleDuration;
- * ```
- * @memberof IgxRippleDirective
- */
-@Input('igxRippleDuration')
+    /**
+     * Sets/gets the ripple duration(in milliseconds).
+     * Default value is `600`.
+     * ```html
+     * <button #rippleContainer igxRipple [igxRippleDuration] = "800"></button>
+     * ```
+     * ```typescript
+     * @ViewChild('rippleContainer', {read: IgxRippleDirective})
+     * public ripple: IgxRippleDirective;
+     * let rippleDuration = this.ripple.rippleDuration;
+     * ```
+     * @memberof IgxRippleDirective
+     */
+    @Input('igxRippleDuration')
     public rippleDuration = 600;
-/**
- * Enables/disables the ripple to be centered.
- * ```html
- * <button #rippleContainer igxRipple [igxRippleCentered] = "true"></button>
- * ```
- * @memberof IgxRippleDirective
- */
-@Input('igxRippleCentered') set centered(value: boolean) {
+    /**
+     * Enables/disables the ripple to be centered.
+     * ```html
+     * <button #rippleContainer igxRipple [igxRippleCentered] = "true"></button>
+     * ```
+     * @memberof IgxRippleDirective
+     */
+    @Input('igxRippleCentered') set centered(value: boolean) {
         this._centered = value || this.centered;
     }
-/**
- * Sets/gets whether the ripple is disabled.
- * Default value is `false`.
- * ```html
- * <button #rippleContainer igxRipple [igxRippleDisabled] = "true"></button>
- * ```
- * ```typescript
- * @ViewChild('rippleContainer', {read: IgxRippleDirective})
- * public ripple: IgxRippleDirective;
- * let isRippleDisabled = this.ripple.rippleDisabled;
- * ```
- * @memberof IgxRippleDirective
- */
-@Input('igxRippleDisabled')
+    /**
+     * Sets/gets whether the ripple is disabled.
+     * Default value is `false`.
+     * ```html
+     * <button #rippleContainer igxRipple [igxRippleDisabled] = "true"></button>
+     * ```
+     * ```typescript
+     * @ViewChild('rippleContainer', {read: IgxRippleDirective})
+     * public ripple: IgxRippleDirective;
+     * let isRippleDisabled = this.ripple.rippleDisabled;
+     * ```
+     * @memberof IgxRippleDirective
+     */
+    @Input('igxRippleDisabled')
     public rippleDisabled = false;
 
     protected get nativeElement(): HTMLElement {
@@ -99,10 +99,10 @@ export class IgxRippleDirective {
         protected elementRef: ElementRef,
         protected renderer: Renderer2,
         private zone: NgZone) { }
-/**
- *@hidden
- */
-@HostListener('mousedown', ['$event'])
+    /**
+     *@hidden
+     */
+    @HostListener('mousedown', ['$event'])
     public onMouseDown(event) {
         this.zone.runOutsideAngular(() => this._ripple(event));
     }
@@ -122,8 +122,6 @@ export class IgxRippleDirective {
         if (this.rippleDisabled) {
             return;
         }
-
-        event.stopPropagation();
 
         const target = (this.rippleTarget ? this.nativeElement.querySelector(this.rippleTarget) || this.nativeElement : this.nativeElement);
 
@@ -148,7 +146,7 @@ export class IgxRippleDirective {
         this.renderer.addClass(target, this.rippleHostClass);
         this.renderer.appendChild(target, rippleElement);
 
-        const animation = rippleElement.animate(this.animationFrames, { duration: this.rippleDuration, fill: 'forwards'});
+        const animation = rippleElement.animate(this.animationFrames, { duration: this.rippleDuration, fill: 'forwards' });
         this.animationQueue.push(animation);
 
         animation.onfinish = () => {

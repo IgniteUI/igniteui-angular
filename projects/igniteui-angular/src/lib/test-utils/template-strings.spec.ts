@@ -309,28 +309,34 @@ export class ColumnDefinitions {
     public static movableColumns = `
         <igx-column [movable]="true" field="ID" width="150px"
                     [resizable]="isResizable"
+                    [editable]="isEditable"
                     [sortable]="isSortable"
+                    [hidden]="isHidden"
+                    [groupable]="isGroupable"
                     [filterable]="isFilterable">
         </igx-column>
         <igx-column [movable]="true" field="Name" width="150px"
                     [resizable]="isResizable"
+                    [editable]="isEditable"
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
         <igx-column [movable]="false" field="LastName" width="150px"
                     [resizable]="isResizable"
+                    [editable]="isEditable"
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
         <igx-column [movable]="true" field="Region" width="150px"
                     [resizable]="isResizable"
+                    [editable]="isEditable"
                     [sortable]="isSortable"
                     [filterable]="isFilterable">
         </igx-column>
     `;
 
     public static multiColHeadersColumns = `
-        <igx-column [width]="'100px'" [movable]="true" [resizable]="true"
+        <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="isPinned"
                     [sortable]="true" [filterable]="true" field="Missing"></igx-column>
         <igx-column-group [movable]="true" header="General Information">
             <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
@@ -396,4 +402,10 @@ export class EventSubscriptions {
     public static onRowSelectionChange = ` (onRowSelectionChange)="rowSelectionChange($event)"`;
 
     public static onColumnResized = ` (onColumnResized)="columnResized($event)"`;
+
+    public static onColumnMovingStart = ` (onColumnMovingStart)="onColumnMovingStarted($event)"`;
+
+    public static onColumnMoving = ` (onColumnMoving)="onColumnMoving($event)"`;
+
+    public static onColumnMovingEnd = ` (onColumnMovingEnd)="onColumnMovingEnded($event)"`;
 }
