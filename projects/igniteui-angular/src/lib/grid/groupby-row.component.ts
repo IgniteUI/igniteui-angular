@@ -181,7 +181,7 @@ export class IgxGridGroupByRowComponent {
         event.preventDefault();
         event.stopPropagation();
         const rowIndex = this.index + 1;
-        this.grid.navigateDown(rowIndex, visibleColumnIndex);
+        this.grid.navigateDown(rowIndex, visibleColumnIndex, event);
     }
 
     /**
@@ -197,7 +197,7 @@ export class IgxGridGroupByRowComponent {
             return;
         }
         const rowIndex = this.index - 1;
-        this.grid.navigateUp(rowIndex, visibleColumnIndex);
+        this.grid.navigateUp(rowIndex, visibleColumnIndex, event);
     }
 
     /**
@@ -205,6 +205,9 @@ export class IgxGridGroupByRowComponent {
      */
     public onFocus() {
         this.isFocused = true;
+        if (this.grid.selectedCells.length) {
+            this.grid.selectedCells[0]._clearCellSelection();
+        }
     }
 
     /**
