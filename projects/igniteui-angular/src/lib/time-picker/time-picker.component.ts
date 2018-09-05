@@ -426,7 +426,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
             this.selectedHour = `${this._hourItems[3]}`;
         }
         if (this.selectedMinute === undefined) {
-            this.selectedMinute = `${this._minuteItems[3]}`;
+            this.selectedMinute = '0';
         }
         if (this.selectedAmPm === undefined && this._ampmItems !== null) {
             this.selectedAmPm = this._ampmItems[3];

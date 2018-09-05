@@ -169,7 +169,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     @Input()
-    public allowItemsFocus = true;
+    public allowItemsFocus = false;
 
     /**
      * Gets the drop down's id
