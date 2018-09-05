@@ -6,6 +6,11 @@ import { CommonModule } from '@angular/common';
 @Directive({selector: '[igxTemplateOutlet]'})
 export class IgxTemplateOutletDirective implements OnChanges {
   private _viewRef !: EmbeddedViewRef<any>;
+
+    /**
+    * The embedded views cache. Collection is key-value paired.
+    * Key is the template id, value is the embedded view for the related template.
+    */
   private _embeddedViewsMap: Map<string, EmbeddedViewRef<any>> = new Map();
 
   @Input() public igxTemplateOutletContext !: Object;
@@ -19,27 +24,28 @@ export class IgxTemplateOutletDirective implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     const recreateView = this._shouldRecreateView(changes);
     if (recreateView) {
-      if (!this._viewRef) {
-        // first time - create embedded view.
-        this._recreateView();
-      } else {
-        if (this.igxTemplateOutletContext['templateID']) {
-            const res = this._embeddedViewsMap.get(this.igxTemplateOutletContext['templateID']);
-            if (res) {
-                // use from cache
-                const vr = this._viewRef;
-                const detachedView = this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
-                this._viewRef = res;
-                this._viewContainerRef.insert(this._viewRef, 0);
-                this._updateExistingContext(this.igxTemplateOutletContext);
-            } else {
-                this._recreateView();
-            }
-        } else {
+        // view should be re-created due to changes in the template or context.
+        // check if we have existing view with the new template stored in the cache.
+        const tmplID = this.igxTemplateOutletContext['templateID'];
+        const cachedView = tmplID ?
+            this._embeddedViewsMap.get(tmplID) :
+            null;
+        if (!this._viewRef || !cachedView) {
+            // if view does not exist yet
+            // or if there is no template defined in the template outlet context
+            // or if there's no such view in the cache - then re-create view.
             this._recreateView();
+        } else {
+           // if view exists, but template has been changed and there is a view in the cache with the related template
+           // then detach old view and insert the stored one with the matching template
+           // after that update its context.
+            this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
+            this._viewRef = cachedView;
+            this._viewContainerRef.insert(this._viewRef, 0);
+            this._updateExistingContext(this.igxTemplateOutletContext);
         }
-     }
     } else {
+        // view should not be re-created. Check if it exists and if context exists and just update it.
       if (this._viewRef && this.igxTemplateOutletContext) {
           this._updateExistingContext(this.igxTemplateOutletContext);
       }
@@ -56,6 +62,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
               this.igxTemplateOutlet, this.igxTemplateOutletContext);
             const tmplId = this.igxTemplateOutletContext['templateID'];
             if (tmplId) {
+                // if context contains a template id, check if we have a view for that template already stored in the cache
+                // if not create a copy and add it to the cache in detached state.
+                // Note: Views in detached state do not appear in the DOM, however they remain stored in memory.
                 const res = this._embeddedViewsMap.get(this.igxTemplateOutletContext['templateID']);
                 if (!res) {
                     let emptyView = this._viewContainerRef.createEmbeddedView(
