@@ -1,9 +1,166 @@
 import { IgxTransactionBaseService } from './transaction-base';
 import { ITransaction, TransactionType } from './utilities';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { NoOpTransactionService } from './noop-transaction';
 
 describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
+        it('Should initialize tranaction log properly', () => {
+            const trans = new IgxTransactionBaseService();
+            expect(trans).toBeDefined();
+            expect(trans['_transactions']).toBeDefined();
+            expect(trans['_transactions'].length).toEqual(0);
+            expect(trans['_redoStack']).toBeDefined();
+            expect(trans['_redoStack'].length).toEqual(0);
+            expect(trans['_states']).toBeDefined();
+            expect(trans['_states'].size).toEqual(0);
+        });
+
+        it('Should add changes to the tranaction log', () => {
+            const trans = new IgxTransactionBaseService();
+            const states: ITransaction[] = [
+                { id: '1', type: TransactionType.ADD, newValue: 1 },
+                { id: '2', type: TransactionType.ADD, newValue: 2 },
+                { id: '3', type: TransactionType.ADD, newValue: 3 },
+                { id: '1', type: TransactionType.UPDATE, newValue: 4 },
+                { id: '5', type: TransactionType.ADD, newValue: 5 },
+                { id: '6', type: TransactionType.ADD, newValue: 6 },
+                { id: '2', type: TransactionType.DELETE, newValue: 7 },
+                { id: '8', type: TransactionType.ADD, newValue: 8 },
+                { id: '9', type: TransactionType.ADD, newValue: 9 },
+                { id: '8', type: TransactionType.UPDATE, newValue: 10 }
+            ];
+            expect(trans['_transactions'].length).toEqual(0);
+            expect(trans['_redoStack'].length).toEqual(0);
+            let transactionIndex = 1;
+            states.forEach(function (state) {
+                trans.add(state);
+                expect(trans.getLastTransactionById(state.id)).toEqual(state);
+                expect(trans['_transactions'].length).toEqual(transactionIndex);
+                expect(trans['_redoStack'].length).toEqual(0);
+                transactionIndex++;
+            });
+        });
+
+        it('Should throw an error when trying to add duplicate change', () => {
+            const trans = new IgxTransactionBaseService();
+            const states: ITransaction[] = [
+                { id: '1', type: TransactionType.ADD, newValue: 1 },
+                { id: '2', type: TransactionType.ADD, newValue: 2 },
+                { id: '3', type: TransactionType.ADD, newValue: 3 },
+                { id: '1', type: TransactionType.UPDATE, newValue: 4 },
+                { id: '5', type: TransactionType.ADD, newValue: 5 },
+                { id: '6', type: TransactionType.ADD, newValue: 6 },
+                { id: '2', type: TransactionType.DELETE, newValue: 7 },
+                { id: '8', type: TransactionType.ADD, newValue: 8 },
+                { id: '9', type: TransactionType.ADD, newValue: 9 },
+                { id: '8', type: TransactionType.UPDATE, newValue: 10 }
+            ];
+            states.forEach(function (state) {
+                trans.add(state);
+            });
+
+            const change = { id: '6', type: TransactionType.ADD, newValue: 6 };
+            expect(trans.getLastTransactionById('6')).toEqual(change);
+            const msg = `Cannot add this change. Change with id: ${change.id} has been already added.`;
+            expect(function () {
+                trans.add(change);
+            }).toThrowError(msg);
+        });
+
+        it('Should throw an error when trying to update change with no original value', () => {
+            const trans = new IgxTransactionBaseService();
+            const transactions: ITransaction[] = [
+                { id: '1', type: TransactionType.ADD, newValue: 1 },
+                { id: '2', type: TransactionType.ADD, newValue: 2 },
+                { id: '3', type: TransactionType.ADD, newValue: 3 },
+                { id: '1', type: TransactionType.UPDATE, newValue: 4 },
+                { id: '5', type: TransactionType.ADD, newValue: 5 },
+                { id: '6', type: TransactionType.ADD, newValue: 6 },
+                { id: '2', type: TransactionType.DELETE, newValue: 7 },
+                { id: '8', type: TransactionType.ADD, newValue: 8 },
+                { id: '9', type: TransactionType.ADD, newValue: 9 },
+                { id: '8', type: TransactionType.UPDATE, newValue: 10 }
+            ];
+            transactions.forEach(function (transaction) {
+                trans.add(transaction);
+            });
+
+            const updateTransaction = { id: '2', type: TransactionType.DELETE, newValue: 7 };
+            expect(trans.getLastTransactionById('2')).toEqual(updateTransaction);
+            const msg = `Cannot add this change. This is first change of type ${updateTransaction.type} for id ${updateTransaction.id}.
+                     For first change of this type original value is mandatory.`;
+            expect(function () {
+                updateTransaction.newValue = 107;
+                trans.add(updateTransaction);
+            }).toThrowError(msg);
+        });
+
+        it('Should throw an error when trying to delete an already deleted item', () => {
+            const trans = new IgxTransactionBaseService();
+            const originalValue = { key: 'Key1', value: 1 };
+            const deleteTransaction: ITransaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
+            trans.add(deleteTransaction, originalValue);
+            expect(trans.getLastTransactionById('Key1')).toEqual(deleteTransaction);
+
+            const msg = `Cannot add this change. Change with id: ${deleteTransaction.id} has been already deleted.`;
+            expect(function () {
+                trans.add(deleteTransaction);
+            }).toThrowError(msg);
+        });
+
+        it('Should throw an error when trying to update an already deleted item', () => {
+            const trans = new IgxTransactionBaseService();
+            const originalValue = { key: 'Key1', value: 1 };
+            const deleteTransaction: ITransaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
+            trans.add(deleteTransaction, originalValue);
+            expect(trans.getLastTransactionById('Key1')).toEqual(deleteTransaction);
+
+            const msg = `Cannot add this change. Change with id: ${deleteTransaction.id} has been already deleted.`;
+            expect(function () {
+                deleteTransaction.type = TransactionType.UPDATE;
+                deleteTransaction.newValue = 5;
+                trans.add(deleteTransaction);
+            }).toThrowError(msg);
+        });
+
+        it('Should get a transaction by transaction id', () => {
+            const trans = new IgxTransactionBaseService();
+            let state: ITransaction = { id: '1', type: TransactionType.ADD, newValue: 1 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('1')).toEqual(state);
+            state = { id: '2', type: TransactionType.ADD, newValue: 2 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('2')).toEqual(state);
+            state = { id: '3', type: TransactionType.ADD, newValue: 3 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('3')).toEqual(state);
+            state = { id: '1', type: TransactionType.UPDATE, newValue: 4 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('1')).toEqual(state);
+            state = { id: '5', type: TransactionType.ADD, newValue: 5 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('5')).toEqual(state);
+            state = { id: '6', type: TransactionType.ADD, newValue: 6 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('6')).toEqual(state);
+            state = { id: '2', type: TransactionType.DELETE, newValue: 7 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('2')).toEqual(state);
+            state = { id: '8', type: TransactionType.ADD, newValue: 8 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('8')).toEqual(state);
+            state = { id: '9', type: TransactionType.ADD, newValue: 9 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('9')).toEqual(state);
+            state = { id: '8', type: TransactionType.UPDATE, newValue: 10 };
+            trans.add(state);
+            expect(trans.getLastTransactionById('8')).toEqual(state);
+
+            // Get unexisting change
+            expect(trans.getLastTransactionById('100')).toEqual(undefined);
+        });
+
         it('Add ADD type change - all feasible paths', () => {
             const trans = new IgxTransactionBaseService();
             expect(trans).toBeDefined();
