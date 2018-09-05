@@ -78,30 +78,30 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
     public ngOnInit() {
         super.ngOnInit();
 
-        // const positionSettings: PositionSettings = {
-        //     target: this.nativeElement,
-        //     horizontalDirection: HorizontalAlignment.Center,
-        //     horizontalStartPoint: HorizontalAlignment.Center
-        // };
+        const positionSettings: PositionSettings = {
+            target: this.nativeElement,
+            horizontalDirection: HorizontalAlignment.Center,
+            horizontalStartPoint: HorizontalAlignment.Center
+        };
 
-        // this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
+        this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
 
-        // const tooltipDir = (this.target as IgxTooltipDirective);
-        // this._tooltipOpenedSub = tooltipDir.onOpened.subscribe(() =>
-        //     this.onTooltipOpened.emit({ tooltip: this.target })
-        // );
-        // this._tooltipClosedSub = tooltipDir.onClosed.subscribe(() =>
-        //     this.onTooltipClosed.emit({ tooltip: this.target })
-        // );
+        const tooltipDir = (this.target as IgxTooltipDirective);
+        this._tooltipOpenedSub = tooltipDir.onOpened.subscribe(() =>
+            this.onTooltipOpened.emit({ tooltip: this.target })
+        );
+        this._tooltipClosedSub = tooltipDir.onClosed.subscribe(() =>
+            this.onTooltipClosed.emit({ tooltip: this.target })
+        );
     }
 
     public ngOnDestroy() {
-        // if (this._tooltipOpenedSub && !this._tooltipOpenedSub.closed) {
-        //     this._tooltipOpenedSub.unsubscribe();
-        // }
-        // if (this._tooltipClosedSub && !this._tooltipClosedSub.closed) {
-        //     this._tooltipClosedSub.unsubscribe();
-        // }
+        if (this._tooltipOpenedSub && !this._tooltipOpenedSub.closed) {
+            this._tooltipOpenedSub.unsubscribe();
+        }
+        if (this._tooltipClosedSub && !this._tooltipClosedSub.closed) {
+            this._tooltipClosedSub.unsubscribe();
+        }
     }
 
     /* Private Methods */
@@ -119,30 +119,30 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
     }
 
     private preMouseEnterCheck() {
-        // // If tooltip is about to be opened
-        // if (this._toBeShown) {
-        //     clearTimeout(this._timeoutId);
-        //     this._toBeShown = false;
-        // }
+        // If tooltip is about to be opened
+        if (this._toBeShown) {
+            clearTimeout(this._timeoutId);
+            this._toBeShown = false;
+        }
 
-        // // If Tooltip is opened or about to be hidden
-        // if (!this.target.collapsed || this._toBeHidden) {
-        //     clearTimeout(this._timeoutId);
-        //     this.target.close();
-        //     this._toBeHidden = false;
-        // }
+        // If Tooltip is opened or about to be hidden
+        if (!this.target.collapsed || this._toBeHidden) {
+            clearTimeout(this._timeoutId);
+            this.target.close();
+            this._toBeHidden = false;
+        }
     }
 
     private preMouseLeaveCheck() {
-        // clearTimeout(this._timeoutId);
+        clearTimeout(this._timeoutId);
 
-        // // If tooltip is about to be opened
-        // if (this._toBeShown) {
-        //     clearTimeout(this._timeoutId);
-        //     this._toBeShown = false;
-        //     this._toBeHidden = false;
-        //     return;
-        // }
+        // If tooltip is about to be opened
+        if (this._toBeShown) {
+            clearTimeout(this._timeoutId);
+            this._toBeShown = false;
+            this._toBeHidden = false;
+            return;
+        }
     }
 
     /* Public Methods */
@@ -153,65 +153,65 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
 
     @HostListener('mouseenter')
     public onMouseEnter() {
-        // if (this.tooltipDisabled) {
-        //     return;
-        // }
+        if (this.tooltipDisabled) {
+            return;
+        }
 
-        // this.checkOutletAndOutsideClick();
-        // this.preMouseEnterCheck();
+        this.checkOutletAndOutsideClick();
+        this.preMouseEnterCheck();
 
-        // this.onTooltipOpening.emit({ tooltip: this.target });
-        // this._toBeShown = true;
-        // this._timeoutId = setTimeout(() => {
-        //     this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
-        //     this._toBeShown = false;
-        // }, this.showDelay);
+        this.onTooltipOpening.emit({ tooltip: this.target });
+        this._toBeShown = true;
+        this._timeoutId = setTimeout(() => {
+            this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
+            this._toBeShown = false;
+        }, this.showDelay);
     }
 
     @HostListener('mouseleave')
     public onMouseLeave() {
-        // if (this.tooltipDisabled) {
-        //     return;
-        // }
+        if (this.tooltipDisabled) {
+            return;
+        }
 
-        // this.checkOutletAndOutsideClick();
-        // this.preMouseLeaveCheck();
+        this.checkOutletAndOutsideClick();
+        this.preMouseLeaveCheck();
 
-        // this.onTooltipClosing.emit({ tooltip: this.target });
-        // this._toBeHidden = true;
-        // this._timeoutId = setTimeout(() => {
-        //     this.target.close(); // Call close() of IgxTooltipDirective
-        //     this._toBeHidden = false;
-        // }, this.hideDelay);
+        this.onTooltipClosing.emit({ tooltip: this.target });
+        this._toBeHidden = true;
+        this._timeoutId = setTimeout(() => {
+            this.target.close(); // Call close() of IgxTooltipDirective
+            this._toBeHidden = false;
+        }, this.hideDelay);
     }
 
     public openTooltip() {
-        // clearTimeout(this._timeoutId);
+        clearTimeout(this._timeoutId);
 
-        // if (!this.target.collapsed) {
-        //     this.target.close();
-        //     this._toBeHidden = false;
-        // }
+        if (!this.target.collapsed) {
+            this.target.close();
+            this._toBeHidden = false;
+        }
 
-        // this.onTooltipOpening.emit({ tooltip: this.target });
-        // this._toBeShown = true;
-        // this._timeoutId = setTimeout(() => {
-        //     this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
-        //     this._toBeShown = false;
-        // }, this.showDelay);
+        this.onTooltipOpening.emit({ tooltip: this.target });
+        this._toBeShown = true;
+        this._timeoutId = setTimeout(() => {
+            this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
+            this._toBeShown = false;
+        }, this.showDelay);
     }
 
     public closeTooltip() {
-        // if (this.target.collapsed || this._toBeHidden) {
-        //     return;
-        // }
+        if (this.target.collapsed || this._toBeHidden) {
+            return;
+        }
 
-        // this.onTooltipClosing.emit({ tooltip: this.target });
-        // this._toBeHidden = true;
-        // this._timeoutId = setTimeout(() => {
-        //     this.target.close(); // Call close() of IgxTooltipDirective
-        //     this._toBeHidden = false;
-        // }, this.hideDelay);
+        this.onTooltipClosing.emit({ tooltip: this.target });
+        this._toBeHidden = true;
+        this._timeoutId = setTimeout(() => {
+            this.target.close(); // Call close() of IgxTooltipDirective
+            this._toBeHidden = false;
+        }, this.hideDelay);
     }
 }
 
