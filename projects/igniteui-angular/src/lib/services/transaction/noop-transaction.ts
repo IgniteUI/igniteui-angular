@@ -1,13 +1,13 @@
-import { ITransaction, IChange, IState } from './utilities';
+import { ITransactionService, ITransaction, IState } from './utilities';
 
-export class NoOpTransactionService implements ITransaction {
-    public add(change: IChange) {
+export class NoOpTransactionService implements ITransactionService {
+    public add(transaction: ITransaction) {
     }
 
-    get(id: string): IChange {
+    getLastTransactionById(id: any): ITransaction {
         return null;
     }
-    getAll(): IChange[] {
+    getTransactionLog(): ITransaction[] {
         return [];
     }
 

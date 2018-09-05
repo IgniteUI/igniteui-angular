@@ -1,25 +1,25 @@
-export enum ChangeType {
+export enum TransactionType {
     ADD = 'add',
     DELETE = 'delete',
     UPDATE = 'update'
 }
 
-export interface IChange {
+export interface ITransaction {
     id: any;
-    type: ChangeType;
+    type: TransactionType;
     newValue: any;
 }
 
 export interface IState {
     value: any;
     originalValue: any;
-    type: ChangeType;
+    type: TransactionType;
 }
 
-export interface ITransaction {
-    add(change: IChange, originalValue?: any);
-    get(id: string): IChange;
-    getAll(): IChange[];
+export interface ITransactionService {
+    add(transaction: ITransaction, originalValue?: any);
+    getLastTransactionById(id: any): ITransaction;
+    getTransactionLog(): ITransaction[];
     undo();
     redo();
     currentState(): Map<any, IState>;

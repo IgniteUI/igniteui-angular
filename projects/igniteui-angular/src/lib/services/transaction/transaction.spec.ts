@@ -1,7 +1,6 @@
 import { IgxTransactionBaseService } from './transaction-base';
-import { ITransaction, IChange, IState, ChangeType } from './utilities';
-
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { ITransaction, TransactionType } from './utilities';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 fdescribe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
@@ -10,110 +9,110 @@ fdescribe('IgxTransaction', () => {
             expect(trans).toBeDefined();
 
             // ADD
-            const addChange: IChange = { id: '1', type: ChangeType.ADD, newValue: 1 };
-            trans.add(addChange);
-            expect(trans.get('1')).toEqual(addChange);
-            expect(trans.getAll()).toEqual([addChange]);
-            expect(trans.currentState().get(addChange.id)).toEqual({
-                value: addChange.newValue,
+            const addTransaction: ITransaction = { id: '1', type: TransactionType.ADD, newValue: 1 };
+            trans.add(addTransaction);
+            expect(trans.getLastTransactionById('1')).toEqual(addTransaction);
+            expect(trans.getTransactionLog()).toEqual([addTransaction]);
+            expect(trans.currentState().get(addTransaction.id)).toEqual({
+                value: addTransaction.newValue,
                 originalValue: undefined,
-                type: addChange.type
+                type: addTransaction.type
             });
             trans.reset();
-            expect(trans.getAll()).toEqual([]);
+            expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.currentState()).toEqual(new Map());
 
             // ADD -> Undo
-            trans.add(addChange);
+            trans.add(addTransaction);
             trans.undo();
-            expect(trans.getAll()).toEqual([]);
+            expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.currentState()).toEqual(new Map());
             trans.reset();
 
             // ADD -> Undo -> Redo
-            trans.add(addChange);
+            trans.add(addTransaction);
             trans.undo();
             trans.redo();
-            expect(trans.getAll()).toEqual([addChange]);
-            expect(trans.currentState().get(addChange.id)).toEqual({
-                value: addChange.newValue,
+            expect(trans.getTransactionLog()).toEqual([addTransaction]);
+            expect(trans.currentState().get(addTransaction.id)).toEqual({
+                value: addTransaction.newValue,
                 originalValue: undefined,
-                type: addChange.type
+                type: addTransaction.type
             });
             trans.reset();
 
             // ADD -> DELETE
-            trans.add(addChange);
-            const deleteChange: IChange = { id: '1', type: ChangeType.DELETE, newValue: 1 };
-            trans.add(deleteChange);
-            expect(trans.getAll()).toEqual([addChange, deleteChange]);
+            trans.add(addTransaction);
+            const deleteTransaction: ITransaction = { id: '1', type: TransactionType.DELETE, newValue: 1 };
+            trans.add(deleteTransaction);
+            expect(trans.getTransactionLog()).toEqual([addTransaction, deleteTransaction]);
             expect(trans.currentState()).toEqual(new Map());
             trans.reset();
 
             // ADD -> DELETE -> Undo
-            trans.add(addChange);
-            trans.add(deleteChange);
+            trans.add(addTransaction);
+            trans.add(deleteTransaction);
             trans.undo();
-            expect(trans.getAll()).toEqual([addChange]);
-            expect(trans.currentState().get(addChange.id)).toEqual({
-                value: addChange.newValue,
+            expect(trans.getTransactionLog()).toEqual([addTransaction]);
+            expect(trans.currentState().get(addTransaction.id)).toEqual({
+                value: addTransaction.newValue,
                 originalValue: undefined,
-                type: addChange.type
+                type: addTransaction.type
             });
             trans.reset();
 
             // ADD -> DELETE -> Undo -> Redo
-            trans.add(addChange);
-            trans.add(deleteChange);
+            trans.add(addTransaction);
+            trans.add(deleteTransaction);
             trans.undo();
             trans.redo();
-            expect(trans.getAll()).toEqual([addChange, deleteChange]);
+            expect(trans.getTransactionLog()).toEqual([addTransaction, deleteTransaction]);
             expect(trans.currentState()).toEqual(new Map());
             trans.reset();
 
             // ADD -> DELETE -> Undo -> Undo
-            trans.add(addChange);
-            trans.add(deleteChange);
+            trans.add(addTransaction);
+            trans.add(deleteTransaction);
             trans.undo();
             trans.undo();
-            expect(trans.getAll()).toEqual([]);
+            expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.currentState()).toEqual(new Map());
             trans.reset();
 
             // ADD -> UPDATE
-            trans.add(addChange);
-            const updateChange: IChange = { id: '1', type: ChangeType.UPDATE, newValue: 2 };
+            trans.add(addTransaction);
+            const updateChange: ITransaction = { id: '1', type: TransactionType.UPDATE, newValue: 2 };
             trans.add(updateChange);
-            expect(trans.getAll()).toEqual([addChange, updateChange]);
-            expect(trans.currentState().get(addChange.id)).toEqual({
+            expect(trans.getTransactionLog()).toEqual([addTransaction, updateChange]);
+            expect(trans.currentState().get(addTransaction.id)).toEqual({
                 value: updateChange.newValue,
                 originalValue: undefined,
-                type: addChange.type
+                type: addTransaction.type
             });
             trans.reset();
 
             // ADD -> UPDATE -> Undo
-            trans.add(addChange);
+            trans.add(addTransaction);
             trans.add(updateChange);
             trans.undo();
-            expect(trans.getAll()).toEqual([addChange]);
-            expect(trans.currentState().get(addChange.id)).toEqual({
-                value: addChange.newValue,
+            expect(trans.getTransactionLog()).toEqual([addTransaction]);
+            expect(trans.currentState().get(addTransaction.id)).toEqual({
+                value: addTransaction.newValue,
                 originalValue: undefined,
-                type: addChange.type
+                type: addTransaction.type
             });
             trans.reset();
 
             // ADD -> UPDATE -> Undo -> Redo
-            trans.add(addChange);
+            trans.add(addTransaction);
             trans.add(updateChange);
             trans.undo();
             trans.redo();
-            expect(trans.getAll()).toEqual([addChange, updateChange]);
-            expect(trans.currentState().get(addChange.id)).toEqual({
+            expect(trans.getTransactionLog()).toEqual([addTransaction, updateChange]);
+            expect(trans.currentState().get(addTransaction.id)).toEqual({
                 value: updateChange.newValue,
                 originalValue: undefined,
-                type: addChange.type
+                type: addTransaction.type
             });
             trans.reset();
         });
@@ -124,36 +123,36 @@ fdescribe('IgxTransaction', () => {
 
             // DELETE
             const originalValue = { key: 'Key1', value: 1 };
-            const deleteChange: IChange = { id: 'Key1', type: ChangeType.DELETE, newValue: null };
-            trans.add(deleteChange, originalValue);
-            expect(trans.get('Key1')).toEqual(deleteChange);
-            expect(trans.getAll()).toEqual([deleteChange]);
-            expect(trans.currentState().get(deleteChange.id)).toEqual({
-                value: deleteChange.newValue,
+            const deleteTransaction: ITransaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
+            trans.add(deleteTransaction, originalValue);
+            expect(trans.getLastTransactionById('Key1')).toEqual(deleteTransaction);
+            expect(trans.getTransactionLog()).toEqual([deleteTransaction]);
+            expect(trans.currentState().get(deleteTransaction.id)).toEqual({
+                value: deleteTransaction.newValue,
                 originalValue: originalValue,
-                type: deleteChange.type
+                type: deleteTransaction.type
             });
             trans.reset();
-            expect(trans.getAll()).toEqual([]);
+            expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.currentState()).toEqual(new Map());
 
             // DELETE -> Undo
-            trans.add(deleteChange, originalValue);
+            trans.add(deleteTransaction, originalValue);
             trans.undo();
-            expect(trans.getAll()).toEqual([]);
+            expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.currentState()).toEqual(new Map());
             trans.reset();
 
             // DELETE -> Undo -> Redo
-            trans.add(deleteChange, originalValue);
+            trans.add(deleteTransaction, originalValue);
             trans.undo();
             trans.redo();
-            expect(trans.get('Key1')).toEqual(deleteChange);
-            expect(trans.getAll()).toEqual([deleteChange]);
-            expect(trans.currentState().get(deleteChange.id)).toEqual({
-                value: deleteChange.newValue,
+            expect(trans.getLastTransactionById('Key1')).toEqual(deleteTransaction);
+            expect(trans.getTransactionLog()).toEqual([deleteTransaction]);
+            expect(trans.currentState().get(deleteTransaction.id)).toEqual({
+                value: deleteTransaction.newValue,
                 originalValue: originalValue,
-                type: deleteChange.type
+                type: deleteTransaction.type
             });
             trans.reset();
         });
@@ -165,119 +164,152 @@ fdescribe('IgxTransaction', () => {
             // UPDATE
             const originalValue = { key: 'Key1', value: 1 };
             const newValue = { key: 'Key1', value: 2 };
-            const updateChange: IChange = { id: 'Key1', type: ChangeType.UPDATE, newValue: newValue };
-            trans.add(updateChange, originalValue);
-            expect(trans.get('Key1')).toEqual(updateChange);
-            expect(trans.getAll()).toEqual([updateChange]);
-            expect(trans.currentState().get(updateChange.id)).toEqual({
-                value: updateChange.newValue,
+            const updateTransaction: ITransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue };
+            trans.add(updateTransaction, originalValue);
+            expect(trans.getLastTransactionById('Key1')).toEqual(updateTransaction);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction]);
+            expect(trans.currentState().get(updateTransaction.id)).toEqual({
+                value: updateTransaction.newValue,
                 originalValue: originalValue,
-                type: updateChange.type
+                type: updateTransaction.type
             });
             trans.reset();
-            expect(trans.getAll()).toEqual([]);
+            expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.currentState()).toEqual(new Map());
 
             // UPDATE -> Undo
-            trans.add(updateChange, originalValue);
+            trans.add(updateTransaction, originalValue);
             trans.undo();
-            expect(trans.getAll()).toEqual([]);
+            expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.currentState()).toEqual(new Map());
             trans.reset();
 
             // UPDATE -> Undo -> Redo
-            trans.add(updateChange, originalValue);
+            trans.add(updateTransaction, originalValue);
             trans.undo();
             trans.redo();
-            expect(trans.get('Key1')).toEqual(updateChange);
-            expect(trans.getAll()).toEqual([updateChange]);
-            expect(trans.currentState().get(updateChange.id)).toEqual({
-                value: updateChange.newValue,
+            expect(trans.getLastTransactionById('Key1')).toEqual(updateTransaction);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction]);
+            expect(trans.currentState().get(updateTransaction.id)).toEqual({
+                value: updateTransaction.newValue,
                 originalValue: originalValue,
-                type: updateChange.type
+                type: updateTransaction.type
             });
             trans.reset();
 
             // UPDATE -> UPDATE
-            trans.add(updateChange, originalValue);
+            trans.add(updateTransaction, originalValue);
             const newValue2 = { key: 'Key1', value: 2 };
-            const updateChange2: IChange = { id: 'Key1', type: ChangeType.UPDATE, newValue: newValue2 };
-            trans.add(updateChange, originalValue);
-            expect(trans.get('Key1')).toEqual(updateChange2);
-            expect(trans.getAll()).toEqual([updateChange, updateChange]);
-            expect(trans.currentState().get(updateChange.id)).toEqual({
-                value: updateChange2.newValue,
+            const updateTransaction2: ITransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue2 };
+            trans.add(updateTransaction, originalValue);
+            expect(trans.getLastTransactionById('Key1')).toEqual(updateTransaction2);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction, updateTransaction]);
+            expect(trans.currentState().get(updateTransaction.id)).toEqual({
+                value: updateTransaction2.newValue,
                 originalValue: originalValue,
-                type: updateChange2.type
+                type: updateTransaction2.type
             });
             trans.reset();
 
             // UPDATE -> UPDATE -> Undo
-            trans.add(updateChange, originalValue);
-            trans.add(updateChange, originalValue);
+            trans.add(updateTransaction, originalValue);
+            trans.add(updateTransaction, originalValue);
             trans.undo();
-            expect(trans.get('Key1')).toEqual(updateChange);
-            expect(trans.getAll()).toEqual([updateChange]);
-            expect(trans.currentState().get(updateChange.id)).toEqual({
-                value: updateChange.newValue,
+            expect(trans.getLastTransactionById('Key1')).toEqual(updateTransaction);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction]);
+            expect(trans.currentState().get(updateTransaction.id)).toEqual({
+                value: updateTransaction.newValue,
                 originalValue: originalValue,
-                type: updateChange.type
+                type: updateTransaction.type
             });
             trans.reset();
 
             // UPDATE -> UPDATE -> Undo -> Redo
-            trans.add(updateChange, originalValue);
-            trans.add(updateChange, originalValue);
+            trans.add(updateTransaction, originalValue);
+            trans.add(updateTransaction, originalValue);
             trans.undo();
             trans.redo();
-            expect(trans.get('Key1')).toEqual(updateChange2);
-            expect(trans.getAll()).toEqual([updateChange, updateChange]);
-            expect(trans.currentState().get(updateChange.id)).toEqual({
-                value: updateChange2.newValue,
+            expect(trans.getLastTransactionById('Key1')).toEqual(updateTransaction2);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction, updateTransaction]);
+            expect(trans.currentState().get(updateTransaction.id)).toEqual({
+                value: updateTransaction2.newValue,
                 originalValue: originalValue,
-                type: updateChange2.type
+                type: updateTransaction2.type
             });
             trans.reset();
 
             // UPDATE -> DELETE
-            trans.add(updateChange, originalValue);
-            const deleteChange: IChange = { id: 'Key1', type: ChangeType.DELETE, newValue: null };
-            trans.add(deleteChange);
-            expect(trans.get('Key1')).toEqual(deleteChange);
-            expect(trans.getAll()).toEqual([updateChange, deleteChange]);
-            expect(trans.currentState().get(deleteChange.id)).toEqual({
-                value: deleteChange.newValue,
+            trans.add(updateTransaction, originalValue);
+            const deleteTransaction: ITransaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
+            trans.add(deleteTransaction);
+            expect(trans.getLastTransactionById('Key1')).toEqual(deleteTransaction);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction, deleteTransaction]);
+            expect(trans.currentState().get(deleteTransaction.id)).toEqual({
+                value: deleteTransaction.newValue,
                 originalValue: originalValue,
-                type: deleteChange.type
+                type: deleteTransaction.type
             });
             trans.reset();
 
             // UPDATE -> DELETE -> Undo
-            trans.add(updateChange, originalValue);
-            trans.add(deleteChange);
+            trans.add(updateTransaction, originalValue);
+            trans.add(deleteTransaction);
             trans.undo();
-            expect(trans.get('Key1')).toEqual(updateChange);
-            expect(trans.getAll()).toEqual([updateChange]);
-            expect(trans.currentState().get(updateChange.id)).toEqual({
-                value: updateChange.newValue,
+            expect(trans.getLastTransactionById('Key1')).toEqual(updateTransaction);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction]);
+            expect(trans.currentState().get(updateTransaction.id)).toEqual({
+                value: updateTransaction.newValue,
                 originalValue: originalValue,
-                type: updateChange.type
+                type: updateTransaction.type
             });
             trans.reset();
 
             // UPDATE -> DELETE -> Undo -> Redo
-            trans.add(updateChange, originalValue);
-            trans.add(deleteChange);
+            trans.add(updateTransaction, originalValue);
+            trans.add(deleteTransaction);
             trans.undo();
             trans.redo();
-            expect(trans.get('Key1')).toEqual(deleteChange);
-            expect(trans.getAll()).toEqual([updateChange, deleteChange]);
-            expect(trans.currentState().get(deleteChange.id)).toEqual({
-                value: deleteChange.newValue,
+            expect(trans.getLastTransactionById('Key1')).toEqual(deleteTransaction);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction, deleteTransaction]);
+            expect(trans.currentState().get(deleteTransaction.id)).toEqual({
+                value: deleteTransaction.newValue,
                 originalValue: originalValue,
-                type: deleteChange.type
+                type: deleteTransaction.type
             });
             trans.reset();
+        });
+
+        it('Update data when data is list of objects', () => {
+            const originalData = SampleTestData.generateProductData(100);
+            const trans = new IgxTransactionBaseService();
+            expect(trans).toBeDefined();
+
+            const item0Update1: ITransaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
+            trans.add(item0Update1, originalData[1]);
+
+            const item10Delete: ITransaction = { id: 10, type: TransactionType.DELETE, newValue: null };
+            trans.add(item10Delete, originalData[10]);
+
+            const newItem1: ITransaction = {
+                id: 'add1', type: TransactionType.ADD, newValue: {
+                    ID: undefined,
+                    Category: 'Category Added',
+                    Downloads: 100,
+                    Items: 'Items Added',
+                    ProductName: 'ProductName Added',
+                    ReleaseDate: new Date(),
+                    Released: true,
+                    Test: 'test Added'
+                }
+            };
+
+            trans.add(newItem1, undefined);
+
+            trans.update(originalData);
+            expect(originalData.find(i => i.ID === 1).Category).toBe('Some new value');
+            expect(originalData.find(i => i.ID === 10)).toBeUndefined();
+            expect(originalData.length).toBe(100);
+            expect(originalData[99]).toEqual(newItem1.newValue);
         });
     });
 });

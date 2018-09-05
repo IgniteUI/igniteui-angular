@@ -1,26 +1,23 @@
-import { ITransaction, IChange, IState, ChangeType } from './utilities';
+import { ITransactionService, ITransaction, IState, TransactionType } from './utilities';
 
-export class IgxTransactionBaseService implements ITransaction {
-    private _changes: IChange[] = [];
-    private _undone: { change: IChange, originalValue: any }[] = [];
+export class IgxTransactionBaseService implements ITransactionService {
+    private _transactions: ITransaction[] = [];
+    private _redoStack: { transaction: ITransaction, originalValue: any }[] = [];
     private _states: Map<any, IState> = new Map();
 
-    constructor() {
+    public add(transaction: ITransaction, originalValue?: any) {
+        this.verifyAddedChange(transaction, originalValue);
+        this.updateCurrentState(transaction, originalValue);
+        this._transactions.push(transaction);
+        this._redoStack = [];
     }
 
-    public add(change: IChange, originalValue?: any) {
-        this.verifyAddedChange(change, originalValue);
-        this.updateCurrentState(change, originalValue);
-        this._changes.push(change);
-        this._undone = [];
+    public getLastTransactionById(id: string): ITransaction {
+        return [...this._transactions].reverse().find(t => t.id === id);
     }
 
-    public get(id: string): IChange {
-        return [...this._changes].reverse().find(t => t.id === id);
-    }
-
-    public getAll(): IChange[] {
-        return [...this._changes];
+    public getTransactionLog(): ITransaction[] {
+        return [...this._transactions];
     }
 
     public currentState(): Map<any, IState> {
@@ -30,17 +27,17 @@ export class IgxTransactionBaseService implements ITransaction {
     public update(data: any[]) {
         this._states.forEach(s => {
             switch (s.type) {
-                case ChangeType.ADD:
+                case TransactionType.ADD:
                     data.push(s.value);
                     break;
-                case ChangeType.DELETE:
-                    const index = data.indexOf(i => i === s.originalValue);
+                case TransactionType.DELETE:
+                    const index = data.findIndex(i => i === s.originalValue);
                     if (0 <= index && index < data.length) {
                         data.splice(index, 1);
                     }
                     //  TODO: should we throw here if there is no such item in the data
                     break;
-                case ChangeType.UPDATE:
+                case TransactionType.UPDATE:
                     this.updateValue(s, data);
                     break;
             }
@@ -48,57 +45,57 @@ export class IgxTransactionBaseService implements ITransaction {
     }
 
     public reset() {
-        this._changes = [];
+        this._transactions = [];
         this._states = new Map();
-        this._undone = [];
+        this._redoStack = [];
     }
 
     public undo() {
-        if (this._changes.length > 0) {
-            const change: IChange = this._changes.pop();
-            const state = this._states.get(change.id);
+        if (this._transactions.length > 0) {
+            const transaction: ITransaction = this._transactions.pop();
+            const state = this._states.get(transaction.id);
             const originalValue = state ? state.originalValue : undefined;
 
-            this._undone.push({ change, originalValue });
-            const currentlyLastChange = [...this._changes].reverse().find(c => c.id === change.id);
+            this._redoStack.push({ transaction, originalValue });
+            const currentlyLastChange = [...this._transactions].reverse().find(c => c.id === transaction.id);
             if (currentlyLastChange) {
                 this.updateCurrentState(currentlyLastChange, originalValue);
             } else {
-                this._states.delete(change.id);
+                this._states.delete(transaction.id);
             }
         }
     }
 
     public redo() {
-        if (this._undone.length > 0) {
-            const undone = this._undone.pop();
-            this.updateCurrentState(undone.change, undone.originalValue);
-            this._changes.push(undone.change);
+        if (this._redoStack.length > 0) {
+            const undone = this._redoStack.pop();
+            this.updateCurrentState(undone.transaction, undone.originalValue);
+            this._transactions.push(undone.transaction);
         }
     }
 
     /**
      * Verifies if the passed @param change is correct. If not throws an exception.
-     * @param change Change to be verified
+     * @param transaction Change to be verified
      */
-    private verifyAddedChange(change: IChange, originalValue?: any): void {
-        const state = this._states.get(change.id);
-        switch (change.type) {
-            case ChangeType.ADD:
+    private verifyAddedChange(transaction: ITransaction, originalValue?: any): void {
+        const state = this._states.get(transaction.id);
+        switch (transaction.type) {
+            case TransactionType.ADD:
                 if (state) {
                     //  cannot add same item twice
-                    throw new Error(`Cannot add this change. Change with id: ${change.id} has been already added.`);
+                    throw new Error(`Cannot add this change. Change with id: ${transaction.id} has been already added.`);
                 }
                 break;
-            case ChangeType.DELETE:
-            case ChangeType.UPDATE:
-                if (state && state.type === ChangeType.DELETE) {
+            case TransactionType.DELETE:
+            case TransactionType.UPDATE:
+                if (state && state.type === TransactionType.DELETE) {
                     //  cannot delete or update deleted items
-                    throw new Error(`Cannot add this change. Change with id: ${change.id} has been already deleted.`);
+                    throw new Error(`Cannot add this change. Change with id: ${transaction.id} has been already deleted.`);
                 }
                 if (!state && !originalValue) {
                     //  cannot initially change or delete item with no original value
-                    throw new Error(`Cannot add this change. This is first change of type ${change.type} for id ${change.id}.
+                    throw new Error(`Cannot add this change. This is first change of type ${transaction.type} for id ${transaction.id}.
                      For first change of this type original value is mandatory.`);
                 }
                 break;
@@ -107,11 +104,11 @@ export class IgxTransactionBaseService implements ITransaction {
 
     /**
      * Updates the current state according to passed @param change and @param originalValue
-     * @param change Change to apply to the current state
+     * @param transaction Change to apply to the current state
      * @param originalValue Original value, if any, of the record change is applied to
      */
-    private updateCurrentState(change: IChange, originalValue?: any): void {
-        const state = this._states.get(change.id);
+    private updateCurrentState(transaction: ITransaction, originalValue?: any): void {
+        const state = this._states.get(transaction.id);
         //  if ChangeType is ADD simply add change to _states;
         //  if ChangeType is DELETE:
         //    - if there is state with this id of type ADD remove it from the _states;
@@ -121,28 +118,28 @@ export class IgxTransactionBaseService implements ITransaction {
         //    - if there is state with this id set state value to the change value;
         //    - if there is state with this id and state type is DELETE change its type to UPDATE
         //    - if there is no state with this id add change to _states;
-        switch (change.type) {
-            case ChangeType.DELETE:
-                if (state && state.type === ChangeType.ADD) {
-                    this._states.delete(change.id);
+        switch (transaction.type) {
+            case TransactionType.DELETE:
+                if (state && state.type === TransactionType.ADD) {
+                    this._states.delete(transaction.id);
                     return;
-                } else if (state && state.type === ChangeType.UPDATE) {
-                    state.value = change.newValue;
-                    state.type = ChangeType.DELETE;
+                } else if (state && state.type === TransactionType.UPDATE) {
+                    state.value = transaction.newValue;
+                    state.type = TransactionType.DELETE;
                     return;
                 }
                 break;
-            case ChangeType.UPDATE:
+            case TransactionType.UPDATE:
                 if (state) {
-                    state.value = change.newValue;
-                    if (state.type === ChangeType.DELETE) {
-                        state.type = ChangeType.UPDATE;
+                    state.value = transaction.newValue;
+                    if (state.type === TransactionType.DELETE) {
+                        state.type = TransactionType.UPDATE;
                     }
                     return;
                 }
         }
 
-        this._states.set(change.id, { value: change.newValue, originalValue: originalValue, type: change.type });
+        this._states.set(transaction.id, { value: transaction.newValue, originalValue: originalValue, type: transaction.type });
     }
 
     /**
