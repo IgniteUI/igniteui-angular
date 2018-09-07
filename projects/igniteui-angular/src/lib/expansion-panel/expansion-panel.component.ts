@@ -123,10 +123,11 @@ export class IgxExpansionPanelComponent {
     }
 
     collapse (evt?: Event) {
+        this.collapsed = true;
         this.playCloseAnimation(
             () => {
                 this.onCollapsed.emit({event: evt});
-                this.collapsed = true; }
+                }
             );
     }
 
