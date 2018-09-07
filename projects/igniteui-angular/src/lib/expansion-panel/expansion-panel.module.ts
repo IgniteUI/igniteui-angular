@@ -6,8 +6,8 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
+import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
-  IgxExpansionPanelBodyComponent,
   IgxExpansionPanelHeaderDirective,
   IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 
@@ -15,10 +15,10 @@ import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
   declarations: [
     IgxExpansionPanelComponent,
     IgxExpansionPanelHeaderComponent,
+    IgxExpansionPanelBodyComponent,
     IgxExpansionPanelHeaderDirective,
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
-    IgxExpansionPanelBodyComponent,
     IgxExpansionPanelIconDirective
   ],
   entryComponents: [
@@ -26,9 +26,9 @@ import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
   exports: [
     IgxExpansionPanelComponent,
     IgxExpansionPanelHeaderComponent,
+    IgxExpansionPanelBodyComponent,
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
-    IgxExpansionPanelBodyComponent,
     IgxExpansionPanelIconDirective,
     IgxExpansionPanelHeaderDirective
   ],
