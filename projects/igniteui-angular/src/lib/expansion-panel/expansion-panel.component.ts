@@ -67,19 +67,18 @@ export class IgxExpansionPanelComponent {
     public collapsed = true;
 
     @Output()
-    public onCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
+    public onCollapsed = new EventEmitter<any>();
 
     @Output()
-    public onExpanded = new EventEmitter<IExpansionPanelEventArgs>();
+    public onExpanded = new EventEmitter<any>();
 
     constructor(
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
-        private renderer: Renderer2,
         private builder: AnimationBuilder) { }
 
-    @ViewChildren('collapseBody', { read : ElementRef})
-    private body: QueryList<ElementRef>;
+    // @ViewChildren('collapseBody', { read : ElementRef})
+    // private body: QueryList<ElementRef>;
 
     @ContentChild(IgxExpansionPanelTitleDirective, {read: IgxExpansionPanelTitleDirective })
     public title: IgxExpansionPanelTitleDirective;
@@ -96,46 +95,46 @@ export class IgxExpansionPanelComponent {
         return this.title ? this.title.id : this._title;
     }
 
-    private playOpenAnimation(cb: () => void) {
-        this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(0px)';
-        const animationBuilder = this.builder.build(this.animationSettings.openAnimation);
-        const openAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
+    // private playOpenAnimation(cb: () => void) {
+    //     this.animationSettings.openAnimation.options.params.fromPosition = 'translateY(0px)';
+    //     const animationBuilder = this.builder.build(this.animationSettings.openAnimation);
+    //     const openAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
 
-        openAnimationPlayer.onDone(() => {
-            cb();
-            openAnimationPlayer.reset();
-        });
+    //     openAnimationPlayer.onDone(() => {
+    //         cb();
+    //         openAnimationPlayer.reset();
+    //     });
 
-        openAnimationPlayer.play();
-    }
+    //     openAnimationPlayer.play();
+    // }
 
-    private playCloseAnimation(cb: () => void) {
-        this.animationSettings.closeAnimation.options.params.toPosition = 'translateY(0px)';
-        const animationBuilder = this.builder.build(this.animationSettings.closeAnimation);
-        const closeAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
+    // private playCloseAnimation(cb: () => void) {
+    //     this.animationSettings.closeAnimation.options.params.toPosition = 'translateY(0px)';
+    //     const animationBuilder = this.builder.build(this.animationSettings.closeAnimation);
+    //     const closeAnimationPlayer = animationBuilder.create(this.body.first.nativeElement);
 
-        closeAnimationPlayer.onDone(() => {
-            cb();
-            closeAnimationPlayer.reset();
-        });
+    //     closeAnimationPlayer.onDone(() => {
+    //         cb();
+    //         closeAnimationPlayer.reset();
+    //     });
 
-        closeAnimationPlayer.play();
-    }
+    //     closeAnimationPlayer.play();
+    // }
 
     collapse (evt?: Event) {
         this.collapsed = true;
-        this.playCloseAnimation(
-            () => {
-                this.onCollapsed.emit({event: evt});
-                }
-            );
+        // this.playCloseAnimation(
+        //     () => {
+        //         this.onCollapsed.emit({event: evt});
+        //         }
+        //     );
     }
 
     expand (evt?: Event) {
         this.collapsed = false;
-        this.playOpenAnimation(
-            () => { this.onExpanded.emit({event: evt}); }
-        );
+        // this.playOpenAnimation(
+        //     () => { this.onExpanded.emit({event: evt}); }
+        // );
     }
 
     toggle (evt?: Event) {
