@@ -270,6 +270,23 @@ describe('IgxDatePicker', () => {
         const boundValue = fix.componentInstance.val;
         expect(boundValue).toEqual(expectedRes);
     }));
+
+    it('Should be able to deselect using the API.', () => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        const datePicker = fix.componentInstance.datePicker;
+        fix.detectChanges();
+
+        const date = new Date(Date.now());
+        datePicker.selectDate(date);
+        fix.detectChanges();
+
+        expect(datePicker.value).toBe(date);
+
+        datePicker.deselectDate();
+        fix.detectChanges();
+
+        expect(datePicker.value).toBe(null);
+    });
 });
 
 @Component({
