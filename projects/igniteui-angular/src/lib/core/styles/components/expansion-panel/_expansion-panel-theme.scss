@@ -32,7 +32,8 @@
     $header-description-color: null,
     $header-icon-color: null,
     $body-color: null,
-    $body-background: null
+    $body-background: null,
+    $disabled-color: null
 
 ) {
     $default-theme: (
@@ -43,7 +44,8 @@
         header-description-color: igx-color($palette, 'grays', 600),
         header-icon-color: igx-color($palette, 'grays', 800),
         body-color: igx-color($palette, 'grays', 800),
-        body-background: #fff
+        body-background: #fff,
+        disabled-color: igx-color($palette, 'grays', 500)
     );
 
     @if not($header-title-color) and $header-background {
@@ -70,9 +72,9 @@
         header-title-color: $header-title-color,
         header-description-color: $header-description-color,
         header-icon-color: $header-icon-color,
-        header-icon-color: $header-icon-color,
         body-color: $body-color,
         body-background: $body-background,
+        disabled-color: $disabled-color,
     ));
 }
 
