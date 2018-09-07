@@ -88,4 +88,7 @@ export class GridGroupBySampleComponent implements OnInit {
     getRowsList() {
         console.log(this.grid1.rowList);
     }
+    onGroupingChangedHandler(event){
+        console.log(event)
+    }
 }

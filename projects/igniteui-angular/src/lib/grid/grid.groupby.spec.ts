@@ -328,7 +328,7 @@ describe('IgxGrid - GroupBy', () => {
         }
     });
 
-    it('should trigger a onGroupingDone event when a column is grouped with the correct params.', () => {
+    it('should trigger a onGroupingChanged event when a column is grouped with the correct params.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -1991,7 +1991,7 @@ export class DataParent {
             [width]='width'
             [height]='height'
             [data]="data"
-            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingChanged)="onGroupingChangedHandler($event)">
         </igx-grid>
         <ng-template #dropArea>
             <span> Custom template </span>
@@ -2022,7 +2022,7 @@ export class DefaultGridComponent extends DataParent {
         column.editable = this.enableEditing;
         column.groupable = this.enableGrouping;
     }
-    public onGroupingDoneHandler(sortExpr) {
+    public onGroupingChangedHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
 }

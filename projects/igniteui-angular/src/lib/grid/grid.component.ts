@@ -1046,17 +1046,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Emitted when a new `IgxColumnComponent` is grouped or ungrouped.
      * Returns the `ISortingExpression` related to the grouping operation.
      * ```typescript
-     * groupingDone(event: any){
+     * groupingChanged(event: any){
      *     const grouping = event;
      * }
      * ```
      * ```html
-     * <igx-grid #grid [data]="localData" (onGroupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (onGroupingChanged)="groupingChanged($event)" [autoGenerate]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onGroupingDone = new EventEmitter<ISortingExpression[]>();
+    public onGroupingChanged = new EventEmitter<any>();
 
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
@@ -2809,6 +2809,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
+        const oldSortingExpressions = this.sortingExpressions;
         this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -2817,7 +2818,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        this.onGroupingDone.emit(this.sortingExpressions);
+        const groupingChangedArgs = {
+            oldExpressions : oldSortingExpressions || null,
+            newExpressions: this.sortingExpressions
+        };
+        this.onGroupingChanged.emit(groupingChangedArgs);
 
         this.restoreHighlight();
     }
@@ -2832,8 +2837,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      *
      */
     public clearGrouping(name?: string): void {
+        const oldSortingExpressions = this.sortingExpressions;
         this.gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
+        const groupingChangedArgs = {
+            oldExpressions : oldSortingExpressions || null,
+            newExpressions: this.sortingExpressions
+        };
+        this.onGroupingChanged.emit(groupingChangedArgs);
 
         this.restoreHighlight();
     }
