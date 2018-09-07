@@ -86,7 +86,7 @@
 @mixin igx-expansion-panel($theme) {
     @include igx-root-css-vars($theme);
 
-    $panel-padding: em(24px, 16px) em(16px, 16px) em(16px, 16px) em(16px, 16px);
+    $panel-padding: em(16px, 16px);
     $panel-compact-padding: em(16px, 16px);
     $panel-cosy-padding: em(8px, 16px);
 

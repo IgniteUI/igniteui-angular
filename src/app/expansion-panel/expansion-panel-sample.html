@@ -1,6 +1,10 @@
 <div class="sample-wrapper">
     <app-page-header title="Expansion Panel" description="IgxExpansionPanel lets you display content with a toggleable details view"></app-page-header>
-    <section>
+    <section class="sample-flex-item">
+        <div class="sample-flex-row">
+            <button igxButton class="igx-button--flat" (click)="templateIcon()">{{ templatedIcon ? 'Disabled' : 'Enable'}} icon template</button>
+            <button igxButton class="igx-button--flat" (click)="toggleLeftRight()">Current Position: {{ iconPosition }}</button>
+        </div>
         <div class="game-board">
             <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible"
             (onCollapsed)="handleCollapsed($event)"
@@ -29,7 +33,5 @@
                 </igx-expansion-panel-body>
             </igx-expansion-panel>
         </div>
-        <button igxButton class="igx-button--raised" (click)="templateIcon()">{{ templatedIcon ? 'Disabled' : 'Enable'}} icon template</button>
-        <button igxButton class="igx-button--raised" (click)="toggleLeftRight()">Current Position: {{ iconPosition }}</button>
     </section>
 </div>
