@@ -42,7 +42,8 @@ import {
     IgxGridPagingPipe,
     IgxGridPostGroupingPipe,
     IgxGridPreGroupingPipe,
-    IgxGridSortingPipe
+    IgxGridSortingPipe,
+    IgxGridTransactionPipe
 } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
@@ -79,7 +80,8 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
     IgxGridFilterConditionPipe,
-    IgxGridFilterExpressionComponent
+    IgxGridFilterExpressionComponent,
+    IgxGridTransactionPipe
   ],
   entryComponents: [
     IgxColumnComponent,

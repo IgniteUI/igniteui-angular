@@ -172,3 +172,16 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
         return value.split(/(?=[A-Z])/).join(' ');
     }
 }
+
+@Pipe({
+    name: 'gridTransaction',
+    pure: true
+})
+export class IgxGridTransactionPipe implements PipeTransform {
+
+    constructor(private gridAPI: IgxGridAPIService) { }
+
+    transform(collection: any[], id: string, pipeTrigger: number) {
+        return [...collection];
+    }
+}

@@ -2,7 +2,7 @@ import { IgxTransactionBaseService } from './transaction-base';
 import { ITransaction, TransactionType } from './utilities';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
-fdescribe('IgxTransaction', () => {
+describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
         it('Should initialize transactions log properly', () => {
             const trans = new IgxTransactionBaseService();
