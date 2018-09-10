@@ -97,7 +97,7 @@ export class IgxExpansionPanelHeaderComponent {
          evt.preventDefault();
      }
 
-     public iconPositionClass(): string {
+     public get iconPositionClass(): string {
         switch (this.iconPosition) {
             case (ICON_POSITION.LEFT):
                 return `igx-expansion-panel__header-icon--start`;

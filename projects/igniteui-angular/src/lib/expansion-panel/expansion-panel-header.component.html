@@ -4,7 +4,7 @@
         <ng-content select="igx-expansion-panel-description"></ng-content>
     </div>
     <!--<ng-content></ng-content>-->
-    <div [class]="iconPositionClass()">
+    <div [class]="iconPositionClass">
         <ng-content *ngIf="iconTemplate" select="igx-expansion-panel-icon"></ng-content>
         <igx-icon *ngIf="!iconTemplate" fontSet="material">
             {{panel.collapsed? 'expand_more':'expand_less'}}
