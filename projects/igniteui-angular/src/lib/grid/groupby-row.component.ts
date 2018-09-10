@@ -22,7 +22,7 @@ import { IgxGridComponent } from './grid.component';
 export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: IgxGridAPIService,
-                private selectionAPI: IgxSelectionAPIService,
+                private selection: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
@@ -108,7 +108,8 @@ export class IgxGridGroupByRowComponent {
      */
     @HostBinding('attr.aria-describedby')
     get describedBy(): string {
-        return this.gridID + '_' + this.groupRow.expression.fieldName;
+        const grRowExpr = this.groupRow.expression !== undefined ? this.groupRow.expression.fieldName : '';
+        return this.gridID + '_' + grRowExpr;
     }
 
     /**
@@ -180,7 +181,7 @@ export class IgxGridGroupByRowComponent {
         event.preventDefault();
         event.stopPropagation();
         const rowIndex = this.index + 1;
-        this.grid.navigateDown(rowIndex, visibleColumnIndex);
+        this.grid.navigateDown(rowIndex, visibleColumnIndex, event);
     }
 
     /**
@@ -196,7 +197,7 @@ export class IgxGridGroupByRowComponent {
             return;
         }
         const rowIndex = this.index - 1;
-        this.grid.navigateUp(rowIndex, visibleColumnIndex);
+        this.grid.navigateUp(rowIndex, visibleColumnIndex, event);
     }
 
     /**
@@ -204,6 +205,9 @@ export class IgxGridGroupByRowComponent {
      */
     public onFocus() {
         this.isFocused = true;
+        if (this.grid.selectedCells.length) {
+            this.grid.selectedCells[0]._clearCellSelection();
+        }
     }
 
     /**
@@ -214,14 +218,14 @@ export class IgxGridGroupByRowComponent {
     }
 
     private _getSelectedColIndex() {
-        const cell = this.selectionAPI.get_selection_first(this.gridID + '-cell');
+        const cell = this.selection.first_item(this.gridID + '-cell');
         if (cell) {
             return cell.columnID;
         }
     }
 
     private _getPrevSelectedColIndex() {
-        const prevCell = this.selectionAPI.get_selection_first(this.gridID + '-prev-cell');
+        const prevCell = this.selection.first_item(this.gridID + '-prev-cell');
         if (prevCell) {
             return prevCell.columnID;
         }

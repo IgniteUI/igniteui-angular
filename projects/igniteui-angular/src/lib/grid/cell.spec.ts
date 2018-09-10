@@ -41,9 +41,9 @@ describe('IgxGrid - Cell component', () => {
             // else call arrow up/down
             // cell.nativeElement.dispatchEvent(keyboardEvent);
             if (dir === 'ArrowRight') {
-                cell.onKeydownArrowRight();
+                cell.onKeydownArrowRight(keyboardEvent);
             } else {
-                cell.onKeydownArrowLeft();
+                cell.onKeydownArrowLeft(keyboardEvent);
             }
 
             grid.cdr.detectChanges();
@@ -372,6 +372,25 @@ describe('IgxGrid - Cell component', () => {
 
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(cellValue);
+            }));
+
+            it('should not throw errors when update cell to value, which does not match filter criteria', (async () => {
+                grid.filter('personNumber', 1, IgxStringFilteringOperand.instance().condition('equals'));
+                fixture.detectChanges();
+
+                const cell = grid.getCellByColumn(0, 'personNumber');
+                const cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[4];
+                const previousCell = grid.getCellByColumn(0, 'birthday');
+
+                cellDomPK.triggerEventHandler('dblclick', {});
+                await wait();
+                expect(cell.inEditMode).toBe(true);
+
+                const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
+                UIInteractions.sendInput(editTemplate, 9);
+                await wait();
+
+                expect (() => previousCell.onClick({})).not.toThrow();
             }));
 
             it('should exit edit mode on sorting', (async () => {
@@ -921,7 +940,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
         const curCell = grid.getCellByColumn(3, '1');
-        curCell.onKeydownArrowDown();
+        curCell.onKeydownArrowDown(null);
 
         grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
             expect(parseInt(displayContainer.style.top, 10)).toEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
@@ -957,7 +976,7 @@ describe('IgxGrid - Cell component', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
             const curCell = grid.getCellByColumn(1, '1');
-            curCell.onKeydownArrowUp();
+            curCell.onKeydownArrowUp(null);
 
             grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
                 expect(displayContainer.style.top).toEqual('0px');
@@ -994,7 +1013,7 @@ describe('IgxGrid - Cell component', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
             const curCell = grid.getCellByColumn(1, '1');
-            curCell.onKeydownArrowLeft();
+            curCell.onKeydownArrowLeft(null);
 
             grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
                 fix.detectChanges();
@@ -1026,7 +1045,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('2');
 
         const curCell = grid.getCellByColumn(1, '2');
-        curCell.onKeydownArrowRight();
+        curCell.onKeydownArrowRight(null);
 
         grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
             fix.detectChanges();

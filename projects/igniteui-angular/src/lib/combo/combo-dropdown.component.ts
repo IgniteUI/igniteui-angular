@@ -20,11 +20,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selectionAPI: IgxSelectionAPIService,
+        protected selection: IgxSelectionAPIService,
         @Inject(forwardRef(() => IgxComboComponent))
         public combo: IgxComboComponent) {
-        super(elementRef, cdr, selectionAPI);
-        this.allowItemsFocus = false;
+        super(elementRef, cdr, selection);
     }
 
     /**
@@ -112,7 +111,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     public get selectedItem(): any[] {
-        const sel = this.selectionAPI.get_selection(this.combo.id);
+        const sel = this.selection.get(this.combo.id);
         return sel ? Array.from(sel) : [];
     }
 

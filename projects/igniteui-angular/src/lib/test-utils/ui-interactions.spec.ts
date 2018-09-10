@@ -1,7 +1,10 @@
 export function wait(ms = 0) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
-
+declare var Touch: {
+    prototype: Touch;
+    new(prop): Touch;
+};
 export class UIInteractions {
 
     public static sendInput(element, text, fix?) {
@@ -97,5 +100,56 @@ export class UIInteractions {
         });
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
+    }
+    public static simulateWheelEvent(element, deltaX, deltaY) {
+        const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(event);
+            resolve();
+        });
+    }
+
+    public static simulateTouchStartEvent(element, pageX, pageY) {
+        const touchInit = {
+            identifier: 0,
+            target: element,
+            pageX: pageX,
+            pageY: pageY
+        };
+        const t = new Touch(touchInit);
+        const touchEventObject = new TouchEvent('touchstart', {touches: [t]});
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(touchEventObject);
+            resolve();
+        });
+    }
+    public static simulateTouchMoveEvent(element, movedX, movedY) {
+        const touchInit = {
+            identifier: 0,
+            target: element,
+            pageX: movedX,
+            pageY: movedY
+        };
+        const t = new Touch(touchInit);
+        const touchEventObject = new TouchEvent('touchmove', {touches: [t]});
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(touchEventObject);
+            resolve();
+        });
+    }
+
+    public static simulateTouchEndEvent(element, movedX, movedY) {
+        const touchInit = {
+            identifier: 0,
+            target: element,
+            pageX: movedX,
+            pageY: movedY
+        };
+        const t = new Touch(touchInit);
+        const touchEventObject = new TouchEvent('touchend', {touches: [t]});
+        return new Promise((resolve, reject) => {
+            element.dispatchEvent(touchEventObject);
+            resolve();
+        });
     }
 }
