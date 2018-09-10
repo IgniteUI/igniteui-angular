@@ -1227,6 +1227,189 @@ describe('IgxCalendar', () => {
             });
         });
     }));
+
+    it('Deselect using API. Should deselect in "single" selection mode.', () => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        fixture.detectChanges();
+
+        const date = calendar.viewDate;
+        calendar.selectDate(date);
+        fixture.detectChanges();
+
+        let selectedDate = calendar.value;
+        expect(selectedDate).toBe(date);
+
+        calendar.deselectDate(date);
+        fixture.detectChanges();
+
+        selectedDate = calendar.value;
+        expect(selectedDate).toBe(null);
+    });
+
+    it('Deselect using API. Should deselect in "multi" selection mode.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const ci = fixture.componentInstance;
+        const calendar = ci.calendar;
+        ci.model = [];
+        calendar.selection = 'multi';
+        fixture.detectChanges();
+
+        const year = calendar.viewDate.getFullYear();
+        const month = calendar.viewDate.getMonth();
+        const dates = [];
+        const datesCount = 10;
+        for (let i = 0; i < datesCount; i++) {
+            dates.push(new Date(year, month, i + 1));
+        }
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            calendar.selectDate(dates);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            const evenDates = dates.filter(d => d.getDate() % 2 === 0);
+            calendar.deselectDate(evenDates);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
+            const selectedDates: Date[] = calendar.value as Date[];
+            for (const selectedDate of selectedDates) {
+                expect(oddDates.indexOf(selectedDate)).toBeGreaterThan(-1);
+            }
+        });
+    }));
+
+    it('Deselect using API. Should deselect in "range" selection mode.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const ci = fixture.componentInstance;
+        const calendar = ci.calendar;
+        ci.model = [];
+        calendar.selection = 'range';
+        fixture.detectChanges();
+
+        const startDate = calendar.viewDate;
+        const endDate = new Date(calendar.viewDate);
+        endDate.setDate(endDate.getDate() + 14);
+
+        const startDateDeselect = new Date(startDate);
+        const endDateDeselect = new Date(endDate);
+        endDateDeselect.setDate(endDate.getDate() - 7);
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            calendar.selectDate(startDate);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            calendar.selectDate(endDate);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            const selectedDates: Date[] = calendar.value as Date[];
+            const selectedDatesMs = selectedDates.map(d => new Date(
+                d.getFullYear(), d.getMonth(), d.getDate()).getTime());
+            expect(selectedDates.length).toBe(7);
+            const expectedSelectedDates = [];
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(endDate);
+                date.setDate(date.getDate() - i);
+                expectedSelectedDates.push(date);
+            }
+
+            const expectedSelectedDatesInMs = expectedSelectedDates.map(d => new Date(
+                d.getFullYear(), d.getMonth(), d.getDate()).getTime());
+            for (const expectedSelectedDate of expectedSelectedDatesInMs) {
+                expect(selectedDatesMs.indexOf(expectedSelectedDate)).toBeGreaterThan(-1);
+            }
+        });
+    }));
+
+    it('Deselect using API. Should deselect all in "single" mode.', () => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        fixture.detectChanges();
+
+        const date = calendar.viewDate;
+        calendar.selectDate(date);
+        fixture.detectChanges();
+
+        let selectedDate = calendar.value;
+        expect(selectedDate).toBe(date);
+
+        calendar.deselectDate();
+        fixture.detectChanges();
+
+        selectedDate = calendar.value;
+        expect(selectedDate).toBe(null);
+    });
+
+    it('Deselect using API. Should deselect all in "multi" mode.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const ci = fixture.componentInstance;
+        const calendar = ci.calendar;
+        ci.model = [];
+        calendar.selection = 'multi';
+        fixture.detectChanges();
+
+        const year = calendar.viewDate.getFullYear();
+        const month = calendar.viewDate.getMonth();
+        const dates = [];
+        const datesCount = 10;
+        for (let i = 0; i < datesCount; i++) {
+            dates.push(new Date(year, month, i + 1));
+        }
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            calendar.selectDate(dates);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            calendar.deselectDate();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(calendar.value).toEqual([]);
+        });
+    }));
+
+    it('Deselect using API. Should deselect all in "range" mode.', async(() => {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const ci = fixture.componentInstance;
+        const calendar = ci.calendar;
+        ci.model = [];
+        calendar.selection = 'range';
+        fixture.detectChanges();
+
+        const startDate = calendar.viewDate;
+        const endDate = new Date(calendar.viewDate);
+        endDate.setDate(endDate.getDate() + 7);
+
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            calendar.selectDate(startDate);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            calendar.selectDate(endDate);
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            calendar.deselectDate();
+            return fixture.whenStable();
+        }).then(() => {
+            fixture.detectChanges();
+            expect(calendar.value).toEqual([]);
+        });
+    }));
 });
 
 @Component({

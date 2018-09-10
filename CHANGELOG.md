@@ -10,11 +10,12 @@ All notable changes for each version of this project will be documented in this 
 - `igxButtonGroup`
     - Added the ability to define buttons directly in the template
 - `igx-time-picker`:
-    - `igxTimePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxTimePickerComponent`'s input group is retemplated. 
+    - `igxTimePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxTimePickerComponent`'s input group is retemplated.
 - `igx-datePicker`:
     - `igxDatePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxDatePickerComponent`'s input group is retemplated.
     - Introduced `disabledDates`. This property is exposed from the `igx-calendar` component.
     - Introduced `specialDates`. This property is exposed from the `igx-calendar` component.
+    - Introduced `deselectDate` method added that deselects the calendar date.
 - `IgxTextHighlightDirective`: The `highlight` method now has a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the group's value.
     - If its value is true, the entire group's value should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
@@ -41,6 +42,7 @@ All notable changes for each version of this project will be documented in this 
 - `igx-calendar`:
     - Introduced `disabledDates` property which allows a user to disable dates based on various rules: before or after a date, weekends, workdays, specific dates and ranges. The disabled dates cannot be selected and have a distinguishable style.
     - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
+    - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
 - `IgxList`:
     - the control now supports **ng-templates** which are shown "under" a list item when it is left or right panned. The templates are distinguished using the `igxListItemLeftPanning` and `igxListItemRightPanning` directives set on the templates.
     - the IgxList's `onLeftPan` and `onRightPan` events now have an argument of type `IListItemPanningEventArgs` (instead of `IgxListItemComponent`). The event argument has the following fields:
