@@ -14,26 +14,20 @@
 .tsd-signature
     margin: 0 0 1em 0
     padding: 10px
-    border: 1px solid $COLOR_PANEL_DIVIDER
+    border-top: 1px solid #ededed
+    border-bottom: 1px solid #ededed
     font-family: $FONT_FAMILY_MONO
     font-size: $FONT_SIZE_MONO
 
     &.tsd-kind-icon
-        padding-left: 30px
-
-        &:before
+        &::before
             top: 10px
             left: 10px
 
     .tsd-panel > &
-        margin-left: -20px
-        margin-right: -20px
-        border-width: 1px 0
 
         &.tsd-kind-icon
-            padding-left: 40px
-
-            &:before
+            &::before
                 left: 20px
 
 .tsd-signature-symbol
@@ -68,19 +62,15 @@
             border-top-width: 0
 
         &.current
-            background-color: $COLOR_PANEL_DIVIDER
+            background-color: rgba(0, 0, 0, .04)
 
     &.active > .tsd-signature
         cursor: pointer
 
     .tsd-panel > &
-        margin-left: -20px
-        margin-right: -20px
         border-width: 1px 0
 
         .tsd-signature.tsd-kind-icon
-            padding-left: 40px
-
             &:before
                 left: 20px
 
@@ -132,13 +122,12 @@ ul.tsd-descriptions
 
     h4
         font-size: $FONT_SIZE
+        font-weight: 500
         margin: 1em 0 0.5em 0
 
 ul.tsd-parameters,
 ul.tsd-type-parameters
-    list-style: square
     margin: 0
-    padding-left: 20px
 
     > li.tsd-parameter-siganture
         list-style: none
@@ -146,6 +135,7 @@ ul.tsd-type-parameters
 
     h5
         font-size: $FONT_SIZE
+        font-weight: 500
         margin: 1em 0 0.5em 0
 
     .tsd-comment
