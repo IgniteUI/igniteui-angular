@@ -17,7 +17,7 @@ fdescribe('IgxTransaction', () => {
 
         it('Should add transactions to the transactions log', () => {
             const trans = new IgxTransactionBaseService();
-            const states: ITransaction[] = [
+            const transactions: ITransaction[] = [
                 { id: '1', type: TransactionType.ADD, newValue: 1 },
                 { id: '2', type: TransactionType.ADD, newValue: 2 },
                 { id: '3', type: TransactionType.ADD, newValue: 3 },
@@ -32,9 +32,9 @@ fdescribe('IgxTransaction', () => {
             expect(trans['_transactions'].length).toEqual(0);
             expect(trans['_redoStack'].length).toEqual(0);
             let transactionIndex = 1;
-            states.forEach(function (state) {
-                trans.add(state);
-                expect(trans.getTransactionLog(state.id)).toEqual(state);
+            transactions.forEach(function (transaction) {
+                trans.add(transaction);
+                expect(trans.getTransactionLog(transaction.id)).toEqual(transaction);
                 expect(trans['_transactions'].length).toEqual(transactionIndex);
                 expect(trans['_redoStack'].length).toEqual(0);
                 transactionIndex++;
@@ -490,7 +490,6 @@ fdescribe('IgxTransaction', () => {
             expect(originalData.find(i => i === 'Row 10')).toBeUndefined();
             expect(originalData.length).toBe(50);
             expect(originalData[49]).toEqual('Added Row');
-
         });
     });
 });
