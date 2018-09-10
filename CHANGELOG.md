@@ -16,6 +16,9 @@ All notable changes for each version of this project will be documented in this 
         - Adding inertia scrolling for touch devices.
     - `igxCombo`
         - Adding inertia scrolling for touch devices. 
+    - `IgxCalendar` - `deselectDate` method added that deselects date(s) (based on the selection type)
+    - `IgxDatePicker` - `deselectDate` method added that deselects the calendar date.
+
 ## 6.1.3
 - **General**
     - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.

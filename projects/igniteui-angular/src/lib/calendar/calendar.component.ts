@@ -733,6 +733,31 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
+     * Deselects date(s) (based on the selection type).
+     *```typescript
+     * this.calendar.deselectDate(new Date(`2018-06-12`));
+     *````
+     */
+    public deselectDate(value?: Date | Date[]) {
+        if (value === null || value === undefined) {
+            this.selectedDates = this.selection === 'single' ? null : [];
+            return;
+        }
+
+        switch (this.selection) {
+            case 'single':
+                this.deselectSingle(value as Date);
+                break;
+            case 'multi':
+                this.deselectMultiple(value as Date[]);
+                break;
+            case 'range':
+                this.deselectRange(value as Date[]);
+                break;
+        }
+    }
+
+    /**
      * @hidden
      */
     public generateWeekHeader(): string[] {
@@ -1000,6 +1025,65 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
+     * Performs a single deselection.
+     * @hidden
+     */
+    private deselectSingle(value: Date) {
+        if (this.selectedDates !== null && value !== null &&
+            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates)) {
+            this.selectedDates = null;
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
+
+    /**
+     * Performs a multiple deselection.
+     * @hidden
+     */
+    private deselectMultiple(value: Date[]) {
+        if (value === null) {
+            return;
+        }
+
+        value = value.filter(v => v !== null);
+        const selectedDatesCount = this.selectedDates.length;
+        const datesInMsToDeselect: Set<number> = new Set<number>(
+            value.map(v => this.getDateOnlyInMs(v)));
+
+        for (let i = this.selectedDates.length - 1; i >= 0; i--) {
+            if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
+                this.selectedDates.splice(i, 1);
+            }
+        }
+
+        if (this.selectedDates.length !== selectedDatesCount) {
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
+
+    /**
+     * Performs a range deselection.
+     * @hidden
+     */
+    private deselectRange(value: Date[]) {
+        if (value === null) {
+            return;
+        }
+
+        value = value.filter(v => v !== null);
+        if (value.length < 2) {
+            return;
+        }
+
+        value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+        const start = value.shift();
+        const end = value.pop();
+
+        const deselectRange = [start, ...this.generateDateRange(start, end)];
+        this.deselectMultiple(deselectRange);
+    }
+
+    /**
      * Helper method building and returning the context object inside
      * the calendar templates.
      * @hidden
@@ -1037,6 +1121,12 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             return;
         }
         this._viewDate = this.calendarModel.timedelta(this._viewDate, 'year', delta);
+    }
+    /**
+     *@hidden
+     */
+    private getDateOnlyInMs(date: Date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
     }
     /**
      *@hidden
