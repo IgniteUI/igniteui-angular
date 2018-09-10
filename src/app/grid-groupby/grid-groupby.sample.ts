@@ -85,4 +85,7 @@ export class GridGroupBySampleComponent implements OnInit {
             case DisplayDensity.compact: this.density = DisplayDensity.comfortable; break;
         }
     }
+    getRowsList() {
+        console.log(this.grid1.rowList);
+    }
 }
