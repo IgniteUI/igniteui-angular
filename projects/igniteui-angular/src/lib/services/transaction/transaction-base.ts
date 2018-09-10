@@ -2,36 +2,35 @@ import { ITransactionService, ITransaction, IState, TransactionType } from './ut
 
 export class IgxTransactionBaseService implements ITransactionService {
     private _transactions: ITransaction[] = [];
-    private _redoStack: { transaction: ITransaction, originalValue: any }[] = [];
+    private _redoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _states: Map<any, IState> = new Map();
 
-    public add(transaction: ITransaction, originalValue?: any) {
-        this.verifyAddedChange(transaction, originalValue);
-        this.updateCurrentState(transaction, originalValue);
+    public add(transaction: ITransaction, recordRef?: any) {
+        this.verifyAddedTransaction(transaction, recordRef);
+        this.updateCurrentState(transaction, recordRef);
         this._transactions.push(transaction);
         this._redoStack = [];
     }
 
-    public getLastTransactionById(id: string): ITransaction {
-        return [...this._transactions].reverse().find(t => t.id === id);
-    }
-
-    public getTransactionLog(): ITransaction[] {
+    public getTransactionLog(id?: any): ITransaction[] | ITransaction {
+        if (id) {
+            return [...this._transactions].reverse().find(t => t.id === id);
+        }
         return [...this._transactions];
     }
 
-    public currentState(): Map<any, IState> {
+    public aggregatedState(): Map<any, IState> {
         return new Map(this._states);
     }
 
-    public update(data: any[]) {
+    public commit(data: any[]) {
         this._states.forEach(s => {
             switch (s.type) {
                 case TransactionType.ADD:
                     data.push(s.value);
                     break;
                 case TransactionType.DELETE:
-                    const index = data.findIndex(i => i === s.originalValue);
+                    const index = data.findIndex(i => i === s.recordRef);
                     if (0 <= index && index < data.length) {
                         data.splice(index, 1);
                     }
@@ -44,7 +43,7 @@ export class IgxTransactionBaseService implements ITransactionService {
         });
     }
 
-    public reset() {
+    public clear() {
         this._transactions = [];
         this._states = new Map();
         this._redoStack = [];
@@ -54,12 +53,12 @@ export class IgxTransactionBaseService implements ITransactionService {
         if (this._transactions.length > 0) {
             const transaction: ITransaction = this._transactions.pop();
             const state = this._states.get(transaction.id);
-            const originalValue = state ? state.originalValue : undefined;
+            const recordRef = state ? state.recordRef : undefined;
 
-            this._redoStack.push({ transaction, originalValue });
-            const currentlyLastChange = [...this._transactions].reverse().find(c => c.id === transaction.id);
-            if (currentlyLastChange) {
-                this.updateCurrentState(currentlyLastChange, originalValue);
+            this._redoStack.push({ transaction, recordRef });
+            const currentlyLastTransaction = [...this._transactions].reverse().find(c => c.id === transaction.id);
+            if (currentlyLastTransaction) {
+                this.updateCurrentState(currentlyLastTransaction, recordRef);
             } else {
                 this._states.delete(transaction.id);
             }
@@ -68,56 +67,56 @@ export class IgxTransactionBaseService implements ITransactionService {
 
     public redo() {
         if (this._redoStack.length > 0) {
-            const undone = this._redoStack.pop();
-            this.updateCurrentState(undone.transaction, undone.originalValue);
-            this._transactions.push(undone.transaction);
+            const undoItem = this._redoStack.pop();
+            this.updateCurrentState(undoItem.transaction, undoItem.recordRef);
+            this._transactions.push(undoItem.transaction);
         }
     }
 
     /**
-     * Verifies if the passed @param change is correct. If not throws an exception.
-     * @param transaction Change to be verified
+     * Verifies if the passed transaction is correct. If not throws an exception.
+     * @param transaction Transaction to be verified
      */
-    private verifyAddedChange(transaction: ITransaction, originalValue?: any): void {
+    private verifyAddedTransaction(transaction: ITransaction, recordRef?: any): void {
         const state = this._states.get(transaction.id);
         switch (transaction.type) {
             case TransactionType.ADD:
                 if (state) {
                     //  cannot add same item twice
-                    throw new Error(`Cannot add this change. Change with id: ${transaction.id} has been already added.`);
+                    throw new Error(`Cannot add this transaction. Transaction with id: ${transaction.id} has been already added.`);
                 }
                 break;
             case TransactionType.DELETE:
             case TransactionType.UPDATE:
                 if (state && state.type === TransactionType.DELETE) {
                     //  cannot delete or update deleted items
-                    throw new Error(`Cannot add this change. Change with id: ${transaction.id} has been already deleted.`);
+                    throw new Error(`Cannot add this transaction. Transaction with id: ${transaction.id} has been already deleted.`);
                 }
-                if (!state && !originalValue) {
-                    //  cannot initially change or delete item with no original value
-                    throw new Error(`Cannot add this change. This is first change of type ${transaction.type} for id ${transaction.id}.
-                     For first change of this type original value is mandatory.`);
+                if (!state && !recordRef) {
+                    //  cannot initially transaction or delete item with no recordRef
+                    throw new Error(`Cannot add this transaction. This is first transaction of type ${transaction.type} ` +
+                    `for id ${transaction.id}. For first transaction of this type recordRef is mandatory.`);
                 }
                 break;
         }
     }
 
     /**
-     * Updates the current state according to passed @param change and @param originalValue
-     * @param transaction Change to apply to the current state
-     * @param originalValue Original value, if any, of the record change is applied to
+     * Updates the current state according to passed transaction and recordRef
+     * @param transaction Transaction to apply to the current state
+     * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    private updateCurrentState(transaction: ITransaction, originalValue?: any): void {
+    private updateCurrentState(transaction: ITransaction, recordRef?: any): void {
         const state = this._states.get(transaction.id);
-        //  if ChangeType is ADD simply add change to _states;
-        //  if ChangeType is DELETE:
+        //  if TransactionType is ADD simply add transaction to _states;
+        //  if TransactionType is DELETE:
         //    - if there is state with this id of type ADD remove it from the _states;
         //    - if there is state with this id of type UPDATE change its type to DELETE;
-        //    - if there is no state with this id add change to _states;
-        //  if ChangeType is UPDATE:
-        //    - if there is state with this id set state value to the change value;
+        //    - if there is no state with this id add transaction to _states;
+        //  if TransactionType is UPDATE:
+        //    - if there is state with this id set state value to the transaction's value;
         //    - if there is state with this id and state type is DELETE change its type to UPDATE
-        //    - if there is no state with this id add change to _states;
+        //    - if there is no state with this id add transaction to _states;
         switch (transaction.type) {
             case TransactionType.DELETE:
                 if (state && state.type === TransactionType.ADD) {
@@ -139,7 +138,7 @@ export class IgxTransactionBaseService implements ITransactionService {
                 }
         }
 
-        this._states.set(transaction.id, { value: transaction.newValue, originalValue: originalValue, type: transaction.type });
+        this._states.set(transaction.id, { value: transaction.newValue, recordRef: recordRef, type: transaction.type });
     }
 
     /**
@@ -148,10 +147,10 @@ export class IgxTransactionBaseService implements ITransactionService {
      * @param data Data source where update should be applied
      */
     private updateValue(state: IState, data: any[]) {
-        if (typeof state.originalValue === 'object') {
-            Object.assign(state.originalValue, state.value);
+        if (typeof state.recordRef === 'object') {
+            Object.assign(state.recordRef, state.value);
         } else {
-            const index = data.findIndex(i => i === state.originalValue);
+            const index = data.findIndex(i => i === state.recordRef);
             if (0 <= index && index < data.length) {
                 data[index] = state.value;
             }

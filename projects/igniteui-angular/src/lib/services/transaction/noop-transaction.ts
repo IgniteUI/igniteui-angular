@@ -15,11 +15,11 @@ export class NoOpTransactionService implements ITransactionService {
 
     redo() { }
 
-    currentState(): Map<any, IState> {
+    aggregatedState(): Map<any, IState> {
         return new Map();
     }
 
-    update(data: any) { }
+    commit(data: any) { }
 
-    reset() { }
+    clear() { }
 }

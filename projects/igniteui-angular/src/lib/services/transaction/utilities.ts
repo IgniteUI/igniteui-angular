@@ -12,28 +12,22 @@ export interface ITransaction {
 
 export interface IState {
     value: any;
-    originalValue: any;
+    recordRef: any;
     type: TransactionType;
 }
 
 export interface ITransactionService {
     /**
-     * Adds provided  transaction with originalValue if any
+     * Adds provided  transaction with recordRef if any
      * @param transaction Transaction to be added
-     * @param originalValue Value from data source of the changed item
+     * @param recordRef Reference to the value of the record in thd data source related to the changed item
      */
-    add(transaction: ITransaction, originalValue?: any);
+    add(transaction: ITransaction, recordRef?: any);
 
     /**
-     * Returns last transaction related to the passed id
-     * @param id Of the transaction
+     * Returns an array of all transactions. If id is provided returns last transaction for provided id
      */
-    getLastTransactionById(id: any): ITransaction;
-
-    /**
-     * Returns an array of all transactions
-     */
-    getTransactionLog(): ITransaction[];
+    getTransactionLog(id?: any): ITransaction[] | ITransaction;
 
     /**
      * Remove the last transaction if any
@@ -46,18 +40,19 @@ export interface ITransactionService {
     redo();
 
     /**
-     * Returns a map of actual state for each changed item
+     * Returns a map of aggregated state for all transactions
      */
-    currentState(): Map<any, IState>;
+    aggregatedState(): Map<any, IState>;
 
+    // TODO rename to commit
     /**
-     * Applies all changes for all changed items in the provided data
+     * Applies all transactions over the provided data
      * @param data Data source to update
      */
-    update(data: any[]);
+    commit(data: any[]);
 
     /**
      * Clears all transactions
      */
-    reset();
+    clear();
 }
