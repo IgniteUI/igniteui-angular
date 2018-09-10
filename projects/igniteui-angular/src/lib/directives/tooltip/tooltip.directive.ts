@@ -202,6 +202,10 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
     }
 
     public closeTooltip() {
+        if (this.target.collapsed && this._toBeShown) {
+            clearTimeout(this._timeoutId);
+        }
+
         if (this.target.collapsed || this._toBeHidden) {
             return;
         }
