@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <igx-grid #grid1 [data]="data" [width]="'1200px'" [height]="'800px'" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="'compact'">
+    <igx-grid #grid1 [data]="data" [width]="'1200px'" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="'compact'">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
             [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned'>
         </igx-column>

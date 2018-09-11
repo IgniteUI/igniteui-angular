@@ -2067,6 +2067,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onDataPreLoad.emit(event);
     }
 
+    public chunkGenerated(event) {
+        this.calcHeight = event;
+    }
+
     /**
      * Toggles the specified column's visibility.
      * ```typescript

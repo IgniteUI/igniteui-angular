@@ -14,6 +14,7 @@ export class GridHeightTestComponent implements OnInit {
     @ViewChild('grid1') public grid1: IgxGridComponent;
     @ViewChild('grid2') public grid2: IgxGridComponent;
     @ViewChild('grid3') public grid3: IgxGridComponent;
+    @ViewChild('grid4') public grid4: IgxGridComponent;
 
 
     public grids: Array<IgxGridComponent>;
@@ -63,7 +64,7 @@ export class GridHeightTestComponent implements OnInit {
             { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
-        this.grids = [ this.grid1, this.grid2, this.grid3 ];
+        this.grids = [ this.grid1, this.grid2, this.grid3, this.grid4 ];
     }
 
     setComfortable(grid) {
