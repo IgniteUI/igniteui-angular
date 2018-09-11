@@ -1057,7 +1057,7 @@ describe('IgxGrid - Row Selection', () => {
 
         const targetCell = gridFirstRow.cells.toArray()[cellsLength - 4];
 
-        targetCell.nativeElement.focus();
+        targetCell.onFocus(mockEvent);
         await wait();
         fix.detectChanges();
 
@@ -1072,19 +1072,16 @@ describe('IgxGrid - Row Selection', () => {
         // Focus has changed to last cell
         expect(lastVisibleCell.isSelected).toBeTruthy();
         // Focus leftmost cell, SHIFT + TAB will NOT trigger virtualization
-        gridFirstRow.cells.first.nativeElement.focus();
+        gridFirstRow.cells.first.onFocus(mockEvent);
         await wait();
         fix.detectChanges();
 
         expect(gridFirstRow.cells.first.isSelected).toBeTruthy();
-        // gridFirstRow.cells.first.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
         gridFirstRow.cells.first.onShiftTabKey(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
         await wait(100);
         fix.detectChanges();
         // There are not cells prior to the first cell - no scrolling will be done, spy will not be called;
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
-        // Cell is no longer focused
-        expect(gridFirstRow.cells.first.isSelected).toBeFalsy();
     }));
 
 });
