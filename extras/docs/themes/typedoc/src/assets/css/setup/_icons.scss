@@ -32,16 +32,14 @@ $member-icons:
 .tsd-kind-icon {
     display: block;
     position: relative;
-    padding-left: 20px;
-    text-indent: -20px;
 
-    &:before {
+    &::before {
         content: '';
         display: inline-block;
-        vertical-align: middle;
+        vertical-align: sub;
         width: 17px;
         height: 17px;
-        margin: 0 3px 2px 0;
+        margin-right: 8px;
         background-image: url(../images/icons.png);
 
         @include retina {
