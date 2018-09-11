@@ -28,7 +28,8 @@ describe('IgxDropDown ', () => {
                 InputWithDropDownDirectiveComponent,
                 IgxDropDownInputTestComponent,
                 IgxDropDownImageTestComponent,
-                IgxDropDownTabsTestComponent
+                IgxDropDownTabsTestComponent,
+                DropDownWithValuesComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -1028,6 +1029,20 @@ describe('IgxDropDown ', () => {
 
             expect(componentInstance.dropdownDisabledAny.selectedItem.index).toEqual(2);
         }));
+
+        it('Should properly handle IgxDropDownItem value', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DropDownWithValuesComponent);
+            const dropdown = fixture.componentInstance.dropdown;
+            dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            // tslint:disable-next-line:no-debugger
+            debugger;
+            dropdown.selectItem(dropdown.items[2]);
+            tick();
+            fixture.detectChanges();
+            expect(dropdown.selectedItem.value).toEqual({ name: 'Product 3', id: 3 });
+        }));
     });
 });
 
@@ -1440,5 +1455,25 @@ class InputWithDropDownDirectiveComponent {
         { field: 'Nav2' },
         { field: 'Nav3' },
         { field: 'Nav4' }
+    ];
+}
+
+@Component({
+    template: `
+    <igx-drop-down #dropdownElement [width]="'400px'" [height]="'400px'">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class DropDownWithValuesComponent {
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropdown: IgxDropDownComponent;
+
+    public items: any[] = [
+        { name: 'Product 1', id: 1 },
+        { name: 'Product 2', id: 2 },
+        { name: 'Product 3', id: 3 },
+        { name: 'Product 4', id: 3 },
     ];
 }
