@@ -69,10 +69,8 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
     public onTooltipClosed = new EventEmitter<ITooltipEventArgs>();
 
     constructor(private _element: ElementRef,
-        private _renderer: Renderer2,
-        private _cdr: ChangeDetectorRef,
-        @Optional() private _navigationService: IgxNavigationService) {
-        super(_element, _navigationService);
+                @Optional() private _navigationService: IgxNavigationService) {
+                super(_element, _navigationService);
     }
 
     public ngOnInit() {
