@@ -24,31 +24,31 @@
             @content
 
 =size-md-lg
-    @media (min-width: 901px)
+    @media (min-width: 961px)
         &
             @content
 
 .container
-    max-width: 1200px
     margin: 0 auto
-    padding: 0 40px
 
     +size-xs
         padding: 0 20px
 
 .container-main
-    padding-bottom: 200px
+    padding-top: 126px
+
+    @media only screen and (max-width: 961px)
+        padding-top: 110px
 
 .row
     +clearfix
     position: relative
-    margin: 0 -10px
+    display: flex
 
 .col
     @extend %prevent-children-margin
     box-sizing: border-box
     float: left
-    padding: 0 10px
 
 @for $width from 1 to 12
     .col-#{$width}
