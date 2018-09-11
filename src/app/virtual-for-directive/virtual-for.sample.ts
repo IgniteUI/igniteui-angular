@@ -26,6 +26,9 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('virtDirRemote', { read: IgxForOfDirective })
     virtDirRemote: IgxForOfDirective<any>;
 
+    @ViewChild('virtDirVariableVertical', { read: IgxForOfDirective })
+    virtDirVariableVertical: IgxForOfDirective<any>;
+
     constructor(private remoteService: RemoteService) {
         this.remoteService.urlBuilder = (dataState) => {
             let qS = `?`;
@@ -134,41 +137,11 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             width: 100,
             height: 100
         }];
-        for (let i = 10; i < 1e5; i++) {
+        for (let i = 10; i < 1e6; i++) {
             const obj = Object.assign({}, data[i % 10]);
             obj['key'] = i;
             data.push(obj);
         }
-        // data.push({
-        //     key: -1,
-        //     avatar: 'assets/images/avatar/17.jpg',
-        //     favorite: false,
-        //     link: '#',
-        //     phone: '724-742-0979',
-        //     text: 'Test1',
-        //     width: 100,
-        //     height: 1000
-        // });
-        // data.push({
-        //     key: -3,
-        //     avatar: 'assets/images/avatar/17.jpg',
-        //     favorite: false,
-        //     link: '#',
-        //     phone: '724-742-0979',
-        //     text: 'Test2',
-        //     width: 100,
-        //     height: 1000
-        // });
-        // data.push({
-        //     key: -2,
-        //     avatar: 'assets/images/avatar/17.jpg',
-        //     favorite: false,
-        //     link: '#',
-        //     phone: '724-742-0979',
-        //     text: 'Test3',
-        //     width: 100,
-        //     height: 1000
-        // });
         this.data = data;
     }
 
@@ -224,6 +197,10 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
 
     scrHorizontalScrollTo(index) {
         this.virtDirHorizontal.scrollTo(index);
+    }
+
+    trackByKey(index, item) {
+        return item.key;
     }
 
 }

@@ -1064,7 +1064,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     }
 
     public testInitHCache(cols: any[]): number {
-        return super.initHCache(cols);
+        return super.initSizesCache(cols);
     }
 
     public testGetHorizontalScroll(viewref, nodeName) {
@@ -1072,7 +1072,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     }
 
     public testGetHorizontalIndexAt(left, set, index) {
-        super.getHorizontalIndexAt(left, set, index);
+        super.getIndexAt(left, set, index);
     }
 }
 

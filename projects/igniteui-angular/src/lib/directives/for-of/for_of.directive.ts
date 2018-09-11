@@ -564,10 +564,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             return;
         }
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-
-        this._zone.run(() => {
-            this.cdr.markForCheck();
-        });
+        this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit(this.state);
     }
 
@@ -854,19 +851,25 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected getIndexAt(left, set, index) {
-        let midIdx;
-        let midLeft;
-        if (set.length === 1) {
-            return index;
-        }
-        midIdx = Math.floor(set.length / 2);
-        midLeft = set[midIdx];
-        return this.getIndexAt(
-            left,
-            midLeft >= left ? set.slice(0, midIdx) : set.slice(midIdx),
-            midLeft >= left ? index : index + midIdx
-        );
+     protected getIndexAt(left, set, index) {
+         let start = 0;
+         let end = set.length - 1;
+         if (left === 0) {
+             return 0;
+         }
+         while (start <= end) {
+             const midIdx = Math.floor((start + end) / 2);
+             const midLeft = set[midIdx];
+             const cmp = left - midLeft;
+             if (cmp > 0) {
+                 start = midIdx + 1;
+             } else if (cmp < 0) {
+                 end = midIdx - 1;
+             } else {
+                 return midIdx;
+             }
+         }
+         return end;
     }
 
     private _recalcScrollBarSize() {

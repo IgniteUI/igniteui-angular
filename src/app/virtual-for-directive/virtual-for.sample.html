@@ -46,7 +46,7 @@
         <span>Variable heights</span>
         <br/>
         <div style='height:500px; position: relative; overflow: hidden'>
-              <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
+              <ng-template igxFor let-item [igxForOf]="data" #virtDirVariableVertical [igxForTrackBy]='trackByKey'
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"'
                 let-rowIndex="index">
