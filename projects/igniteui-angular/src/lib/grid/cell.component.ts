@@ -99,14 +99,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input()
     public value: any;
 
-    private get isFirstCell(): boolean {
-        return this.columnIndex === 0 || (this.isPinned && this.visibleColumnIndex === 0);
-    }
-
-    private get isLastCell(): boolean {
-        return this.columnIndex === this.grid.columns.length - 1 && !this.column.pinned;
-    }
-
     /**
      * Sets/gets the highlight class of the cell.
      * Default value is `"igx-highlight"`.
@@ -535,14 +527,24 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     protected isFocused = false;
     protected isSelected = false;
     private destroy$ = new Subject();
-    private keydown$ = fromEvent(this.nativeElement, 'keydown').pipe(
-        tap((event: KeyboardEvent) => {
-            if (event.key === 'Tab') {
-                event.preventDefault();
-            }
-        }),
-        takeUntil(this.destroy$),
-        sampleTime(0, rAF));
+    private keydown$ = fromEvent(this.nativeElement, 'keydown')
+        .pipe(
+            tap((event: KeyboardEvent) => {
+                if (event.key === 'Tab') {
+                    event.preventDefault();
+                }
+                if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
+                    event.stopPropagation();
+                    return;
+                }
+                if (this.isNavigationKey(event.key.toLowerCase())) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            }),
+            takeUntil(this.destroy$),
+            sampleTime(0, rAF)
+        );
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
@@ -746,8 +748,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
 
-        event.preventDefault();
-        event.stopPropagation();
+        if (this.inEditMode && this.isNavigationKey(key)) {
+            return;
+        }
 
         switch (key) {
             case 'tab':
@@ -759,7 +762,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
             case 'arrowleft':
             case 'left':
-                if (this.inEditMode) { return; }
                 if (ctrl) {
                     this.onKeydownCtrlArrowLeft(event);
                     break;
@@ -768,7 +770,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
             case 'arrowright':
             case 'right':
-                if (this.inEditMode) { return; }
                 if (ctrl) {
                     this.onKeydownCtrlArrowRight(event);
                     break;
@@ -777,12 +778,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
             case 'arrowup':
             case 'up':
-                if (this.inEditMode) { return; }
                 this.onKeydownArrowUp(event);
                 break;
             case 'arrowdown':
             case 'down':
-                if (this.inEditMode) { return; }
                 this.onKeydownArrowDown(event);
                 break;
             case 'enter':
@@ -799,13 +798,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onShiftTabKey(event) {
-        if (this.isFirstCell) {
-            this.selection.clear(this.cellSelectionID);
-            this.grid.markForCheck();
-            return;
-        } else {
-            this.onKeydownArrowLeft(event);
-        }
+        this.onKeydownArrowLeft(event);
     }
 
     public onKeydownArrowLeft(event) {
@@ -879,13 +872,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onTabKey(event) {
-        if (this.isLastCell) {
-            this.selection.clear(this.cellSelectionID);
-            this.grid.markForCheck();
-            return;
-        } else {
-            this.onKeydownArrowRight(event);
-        }
+        this.onKeydownArrowRight(event);
     }
 
     public onKeydownArrowRight(event) {
@@ -1032,5 +1019,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.highlight && this.column.searchable) {
             this.highlight.clearHighlight();
         }
+    }
+
+    private isNavigationKey(key) {
+        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
     }
 }
