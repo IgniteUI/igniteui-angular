@@ -85,6 +85,7 @@ The following inputs are available in the **igx-drop-down-item** component:
 | `isHeader` | boolean| Defines if the item is a group header. |
 | `disabled` | boolean| Disables the given item. |
 | `isFocused` | boolean| Defines if the given item is focused. |
+| `value` | any | The value of the drop-down item. |
 
 #### Getters
 The following getters are available on the **igx-drop-down-item** component:
