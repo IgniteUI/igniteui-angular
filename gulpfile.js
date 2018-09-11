@@ -219,7 +219,7 @@ gulp.task('typedoc-build', [
 ]);
 
 gulp.task('typedoc-build:theme', ['typedoc-build'],
-    shell.task('typedoc projects/igniteui-angular/src/public_api.ts')
+    shell.task('typedoc projects/igniteui-angular/src')
 );
 
 gulp.task('typedoc-serve', ['typedoc-watch'], () => {
