@@ -579,7 +579,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const ind = ratio * count;
+        const ind = this.igxForItemSize ?
+         ratio * count :
+         this.getIndexAt(
+            inScrollTop,
+            this.sizesCache,
+            0
+        );
         // floating point number calculations are flawed so we need to handle rounding errors.
         const currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
         let endingIndex = this.state.chunkSize + currIndex;
@@ -591,14 +597,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (endingIndex > this.igxForOf.length) {
             endingIndex = this.igxForOf.length;
         }
-        //if (bUpdatedStart &&
-        //    ((!this._isScrolledToBottom || !this._isAtBottomIndex) && !this.extraRowApplied) ||
-        //    ((this._isScrolledToBottom || this._isAtBottomIndex) && this.extraRowApplied)) {
-        //    // Reapply chunk size when are aren't at the buttom index but we don't have extra row applied as well.
-        //    // or reapply chunk size when we are at the bottom index but we have extra row applied.
-        //    // We check both scroll position and index to be sure since we actually check bottom index before recalculating chunk size.
-        //    this.applyChunkSizeChange();
-        //}
+        if (bUpdatedStart && this.igxForItemSize &&
+            ((!this._isScrolledToBottom || !this._isAtBottomIndex) && !this.extraRowApplied) ||
+            ((this._isScrolledToBottom || this._isAtBottomIndex) && this.extraRowApplied)) {
+            // Reapply chunk size when are aren't at the buttom index but we don't have extra row applied as well.
+            // or reapply chunk size when we are at the bottom index but we have extra row applied.
+            // We check both scroll position and index to be sure since we actually check bottom index before recalculating chunk size.
+            this.applyChunkSizeChange();
+        }
 
         if (bUpdatedStart) {
             this.onChunkPreload.emit(this.state);
@@ -614,8 +620,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
         }
+        const scrOffset = this.igxForItemSize ?
+         inScrollTop - this.state.startIndex * (scrollHeight / count) :
+         inScrollTop - this.sizesCache[this.state.startIndex];
 
-        return inScrollTop - this.state.startIndex * (scrollHeight / count);
+        return scrOffset;
     }
 
     /**
@@ -662,8 +671,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
         }
-
-        return inScrollLeft - this.sizesCache[this.state.startIndex];
+        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
+        const scrollWidth = parseInt(this.hScroll.children[0].style.width, 10);
+        const scrOffset = this.igxForItemSize ?
+        inScrollLeft - this.state.startIndex * (scrollWidth / count) :
+        inScrollLeft - this.sizesCache[this.state.startIndex];
+        return scrOffset;
     }
 
     /**
@@ -752,12 +765,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
                 chunkSize = isNaN(chunkSize) ? 0 : chunkSize;
-                if (chunkSize !== 0 && !this._isScrolledToBottom && !this._isAtBottomIndex) {
-                    chunkSize++;
-                    this.extraRowApplied = true;
-                } else {
-                    this.extraRowApplied = false;
-                }
+                 if (chunkSize !== 0 && !this._isScrolledToBottom && !this._isAtBottomIndex) {
+                     chunkSize++;
+                     this.extraRowApplied = true;
+                 } else {
+                     this.extraRowApplied = false;
+                 }
                 if (this.igxForOf && chunkSize > this.igxForOf.length) {
                     chunkSize = this.igxForOf.length;
                 }

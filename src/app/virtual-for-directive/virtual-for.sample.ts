@@ -139,6 +139,36 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             obj['key'] = i;
             data.push(obj);
         }
+        // data.push({
+        //     key: -1,
+        //     avatar: 'assets/images/avatar/17.jpg',
+        //     favorite: false,
+        //     link: '#',
+        //     phone: '724-742-0979',
+        //     text: 'Test1',
+        //     width: 100,
+        //     height: 1000
+        // });
+        // data.push({
+        //     key: -3,
+        //     avatar: 'assets/images/avatar/17.jpg',
+        //     favorite: false,
+        //     link: '#',
+        //     phone: '724-742-0979',
+        //     text: 'Test2',
+        //     width: 100,
+        //     height: 1000
+        // });
+        // data.push({
+        //     key: -2,
+        //     avatar: 'assets/images/avatar/17.jpg',
+        //     favorite: false,
+        //     link: '#',
+        //     phone: '724-742-0979',
+        //     text: 'Test3',
+        //     width: 100,
+        //     height: 1000
+        // });
         this.data = data;
     }
 
