@@ -10,18 +10,18 @@ import {
     OnInit,
     Output,
     QueryList,
-    TemplateRef,
     ViewChildren
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
-import { Calendar, ICalendarDate, range, weekDay, WEEKDAYS } from './calendar';
+import { Calendar, ICalendarDate, range, WEEKDAYS } from './calendar';
 import {
     IgxCalendarDateDirective,
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
 let NEXT_ID = 0;
 
@@ -296,6 +296,59 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      */
     @Input()
     public vertical = false;
+
+    /**
+     * Gets the disabled dates descriptors.
+     * ```typescript
+     * let disabledDates = this.calendar.disabledDates;
+     * ```
+     */
+    public get disabledDates(): DateRangeDescriptor[] {
+        return this._disabledDates;
+    }
+
+    /**
+     * Sets the disabled dates' descriptors.
+     * ```typescript
+     *@ViewChild("MyCalendar")
+     *public calendar: IgCalendarComponent;
+     *ngOnInit(){
+     *    this.calendar.disabledDates = [
+     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
+     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *}
+     *```
+     */
+    public set disabledDates(value: DateRangeDescriptor[]) {
+        this._disabledDates = value;
+    }
+
+    /**
+     * Gets the special dates descriptors.
+     * ```typescript
+     * let specialDates = this.calendar.specialDates;
+     * ```
+     */
+    public get specialDates(): DateRangeDescriptor[] {
+        return this._specialDates;
+    }
+
+    /**
+     * Sets the special dates' descriptors.
+     * ```typescript
+     *@ViewChild("MyCalendar")
+     *public calendar: IgCalendarComponent;
+     *ngOnInit(){
+     *    this.calendar.specialDates = [
+     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
+     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *}
+     *```
+     */
+    public set specialDates(value: DateRangeDescriptor[]) {
+        this._specialDates = value;
+    }
+
     /**
      * Emits an event when a selection is made in the calendar.
      * Provides reference the `selectedDates` property in the `IgxCalendarComponent`.
@@ -551,7 +604,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         month: true,
         year: false
     };
-
+    /**
+     *@hidden
+     */
+    private _disabledDates: DateRangeDescriptor[] = null;
+    /**
+     *@hidden
+     */
+    private _specialDates: DateRangeDescriptor[] = null;
     /**
      * @hidden
      */
@@ -699,7 +759,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             this.nextMonth();
         }
 
-        this.selectDate(instance.date);
+        this.selectDateFromClient(instance.date);
         this.onSelection.emit(this.selectedDates);
     }
 
@@ -730,6 +790,61 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
                 this.selectRange(value);
                 break;
         }
+    }
+
+    /**
+     * Deselects date(s) (based on the selection type).
+     *```typescript
+     * this.calendar.deselectDate(new Date(`2018-06-12`));
+     *````
+     */
+    public deselectDate(value?: Date | Date[]) {
+        if (value === null || value === undefined) {
+            this.selectedDates = this.selection === 'single' ? null : [];
+            return;
+        }
+
+        switch (this.selection) {
+            case 'single':
+                this.deselectSingle(value as Date);
+                break;
+            case 'multi':
+                this.deselectMultiple(value as Date[]);
+                break;
+            case 'range':
+                this.deselectRange(value as Date[]);
+                break;
+        }
+    }
+
+    /**
+     * Checks whether a date is disabled.
+     *```typescript
+     * this.calendar.isDateDisabled(new Date(`2018-06-12`));
+     *```
+     * @hidden
+     */
+    public isDateDisabled(date: Date) {
+        if (this.disabledDates === null) {
+            return false;
+        }
+
+        return this.isDateInRanges(date, this.disabledDates);
+    }
+
+    /**
+     * Checks whether a date is special.
+     *```typescript
+     * this.calendar.isDateSpecial(new Date(`2018-06-12`));
+     *```
+     * @hidden
+     */
+    public isDateSpecial(date: Date) {
+        if (this.specialDates === null) {
+            return false;
+        }
+
+        return this.isDateInRanges(date, this.specialDates);
     }
 
     /**
@@ -845,9 +960,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
 
         const node = this.dates.find((date) => date.nativeElement === event.target);
-        const index = this.dates.toArray().indexOf(node);
-        if (node && index > -1 && index - 7 > -1) {
-            this.dates.toArray()[index - 7].nativeElement.focus();
+        if (!node) { return; }
+        const dates = this.dates.toArray();
+        for (let index = dates.indexOf(node); index - 7 > -1; index -= 7) {
+            const date = dates[index - 7];
+            if (!date.isDisabled) {
+                date.nativeElement.focus();
+                break;
+            }
         }
     }
 
@@ -859,9 +979,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
 
         const node = this.dates.find((date) => date.nativeElement === event.target);
-        const index = this.dates.toArray().indexOf(node);
-        if (node && index > -1 && index + 7 < this.dates.length) {
-            this.dates.toArray()[index + 7].nativeElement.focus();
+        if (!node) { return; }
+        const dates = this.dates.toArray();
+        for (let index = dates.indexOf(node); index + 7 < this.dates.length; index += 7) {
+            const date = dates[index + 7];
+            if (!date.isDisabled) {
+                date.nativeElement.focus();
+                break;
+            }
         }
     }
 
@@ -873,9 +998,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
 
         const node = this.dates.find((date) => date.nativeElement === event.target);
-        const index = this.dates.toArray().indexOf(node);
-        if (node && index > -1 && index > 0) {
-            this.dates.toArray()[index - 1].nativeElement.focus();
+        if (!node) { return; }
+        const dates = this.dates.toArray();
+        for (let index = dates.indexOf(node); index > 0; index--) {
+            const date = dates[index - 1];
+            if (!date.isDisabled) {
+                date.nativeElement.focus();
+                break;
+            }
         }
     }
 
@@ -887,9 +1017,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         event.preventDefault();
 
         const node = this.dates.find((date) => date.nativeElement === event.target);
-        const index = this.dates.toArray().indexOf(node);
-        if (node && index > -1 && index < this.dates.length - 1) {
-            this.dates.toArray()[index + 1].nativeElement.focus();
+        if (!node) { return; }
+        const dates = this.dates.toArray();
+        for (let index = dates.indexOf(node); index < this.dates.length - 1; index++) {
+            const date = dates[index + 1];
+            if (!date.isDisabled) {
+                date.nativeElement.focus();
+                break;
+            }
         }
     }
 
@@ -900,9 +1035,13 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
 
-        this.dates
-            .filter((date) => date.isCurrentMonth)
-            .shift().nativeElement.focus();
+        const dates = this.dates.filter(d => d.isCurrentMonth);
+        for (let i = 0; i < dates.length; i++) {
+            if (!dates[i].isDisabled) {
+                dates[i].nativeElement.focus();
+                break;
+            }
+        }
     }
 
     /**
@@ -912,9 +1051,13 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
 
-        this.dates
-            .filter((date) => date.isCurrentMonth)
-            .pop().nativeElement.focus();
+        const dates = this.dates.filter(d => d.isCurrentMonth);
+        for (let i = dates.length - 1; i >= 0; i--) {
+            if (!dates[i].isDisabled) {
+                dates[i].nativeElement.focus();
+                break;
+            }
+        }
     }
 
     /**
@@ -962,7 +1105,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
      *@hidden
      */
-    private selectRange(value: Date | Date[]) {
+    private selectRange(value: Date | Date[], excludeDisabledDates: boolean = false) {
         let start: Date;
         let end: Date;
 
@@ -971,10 +1114,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             start = value.shift();
             end = value.pop();
-            this.selectedDates = [start];
-
             this.selectedDates = [start, ...this.generateDateRange(start, end)];
-
         } else {
             if (!this._rangeStarted) {
                 this._rangeStarted = true;
@@ -996,7 +1136,151 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
                 this.selectedDates = [start, ...this.generateDateRange(start, end)];
             }
         }
+
+        if (excludeDisabledDates) {
+            this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
+        }
+
         this._onChangeCallback(this.selectedDates);
+    }
+
+    /**
+     * Performs a single deselection.
+     * @hidden
+     */
+    private deselectSingle(value: Date) {
+        if (this.selectedDates !== null && value !== null &&
+            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates)) {
+            this.selectedDates = null;
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
+
+    /**
+     * Performs a multiple deselection.
+     * @hidden
+     */
+    private deselectMultiple(value: Date[]) {
+        if (value === null) {
+            return;
+        }
+
+        value = value.filter(v => v !== null);
+        const selectedDatesCount = this.selectedDates.length;
+        const datesInMsToDeselect: Set<number> = new Set<number>(
+            value.map(v => this.getDateOnlyInMs(v)));
+
+        for (let i = this.selectedDates.length - 1; i >= 0; i--) {
+            if (datesInMsToDeselect.has(this.getDateOnlyInMs(this.selectedDates[i]))) {
+                this.selectedDates.splice(i, 1);
+            }
+        }
+
+        if (this.selectedDates.length !== selectedDatesCount) {
+            this._onChangeCallback(this.selectedDates);
+        }
+    }
+
+    /**
+     * Performs a range deselection.
+     * @hidden
+     */
+    private deselectRange(value: Date[]) {
+        if (value === null) {
+            return;
+        }
+
+        value = value.filter(v => v !== null);
+        if (value.length < 2) {
+            return;
+        }
+
+        value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+        const start = value.shift();
+        const end = value.pop();
+
+        const deselectRange = [start, ...this.generateDateRange(start, end)];
+        this.deselectMultiple(deselectRange);
+    }
+
+    /**
+     * @hidden
+     */
+    private selectDateFromClient(value: Date) {
+        switch (this.selection) {
+            case 'single':
+            case 'multi':
+                if (!this.isDateDisabled(value)) {
+                    this.selectDate(value);
+                }
+
+                break;
+            case 'range':
+                this.selectRange(value, true);
+                break;
+        }
+    }
+    /**
+     *@hidden
+     */
+    private isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boolean {
+        date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const dateInMs = date.getTime();
+
+        for (const descriptor of ranges) {
+            const dRanges = descriptor.dateRange ? descriptor.dateRange.map(
+                r => new Date(r.getFullYear(), r.getMonth(), r.getDate())) : undefined;
+            switch (descriptor.type) {
+                case (DateRangeType.After):
+                    if (dateInMs > dRanges[0].getTime()) {
+                        return true;
+                    }
+
+                    break;
+                case (DateRangeType.Before):
+                    if (dateInMs < dRanges[0].getTime()) {
+                        return true;
+                    }
+
+                    break;
+                case (DateRangeType.Between):
+                    const dRange = dRanges.map(d => d.getTime());
+                    const min = Math.min(dRange[0], dRange[1]);
+                    const max = Math.max(dRange[0], dRange[1]);
+                    if (dateInMs >= min && dateInMs <= max) {
+                        return true;
+                    }
+
+                    break;
+                case (DateRangeType.Specific):
+                    const datesInMs = dRanges.map(d => d.getTime());
+                    for (const specificDateInMs of datesInMs) {
+                        if (dateInMs === specificDateInMs) {
+                            return true;
+                        }
+                    }
+
+                    break;
+                case (DateRangeType.Weekdays):
+                    const day = date.getDay();
+                    if (day % 6 !== 0) {
+                        return true;
+                    }
+
+                    break;
+                case (DateRangeType.Weekends):
+                    const weekday = date.getDay();
+                    if (weekday % 6 === 0) {
+                        return true;
+                    }
+
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -1037,6 +1321,12 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
             return;
         }
         this._viewDate = this.calendarModel.timedelta(this._viewDate, 'year', delta);
+    }
+    /**
+     *@hidden
+     */
+    private getDateOnlyInMs(date: Date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
     }
     /**
      *@hidden

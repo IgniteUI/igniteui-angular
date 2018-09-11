@@ -11,6 +11,9 @@ import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand } from '../../public_api';
 import { DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
+import { GridTemplateStrings } from '../test-utils/template-strings.spec';
+import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
 
 describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
@@ -282,7 +285,8 @@ describe('IgxGrid Component Tests', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
-                    IgxGridWrappedInContComponent
+                    IgxGridWrappedInContComponent,
+                    IgxGridFormattingComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -676,6 +680,50 @@ describe('IgxGrid Component Tests', () => {
                 done();
             }, 100);
         });
+
+        it('Should render date and number values based on default formatting', () => {
+            const fixture = TestBed.createComponent(IgxGridFormattingComponent);
+            fixture.detectChanges();
+             const grid = fixture.componentInstance.grid;
+            const rows = grid.rowList.toArray();
+             // verify default number formatting
+            let expectedValue = '2,760';
+            expect(rows[0].cells.toArray()[3].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = '1,098';
+            expect(rows[5].cells.toArray()[3].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = '7,898';
+            expect(rows[7].cells.toArray()[3].element.nativeElement.textContent).toBe(expectedValue);
+             // verify formatter function formatting
+            expectedValue = '2.76e+3';
+            expect(rows[0].cells.toArray()[5].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = '1.098e+3';
+            expect(rows[5].cells.toArray()[5].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = '7.898e+3';
+            expect(rows[7].cells.toArray()[5].element.nativeElement.textContent).toBe(expectedValue);
+             // verify date formatting
+            expectedValue = 'Mar 21, 2005';
+            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = 'Jan 15, 2008';
+            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = 'Nov 20, 2010';
+            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+             // verify summaries formatting
+            let avgValue;
+            let earliestValue;
+            const summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));
+            summaries.forEach((summary) => {
+                const avgLabel = summary.query(By.css('[title=\'Avg\']'));
+                const earliest = summary.query(By.css('[title=\'Earliest\']'));
+                if (avgLabel) {
+                    avgValue = avgLabel.nativeElement.nextSibling.innerText;
+                    expect(avgValue).toBe('3,900.4');
+                }
+                if (earliest) {
+                    earliestValue = earliest.nativeElement.nextSibling.innerText;
+                    expect(earliestValue).toBe('May 17, 1990');
+                }
+            });
+        });
     });
 
     describe('IgxGrid - keyboard navigation tests', () => {
@@ -1017,5 +1065,31 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        '', '',
+        `<igx-column field="ProductID" header="Product ID">
+        </igx-column>
+        <igx-column field="ProductName">
+        </igx-column>
+        <igx-column field="InStock" [dataType]="'boolean'">
+        </igx-column>
+        <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true">
+        </igx-column>
+        <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hasSummary]="true">
+        </igx-column><igx-column field="UnitsInStock" [formatter]="formatNum" [dataType]="'number'" [hasSummary]="true">
+        </igx-column>`)
+})
+export class IgxGridFormattingComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    public width = '600px';
+    public height = '400px';
+    public value: any;
+     public formatNum() {
+        return this.value.toExponential().toString();
     }
 }
