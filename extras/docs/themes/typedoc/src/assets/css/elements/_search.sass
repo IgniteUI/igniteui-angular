@@ -1,51 +1,49 @@
 #tsd-search
-    transition: background-color 0.2s
-
-    .title
-        position: relative
-        z-index: 2
+    margin: 0 -15px
+    transition: background-color .2s
 
     .field
-        position: absolute
-        left: 0
-        top: 0
-        right: 40px
-        height: 40px
+        position: relative
+        display: flex;
+        background: #fff
 
         input
-            box-sizing: border-box
             position: relative
-            top: -50px
+            box-sizing: border-box
             z-index: 1
             width: 100%
-            padding: 0 10px
-            opacity: 0
+            height: 36px
+            font-size: 13px
             outline: 0
             border: 0
-            background: transparent
             color: $COLOR_TEXT
 
         label
-            position: absolute
-            overflow: hidden
-            right: -40px
-
-    .field input,
-    .title
-        transition: opacity 0.2s
+            position: relative
+            display: inline-flex
+            font-size: 18px
+            width: 36px
+            height: 36px
+            justify-content: center
+            align-items: center
+            color: #09f
+            z-index: 2
 
     .results
         position: absolute
         visibility: hidden
-        top: 40px
-        width: 100%
+        font-size: 15px
+        top: 36px
         margin: 0
         padding: 0
         list-style: none
-        box-shadow: 0 0 4px rgba(#000, 0.25)
+        border: 1px solid #dedede
+        box-shadow: 0 6px 24px rgba(0, 0, 0, .08)
+        z-index: 3
+        opacity: .94
 
         li
-            padding: 0 10px
+            padding: 0
             background-color: $COLOR_BACKGROUND
 
         li:nth-child(even)
@@ -60,9 +58,13 @@
 
         a
             display: block
+            padding: 10px
 
             &:before
                 top: 10px
+
+            &:hover
+                text-decoration: none
 
         span.parent
             color: $COLOR_TEXT_ASIDE

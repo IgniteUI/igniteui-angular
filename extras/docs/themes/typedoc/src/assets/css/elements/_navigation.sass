@@ -13,19 +13,16 @@
         +INDENT($DEPTH, $BASE, $STEP)
 
 .tsd-navigation
-    padding: 0 0 0 40px
+    padding: 0
 
     a
-        display: block
-        padding-top: 2px
-        padding-bottom: 2px
-        border-left: 2px solid transparent
+        display: inline-block
+        padding-top: 6px
+        font-size: 13px
         color: $COLOR_TEXT
         text-decoration: none
-        transition: border-left-color 0.1s
-
         &:hover
-            text-decoration: underline
+            color: #09f
 
     ul
         margin: 0
@@ -53,8 +50,6 @@
 // </nav>
 //
 .tsd-navigation.primary
-    padding-bottom: 40px
-
     a
         display: block
         padding-top: 6px
@@ -63,23 +58,20 @@
     ul
         +INDENTS(6, 5, 20)
 
-    > ul
-        border-bottom: 1px solid $COLOR_PANEL_DIVIDER
-
     li
-        border-top: 1px solid $COLOR_PANEL_DIVIDER
-
-        &.current > a
+        > a
+            color: #000
+            text-transform: uppercase
             font-weight: bold
 
         &.label span
             display: block
-            padding: 20px 0 6px 5px
+            padding: 16px 0 4px 5px
             color: $COLOR_MENU_LABEL
 
         &.globals + li > span,
         &.globals + li > a
-            padding-top: 20px
+            padding-top: 16px
 
 
 // Secondary part of the navigation containing the table of contents
@@ -111,7 +103,7 @@
 //
 .tsd-navigation.secondary
     ul
-        +INDENTS(6, 25, 20)
+        +INDENTS(5, 0, 16)
         transition: opacity 0.2s
 
         &.current a
@@ -122,8 +114,6 @@
         border-left-color: $COLOR_MENU_DIVIDER_FOCUS
 
     li.current
-        margin-top: 20px
-        margin-bottom: 20px
         border-left-color: $COLOR_PANEL_DIVIDER
 
         > a
@@ -160,3 +150,8 @@
 
             &.sticky-current
                 position: sticky
+
+.menu-highlight
+    background: #f1f1f1
+    border-right: 1px solid #dedede
+    padding: 0 15px
