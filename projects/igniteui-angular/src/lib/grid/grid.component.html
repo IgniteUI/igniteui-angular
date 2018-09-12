@@ -78,10 +78,6 @@
     | gridPaging:page:perPage:id:pipeTrigger
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger" let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)" (onChunkGenerated)="chunkGenerated($event)">
-        <ng-container *ngIf="isGroupByRecord(rowData); else record_template">
-            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
-            </igx-grid-groupby-row>
-        </ng-container>
         <ng-template #record_template>
             <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-grid-row>
