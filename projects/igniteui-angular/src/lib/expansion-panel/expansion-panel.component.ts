@@ -82,6 +82,9 @@ export class IgxExpansionPanelComponent {
     }
 
     private playOpenAnimation(cb: () => void) {
+        if (!this.body) { // if not body element is passed, there is nothing to animate
+            return;
+        }
         const animation = useAnimation(this.animationSettings.openAnimation);
         const animationBuilder = this.builder.build(animation);
         const openAnimationPlayer = animationBuilder.create(this.body.element.nativeElement.firstElementChild);
@@ -95,6 +98,9 @@ export class IgxExpansionPanelComponent {
     }
 
     private playCloseAnimation(cb: () => void) {
+        if (!this.body) { // if not body element is passed, there is nothing to animate
+            return;
+        }
         const animation = useAnimation(this.animationSettings.closeAnimation);
         const animationBuilder = this.builder.build(animation);
         const closeAnimationPlayer = animationBuilder.create(this.body.element.nativeElement.firstElementChild);
