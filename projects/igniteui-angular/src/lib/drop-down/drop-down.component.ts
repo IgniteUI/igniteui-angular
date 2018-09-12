@@ -155,8 +155,11 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
-     * Gets/sets whether items will be able to take focus. If set to true, default value,
-     * user will be able to use keyboard navigation.
+     * Gets/sets whether items will be able to take focus.
+     * Default value is false and during keyboard navigation
+     * the focus will stay at the element that the igxDropDownItemNavigation directive is applied on.
+     * If set to true drop down items will get focus, during keyboard navigation, and the element that the
+     * igxDropDownItemNavigation directive is applied on, will loose focus.
      *
      * ```typescript
      * // get
