@@ -154,6 +154,7 @@
         display: flex;
         align-content: center;
         justify-content: center;
+        user-select: none;
 
         igx-icon {
             color: --var($theme, 'header-icon-color');
@@ -208,6 +209,7 @@
 
         %igx-expansion-panel__body {
             @include igx-type-style($type-scale, $body);
+            overflow: hidden;
         }
     }
 }

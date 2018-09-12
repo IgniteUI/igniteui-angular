@@ -25,7 +25,7 @@ const enum IconPositionClass {
     RIGHT = 'igx-expansion-panel__header-icon--end',
     NONE = 'igx-expansion-panel__header-icon--none',
 }
-describe('igxExpansionPanel', () => {
+fdescribe('igxExpansionPanel', () => {
     beforeEach(async(() => {
         // TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -116,7 +116,6 @@ describe('igxExpansionPanel', () => {
             header.onAction(mockEvent);
             tick();
             fixture.detectChanges();
-            tick();
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(0); // Initially collapsed
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(1);
             expect(panel.toggle).toHaveBeenCalledTimes(1);
@@ -130,7 +129,6 @@ describe('igxExpansionPanel', () => {
             header.onAction(mockEvent);
             tick();
             fixture.detectChanges();
-            tick();
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1); // First Collapse
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(2);
             expect(panel.toggle).toHaveBeenCalledTimes(2);
@@ -144,7 +142,7 @@ describe('igxExpansionPanel', () => {
             header.onAction(mockEvent);
             tick();
             fixture.detectChanges();
-            tick(); // No additional calls, because panel.disabled === true
+            // No additional calls, because panel.disabled === true
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1);
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(2);
             expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
@@ -169,7 +167,7 @@ describe('igxExpansionPanel', () => {
                 expect(button.getAttribute('ng-reflect-icon-name')).toMatch(iconName);
             }
             if (collapsed) {
-                expect(panelContainer.lastElementChild.children.length).toEqual(0);
+                expect(panelContainer.lastElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-HEADER');
             } else {
                 const panelBody = panelContainer.getElementsByTagName(CSS_CLASS_PANEL_BODY)[0];
                 expect(panelBody).toBeDefined();
@@ -814,12 +812,12 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
             expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
-            panel.label = 'custom-test-label';
+            panel.body.label = 'custom-test-label';
             tick();
             fixture.detectChanges();
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
             expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`custom-test-label`);
-            panel.label = '';
+            panel.body.label = '';
             tick();
             fixture.detectChanges();
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(null);
@@ -835,7 +833,7 @@ describe('igxExpansionPanel', () => {
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             expect(panelContainer).not.toBeNull();
             expect(panelContainer.attributes.getNamedItem('id').nodeValue).toEqual(panel.id);
-            expect(panelContainer.childElementCount).toEqual(2);
+            expect(panelContainer.childElementCount).toEqual(1);
 
             const header = panelContainer.children[0];
             expect(header.attributes.getNamedItem('class').nodeValue).toContain(CSS_CLASS_PANEL_HEADER);
@@ -865,28 +863,28 @@ describe('igxExpansionPanel', () => {
             const description = headerBtn.firstElementChild.lastElementChild;
             expect(description.textContent).toEqual('Example Description');
 
-            const bodyWrapper = panelContainer.children[1];
-            expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
-            expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
             // expect(bodyWrapper.attributes.getNamedItem('aria-labelledby').nodeValue).toEqual('igx-expansion-panel-header-title-0');
-            expect(bodyWrapper.childElementCount).toEqual(0);
+            expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
             tick();
             fixture.detectChanges();
-
+            tick();
+            const bodyWrapper = panelContainer.children[1];
+            expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
+            expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
             expect(bodyWrapper.childElementCount).toEqual(1);
             const panelBody = bodyWrapper.children[0];
             expect(panelBody.textContent.trim()).toEqual('Example body');
         }));
-        it('Should apply all appropriate classes on combo initialization_grid content', fakeAsync(() => {
+        it('Should apply all appropriate classes on initialization_grid content', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelGridComponent> = TestBed.createComponent(IgxExpansionPanelGridComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             expect(panelContainer).not.toBeNull();
             expect(panelContainer.attributes.getNamedItem('id').nodeValue).toEqual(panel.id);
-            expect(panelContainer.childElementCount).toEqual(2);
+            expect(panelContainer.childElementCount).toEqual(1);
 
             const header = panelContainer.children[0];
             expect(header.attributes.getNamedItem('class').nodeValue).toContain(CSS_CLASS_PANEL_HEADER);
@@ -916,18 +914,18 @@ describe('igxExpansionPanel', () => {
             const description = headerBtn.firstElementChild.lastElementChild;
             expect(description.textContent).toEqual('Product orders details');
 
-            const bodyWrapper = panelContainer.children[1];
-            expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
-            expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
             // expect(bodyWrapper.attributes.getNamedItem('aria-labelledby').nodeValue).toEqual('igx-expansion-panel-header-title-0');
-            expect(bodyWrapper.childElementCount).toEqual(0);
+            expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
             tick();
             fixture.detectChanges();
             tick();
-            expect(bodyWrapper.childElementCount).toEqual(1);
-            const grid = bodyWrapper.firstElementChild.firstElementChild.firstElementChild; // wrapping div
+            const bodyWrapper = panelContainer.children[1];
+            expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
+            expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
+            expect(bodyWrapper.firstElementChild.nodeName).toEqual('IGX-GRID');
+            const grid = bodyWrapper.firstElementChild; // wrapping div
             expect(grid.attributes.getNamedItem('class').nodeValue).toContain(CSS_CLASS_GRID);
             expect(grid.attributes.getNamedItem('role').nodeValue).toEqual('grid');
             expect(grid.attributes.getNamedItem('id').nodeValue).toEqual(fixture.componentInstance.grid1.id);
@@ -944,7 +942,7 @@ describe('igxExpansionPanel', () => {
             const panelContainer = fixture.nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL);
             expect(panelContainer).not.toBeNull();
             expect(panelContainer.attributes.getNamedItem('id').nodeValue).toEqual(panel.id);
-            expect(panelContainer.childElementCount).toEqual(2);
+            expect(panelContainer.childElementCount).toEqual(1);
 
             const header = panelContainer.children[0];
             expect(header.attributes.getNamedItem('class').nodeValue).toContain(CSS_CLASS_PANEL_HEADER);
@@ -973,19 +971,18 @@ describe('igxExpansionPanel', () => {
 
             const description = headerBtn.firstElementChild.lastElementChild;
             expect(description.textContent).toEqual('Frog description');
-
-            const bodyWrapper = panelContainer.children[1];
-            expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
-            expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
             // expect(bodyWrapper.attributes.getNamedItem('aria-labelledby').nodeValue).toEqual('igx-expansion-panel-header-title-0');
-            expect(bodyWrapper.childElementCount).toEqual(0);
+            expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
             tick();
             fixture.detectChanges();
             tick();
+            const bodyWrapper = panelContainer.children[1];
+            expect(bodyWrapper.attributes.getNamedItem('role').nodeValue).toEqual('region');
+            expect(bodyWrapper.attributes.getNamedItem('aria-label').nodeValue).toEqual(panel.id + '-region');
             expect(bodyWrapper.childElementCount).toEqual(1);
-            const textWrapper = bodyWrapper.firstElementChild.firstElementChild.firstElementChild; // wrapping div
+            const textWrapper = bodyWrapper.firstElementChild; // wrapping div
             expect(textWrapper.attributes.getNamedItem('class').nodeValue).toContain('sample-wrapper');
             expect(textWrapper.childElementCount).toEqual(1);
             const image = textWrapper.children[0] as HTMLElement;

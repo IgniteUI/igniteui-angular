@@ -9,6 +9,7 @@ import {
     Output,
     ViewChild,
     ContentChild,
+    forwardRef,
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { growVerOut, growVerIn } from '../animations/main';
@@ -63,23 +64,12 @@ export class IgxExpansionPanelComponent {
         public elementRef: ElementRef,
         private builder: AnimationBuilder) { }
 
-    @ContentChild(IgxExpansionPanelBodyComponent, { read: IgxExpansionPanelBodyComponent })
-    private body: IgxExpansionPanelBodyComponent;
+    @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent), { read: IgxExpansionPanelBodyComponent })
+    public body: IgxExpansionPanelBodyComponent;
 
     @ContentChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
     public title: IgxExpansionPanelTitleDirective;
 
-    @Input()
-    public label = '';
-
-    @Input()
-    public set labelledby(val: string) {
-        this._title = val;
-    }
-
-    public get labelledby(): string {
-        return this.title ? this.title.id : this._title;
-    }
 
     private playOpenAnimation(cb: () => void) {
         if (!this.body) { // if not body element is passed, there is nothing to animate
@@ -87,7 +77,7 @@ export class IgxExpansionPanelComponent {
         }
         const animation = useAnimation(this.animationSettings.openAnimation);
         const animationBuilder = this.builder.build(animation);
-        const openAnimationPlayer = animationBuilder.create(this.body.element.nativeElement.firstElementChild);
+        const openAnimationPlayer = animationBuilder.create(this.body.element.nativeElement);
 
         openAnimationPlayer.onDone(() => {
             cb();
@@ -103,7 +93,7 @@ export class IgxExpansionPanelComponent {
         }
         const animation = useAnimation(this.animationSettings.closeAnimation);
         const animationBuilder = this.builder.build(animation);
-        const closeAnimationPlayer = animationBuilder.create(this.body.element.nativeElement.firstElementChild);
+        const closeAnimationPlayer = animationBuilder.create(this.body.element.nativeElement);
         closeAnimationPlayer.onDone(() => {
             cb();
             closeAnimationPlayer.reset();
