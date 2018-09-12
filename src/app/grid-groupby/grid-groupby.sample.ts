@@ -91,4 +91,18 @@ export class GridGroupBySampleComponent implements OnInit {
     onGroupingChangedHandler(event){
         console.log(event)
     }
+    test(){
+        const expr = [
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
+            {fieldName: "Address", dir: 2, ignoreCase: true},
+            {fieldName: "Country", dir: 2, ignoreCase: true}
+        ]
+        this.grid1.groupBy(expr);
+    }
+    test2(){
+        // const expr2: ISortingExpression = {fieldName: "CompanyName", dir: 2, ignoreCase: true};
+        // this.grid1.groupBy(expr2);
+        const clearExpr2 : Array<string> = ["Address", "Country"];
+        this.grid1.clearGrouping(clearExpr2);
+    }
 }
