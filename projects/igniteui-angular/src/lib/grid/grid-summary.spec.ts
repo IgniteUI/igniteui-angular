@@ -852,7 +852,7 @@ class EarliestSummary extends IgxDateSummaryOperand {
             </igx-column>
             <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true" [summaries]="dealsSummary">
             </igx-column>
-            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="hasSummary"
+            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true"
                 [summaries]="earliest">
             </igx-column>
         </igx-grid>
