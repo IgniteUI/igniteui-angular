@@ -202,8 +202,10 @@ export class IgxDropDownItemBase {
     clicked(event) {
         if (this.disabled || this.isHeader) {
             const focusedItem = this.dropDown.items.find((item) => item.isFocused);
-            focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
-            return;
+            if (focusedItem) {
+                focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
+                return;
+                }
         }
         this.dropDown.navigateItem(this.index);
         this.dropDown.selectItem(this, event);
