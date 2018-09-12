@@ -31,14 +31,8 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
     /**
      * @hidden
      */
-    @Input()
-    public itemData;
-
-    /**
-     * @hidden
-     */
     public get itemID() {
-        return this.combo.isRemote ? JSON.stringify(this.itemData) : this.itemData;
+        return this.combo.isRemote ? JSON.stringify(this.value) : this.value;
     }
 
     constructor(

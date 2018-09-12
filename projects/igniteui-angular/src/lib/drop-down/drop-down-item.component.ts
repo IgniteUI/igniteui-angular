@@ -30,9 +30,24 @@ export class IgxDropDownItemBase {
     }
 
     /**
-     * @hidden
+     * Gets/sets the value of the item if the item is databound
+     *
+     * ```typescript
+     * // usage in IgxDropDownItemComponent
+     * // get
+     * let mySelectedItemValue = this.dropdown.selectedItem.value;
+     *
+     * // set
+     * let mySelectedItem = this.dropdown.selectedItem;
+     * mySelectedItem.value = { id: 123, name: 'Example Name' }
+     *
+     * // usage in IgxComboItemComponent
+     * // get
+     * let myComboItemValue = this.combo.items[0].value;
+     * ```
      */
-    public itemData: any;
+    @Input()
+    public value: any;
 
     /**
      * @hidden
@@ -187,8 +202,10 @@ export class IgxDropDownItemBase {
     clicked(event) {
         if (this.disabled || this.isHeader) {
             const focusedItem = this.dropDown.items.find((item) => item.isFocused);
-            focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
-            return;
+            if (focusedItem) {
+                focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
+                return;
+                }
         }
         this.dropDown.navigateItem(this.index);
         this.dropDown.selectItem(this, event);
