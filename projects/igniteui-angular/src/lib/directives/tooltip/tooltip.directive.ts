@@ -1,5 +1,7 @@
-import { Directive, ElementRef, HostListener, Input, NgModule, Renderer2, ChangeDetectorRef, OnInit,
-         Output, EventEmitter, Optional, HostBinding, OnDestroy } from '@angular/core';
+import {
+    Directive, ElementRef, HostListener, Input, NgModule, Renderer2, ChangeDetectorRef, OnInit,
+    Output, EventEmitter, Optional, HostBinding, OnDestroy
+} from '@angular/core';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { HorizontalAlignment, AutoPositionStrategy, PositionSettings } from '../../services';
 import { CommonModule } from '@angular/common';
@@ -80,8 +82,8 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
     public onTooltipClosed = new EventEmitter<ITooltipClosedEventArgs>();
 
     constructor(private _element: ElementRef,
-                @Optional() private _navigationService: IgxNavigationService) {
-                super(_element, _navigationService);
+        @Optional() private _navigationService: IgxNavigationService) {
+        super(_element, _navigationService);
     }
 
     public ngOnInit() {
@@ -143,7 +145,8 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
         }
     }
 
-    private preMouseLeaveCheck() {
+    // Return true if the execution in onMouseLeave should be terminated after this method
+    private preMouseLeaveCheck(): boolean {
         clearTimeout(this._timeoutId);
 
         // If tooltip is about to be opened
@@ -151,8 +154,10 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
             clearTimeout(this._timeoutId);
             this._toBeShown = false;
             this._toBeHidden = false;
-            return;
+            return true;
         }
+
+        return false;
     }
 
     /* Public Methods */
@@ -191,8 +196,11 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
         }
 
         this.checkOutletAndOutsideClick();
-        this.preMouseLeaveCheck();
-        
+        const shouldReturn = this.preMouseLeaveCheck();
+        if (shouldReturn) {
+            return;
+        }
+
         const args = { tooltip: this.target, cancel: false };
         this.onTooltipClosing.emit(args);
 
