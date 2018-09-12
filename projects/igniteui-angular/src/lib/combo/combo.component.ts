@@ -1046,7 +1046,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    public getItemDataByValueKey(val: any): any {
+    public getValueByValueKey(val: any): any {
         if (!val && val !== 0) {
             return undefined;
         }
@@ -1129,7 +1129,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
                 this.changeSelectedItem(itemID, false);
             }
         } else {
-            const target = typeof itemID === 'object' ? itemID : this.getItemDataByValueKey(itemID);
+            const target = typeof itemID === 'object' ? itemID : this.getValueByValueKey(itemID);
             if (target) {
                 this.changeSelectedItem(target, select);
             }
