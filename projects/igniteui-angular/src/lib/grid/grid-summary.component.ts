@@ -101,8 +101,4 @@ export class IgxGridSummaryComponent implements DoCheck {
             return this.gridAPI.get_summaries(this.gridID).get(this.column.field);
         }
     }
-
-    public isNumber(res) {
-        return typeof res === 'number';
-    }
 }
