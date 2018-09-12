@@ -40,7 +40,7 @@
             <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
                 [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight"
                 [igxForItemSize]="itemHeight" (onChunkPreload)="dataLoading($event)" #virtualScrollContainer>
-                <igx-combo-item [itemData]="item" isHeader={{item.isHeader}} role="option">
+                <igx-combo-item [value]="item" isHeader={{item.isHeader}} role="option">
                     <ng-container *ngIf="!item.isHeader">
                         <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true" class="igx-combo__checkbox"></igx-checkbox>
                     </ng-container>
@@ -59,7 +59,7 @@
                 </ng-container>
             </div>
             <igx-combo-item *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item"
-                    igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false" [itemData]="'ADD ITEM'" role="button"
+                    igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false" [value]="'ADD ITEM'" role="button"
                     aria-label="Add Item">
                 <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$implicit: this}">
                 </ng-container>
