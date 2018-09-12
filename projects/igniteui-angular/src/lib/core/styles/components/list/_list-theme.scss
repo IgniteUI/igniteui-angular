@@ -160,7 +160,7 @@
     }
 
     %igx-list-item-content--inactive {
-        transition: left .3s $ease-out-quad;
+        transition: transform .3s $ease-out-quad;
     }
 }
 

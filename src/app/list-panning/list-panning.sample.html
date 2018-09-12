@@ -3,10 +3,9 @@
     <section class="sample-content">
 
         <article class="sample-column">
-            <h4 class="sample-title">Swipe left or right</h4>
-            <igx-switch [checked]="true" #checkbox style="margin-bottom:20px">Keep Item</igx-switch>
+            <h4 class="sample-title">Swipe left or right to perform action</h4>
             <div class="list-sample">
-                <igx-list [allowLeftPanning]="true" [allowRightPanning]="true" height="300"
+                <igx-list [allowLeftPanning]="true" [allowRightPanning]="true" height="300" #mainList
                     (onLeftPan)="onLeftPanHandler($event)" (onRightPan)="onRightPanHandler($event)">
                     <ng-template igxListItemLeftPanning>
                         <div class="listItemLeftPanningStyle">SMS</div>
@@ -30,5 +29,33 @@
             </div>
         </article>
         
+        <article class="sample-column">
+            <h4 class="sample-title">Swipe left or right to perform action</h4>
+            <div class="list-sample">
+                <igx-list [allowLeftPanning]="true" [allowRightPanning]="true" height="300" #mainList2
+                    (onLeftPan)="onLeftPanHandler2($event)" (onRightPan)="onRightPanHandler2($event)">
+                    <ng-template igxListItemLeftPanning>
+                        <div class="listItemLeftPanningStyle2">Edit</div>
+                    </ng-template>
+                    <ng-template igxListItemRightPanning>
+                        <div class="listItemRightPanningStyle2">Delete</div>
+                    </ng-template>
+                    <igx-list-item [isHeader]="true">Contacts</igx-list-item>
+                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems2">
+                        <div class="item">
+                            <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
+                            <div class="person">
+                                <p class="name">{{item.text}}</p>
+                                <span class="phone">{{item.phone}}</span>
+                            </div>
+                            <igx-icon name="star" [class.favorite]="item.favorite" (click)="toggleFavorite(item)"></igx-icon>
+                        </div>
+                    </igx-list-item>
+                </igx-list>
+                <button (click)="repopulateHandler()">Repopulate List</button>
+                <igx-toast #toast></igx-toast>
+            </div>
+        </article>
+
     </section>
 </div>

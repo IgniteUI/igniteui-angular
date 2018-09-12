@@ -8,13 +8,10 @@ import { IgxToastComponent } from 'igniteui-angular';
 })
 export class ListPanningSampleComponent {
 
-    @ViewChild('checkbox')
-    checkbox: any;
-
     @ViewChild('toast')
     toast: IgxToastComponent;
 
-    navItems: object[] = [{
+    public navItems: object[] = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',
@@ -86,20 +83,45 @@ export class ListPanningSampleComponent {
         text: 'Ward Riley'
     }];
 
+    public navItems2: object[];
+
+    constructor() {
+        this.navItems2 = Object.assign([], this.navItems);
+    }
+
     public toggleFavorite(contact: any) {
         contact.favorite = !contact.favorite;
     }
 
     public onLeftPanHandler(args) {
-        args.keepItem = this.checkbox.checked;
-        this.toast.message = "Left pan performed.";
+        args.keepItem = true;
+        this.toast.message = 'Composing message...';
         this.toast.show();
     }
 
     public onRightPanHandler(args) {
-        args.keepItem = this.checkbox.checked;
-        this.toast.message = "Right pan performed.";
+        args.keepItem = true;
+        this.toast.message = 'Dialing...';
         this.toast.show();
+    }
+
+    public onLeftPanHandler2(args) {
+        args.keepItem = true;
+        this.toast.message = 'Edit contact.';
+        this.toast.show();
+    }
+
+    public onRightPanHandler2(args) {
+        args.keepItem = false;
+        setTimeout((idx = args.item.index - 1) => {
+            this.toast.message = 'Contact removed.';
+            this.toast.show();
+            this.navItems2.splice(idx, 1);
+        }, 500);
+    }
+
+    public repopulateHandler() {
+        this.navItems2 = Object.assign([], this.navItems);
     }
 
 }
