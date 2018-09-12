@@ -7,7 +7,18 @@ import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { Subscription } from 'rxjs';
 
-export interface ITooltipEventArgs {
+export interface ITooltipOpeningEventArgs {
+    tooltip: IgxTooltipDirective;
+    cancel: boolean;
+}
+export interface ITooltipOpenedEventArgs {
+    tooltip: IgxTooltipDirective;
+}
+export interface ITooltipClosingEventArgs {
+    tooltip: IgxTooltipDirective;
+    cancel: boolean;
+}
+export interface ITooltipClosedEventArgs {
     tooltip: IgxTooltipDirective;
 }
 
@@ -57,16 +68,16 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
     }
 
     @Output()
-    public onTooltipOpening = new EventEmitter<ITooltipEventArgs>();
+    public onTooltipOpening = new EventEmitter<ITooltipOpeningEventArgs>();
 
     @Output()
-    public onTooltipOpened = new EventEmitter<ITooltipEventArgs>();
+    public onTooltipOpened = new EventEmitter<ITooltipOpenedEventArgs>();
 
     @Output()
-    public onTooltipClosing = new EventEmitter<ITooltipEventArgs>();
+    public onTooltipClosing = new EventEmitter<ITooltipClosingEventArgs>();
 
     @Output()
-    public onTooltipClosed = new EventEmitter<ITooltipEventArgs>();
+    public onTooltipClosed = new EventEmitter<ITooltipClosedEventArgs>();
 
     constructor(private _element: ElementRef,
                 @Optional() private _navigationService: IgxNavigationService) {
@@ -83,6 +94,7 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
         };
 
         this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
+        this._overlayDefaults.closeOnOutsideClick = false;
 
         const tooltipDir = (this.target as IgxTooltipDirective);
         this._tooltipOpenedSub = tooltipDir.onOpened.subscribe(() =>
@@ -158,7 +170,13 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
         this.checkOutletAndOutsideClick();
         this.preMouseEnterCheck();
 
-        this.onTooltipOpening.emit({ tooltip: this.target });
+        const args = { tooltip: this.target, cancel: false };
+        this.onTooltipOpening.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
         this._toBeShown = true;
         this._timeoutId = setTimeout(() => {
             this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
@@ -174,8 +192,14 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
 
         this.checkOutletAndOutsideClick();
         this.preMouseLeaveCheck();
+        
+        const args = { tooltip: this.target, cancel: false };
+        this.onTooltipClosing.emit(args);
 
-        this.onTooltipClosing.emit({ tooltip: this.target });
+        if (args.cancel) {
+            return;
+        }
+
         this._toBeHidden = true;
         this._timeoutId = setTimeout(() => {
             this.target.close(); // Call close() of IgxTooltipDirective
@@ -191,7 +215,13 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
             this._toBeHidden = false;
         }
 
-        this.onTooltipOpening.emit({ tooltip: this.target });
+        const args = { tooltip: this.target, cancel: false };
+        this.onTooltipOpening.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
         this._toBeShown = true;
         this._timeoutId = setTimeout(() => {
             this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
@@ -208,7 +238,13 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this.onTooltipClosing.emit({ tooltip: this.target });
+        const args = { tooltip: this.target, cancel: false };
+        this.onTooltipClosing.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
         this._toBeHidden = true;
         this._timeoutId = setTimeout(() => {
             this.target.close(); // Call close() of IgxTooltipDirective
