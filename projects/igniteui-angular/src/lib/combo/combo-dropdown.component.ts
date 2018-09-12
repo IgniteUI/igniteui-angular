@@ -188,7 +188,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      * @hidden
      */
     selectItem(item: IgxComboItemComponent, event?: Event) {
-        if (item.itemData === 'ADD ITEM') {
+        if (item.value === 'ADD ITEM') {
             if (event) {
                 this.combo.addItemToCollection();
             }
@@ -215,7 +215,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         const extraScroll = this.combo.isAddButtonVisible();
         if (direction) {
             if (direction === Navigate.Down && extraScroll) {
-                if (vContainer.igxForOf[vContainer.igxForOf.length - 1] === this.focusedItem.itemData) {
+                if (vContainer.igxForOf[vContainer.igxForOf.length - 1] === this.focusedItem.value) {
                     if (this.focusedItem) {
                         this.focusedItem.isFocused = false;
                     }
@@ -223,7 +223,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
                     this.focusedItem.isFocused = true;
                     return;
                 } else if (vContainer.igxForOf[vContainer.state.chunkSize + vContainer.state.startIndex - 2] ===
-                    this.focusedItem.itemData) {
+                    this.focusedItem.value) {
                     this.subscribeNext(vContainer, () => {
                         if (this.focusedItem.isHeader &&
                             vContainer.state.startIndex + vContainer.state.chunkSize < vContainer.igxForOf.length) {
