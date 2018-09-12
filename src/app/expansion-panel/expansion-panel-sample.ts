@@ -1,6 +1,6 @@
-import { IgxExpansionPanelComponent, scaleInVerTop, scaleOutVerTop } from 'igniteui-angular';
+import { IgxExpansionPanelComponent, growVerIn, growVerOut, scaleInVerTop } from 'igniteui-angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AnimationReferenceMetadata } from '@angular/animations';
+import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -14,26 +14,14 @@ export class ExpansionPanelSampleComponent implements OnInit {
     @ViewChild('button') public button: ElementRef;
 
     public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
-        openAnimation:  Object.assign(scaleInVerTop, {
-            options: {
-                params: Object.assign(scaleInVerTop.options.params, {
-                    startOpacity: 0.5,
-                    fromScale: 0,
-                    toScale: 1,
-                    startHeight: '200px',
-                    duration: '2000ms'
-                })
-            }
-        }),
-        closeAnimation: Object.assign(scaleOutVerTop, {
-            options: {
-                params: Object.assign(scaleOutVerTop.options.params, {
-                    startOpacity: 1,
-                    endOpacity: 0.5,
-                    fromScale: 1,
-                    toScale: 0,
-                    duration: '200ms'
-                })
+        openAnimation: useAnimation(growVerIn, { params: {
+            startHeight: '0px',
+            endHeight: '*',
+            duration: '400ms'
+        }}),
+        closeAnimation: useAnimation(growVerOut, {
+            params: {
+                duration: '200ms'
             }
         })
     };
@@ -43,8 +31,10 @@ export class ExpansionPanelSampleComponent implements OnInit {
     public winningPlayer;
     public iconPosition = 'right';
     private rounds = 5;
-    public get currentScore(): { 'Player 1': number,
-    'Player 2': number} {
+    public get currentScore(): {
+        'Player 1': number,
+        'Player 2': number
+    } {
         return this.data.length === 0 ? [] : this.data.reduce((a, b) => {
             return {
                 'Player 1': a['Player 1'] + b['Player 1'],
@@ -102,6 +92,6 @@ export class ExpansionPanelSampleComponent implements OnInit {
     }
 
     toggleLeftRight() {
-        this.iconPosition = this.iconPosition === 'right' ? 'left' : 'right' ;
+        this.iconPosition = this.iconPosition === 'right' ? 'left' : 'right';
     }
 }

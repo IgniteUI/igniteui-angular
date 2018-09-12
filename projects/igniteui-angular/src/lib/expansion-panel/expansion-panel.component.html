@@ -2,6 +2,6 @@
 <ng-content select="igx-expansion-panel-header"></ng-content>
 <div #collapseBody [attr.aria-labelledby] = "labelledby" [attr.role] = "'region'"
    [attr.aria-label] = "label || id + '-region'">
-    <ng-content select="igx-expansion-panel-body"></ng-content>
+    <ng-content *ngIf="!collapsed" select="igx-expansion-panel-body"></ng-content>
 </div>
 
