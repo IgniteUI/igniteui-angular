@@ -19,6 +19,7 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { Subject, animationFrameScheduler as rAF, fromEvent } from 'rxjs';
+import { TransactionType } from '../services/transaction/utilities';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -989,7 +990,21 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
             if (this.inEditMode) {
-                this.gridAPI.submit_value(this.gridID);
+                const rowTransaction = this.grid.transactions.getTransactionLog(this.row.rowID);
+                if (rowTransaction !== null) {
+                    const newTransaction = { [this.column.field]: this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue };
+                    let newRowTransaction;
+                    if (rowTransaction !== undefined) {
+                        newRowTransaction = Object.assign({}, rowTransaction.newValue);
+                        newRowTransaction = Object.assign(newRowTransaction, newTransaction);
+                    } else {
+                        newRowTransaction = newTransaction;
+                    }
+                    this.grid.transactions.add({ id: this.row.rowID, type: TransactionType.UPDATE, newValue: newRowTransaction},
+                        this.row.rowData);
+                } else {
+                    this.gridAPI.submit_value(this.gridID);
+                }
             } else {
                 this.inEditMode = true;
             }

@@ -10,6 +10,7 @@ export class IgxTransactionBaseService implements ITransactionService {
         this.updateCurrentState(transaction, recordRef);
         this._transactions.push(transaction);
         this._redoStack = [];
+        return true;
     }
 
     public getTransactionLog(id?: any): ITransaction[] | ITransaction {

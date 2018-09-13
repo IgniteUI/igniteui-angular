@@ -152,4 +152,12 @@ export class GridCellEditingComponent {
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
     }
+
+    public undo() {
+        this.gridWithPK.transactions.undo();
+    }
+
+    public redo() {
+        this.gridWithPK.transactions.redo();
+    }
 }

@@ -52,6 +52,7 @@ import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxTransactionBaseService } from '../services/transaction/transaction-base';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -94,6 +95,11 @@ export interface IRowSelectionEventArgs {
     newSelection: any[];
     row?: IgxGridRowComponent;
     event?: Event;
+}
+
+export interface IRowUpdateDataEventArgs {
+    oldData: any;
+    data: any;
 }
 
 export interface ISearchInfo {
@@ -146,7 +152,8 @@ export interface IColumnMovingEndEventArgs {
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid',
-    templateUrl: './grid.component.html'
+    templateUrl: './grid.component.html',
+    providers: [IgxTransactionBaseService]
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
@@ -612,6 +619,29 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
+     * Sets whether the `IgxGridRowComponent` is editable.
+     * By default it is set to false.
+     * ```typescript
+     * let rowEditable = this.grid.rowEditable;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    get rowEditable(): boolean {
+        return this._rowEditable;
+    }
+     /**
+     * Sets whether rows can be edited.
+     * ```html
+     * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [columnHiding]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    set rowEditable(val: boolean) {
+        this._rowEditable = val;
+    }
+
+    /**
      * Returns the height of the `IgxGridComponent`.
      * ```typescript
      * let gridHeight = this.grid.height;
@@ -903,6 +933,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Output()
     public onRowSelectionChange = new EventEmitter<IRowSelectionEventArgs>();
+
+    /**
+     * Emitted when a `IgxGridRowComponent` is being updated to the `IgxGridComponent` through the UI and API.
+     * Returns the data for the updated `IgxGridRowComponent` object.
+     * ```typescript
+     * rowUpdated(event: IRowUpdateDataEventArgs){
+     *    const rowInfo = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" (onRowUpdated)="rowUpdated($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Output()
+    public onRowUpdated = new EventEmitter<IRowUpdateDataEventArgs>();
 
     /**
      * Emitted when `IgxColumnComponent` is pinned.
@@ -1533,6 +1579,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
+     * Get transactions.
+     */
+    get transactions() {
+        return this._transactions;
+    }
+
+    /**
      * @hidden
     */
     public columnsWithNoSetWidths = null;
@@ -1771,6 +1824,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    @Input()
+    public buttonDoneTemplate;
+
+     @Input()
+    public buttonCancelTemplate;
+
     /**
      * Emitted when an export process is initiated by the user.
      * ```typescript
@@ -1872,6 +1931,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
+    protected _rowEditable = false;
+    /**
+     * @hidden
+     */
     protected _pipeTrigger = 0;
     /**
      * @hidden
@@ -1940,6 +2003,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     constructor(
         private gridAPI: IgxGridAPIService,
         public selection: IgxSelectionAPIService,
+        private _transactions: IgxTransactionBaseService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -4506,5 +4570,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         event.preventDefault();
         this.verticalScrollContainer.scrollPrevPage();
         this.nativeElement.focus();
+    }
+
+    public updateRowTransaction(event) {
+
+    }
+
+    public resetRowTransaction(event) {
+
     }
 }
