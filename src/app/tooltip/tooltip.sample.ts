@@ -1,5 +1,8 @@
 import { Component, Input, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { IgxTooltipActionDirective, OverlaySettings, AutoPositionStrategy } from 'projects/igniteui-angular/src/public_api';
+import {
+    IgxTooltipTargetDirective, OverlaySettings, AutoPositionStrategy,
+    ITooltipOpeningEventArgs, ITooltipOpenedEventArgs, ITooltipClosingEventArgs, ITooltipClosedEventArgs
+} from 'igniteui-angular';
 
 @Component({
     selector: 'app-tooltip-sample',
@@ -8,9 +11,9 @@ import { IgxTooltipActionDirective, OverlaySettings, AutoPositionStrategy } from
 })
 export class TooltipSampleComponent implements OnInit, AfterViewInit {
 
-    @ViewChild("button") public tooltipAction: IgxTooltipActionDirective;
+    @ViewChild("button") public tooltipTarget: IgxTooltipTargetDirective;
 
-    settings: OverlaySettings = {        
+    settings: OverlaySettings = {
         positionStrategy: new AutoPositionStrategy(),
         closeOnOutsideClick: false,
         modal: false
@@ -19,7 +22,7 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
     public data: any[];
 
     constructor() {
-        
+
     }
 
     ngOnInit() {
@@ -29,25 +32,25 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
             { Name: "Nick", LastName: "Rogers", Age: 54 },
             { Name: "Samantha", LastName: "Black", Age: 33 },
             { Name: "Nicole", LastName: "Donovan", Age: 30 }
-          ];
+        ];
     }
 
     ngAfterViewInit() {
-        this.settings.positionStrategy.settings.target = this.tooltipAction.nativeElement;
-        this.settings.positionStrategy.settings.openAnimation = null;
-        this.settings.positionStrategy.settings.closeAnimation = null;
+        this.settings.positionStrategy.settings.target = this.tooltipTarget.nativeElement;
+        // this.settings.positionStrategy.settings.openAnimation = null;
+        // this.settings.positionStrategy.settings.closeAnimation = null;
     }
 
     showTooltip() {
-        this.tooltipAction.openTooltip();
+        this.tooltipTarget.openTooltip();
     }
 
     hideTooltip() {
-        this.tooltipAction.closeTooltip();
+        this.tooltipTarget.closeTooltip();
     }
 
-    opening() { console.log("opening" + " collapsed:" + this.tooltipAction.tooltipHidden); }
-    opened() { console.log("opened" + " collapsed:" + this.tooltipAction.tooltipHidden); }
-    closing() { console.log("closing" + " collapsed:" + this.tooltipAction.tooltipHidden); }
-    closed() { console.log("closed" + " collapsed:" + this.tooltipAction.tooltipHidden); }
+    opening(args: ITooltipOpeningEventArgs) { console.log("opening"); }
+    opened(args: ITooltipOpenedEventArgs) { console.log("opened"); }
+    closing(args: ITooltipClosingEventArgs) { console.log("closing"); }
+    closed(args: ITooltipClosedEventArgs) { console.log("closed"); }
 }

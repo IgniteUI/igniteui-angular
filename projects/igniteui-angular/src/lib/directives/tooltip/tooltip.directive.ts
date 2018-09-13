@@ -25,10 +25,10 @@ export interface ITooltipClosedEventArgs {
 }
 
 @Directive({
-    exportAs: 'tooltipAction',
-    selector: '[igxTooltipAction]'
+    exportAs: 'tooltipTarget',
+    selector: '[igxTooltipTarget]'
 })
-export class IgxTooltipActionDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
+export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
 
     /* Private Members */
     private _toBeShown = false;
@@ -47,7 +47,7 @@ export class IgxTooltipActionDirective extends IgxToggleActionDirective implemen
     @Input('tooltipDisabled')
     public tooltipDisabled = false;
 
-    @Input('igxTooltipAction')
+    @Input('igxTooltipTarget')
     set target(target: any) {
         if (target !== null && target !== '') {
             this._target = target;
@@ -294,8 +294,8 @@ export class IgxTooltipDirective extends IgxToggleDirective {
 }
 
 @NgModule({
-    declarations: [IgxTooltipDirective, IgxTooltipActionDirective],
-    exports: [IgxTooltipDirective, IgxTooltipActionDirective],
+    declarations: [IgxTooltipDirective, IgxTooltipTargetDirective],
+    exports: [IgxTooltipDirective, IgxTooltipTargetDirective],
     imports: [CommonModule],
     providers: [IgxOverlayService]
 })
