@@ -255,7 +255,7 @@ export class IgxGridAPIService {
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         if (name) {
-            if (typeof name === "string"){
+            if (typeof name === 'string') {
             // clear specific expression
             const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === name);
             const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === name);
@@ -276,8 +276,8 @@ export class IgxGridAPIService {
                     return val.hierarchy && val.hierarchy.length <= grExprIndex;
                 });
             } else {
-                for (let i = 0; i < name.length; i++){
-                    this.clear_groupby(id, name[i])
+                for (let i = 0; i < name.length; i++) {
+                    this.clear_groupby(id, name[i]);
                 }
             }
         } else {

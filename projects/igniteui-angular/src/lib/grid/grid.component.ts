@@ -2822,8 +2822,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
-        const oldSortingExpressions : Array<ISortingExpression> = this.sortingExpressions;
-        let newlyGroupedCols : Array<IgxColumnComponent> = [];
+        const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        const newlyGroupedCols: Array<IgxColumnComponent> = [];
         this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -2832,13 +2832,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        const newSortingExpressions : Array<ISortingExpression> = this.sortingExpressions;
-        let changedColsArr = newSortingExpressions.filter(function(obj) {
-            return !oldSortingExpressions.some(function(obj2){
-                return obj.fieldName === obj2.fieldName
-            })
-        })
-        changedColsArr.forEach(function(elem){newlyGroupedCols.push(this.getColumnByName(elem.fieldName))}, this);
+        const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        const changedColsArr = newSortingExpressions.filter(function(obj) {
+            return !oldSortingExpressions.some(function(obj2) {
+                return obj.fieldName === obj2.fieldName;
+            });
+        });
+        changedColsArr.forEach(function(elem) {
+            newlyGroupedCols.push(this.getColumnByName(elem.fieldName));
+        }, this);
         const groupingChangedArgs: IGroupingChangedEventArgs = {
             oldExpressions : oldSortingExpressions || null,
             newExpressions: newSortingExpressions || null,
@@ -2861,17 +2863,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      *
      */
     public clearGrouping(name?: string | Array<string>): void {
-        const oldSortingExpressions : Array<ISortingExpression> = this.sortingExpressions;
-        let newlyUngroupedCols : Array<IgxColumnComponent> = [];
+        const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        const newlyUngroupedCols: Array<IgxColumnComponent> = [];
         this.gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
-        const newSortingExpressions : Array<ISortingExpression> = this.sortingExpressions;
-        let changedColsArr = oldSortingExpressions.filter(function(obj) {
-            return !newSortingExpressions.some(function(obj2){
-                return obj.fieldName === obj2.fieldName
-            })
-        })
-        changedColsArr.forEach(function(elem){newlyUngroupedCols.push(this.getColumnByName(elem.fieldName))}, this);
+        const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        const changedColsArr = oldSortingExpressions.filter(function(obj) {
+            return !newSortingExpressions.some(function(obj2) {
+                return obj.fieldName === obj2.fieldName;
+            });
+        });
+        changedColsArr.forEach(function(elem) {
+            newlyUngroupedCols.push(this.getColumnByName(elem.fieldName));
+        }, this);
         const groupingChangedArgs: IGroupingChangedEventArgs = {
             oldExpressions : oldSortingExpressions || null,
             newExpressions: newSortingExpressions || null,
