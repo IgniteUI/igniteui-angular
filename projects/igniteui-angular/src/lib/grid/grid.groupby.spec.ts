@@ -328,7 +328,7 @@ describe('IgxGrid - GroupBy', () => {
         }
     });
 
-    it('should trigger a onGroupingChanged event when a column is grouped with the correct params.', () => {
+    it('should trigger an onGroupingChanged event when a column is grouped with the correct params.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -338,8 +338,31 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         const currExpr = fix.componentInstance.currentSortExpressions;
-        expect(currExpr.length).toEqual(1);
-        expect(currExpr[0].fieldName).toEqual('Released');
+        expect(currExpr.newExpressions.length).toEqual(1);
+        expect(currExpr.newExpressions[0].fieldName).toEqual('Released');
+        expect(currExpr.newlyGrouped.length).toEqual(1);
+        expect(currExpr.newlyGrouped[0].field).toEqual('Released');
+    });
+
+    it('should trigger an onGroupingChanged event when a column is ungrouped with the correct params.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
+        fix.detectChanges();
+
+        grid.clearGrouping('Released');
+        fix.detectChanges();
+        const currExpr = fix.componentInstance.currentSortExpressions;
+        expect(currExpr.newExpressions.length).toEqual(1);
+        expect(currExpr.newExpressions[0].fieldName).toEqual('ReleaseDate');
+        expect(currExpr.newlyUngrouped.length).toEqual(1);
+        expect(currExpr.newlyUngrouped[0].field).toEqual('Released');
     });
 
     it('should allow setting custom template for group row content.', () => {
