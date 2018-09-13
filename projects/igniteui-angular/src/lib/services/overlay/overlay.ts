@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { OverlaySettings, OverlayEventArgs, OverlayInfo } from './utilities';
+import { OverlaySettings, OverlayEventArgs, OverlayInfo, OverlayAnimationEventArgs } from './utilities';
 
 import {
     ApplicationRef,
@@ -54,6 +54,9 @@ export class IgxOverlayService {
      */
     public onClosed = new EventEmitter<OverlayEventArgs>();
 
+    /** Emitted before animation is started */
+    public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
+
     constructor(
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
@@ -66,35 +69,45 @@ export class IgxOverlayService {
     /**
      * Shows the provided component.
      */
-    show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string {
-        const id: string = (this._componentId++).toString();
-        settings = Object.assign({}, this._defaultSettings, settings);
-
-        const info = this.getOverlayInfo(component);
-
-        //  if there is no info most probably wrong type component was provided and we just go out
-        //  if show or hide players are in progress just return
-        if (!info ||
-            (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) ||
-            (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {
-            return;
+    show(component: ElementRef | Type<{}>, settings?: OverlaySettings, id?: string): string {
+        let info: OverlayInfo;
+        if (id) {
+            info = this.getOverlayById(id);
         }
 
-        info.id = id;
+        if (!info) {
+            id = (this._componentId++).toString();
+            info = this.getOverlayInfo(component);
+
+            //  if there is no info most probably wrong type component was provided and we just go out
+            if (!info) {
+                return;
+            }
+
+            info.id = id;
+        }
+
+        settings = Object.assign({}, this._defaultSettings, settings);
         info.settings = settings;
 
         this.onOpening.emit({ id, componentRef: info.componentRef });
 
-        info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
-        info.hook = this.placeElementHook(info.elementRef.nativeElement);
+        //  if there is no close animation player, or there is one but it is not started yet we are in clear
+        //  opening. Otherwise, if there is close animation player playing animation now we should not setup
+        //  overlay this is already done
+        if (!info.closeAnimationPlayer || (info.closeAnimationPlayer && !info.closeAnimationPlayer.hasStarted())) {
+            info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
+            info.hook = this.placeElementHook(info.elementRef.nativeElement);
 
-        this.moveElementToOverlay(info);
-        this.updateSize(info);
-        this._overlayInfos.push(info);
+            this.moveElementToOverlay(info);
+            this.updateSize(info);
+            this._overlayInfos.push(info);
 
-        settings.positionStrategy.position(info.elementRef.nativeElement.parentElement, info.initialSize, document, true);
-        settings.scrollStrategy.initialize(this._document, this, id);
-        settings.scrollStrategy.attach();
+            settings.positionStrategy.position(info.elementRef.nativeElement.parentElement, info.initialSize, document, true);
+            settings.scrollStrategy.initialize(this._document, this, id);
+            settings.scrollStrategy.attach();
+        }
+
         this.addOutsideClickListener(info);
         this.addResizeHandler(info.id);
 
@@ -119,12 +132,6 @@ export class IgxOverlayService {
 
         if (!info) {
             console.warn('igxOverlay.hide was called with wrong id: ' + id);
-            return;
-        }
-
-        //  if show or hide players are in progress just return
-        if ((info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) ||
-            (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {
             return;
         }
 
@@ -316,29 +323,67 @@ export class IgxOverlayService {
     }
 
     private playOpenAnimation(info: OverlayInfo) {
+        if (!info.openAnimationPlayer) {
+            const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
+            info.openAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
+            info.openAnimationPlayer.init();
 
-        const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
-        info.openAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
+            //  AnimationPlayer.getPosition returns always 0. To workaround this we are getting inner WebAnimationPlayer
+            //  and then getting the positions from it.
+            //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
+            //  As soon as this is resolved we can remove this hack
+            const innerRenderer = (<any>info.openAnimationPlayer)._renderer;
+            info.openAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
+            info.openAnimationPlayer.onDone(() => {
+                this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+                info.openAnimationPlayer.reset();
+                info.openAnimationPlayer = null;
+                if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
+                    info.closeAnimationPlayer.reset();
+                }
+            });
+        }
 
-        info.openAnimationPlayer.onDone(() => {
-            this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
-            info.openAnimationPlayer.reset();
-            info.openAnimationPlayer = null;
-        });
+        if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
+            const position = 1 - info.closeAnimationInnerPlayer.getPosition();
+            info.closeAnimationPlayer.reset();
+            info.openAnimationPlayer.setPosition(position);
+        }
 
+        this.onAnimation.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
         info.openAnimationPlayer.play();
     }
 
     private playCloseAnimation(info: OverlayInfo) {
-        const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
-        info.closeAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
+        if (!info.closeAnimationPlayer) {
+            const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
+            info.closeAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
+            info.closeAnimationPlayer.init();
 
-        info.closeAnimationPlayer.onDone(() => {
-            info.closeAnimationPlayer.reset();
-            info.closeAnimationPlayer = null;
-            this.onCloseDone(info);
-        });
+            //  AnimationPlayer.getPosition returns always 0. To workaround this we are getting inner WebAnimationPlayer
+            //  and then getting the positions from it.
+            //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
+            //  As soon as this is resolved we can remove this hack
+            const innerRenderer = (<any>info.closeAnimationPlayer)._renderer;
+            info.closeAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
 
+            info.closeAnimationPlayer.onDone(() => {
+                info.closeAnimationPlayer.reset();
+                info.closeAnimationPlayer = null;
+                if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
+                    info.openAnimationPlayer.reset();
+                }
+                this.onCloseDone(info);
+            });
+        }
+
+        if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
+            const position = 1 - info.openAnimationInnerPlayer.getPosition();
+            info.openAnimationPlayer.reset();
+            info.closeAnimationPlayer.setPosition(position);
+        }
+
+        this.onAnimation.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
         info.closeAnimationPlayer.play();
     }
 
@@ -398,7 +443,6 @@ export class IgxOverlayService {
                 this._document.addEventListener('click', this.documentClicked, true);
             }
         }
-
     }
 
     private removeOutsideClickListener(info: OverlayInfo) {
