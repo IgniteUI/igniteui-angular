@@ -262,7 +262,7 @@ export class TemplatedColumnsComponent {
             <igx-column field="ProductId"  dataType="number" width="100px"></igx-column>
             <igx-column field="Number1" dataType="number" width="100px"></igx-column>
             <igx-column field="Number2" dataType="number" width="100px" [headerClasses]="'headerAlignSyle'"></igx-column>
-            <igx-column field="Number3" dataType="number" width="100px" [cellClasses]="'headerAlignSyle'"></igx-column>
+            <igx-column field="Number3" dataType="number" width="100px" [cellClasses]="{'headerAlignSyle':true}"></igx-column>
             <igx-column field="Number4" dataType="number" width="100px"></igx-column>
             <igx-column field="Number5" dataType="number" width="100px"></igx-column>
             <igx-column field="Number6" dataType="number" width="100px"></igx-column>

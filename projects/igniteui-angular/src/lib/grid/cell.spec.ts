@@ -564,7 +564,7 @@ describe('IgxGrid - Cell component', () => {
                 await wait(100);
                 fixture.detectChanges();
 
-                const testCells = fixture.debugElement.queryAll(By.css('.testCell'));
+                const testCells = grid.getColumnByName('firstName').cells;
                 cellElem = testCells[testCells.length - 1].nativeElement;
 
                 cellElem.dispatchEvent(new Event('focus'));
@@ -1271,7 +1271,7 @@ export class CellEditingTestComponent {
 @Component({
     template: `
         <igx-grid [data]="data" width="300px" height="250px">
-            <igx-column [editable]="true" field="firstName" cellClasses='testCell'></igx-column>
+            <igx-column [editable]="true" field="firstName"></igx-column>
             <igx-column [editable]="true" field="lastName"></igx-column>
             <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
             <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
