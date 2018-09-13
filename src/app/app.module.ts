@@ -61,6 +61,7 @@ import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 
 const components = [
@@ -87,6 +88,7 @@ const components = [
     NavbarSampleComponent,
     NavdrawerSampleComponent,
     OverlaySampleComponent,
+    OverlayAnimationSampleComponent,
     PageHeaderComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,

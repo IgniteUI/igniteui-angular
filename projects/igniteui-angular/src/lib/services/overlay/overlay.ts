@@ -345,6 +345,10 @@ export class IgxOverlayService {
         }
 
         if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
+            //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
+            //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
+            //  the previous has finished we need the amount up to 1, therefore we are subtracting what
+            //  getPosition() returns from one
             const position = 1 - info.closeAnimationInnerPlayer.getPosition();
             info.closeAnimationPlayer.reset();
             info.openAnimationPlayer.setPosition(position);
@@ -378,6 +382,10 @@ export class IgxOverlayService {
         }
 
         if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
+            //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
+            //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
+            //  the previous has finished we need the amount up to 1, therefore we are subtracting what
+            //  getPosition() returns from one
             const position = 1 - info.openAnimationInnerPlayer.getPosition();
             info.openAnimationPlayer.reset();
             info.closeAnimationPlayer.setPosition(position);

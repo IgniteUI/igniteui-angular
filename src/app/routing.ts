@@ -46,6 +46,7 @@ import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-colum
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 
 const appRoutes = [
@@ -141,6 +142,10 @@ const appRoutes = [
     {
         path: 'overlay',
         component: OverlaySampleComponent
+    },
+    {
+        path: 'overlay-animation',
+        component: OverlayAnimationSampleComponent
     },
     {
         path: 'progressbar',
