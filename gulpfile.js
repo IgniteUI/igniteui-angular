@@ -218,8 +218,19 @@ gulp.task('typedoc-build', [
     'typedoc-js'
 ]);
 
+const EXPORT_PATH = 'dist/igniteui-angular/docs/typescript-exported';
+const PROJECT_PATH = 'projects/igniteui-angular/src';
+
+gulp.task('typedoc-build:export', ['typedoc-build'],
+    shell.task(`typedoc ${PROJECT_PATH} --generate-json ${EXPORT_PATH}`)
+);
+
+gulp.task('typedoc-build:import', ['typedoc-build'],
+    shell.task(`typedoc ${PROJECT_PATH} --generate-from-json ${EXPORT_PATH}`)
+);
+
 gulp.task('typedoc-build:theme', ['typedoc-build'],
-    shell.task('typedoc projects/igniteui-angular/src/public_api.ts')
+    shell.task(`typedoc ${PROJECT_PATH}`)
 );
 
 gulp.task('typedoc-serve', ['typedoc-watch'], () => {
