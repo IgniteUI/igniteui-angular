@@ -4,7 +4,7 @@
 _Directives_
 
 ## Description
-The **IgxTooltip** directive provides us a way to make a given element a tooltip. Then we can assign it to be a tooltip for another element (for example a button) by using the **IgxTooltipAction** directive.
+The **IgxTooltip** directive provides us a way to make a given element a tooltip. Then we can assign it to be a tooltip for another element (for example a button) by using the **IgxTooltipTarget** directive.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip.html).
 
 ## Usage
@@ -14,16 +14,16 @@ import { IgxTooltipModule } from "igniteui-angular";
 ```
 
 - The **IgxTooltip** directive is used to make a given element a tooltip. (exported with the name **tooltip**) This directive extends the **IgxToggle** directive and shares its functionality, since the tooltip is basically a togglable element.
-- The **IgxTooltipAction** directive is used to mark an element as one that has a tooltip. (exported with the name **tooltipAction**) This directive extends the **IgxToggleAction** directive and shares most of its functionality as well as adding some of its own (for example the hover/unhover behavior which is tooltip specific).
+- The **IgxTooltipTarget** directive is used to mark an element as one that has a tooltip. (exported with the name **tooltipTarget**) This directive extends the **IgxToggleAction** directive and shares most of its functionality as well as adding some of its own (for example the hover/unhover behavior which is tooltip specific).
 
-By exporting the IgxTooltip directive and assigning it to the IgxTooltipAction property, we assign the tooltip to a specific element.
+By exporting the IgxTooltip directive and assigning it to the IgxTooltipTarget property, we assign the tooltip to a specific element.
 
 
 ### Simple tooltip
 
 Let's say we have a button and we would like it to have a tooltip that provides some additional text information.
 ```html
-<button [igxTooltipAction]="tooltipRef">
+<button [igxTooltipTarget]="tooltipRef">
     Hover me
 </button>
 
@@ -37,7 +37,7 @@ Let's say we have a button and we would like it to have a tooltip that provides 
 Since the tooltip itself is a simple DOM element, we can inject whatever content we want inside of it and it will be displayed as an ordinary tooltip.
 
 ```html
-<button [igxTooltipAction]="tooltipRef">
+<button [igxTooltipTarget]="tooltipRef">
     Hover me
 </button>
 
@@ -51,10 +51,10 @@ Since the tooltip itself is a simple DOM element, we can inject whatever content
 ## Configuration
 
 ### Delay settings
-The **IgxTooltipAction** directive exposes `showDelay` and `hideDelay` inputs, which can be used to set the amount of time (in milliseconds) that has to pass before showing and hiding the tooltip respectively.
+The **IgxTooltipTarget** directive exposes `showDelay` and `hideDelay` inputs, which can be used to set the amount of time (in milliseconds) that has to pass before showing and hiding the tooltip respectively.
 
 ```html
-<button [igxTooltipAction]="tooltipRef" showDelay="1500" hideDelay="1500">
+<button [igxTooltipTarget]="tooltipRef" showDelay="1500" hideDelay="1500">
     Hover me
 </button>
 
@@ -64,13 +64,13 @@ The **IgxTooltipAction** directive exposes `showDelay` and `hideDelay` inputs, w
 ```
 
 ### Manually opening and closing the tooltip
-While the tooltip's default behavior is to open when its target is hovered and close when its target is unhovered, we can also do this manually by using the `openTooltip` and the `closeTooltip` methods of the IgxTooltipAction directive.
+While the tooltip's default behavior is to open when its target is hovered and close when its target is unhovered, we can also do this manually by using the `openTooltip` and the `closeTooltip` methods of the IgxTooltipTarget directive.
 
 ```html
-<button (click)="actionBtn.openTooltip()">Open tooltip</button>
-<button (click)="actionBtn.closeTooltip()">Close tooltip</button>
+<button (click)="targetBtn.openTooltip()">Open tooltip</button>
+<button (click)="targetBtn.closeTooltip()">Close tooltip</button>
 
-<button #actionBtn="tooltipAction" [igxTooltipAction]="tooltipRef">
+<button #targetBtn="tooltipTarget" [igxTooltipTarget]="tooltipRef">
     Hover me
 </button>
 
@@ -85,7 +85,7 @@ While the tooltip's default behavior is to open when its target is hovered and c
 
 Since the **IgxTooltip** directive extends the **IgxToggle** directive and there is no specific functionality it adds apart from some styling classes and attributes, you can refer to the [IgxToggle API](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md) for additional details.
 
-## IgxTooltipActionDirective
+## IgxTooltipTargetDirective
 
 ### Properties
 | Name | Type | Description |
