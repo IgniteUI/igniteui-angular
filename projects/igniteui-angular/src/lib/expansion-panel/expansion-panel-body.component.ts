@@ -1,15 +1,19 @@
-import { Component, HostBinding, Inject, forwardRef, ElementRef, Input } from '@angular/core';
+import { Component, HostBinding, Inject,
+    forwardRef, ElementRef, Input, AfterViewInit, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
+import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 
 @Component({
     // tslint:disable-next-line:directive-selector
     selector: 'igx-expansion-panel-body',
-    template: `
-            <ng-content></ng-content>`
+    template: `<ng-content></ng-content>`
 })
-export class IgxExpansionPanelBodyComponent {
+export class IgxExpansionPanelBodyComponent implements OnInit {
+    private _labelledBy = '';
+    private _label = '';
     constructor(@Inject(forwardRef(() => IgxExpansionPanelComponent))
-    public panel: IgxExpansionPanelComponent, public element: ElementRef) {
+    public panel: IgxExpansionPanelComponent, public element: ElementRef,
+    public cdr: ChangeDetectorRef) {
     }
     @HostBinding('class.igx-expansion-panel__body')
     public cssClass = `igx-expansion-panel__body`;
@@ -17,18 +21,28 @@ export class IgxExpansionPanelBodyComponent {
 
     @Input()
     @HostBinding('attr.aria-label')
-    public label = this.panel.id + '-region';
+    public get label(): string {
+        return this._label || this.panel.id + '-region';
+    }
+    public set label(val: string) {
+        this._label = val;
+    }
 
     @Input()
     @HostBinding('attr.aria-labelledby')
     public get labelledBy(): string {
-        return this.panel.title ? this.panel.title.id : this._title;
+        return this._labelledBy;
     }
     public set labelledBy(val: string) {
-        this._title = val;
+        this._labelledBy = val;
     }
 
     @Input()
     @HostBinding('attr.role')
     public role = 'region';
+
+    ngOnInit() {
+        this.labelledBy = this.panel.headerId;
+        this.label = this.panel.id + '-region';
+    }
 }
