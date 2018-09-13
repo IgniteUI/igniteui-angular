@@ -71,7 +71,7 @@ export class IgxOverlayService {
      */
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings, id?: string): string {
         let info: OverlayInfo;
-        if (id) {
+        if (id !== undefined) {
             info = this.getOverlayById(id);
         }
 
