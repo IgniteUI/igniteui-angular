@@ -107,7 +107,7 @@ export class IgxExpansionPanelComponent {
     collapse(evt?: Event) {
         this.playCloseAnimation(
             () => {
-                this.onCollapsed.emit({ event: evt });
+                this.onCollapsed.emit({ event: evt, panel: this });
                 this.collapsed = true;
             }
         );
@@ -118,7 +118,7 @@ export class IgxExpansionPanelComponent {
         this.cdr.detectChanges();
         this.playOpenAnimation(
             () => {
-                this.onExpanded.emit({ event: evt });
+                this.onExpanded.emit({ event: evt, panel: this });
             }
         );
     }

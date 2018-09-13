@@ -16,6 +16,7 @@ import { IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from 
 
 export interface IExpansionPanelEventArgs {
     event: Event;
+    panel: IgxExpansionPanelComponent;
 }
 
 export enum ICON_POSITION {
@@ -92,7 +93,7 @@ export class IgxExpansionPanelHeaderComponent {
             evt.stopPropagation();
             return;
          }
-         this.onInteraction.emit({ event: evt });
+         this.onInteraction.emit({ event: evt, panel: this.panel });
          this.panel.toggle(evt);
          evt.preventDefault();
      }

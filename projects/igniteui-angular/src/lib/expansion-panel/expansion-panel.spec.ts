@@ -124,7 +124,7 @@ describe('igxExpansionPanel', () => {
             expect(panel.expand).toHaveBeenCalledWith(mockEvent);
             expect(panel.collapse).toHaveBeenCalledTimes(0);
             expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
-            expect(header.onInteraction.emit).toHaveBeenCalledWith({ event: mockEvent });
+            expect(header.onInteraction.emit).toHaveBeenCalledWith({ event: mockEvent, panel: header.panel });
 
             header.onAction(mockEvent);
             tick();
