@@ -42,7 +42,6 @@ export class IgxExpansionPanelComponent {
      * ```
      * @memberof IgxExpansionPanelComponent
      */
-
     @HostBinding('attr.id')
     @Input()
     public id = `igx-expansion-panel-${NEXT_ID++}`;
@@ -59,6 +58,9 @@ export class IgxExpansionPanelComponent {
     @Output()
     public onExpanded = new EventEmitter<any>();
 
+    public get headerId() {
+        return this.title ? this.title.id : '';
+    }
     constructor(
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
