@@ -15,7 +15,7 @@ export class GridCellStylingSampleComponent implements OnInit {
 
     @ViewChild('grid1') public grid1: IgxGridComponent;
 
-    condition = (rowData: any, columnKey: any): boolean => {
+    condition = (rowData: any): boolean => {
         return rowData[this.grid1.primaryKey] === "BLONP";
     }
 
