@@ -175,14 +175,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
 
         this._overlayId = this.overlayService.show(this.elementRef, overlaySettings);
-        this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+        this.overlayService.onOpened.pipe(this._overlaySubFilter[0], this._overlaySubFilter[1]).subscribe(() => {
             this.onOpened.emit();
         });
         this._overlayClosedSub = this.overlayService.onClosed
-            .pipe(...this._overlaySubFilter)
+            .pipe(this._overlaySubFilter[0], this._overlaySubFilter[1])
             .subscribe(this.overlayClosed);
         this._overlayClosingSub = this.overlayService.onClosing
-            .pipe(...this._overlaySubFilter)
+            .pipe(this._overlaySubFilter[0], this._overlaySubFilter[1])
             .subscribe(this.overlayClosing);
     }
 
