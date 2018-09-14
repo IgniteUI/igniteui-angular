@@ -5,13 +5,14 @@
     <section class="sample-content">
         <article class="sample-column">
             <h4 class="sample-title">Simple tooltip</h4>
-            <div style="display: flex;">
-
-
+            <div style="display:flex;">
                 <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="ref" [overlaySettings]="settings"
-                    (onTooltipOpening)="opening()" (onTooltipOpened)="opened()" (onTooltipClosing)="closing()"
-                    (onTooltipClosed)="closed()" src="assets/images/avatar/10.jpg" size="medium" [roundShape]="true"></igx-avatar>
-
+                            src="assets/images/avatar/10.jpg" size="medium" [roundShape]="true"
+                            (onTooltipOpening)="opening()"
+                            (onTooltipOpened)="opened()"
+                            (onTooltipClosing)="closing()"
+                            (onTooltipClosed)="closed()">
+                </igx-avatar>
 
                 <div #ref="tooltip" igxTooltip>
                     Her name is Toola Tipa
@@ -36,6 +37,44 @@
                 </div>
             </div>
         </article>
+
+
+    </section>
+    <section class="sample-content">
+        <article class="sample-column">
+            <h4 class="sample-title">Rich tooltip</h4>
+
+            <article class="card-wrapper">
+                <igx-card>
+                    <igx-card-content style="padding: 0px;">
+                        <div class="location">
+                            <igx-icon class="cursorHover" fontSet="material" name="location_on" [igxTooltipTarget]="locationTooltip"></igx-icon>
+                            <div class="locationTooltip" #locationTooltip="tooltip" igxTooltip>
+                                <div class="locationTooltipContent">
+                                    <igx-avatar class="locationIcon" src="assets/images/card/avatars/igLogo.png" size="medium"
+                                        [roundShape]="false"></igx-avatar>
+                                    <div>
+                                        <div>Infragistics Inc. HQ</div>
+                                        <div>2 Commerce Dr, Cranbury, NJ 08512, USA</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </igx-card-content>
+                    <igx-card-actions>
+                        <div class="igx-card-actions__igroup--start">
+                            <span igxButton="icon" igxRipple igxRippleCentered="true">
+                                <igx-icon fontSet="material" name="favorite"></igx-icon>
+                            </span>
+                            <span igxButton="icon" igxRipple igxRippleCentered="true">
+
+                                <igx-icon fontSet="material" name="share"></igx-icon>
+                            </span>
+                        </div>
+                    </igx-card-actions>
+                </igx-card>
+            </article>
+        </article>
     </section>
     <section class="sample-content">
         <article class="sample-column">
@@ -46,7 +85,7 @@
                     <igx-column [field]="'Model'" dataType="string"></igx-column>
                     <igx-column [field]="'Spec'">
                         <ng-template igxCell let-cell="cell">
-                            <igx-icon class="specIcon" [igxTooltipTarget]="tp" fontset="material">
+                            <igx-icon class="cursorHover" [igxTooltipTarget]="tp" fontset="material">
                                 info
                             </igx-icon>
 

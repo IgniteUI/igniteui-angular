@@ -1,9 +1,9 @@
-.leftMargin {
-    margin-left: 300px;
+.topMargin {
+    margin-top: 50px;
 }
 
-.bottomMargin {
-    margin-bottom: 15px;
+.leftMargin {
+    margin-left: 200px;
 }
 
 .btn {
@@ -24,6 +24,39 @@
     font-size: 13px;
 }
 
-.specIcon:hover {
+.cursorHover:hover {
     cursor: pointer;
+}
+
+.card-wrapper {
+    max-width: 200px;
+    min-width: 120px;
+}
+
+.locationTooltip {
+    width: 300px;
+    background-color: rgba(128, 128, 128, 0.7);    
+    padding: 3px;
+    font-size: 13px;
+}
+
+.locationTooltipContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.locationIcon {
+    width: 45px;
+    height: 45px;
+}
+
+.location {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 252px;
+    background-image: url(../../assets/images/card/media/infragisticsMap.png);
 }
