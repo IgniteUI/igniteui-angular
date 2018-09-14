@@ -268,7 +268,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
                     this.state.startIndex = this.getHorizontalIndexAt(this.hScroll.scrollLeft, this.hCache, 0);
                 }
             }
-            this.state.chunkSize = this.igxForVisibleElements;
+            this.state.chunkSize = this.igxForVisibleElements + 1;
             for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
@@ -321,7 +321,10 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * @hidden
      */
     public ngAfterViewInit() {
-        this.onChunkGenerated.emit(this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height);
+        this.onChunkGenerated.emit(
+            this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height -
+            this.igxForItemSize
+        );
     }
 
     /**
@@ -967,7 +970,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
     private applyChunkSizeChange() {
-        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this.igxForVisibleElements;
+        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this.igxForVisibleElements + 1;
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
