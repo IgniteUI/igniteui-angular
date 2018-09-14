@@ -8,6 +8,8 @@ import { IFilteringExpressionsTree } from '../data-operations/filtering-expressi
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
+import { TransactionType } from '../services/transaction/utilities';
+import { stat } from 'fs-extra';
 
 /**
  *@hidden
@@ -183,8 +185,21 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
     transform(collection: any[], id: string, pipeTrigger: number) {
         const grid = this.gridAPI.get(id);
-        const copy = [...collection];
-        grid.transactions.commit(copy);
+        const copy = JSON.parse(JSON.stringify(collection));
+        const transactionsState = grid.transactions.aggregatedState();
+        transactionsState.forEach((state, ket) => {
+            if (state.type === TransactionType.ADD) {
+                copy.push(state.value);
+            }
+            const index = collection.findIndex(v => v === state.recordRef);
+            if (state.type === TransactionType.UPDATE) {
+                Object.assign(copy[index], state.value);
+            }
+            //  TODO: we should remove this logic and mark deleted rows as deleted
+            if (state.type === TransactionType.DELETE) {
+                copy.splice(index, 1);
+            }
+        });
         return copy;
     }
 }

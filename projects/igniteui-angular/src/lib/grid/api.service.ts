@@ -171,13 +171,17 @@ export class IgxGridAPIService {
         const column = grid.columnList.toArray()[columnID];
         const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
         editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
-        const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-        grid.data.indexOf(rowID);
+        const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
         if (rowIndex !== -1) {
             const args: IGridEditEventArgs = {
                 row: cellObj ? cellObj.row : null, cell: cellObj,
                 currentValue: grid.data[rowIndex][column.field], newValue: editValue
             };
+            const oldValue = grid.data[rowIndex][column.field];
+            if (oldValue && oldValue === editValue) {
+                return;
+            }
+
             grid.onEditDone.emit(args);
             if (grid.transactions.aggregatedState() !== null) {
                 const rowTransaction = grid.transactions.aggregatedState().get(rowID);
