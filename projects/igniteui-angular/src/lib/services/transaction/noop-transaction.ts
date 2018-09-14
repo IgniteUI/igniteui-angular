@@ -17,7 +17,7 @@ export class NoOpTransactionService implements ITransactionService {
     redo() { }
 
     aggregatedState(): Map<any, IState> {
-        return new Map();
+        return null;
     }
 
     commit(data: any) { }

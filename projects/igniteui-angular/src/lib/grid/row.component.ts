@@ -108,7 +108,8 @@ export class IgxGridRowComponent implements DoCheck {
     get styleClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass}`;
+        const dirtyClass = this.isDirty ? 'igx-grid__tr--dirty' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${dirtyClass}`;
     }
 
 
@@ -159,6 +160,14 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('attr.aria-selected')
     public isSelected: boolean;
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-dirty')
+    public get isDirty(): boolean {
+        return this.grid.rowEditable && this.grid.transactions.getTransactionLog(this.rowID) !== undefined;
+    }
 
     /**
      * Get a reference to the grid that contains the selected row.
@@ -261,6 +270,7 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     public update(value: any) {
+
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.rowID) {
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
@@ -280,6 +290,7 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     public delete() {
+
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.rowID) {
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);

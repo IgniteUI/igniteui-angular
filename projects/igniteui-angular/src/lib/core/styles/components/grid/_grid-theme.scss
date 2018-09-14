@@ -634,6 +634,15 @@
         }
     }
 
+    %grid-row--dirty {
+        border-style: solid;
+        border-color: black;
+        border-width: 1px;
+    }
+     %grid-row__updating-buttons {
+        display: flex;
+    }
+
     %grid-row--group {
         position: relative;
         background: --var($theme, 'header-background') !important;
@@ -674,6 +683,10 @@
         color: --var($theme, 'cell-selected-text-color');
         background-color: --var($theme, 'cell-selected-background') !important;
         border-bottom: 0;
+    }
+
+    %grid-cell--dirty {
+        font-style: italic;
     }
 
     %grid-cell--editing {

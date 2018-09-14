@@ -135,3 +135,16 @@
 
 <div class="igx-grid__filtering-outlet" igxOverlayOutlet></div>
 
+<div igxToggle>
+    <div class="igx-grid-row__updating-buttons" style="display: flex;">
+        <ng-container *ngTemplateOutlet="buttonDoneTemplate ? buttonDoneTemplate : buttonDone; context: {$implicit: this}"></ng-container>
+        <ng-container *ngTemplateOutlet="buttonCancelTemplate ? buttonCancelTemplate : buttonCancel; context: {$implicit: this}"></ng-container>
+    </div>
+</div>
+<ng-template #buttonCancel>
+    <button igxButton (click)="resetRowTransaction($event)">Cancel</button>
+</ng-template>
+ <ng-template #buttonDone>
+    <button igxButton (click)="updateRowTransaction($event)">Done</button>
+</ng-template>
+

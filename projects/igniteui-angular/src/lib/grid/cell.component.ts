@@ -390,7 +390,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             'igx-grid__td--editing': this.inEditMode,
             'igx-grid__th--pinned': this.column.pinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__td--selected': this.selected
+            'igx-grid__td--selected': this.selected,
+            'igx-grid__td--dirty': this.dirty
         };
 
         Object.entries(classList).forEach(([klass, value]) => {
@@ -509,6 +510,11 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     get selected() {
         return this.isSelected = this.isCellSelected();
+    }
+
+    get dirty() {
+        const rowTransaction = this.grid.transactions.getTransactionLog(this.row.rowID);
+        return rowTransaction && rowTransaction.newValue[this.column.field];
     }
 
     /**
@@ -990,21 +996,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public onKeydownEnterEditMode() {
         if (this.column.editable) {
             if (this.inEditMode) {
-                const rowTransaction = this.grid.transactions.getTransactionLog(this.row.rowID);
-                if (rowTransaction !== null) {
-                    const newTransaction = { [this.column.field]: this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue };
-                    let newRowTransaction;
-                    if (rowTransaction !== undefined) {
-                        newRowTransaction = Object.assign({}, rowTransaction.newValue);
-                        newRowTransaction = Object.assign(newRowTransaction, newTransaction);
-                    } else {
-                        newRowTransaction = newTransaction;
-                    }
-                    this.grid.transactions.add({ id: this.row.rowID, type: TransactionType.UPDATE, newValue: newRowTransaction},
-                        this.row.rowData);
-                } else {
-                    this.gridAPI.submit_value(this.gridID);
-                }
+                this.gridAPI.submit_value(this.gridID);
             } else {
                 this.inEditMode = true;
             }

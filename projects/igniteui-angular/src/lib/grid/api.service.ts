@@ -11,6 +11,7 @@ import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
+import { ITransaction, TransactionType } from '../services/transaction/utilities';
 /**
  *@hidden
  */
@@ -178,7 +179,21 @@ export class IgxGridAPIService {
                 currentValue: grid.data[rowIndex][column.field], newValue: editValue
             };
             grid.onEditDone.emit(args);
-            grid.data[rowIndex][column.field] = args.newValue;
+            if (grid.transactions.aggregatedState() !== null) {
+                const rowTransaction = grid.transactions.aggregatedState().get(rowID);
+                const newTransaction = { [column.field]: editValue };
+                let newRowTransaction;
+                if (rowTransaction !== undefined) {
+                    newRowTransaction = Object.assign({}, rowTransaction.value);
+                    newRowTransaction = Object.assign(newRowTransaction, newTransaction);
+                } else {
+                    newRowTransaction = newTransaction;
+                }
+                grid.transactions.add({ id: rowID, type: TransactionType.UPDATE, newValue: newRowTransaction},
+                    grid.data[rowIndex]);
+            } else {
+                grid.data[rowIndex][column.field] = args.newValue;
+            }
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, args.newValue);
