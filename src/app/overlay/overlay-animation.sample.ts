@@ -4,8 +4,11 @@ import {
     GlobalPositionStrategy,
     NoOpScrollStrategy,
     IgxToggleDirective,
-    HorizontalAlignment
+    HorizontalAlignment,
+    scaleInTop,
+    scaleOutTop
 } from 'igniteui-angular';
+import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animate } from '@angular/animations';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -26,8 +29,19 @@ export class OverlayAnimationSampleComponent {
     @ViewChild('mercedesToggle') public mercedesToggle: IgxToggleDirective;
 
     public mouseenter(ev) {
-        this._overlaySettings.positionStrategy.settings.openAnimation.options.params.duration = '3000ms';
-        this._overlaySettings.positionStrategy.settings.closeAnimation.options.params.duration = '3000ms';
+        const openAnimationMetaData: AnimationMetadata[] = [
+            style({ opacity: `0`, transform: `scale(0.5)`, transformOrigin: `50% 50%` }),
+            animate(`3000ms`, style({ opacity: `1`, transform: `scale(1)`, transformOrigin: `50% 50%` }))
+        ];
+        const openAnimation: AnimationReferenceMetadata = animation(openAnimationMetaData);
+        this._overlaySettings.positionStrategy.settings.openAnimation = openAnimation;
+
+        const closeAnimationMetaData: AnimationMetadata[] = [
+            style({ opacity: `1`, transform: `scale(1)`, transformOrigin: `50% 50%` }),
+            animate(`6000ms`, style({ opacity: `0`, transform: `scale(0.5)`, transformOrigin: `50% 50%` }))
+        ];
+        const closeAnimation: AnimationReferenceMetadata = animation(closeAnimationMetaData);
+        this._overlaySettings.positionStrategy.settings.closeAnimation = closeAnimation;
         switch (ev.target.id) {
             case 'audi':
                 this._overlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Left;
