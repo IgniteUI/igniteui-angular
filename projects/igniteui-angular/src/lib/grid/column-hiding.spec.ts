@@ -234,7 +234,7 @@ describe('Column Hiding UI', () => {
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
 
-            const checkbox = getCheckboxInput(name, columnChooserElement, fix);
+            let checkbox = getCheckboxInput(name, columnChooserElement, fix);
             verifyCheckbox(name, true, false, columnChooserElement, fix);
 
             expect(getButtonDisabledState('Show All')).toBe(false);
@@ -247,6 +247,8 @@ describe('Column Hiding UI', () => {
 
             expect(getButtonDisabledState('Show All')).toBe(true, 'Show All button is not disabled!');
             expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All button is not enabled!');
+
+            checkbox = getCheckboxInput(name, columnChooserElement, fix);
 
             checkbox.click();
             fix.detectChanges();
@@ -263,7 +265,7 @@ describe('Column Hiding UI', () => {
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
 
-            const checkbox = getCheckboxInput(name, columnChooserElement, fix);
+            let checkbox = getCheckboxInput(name, columnChooserElement, fix);
             verifyCheckbox(name, false, false, columnChooserElement, fix);
             expect(getButtonDisabledState('Show All')).toBe(true);
             expect(getButtonDisabledState('Hide All')).toBe(false);
@@ -275,6 +277,8 @@ describe('Column Hiding UI', () => {
 
             expect(getButtonDisabledState('Show All')).toBe(false);
             expect(getButtonDisabledState('Hide All')).toBe(true);
+
+            checkbox = getCheckboxInput(name, columnChooserElement, fix);
 
             checkbox.click();
             fix.detectChanges();
@@ -478,37 +482,37 @@ describe('Column Hiding UI', () => {
 
         it('filters columns according to the specified filter criteria.', (async () => {
             columnChooser.filterCriteria = 'd';
-            fix.detectChanges();
             await wait();
+            fix.detectChanges();
 
             const filterInput = getFilterInput() ? getFilterInput().nativeElement : undefined;
             expect(filterInput.value).toBe('d');
             expect(columnChooser.columnItems.length).toBe(5);
 
             columnChooser.filterCriteria += 'a';
-            fix.detectChanges();
             await wait();
+            fix.detectChanges();
 
             expect(filterInput.value).toBe('da');
             expect(columnChooser.columnItems.length).toBe(1);
 
             columnChooser.filterCriteria = '';
             columnChooser.filterCriteria = 'el';
-            fix.detectChanges();
             await wait();
+            fix.detectChanges();
 
             expect(filterInput.value).toBe('el');
             expect(columnChooser.columnItems.length).toBe(2);
 
             columnChooser.filterCriteria = '';
-            fix.detectChanges();
             await wait();
+            fix.detectChanges();
 
             expect(filterInput.value).toBe('');
             expect(columnChooser.columnItems.length).toBe(5);
         }));
 
-        it('- Hide All button operates over the filtered in columns only', (async () => {
+       it('- Hide All button operates over the filtered in columns only', (async () => {
             grid.columns[1].disableHiding = false;
             columnChooser.filterCriteria = 're';
             fix.detectChanges();
