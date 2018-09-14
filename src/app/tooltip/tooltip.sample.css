@@ -2,12 +2,12 @@
     margin-left: 300px;
 }
 
-.switch {
+.bottomMargin {
     margin-bottom: 15px;
 }
 
 .btn {
-    margin-bottom: 15px;
+    margin-right: 10px;
     width: 120px;
 }
 
@@ -17,4 +17,13 @@
     color: white;
     padding: 10px;
     margin-top: 10px;
+}
+
+.cellTooltip {
+    width: 230px;
+    font-size: 13px;
+}
+
+.specIcon:hover {
+    cursor: pointer;
 }
