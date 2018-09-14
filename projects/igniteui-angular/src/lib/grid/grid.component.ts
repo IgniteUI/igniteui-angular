@@ -53,6 +53,7 @@ import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpr
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxTransactionBaseService } from '../services/transaction/transaction-base';
+import { ITransaction, TransactionType } from '../services/transaction/utilities';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -2711,13 +2712,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public addRow(data: any): void {
-        this.data.push(data);
+        const transaction: ITransaction = {id: `addRow${this._newRowTransactionId++}`, type: TransactionType.ADD, newValue: data};
+        if (!this.transactions.add(transaction)) {
+            this.data.push(data);
+        }
         this.onRowAdded.emit({ data });
         this._pipeTrigger++;
         this.cdr.markForCheck();
 
         this.refreshSearch();
     }
+    // tslint:disable-next-line:member-ordering
+    private _newRowTransactionId = 0;
 
     /**
      * Removes the `IgxGridRowComponent` and the corresponding data record by primary key.
@@ -2733,12 +2739,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
             const index = this.gridAPI.get(this.id).data.map((record) => record[this.gridAPI.get(this.id).primaryKey]).indexOf(rowSelector);
             if (index !== -1) {
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                if (editableCell && editableCell.cellID.rowID === rowSelector) {
-                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                const transaction: ITransaction = {id: rowSelector, type: TransactionType.DELETE, newValue: null};
+                if (!this.transactions.add(transaction, this.data[index])) {
+                    const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                    if (editableCell && editableCell.cellID.rowID === rowSelector) {
+                        this.gridAPI.escape_editMode(this.id, editableCell.cellID);
+                    }
+                    this.onRowDeleted.emit({ data: this.data[index] });
+                    this.data.splice(index, 1);
                 }
-                this.onRowDeleted.emit({ data: this.data[index] });
-                this.data.splice(index, 1);
                 if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowSelector)) {
                     this.deselectRows([rowSelector]);
                 } else {

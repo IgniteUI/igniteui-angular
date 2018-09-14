@@ -182,6 +182,9 @@ export class IgxGridTransactionPipe implements PipeTransform {
     constructor(private gridAPI: IgxGridAPIService) { }
 
     transform(collection: any[], id: string, pipeTrigger: number) {
-        return [...collection];
+        const grid = this.gridAPI.get(id);
+        const copy = [...collection];
+        grid.transactions.commit(copy);
+        return copy;
     }
 }
