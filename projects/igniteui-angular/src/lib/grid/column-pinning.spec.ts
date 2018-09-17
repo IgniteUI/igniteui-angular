@@ -184,7 +184,7 @@ describe('Column Pinning UI', () => {
         });
 
         it('doesn\'t pin columns if unpinned area width does not allow it even after hiding a pinned column.', () => {
-            const checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
+            let checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
             checkboxes[0].click();
             checkboxes[1].click();
 
@@ -193,6 +193,7 @@ describe('Column Pinning UI', () => {
 
             expect(grid.pinnedColumns.length).toBe(1);
 
+            checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
             checkboxes[2].click();
             verifyColumnIsPinned(grid.columns[2], false, 1);
 
