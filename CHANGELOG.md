@@ -24,11 +24,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`: The `findNext` and `findPrev` methods now have a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the grid's cells.
     - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
-- `IgxChip`
-    - Introduced event argument types to all `EventEmitter` `@Output`s.
-    - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
-- `IgxChipArea`
-    - Introduced event argument types to all `EventEmitter` `@Output`s.
 - `IgxCombo`
     - Added the following directives for `TemplateRef` assignment for combo templates (item, footer, etc.):
         - Added `IgxComboItemDirective`. Use `[igxComboItem]` in markup to assing a TemplateRef to `combo.itemTemplate`.
@@ -47,6 +42,20 @@ All notable changes for each version of this project will be documented in this 
     - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
     - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
 
+## 6.1.5
+- **General**
+    - `IgxChip`
+        - Introduced event argument types to all `EventEmitter` `@Output`s.
+        - A chip can now be selected with the API with the new `selected` input. The `selected` input overrides the `selectable` input value.
+        - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - `IgxChipArea`
+        - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - `igxFor`
+        - Adding inertia scrolling for touch devices. This also affects the following components that virtualize their content via the igxFor - `igxGrid`, `igxCombo`.
+    - `igxGrid`
+        - Adding inertia scrolling for touch devices.
+    - `igxCombo`
+        - Adding inertia scrolling for touch devices. 
 ## 6.1.3
 - **General**
     - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.
