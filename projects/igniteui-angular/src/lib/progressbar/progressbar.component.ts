@@ -11,8 +11,10 @@ import {
     Output,
     Renderer2,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    ContentChild
 } from '@angular/core';
+import { IgxProcessBarTextTemplateDirective } from './progressbar.common';
 
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
@@ -456,26 +458,38 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     @Input()
     public text: string;
 
-    /**
-     * Sets the text template to be displayed inside the `igxCircularBar`..
-     * ```html
-     * <ng-template #textTemplate>
-     *     <svg:tspan class="progress-circular__text">20</tspan>
-     *     <svg:tspan >Precess</tspan>
-     * </ng-template>
-     * ```
+    @ViewChild('defaultText', { read: TemplateRef })
+    protected defaultTextTemplate: TemplateRef<any>;
+
+    @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective })
+    public textTemplate: IgxProcessBarTextTemplateDirective;
+
+     /**
+     * Returns the `template` of the text
      * ```typescript
-     * @ViewChild("'textTemplate'", {read: TemplateRef })
-     * public textTemplate: TemplateRef<any>;
-     * this.circularBar.textTemplate = this.textTemplate;
+     * let textTemplate = this.circularBar.template;
      * ```
      * @memberof IgxCircularProgressBarComponent
      */
-    @Input()
-    public textTemplate: TemplateRef<any>;
+    public get template(): TemplateRef<any> {
+        return this.textTemplate ? this.textTemplate.template : this.defaultTextTemplate;
+    }
 
     /**
-     *Animation on progress `IgxCircularProgressBarComponent`. By default it is set to true.
+     * Returns the `context` object which represents the `template context` binding into the `circularBar container`
+     * by providing the `$implicit` declaration which is the `IgxCircularProgressBarComponent` itself.
+     * ```typescript
+     * let processComponent =  this.circularBar.context;
+     * ```
+     */
+    public get context(): any {
+        return {
+            $implicit: this
+        };
+    }
+
+    /**
+    *Animation on progress `IgxCircularProgressBarComponent`. By default it is set to true.
      *```html
      *<igx-circular-bar [animate]="false" [value]="50"></igx-circular-bar>
      *```
@@ -681,8 +695,8 @@ export function convertInPercentage(value: number, max: number) {
  * {@link IgxCircularProgressBarComponent} inside your application.
  */
 @NgModule({
-    declarations: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent],
-    exports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent],
+    declarations: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProcessBarTextTemplateDirective],
+    exports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProcessBarTextTemplateDirective],
     imports: [CommonModule]
 })
 export class IgxProgressBarModule {
