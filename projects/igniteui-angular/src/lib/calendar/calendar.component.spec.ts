@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar, ICalendarDate, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from './index';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxCalendar', () => {
     beforeEach(() => {
@@ -288,7 +288,7 @@ describe('IgxCalendar', () => {
             expect(bodyMonth.nativeElement.textContent.trim()).toMatch('8');
         });
 
-        it('should properly render calendar DOM structure', async(() => {
+        it('should properly render calendar DOM structure', () => {
             const calendar = fixture.componentInstance.calendar;
             const today = new Date(Date.now());
             calendar.viewDate = today;
@@ -311,16 +311,13 @@ describe('IgxCalendar', () => {
                     .nativeElement.textContent.trim()
             ).toMatch(today.getDate().toString());
 
-            fixture.whenStable().then(() => {
-                // Hide calendar header when not single selection
-                calendar.selection = 'multi';
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                const calendarHeader = dom.query(By.css('.igx-calendar__header'));
-                expect(calendarHeader).toBeFalsy();
-            });
-        }));
+            // Hide calendar header when not single selection
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+
+            const calendarHeader = dom.query(By.css('.igx-calendar__header'));
+            expect(calendarHeader).toBeFalsy();
+        });
 
         it('Calendar DOM structure - year view | month view', () => {
             const calendar = fixture.componentInstance.calendar;
@@ -361,382 +358,365 @@ describe('IgxCalendar', () => {
             expect(calendar.viewDate.getFullYear()).toEqual(2014);
         });
 
-        it('Calendar selection - single with event', async(() => {
+        it('Calendar selection - single with event', () => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
-            fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            const target = dom.query(By.css('.igx-calendar__date--selected'));
+            const weekDiv = target.parent;
+            const weekDays = weekDiv.queryAll(By.css('span'));
+            const nextDay = new Date(2017, 5, 14);
+
+            expect((calendar.value as Date).toDateString()).toMatch(
+                new Date(2017, 5, 13).toDateString()
+            );
+
+            spyOn(calendar.onSelection, 'emit');
+
+            // Select 14th
+            weekDays[3].triggerEventHandler('click', {});
+
+            fixture.detectChanges();
+
+            expect(calendar.onSelection.emit).toHaveBeenCalled();
+            expect((calendar.value as Date).toDateString()).toMatch(
+                nextDay.toDateString()
+            );
+            expect(
+                weekDays[3].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(true);
+            expect(
+                (fixture.componentInstance.model as Date).toDateString()
+            ).toMatch(nextDay.toDateString());
+            expect(
+                target.nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(false);
+        });
+
+        it('Calendar selection - outside of current month - 1', () => {
+            const dom = fixture.debugElement;
+
+            fixture.detectChanges();
+            const parent = dom.query(
+                By.css('.igx-calendar__body-row:last-child')
+            );
+            const target = parent.queryAll(By.css('span')).pop();
+
+            target.triggerEventHandler('click', {});
+            fixture.detectChanges();
+
+            expect(
+                (fixture.componentInstance.model as Date).toDateString()
+            ).toMatch(new Date(2017, 6, 8).toDateString());
+            expect(
+                dom
+                    .query(By.css('.igx-calendar__header-date'))
+                    .nativeElement.textContent.includes('Jul')
+            ).toBe(true);
+        });
+
+        it('Calendar selection - outside of current month - 2', () => {
+            const dom = fixture.debugElement;
+
+            fixture.detectChanges();
+            const parent = dom.queryAll(By.css('.igx-calendar__body-row'))[1];
+            const target = parent.queryAll(By.css('span')).shift();
+
+            target.triggerEventHandler('click', {});
+            fixture.detectChanges();
+
+            expect(
+                (fixture.componentInstance.model as Date).toDateString()
+            ).toMatch(new Date(2017, 4, 28).toDateString());
+            expect(
+                dom
+                    .query(By.css('.igx-calendar__header-date'))
+                    .nativeElement.textContent.includes('May')
+            ).toBe(true);
+        });
+
+        it('Calendar selection - single through API', () => {
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+            fixture.detectChanges();
+
+            const target = dom.query(By.css('.igx-calendar__date--selected'));
+            const weekDiv = target.parent;
+            const weekDays = weekDiv.queryAll(By.css('span'));
+            const nextDay = new Date(2017, 5, 14);
+
+            expect((calendar.value as Date).toDateString()).toMatch(
+                new Date(2017, 5, 13).toDateString()
+            );
+
+            calendar.selectDate(new Date(2017, 5, 14));
+            fixture.detectChanges();
+
+            expect((calendar.value as Date).toDateString()).toMatch(
+                nextDay.toDateString()
+            );
+            expect(
+                weekDays[3].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(true);
+            expect(
+                (fixture.componentInstance.model as Date).toDateString()
+            ).toMatch(nextDay.toDateString());
+            expect(
+                target.nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(false);
+        });
+
+        it('Calendar selection - multiple with event', () => {
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+            fixture.detectChanges();
+
+            const target = dom.query(By.css('.igx-calendar__date--selected'));
+            const weekDiv = target.parent;
+            const weekDays = weekDiv.queryAll(By.css('span'));
+
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+
+            expect(calendar.value instanceof Array).toBeTruthy();
+            expect(
+                fixture.componentInstance.model instanceof Array
+            ).toBeTruthy();
+            expect((calendar.value as Date[]).length).toEqual(0);
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                0
+            );
+
+            weekDays.forEach((el) => {
+                el.triggerEventHandler('click', {});
                 fixture.detectChanges();
-                const target = dom.query(By.css('.igx-calendar__date--selected'));
-                const weekDiv = target.parent;
-                const weekDays = weekDiv.queryAll(By.css('span'));
-                const nextDay = new Date(2017, 5, 14);
-
-                expect((calendar.value as Date).toDateString()).toMatch(
-                    new Date(2017, 5, 13).toDateString()
-                );
-
-                spyOn(calendar.onSelection, 'emit');
-
-                // Select 14th
-                weekDays[3].triggerEventHandler('click', {});
-
-                fixture.detectChanges();
-
-                expect(calendar.onSelection.emit).toHaveBeenCalled();
-                expect((calendar.value as Date).toDateString()).toMatch(
-                    nextDay.toDateString()
-                );
-                expect(
-                    weekDays[3].nativeElement.classList.contains(
-                        'igx-calendar__date--selected'
-                    )
-                ).toBe(true);
-                expect(
-                    (fixture.componentInstance.model as Date).toDateString()
-                ).toMatch(nextDay.toDateString());
-                expect(
-                    target.nativeElement.classList.contains(
-                        'igx-calendar__date--selected'
-                    )
-                ).toBe(false);
             });
-        }));
 
-        it('Calendar selection - outside of current month - 1', async(() => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const parent = dom.query(
-                    By.css('.igx-calendar__body-row:last-child')
-                );
-                const target = parent.queryAll(By.css('span')).pop();
-
-                target.triggerEventHandler('click', {});
-                fixture.detectChanges();
-
+            expect((calendar.value as Date[]).length).toEqual(7);
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                7
+            );
+            weekDays.forEach((el) => {
                 expect(
-                    (fixture.componentInstance.model as Date).toDateString()
-                ).toMatch(new Date(2017, 6, 8).toDateString());
-                expect(
-                    dom
-                        .query(By.css('.igx-calendar__header-date'))
-                        .nativeElement.textContent.includes('Jul')
-                ).toBe(true);
-            });
-        }));
-
-        it('Calendar selection - outside of current month - 2', async(() => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const parent = dom.queryAll(By.css('.igx-calendar__body-row'))[1];
-                const target = parent.queryAll(By.css('span')).shift();
-
-                target.triggerEventHandler('click', {});
-                fixture.detectChanges();
-
-                expect(
-                    (fixture.componentInstance.model as Date).toDateString()
-                ).toMatch(new Date(2017, 4, 28).toDateString());
-                expect(
-                    dom
-                        .query(By.css('.igx-calendar__header-date'))
-                        .nativeElement.textContent.includes('May')
-                ).toBe(true);
-            });
-        }));
-
-        it('Calendar selection - single through API', async(() => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const target = dom.query(By.css('.igx-calendar__date--selected'));
-                const weekDiv = target.parent;
-                const weekDays = weekDiv.queryAll(By.css('span'));
-                const nextDay = new Date(2017, 5, 14);
-
-                expect((calendar.value as Date).toDateString()).toMatch(
-                    new Date(2017, 5, 13).toDateString()
-                );
-
-                calendar.selectDate(new Date(2017, 5, 14));
-                fixture.detectChanges();
-
-                expect((calendar.value as Date).toDateString()).toMatch(
-                    nextDay.toDateString()
-                );
-                expect(
-                    weekDays[3].nativeElement.classList.contains(
-                        'igx-calendar__date--selected'
-                    )
-                ).toBe(true);
-                expect(
-                    (fixture.componentInstance.model as Date).toDateString()
-                ).toMatch(nextDay.toDateString());
-                expect(
-                    target.nativeElement.classList.contains(
-                        'igx-calendar__date--selected'
-                    )
-                ).toBe(false);
-            });
-        }));
-
-        it('Calendar selection - multiple with event', async(() => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const target = dom.query(By.css('.igx-calendar__date--selected'));
-                const weekDiv = target.parent;
-                const weekDays = weekDiv.queryAll(By.css('span'));
-
-                calendar.selection = 'multi';
-                fixture.detectChanges();
-
-                expect(calendar.value instanceof Array).toBeTruthy();
-                expect(
-                    fixture.componentInstance.model instanceof Array
-                ).toBeTruthy();
-                expect((calendar.value as Date[]).length).toEqual(0);
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    0
-                );
-
-                weekDays.forEach((el) => {
-                    el.triggerEventHandler('click', {});
-                    fixture.detectChanges();
-                });
-
-                expect((calendar.value as Date[]).length).toEqual(7);
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    7
-                );
-                weekDays.forEach((el) => {
-                    expect(
-                        el.nativeElement.classList.contains(
-                            'igx-calendar__date--selected'
-                        )
-                    ).toBe(true);
-                });
-
-                // Deselect last day
-                weekDays[weekDays.length - 1].triggerEventHandler('click', {});
-                fixture.detectChanges();
-
-                expect((calendar.value as Date[]).length).toEqual(6);
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    6
-                );
-                expect(
-                    weekDays[weekDays.length - 1].nativeElement.classList.contains(
-                        'igx-calendar__date--selected'
-                    )
-                ).toBe(false);
-            });
-        }));
-
-        it('Calendar selection - multiple through API', async(() => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const target = dom.query(By.css('.igx-calendar__date--selected'));
-                const weekDiv = target.parent;
-                const weekDays = weekDiv.queryAll(By.css('span'));
-
-                calendar.selection = 'multi';
-                fixture.detectChanges();
-
-                const lastDay = new Date(2017, 5, 17);
-
-                // Single date
-                calendar.selectDate(lastDay);
-                fixture.detectChanges();
-
-                expect(
-                    (fixture.componentInstance.model as Date[])[0].toDateString()
-                ).toMatch(lastDay.toDateString());
-                expect(calendar.value[0].toDateString()).toMatch(
-                    lastDay.toDateString()
-                );
-                expect(
-                    weekDays[weekDays.length - 1].nativeElement.classList.contains(
-                        'igx-calendar__date--selected'
-                    )
-                ).toBe(true);
-
-                // Multiple dates
-                calendar.selectDate([new Date(2017, 5, 11), new Date(2017, 5, 12)]);
-                fixture.detectChanges();
-
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    3
-                );
-                expect((calendar.value as Date[]).length).toEqual(3);
-                // 11th June
-                expect(
-                    weekDays[0].nativeElement.classList.contains(
-                        'igx-calendar__date--selected'
-                    )
-                ).toBe(true);
-                // 12th June
-                expect(
-                    weekDays[1].nativeElement.classList.contains(
+                    el.nativeElement.classList.contains(
                         'igx-calendar__date--selected'
                     )
                 ).toBe(true);
             });
-        }));
 
-        it('Calendar selection - range with event', async(() => {
+            // Deselect last day
+            weekDays[weekDays.length - 1].triggerEventHandler('click', {});
+            fixture.detectChanges();
+
+            expect((calendar.value as Date[]).length).toEqual(6);
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                6
+            );
+            expect(
+                weekDays[weekDays.length - 1].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(false);
+        });
+
+        it('Calendar selection - multiple through API', () => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const target = dom.query(By.css('.igx-calendar__date--selected'));
-                const weekDiv = target.parent;
-                const weekDays = weekDiv.queryAll(By.css('span'));
+            fixture.detectChanges();
+            const target = dom.query(By.css('.igx-calendar__date--selected'));
+            const weekDiv = target.parent;
+            const weekDays = weekDiv.queryAll(By.css('span'));
 
-                calendar.selection = 'range';
-                fixture.detectChanges();
+            calendar.selection = 'multi';
+            fixture.detectChanges();
 
-                const lastDay = new Date(2017, 5, 17);
-                const firstDay = new Date(2017, 5, 11);
+            const lastDay = new Date(2017, 5, 17);
 
-                // Toggle range selection...
-                weekDays[0].triggerEventHandler('click', {});
-                fixture.detectChanges();
+            // Single date
+            calendar.selectDate(lastDay);
+            fixture.detectChanges();
 
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    1
-                );
-                expect((calendar.value as Date[]).length).toEqual(1);
+            expect(
+                (fixture.componentInstance.model as Date[])[0].toDateString()
+            ).toMatch(lastDay.toDateString());
+            expect(calendar.value[0].toDateString()).toMatch(
+                lastDay.toDateString()
+            );
+            expect(
+                weekDays[weekDays.length - 1].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(true);
+
+            // Multiple dates
+            calendar.selectDate([new Date(2017, 5, 11), new Date(2017, 5, 12)]);
+            fixture.detectChanges();
+
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                3
+            );
+            expect((calendar.value as Date[]).length).toEqual(3);
+            // 11th June
+            expect(
+                weekDays[0].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(true);
+            // 12th June
+            expect(
+                weekDays[1].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(true);
+        });
+
+        it('Calendar selection - range with event', () => {
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            fixture.detectChanges();
+            const target = dom.query(By.css('.igx-calendar__date--selected'));
+            const weekDiv = target.parent;
+            const weekDays = weekDiv.queryAll(By.css('span'));
+
+            calendar.selection = 'range';
+            fixture.detectChanges();
+
+            const lastDay = new Date(2017, 5, 17);
+            const firstDay = new Date(2017, 5, 11);
+
+            // Toggle range selection...
+            weekDays[0].triggerEventHandler('click', {});
+            fixture.detectChanges();
+
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                1
+            );
+            expect((calendar.value as Date[]).length).toEqual(1);
+            expect(
+                (fixture.componentInstance.model as Date[])[0].toDateString()
+            ).toMatch(firstDay.toDateString());
+            expect(
+                weekDays[0].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(true);
+
+            // ...and cancel it
+            weekDays[0].triggerEventHandler('click', {});
+            fixture.detectChanges();
+
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                0
+            );
+            expect((calendar.value as Date[]).length).toEqual(0);
+            expect(
+                weekDays[0].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(false);
+
+            // Toggle range selection...
+            weekDays[0].triggerEventHandler('click', {});
+            fixture.detectChanges();
+
+            // ...and complete it
+            weekDays[weekDays.length - 1].triggerEventHandler('click', {});
+            fixture.detectChanges();
+
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                7
+            );
+            expect((calendar.value as Date[]).length).toEqual(7);
+            expect(calendar.value[0].toDateString()).toMatch(
+                firstDay.toDateString()
+            );
+            expect(
+                calendar.value[
+                    (calendar.value as Date[]).length - 1
+                ].toDateString()
+            ).toMatch(lastDay.toDateString());
+            weekDays.forEach((el) => {
                 expect(
-                    (fixture.componentInstance.model as Date[])[0].toDateString()
-                ).toMatch(firstDay.toDateString());
-                expect(
-                    weekDays[0].nativeElement.classList.contains(
+                    el.nativeElement.classList.contains(
                         'igx-calendar__date--selected'
                     )
                 ).toBe(true);
-
-                // ...and cancel it
-                weekDays[0].triggerEventHandler('click', {});
-                fixture.detectChanges();
-
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    0
-                );
-                expect((calendar.value as Date[]).length).toEqual(0);
-                expect(
-                    weekDays[0].nativeElement.classList.contains(
-                        'igx-calendar__date--selected'
-                    )
-                ).toBe(false);
-
-                // Toggle range selection...
-                weekDays[0].triggerEventHandler('click', {});
-                fixture.detectChanges();
-
-                // ...and complete it
-                weekDays[weekDays.length - 1].triggerEventHandler('click', {});
-                fixture.detectChanges();
-
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    7
-                );
-                expect((calendar.value as Date[]).length).toEqual(7);
-                expect(calendar.value[0].toDateString()).toMatch(
-                    firstDay.toDateString()
-                );
-                expect(
-                    calendar.value[
-                        (calendar.value as Date[]).length - 1
-                    ].toDateString()
-                ).toMatch(lastDay.toDateString());
-                weekDays.forEach((el) => {
-                    expect(
-                        el.nativeElement.classList.contains(
-                            'igx-calendar__date--selected'
-                        )
-                    ).toBe(true);
-                });
             });
-        }));
+        });
 
-        it('Calendar selection - range through API', async(() => {
+        it('Calendar selection - range through API', () => {
             const calendar = fixture.componentInstance.calendar;
             const dom = fixture.debugElement;
 
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const target = dom.query(By.css('.igx-calendar__date--selected'));
-                const weekDiv = target.parent;
-                const weekDays = weekDiv.queryAll(By.css('span'));
+            fixture.detectChanges();
+            const target = dom.query(By.css('.igx-calendar__date--selected'));
+            const weekDiv = target.parent;
+            const weekDays = weekDiv.queryAll(By.css('span'));
 
-                calendar.selection = 'range';
-                fixture.detectChanges();
+            calendar.selection = 'range';
+            fixture.detectChanges();
 
-                const lastDay = new Date(2017, 5, 17);
-                const midDay = new Date(2017, 5, 14);
-                const firstDay = new Date(2017, 5, 11);
+            const lastDay = new Date(2017, 5, 17);
+            const midDay = new Date(2017, 5, 14);
+            const firstDay = new Date(2017, 5, 11);
 
-                calendar.selectDate([firstDay, lastDay]);
-                fixture.detectChanges();
+            calendar.selectDate([firstDay, lastDay]);
+            fixture.detectChanges();
 
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    7
-                );
-                expect((calendar.value as Date[]).length).toEqual(7);
-                expect(calendar.value[0].toDateString()).toMatch(
-                    firstDay.toDateString()
-                );
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                7
+            );
+            expect((calendar.value as Date[]).length).toEqual(7);
+            expect(calendar.value[0].toDateString()).toMatch(
+                firstDay.toDateString()
+            );
+            expect(
+                calendar.value[
+                    (calendar.value as Date[]).length - 1
+                ].toDateString()
+            ).toMatch(lastDay.toDateString());
+            weekDays.forEach((el) => {
                 expect(
-                    calendar.value[
-                        (calendar.value as Date[]).length - 1
-                    ].toDateString()
-                ).toMatch(lastDay.toDateString());
-                weekDays.forEach((el) => {
-                    expect(
-                        el.nativeElement.classList.contains(
-                            'igx-calendar__date--selected'
-                        )
-                    ).toBe(true);
-                });
-
-                calendar.selectDate([firstDay, midDay]);
-                fixture.detectChanges();
-
-                expect((fixture.componentInstance.model as Date[]).length).toEqual(
-                    4
-                );
-                expect((calendar.value as Date[]).length).toEqual(4);
-                expect(calendar.value[0].toDateString()).toMatch(
-                    firstDay.toDateString()
-                );
-                expect(
-                    calendar.value[
-                        (calendar.value as Date[]).length - 1
-                    ].toDateString()
-                ).toMatch(midDay.toDateString());
-                for (const i of [0, 1, 2, 3]) {
-                    expect(
-                        weekDays[i].nativeElement.classList.contains(
-                            'igx-calendar__date--selected'
-                        )
-                    ).toBe(true);
-                }
+                    el.nativeElement.classList.contains(
+                        'igx-calendar__date--selected'
+                    )
+                ).toBe(true);
             });
-        }));
+
+            calendar.selectDate([firstDay, midDay]);
+            fixture.detectChanges();
+
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                4
+            );
+            expect((calendar.value as Date[]).length).toEqual(4);
+            expect(calendar.value[0].toDateString()).toMatch(
+                firstDay.toDateString()
+            );
+            expect(
+                calendar.value[
+                    (calendar.value as Date[]).length - 1
+                ].toDateString()
+            ).toMatch(midDay.toDateString());
+            for (const i of [0, 1, 2, 3]) {
+                expect(
+                    weekDays[i].nativeElement.classList.contains(
+                        'igx-calendar__date--selected'
+                    )
+                ).toBe(true);
+            }
+        });
 
         it('Calendar keyboard navigation - PageUp/PageDown', () => {
             const calendar = fixture.componentInstance.calendar;
@@ -768,74 +748,70 @@ describe('IgxCalendar', () => {
             expect(calendar.viewDate.getFullYear()).toEqual(2018);
         });
 
-        it('Calendar keyboard navigation - Home/End/Enter', async(() => {
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const calendar = fixture.componentInstance.calendar;
-                const dom = fixture.debugElement;
-                const component = dom.query(By.css('.igx-calendar'));
+        it('Calendar keyboard navigation - Home/End/Enter', () => {
+            fixture.detectChanges();
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+            const component = dom.query(By.css('.igx-calendar'));
 
-                const days = calendar.dates.filter((day) => day.isCurrentMonth);
-                const firstDay = days[0];
-                const lastDay = days[days.length - 1];
+            const days = calendar.dates.filter((day) => day.isCurrentMonth);
+            const firstDay = days[0];
+            const lastDay = days[days.length - 1];
 
-                UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Home');
-                fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Home');
+            fixture.detectChanges();
 
-                expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
-                expect(document.activeElement.textContent.trim()).toMatch('1');
+            expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
+            expect(document.activeElement.textContent.trim()).toMatch('1');
 
-                UIInteractions.simulateKeyDownEvent(component.nativeElement, 'End');
-                fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(component.nativeElement, 'End');
+            fixture.detectChanges();
 
-                expect(document.activeElement.textContent).toMatch(lastDay.nativeElement.textContent);
-                expect(document.activeElement.textContent.trim()).toMatch('30');
+            expect(document.activeElement.textContent).toMatch(lastDay.nativeElement.textContent);
+            expect(document.activeElement.textContent.trim()).toMatch('30');
 
-                UIInteractions.simulateKeyDownEvent(firstDay.nativeElement, 'Enter');
-                fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(firstDay.nativeElement, 'Enter');
+            fixture.detectChanges();
 
-                expect((calendar.value as Date).toDateString()).toMatch(new Date(2017, 5, 1).toDateString());
-            });
-        }));
+            expect((calendar.value as Date).toDateString()).toMatch(new Date(2017, 5, 1).toDateString());
+        });
 
-        it('Calendar keyboard navigation - Arrow keys', async(() => {
-            fixture.whenStable().then(() => {
-                const calendar = fixture.componentInstance.calendar;
-                const dom = fixture.debugElement;
-                const component = dom.query(By.css('.igx-calendar'));
+        it('Calendar keyboard navigation - Arrow keys', () => {
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+            const component = dom.query(By.css('.igx-calendar'));
 
-                const days = calendar.dates.filter((day) => day.isCurrentMonth);
-                const firstDay = days[0];
+            const days = calendar.dates.filter((day) => day.isCurrentMonth);
+            const firstDay = days[0];
 
-                UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Home');
-                fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Home');
+            fixture.detectChanges();
 
-                expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
-                expect(document.activeElement.textContent.trim()).toMatch('1');
+            expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
+            expect(document.activeElement.textContent.trim()).toMatch('1');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
-                fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
 
-                expect(document.activeElement.textContent.trim()).toMatch('8');
+            expect(document.activeElement.textContent.trim()).toMatch('8');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-                fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
 
-                expect(document.activeElement.textContent.trim()).toMatch('7');
+            expect(document.activeElement.textContent.trim()).toMatch('7');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
-                fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+            fixture.detectChanges();
 
-                expect(document.activeElement.textContent.trim()).toMatch('8');
+            expect(document.activeElement.textContent.trim()).toMatch('8');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
-                fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+            fixture.detectChanges();
 
-                expect(document.activeElement.textContent.trim()).toMatch('1');
-            });
-        }));
+            expect(document.activeElement.textContent.trim()).toMatch('1');
+        });
 
-        it('Calendar date should persist the focus when select date in the (next/prev) month.', ((done) => {
+        it('Calendar date should persist the focus when select date in the (next/prev) month.', async () => {
             const component = fixture.debugElement.query(By.css('.igx-calendar'));
             const calendar = fixture.componentInstance.calendar;
             const calendarMonth = calendar.getCalendarMonth;
@@ -854,19 +830,16 @@ describe('IgxCalendar', () => {
 
             UIInteractions.simulateKeyDownEvent(date, 'Enter');
             fixture.detectChanges();
-            setTimeout(() => {
-                fixture.detectChanges();
-                date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
-                expect(document.activeElement).toBe(date);
-                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement, true);
-                fixture.detectChanges();
-                setTimeout(() => {
-                    fixture.detectChanges();
-                    expect(document.activeElement.textContent.trim()).toMatch('2');
-                    done();
-                }, 500);
-            }, 500);
-        }));
+            await wait(500);
+
+            date = calendar.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
+            expect(document.activeElement).toBe(date);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement, true);
+            fixture.detectChanges();
+            await wait(500);
+
+            expect(document.activeElement.textContent.trim()).toMatch('2');
+        });
     });
 
     it('Deselect using API. Should deselect in "single" selection mode.', () => {
@@ -888,13 +861,14 @@ describe('IgxCalendar', () => {
         expect(selectedDate).toBe(null);
     });
 
-    it('Deselect using API. Should deselect in "multi" selection mode.', async(() => {
+    it('Deselect using API. Should deselect in "multi" selection mode.', async () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const ci = fixture.componentInstance;
         const calendar = ci.calendar;
         ci.model = [];
         calendar.selection = 'multi';
         fixture.detectChanges();
+        await wait(50);
 
         const year = calendar.viewDate.getFullYear();
         const month = calendar.viewDate.getMonth();
@@ -904,32 +878,29 @@ describe('IgxCalendar', () => {
             dates.push(new Date(year, month, i + 1));
         }
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            calendar.selectDate(dates);
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            const evenDates = dates.filter(d => d.getDate() % 2 === 0);
-            calendar.deselectDate(evenDates);
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
-            const selectedDates: Date[] = calendar.value as Date[];
-            for (const selectedDate of selectedDates) {
-                expect(oddDates.indexOf(selectedDate)).toBeGreaterThan(-1);
-            }
-        });
-    }));
+        fixture.detectChanges();
+        calendar.selectDate(dates);
 
-    it('Deselect using API. Should deselect in "range" selection mode.', async(() => {
+        fixture.detectChanges();
+        const evenDates = dates.filter(d => d.getDate() % 2 === 0);
+        calendar.deselectDate(evenDates);
+
+        fixture.detectChanges();
+        const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
+        const selectedDates: Date[] = calendar.value as Date[];
+        for (const selectedDate of selectedDates) {
+            expect(oddDates.indexOf(selectedDate)).toBeGreaterThan(-1);
+        }
+    });
+
+    it('Deselect using API. Should deselect in "range" selection mode.', async () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const ci = fixture.componentInstance;
         const calendar = ci.calendar;
         ci.model = [];
         calendar.selection = 'range';
         fixture.detectChanges();
+        await wait(50);
 
         const startDate = calendar.viewDate;
         const endDate = new Date(calendar.viewDate);
@@ -939,39 +910,33 @@ describe('IgxCalendar', () => {
         const endDateDeselect = new Date(endDate);
         endDateDeselect.setDate(endDate.getDate() - 7);
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            calendar.selectDate(startDate);
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            calendar.selectDate(endDate);
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            calendar.deselectDate([startDateDeselect, endDateDeselect]);
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            const selectedDates: Date[] = calendar.value as Date[];
-            const selectedDatesMs = selectedDates.map(d => new Date(
-                d.getFullYear(), d.getMonth(), d.getDate()).getTime());
-            expect(selectedDates.length).toBe(7);
-            const expectedSelectedDates = [];
+        calendar.selectDate(startDate);
+        fixture.detectChanges();
 
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(endDate);
-                date.setDate(date.getDate() - i);
-                expectedSelectedDates.push(date);
-            }
+        calendar.selectDate(endDate);
+        fixture.detectChanges();
 
-            const expectedSelectedDatesInMs = expectedSelectedDates.map(d => new Date(
-                d.getFullYear(), d.getMonth(), d.getDate()).getTime());
-            for (const expectedSelectedDate of expectedSelectedDatesInMs) {
-                expect(selectedDatesMs.indexOf(expectedSelectedDate)).toBeGreaterThan(-1);
-            }
-        });
-    }));
+        calendar.deselectDate([startDateDeselect, endDateDeselect]);
+        fixture.detectChanges();
+
+        const selectedDates: Date[] = calendar.value as Date[];
+        const selectedDatesMs = selectedDates.map(d => new Date(
+            d.getFullYear(), d.getMonth(), d.getDate()).getTime());
+        expect(selectedDates.length).toBe(7);
+        const expectedSelectedDates = [];
+
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(endDate);
+            date.setDate(date.getDate() - i);
+            expectedSelectedDates.push(date);
+        }
+
+        const expectedSelectedDatesInMs = expectedSelectedDates.map(d => new Date(
+            d.getFullYear(), d.getMonth(), d.getDate()).getTime());
+        for (const expectedSelectedDate of expectedSelectedDatesInMs) {
+            expect(selectedDatesMs.indexOf(expectedSelectedDate)).toBeGreaterThan(-1);
+        }
+    });
 
     it('Deselect using API. Should deselect all in "single" mode.', () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
@@ -992,13 +957,14 @@ describe('IgxCalendar', () => {
         expect(selectedDate).toBe(null);
     });
 
-    it('Deselect using API. Should deselect all in "multi" mode.', async(() => {
+    it('Deselect using API. Should deselect all in "multi" mode.', async () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const ci = fixture.componentInstance;
         const calendar = ci.calendar;
         ci.model = [];
         calendar.selection = 'multi';
         fixture.detectChanges();
+        await wait(50);
 
         const year = calendar.viewDate.getFullYear();
         const month = calendar.viewDate.getMonth();
@@ -1008,49 +974,39 @@ describe('IgxCalendar', () => {
             dates.push(new Date(year, month, i + 1));
         }
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            calendar.selectDate(dates);
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            calendar.deselectDate();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(calendar.value).toEqual([]);
-        });
-    }));
+        calendar.selectDate(dates);
+        fixture.detectChanges();
 
-    it('Deselect using API. Should deselect all in "range" mode.', async(() => {
+        calendar.deselectDate();
+        fixture.detectChanges();
+
+        expect(calendar.value).toEqual([]);
+    });
+
+    it('Deselect using API. Should deselect all in "range" mode.', async () => {
         const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
         const ci = fixture.componentInstance;
         const calendar = ci.calendar;
         ci.model = [];
         calendar.selection = 'range';
         fixture.detectChanges();
+        await wait(50);
 
         const startDate = calendar.viewDate;
         const endDate = new Date(calendar.viewDate);
         endDate.setDate(endDate.getDate() + 7);
 
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            calendar.selectDate(startDate);
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            calendar.selectDate(endDate);
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            calendar.deselectDate();
-            return fixture.whenStable();
-        }).then(() => {
-            fixture.detectChanges();
-            expect(calendar.value).toEqual([]);
-        });
-    }));
+        calendar.selectDate(startDate);
+        fixture.detectChanges();
+
+        calendar.selectDate(endDate);
+        fixture.detectChanges();
+
+        calendar.deselectDate();
+        fixture.detectChanges();
+
+        expect(calendar.value).toEqual([]);
+    });
 });
 
 @Component({
