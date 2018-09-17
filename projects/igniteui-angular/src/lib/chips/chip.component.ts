@@ -10,14 +10,11 @@
     AfterViewInit,
     Renderer2
 } from '@angular/core';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 import { DisplayDensity } from '../core/utils';
 import {
     IgxDragDirective,
     IDragBaseEventArgs,
-    IDragStartEventArgs,
-    IgxDropEnterEventArgs
+    IDragStartEventArgs
 } from '../directives/dragdrop/dragdrop.directive';
 
 
