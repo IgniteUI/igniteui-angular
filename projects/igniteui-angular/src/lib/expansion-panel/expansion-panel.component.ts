@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { growVerOut, growVerIn } from '../animations/main';
-import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
+import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 
 let NEXT_ID = 0;
 
@@ -56,7 +56,7 @@ export class IgxExpansionPanelComponent {
     public onExpanded = new EventEmitter<any>();
 
     public get headerId() {
-        return this.title ? this.title.id : '';
+        return this.header ? `${this.id}-header` : '';
     }
     constructor(
         public cdr: ChangeDetectorRef,
@@ -66,8 +66,8 @@ export class IgxExpansionPanelComponent {
     @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent), { read: IgxExpansionPanelBodyComponent })
     public body: IgxExpansionPanelBodyComponent;
 
-    @ContentChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
-    public title: IgxExpansionPanelTitleDirective;
+    @ContentChild(forwardRef(() => IgxExpansionPanelHeaderComponent), { read: IgxExpansionPanelHeaderComponent })
+    public header: IgxExpansionPanelHeaderComponent;
 
 
     private playOpenAnimation(cb: () => void) {

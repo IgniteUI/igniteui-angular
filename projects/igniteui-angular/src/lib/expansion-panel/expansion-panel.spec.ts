@@ -730,7 +730,7 @@ describe('igxExpansionPanel', () => {
             const panelElement = panel.elementRef.nativeElement;
             const header = fixture.componentInstance.header;
             const headerElement = header.elementRef.nativeElement;
-            const title = fixture.componentInstance.expansionPanel.title;
+            const title = fixture.componentInstance.expansionPanel.header;
             fixture.detectChanges();
             // IgxExpansionPanelHeaderComponent host
             expect(headerElement.getAttribute('aria-level')).toEqual('3');
@@ -785,7 +785,7 @@ describe('igxExpansionPanel', () => {
             const panelElement = panel.elementRef.nativeElement;
             const header = fixture.componentInstance.header;
             const headerElement = header.elementRef.nativeElement;
-            const title = panel.title;
+            const title = panel.header;
             panel.expand();
             tick();
             fixture.detectChanges();
@@ -811,7 +811,7 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
             const panelElement = panel.elementRef.nativeElement;
-            const title = fixture.componentInstance.expansionPanel.title;
+            const title = fixture.componentInstance.expansionPanel.header;
             panel.expand();
             tick();
             fixture.detectChanges();

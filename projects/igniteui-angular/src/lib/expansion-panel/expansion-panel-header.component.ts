@@ -33,6 +33,7 @@ export enum ICON_POSITION {
 export class IgxExpansionPanelHeaderComponent {
      // properties section
     private _iconTemplate = false;
+    public id = '';
 
     @ContentChild(IgxExpansionPanelIconDirective)
     public set iconTemplate(val: any) {
@@ -42,13 +43,6 @@ export class IgxExpansionPanelHeaderComponent {
     public get iconTemplate(): any {
         return this._iconTemplate;
     }
-
-    @ContentChild(IgxExpansionPanelTitleDirective)
-    public title: IgxExpansionPanelTitleDirective;
-
-    @HostBinding('attr.aria-labelledby')
-    @Input()
-    public labelledby = this.title ? this.title.id : null;
 
     @HostBinding('attr.aria-level')
     @Input()
@@ -82,7 +76,9 @@ export class IgxExpansionPanelHeaderComponent {
     public disabled = false;
 
     constructor(@Host() public panel: IgxExpansionPanelComponent, public cdr: ChangeDetectorRef,
-     public elementRef: ElementRef, private renderer: Renderer2) { }
+     public elementRef: ElementRef) {
+         this.id = `${this.panel.id}-header`;
+     }
 
      @HostListener('keydown.Enter', ['$event'])
      @HostListener('keydown.Space', ['$event'])
