@@ -6,9 +6,9 @@
 
 1. Hierarchical Grid POC (Proof of concept) [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)
 2. Tree Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2530)
-3. Implement number-of-records-based rendering for igxGrid
+3. Implement number-of-records-based rendering for igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)
 4. Advanced Filtering Dialog
-5. Quick Per-column Search in the igxGrid
+5. Quick Per-column Search in the igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/542)
 6. Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
 7. Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
 8. Typography Updates 
