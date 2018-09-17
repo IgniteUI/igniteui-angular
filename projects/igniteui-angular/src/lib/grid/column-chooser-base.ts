@@ -35,6 +35,9 @@ export abstract class ColumnChooserBase implements OnDestroy {
         if (value) {
             this._gridColumns = value;
             this.createColumnItems();
+            if (this.filterCriteria) {
+                this.filter();
+            }
         }
     }
     /**
