@@ -233,9 +233,9 @@ export interface IGridComponent {
     triggerRowSelectionChange(newSelectionAsSet: Set<any>,
         row?: IgxRowComponent<IGridComponent>, event?: Event, headerStatus?: boolean);
     scrollTo(row: any, column: any);
-    focusNextCell(rowIndex: number, columnIndex: number, dir?: string);
-    navigateDown(rowIndex: number, columnIndex: number);
-    navigateUp(rowIndex: number, columnIndex: number);
+    focusNextCell(rowIndex: number, columnIndex: number, dir?: string, event?);
+    navigateDown(rowIndex: number, columnIndex: number, event?);
+    navigateUp(rowIndex: number, columnIndex: number, event?);
     scrollHandler(event);
     enableSummaries(...rest);
 }

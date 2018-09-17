@@ -29,6 +29,8 @@ import {
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
     IgxColumnMovingService,
+    IgxDatePipeComponent,
+    IgxDecimalPipeComponent
 } from './grid-common.misc';
 import {
     IgxGridFilteringPipe,
@@ -58,7 +60,9 @@ import { IgxTemplateOutletModule } from '../directives/template-outlet/template_
       IgxColumnResizerDirective,
       IgxColumnMovingDragDirective,
       IgxColumnMovingDropDirective,
-      IgxRowComponent
+      IgxRowComponent,
+      IgxDatePipeComponent,
+      IgxDecimalPipeComponent
     ],
     entryComponents: [
       IgxColumnComponent,
@@ -96,7 +100,9 @@ import { IgxTemplateOutletModule } from '../directives/template-outlet/template_
       IgxDropDownModule,
       IgxButtonGroupModule,
       IgxColumnPinningModule,
-      IgxRowComponent
+      IgxRowComponent,
+      IgxDatePipeComponent,
+      IgxDecimalPipeComponent
     ],
     imports: [
       CommonModule,

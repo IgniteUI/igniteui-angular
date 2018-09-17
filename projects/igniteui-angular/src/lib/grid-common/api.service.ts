@@ -95,7 +95,7 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.zone.runOutsideAngular(() => {
             grid.document.defaultView.addEventListener('resize', this.resizeHandler);
         });
-        this.derivePossibleWidth(id);
+        this.calculateGridWidth(id);
         this.initPinning(id);
         grid.reflow();
         grid.onDensityChanged.pipe(takeUntil(this.getDestroy(id))).subscribe(() => {
@@ -613,6 +613,17 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
+    public calculateGridSizes(id: string) {
+        const grid = this.get(id);
+        this.derivePossibleWidth(id);
+        grid.cdr.detectChanges();
+        this.calculateGridHeight(id);
+        if (grid.rowSelectable) {
+            grid.calcRowCheckboxWidth = grid.headerCheckboxContainer.nativeElement.clientWidth;
+        }
+        grid.cdr.detectChanges();
+    }
+
     private scrollDirective(id: string, directive: IgxForOfDirective<any>, goal: number): void {
         if (!directive) {
             return;
@@ -878,43 +889,44 @@ export class IGridAPIService <T extends IGridComponent> {
     }
 
 
-        /**
+    /**
      * @hidden
      */
-    protected initColumns(id, collection: QueryList<IgxColumnComponent>, cb: any = null) {
+    protected initColumns(id: string, collection: QueryList<IgxColumnComponent>, cb: any = null) {
         const grid = this.get(id);
-        if (grid.columns.length !== collection.length) {
-            // XXX: Deprecate index
-            grid.columns = grid.columnList.toArray();
-        }
-        const _columnsWithNoSetWidths = [];
-
+        // XXX: Deprecate index
+        grid.columns = grid.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
-            column.gridID = grid.id;
+            column.gridID = id;
+            column.defaultWidth = grid.columnWidth;
+
             if (cb) {
                 cb(column);
             }
-            if ((grid.columnsWithNoSetWidths === null && !column.width) ||
-                (grid.columnsWithNoSetWidths !== null && grid.columnsWithNoSetWidths.indexOf(column) !== -1)) {
-                column.width = grid.columnWidth;
-
-                if (!column.hidden) {
-                    _columnsWithNoSetWidths.push(column);
-                }
-            }
         });
 
-        grid.columnsWithNoSetWidths = _columnsWithNoSetWidths;
         this.reinitPinStates(id);
     }
 
-
+    /**
+     * @hidden
+     */
     protected reinitPinStates(id: string) {
         const grid = this.get(id);
-        if (grid.hasColumnGroups) {
-            grid.pinnedColumns = grid.columnList.filter((c) => c.pinned);
-        }
-        grid.unpinnedColumns = grid.columnList.filter((c) => !c.pinned);
+
+        grid.pinnedColumns.splice(0);
+        grid.columns.map((c) => {
+            if (c.pinned) {
+                grid.pinnedColumns.push(c);
+            }
+        });
+
+        grid.unpinnedColumns.splice(0);
+        grid.columns.map((c) => {
+            if (!c.pinned) {
+                grid.unpinnedColumns.push(c);
+            }
+        });
     }
 
       /**
@@ -939,37 +951,32 @@ export class IGridAPIService <T extends IGridComponent> {
         let computedWidth = parseInt(
             grid.document.defaultView.getComputedStyle(grid.nativeElement).getPropertyValue('width'), 10);
 
-        let maxColumnWidth = Math.max(
-            ...grid.visibleColumns.map((col) => parseInt(col.width, 10))
-                .filter((width) => !isNaN(width))
-        );
-
         if (grid.rowSelectable) {
             computedWidth -= grid.headerCheckboxContainer.nativeElement.clientWidth;
         }
 
-        if (grid.columnsWithNoSetWidths === null) {
-            grid.columnsWithNoSetWidths = grid.visibleColumns.filter((col) => !col.columnGroup && col.width === null);
-        }
+        const visibleChildColumns = grid.visibleColumns.filter(c => !c.columnGroup);
 
-        const sumExistingWidths = grid.visibleColumns
-            .filter((col) => !col.columnGroup && grid.columnsWithNoSetWidths.indexOf(col) === -1)
+        const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
+        const columnsToSize = visibleChildColumns.length - columnsWithSetWidths.length;
+
+        const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
-        maxColumnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / grid.columnsWithNoSetWidths.length, MINIMUM_COLUMN_WIDTH) :
-            Math.max((computedWidth - sumExistingWidths) / grid.columnsWithNoSetWidths.length, MINIMUM_COLUMN_WIDTH);
+        const columnWidth = !Number.isFinite(sumExistingWidths) ?
+            Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH);
 
-        return maxColumnWidth.toString();
+        return columnWidth.toString();
     }
 
-    private checkIfGridIsAdded(node, id): boolean {
+    private checkIfGridIsAdded(id, node): boolean {
         const grid = this.get(id);
         if (node === grid.nativeElement) {
             return true;
         } else {
             for (const childNode of node.childNodes) {
-                const added = this.checkIfGridIsAdded(childNode, id);
+                const added = this.checkIfGridIsAdded(id, childNode);
                 if (added) {
                     return true;
                 }
