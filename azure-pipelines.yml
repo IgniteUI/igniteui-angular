@@ -1,0 +1,43 @@
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+steps:
+- script: npm install
+  displayName: 'Install dependencies'
+  env:
+    AZURE_PIPELINES: "true"
+
+- script: sudo npm install -g @angular/cli
+  displayName: 'Install Angular CLI'
+
+- script: npm run lint:lib
+  displayName: 'Run lint'
+
+- script: ng build igniteui-angular --prod
+  displayName: 'Build source code'
+
+- script: npm run build:style
+  displayName: 'Build styles'
+
+- script: npm run test:lib
+  displayName: 'Run tests'
+
+- script: npm run test:migration
+  displayName: 'Run migrations'
+
+- script: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  condition: eq(variables['system.teamProject'], 'IgniteUI/igniteui-angular')
+  displayName: 'Code coverage @ Coveralls'
+  env:
+    COVERALLS_REPO_TOKEN: $(coveralls.repoToken)
+
+- task: PublishTestResults@2
+  inputs:
+    testRunner: 'JUnit'
+    testResultsFiles: '**/TESTS-*.xml' 
+
+- task: PublishCodeCoverageResults@1
+  inputs: 
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
