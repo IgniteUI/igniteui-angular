@@ -196,9 +196,8 @@ export class IgxGridTransactionPipe implements PipeTransform {
             if (state.type === TransactionType.UPDATE) {
                 Object.assign(copy[index], state.value);
             }
-            //  TODO: we should remove this logic and mark deleted rows as deleted
             if (state.type === TransactionType.DELETE) {
-                copy.splice(index, 1);
+                //  TODO: mark row as deleted somehow
             }
         });
         return copy;
