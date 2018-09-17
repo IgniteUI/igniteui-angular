@@ -1,7 +1,6 @@
 import { Component, HostBinding, Inject,
-    forwardRef, ElementRef, Input, AfterViewInit, ChangeDetectorRef, OnInit } from '@angular/core';
+    forwardRef, ElementRef, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
-import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 
 @Component({
     // tslint:disable-next-line:directive-selector

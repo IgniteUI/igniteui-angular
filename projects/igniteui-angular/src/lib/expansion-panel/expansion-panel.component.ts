@@ -1,4 +1,3 @@
-import { element } from 'protractor';
 import {
     Component,
     ChangeDetectorRef,
@@ -7,7 +6,6 @@ import {
     HostBinding,
     Input,
     Output,
-    ViewChild,
     ContentChild,
     forwardRef,
 } from '@angular/core';
@@ -23,7 +21,6 @@ let NEXT_ID = 0;
     templateUrl: 'expansion-panel.component.html'
 })
 export class IgxExpansionPanelComponent {
-    private _title: string;
 
     @Input()
     public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
@@ -131,4 +128,3 @@ export class IgxExpansionPanelComponent {
         }
     }
 }
-
