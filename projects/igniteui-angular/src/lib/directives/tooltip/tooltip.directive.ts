@@ -162,7 +162,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /* Public Methods */
     @HostListener('document:keydown.escape', ['$event'])
-    public onKeydownEscape(event: KeyboardEvent) {        
+    public onKeydownEscape(event: KeyboardEvent) {
         const args = { tooltip: this.target, cancel: false };
         this.onTooltipClosing.emit(args);
 

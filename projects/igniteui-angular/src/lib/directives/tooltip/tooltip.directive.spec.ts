@@ -259,6 +259,19 @@ describe('IgxTooltip', () => {
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
     }));
 
+    it('IgxTooltip closes on pressing \'escape\' key', fakeAsync(() => {
+        tooltipTarget.openTooltip();
+        flush();
+        fix.detectChanges();
+        verifyTooltipVisibility(fix, tooltipNativeElement, true);
+
+        UIInteractions.simulateKeyDownEvent(document.documentElement, 'Escape');
+
+        flush();
+        fix.detectChanges();
+        verifyTooltipVisibility(fix, tooltipNativeElement, false);
+    }));
+
     describe('Tooltip events', () => {
         it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
             spyOn(tooltipTarget.onTooltipOpening, 'emit');
