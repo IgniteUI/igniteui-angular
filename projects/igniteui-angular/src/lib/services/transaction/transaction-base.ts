@@ -3,12 +3,14 @@ import { ITransactionService, ITransaction, IState, TransactionType } from './ut
 export class IgxTransactionBaseService implements ITransactionService {
     private _transactions: ITransaction[] = [];
     private _redoStack: { transaction: ITransaction, recordRef: any }[] = [];
+    private _undoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _states: Map<any, IState> = new Map();
 
     public add(transaction: ITransaction, recordRef?: any) {
         this.verifyAddedTransaction(transaction, recordRef);
         this.updateCurrentState(transaction, recordRef);
         this._transactions.push(transaction);
+        this._undoStack.push({ transaction, recordRef });
         this._redoStack = [];
         return true;
     }
@@ -48,22 +50,19 @@ export class IgxTransactionBaseService implements ITransactionService {
         this._transactions = [];
         this._states = new Map();
         this._redoStack = [];
+        this._undoStack = [];
     }
 
     public undo() {
-        if (this._transactions.length > 0) {
-            const transaction: ITransaction = this._transactions.pop();
-            const state = this._states.get(transaction.id);
-            const recordRef = state ? state.recordRef : undefined;
-
-            this._redoStack.push({ transaction, recordRef });
-            const currentlyLastTransaction = [...this._transactions].reverse().find(c => c.id === transaction.id);
-            if (currentlyLastTransaction) {
-                this.updateCurrentState(currentlyLastTransaction, recordRef);
-            } else {
-                this._states.delete(transaction.id);
-            }
+        if (this._transactions.length <= 0) {
+            //  TODO: should we throw here
+            return;
         }
+            this._transactions.pop();
+            const action: { transaction: ITransaction, recordRef: any } = this._undoStack.pop();
+            this._redoStack.push(action);
+            this._states.clear();
+            this._undoStack.map(a => this.updateCurrentState(a.transaction, a.recordRef));
     }
 
     public redo() {
@@ -96,7 +95,7 @@ export class IgxTransactionBaseService implements ITransactionService {
                 if (!state && !recordRef) {
                     //  cannot initially transaction or delete item with no recordRef
                     throw new Error(`Cannot add this transaction. This is first transaction of type ${transaction.type} ` +
-                    `for id ${transaction.id}. For first transaction of this type recordRef is mandatory.`);
+                        `for id ${transaction.id}. For first transaction of this type recordRef is mandatory.`);
                 }
                 break;
         }
@@ -139,6 +138,11 @@ export class IgxTransactionBaseService implements ITransactionService {
                 }
         }
 
+        const oldState: IState = this._states.get(transaction.id);
+        if (oldState && oldState.type === TransactionType.UPDATE && typeof oldState.value === 'object') {
+            Object.assign(oldState.value, transaction.newValue);
+            return;
+        }
         this._states.set(transaction.id, { value: transaction.newValue, recordRef: recordRef, type: transaction.type });
     }
 

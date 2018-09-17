@@ -2712,6 +2712,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public addRow(data: any): void {
+        //  TODO: set transaction id in this way so it could be then updated and deleted
+        //  with next transaction on this row
         const transaction: ITransaction = {id: `addRow${this._newRowTransactionId++}`, type: TransactionType.ADD, newValue: data};
         if (!this.transactions.add(transaction)) {
             this.data.push(data);

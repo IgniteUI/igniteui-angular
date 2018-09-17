@@ -184,16 +184,8 @@ export class IgxGridAPIService {
 
             grid.onEditDone.emit(args);
             if (grid.transactions.aggregatedState() !== null) {
-                const rowTransaction = grid.transactions.aggregatedState().get(rowID);
                 const newTransaction = { [column.field]: editValue };
-                let newRowTransaction;
-                if (rowTransaction !== undefined) {
-                    newRowTransaction = Object.assign({}, rowTransaction.value);
-                    newRowTransaction = Object.assign(newRowTransaction, newTransaction);
-                } else {
-                    newRowTransaction = newTransaction;
-                }
-                grid.transactions.add({ id: rowID, type: TransactionType.UPDATE, newValue: newRowTransaction},
+                grid.transactions.add({ id: rowID, type: TransactionType.UPDATE, newValue: newTransaction},
                     grid.data[rowIndex]);
             } else {
                 grid.data[rowIndex][column.field] = args.newValue;

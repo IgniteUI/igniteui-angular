@@ -185,6 +185,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
     transform(collection: any[], id: string, pipeTrigger: number) {
         const grid = this.gridAPI.get(id);
+        //  TODO: find faster way to copy the data source collection
         const copy = JSON.parse(JSON.stringify(collection));
         const transactionsState = grid.transactions.aggregatedState();
         transactionsState.forEach((state, ket) => {
