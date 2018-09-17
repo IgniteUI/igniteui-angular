@@ -7,7 +7,7 @@ import {
     flush
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxCircularProgressBarComponent } from './progressbar.component';
+import { IgxCircularProgressBarComponent, IgxProgressBarModule } from './progressbar.component';
 import { Common } from './common.spec';
 
 describe('IgCircularBar', () => {
@@ -17,8 +17,10 @@ describe('IgCircularBar', () => {
             declarations: [
                 InitCircularProgressBarComponent,
                 CircularBarComponent,
-                IgxCircularProgressBarComponent,
                 CircularBarTemplateComponent
+            ],
+            imports: [
+                IgxProgressBarModule
             ]
         })
         .compileComponents();
@@ -157,23 +159,20 @@ describe('IgCircularBar', () => {
         expect(progressBar.value).toBe(expectedValue);
     });
 
-    it('When passed value is string progress indication should remain the same', async(() => {
+    it('When passed value is string progress indication should remain the same', fakeAsync(() => {
         const fix = TestBed.createComponent(CircularBarComponent);
         fix.detectChanges();
 
-        const datepicker = fix.componentInstance.circularBar;
+        const bar = fix.componentInstance.circularBar;
         const expectedRes = fix.componentInstance.value;
-        fix.whenStable().then(() => {
-            expect(datepicker.value).toEqual(expectedRes);
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            datepicker.value = '0345-234';
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            expect(datepicker.value).toEqual(expectedRes);
-        });
+
+        tick(tickTime);
+        expect(bar.value).toEqual(expectedRes);
+
+        bar.value = '0345-234';
+        tick(tickTime);
+        fix.detectChanges();
+        expect(bar.value).toEqual(expectedRes);
     }));
 
     it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
@@ -308,9 +307,8 @@ describe('IgCircularBar', () => {
         const componentInstance = fixture.componentInstance;
         const progressBarElem = fixture.debugElement.nativeElement
             .querySelector('.progress-circular');
-
+        fixture.detectChanges();
         expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
-        expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
 
         expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
         expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
@@ -318,7 +316,7 @@ describe('IgCircularBar', () => {
         expect(progressBarElem.children[2].children[0].textContent.trim()).toBe('Value is:');
         expect(progressBarElem.children[2].children[1].textContent.trim()).toMatch('20');
 
-        componentInstance.circularBar.textVisibility = false;
+        componentInstance.progressbar.textVisibility = false;
         fixture.detectChanges();
         expect(progressBarElem.children[2].classList.value).toMatch('progress-circular__text--hidden');
     });
@@ -444,19 +442,13 @@ class CircularBarComponent {
 
 @Component({
     template: `
-    <div #wrapper>
-        <ng-template #myTemplate>
-            <svg:tspan>Value is:</tspan>
-            <svg:tspan>20</tspan>
-        </ng-template>
-        <igx-circular-bar #circularBar [value]="20" [animate]="animate" [max]="max" [textTemplate]='myTemplate'>
-        </igx-circular-bar>
-    </div>`
+        <igx-circular-bar [value]="20" [animate]="false" [max]="100" [textVisibility]="true">
+            <ng-template igxProcessBarText let-process>
+                <svg:tspan>Value is:</tspan>
+                <svg:tspan>{{process.value}}</tspan>
+            </ng-template>
+        </igx-circular-bar>`
 })
 class CircularBarTemplateComponent {
     @ViewChild(IgxCircularProgressBarComponent) public progressbar: IgxCircularProgressBarComponent;
-    @ViewChild('wrapper') public wrapper;
-    @ViewChild('circularBar') public circularBar;
-    public max = 100;
-    public animate = false;
 }
