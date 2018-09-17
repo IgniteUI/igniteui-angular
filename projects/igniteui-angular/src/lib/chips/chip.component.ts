@@ -1,20 +1,12 @@
 ﻿import {
     Component,
     ChangeDetectorRef,
-    Directive,
     EventEmitter,
     ElementRef,
-    forwardRef,
     HostBinding,
-    HostListener,
     Input,
-    Inject,
-    NgModule,
     Output,
-    Provider,
     ViewChild,
-    OnInit,
-    AfterContentInit,
     AfterViewInit,
     Renderer2
 } from '@angular/core';

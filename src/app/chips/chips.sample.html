@@ -22,7 +22,7 @@
                     <igx-chip *ngFor="let chip of chipListTo" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartTo()" (onMoveEnd)="moveEndedTo()">
                         <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                     </igx-chip>
-                    <div class="dropAreaTo" igxDrop #dropTo (onDrop)="onDropTo($event)" (igxDragEnter)="onDragEnterCc($event)" (igxDragLeave)="onDragLeaveCc($event)"></div>
+                    <div class="dropAreaTo" igxDrop #dropTo (onDrop)="onDropTo($event)" (igxDragEnter)="onDragEnterCc()" (igxDragLeave)="onDragLeaveCc()"></div>
                 </igx-chips-area>
             </div>
 
@@ -32,7 +32,7 @@
                     <igx-chip *ngFor="let chip of chipListCc" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartCc()" (onMoveEnd)="moveEndedCc()">
                         <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                     </igx-chip>
-                    <div igxDrop #dropCc (onDrop)="onDropCc($event)" (igxDragEnter)="onDragEnterCc($event)" (igxDragLeave)="onDragLeaveCc($event)"
+                    <div igxDrop #dropCc (onDrop)="onDropCc($event)" (igxDragEnter)="onDragEnterCc()" (igxDragLeave)="onDragLeaveCc()"
                         class="dropAreaCc"></div>
                 </igx-chips-area>
             </div>
