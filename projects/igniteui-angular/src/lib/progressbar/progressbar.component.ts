@@ -10,7 +10,8 @@ import {
     OnChanges,
     Output,
     Renderer2,
-    ViewChild
+    ViewChild,
+    TemplateRef
 } from '@angular/core';
 
 const ONE_PERCENT = 0.01;
@@ -454,6 +455,24 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
      */
     @Input()
     public text: string;
+
+    /**
+     * Sets the text template to be displayed inside the `igxCircularBar`..
+     * ```html
+     * <ng-template #textTemplate>
+     *     <svg:tspan class="progress-circular__text">20</tspan>
+     *     <svg:tspan >Precess</tspan>
+     * </ng-template>
+     * ```
+     * ```typescript
+     * @ViewChild("'textTemplate'", {read: TemplateRef })
+     * public textTemplate: TemplateRef<any>;
+     * this.circularBar.textTemplate = this.textTemplate;
+     * ```
+     * @memberof IgxCircularProgressBarComponent
+     */
+    @Input()
+    public textTemplate: TemplateRef<any>;
 
     /**
      *Animation on progress `IgxCircularProgressBarComponent`. By default it is set to true.

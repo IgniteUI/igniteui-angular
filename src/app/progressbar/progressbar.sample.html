@@ -85,7 +85,12 @@
             </div>
             <div class="circular-samples">
                 <div class="circular-container">
-                    <igx-circular-bar [value]="18"></igx-circular-bar>
+                    <ng-template #myTemplate>
+                        <svg:tspan x="50" dy="-25" >Value is:</tspan>
+                        <svg:tspan x="50" dy="25" font-weight="bold" font-size="30">{{getValue()}}</tspan>
+                    </ng-template> 
+                    <igx-circular-bar [value]="currentValue" [textVisibility]="true" [textTemplate]='myTemplate'>
+                    </igx-circular-bar>
                 </div>
                 <div class="circular-container">
                     <igx-circular-bar [value]="77"></igx-circular-bar>

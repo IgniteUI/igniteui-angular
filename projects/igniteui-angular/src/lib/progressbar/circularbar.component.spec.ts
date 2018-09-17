@@ -17,7 +17,8 @@ describe('IgCircularBar', () => {
             declarations: [
                 InitCircularProgressBarComponent,
                 CircularBarComponent,
-                IgxCircularProgressBarComponent
+                IgxCircularProgressBarComponent,
+                CircularBarTemplateComponent
             ]
         })
         .compileComponents();
@@ -300,6 +301,28 @@ describe('IgCircularBar', () => {
         expect(bar.valueInPercent).toBe(valueInPercent);
     }));
 
+    it('The template should be applied correct', () => {
+        const fixture = TestBed.createComponent(CircularBarTemplateComponent);
+        fixture.detectChanges();
+
+        const componentInstance = fixture.componentInstance;
+        const progressBarElem = fixture.debugElement.nativeElement
+            .querySelector('.progress-circular');
+
+        expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
+        expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
+
+        expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
+        expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
+        expect(progressBarElem.children[2].children.length).toBe(2);
+        expect(progressBarElem.children[2].children[0].textContent.trim()).toBe('Value is:');
+        expect(progressBarElem.children[2].children[1].textContent.trim()).toMatch('20');
+
+        componentInstance.circularBar.textVisibility = false;
+        fixture.detectChanges();
+        expect(progressBarElem.children[2].classList.value).toMatch('progress-circular__text--hidden');
+    });
+
     // UI TESTS
     describe('Circular bar UI TESTS', () => {
         it('The value representation should respond to passed value correctly', fakeAsync(() => {
@@ -319,14 +342,14 @@ describe('IgCircularBar', () => {
 
             expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
             expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
-            expect(progressBarElem.children[2].classList.value).toBe('progress-circular__text');
-            expect(progressBarElem.children[2].textContent.trim()).toMatch(expectedTextContent);
+            expect(progressBarElem.children[2].children[0].classList.value).toBe('progress-circular__text');
+            expect(progressBarElem.children[2].children[0].textContent.trim()).toMatch(expectedTextContent);
 
             componentInstance.circularBar.text = 'No progress';
             fixture.detectChanges();
 
             expectedTextContent = 'No progress';
-            expect(progressBarElem.children[2].textContent.trim()).toMatch(expectedTextContent);
+            expect(progressBarElem.children[2].children[0].textContent.trim()).toMatch(expectedTextContent);
 
             componentInstance.circularBar.textVisibility = false;
             fixture.detectChanges();
@@ -355,7 +378,7 @@ describe('IgCircularBar', () => {
             expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
             expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
             expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
-            expect(progressBarElem.children[2].classList.value).toBe('progress-circular__text');
+            expect(progressBarElem.children[2].children[0].classList.value).toBe('progress-circular__text');
         }));
 
         it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
@@ -417,4 +440,23 @@ class CircularBarComponent {
     public value: string | number = 30;
     public max = 100;
     public animate = true;
+}
+
+@Component({
+    template: `
+    <div #wrapper>
+        <ng-template #myTemplate>
+            <svg:tspan>Value is:</tspan>
+            <svg:tspan>20</tspan>
+        </ng-template>
+        <igx-circular-bar #circularBar [value]="20" [animate]="animate" [max]="max" [textTemplate]='myTemplate'>
+        </igx-circular-bar>
+    </div>`
+})
+class CircularBarTemplateComponent {
+    @ViewChild(IgxCircularProgressBarComponent) public progressbar: IgxCircularProgressBarComponent;
+    @ViewChild('wrapper') public wrapper;
+    @ViewChild('circularBar') public circularBar;
+    public max = 100;
+    public animate = false;
 }
