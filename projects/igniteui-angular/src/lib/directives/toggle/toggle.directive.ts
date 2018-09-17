@@ -137,6 +137,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * @hidden
      */
     @HostBinding('class.igx-toggle--hidden')
+    @HostBinding('attr.aria-hidden')
     public get hiddenClass() {
         return this.collapsed;
     }

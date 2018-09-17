@@ -284,13 +284,16 @@ export class IgxTooltipDirective extends IgxToggleDirective {
 
     @Input() public labelId = `${this.id}-label`;
 
-    @HostBinding('attr.aria-labelledby')
-    @Input('aria-labelledby')
-    public ariaLabelledBy = this.labelId;
+    // @HostBinding('attr.aria-live')
+    // public get ariaLive() {
+    //     return !this.collapsed? 'assertive': 'off';
+    // }
 
-    @HostBinding('attr.aria-label')
-    @Input('aria-label')
-    public ariaLabel: string | null = null;
+    @HostBinding('attr.role')
+    public get role() {
+        return 'tooltip';
+    }
+
 }
 
 @NgModule({
