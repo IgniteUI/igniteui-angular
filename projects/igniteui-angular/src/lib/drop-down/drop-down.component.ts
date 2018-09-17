@@ -612,7 +612,7 @@ export class IgxDropDownItemNavigationDirective {
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
         if (!(this.target instanceof IgxDropDownComponent)) {
-            if (this.target.focusedItem.itemData === 'ADD ITEM') {
+            if (this.target.focusedItem.value === 'ADD ITEM') {
                 const targetC = this.target as IgxComboDropDownComponent;
                 targetC.combo.addItemToCollection();
             } else {

@@ -1,3 +1,4 @@
+﻿import { DOCUMENT, DatePipe, DecimalPipe } from '@angular/common';
 import {
     Directive,
     OnDestroy,
@@ -7,12 +8,13 @@ import {
     NgZone,
     Input,
     Output,
+    Pipe,
+    PipeTransform,
     Renderer2,
     HostListener,
     ChangeDetectorRef,
     Injectable
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
@@ -490,7 +492,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
 
                 if (cell) {
-                    cell._updateCellSelectionStatus();
+                    cell._updateCellSelectionStatus(true, event);
                 }
 
                 this.cms.selection = null;
@@ -498,6 +500,38 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
+        }
+    }
+}
+
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'igxdate'
+})
+export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
+    transform(value: any): string {
+        if (value && value instanceof Date) {
+            return super.transform(value);
+        } else {
+            return value;
+        }
+    }
+}
+
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'igxdecimal'
+})
+export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
+    transform(value: any): string {
+        if (value && typeof value === 'number') {
+            return super.transform(value);
+        } else {
+            return value;
         }
     }
 }

@@ -10,22 +10,18 @@ All notable changes for each version of this project will be documented in this 
 - `igxButtonGroup`
     - Added the ability to define buttons directly in the template
 - `igx-time-picker`:
-    - `igxTimePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxTimePickerComponent`'s input group is retemplated. 
+    - `igxTimePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxTimePickerComponent`'s input group is retemplated.
 - `igx-datePicker`:
     - `igxDatePickerTemplate` - new directive which should be applied on the child `<ng-template>` element when `IgxDatePickerComponent`'s input group is retemplated.
     - Introduced `disabledDates`. This property is exposed from the `igx-calendar` component.
     - Introduced `specialDates`. This property is exposed from the `igx-calendar` component.
+    - Introduced `deselectDate` method added that deselects the calendar date.
 - `IgxTextHighlightDirective`: The `highlight` method now has a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the group's value.
     - If its value is true, the entire group's value should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
 - `IgxGrid`: The `findNext` and `findPrev` methods now have a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the grid's cells.
     - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
-- `IgxChip`
-    - Introduced event argument types to all `EventEmitter` `@Output`s.
-    - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
-- `IgxChipArea`
-    - Introduced event argument types to all `EventEmitter` `@Output`s.
 - `IgxCombo`
     - Added the following directives for `TemplateRef` assignment for combo templates (item, footer, etc.):
         - Added `IgxComboItemDirective`. Use `[igxComboItem]` in markup to assing a TemplateRef to `combo.itemTemplate`.
@@ -38,10 +34,26 @@ All notable changes for each version of this project will be documented in this 
             `#itemTemplate`, `#headerTemplate`, `#footerTemplate`, `#emptyTemplate`, `#addItemTemplate`, `#headerItemTemplate`.
 - `IgxDropDown`
     - **Breaking change** `allowItemsFocus` default value is changed to `false`.
+    - Added `value` input to `IgxDropDownItemComponent` definition. The property allows data to be bound to a drop-down item so it can more easily be retrieved (e.g. on selection)
 - `igx-calendar`:
     - Introduced `disabledDates` property which allows a user to disable dates based on various rules: before or after a date, weekends, workdays, specific dates and ranges. The disabled dates cannot be selected and have a distinguishable style.
     - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
+    - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
 
+## 6.1.5
+- **General**
+    - `IgxChip`
+        - Introduced event argument types to all `EventEmitter` `@Output`s.
+        - A chip can now be selected with the API with the new `selected` input. The `selected` input overrides the `selectable` input value.
+        - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - `IgxChipArea`
+        - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - `igxFor`
+        - Adding inertia scrolling for touch devices. This also affects the following components that virtualize their content via the igxFor - `igxGrid`, `igxCombo`.
+    - `igxGrid`
+        - Adding inertia scrolling for touch devices.
+    - `igxCombo`
+        - Adding inertia scrolling for touch devices. 
 ## 6.1.3
 - **General**
     - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.

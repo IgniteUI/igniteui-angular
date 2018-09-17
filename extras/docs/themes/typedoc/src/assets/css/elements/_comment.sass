@@ -10,24 +10,25 @@
 // </dl>
 //
 dl.tsd-comment-tags
+    display: flex
+    align-items: center
     overflow: hidden
 
     dt
-        float: left
-        padding: 1px 5px
-        margin: 0 10px 0 0
-        border-radius: 4px
+        padding: 0 8px
+        margin-right: 8px
         border: 1px solid $COLOR_COMMENT_TAG
         color: $COLOR_COMMENT_TAG
-        font-size: 0.8em
-        font-weight: normal
+        font-size: 12px
+        line-height: 24px
+        font-weight: 400
 
     dd
-        margin: 0 0 10px 0
+        margin: 0
 
         &:before, &:after
             display: table
-            content: " "
+            content: ' '
         pre, &:after
             clear: both
 
