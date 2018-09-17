@@ -19,9 +19,19 @@
     margin-top: 10px;
 }
 
-.cellTooltip {
-    width: 230px;
-    font-size: 13px;
+.custom-width {
+    width: 180px;
+}
+
+.custom-size{
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    cursor: pointer;
+}
+
+.checkbox {
+    display: flex;
 }
 
 .cursorHover:hover {
@@ -31,6 +41,16 @@
 .card-wrapper {
     max-width: 200px;
     min-width: 120px;
+}
+
+.location {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 252px;
+    background-image: url(../../assets/images/card/media/infragisticsMap.png);
 }
 
 .locationTooltip {
@@ -51,12 +71,7 @@
     height: 45px;
 }
 
-.location {
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 200px;
-    height: 252px;
-    background-image: url(../../assets/images/card/media/infragisticsMap.png);
+.cellTooltip {
+    width: 230px;
+    font-size: 13px;
 }

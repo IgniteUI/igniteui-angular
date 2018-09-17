@@ -5,50 +5,49 @@
     <section class="sample-content">
         <article class="sample-column">
             <h4 class="sample-title">Simple tooltip</h4>
-            <div style="display:flex;">
-                <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="ref" [overlaySettings]="settings"
-                            src="assets/images/avatar/10.jpg" size="medium" [roundShape]="true"
-                            (onTooltipOpening)="opening()"
-                            (onTooltipOpened)="opened()"
-                            (onTooltipClosing)="closing()"
-                            (onTooltipClosed)="closed()">
-                </igx-avatar>
+            <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="simple" [overlaySettings]="settings"
+                        src="assets/images/avatar/10.jpg" size="medium" [roundShape]="true"
+                        (onTooltipOpening)="opening()"
+                        (onTooltipOpened)="opened()"
+                        (onTooltipClosing)="closing()"
+                        (onTooltipClosed)="closed()"
+                        aria-describedby="myid">
+            </igx-avatar>
 
-                <div #ref="tooltip" igxTooltip>
-                    Her name is Toola Tipa
+            <div class="custom-width" #simple="tooltip" igxTooltip id="myid">
+                Her name is Toola Tipa
+            </div>
+        </article>
+        <article class="sample-column">
+            <h4 class="sample-title">Simple tooltip settings</h4>
+            <div>
+                <div class="bottomMargin">
+                    <igx-switch [(ngModel)]="target.tooltipDisabled">Disable tooltip</igx-switch>
                 </div>
-
-                <div class="leftMargin">
-                    <div class="bottomMargin">
-                        <igx-switch [(ngModel)]="target.tooltipDisabled">Disable tooltip</igx-switch>
-                    </div>
-                    <div class="bottomMargin">
-                        <igx-slider minValue="0" maxValue="3000" [step]="100" [(ngModel)]="target.showDelay"></igx-slider>
-                        <span>Show Delay: {{target.showDelay}}</span>
-                    </div>
-                    <div class="bottomMargin">
-                        <igx-slider minValue="0" maxValue="3000" [step]="100" [(ngModel)]="target.hideDelay"></igx-slider>
-                        <span>Hide Delay: {{target.hideDelay}}</span>
-                    </div>
-                    <div>
-                        <button class="btn" (click)="showTooltip()">Show Tooltip</button>
-                        <button class="btn" (click)="hideTooltip()">Hide Tooltip</button>
-                    </div>
+                <div class="bottomMargin">
+                    <igx-slider minValue="0" maxValue="3000" [step]="100" [(ngModel)]="target.showDelay"></igx-slider>
+                    <span>Show Delay: {{target.showDelay}}</span>
+                </div>
+                <div class="bottomMargin">
+                    <igx-slider minValue="0" maxValue="3000" [step]="100" [(ngModel)]="target.hideDelay"></igx-slider>
+                    <span>Hide Delay: {{target.hideDelay}}</span>
+                </div>
+                <div>
+                    <button class="btn" (click)="showTooltip()">Show Tooltip</button>
+                    <button class="btn" (click)="hideTooltip()">Hide Tooltip</button>
                 </div>
             </div>
         </article>
-
-
     </section>
     <section class="sample-content">
         <article class="sample-column">
             <h4 class="sample-title">Rich tooltip</h4>
-
             <article class="card-wrapper">
                 <igx-card>
                     <igx-card-content style="padding: 0px;">
                         <div class="location">
                             <igx-icon class="cursorHover" fontSet="material" name="location_on" [igxTooltipTarget]="locationTooltip"></igx-icon>
+
                             <div class="locationTooltip" #locationTooltip="tooltip" igxTooltip>
                                 <div class="locationTooltipContent">
                                     <igx-avatar class="locationIcon" src="assets/images/card/avatars/igLogo.png" size="medium"
@@ -67,7 +66,6 @@
                                 <igx-icon fontSet="material" name="favorite"></igx-icon>
                             </span>
                             <span igxButton="icon" igxRipple igxRippleCentered="true">
-
                                 <igx-icon fontSet="material" name="share"></igx-icon>
                             </span>
                         </div>
@@ -75,32 +73,30 @@
                 </igx-card>
             </article>
         </article>
-    </section>
-    <section class="sample-content">
         <article class="sample-column">
-            <h4 class="sample-title">Grid with tooltips</h4>
-            <div>
-                <igx-grid [data]="data" width="600px" height="400px" [autoGenerate]="false">
-                    <igx-column [field]="'Brand'" dataType="string"></igx-column>
-                    <igx-column [field]="'Model'" dataType="string"></igx-column>
-                    <igx-column [field]="'Spec'">
-                        <ng-template igxCell let-cell="cell">
-                            <igx-icon class="cursorHover" [igxTooltipTarget]="tp" fontset="material">
-                                info
-                            </igx-icon>
-
-                            <div class="cellTooltip" #tp="tooltip" igxTooltip>
-                                <div><strong>Launch: </strong>{{cell.row.rowData.Spec.Launch}}</div>
-                                <div><strong>Build: </strong>{{cell.row.rowData.Spec.Build}}</div>
-                                <div><strong>Display: </strong>{{cell.row.rowData.Spec.Display}}</div>
-                                <div><strong>Resolution: </strong>{{cell.row.rowData.Spec.Resolution}}</div>
-                                <div><strong>OS: </strong>{{cell.row.rowData.Spec.OS}}</div>
-                                <div><strong>Battery: </strong>{{cell.row.rowData.Spec.Battery}}</div>
-                            </div>
-                        </ng-template>
-                    </igx-column>
-                </igx-grid>
-            </div>
-        </article>
+                <h4 class="sample-title">Grid with tooltips</h4>
+                <div>
+                    <igx-grid [data]="data" width="500px" height="400px" [autoGenerate]="false">
+                        <igx-column [field]="'Brand'" dataType="string"></igx-column>
+                        <igx-column [field]="'Model'" dataType="string"></igx-column>
+                        <igx-column [field]="'Spec'">
+                            <ng-template igxCell let-cell="cell">
+                                <igx-icon class="cursorHover" [igxTooltipTarget]="tp" fontset="material">
+                                    info
+                                </igx-icon>
+    
+                                <div class="cellTooltip" #tp="tooltip" igxTooltip>
+                                    <div><strong>Launch: </strong>{{cell.row.rowData.Spec.Launch}}</div>
+                                    <div><strong>Build: </strong>{{cell.row.rowData.Spec.Build}}</div>
+                                    <div><strong>Display: </strong>{{cell.row.rowData.Spec.Display}}</div>
+                                    <div><strong>Resolution: </strong>{{cell.row.rowData.Spec.Resolution}}</div>
+                                    <div><strong>OS: </strong>{{cell.row.rowData.Spec.OS}}</div>
+                                    <div><strong>Battery: </strong>{{cell.row.rowData.Spec.Battery}}</div>
+                                </div>
+                            </ng-template>
+                        </igx-column>
+                    </igx-grid>
+                </div>
+            </article>
     </section>
 </div>

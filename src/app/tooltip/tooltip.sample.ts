@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import {
-    IgxTooltipTargetDirective, OverlaySettings, AutoPositionStrategy,
+    IgxTooltipTargetDirective, OverlaySettings, AutoPositionStrategy, AbsoluteScrollStrategy,
     ITooltipOpeningEventArgs, ITooltipOpenedEventArgs, ITooltipClosingEventArgs, ITooltipClosedEventArgs
 } from 'igniteui-angular';
 
@@ -13,8 +13,9 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
 
     @ViewChild("target") public tooltipTarget: IgxTooltipTargetDirective;
 
-    settings: OverlaySettings = {
+    public settings: OverlaySettings = {
         // positionStrategy: new AutoPositionStrategy(),
+        // scrollStrategy: new AbsoluteScrollStrategy(),
         // closeOnOutsideClick: false,
         // modal: false
     };
@@ -22,7 +23,6 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
     public data: any[];
 
     constructor() {
-
     }
 
     ngOnInit() {
@@ -86,7 +86,7 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
         ];
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit() {        
         // this.settings.positionStrategy.settings.target = this.tooltipTarget.nativeElement;
         // this.settings.positionStrategy.settings.openAnimation = null;
         // this.settings.positionStrategy.settings.closeAnimation = null;

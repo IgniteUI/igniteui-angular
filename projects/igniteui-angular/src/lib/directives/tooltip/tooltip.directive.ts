@@ -161,6 +161,20 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /* Public Methods */
+    @HostListener('document:keydown.escape', ['$event'])
+    public onKeydownEscape(event: KeyboardEvent) {        
+        const args = { tooltip: this.target, cancel: false };
+        this.onTooltipClosing.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
+        this._toBeHidden = true;
+        this.target.close();
+        this._toBeHidden = false;
+    }
+
     @HostListener('click')
     public onClick() {
         return;
@@ -284,16 +298,10 @@ export class IgxTooltipDirective extends IgxToggleDirective {
 
     @Input() public labelId = `${this.id}-label`;
 
-    // @HostBinding('attr.aria-live')
-    // public get ariaLive() {
-    //     return !this.collapsed? 'assertive': 'off';
-    // }
-
     @HostBinding('attr.role')
     public get role() {
         return 'tooltip';
     }
-
 }
 
 @NgModule({
