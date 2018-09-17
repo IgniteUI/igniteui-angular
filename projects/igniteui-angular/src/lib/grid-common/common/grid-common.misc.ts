@@ -17,9 +17,9 @@ import {
 } from '@angular/core';
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
-import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxColumnComponent } from './column.component';
+import { IgxDragDirective, IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
+import { IgxForOfDirective } from '../../directives/for-of/for_of.directive';
+import { IgxColumnComponent } from '../column.component';
 
 /**
  * @hidden

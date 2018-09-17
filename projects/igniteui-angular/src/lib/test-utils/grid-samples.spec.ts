@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild, Input } from '@angular/core';
 import { IgxGridCellComponent } from '../grid-common/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from '../grid-common/summaries/grid-summary';
-import { IGridCellEventArgs, IGridEditEventArgs } from '../grid-common/grid-interfaces';
+import { IGridCellEventArgs, IGridEditEventArgs } from '../grid-common/common/grid-interfaces';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
 import { IGridSelection, IEditDone, IGridRowEvents, IGridRowSelectionChange } from './grid-interfaces.spec';

@@ -5,7 +5,7 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { IGroupByResult } from '../data-operations/sorting-strategy';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './grid-api.service';
-import { IGridComponent } from '../grid-common/grid-interfaces';
+import { IGridComponent } from '../grid-common/common/grid-interfaces';
 import { IGridAPIService } from '../grid-common/api.service';
 import { IgxGridComponent } from './grid.component';
 

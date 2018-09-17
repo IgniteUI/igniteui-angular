@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs } from '../grid-common/grid-interfaces';
+import { IGridEditEventArgs } from '../grid-common/common/grid-interfaces';
 import { IgxGridModule } from './index';
 import { wait } from '../test-utils/ui-interactions.spec';
 

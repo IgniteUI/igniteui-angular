@@ -16,7 +16,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IGridAPIService } from './api.service';
-import { IGridComponent } from './grid-interfaces';
+import { IGridComponent } from './common/grid-interfaces';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 

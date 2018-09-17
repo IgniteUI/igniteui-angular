@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxGridCellComponent } from '../grid-common/cell.component';
 import { IgxColumnComponent } from '../grid-common/column.component';
-import { IGridCellEventArgs } from '../grid-common/grid-interfaces';
+import { IGridCellEventArgs } from '../grid-common/common/grid-interfaces';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';

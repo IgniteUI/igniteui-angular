@@ -7,7 +7,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxColumnComponent } from '../grid-common/column.component';
 import { IgxGridHeaderComponent } from '../grid-common/grid-header.component';
 import { IgxGridComponent } from './grid.component';
-import { IGridCellEventArgs } from '../grid-common/grid-interfaces';
+import { IGridCellEventArgs } from '../grid-common/common/grid-interfaces';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
 import { IgxGridRowComponent } from './grid-row.component';

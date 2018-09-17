@@ -10,24 +10,24 @@ import {
     ViewContainerRef
 } from '@angular/core';
 
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { IFilteringOperation } from '../data-operations/filtering-condition';
+import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IFilteringOperation } from '../../data-operations/filtering-condition';
 
-import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
-import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxRowComponent } from './row.component';
+import { IgxGridCellComponent } from '../cell.component';
+import { IgxColumnComponent } from '../column.component';
+import { IgxGridHeaderComponent } from '../grid-header.component';
+import { IgxRowComponent } from '../row.component';
 
-import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services';
+import { IgxForOfDirective } from '../../directives/for-of/for_of.directive';
 
-import { DisplayDensity } from '../core/utils';
-import { IgxSelectionAPIService } from '../core/selection';
+import { DisplayDensity } from '../../core/utils';
+import { IgxSelectionAPIService } from '../../core/selection';
 
-import { IColumnVisibilityChangedEventArgs } from './column-hiding/column-hiding-item.directive';
+import { IColumnVisibilityChangedEventArgs } from '../column-hiding/column-hiding-item.directive';
 import { DropPosition } from './grid-common.misc';
 
 export interface IGridCellEventArgs {
@@ -127,7 +127,6 @@ export interface IGridComponent {
     summaries: ElementRef;
     summariesHeight: number;
     hasSummarizedColumns: boolean;
-    columnsWithNoSetWidths: IgxColumnComponent[];
     hasMovableColumns: boolean;
     pinnedColumns: IgxColumnComponent[];
     unpinnedColumns: IgxColumnComponent[];

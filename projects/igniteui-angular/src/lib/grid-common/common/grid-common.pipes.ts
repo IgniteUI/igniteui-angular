@@ -1,10 +1,10 @@
-import { DataUtil } from '../data-operations/data-util';
+import { DataUtil } from '../../data-operations/data-util';
 import { Pipe, PipeTransform } from '@angular/core';
-import { IGridAPIService } from './api.service';
+import { IGridAPIService } from '../api.service';
 import { IGridComponent } from './grid-interfaces';
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { cloneArray } from '../core/utils';
-import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { cloneArray } from '../../core/utils';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 
 /**

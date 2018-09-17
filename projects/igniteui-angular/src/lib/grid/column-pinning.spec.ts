@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnPinningComponent, IgxColumnPinningModule } from '../grid-common/column-pinning/column-pinning.component';
 import { IgxGridComponent } from './grid.component';
-import { IPinColumnEventArgs } from '../grid-common/grid-interfaces';
+import { IPinColumnEventArgs } from '../grid-common/common/grid-interfaces';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { HelperUtils } from '../test-utils/helper-utils.spec';

@@ -13,7 +13,7 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IGridAPIService } from '../grid-common/api.service';
-import { IGridComponent} from '../grid-common/grid-interfaces';
+import { IGridComponent} from '../grid-common/common/grid-interfaces';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

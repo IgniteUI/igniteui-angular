@@ -7,4 +7,4 @@ export * from './column.component';
 export * from './api.service';
 export * from './cell.component';
 export * from './row.component';
-export * from './grid-interfaces';
+export * from './common/grid-interfaces';

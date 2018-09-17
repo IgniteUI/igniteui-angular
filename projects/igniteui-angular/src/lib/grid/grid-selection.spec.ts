@@ -23,7 +23,7 @@ let data = [
     { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
 ];
 
-describe('IgxGrid - Row Selection', () => {
+fdescribe('IgxGrid - Row Selection', () => {
 
     beforeEach(async(() => {
         TestBed.resetTestingModule();
@@ -1033,8 +1033,8 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSelection5;
-        const virtualizationSpy = spyOn<any>(IgxGridComponent.prototype, '_focusNextCell');
-        // _focusNextCell is called when virt scroll is done
+        const virtualizationSpy = spyOn<any>(IgxGridComponent.prototype, 'focusNextCell');
+        // focusNextCell is called when virt scroll is done
         fix.detectChanges();
         // Focus left right cell
         const cells = fix.debugElement.queryAll(By.css('.igx-grid__td'));

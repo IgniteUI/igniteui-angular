@@ -1,6 +1,6 @@
 import { Injectable, IterableChangeRecord, QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { cloneArray } from '../core/utils';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -8,10 +8,11 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxRowComponent } from './row.component';
 import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
-import { IGridEditEventArgs, IGridComponent } from './grid-interfaces';
+import { IGridEditEventArgs, IGridComponent } from './common/grid-interfaces';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { DataType } from '../data-operations/data-util';
+import { IgxGridSortingPipe } from './common/grid-common.pipes';
 
 const DEFAULT_TARGET_RECORD_NUMBER = 10;
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -473,6 +474,20 @@ export class IGridAPIService <T extends IGridComponent> {
         });
     }
 
+    public filteredSortedData(id: string): any[] {
+        const grid = this.get(id);
+        let data: any[] = grid.filteredData ? grid.filteredData : grid.data;
+
+        if (grid.sortingExpressions &&
+            grid.sortingExpressions.length > 0) {
+
+            const sortingPipe = new IgxGridSortingPipe(this);
+            data = sortingPipe.transform(data, grid.sortingExpressions, id, -1);
+        }
+
+        return data;
+    }
+
     public refreshSearch(id: string, updateActiveInfo?: boolean) {
         const grid = this.get(id);
         if (grid && grid.lastSearchInfo.searchText) {
@@ -699,9 +714,11 @@ export class IGridAPIService <T extends IGridComponent> {
 
     }
 
-    private resizeHandler = (id) => {
-        this.get(id).reflow();
-        this.get(id).zone.run(() => this.get(id).markForCheck());
+    private resizeHandler = () => {
+        this.state.forEach(g => {
+            g.reflow();
+            g.zone.run(() => g.markForCheck());
+        });
     }
 
     /**
@@ -742,7 +759,7 @@ export class IGridAPIService <T extends IGridComponent> {
         return maxSummaryLength * grid.defaultRowHeight;
     }
 
-        /**
+    /**
      * @hidden
      */
     protected _derivePossibleHeight(id: string) {
@@ -764,24 +781,14 @@ export class IGridAPIService <T extends IGridComponent> {
     /**
      * @hidden
      */
-    public derivePossibleWidth(id: string) {
+    protected derivePossibleWidth(id: string) {
         const grid = this.get(id);
         if (!grid.columnWidthSetByUser) {
             grid.columnWidth = this.getPossibleColumnWidth(id);
+            grid.columnWidthSetByUser = false;
             this.initColumns(id, grid.columnList, null);
         }
         this.calculateGridWidth(id);
-    }
-
-    /**
-     * @hidden
-     */
-    protected rowBasedHeight(id: string) {
-        const grid = this.get(id);
-        if (grid.data && grid.data.length) {
-            return grid.data.length * grid.rowHeight;
-        }
-        return 0;
     }
 
     /**
@@ -914,19 +921,10 @@ export class IGridAPIService <T extends IGridComponent> {
     protected reinitPinStates(id: string) {
         const grid = this.get(id);
 
-        grid.pinnedColumns.splice(0);
-        grid.columns.map((c) => {
-            if (c.pinned) {
-                grid.pinnedColumns.push(c);
-            }
-        });
-
-        grid.unpinnedColumns.splice(0);
-        grid.columns.map((c) => {
-            if (!c.pinned) {
-                grid.unpinnedColumns.push(c);
-            }
-        });
+        if (grid.hasColumnGroups) {
+            grid.pinnedColumns = grid.columns.filter(c => c.pinned);
+        }
+        grid.unpinnedColumns = grid.columns.filter(c => !c.pinned);
     }
 
       /**
@@ -1046,5 +1044,138 @@ export class IGridAPIService <T extends IGridComponent> {
         // Assign the applicaple collections.
         grid.pinnedColumns = pinnedColumns;
         grid.unpinnedColumns = unpinnedColumns;
+    }
+
+
+    /**
+     * @hidden
+     */
+    protected rowBasedHeight(id: string) {
+        const grid = this.get(id);
+        if (grid.data && grid.data.length) {
+            return grid.data.length * grid.rowHeight;
+        }
+        return 0;
+    }
+
+    public focusNextCell(id: string, rowIndex: number, columnIndex: number, dir?: string, event?) {
+        const grid = this.get(id);
+        let row = this.get_row_by_index(id, rowIndex);
+        const virtualDir = dir !== undefined ? row.virtDirRow : grid.verticalScrollContainer;
+        this.subscribeNext(virtualDir, () => {
+            let target;
+            grid.cdr.detectChanges();
+            row = this.get_row_by_index(id, rowIndex);
+            target = this.get_cell_by_visible_index(id, rowIndex, columnIndex);
+
+        });
+    }
+
+    protected updateTarget(target: any, row: IgxRowComponent<IGridComponent>, dir?: string) {
+        if (!target) {
+            if (dir) {
+                target = dir === 'left' ? row.cells.first : row.cells.last;
+            } else if (row) {
+                target = row.cells.first;
+            } else {
+                return;
+            }
+        }
+        target._updateCellSelectionStatus(true, event);
+    }
+
+
+    private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
+        virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
+            next: (e: any) => {
+                callback(e);
+            }
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    public navigateUp(id: string, rowIndex: number, columnIndex: number, event?) {
+        const grid = this.get(id);
+        const row = this.get_row_by_index(id, rowIndex);
+        const target = row instanceof IgxGridGroupByRowComponent ?
+            row.groupContent :
+            this.get_cell_by_visible_index(id, rowIndex, columnIndex);
+        const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+
+        if (!verticalScroll && !target) {
+            return;
+        }
+        if (target) {
+            const containerTopOffset =
+                parseInt(row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            if (grid.rowHeight > Math.abs(containerTopOffset) // not the entire row is visible, due to grid offset
+                && verticalScroll.scrollTop // the scrollbar is not at the first item
+                && row.element.nativeElement.offsetTop < grid.rowHeight) { // the target is in the first row
+                const scrollAmount = containerTopOffset < 0 ?
+                    containerTopOffset :
+                    -grid.rowHeight + Math.abs(containerTopOffset);
+                this.performVerticalScroll(id, scrollAmount, rowIndex - 1, columnIndex, event);
+            }
+            if (row instanceof IgxGridGroupByRowComponent) {
+                target.nativeElement.focus();
+            } else {
+                target._updateCellSelectionStatus(true, event);
+            }
+        } else {
+            const scrollOffset =
+                -parseInt(grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const scrollAmount = grid.rowHeight + scrollOffset;
+            this.performVerticalScroll(id, -scrollAmount, rowIndex, columnIndex, event);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public navigateDown(id: string, rowIndex: number, columnIndex: number, event?) {
+        const grid = this.get(id);
+        const row = this.get_row_by_index(id, rowIndex);
+        const target = row instanceof IgxGridGroupByRowComponent ?
+            row.groupContent :
+            this.get_cell_by_visible_index(id, rowIndex, columnIndex);
+        const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+        if (!verticalScroll && !target) {
+            return;
+        }
+
+        if (target) {
+            const containerHeight = grid.calcHeight ?
+                Math.ceil(grid.calcHeight) :
+                null; // null when there is no vertical virtualization
+            const containerTopOffset =
+                parseInt(grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const targetEndTopOffset = row.element.nativeElement.offsetTop + grid.rowHeight + containerTopOffset;
+            if (containerHeight && targetEndTopOffset > containerHeight) {
+                const scrollAmount = targetEndTopOffset - containerHeight;
+                this.performVerticalScroll(id, scrollAmount, rowIndex, columnIndex, event);
+            } else {
+                if (row instanceof IgxGridGroupByRowComponent) {
+                    target.nativeElement.focus();
+                } else {
+                    (target as any)._updateCellSelectionStatus(true, event);
+                }
+            }
+        } else {
+            const contentHeight = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
+            const scrollOffset = parseInt(grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const lastRowOffset = contentHeight + scrollOffset - grid.calcHeight;
+            const scrollAmount = grid.rowHeight + lastRowOffset;
+            this.performVerticalScroll(id, scrollAmount, rowIndex, columnIndex, event);
+        }
+    }
+
+    private performVerticalScroll(id: string, amount: number, rowIndex: number, columnIndex: number, event?) {
+        const grid = this.get(id);
+        const scrolled = grid.verticalScrollContainer.addScrollTop(amount);
+        if (scrolled) {
+            this.focusNextCell(id, rowIndex, columnIndex, undefined, event);
+        }
     }
 }

@@ -18,7 +18,7 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { IGridComponent } from './grid-interfaces';
+import { IGridComponent } from './common/grid-interfaces';
 import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
 
 /**

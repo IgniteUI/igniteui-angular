@@ -7,7 +7,7 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { IgxColumnComponent } from '../grid-common/column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.misc';
-import { IgxColumnMovingDragDirective } from '../grid-common/grid-common.misc';
+import { IgxColumnMovingDragDirective } from '../grid-common/common/grid-common.misc';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './grid-row.component';

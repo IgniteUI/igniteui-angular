@@ -34,7 +34,7 @@ import {
 
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
-import { IGridComponent } from './grid-interfaces';
+import { IGridComponent } from './common/grid-interfaces';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -845,7 +845,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         if (this.columnGroup) {
             this.allChildren.forEach(child => child.pin());
-            grid.reinitPinStates();
+            grid.gridAPI.reinitPinStates(grid.id);
         }
 
         grid.cdr.detectChanges();
@@ -893,7 +893,7 @@ export class IgxColumnComponent implements AfterContentInit {
             this.allChildren.forEach(child => child.unpin());
         }
 
-        grid.reinitPinStates();
+        grid.gridAPI.reinitPinStates(grid.id);
 
         grid.cdr.detectChanges();
         return true;

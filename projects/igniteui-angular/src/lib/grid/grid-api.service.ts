@@ -6,6 +6,8 @@ import { DataUtil } from '../data-operations/data-util';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IGridComponent, IgxRowComponent} from '../grid-common';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
 
@@ -157,6 +159,15 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
             return DataUtil.group(cloneArray(grid.filteredSortedData), state).metadata;
         } else {
             return null;
+        }
+    }
+
+    protected updateTarget(target: any, row: IgxRowComponent<IGridComponent>, dir?: string) {
+        if (target && row instanceof IgxGridGroupByRowComponent) {
+            target = row.groupContent;
+            target.nativeElement.focus();
+        } else {
+            super.updateTarget(target, row, dir);
         }
     }
 }

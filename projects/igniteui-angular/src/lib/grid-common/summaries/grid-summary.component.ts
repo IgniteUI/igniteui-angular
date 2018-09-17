@@ -5,7 +5,7 @@ import {
 import { DisplayDensity } from '../../core/utils';
 import { DataType } from '../../data-operations/data-util';
 import { IGridAPIService } from '../api.service';
-import { IGridComponent } from '../grid-interfaces';
+import { IGridComponent } from '../common/grid-interfaces';
 import { IgxColumnComponent } from '../column.component';
 /**
  *@hidden

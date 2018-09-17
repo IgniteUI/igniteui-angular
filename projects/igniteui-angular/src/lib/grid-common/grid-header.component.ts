@@ -18,9 +18,9 @@ import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IGridAPIService } from './api.service';
-import { IGridComponent } from './grid-interfaces';
+import { IGridComponent } from './common/grid-interfaces';
 import { IgxColumnComponent } from './column.component';
-import { IgxColumnMovingService } from './grid-common.misc';
+import { IgxColumnMovingService } from './common/grid-common.misc';
 import { isFirefox } from '../core/utils';
 
 /**
