@@ -98,8 +98,9 @@
         <ng-container *ngIf="groupingExpressions.length > 0">
             <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
         </ng-container>
-        <ng-container *ngIf="rowSelectable">
-            <div style="position: relative; z-index: 1; background-color: inherit;"
+        <ng-container *ngIf="summariesMargin">
+            <div
+            class="igx-grid__summaries-patch"
             [style.min-width.px]="summariesMargin" 
             [style.flex-basis.px]="summariesMargin"
             ></div>
