@@ -69,15 +69,21 @@ export class IgxOverlayService {
     /**
      * Shows the provided component.
      */
-    show(component: ElementRef | Type<{}>, settings?: OverlaySettings, id?: string): string {
+    show(id: string, settings?: OverlaySettings): string;
+    show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
+    show(compOrId: string | ElementRef | Type<{}> , settings?: OverlaySettings): string {
         let info: OverlayInfo;
-        if (id !== undefined) {
-            info = this.getOverlayById(id);
-        }
-
-        if (!info) {
+        let id: string;
+        if (typeof compOrId === 'string') {
+            id = compOrId;
+            info = this.getOverlayById(compOrId);
+            if (!info) {
+                console.warn('igxOverlay.show was called with wrong id: ' + compOrId);
+                return;
+            }
+        } else {
             id = (this._componentId++).toString();
-            info = this.getOverlayInfo(component);
+            info = this.getOverlayInfo(compOrId);
 
             //  if there is no info most probably wrong type component was provided and we just go out
             if (!info) {
