@@ -94,9 +94,15 @@
 
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" [style.height.px]="summariesHeight" [style.marginLeft.px]="summariesMargin" role="row" #summaries>
+    <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" [style.height.px]="summariesHeight" role="row" #summaries>
         <ng-container *ngIf="groupingExpressions.length > 0">
             <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
+        </ng-container>
+        <ng-container *ngIf="rowSelectable">
+            <div style="position: relative; z-index: 1; background-color: inherit;"
+            [style.min-width.px]="summariesMargin" 
+            [style.flex-basis.px]="summariesMargin"
+            ></div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-summary [gridID]="id" *ngFor="let col of notGroups(pinnedColumns)"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
