@@ -15,7 +15,7 @@ import { GridTemplateStrings } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
 
-describe('IgxGrid Component Tests', () => {
+fdescribe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
@@ -349,15 +349,15 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
-        xit('should account for columns with set width when determining default column width when grid has 100% width', () => {
+        it('should account for columns with set width when determining default column width when grid has 100% width', () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             const grid = fix.componentInstance.grid;
             fix.componentInstance.initColumnsRows(5, 5);
             fix.componentInstance.changeInitColumns = true;
             fix.detectChanges();
             expect(grid.width).toEqual('100%');
-            expect(grid.columns[0].width).toEqual('200px');
-            expect(grid.columns[4].width).toEqual('200px');
+            expect(grid.columns[0].width).toEqual('100px');
+            expect(grid.columns[4].width).toEqual('100px');
 
             const actualGridWidth = grid.nativeElement.clientWidth;
             const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
@@ -385,14 +385,14 @@ describe('IgxGrid Component Tests', () => {
         it('should account for columns with set width when determining default column width when grid has px width', () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             const grid = fix.componentInstance.grid;
-            grid.width = '800px';
+            grid.width = '600px';
             fix.componentInstance.initColumnsRows(5, 5);
             fix.componentInstance.changeInitColumns = true;
             fix.detectChanges();
 
-            expect(grid.width).toEqual('800px');
-            expect(grid.columns[0].width).toEqual('200px');
-            expect(grid.columns[4].width).toEqual('200px');
+            expect(grid.width).toEqual('600px');
+            expect(grid.columns[0].width).toEqual('100px');
+            expect(grid.columns[4].width).toEqual('100px');
 
             const actualGridWidth = grid.nativeElement.clientWidth;
             const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
@@ -417,7 +417,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
-        xit(`should account for columns with set width when determining default column width when grid has 100% width
+        it(`should account for columns with set width when determining default column width when grid has 100% width
             and there are enough rows to cover the grid's height`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             const grid = fix.componentInstance.grid;
@@ -426,8 +426,8 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             expect(grid.width).toEqual('100%');
-            expect(grid.columns[0].width).toEqual('200px');
-            expect(grid.columns[4].width).toEqual('200px');
+            expect(grid.columns[0].width).toEqual('100px');
+            expect(grid.columns[4].width).toEqual('100px');
 
             const actualGridWidth = grid.nativeElement.clientWidth;
 
@@ -922,7 +922,7 @@ export class IgxGridDefaultRenderingComponent {
             switch (this.grid.columnList.length) {
                 case 5:
                     if (column.index === 0 || column.index === 4) {
-                        column.width = '200px';
+                        column.width = '100px';
                     }
                     break;
                 case 30:
