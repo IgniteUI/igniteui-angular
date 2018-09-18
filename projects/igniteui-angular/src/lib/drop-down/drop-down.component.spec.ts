@@ -217,7 +217,7 @@ describe('IgxDropDown ', () => {
 
             currentItem.triggerEventHandler('click', mockObj);
             fixture.detectChanges();
-            expect(list.selectedItem.index).toEqual(2);
+            expect(list.selectedItem).toBeNull();
         }));
 
         it('Should support header items', fakeAsync(() => {
@@ -233,14 +233,16 @@ describe('IgxDropDown ', () => {
             button.click();
             tick();
             fixture.detectChanges();
-            const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADER))[0];
-            expect(currentItem).toBeDefined();
-            expect(currentItem.componentInstance).toEqual(headerItems[0]);
+            const firstHeaderItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADER))[0];
+            expect(firstHeaderItem).toBeDefined();
+            expect(firstHeaderItem.componentInstance).toEqual(headerItems[0]);
 
-            currentItem.triggerEventHandler('click', mockObj);
+            firstHeaderItem.triggerEventHandler('click', mockObj);
             tick();
             fixture.detectChanges();
-            expect(list.collapsed).toEqual(true);
+
+            //  clicking on header item should not close the drop down
+            expect(list.collapsed).toEqual(false);
         }));
 
         it('Should notify when selection has changed', fakeAsync(() => {
