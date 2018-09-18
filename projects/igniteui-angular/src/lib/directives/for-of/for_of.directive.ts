@@ -183,10 +183,6 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
     private hvh: ComponentRef<HVirtualHelperComponent>;
     private _differ: IterableDiffer<T> | null = null;
     private _trackByFn: TrackByFunction<T>;
-    private _lastTouchX = 0;
-    private _lastTouchY = 0;
-    private _pointerCapture;
-    private _gestureObject;
 
     private get _isScrolledToBottom() {
         if (!this.getVerticalScroll()) {
@@ -222,10 +218,6 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
 
     /** If the next onScroll event is triggered due to internal setting of scrollTop */
     private _bScrollInternal =  false;
-
-    /* size for the set amount of items */
-    private _storedSize: number;
-    // End properties related to virtual height handling
 
     private _embeddedViews: Array<EmbeddedViewRef<any>> = [];
 
@@ -826,47 +818,6 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         const elemBoundingRect = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect();
         return this.igxForScrollOrientation === 'horizontal' ?
             elemBoundingRect.width : elemBoundingRect.height;
-    }
-
-    /**
-     * @hidden
-     */
-    protected _calcMaxChunkSize() {
-        let i = 0;
-        let length = 0;
-        let maxLength = 0;
-        const arr = [];
-        let sum = 0;
-        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem.width, 10);
-        const availableSize = parseInt(this.igxForContainerSize, 10);
-        for (i; i < this.igxForOf.length; i++) {
-            const item = this.igxForOf[i];
-            sum = arr.reduce(reducer,  parseInt(item.width, 10));
-            if (sum <= availableSize) {
-                 arr.push(item);
-                 length = arr.length;
-                 if (i === this.igxForOf.length - 1) {
-                    // reached end without exceeding
-                    // include prev items until size is filled or first item is reached.
-                    let prevIndex = this.igxForOf.indexOf(arr[0]) - 1;
-                    while (prevIndex >= 0 && sum <= availableSize) {
-                        prevIndex = this.igxForOf.indexOf(arr[0]) - 1;
-                        const prevItem = this.igxForOf[prevIndex];
-                        sum = arr.reduce(reducer,  parseInt(prevItem.width, 10));
-                        arr.unshift(prevItem);
-                        length = arr.length;
-                    }
-                 }
-             } else {
-                 arr.push(item);
-                 length = arr.length + 1;
-                 arr.splice(0, 1);
-             }
-             if (length > maxLength) {
-                 maxLength = length;
-             }
-        }
-        return maxLength;
     }
 
     /**

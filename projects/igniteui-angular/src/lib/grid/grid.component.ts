@@ -626,6 +626,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public visibleRows: number = 10;
 
     /**
+     * @hidden
+     */
+    public get horizontalChunkSize(): number {
+        if (!this._horizontalChunkSize) {
+            this._horizontalChunkSize = this.getCalcHorizontalSize();
+        }
+        return this._horizontalChunkSize;
+    }
+
+    /**
      * Returns the width of the `IgxGridComponent`.
      * ```typescript
      * let gridWidth = this.grid.width;
@@ -696,7 +706,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public  get rowHeight()  {
+    public get rowHeight() {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
@@ -1188,7 +1198,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
 
     @ViewChildren('row')
-    private _rowList:  QueryList<any>;
+    private _rowList: QueryList<any>;
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -1489,7 +1499,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth =  this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -1950,6 +1960,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _pinnedColumnsText = '';
     private _width = '100%';
     private _rowHeight;
+    private _horizontalChunkSize = 0;
     private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
 
@@ -3366,6 +3377,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected calculateGridWidth() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
 
+        this._horizontalChunkSize = 0;
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             const width = parseInt(computed.getPropertyValue('width'), 10);
@@ -3671,9 +3683,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     public getContext(rowData): any {
         return {
             $implicit: rowData,
@@ -4324,6 +4336,48 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             return null;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected getCalcHorizontalSize(): number {
+        let i = 0;
+        let length = 0;
+        let maxLength = 0;
+        const arr = [];
+        const columns = this.columnList.toArray();
+        let sum = 0;
+        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem.width, 10);
+        const availableSize = this.unpinnedWidth;
+        for (i; i < columns.length; i++) {
+            const column = columns[i];
+            sum = arr.reduce(reducer, parseInt(column.width, 10));
+            if (sum <= availableSize) {
+                arr.push(column);
+                length = arr.length;
+                if (i === columns.length - 1) {
+                    // reached end without exceeding
+                    // include prev items until size is filled or first item is reached.
+                    let prevIndex = columns.indexOf(arr[i]) - 1;
+                    while (prevIndex >= 0 && sum <= availableSize) {
+                        prevIndex = columns.indexOf(arr[0]) - 1;
+                        const prevItem = columns[prevIndex];
+                        sum = arr.reduce(reducer, parseInt(prevItem.width, 10));
+                        arr.unshift(prevItem);
+                        length = arr.length;
+                    }
+                }
+            } else {
+                arr.push(column);
+                length = arr.length + 1;
+                arr.splice(0, 1);
+            }
+            if (length > maxLength) {
+                maxLength = length;
+            }
+        }
+        return maxLength;
     }
 
     // For paging we need just the increment between the start of the page and the current row
