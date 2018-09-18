@@ -634,13 +634,23 @@
         }
     }
 
-    %grid-row--dirty {
+    %grid-row--edit {
         border-style: solid;
-        border-color: black;
+        border-color: deeppink;
         border-width: 1px;
     }
-     %grid-row__updating-buttons {
+
+    %grid-row--dirty {
+        border-style: solid;
+        border-color: grey;
+        border-left-width: 3px;
+    }
+
+    %grid-row__updating-buttons {
         display: flex;
+        flex-direction: row-reverse;
+        background: white;
+        border: 1px solid grey;
     }
 
     %grid-row--group {

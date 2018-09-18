@@ -185,8 +185,13 @@ export class IgxGridAPIService {
             grid.onEditDone.emit(args);
             if (grid.transactions.aggregatedState() !== null) {
                 const newTransaction = { [column.field]: editValue };
-                grid.transactions.add({ id: rowID, type: TransactionType.UPDATE, newValue: newTransaction},
-                    grid.data[rowIndex]);
+                if (grid.rowEditable) {
+                    grid.transactions.addPending({ id: rowID, type: TransactionType.UPDATE, newValue: newTransaction},
+                        grid.data[rowIndex]);
+                } else {
+                    grid.transactions.add({ id: rowID, type: TransactionType.UPDATE, newValue: newTransaction},
+                        grid.data[rowIndex]);
+                }
             } else {
                 grid.data[rowIndex][column.field] = args.newValue;
             }

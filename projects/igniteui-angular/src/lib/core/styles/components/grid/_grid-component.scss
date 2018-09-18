@@ -93,7 +93,12 @@
     @include e(tr, $m: dirty) {
         @extend %grid-row--dirty !optional;
     }
-     @include e(tr, $m: updatingButtons) {
+
+    @include e(tr, $m: edit) {
+        @extend %grid-row--edit !optional;
+    }
+
+    @include e(tr, $m: updatingButtons) {
         @extend %grid-row__updating-buttons !optional;
     }
 

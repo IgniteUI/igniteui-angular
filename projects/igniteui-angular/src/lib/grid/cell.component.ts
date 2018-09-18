@@ -298,6 +298,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (this.highlight && this.grid.lastSearchInfo.searchText) {
                 this.highlight.observe();
             }
+            if (this.grid.rowEditable) {
+                this.row.inEditMode = value;
+            }
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }

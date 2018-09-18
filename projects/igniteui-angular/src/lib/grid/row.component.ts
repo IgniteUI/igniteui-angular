@@ -30,6 +30,8 @@ import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
 })
 export class IgxGridRowComponent implements DoCheck {
 
+    private _inEditMode = false;
+
     /**
      *  The data passed to the row component.
      *
@@ -109,7 +111,8 @@ export class IgxGridRowComponent implements DoCheck {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
         const dirtyClass = this.isDirty ? 'igx-grid__tr--dirty' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${dirtyClass}`;
+        const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}`;
     }
 
 
@@ -167,6 +170,18 @@ export class IgxGridRowComponent implements DoCheck {
     @HostBinding('attr.aria-dirty')
     public get isDirty(): boolean {
         return this.grid.rowEditable && this.grid.transactions.getTransactionLog(this.rowID) !== undefined;
+    }
+
+    public get inEditMode(): boolean {
+        return this._inEditMode;
+    }
+     public set inEditMode(value: boolean) {
+        this._inEditMode = value;
+        if (value) {
+            this.grid.openRowEditingOverlay(this);
+        } else {
+            this.grid.closeRowEditingOverlay();
+        }
     }
 
     /**

@@ -77,7 +77,7 @@ export class IgxTransactionBaseService implements ITransactionService {
      * Verifies if the passed transaction is correct. If not throws an exception.
      * @param transaction Transaction to be verified
      */
-    private verifyAddedTransaction(transaction: ITransaction, recordRef?: any): void {
+    protected verifyAddedTransaction(transaction: ITransaction, recordRef?: any): void {
         const state = this._states.get(transaction.id);
         switch (transaction.type) {
             case TransactionType.ADD:
@@ -106,7 +106,7 @@ export class IgxTransactionBaseService implements ITransactionService {
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    private updateCurrentState(transaction: ITransaction, recordRef?: any): void {
+    protected updateCurrentState(transaction: ITransaction, recordRef?: any): void {
         const state = this._states.get(transaction.id);
         //  if TransactionType is ADD simply add transaction to _states;
         //  if TransactionType is DELETE:
@@ -151,7 +151,7 @@ export class IgxTransactionBaseService implements ITransactionService {
      * @param state State to update value for
      * @param data Data source where update should be applied
      */
-    private updateValue(state: IState, data: any[]) {
+    protected updateValue(state: IState, data: any[]) {
         if (typeof state.recordRef === 'object') {
             Object.assign(state.recordRef, state.value);
         } else {

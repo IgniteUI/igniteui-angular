@@ -37,7 +37,8 @@ import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-recor
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
+import { IgxBaseExporter, IgxExporterOptionsBase, OverlaySettings, AbsoluteScrollStrategy,
+    ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -51,9 +52,10 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxTransactionBaseService } from '../services/transaction/transaction-base';
 import { ITransaction, TransactionType } from '../services/transaction/utilities';
+import { IgxPendingTransactionService } from '../services/transaction/transaction-pending';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -154,7 +156,7 @@ export interface IColumnMovingEndEventArgs {
     preserveWhitespaces: false,
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
-    providers: [IgxTransactionBaseService]
+    providers: [IgxPendingTransactionService]
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
@@ -1388,6 +1390,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild(IgxOverlayOutletDirective, { read: IgxOverlayOutletDirective })
     public outletDirective: IgxOverlayOutletDirective;
 
+    @ViewChild(IgxToggleDirective)
+    public rowEditingOverlay: IgxToggleDirective;
+
     /**
      * @hidden
      */
@@ -1599,6 +1604,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportText: string = null;
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
+    private _rowInEditMode: IgxGridRowComponent = null;
 
     /**
      * Provides access to the `IgxToolbarComponent`.
@@ -2004,7 +2010,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     constructor(
         private gridAPI: IgxGridAPIService,
         public selection: IgxSelectionAPIService,
-        private _transactions: IgxTransactionBaseService,
+        private _transactions: IgxPendingTransactionService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -4583,11 +4589,41 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.nativeElement.focus();
     }
 
-    public updateRowTransaction(event) {
+    public openRowEditingOverlay(row: IgxGridRowComponent) {
+        const overlaySettings: OverlaySettings = {
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            modal: false,
+            closeOnOutsideClick: false,
+            positionStrategy: new ConnectedPositioningStrategy({
+                target: row.element.nativeElement,
+                horizontalDirection: HorizontalAlignment.Left,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Right,
+                verticalStartPoint: VerticalAlignment.Bottom
+            })
+        };
+        this.rowEditingOverlay.open(overlaySettings);
+        this._rowInEditMode = row;
+    }
 
+    public closeRowEditingOverlay() {
+        this.rowEditingOverlay.close();
+        this._rowInEditMode = null;
+    }
+
+    public updateRowTransaction(event) {
+        const row = this._rowInEditMode;
+        this.closeRowEditingOverlay();
+        this.transactions.add(
+            {
+                id: row.rowID,
+                type: TransactionType.UPDATE,
+                newValue: this.transactions.getPending(row.rowID).value
+            },
+            this.data[row.index]);
     }
 
     public resetRowTransaction(event) {
-
+        this.closeRowEditingOverlay();
     }
 }
