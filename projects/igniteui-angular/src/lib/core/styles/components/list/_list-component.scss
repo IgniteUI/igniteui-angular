@@ -21,13 +21,13 @@
         @extend %igx-list-item-base !optional;
     }
 
-    // css class 'igx-list__item-left' applied to the panning container shown when the list item is panned left
-    @include e(item-left) {
+    // css class 'igx-list__item-right' applied to the panning container shown when the list item is panned left
+    @include e(item-right) {
         @extend %igx-list-item-pan !optional;
     }
 
-    // css class 'igx-list__item-right' applied to the panning container shown when the list item in panned right
-    @include e(item-right) {
+    // css class 'igx-list__item-left' applied to the panning container shown when the list item in panned right
+    @include e(item-left) {
         @extend %igx-list-item-pan !optional;
     }
 
