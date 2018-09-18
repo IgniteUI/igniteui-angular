@@ -19,7 +19,9 @@ export class IgxSelectionAPIService {
      * @param newSelection The new component selection to be set.
      */
     public set(componentID: string, newSelection: Set<any>) {
-        this.selection.set(componentID, newSelection);
+        if (componentID) {
+            this.selection.set(componentID, newSelection);
+        }
     }
 
     /**
@@ -57,7 +59,9 @@ export class IgxSelectionAPIService {
         if (sel === undefined) {
             sel = this.get_empty();
         }
-        sel.add(itemID);
+        if (itemID) {
+            sel.add(itemID);
+        }
         return sel;
     }
 
