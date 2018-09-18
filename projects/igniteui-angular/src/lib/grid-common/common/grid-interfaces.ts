@@ -29,7 +29,6 @@ import { IgxForOfDirective } from '../../directives/for-of/for_of.directive';
 import { DisplayDensity } from '../../core/utils';
 import { IgxSelectionAPIService } from '../../core/selection';
 
-import { IColumnVisibilityChangedEventArgs } from '../column-hiding/column-hiding-item.directive';
 import { DropPosition } from './grid-common.misc';
 
 export interface IGridCellEventArgs {
@@ -101,11 +100,17 @@ export interface IColumnMovingEndEventArgs {
     cancel: boolean;
 }
 
+export interface IColumnVisibilityChangedEventArgs {
+    column: any;
+    newValue: boolean;
+}
+
 export interface IGridComponent {
     id: string;
     nativeElement: any;
     cdr: ChangeDetectorRef;
     selection: IgxSelectionAPIService;
+    pipeTrigger: number;
     template: TemplateRef<any>;
     emptyGridTemplate: TemplateRef<any>;
     columns: IgxColumnComponent[];
@@ -123,6 +128,8 @@ export interface IGridComponent {
     page: number;
     perPage: number;
     isLastPage: boolean;
+    isFirstPage: boolean;
+    totalPages: number;
     pagingState: any;
     filteringExpressionsTree: IFilteringExpressionsTree;
     lastSearchInfo: ISearchInfo;
@@ -190,6 +197,7 @@ export interface IGridComponent {
     // TODO check if it can be passed to the API service
     ngAfterViewInitPassed: boolean;
     unpinnedAreaMinWidth: number;
+    dropAreaVisible: boolean;
 
     // Events
     onCellClick: EventEmitter<IGridCellEventArgs>;
@@ -228,6 +236,7 @@ export interface IGridComponent {
     toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs);
     clearFilter(name?: string);
     filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree, ignoreCase?: boolean);
+    filterGlobal(value: any, condition?, ignoreCase?: boolean);
     clearSummaryCache(editCell?: IGridEditEventArgs);
     selectedRows(): any[];
     selectRows(rowIDs: any[], clearCurrentSelection?: boolean);

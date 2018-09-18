@@ -10,9 +10,10 @@ import {
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../../checkbox/checkbox.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
-import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
+import { IgxColumnHidingItemDirective } from './column-hiding-item.directive';
 import { IgxInputGroupModule } from '../../input-group/input-group.component';
 import { ColumnChooserBase } from './column-chooser-base';
+import { IColumnVisibilityChangedEventArgs } from '../common/grid-interfaces';
 
 @Component({
     preserveWhitespaces: false,

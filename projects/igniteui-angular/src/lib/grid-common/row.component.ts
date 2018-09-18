@@ -267,9 +267,9 @@ export class IgxRowComponent<T extends IGridComponent> implements DoCheck {
         if (editableCell && editableCell.cellID.rowID === this.rowID) {
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
-        this.gridAPI.update_row(value, this.gridID, this.rowID);
+        this.gridAPI.update_row_implementation(this.gridID, value, this.rowID);
         this.cdr.markForCheck();
-        this.gridAPI.refreshSearch(this.gridID);
+        this.gridAPI.refresh_search(this.gridID);
     }
 
     /**
@@ -296,7 +296,7 @@ export class IgxRowComponent<T extends IGridComponent> implements DoCheck {
         }
         (this.grid as any)._pipeTrigger++;
         this.cdr.markForCheck();
-        this.gridAPI.refreshSearch(this.gridID);
+        this.gridAPI.refresh_search(this.gridID);
 
         if (this.grid.data.length % this.grid.perPage === 0 && this.grid.isLastPage && this.grid.page !== 0) {
             this.grid.page--;

@@ -6,8 +6,6 @@ import { DataUtil } from '../data-operations/data-util';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IGridComponent, IgxRowComponent} from '../grid-common';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
 
@@ -28,16 +26,16 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         });
     }
 
-    public onAfterContentInit(id: string) {
+    public on_after_content_init(id: string) {
         const grid = this.get(id);
         if (grid.groupTemplate) {
             grid.groupRowTemplate = grid.groupTemplate.template;
         }
 
-        super.onAfterContentInit(id);
+        super.on_after_content_init(id);
     }
 
-    public getGroupAreaHeight(id: string): number {
+    public get_group_area_height(id: string): number {
         const grid = this.get(id);
         return grid.groupArea ? grid.groupArea.nativeElement.offsetHeight : 0;
     }
@@ -50,7 +48,7 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         }
     }
 
-    public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+    public group_by(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
@@ -59,7 +57,7 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         this.arrange_sorting_expressions(id);
     }
 
-    public groupBy_multiple(id: string, expressions: ISortingExpression[]): void {
+    public group_by_multiple(id: string, expressions: ISortingExpression[]): void {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
@@ -71,7 +69,7 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         this.arrange_sorting_expressions(id);
     }
 
-    public clear_groupby(id: string, name?: string) {
+    public clear_group_by(id: string, name?: string) {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
@@ -109,18 +107,18 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         }
     }
 
-    public groupBy_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
+    public group_by_get_expanded_for_group(id: string, groupRow: IGroupByRecord): IGroupByExpandState {
         const grState = this.get(id).groupingExpansionState;
         const hierarchy = DataUtil.getHierarchy(groupRow);
         return grState.find((state) =>
             DataUtil.isHierarchyMatch(state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
     }
 
-    public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
+    public group_by_toggle_group(id: string, groupRow: IGroupByRecord) {
         const grid = this.get(id);
         const expansionState = grid.groupingExpansionState;
 
-        const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
+        const state: IGroupByExpandState = this.group_by_get_expanded_for_group(id, groupRow);
         if (state) {
             state.expanded = !state.expanded;
         } else {
@@ -132,10 +130,10 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         this.get(id).groupingExpansionState = expansionState;
     }
 
-    public scrollTo(id: string, row: any, column: any): void {
+    public scroll_to(id: string, row: any, column: any): void {
         const grid = this.get(id);
         if (grid.groupingExpressions && grid.groupingExpressions.length) {
-            const groupByRecords = this.getGroupByRecords(id);
+            const groupByRecords = this.get_group_by_records(id);
             const rowIndex = grid.filteredSortedData.indexOf(row);
             const groupByRecord = groupByRecords[rowIndex];
 
@@ -144,10 +142,10 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
             }
         }
 
-        super.scrollTo(id, row, column);
+        super.scroll_to(id, row, column);
     }
 
-    private getGroupByRecords(id: string): IGroupByRecord[] {
+    private get_group_by_records(id: string): IGroupByRecord[] {
         const grid = this.get(id);
         if (grid.groupingExpressions && grid.groupingExpressions.length) {
             const state = {
@@ -160,5 +158,16 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         } else {
             return null;
         }
+    }
+
+    public get_pinned_width(id: string, takeHidden: boolean) {
+        const grid = this.get(id);
+        let sum = super.get_pinned_width(id, takeHidden);
+
+        if (grid.groupingExpressions.length > 0 && grid.headerGroupContainer) {
+            sum += grid.headerGroupContainer.nativeElement.clientWidth;
+        }
+
+        return sum;
     }
 }

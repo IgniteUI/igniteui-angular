@@ -2,11 +2,6 @@
 import { Directive } from '@angular/core';
 import { ColumnChooserItemBase } from './column-chooser-item-base';
 
-export interface IColumnVisibilityChangedEventArgs {
-    column: any;
-    newValue: boolean;
-}
-
 @Directive({
     selector: '[igxColumnHidingItem]'
 })

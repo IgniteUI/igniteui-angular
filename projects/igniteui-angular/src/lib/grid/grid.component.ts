@@ -14,7 +14,6 @@ import {
     HostListener,
     Inject,
     Input,
-    IterableChangeRecord,
     IterableDiffers,
     NgZone,
     OnDestroy,
@@ -26,28 +25,22 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { Subject, of } from 'rxjs';
-import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
-import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxForOfDirective, IForOfState } from '../directives/for-of/for_of.directive';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridCellComponent } from '../grid-common/cell.component';
-import { IColumnVisibilityChangedEventArgs } from '../grid-common/column-hiding/column-hiding-item.directive';
 import { IgxColumnComponent } from '../grid-common/column.component';
 import { ISummaryExpression } from '../grid-common/summaries/grid-summary';
 import { IgxGroupByRowTemplateDirective } from './grid.misc';
 import { DropPosition } from '../grid-common/common/grid-common.misc';
 import { IgxColumnMovingDragDirective } from '../grid-common/common/grid-common.misc';
 import { IgxGridToolbarComponent } from '../grid-common/grid-toolbar.component';
-import { IgxGridSortingPipe } from '../grid-common/common/grid-common.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
@@ -66,6 +59,7 @@ import {
     IColumnMovingEventArgs,
     IColumnMovingStartEventArgs,
     IGridToolbarExportEventArgs,
+    IColumnVisibilityChangedEventArgs,
     ISearchInfo,
     IGridComponent
 } from '../grid-common/common/grid-interfaces';
@@ -232,7 +226,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
         }
 
-        this.gridAPI.refreshSearch(this.id, true);
+        this.gridAPI.refresh_search(this.id, true);
     }
 
     /**
@@ -353,7 +347,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         if (this.ngAfterViewInitPassed) {
             this.cdr.detectChanges();
-            this.gridAPI.calculateGridHeight(this.id);
+            this.gridAPI.calculate_grid_height(this.id);
             this.cdr.detectChanges();
         }
     }
@@ -486,7 +480,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
                 if (this.ngAfterViewInitPassed) {
-                    this.calculateGridSizes();
+                    this.reflow();
                 }
             }
         }
@@ -547,7 +541,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
-                this.gridAPI.calculateGridHeight(this.id);
+                this.gridAPI.calculate_grid_height(this.id);
                 this.cdr.markForCheck();
             });
         }
@@ -755,7 +749,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
                 if (this.ngAfterViewInitPassed) {
-                    this.calculateGridSizes();
+                    this.reflow();
                 }
             }
         }
@@ -1126,15 +1120,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public get rowList() {
-        const res = new QueryList<any>();
-        if (!this._rowList) {
-            return res;
-        }
-        const rList = this._rowList.filter((item) => {
-            return item.element.nativeElement.parentElement !== null;
-        });
-        res.reset(rList);
-        return res;
+        return this.gridAPI.get_row_list(this._rowList);
     }
 
     @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
@@ -1148,15 +1134,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public get dataRowList() {
-        const res = new QueryList<any>();
-        if (!this._dataRowList) {
-            return res;
-        }
-        const rList = this._dataRowList.filter((item) => {
-            return item.element.nativeElement.parentElement !== null;
-        });
-        res.reset(rList);
-        return res;
+        return this.gridAPI.get_row_list(this._dataRowList);
     }
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
@@ -1170,15 +1148,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public get groupsRowList() {
-        const res = new QueryList<any>();
-        if (!this._groupsRowList) {
-            return res;
-        }
-        const rList = this._groupsRowList.filter((item) => {
-            return item.element.nativeElement.parentElement !== null;
-        });
-        res.reset(rList);
-        return res;
+        return this.gridAPI.get_row_list(this._groupsRowList);
     }
 
 
@@ -1333,13 +1303,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public hostRole = 'grid';
 
     /**
-     * @hidden
-     */
-    get pipeTrigger(): number {
-        return this._pipeTrigger;
-    }
-
-    /**
      * Returns the sorting state of the `IgxGridComponent`.
      * ```typescript
      * const sortingState = this.grid.sortingExpressions;
@@ -1366,7 +1329,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
 
-        this.gridAPI.refreshSearch(this.id, true);
+        this.gridAPI.refresh_search(this.id, true);
     }
 
     /**
@@ -1413,13 +1376,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * @hidden
+     * Returns an array of visible `IgxColumnComponent`s.
+     * ```typescript
+     * const visibleColumns = this.grid.visibleColumns.
+     * ```
+	 * @memberof IgxGridComponent
      */
-    get maxLevelHeaderDepth() {
-        if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
-        }
-        return this._maxLevelHeaderDepth;
+    get visibleColumns(): IgxColumnComponent[] {
+        return this.columnList.filter((col) => !col.hidden);
     }
 
     /**
@@ -1482,6 +1446,203 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._pinnedColumnsText = value;
     }
 
+    /**
+     * Returns if the grid's group by drop area is visible.
+     * ```typescript
+     * const dropVisible = this.grid.dropAreaVisible;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    public get dropAreaVisible(): boolean {
+        return (this.draggedColumn && this.draggedColumn.groupable) ||
+            !this.chipsGoupingExpressions.length;
+    }
+
+     /**
+     * Returns if the `IgxGridComponent` has groupable columns.
+     * ```typescript
+     * const groupableGrid = this.grid.hasGroupableColumns;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasGroupableColumns(): boolean {
+        return this.columnList.some((col) => col.groupable);
+    }
+
+    /**
+     * Returns if the `IgxGridComponent` has sortable columns.
+     * ```typescript
+     * const sortableGrid = this.grid.hasSortableColumns;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasSortableColumns(): boolean {
+        return this.columnList.some((col) => col.sortable);
+    }
+
+    /**
+     * Returns if the `IgxGridComponent` has editable columns.
+     * ```typescript
+     * const editableGrid = this.grid.hasEditableColumns;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasEditableColumns(): boolean {
+        return this.columnList.some((col) => col.editable);
+    }
+
+    /**
+     * Returns if the `IgxGridComponent` has fiterable columns.
+     * ```typescript
+     * const filterableGrid = this.grid.hasFilterableColumns;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasFilterableColumns(): boolean {
+        return this.columnList.some((col) => col.filterable);
+    }
+
+    /**
+     * Returns if the `IgxGridComponent` has summarized columns.
+     * ```typescript
+     * const summarizedGrid = this.grid.hasSummarizedColumns;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasSummarizedColumns(): boolean {
+        const summarizedColumns = this.columnList.filter(col => col.hasSummary);
+        return summarizedColumns.length > 0 && summarizedColumns.some(col => !col.hidden);
+    }
+
+    /**
+     * Returns if the `IgxGridComponent` has moveable columns.
+     * ```typescript
+     * const movableGrid = this.grid.hasMovableColumns;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasMovableColumns(): boolean {
+        return this.columnList && this.columnList.some((col) => col.movable);
+    }
+
+    /**
+     * Returns if the `IgxGridComponent` has column groups.
+     * ```typescript
+     * const groupGrid = this.grid.hasColumnGroups;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasColumnGroups(): boolean {
+        return this.columnList.some(col => col.columnGroup);
+    }
+
+        /**
+     * Returns the total number of pages.
+     * ```typescript
+     * const totalPages = this.grid.totalPages;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get totalPages(): number {
+        if (this.pagingState) {
+            return this.pagingState.metadata.countPages;
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the total number of records.
+     * Only functions when paging is enabled.
+     * ```typescript
+     * const totalRecords = this.grid.totalRecords;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get totalRecords(): number {
+        if (this.pagingState) {
+            return this.pagingState.metadata.countRecords;
+        }
+    }
+
+    /**
+     * Returns if the current page is the first page.
+     * ```typescript
+     * const firstPage = this.grid.isFirstPage;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get isFirstPage(): boolean {
+        return this.page === 0;
+    }
+
+    /**
+     * Returns if the current page is the last page.
+     * ```typescript
+     * const lastPage = this.grid.isLastPage;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get isLastPage(): boolean {
+        return this.page + 1 >= this.totalPages;
+    }
+
+    /**
+     * Returns the total width of the `IgxGridComponent`.
+     * ```typescript
+     * const gridWidth = this.grid.totalWidth;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get totalWidth(): number {
+        return this.gridAPI.total_width(this.id);
+    }
+
+    /**
+     * @hidden
+     */
+    get dropAreaTemplateResolved(): TemplateRef<any> {
+        return this.dropAreaTemplate ? this.dropAreaTemplate : this.defaultDropAreaTemplate;
+    }
+
+    /**
+     * @hidden
+     */
+    get pipeTrigger(): number {
+        return this._pipeTrigger;
+    }
+
+    /**
+     * @hidden
+     */
+    get maxLevelHeaderDepth() {
+        if (this._maxLevelHeaderDepth === null) {
+            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+        }
+        return this._maxLevelHeaderDepth;
+    }
+
+    /**
+     * hidden
+     */
+    public get template(): TemplateRef<any> {
+        if (this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.data && this.data.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    get headerCheckboxAriaLabel() {
+        return this._filteringExpressionsTree.filteringOperands.length > 0 ?
+            this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all filtered' : 'Select all filtered' :
+            this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all' : 'Select all';
+    }
+
     /* Toolbar related definitions */
     private _showToolbar = false;
     private _exportExcel = false;
@@ -1540,7 +1701,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._showToolbar = newValue;
             this.cdr.markForCheck();
             if (this.ngAfterViewInitPassed) {
-                this.calculateGridSizes();
+                this.reflow();
             }
         }
     }
@@ -1569,7 +1730,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._toolbarTitle = newValue;
             this.cdr.markForCheck();
             if (this.ngAfterViewInitPassed) {
-                this.calculateGridSizes();
+                this.reflow();
             }
         }
     }
@@ -1598,7 +1759,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._exportExcel = newValue;
             this.cdr.markForCheck();
             if (this.ngAfterViewInitPassed) {
-                this.calculateGridSizes();
+                this.reflow();
             }
         }
     }
@@ -1627,7 +1788,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._exportCsv = newValue;
             this.cdr.markForCheck();
             if (this.ngAfterViewInitPassed) {
-                this.calculateGridSizes();
+                this.reflow();
             }
         }
     }
@@ -1656,7 +1817,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._exportText = newValue;
             this.cdr.markForCheck();
             if (this.ngAfterViewInitPassed) {
-                this.calculateGridSizes();
+                this.reflow();
             }
         }
     }
@@ -1685,7 +1846,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._exportExcelText = newValue;
             this.cdr.markForCheck();
             if (this.ngAfterViewInitPassed) {
-                this.calculateGridSizes();
+                this.reflow();
             }
         }
     }
@@ -1714,7 +1875,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._exportCsvText = newValue;
             this.cdr.markForCheck();
             if (this.ngAfterViewInitPassed) {
-                this.calculateGridSizes();
+                this.reflow();
             }
         }
     }
@@ -1896,28 +2057,28 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public ngOnInit() {
-        this.gridAPI.onInit(this);
+        this.gridAPI.on_init(this);
     }
 
     /**
      * @hidden
      */
     public ngAfterContentInit() {
-        this.gridAPI.onAfterContentInit(this.id);
+        this.gridAPI.on_after_content_init(this.id);
     }
 
     /**
      * @hidden
      */
     public ngAfterViewInit() {
-        this.gridAPI.onAfterViewInit(this.id);
+        this.gridAPI.on_after_view_init(this.id);
     }
 
     /**
      * @hidden
      */
     public ngOnDestroy() {
-        this.gridAPI.onDestroy(this.id);
+        this.gridAPI.on_destroy(this.id);
     }
 
     /**
@@ -1938,11 +2099,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
-        const col = this.getColumnByName(args.column.field);
-        col.hidden = args.newValue;
-        this.onColumnVisibilityChanged.emit(args);
-
-        this.markForCheck();
+        this.gridAPI.toggle_column_visibility(this.id, args);
     }
 
     /**
@@ -2106,7 +2263,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     get pinnedColumns(): IgxColumnComponent[] {
-        return this._pinnedColumns.filter((col) => !col.hidden);
+        return this._pinnedColumns;
     }
     set pinnedColumns(value: IgxColumnComponent[]) {
         this._pinnedColumns = value;
@@ -2135,7 +2292,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public getColumnByName(name: string): IgxColumnComponent {
-        return this.columnList.find((col) => col.field === name);
+        return this.gridAPI.get_column_by_name(this.id, name);
     }
 
     /**
@@ -2164,17 +2321,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Returns an array of visible `IgxColumnComponent`s.
-     * ```typescript
-     * const visibleColumns = this.grid.visibleColumns.
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get visibleColumns(): IgxColumnComponent[] {
-        return this.columnList.filter((col) => !col.hidden);
-    }
-
-    /**
      * Returns the `IgxGridCellComponent` that matches the conditions.
      * ```typescript
      * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
@@ -2184,10 +2330,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
-        const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
-        if (columnId !== -1) {
-            return this.gridAPI.get_cell_by_index(this.id, rowIndex, columnId);
-        }
+        return this.gridAPI.get_cell_by_column(this.id, rowIndex, columnField);
     }
 
     /**
@@ -2205,154 +2348,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Returns the total number of pages.
-     * ```typescript
-     * const totalPages = this.grid.totalPages;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get totalPages(): number {
-        if (this.pagingState) {
-            return this.pagingState.metadata.countPages;
-        }
-        return -1;
-    }
-
-    /**
-     * Returns the total number of records.
-     * Only functions when paging is enabled.
-     * ```typescript
-     * const totalRecords = this.grid.totalRecords;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get totalRecords(): number {
-        if (this.pagingState) {
-            return this.pagingState.metadata.countRecords;
-        }
-    }
-
-    /**
-     * Returns if the current page is the first page.
-     * ```typescript
-     * const firstPage = this.grid.isFirstPage;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get isFirstPage(): boolean {
-        return this.page === 0;
-    }
-
-    /**
-     * Returns if the current page is the last page.
-     * ```typescript
-     * const lastPage = this.grid.isLastPage;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get isLastPage(): boolean {
-        return this.page + 1 >= this.totalPages;
-    }
-
-    /**
-     * Returns the total width of the `IgxGridComponent`.
-     * ```typescript
-     * const gridWidth = this.grid.totalWidth;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get totalWidth(): number {
-        // Take only top level columns
-        const cols = this.visibleColumns.filter(col => col.level === 0 && !col.pinned);
-        let totalWidth = 0;
-        let i = 0;
-        for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].width, 10) || 0;
-        }
-        return totalWidth;
-    }
-
-    /**
-     * @hidden
-     */
-    protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
-        const list = this.columnList.toArray();
-        const fromIndex = list.indexOf(from);
-        let toIndex = list.indexOf(to);
-
-        if (pos === DropPosition.BeforeDropTarget) {
-            toIndex--;
-            if (toIndex < 0) {
-                toIndex = 0;
-            }
-        }
-
-        if (pos === DropPosition.AfterDropTarget) {
-            toIndex++;
-        }
-
-        list.splice(toIndex, 0, ...list.splice(fromIndex, 1));
-        const newList = this._resetColumnList(list);
-        this.columnList.reset(newList);
-        this.columnList.notifyOnChanges();
-        this._columns = this.columnList.toArray();
-    }
-
-    /**
-     * @hidden
-     */
-    protected _resetColumnList(list?) {
-        if (!list) {
-            list = this.columnList.toArray();
-        }
-        let newList = [];
-        list.filter(c => c.level === 0).forEach(p => {
-            newList.push(p);
-            if (p.columnGroup) {
-                newList = newList.concat(p.allChildren);
-            }
-        });
-        return newList;
-    }
-
-    /**
-     * @hidden
-     */
-    protected _reorderPinnedColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition) {
-        const pinned = this._pinnedColumns;
-        let dropIndex = pinned.indexOf(to);
-
-        if (position === DropPosition.BeforeDropTarget) {
-            dropIndex--;
-        }
-
-        if (position === DropPosition.AfterDropTarget) {
-            dropIndex++;
-        }
-
-        pinned.splice(dropIndex, 0, ...pinned.splice(pinned.indexOf(from), 1));
-    }
-
-    /**
-     * @hidden
-     */
-    protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
-        const buffer = parent.children.toArray();
-        const fromIndex = buffer.indexOf(from);
-        let toIndex = buffer.indexOf(to);
-
-        if (pos === DropPosition.BeforeDropTarget) {
-            toIndex--;
-        }
-
-        if (pos === DropPosition.AfterDropTarget) {
-            toIndex++;
-        }
-
-        buffer.splice(toIndex, 0, ...buffer.splice(fromIndex, 1));
-        parent.children.reset(buffer);
-    }
-    /**
      * Moves a column to the specified drop target.
      * ```typescript
      * grid.moveColumn(compName, persDetails);
@@ -2360,57 +2355,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	  * @memberof IgxGridComponent
 	  */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
-
-        let position = pos;
-        const fromIndex = column.visibleIndex;
-        const toIndex = dropTarget.visibleIndex;
-
-        if (pos === DropPosition.BeforeDropTarget && fromIndex < toIndex) {
-            position = DropPosition.BeforeDropTarget;
-        } else if (pos === DropPosition.AfterDropTarget && fromIndex > toIndex) {
-            position = DropPosition.AfterDropTarget;
-        } else {
-            position = DropPosition.None;
-        }
-
-
-        if ((column.level !== dropTarget.level) ||
-            (column.topLevelParent !== dropTarget.topLevelParent)) {
-            return;
-        }
-
-        this.gridAPI.submit_value(this.id);
-        if (column.level) {
-            this._moveChildColumns(column.parent, column, dropTarget, position);
-        }
-
-        if (dropTarget.pinned && column.pinned) {
-            this._reorderPinnedColumns(column, dropTarget, position);
-        }
-
-        if (dropTarget.pinned && !column.pinned) {
-            column.pin();
-            this._reorderPinnedColumns(column, dropTarget, position);
-        }
-
-        if (!dropTarget.pinned && column.pinned) {
-            column.unpin();
-
-            const list = this.columnList.toArray();
-            const fi = list.indexOf(column);
-            const ti = list.indexOf(dropTarget);
-
-            if (pos === DropPosition.BeforeDropTarget && fi < ti) {
-                position = DropPosition.BeforeDropTarget;
-            } else if (pos === DropPosition.AfterDropTarget && fi > ti) {
-                position = DropPosition.AfterDropTarget;
-            } else {
-                position = DropPosition.None;
-            }
-        }
-
-        this._moveColumns(column, dropTarget, position);
-        this.cdr.detectChanges();
+        this.gridAPI.move_column(this.id, column, dropTarget, pos);
     }
 
     /**
@@ -2421,9 +2366,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
+        this.gridAPI.next_page(this.id);
     }
 
     /**
@@ -2434,9 +2377,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
+        this.gridAPI.previous_page(this.id);
     }
 
     /**
@@ -2448,11 +2389,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1) {
-            return;
-        }
-
-        this.page = val;
+        this.gridAPI.paginate(this.id, val);
     }
 
     /**
@@ -2463,10 +2400,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public markForCheck() {
-        if (this.rowList) {
-            this.rowList.forEach((row) => row.cdr.markForCheck());
-        }
-        this.cdr.detectChanges();
+        this.gridAPI.mark_for_check(this.id);
     }
 
     /**
@@ -2482,12 +2416,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public addRow(data: any): void {
-        this.data.push(data);
-        this.onRowAdded.emit({ data });
-        this._pipeTrigger++;
-        this.cdr.markForCheck();
-
-        this.refreshSearch();
+        this.gridAPI.add_row(this.id, data);
     }
 
     /**
@@ -2501,29 +2430,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public deleteRow(rowSelector: any): void {
-        if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const index = this.gridAPI.get(this.id).data.map((record) => record[this.gridAPI.get(this.id).primaryKey]).indexOf(rowSelector);
-            if (index !== -1) {
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                if (editableCell && editableCell.cellID.rowID === rowSelector) {
-                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-                }
-                this.onRowDeleted.emit({ data: this.data[index] });
-                this.data.splice(index, 1);
-                if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowSelector)) {
-                    this.deselectRows([rowSelector]);
-                } else {
-                    this.checkHeaderCheckboxStatus();
-                }
-                this._pipeTrigger++;
-                this.cdr.markForCheck();
-
-                this.refreshSearch();
-                if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
-                    this.page--;
-                }
-            }
-        }
+        this.gridAPI.delete_row(this.id, rowSelector);
     }
 
     /**
@@ -2538,20 +2445,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public updateCell(value: any, rowSelector: any, column: string): void {
-        if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
-            if (columnEdit.length > 0) {
-                const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                if (editableCell && editableCell.cellID.rowID === rowSelector &&
-                    editableCell.cellID.columnID === columnId) {
-                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-                }
-                this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
-                this.cdr.markForCheck();
-                this.refreshSearch();
-            }
-        }
+        this.gridAPI.update_cell(this.id, value, rowSelector, column);
     }
 
     /**
@@ -2568,15 +2462,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public updateRow(value: any, rowSelector: any): void {
-        if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-            if (editableCell && editableCell.cellID.rowID === rowSelector) {
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-            }
-            this.gridAPI.update_row(value, this.id, rowSelector);
-            this.cdr.markForCheck();
-            this.refreshSearch();
-        }
+        this.gridAPI.update_row(this.id, value, rowSelector);
     }
 
     /**
@@ -2589,12 +2475,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     public sort(...rest): void {
-        this.gridAPI.escape_editMode(this.id);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._sortMultiple(rest[0]);
-        } else {
-            this._sort(rest[0]);
-        }
+        this.gridAPI.sort(this.id, rest);
     }
 
     /**
@@ -2613,10 +2494,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._groupBy(rest[0]);
         }
         this.cdr.detectChanges();
-        this.calculateGridSizes();
+        this.reflow();
         this.onGroupingDone.emit(this.sortingExpressions);
 
-        this.gridAPI.refreshSearch(this.id, true);
+        this.gridAPI.refresh_search(this.id, true);
     }
 
     /**
@@ -2629,10 +2510,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      *
      */
     public clearGrouping(name?: string): void {
-        this.gridAPI.clear_groupby(this.id, name);
-        this.calculateGridSizes();
+        this.gridAPI.clear_group_by(this.id, name);
+        this.reflow();
 
-        this.gridAPI.refreshSearch(this.id, true);
+        this.gridAPI.refresh_search(this.id, true);
     }
 
     /**
@@ -2657,7 +2538,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public toggleGroup(groupRow: IGroupByRecord) {
-        this._toggleGroup(groupRow);
+        this.gridAPI.group_by_toggle_group(this.id, groupRow);
     }
 
     /**
@@ -2666,18 +2547,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
         return record.records && record.records.length;
-    }
-
-    /**
-     * Returns if the grid's group by drop area is visible.
-     * ```typescript
-     * const dropVisible = this.grid.dropAreaVisible;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    public get dropAreaVisible(): boolean {
-        return (this.draggedColumn && this.draggedColumn.groupable) ||
-            !this.chipsGoupingExpressions.length;
     }
 
     /**
@@ -2695,20 +2564,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
-        const col = this.gridAPI.get_column_by_name(this.id, name);
-        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
-
-        if (conditionOrExpressionTree) {
-            this.gridAPI.filter(this.id, name, value, conditionOrExpressionTree, filteringIgnoreCase);
-        } else {
-            const expressionsTreeForColumn = this._filteringExpressionsTree.find(name);
-            if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.gridAPI.filter(this.id, name, value, expressionsTreeForColumn, filteringIgnoreCase);
-            } else {
-                const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.gridAPI.filter(this.id, name, value, expressionForColumn.condition, filteringIgnoreCase);
-            }
-        }
+        this.gridAPI.filter(this.id, name, value, conditionOrExpressionTree, ignoreCase);
     }
 
     /**
@@ -2739,15 +2595,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public enableSummaries(...rest) {
-        if (rest.length === 1 && Array.isArray(rest[0])) {
-            this._multipleSummaries(rest[0], true);
-        } else {
-            this._summaries(rest[0], true, rest[1]);
-        }
-        this.summariesHeight = 0;
-        this.markForCheck();
-        this.gridAPI.calculateGridHeight(this.id);
-        this.cdr.detectChanges();
+        this.gridAPI.enable_summaries(this.id, rest);
     }
 
     /**
@@ -2763,15 +2611,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public disableSummaries(...rest) {
-        if (rest.length === 1 && Array.isArray(rest[0])) {
-            this._disableMultipleSummaries(rest[0], false);
-        } else {
-            this._summaries(rest[0], false);
-        }
-        this.summariesHeight = 0;
-        this.markForCheck();
-        this.gridAPI.calculateGridHeight(this.id);
-        this.cdr.detectChanges();
+        this.gridAPI.disable_summaries(this.id, rest);
     }
 
     /**
@@ -2784,13 +2624,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public clearFilter(name?: string) {
-        if (name) {
-            const column = this.gridAPI.get_column_by_name(this.id, name);
-            if (!column) {
-                return;
-            }
-        }
-
         this.gridAPI.clear_filter(this.id, name);
     }
 
@@ -2804,13 +2637,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public clearSort(name?: string) {
-        if (!name) {
-            this.sortingExpressions = [];
-            return;
-        }
-        if (!this.gridAPI.get_column_by_name(this.id, name)) {
-            return;
-        }
         this.gridAPI.clear_sort(this.id, name);
     }
 
@@ -2818,11 +2644,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public clearSummaryCache(editCell?) {
-        if (editCell && editCell.cell) {
-            this.gridAPI.remove_summary(this.id, editCell.cell.column.filed);
-        } else {
-            this.gridAPI.remove_summary(this.id);
-        }
+        this.gridAPI.clear_summary_cache(this.id, editCell);
     }
 
     // TODO: We have return values here. Move them to event args ??
@@ -2837,8 +2659,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
-        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
-        return col.pin(index);
+        return this.gridAPI.pin_column(this.id, columnName, index);
     }
 
     /**
@@ -2851,8 +2672,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
-        const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
-        return col.unpin(index);
+        return this.gridAPI.unpin_column(this.id, columnName, index);
     }
 
     /**
@@ -2877,7 +2697,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public reflow() {
-        this.calculateGridSizes();
+        this.gridAPI.reflow(this.id);
     }
 
     /**
@@ -2889,8 +2709,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public recalculateSummaries() {
-        this.summariesHeight = 0;
-        requestAnimationFrame(() => this.calculateGridSizes());
+        this.gridAPI.recalculate_summaries(this.id);
     }
 
     /**
@@ -2933,7 +2752,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public refreshSearch(updateActiveInfo?: boolean): number {
-        return this.gridAPI.refreshSearch(this.id, updateActiveInfo);
+        return this.gridAPI.refresh_search(this.id, updateActiveInfo);
     }
 
     /**
@@ -2944,85 +2763,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public clearSearch() {
-        this.gridAPI.clearSearch(this.id);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has groupable columns.
-     * ```typescript
-     * const groupableGrid = this.grid.hasGroupableColumns;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get hasGroupableColumns(): boolean {
-        return this.columnList.some((col) => col.groupable);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has sortable columns.
-     * ```typescript
-     * const sortableGrid = this.grid.hasSortableColumns;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get hasSortableColumns(): boolean {
-        return this.columnList.some((col) => col.sortable);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has editable columns.
-     * ```typescript
-     * const editableGrid = this.grid.hasEditableColumns;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get hasEditableColumns(): boolean {
-        return this.columnList.some((col) => col.editable);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has fiterable columns.
-     * ```typescript
-     * const filterableGrid = this.grid.hasFilterableColumns;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get hasFilterableColumns(): boolean {
-        return this.columnList.some((col) => col.filterable);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has summarized columns.
-     * ```typescript
-     * const summarizedGrid = this.grid.hasSummarizedColumns;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get hasSummarizedColumns(): boolean {
-        const summarizedColumns = this.columnList.filter(col => col.hasSummary);
-        return summarizedColumns.length > 0 && summarizedColumns.some(col => !col.hidden);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has moveable columns.
-     * ```typescript
-     * const movableGrid = this.grid.hasMovableColumns;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get hasMovableColumns(): boolean {
-        return this.columnList && this.columnList.some((col) => col.movable);
-    }
-
-    /**
-     * Returns if the `IgxGridComponent` has column groups.
-     * ```typescript
-     * const groupGrid = this.grid.hasColumnGroups;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get hasColumnGroups(): boolean {
-        return this.columnList.some(col => col.columnGroup);
+        this.gridAPI.clear_search(this.id);
     }
 
     /**
@@ -3033,18 +2774,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     get selectedCells(): IgxGridCellComponent[] | any[] {
-        if (this.rowList) {
-            return this.rowList.filter((row) => row instanceof IgxGridRowComponent).map((row) => row.cells.filter((cell) => cell.selected))
-                .reduce((a, b) => a.concat(b), []);
-        }
-        return [];
-    }
-
-    /**
-     * @hidden
-     */
-    protected calculateGridSizes() {
-        this.gridAPI.calculateGridSizes(this.id);
+        return this.gridAPI.selected_cells(this.id);
     }
 
     /**
@@ -3056,21 +2786,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public getPinnedWidth(takeHidden = false) {
-        const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
-        let sum = 0;
-        for (const col of fc) {
-            if (col.level === 0) {
-                sum += parseInt(col.width, 10);
-            }
-        }
-        if (this.rowSelectable) {
-            sum += this.calcRowCheckboxWidth;
-        }
-
-        if (this.groupingExpressions.length > 0 && this.headerGroupContainer) {
-            sum += this.headerGroupContainer.nativeElement.clientWidth;
-        }
-        return sum;
+        return this.gridAPI.get_pinned_width(this.id, takeHidden);
     }
 
     /**
@@ -3080,85 +2796,35 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        const width = this._width && this._width.indexOf('%') !== -1 ?
-            this.calcWidth :
-            parseInt(this._width, 10);
-        return width - this.getPinnedWidth(takeHidden);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sortMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.sort_multiple(this.id, expressions);
+        return this.gridAPI.get_unpinned_width(this.id, takeHidden);
     }
 
     /**
      * @hidden
      */
     protected _groupBy(expression: ISortingExpression) {
-        this.gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
+        this.gridAPI.group_by(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
     }
 
     /**
      * @hidden
      */
     protected _groupByMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.groupBy_multiple(this.id, expressions);
+        this.gridAPI.group_by_multiple(this.id, expressions);
     }
 
     /**
      * @hidden
      */
     protected _getStateForGroupRow(groupRow: IGroupByRecord): IGroupByExpandState {
-        return this.gridAPI.groupBy_get_expanded_for_group(this.id, groupRow);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _toggleGroup(groupRow: IGroupByRecord) {
-        this.gridAPI.groupBy_toggle_group(this.id, groupRow);
+        return this.gridAPI.group_by_get_expanded_for_group(this.id, groupRow);
     }
 
     /**
      * @hidden
      */
     protected _applyGrouping() {
-        this.gridAPI.sort_multiple(this.id, this._groupingExpressions);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
-        const column = this.gridAPI.get_column_by_name(this.id, fieldName);
-        column.hasSummary = hasSummary;
-        if (summaryOperand) {
-            column.summaries = summaryOperand;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    protected _multipleSummaries(expressions: ISummaryExpression[], hasSummary: boolean) {
-        expressions.forEach((element) => {
-            this._summaries(element.fieldName, hasSummary, element.customSummary);
-        });
-    }
-    /**
-     * @hidden
-     */
-    protected _disableMultipleSummaries(expressions: string[], hasSummary: boolean) {
-        expressions.forEach((column) => { this._summaries(column, false); });
+        this.gridAPI.sort_multiple_implementation(this.id, this._groupingExpressions);
     }
 
     /**
@@ -3172,36 +2838,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public onHeaderCheckboxClick(event) {
-        this.allRowsSelected = event.checked;
-        const newSelection =
-            event.checked ?
-                this.filteredData ?
-                    this.selection.add_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
-                    this.selection.get_all_ids(this.data, this.primaryKey) :
-                this.filteredData ?
-                    this.selection.delete_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
-                    this.selection.get_empty();
-        this.triggerRowSelectionChange(newSelection, null, event, event.checked);
-        this.checkHeaderCheckboxStatus(event.checked);
-    }
-
-    /**
-     * @hidden
-     */
-    get headerCheckboxAriaLabel() {
-        return this._filteringExpressionsTree.filteringOperands.length > 0 ?
-            this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all filtered' : 'Select all filtered' :
-            this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all' : 'Select all';
-    }
-
-    public get template(): TemplateRef<any> {
-        if (this.filteredData && this.filteredData.length === 0) {
-            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
-        }
-
-        if (this.data && this.data.length === 0) {
-            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
-        }
+        this.gridAPI.on_header_checkbox_click(this.id, event);
     }
 
     /**
@@ -3214,87 +2851,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         };
     }
 
-
-    /**
-     * @hidden
-     */
-    public get dropAreaTemplateResolved(): TemplateRef<any> {
-        if (this.dropAreaTemplate) {
-            return this.dropAreaTemplate;
-        } else {
-            return this.defaultDropAreaTemplate;
-        }
-    }
-
     /**
      * @hidden
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
-        this.gridAPI.checkHeaderCheckboxStatus(this.id, headerStatus);
+        this.gridAPI.check_header_checkbox_status(this.id, headerStatus);
     }
 
-    /**
-     * @hidden
-     */
-    public filteredItemsStatus(componentID: string, filteredData: any[], primaryKey?) {
-        const currSelection = this.selection.get(componentID);
-        let atLeastOneSelected = false;
-        let notAllSelected = false;
-        if (currSelection) {
-            for (const key of Object.keys(filteredData)) {
-                const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
-                if (currSelection.has(dataItem)) {
-                    atLeastOneSelected = true;
-                    if (notAllSelected) {
-                        return 'indeterminate';
-                    }
-                } else {
-                    notAllSelected = true;
-                    if (atLeastOneSelected) {
-                        return 'indeterminate';
-                    }
-                }
-            }
-        }
-        return atLeastOneSelected ? 'allSelected' : 'noneSelected';
-    }
-
-    /**
-     * @hidden
-     */
-    public updateHeaderCheckboxStatusOnFilter(data) {
-        if (!data) {
-            data = this.data;
-        }
-        switch (this.filteredItemsStatus(this.id, data)) {
-            case 'allSelected': {
-                if (!this.allRowsSelected) {
-                    this.allRowsSelected = true;
-                }
-                if (this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = false;
-                }
-                break;
-            }
-            case 'noneSelected': {
-                if (this.allRowsSelected) {
-                    this.allRowsSelected = false;
-                }
-                if (this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = false;
-                }
-                break;
-            }
-            default: {
-                if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = true;
-                }
-                if (this.allRowsSelected) {
-                    this.allRowsSelected = false;
-                }
-                break;
-            }
-        }
+    private updateHeaderCheckboxStatusOnFilter(data) {
+        this.gridAPI.update_header_checkbox_status_on_filter(this.id, data);
     }
 
     /**
@@ -3306,9 +2871,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public selectedRows(): any[] {
-        let selection: Set<any>;
-        selection = this.selection.get(this.id);
-        return selection ? Array.from(selection) : [];
+        return this.gridAPI.selected_rows(this.id);
     }
 
     /**
@@ -3321,7 +2884,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
-        this.gridAPI.selectRows(this.id, rowIDs,clearCurrentSelection);
+        this.gridAPI.select_rows(this.id, rowIDs, clearCurrentSelection);
     }
 
     /**
@@ -3333,7 +2896,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public deselectRows(rowIDs: any[]) {
-        this.gridAPI.deselectRows(id, rowIDs);
+        this.gridAPI.deselect_rows(this.id, rowIDs);
     }
 
     /**
@@ -3345,7 +2908,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public selectAllRows() {
-        this.gridAPI.triggerRowSelectionChange(this.id, this.selection.get_all_ids(this.data, this.primaryKey));
+        this.gridAPI.trigger_row_selection_change(this.id, this.selection.get_all_ids(this.data, this.primaryKey));
     }
 
     /**
@@ -3356,28 +2919,28 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      */
     public deselectAllRows() {
-        this.gridAPI.triggerRowSelectionChange(this.id, this.selection.get_empty());
+        this.gridAPI.trigger_row_selection_change(this.id, this.selection.get_empty());
     }
 
     /**
      * @hidden
      */
     public triggerRowSelectionChange(newSelectionAsSet: Set<any>, row?: IgxGridRowComponent, event?: Event, headerStatus?: boolean) {
-        this.gridAPI.triggerRowSelectionChange(this.id, newSelectionAsSet, row, event, headerStatus);
+        this.gridAPI.trigger_row_selection_change(this.id, newSelectionAsSet, row, event, headerStatus);
     }
 
     /**
      * @hidden
      */
     public navigateDown(rowIndex: number, columnIndex: number, event?) {
-        this.gridAPI.navigateDown(this.id, rowIndex, columnIndex, event);
+        this.gridAPI.navigate_down(this.id, rowIndex, columnIndex, event);
     }
 
     /**
      * @hidden
      */
     public navigateUp(rowIndex: number, columnIndex: number, event?) {
-        this.gridAPI.navigateUp(this.id, rowIndex, columnIndex, event);
+        this.gridAPI.navigate_up(this.id, rowIndex, columnIndex, event);
     }
 
     /**
@@ -3392,7 +2955,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public focusNextCell(rowIndex: number, columnIndex: number, dir?: string, event?) {
-        this.gridAPI.focusNextCell(this.id, rowIndex, columnIndex, dir, event);
+        this.gridAPI.focus_next_cell(this.id, rowIndex, columnIndex, dir, event);
     }
 
     /**
@@ -3410,7 +2973,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     get filteredSortedData(): any[] {
-        return this.gridAPI.filteredSortedData(this.id);
+        return this.gridAPI.filtered_sorted_data(this.id);
     }
 
     /**
@@ -3503,6 +3066,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public scrollTo(row: any, column: any) {
-        this.gridAPI.scrollTo(this.id, row, column);
+        this.gridAPI.scroll_to(this.id, row, column);
     }
 }

@@ -65,9 +65,9 @@ export class ExcelElementsFactory {
     public static getExcelFile(type: ExcelFileTypes): IExcelFile {
         switch (type) {
             case ExcelFileTypes.RootRelsFile:
-                return  new RootRelsFile();
+                return new RootRelsFile();
             case ExcelFileTypes.AppFile:
-                return  new AppFile();
+                return new AppFile();
             case ExcelFileTypes.CoreFile:
                 return new CoreFile();
             case ExcelFileTypes.WorkbookRelsFile:

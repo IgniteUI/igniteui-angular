@@ -7,12 +7,22 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxRowComponent } from './row.component';
-import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
-import { IGridEditEventArgs, IRowSelectionEventArgs, IGridComponent } from './common/grid-interfaces';
+import {
+    IFilteringOperation,
+    FilteringExpressionsTree,
+    IFilteringExpressionsTree
+} from '../../public_api';
+import {
+    IGridEditEventArgs,
+    IRowSelectionEventArgs,
+    IColumnVisibilityChangedEventArgs,
+    IGridComponent } from './common/grid-interfaces';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridSortingPipe } from './common/grid-common.pipes';
+import { DropPosition } from './common/grid-common.misc';
+import { ISummaryExpression } from './summaries/grid-summary';
 
 const DEFAULT_TARGET_RECORD_NUMBER = 10;
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -29,7 +39,14 @@ export class IGridAPIService <T extends IGridComponent> {
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
 
-    public onInit(grid: T) {
+    private resizeHandler = () => {
+        this.state.forEach(g => {
+            g.reflow();
+            g.zone.run(() => g.markForCheck());
+        });
+    }
+
+    public on_init(grid: T) {
         this.register(grid);
         grid.columnListDiffer = grid.differs.find([]).create(null);
         grid.calcWidth = grid.width && grid.width.indexOf('%') === -1 ? parseInt(grid.width, 10) : 0;
@@ -37,35 +54,35 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.calcRowCheckboxWidth = 0;
 
         const id = grid.id;
-        grid.onRowAdded.pipe(takeUntil(this.getDestroy(id))).subscribe(() => grid.clearSummaryCache());
-        grid.onRowDeleted.pipe(takeUntil(this.getDestroy(id))).subscribe(() => grid.clearSummaryCache());
-        grid.onFilteringDone.pipe(takeUntil(this.getDestroy(id))).subscribe(() => grid.clearSummaryCache());
-        grid.onEditDone.pipe(takeUntil(this.getDestroy(id))).subscribe((editCell) => grid.clearSummaryCache(editCell));
-        grid.onColumnMoving.pipe(takeUntil(this.getDestroy(id))).subscribe((source) => {
+        grid.onRowAdded.pipe(takeUntil(this.get_destroy(id))).subscribe(() => grid.clearSummaryCache());
+        grid.onRowDeleted.pipe(takeUntil(this.get_destroy(id))).subscribe(() => grid.clearSummaryCache());
+        grid.onFilteringDone.pipe(takeUntil(this.get_destroy(id))).subscribe(() => grid.clearSummaryCache());
+        grid.onEditDone.pipe(takeUntil(this.get_destroy(id))).subscribe((editCell) => grid.clearSummaryCache(editCell));
+        grid.onColumnMoving.pipe(takeUntil(this.get_destroy(id))).subscribe(() => {
             this.submit_value(grid.id);
         });
     }
 
-    public onAfterContentInit(id: string) {
+    public on_after_content_init(id: string) {
         const grid = this.get(id);
         if (grid.autoGenerate) {
-            this.autogenerateColumns(id);
+            this.autogenerate_columns(id);
         }
 
-        this.initColumns(id, grid.columnList, (col: IgxColumnComponent) => grid.onColumnInit.emit(col));
+        this.init_columns(id, grid.columnList, (col: IgxColumnComponent) => grid.onColumnInit.emit(col));
         grid.columnListDiffer.diff(grid.columnList);
         grid.clearSummaryCache();
-        grid.summariesHeight = this.calcMaxSummaryHeight(id);
-        this._derivePossibleHeight(id);
-        grid.markForCheck();
+        grid.summariesHeight = this.calc_max_summary_height(id);
+        this.derive_possible_height(id);
+        this.mark_for_check(id);
 
         grid.columnList.changes
-            .pipe(takeUntil(this.getDestroy(id)))
+            .pipe(takeUntil(this.get_destroy(id)))
             .subscribe((change: QueryList<IgxColumnComponent>) => {
                 const diff = grid.columnListDiffer.diff(change);
                 if (diff) {
 
-                    this.initColumns(id, grid.columnList);
+                    this.init_columns(id, grid.columnList);
 
                     diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
                         grid.clearSummaryCache();
@@ -79,27 +96,27 @@ export class IGridAPIService <T extends IGridComponent> {
                         grid.reflow();
 
                         // Clear Filtering
-                        this.clear_filter(id, record.item.field);
+                        this.clear_filter_implementation(id, record.item.field);
 
                         // Clear Sorting
-                        this.clear_sort(id, record.item.field);
+                        this.clear_sort_implementation(id, record.item.field);
                     });
                 }
-                grid.markForCheck();
+                this.mark_for_check(id);
             });
         const vertScrDC = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { grid.scrollHandler(evt); });
     }
 
-    public onAfterViewInit(id: string) {
+    public on_after_view_init(id: string) {
         const grid = this.get(id);
         grid.zone.runOutsideAngular(() => {
             grid.document.defaultView.addEventListener('resize', this.resizeHandler);
         });
-        this.calculateGridWidth(id);
-        this.initPinning(id);
+        this.calculate_grid_width(id);
+        this.init_pinning(id);
         grid.reflow();
-        grid.onDensityChanged.pipe(takeUntil(this.getDestroy(id))).subscribe(() => {
+        grid.onDensityChanged.pipe(takeUntil(this.get_destroy(id))).subscribe(() => {
             requestAnimationFrame(() => {
                 grid.summariesHeight = 0;
                 grid.reflow();
@@ -118,9 +135,9 @@ export class IGridAPIService <T extends IGridComponent> {
                     if (mutation.type === 'childList') {
                         const addedNodes = new Array(...mutation.addedNodes);
                         addedNodes.forEach((node) => {
-                            const added = this.checkIfGridIsAdded(node, id);
+                            const added = this.check_if_grid_is_added(node, id);
                             if (added) {
-                                this.calculateGridWidth(id);
+                                this.calculate_grid_width(id);
                                 observer.disconnect();
                             }
                         });
@@ -133,11 +150,13 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    public onDestroy(id: string) {
+    public on_destroy(id: string) {
         const grid = this.get(id);
-        grid.zone.runOutsideAngular(() => grid.document.defaultView.removeEventListener('resize', this.resizeHandler));
-        this.getDestroy(id).next(true);
-        this.getDestroy(id).complete();
+        grid.zone.runOutsideAngular(() => {
+            grid.document.defaultView.removeEventListener('resize', this.resizeHandler);
+        });
+        this.get_destroy(id).next(true);
+        this.get_destroy(id).complete();
         this.unset(id);
     }
 
@@ -154,7 +173,7 @@ export class IGridAPIService <T extends IGridComponent> {
         return this.state.get(id);
     }
 
-    public getDestroy(id: string): Subject<any> {
+    public get_destroy(id: string): Subject<any> {
         return this.destroyMap.get(id);
     }
 
@@ -163,6 +182,27 @@ export class IGridAPIService <T extends IGridComponent> {
         this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
         this.destroyMap.delete(id);
+    }
+
+    public mark_for_check(id: string) {
+        const grid = this.get(id);
+
+        if (grid.rowList) {
+            grid.rowList.forEach((row) => row.cdr.markForCheck());
+        }
+        grid.cdr.detectChanges();
+    }
+
+    public get_row_list(rowList: QueryList<any>): QueryList<any> {
+        const res = new QueryList<any>();
+        if (!rowList) {
+            return res;
+        }
+        const rList = rowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(rList);
+        return res;
     }
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
@@ -175,11 +215,18 @@ export class IGridAPIService <T extends IGridComponent> {
         }
         const column = this.get_column_by_name(id, name);
         if (this.get(id).filteredData && this.get(id).filteredData.length >= 0) {
-            this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
+            this.calculate_summaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
         } else {
             if (this.get(id).data) {
-                this.calculateSummaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
+                this.calculate_summaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
             }
+        }
+    }
+
+    private calculate_summaries(id: string, column, data) {
+        if (!this.summaryCacheMap.get(id).get(column.field)) {
+            this.summaryCacheMap.get(id).set(column.field,
+                column.summaries.operate(data));
         }
     }
 
@@ -221,7 +268,7 @@ export class IGridAPIService <T extends IGridComponent> {
             }
         }
 
-        this.refreshSearch(gridId);
+        this.refresh_search(gridId);
     }
 
     public get_cell_inEditMode(gridId) {
@@ -267,70 +314,46 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
+    public get_cell_by_column(id: string, rowIndex: number, columnField: string): IgxGridCellComponent {
+        const grid = this.get(id);
+        const columnId = grid.columnList.map((column) => column.field).indexOf(columnField);
+        if (columnId !== -1) {
+            return this.get_cell_by_index(id, rowIndex, columnId);
+        }
+    }
+
     public submit_value(gridId) {
         const editableCell = this.get_cell_inEditMode(gridId);
         if (editableCell) {
             if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
                 if (!this.get_cell_inEditMode(gridId).cell.editValue) {
-                    this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, 0);
+                    this.update_cell_implementation(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, 0);
                 } else {
                     const val = parseFloat(this.get_cell_inEditMode(gridId).cell.editValue);
                     if (!isNaN(val) || isFinite(val)) {
-                        this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, val);
+                        this.update_cell_implementation(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, val);
                     }
                 }
             } else {
-                this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, editableCell.cell.editValue);
+                this.update_cell_implementation(gridId, editableCell.cellID.rowID,
+                                                editableCell.cellID.columnID, editableCell.cell.editValue);
             }
             this.escape_editMode(gridId, editableCell.cellID);
             this.get(gridId).cdr.detectChanges();
         }
     }
 
-    public update_cell(id: string, rowID, columnID, editValue) {
-        const grid = this.get(id);
-        const isRowSelected = grid.selection.is_item_selected(id, rowID);
-        const editableCell = this.get_cell_inEditMode(id);
-        const column = grid.columns[columnID];
-        const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
-        editableCell.cell : grid.columns[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
-        const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-        grid.data.indexOf(rowID);
-        if (rowIndex !== -1) {
-            const args: IGridEditEventArgs = {
-                row: cellObj ? cellObj.row : null, cell: cellObj,
-                currentValue: grid.data[rowIndex][column.field], newValue: editValue
-            };
-            grid.onEditDone.emit(args);
-            grid.data[rowIndex][column.field] = args.newValue;
-            if (grid.primaryKey === column.field && isRowSelected) {
-                grid.selection.deselect_item(id, rowID);
-                grid.selection.select_item(id, args.newValue);
-            }
-            (grid as any)._pipeTrigger++;
+    public sort(id: string, expression: ISortingExpression | Array<ISortingExpression>): void;
+    public sort(id: string, ...rest): void {
+        this.escape_editMode(id);
+        if (rest.length === 1 && rest[0] instanceof Array) {
+            this.sort_multiple_implementation(id, rest[0]);
+        } else {
+            this.sort_implementation(id, rest[0].fieldName, rest[0].dir, rest[0].ignoreCase);
         }
     }
 
-    public update_row(value: any, id: string, rowID: any): void {
-        const grid = this.get(id);
-        const isRowSelected = grid.selection.is_item_selected(id, rowID);
-        const index = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-        grid.data.indexOf(rowID);
-        if (index !== -1) {
-            const args: IGridEditEventArgs = { row: this.get_row_by_key(id, rowID), cell: null,
-                currentValue: this.get(id).data[index], newValue: value };
-            grid.onEditDone.emit(args);
-            grid.data[index] = args.newValue;
-            if (isRowSelected) {
-                grid.selection.deselect_item(id, rowID);
-                const newRowID = (grid.primaryKey) ? args.newValue[grid.primaryKey] : args.newValue;
-                grid.selection.select_item(id, newRowID);
-            }
-            (grid as any)._pipeTrigger++;
-        }
-    }
-
-    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+    public sort_implementation(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
         if (dir === SortingDirection.None) {
             this.remove_grouping_expression(id, fieldName);
         }
@@ -340,7 +363,7 @@ export class IGridAPIService <T extends IGridComponent> {
         this.get(id).sortingExpressions = sortingState;
     }
 
-    public sort_multiple(id: string, expressions: ISortingExpression[]): void {
+    public sort_multiple_implementation(id: string, expressions: ISortingExpression[]): void {
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         for (const each of expressions) {
@@ -353,8 +376,27 @@ export class IGridAPIService <T extends IGridComponent> {
         this.get(id).sortingExpressions = sortingState;
     }
 
-    public filter(id: string, fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
-        ignoreCase: boolean) {
+    public filter(id: string, fieldName: string, value: any, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+                    ignoreCase: boolean) {
+        const grid = this.get(id);
+        const col = this.get_column_by_name(id, fieldName);
+        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+
+        if (conditionOrExpressionsTree) {
+            this.filter_implementation(id, fieldName, value, conditionOrExpressionsTree, filteringIgnoreCase);
+        } else {
+            const expressionsTreeForColumn = grid.filteringExpressionsTree.find(name);
+            if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
+                this.filter_implementation(id, fieldName, value, expressionsTreeForColumn, filteringIgnoreCase);
+            } else {
+                const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
+                this.filter_implementation(id, fieldName, value, expressionForColumn.condition, filteringIgnoreCase);
+            }
+        }
+    }
+
+    private filter_implementation(id: string, fieldName: string, value: any,
+            conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean) {
         const grid = this.get(id);
         const filteringTree = grid.filteringExpressionsTree;
         this.escape_editMode(id);
@@ -368,7 +410,7 @@ export class IGridAPIService <T extends IGridComponent> {
             filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }
 
-        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase);
+        this.prepare_filtering_expression(filteringTree, fieldName, value, conditionOrExpressionsTree, ignoreCase);
         grid.filteringExpressionsTree = filteringTree;
     }
 
@@ -392,7 +434,18 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.filteringExpressionsTree = filteringTree;
     }
 
-    public clear_filter(id, fieldName) {
+    public clear_filter(id: string, fieldName: string) {
+        if (fieldName) {
+            const column = this.get_column_by_name(id, fieldName);
+            if (!column) {
+                return;
+            }
+        }
+
+        this.clear_filter_implementation(id, fieldName);
+    }
+
+    public clear_filter_implementation(id: string, fieldName: string) {
         if (fieldName) {
             const column = this.get_column_by_name(id, fieldName);
             if (!column) {
@@ -416,14 +469,20 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.filteredData = null;
     }
 
-    protected calculateSummaries(id: string, column, data) {
-        if (!this.summaryCacheMap.get(id).get(column.field)) {
-            this.summaryCacheMap.get(id).set(column.field,
-                column.summaries.operate(data));
+    public clear_sort(id, fieldName) {
+        if (!fieldName) {
+            this.get(id).sortingExpressions = [];
+            return;
         }
+
+        if (!this.get_column_by_name(id, fieldName)) {
+            return;
+        }
+
+        this.clear_sort_implementation(id, fieldName);
     }
 
-    public clear_sort(id, fieldName) {
+    public clear_sort_implementation(id, fieldName) {
         const sortingState = this.get(id).sortingExpressions;
         const index = sortingState.findIndex((expr) => expr.fieldName === fieldName);
         if (index > -1) {
@@ -474,7 +533,7 @@ export class IGridAPIService <T extends IGridComponent> {
         });
     }
 
-    public filteredSortedData(id: string): any[] {
+    public filtered_sorted_data(id: string): any[] {
         const grid = this.get(id);
         let data: any[] = grid.filteredData ? grid.filteredData : grid.data;
 
@@ -488,10 +547,10 @@ export class IGridAPIService <T extends IGridComponent> {
         return data;
     }
 
-    public refreshSearch(id: string, updateActiveInfo?: boolean) {
+    public refresh_search(id: string, updateActiveInfo?: boolean) {
         const grid = this.get(id);
         if (grid && grid.lastSearchInfo.searchText) {
-            this.rebuildMatchCache(id);
+            this.rebuild_match_cache(id);
 
             if (updateActiveInfo) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(id);
@@ -517,7 +576,13 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    public find(id: string, text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
+    public find(id: string,
+                text: string,
+                increment: number,
+                caseSensitive?: boolean,
+                exactMatch?: boolean,
+                scroll?: boolean) {
+
         const grid = this.get(id);
         if (!grid || !grid.rowList) {
             return 0;
@@ -529,7 +594,7 @@ export class IGridAPIService <T extends IGridComponent> {
         }
 
         if (!text) {
-            this.clearSearch(id);
+            this.clear_search(id);
             return 0;
         }
 
@@ -560,7 +625,7 @@ export class IGridAPIService <T extends IGridComponent> {
                 });
             });
 
-            this.rebuildMatchCache(id);
+            this.rebuild_match_cache(id);
         }
 
         if (grid.lastSearchInfo.activeMatchIndex >= grid.lastSearchInfo.matchInfoCache.length) {
@@ -579,7 +644,7 @@ export class IGridAPIService <T extends IGridComponent> {
             });
 
             if (scroll !== false) {
-                this.scrollTo(id, matchInfo.row, matchInfo.column);
+                this.scroll_to(id, matchInfo.row, matchInfo.column);
             }
         } else {
             IgxTextHighlightDirective.clearActiveHighlight(id);
@@ -588,7 +653,7 @@ export class IGridAPIService <T extends IGridComponent> {
         return grid.lastSearchInfo.matchInfoCache.length;
     }
 
-    public clearSearch(id: string) {
+    public clear_search(id: string) {
         this.get(id).lastSearchInfo = {
             searchText: '',
             caseSensitive: false,
@@ -604,7 +669,7 @@ export class IGridAPIService <T extends IGridComponent> {
         });
     }
 
-    public scrollTo(id: string, row: any, column: any): void {
+    public scroll_to(id: string, row: any, column: any): void {
         const grid = this.get(id);
         const rowIndex = grid.filteredSortedData.indexOf(row);
         let columnIndex = this.get_column_by_name(id, column).visibleIndex;
@@ -613,7 +678,7 @@ export class IGridAPIService <T extends IGridComponent> {
             grid.page = Math.floor(rowIndex / grid.perPage);
         }
 
-        this.scrollDirective(id, grid.verticalScrollContainer, rowIndex);
+        this.scroll_directive(id, grid.verticalScrollContainer, rowIndex);
 
         const scrollRow = grid.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
@@ -621,25 +686,14 @@ export class IGridAPIService <T extends IGridComponent> {
         if (grid.pinnedColumns.length) {
             if (columnIndex >= grid.pinnedColumns.length) {
                 columnIndex -= grid.pinnedColumns.length;
-                this.scrollDirective(id, virtDir, columnIndex);
+                this.scroll_directive(id, virtDir, columnIndex);
             }
         } else {
-            this.scrollDirective(id, virtDir, columnIndex);
+            this.scroll_directive(id, virtDir, columnIndex);
         }
     }
 
-    public calculateGridSizes(id: string) {
-        const grid = this.get(id);
-        this.derivePossibleWidth(id);
-        grid.cdr.detectChanges();
-        this.calculateGridHeight(id);
-        if (grid.rowSelectable) {
-            grid.calcRowCheckboxWidth = grid.headerCheckboxContainer.nativeElement.clientWidth;
-        }
-        grid.cdr.detectChanges();
-    }
-
-    private scrollDirective(id: string, directive: IgxForOfDirective<any>, goal: number): void {
+    private scroll_directive(id: string, directive: IgxForOfDirective<any>, goal: number): void {
         if (!directive) {
             return;
         }
@@ -666,7 +720,7 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    private rebuildMatchCache(id: string) {
+    private rebuild_match_cache(id: string) {
         const grid = this.get(id);
         grid.lastSearchInfo.matchInfoCache = [];
 
@@ -710,21 +764,22 @@ export class IGridAPIService <T extends IGridComponent> {
         });
     }
 
+    public reflow(id: string) {
+        const grid = this.get(id);
+        this.derive_possible_width(id);
+        grid.cdr.detectChanges();
+        this.calculate_grid_height(id);
+        if (grid.rowSelectable) {
+            grid.calcRowCheckboxWidth = grid.headerCheckboxContainer.nativeElement.clientWidth;
+        }
+        grid.cdr.detectChanges();
+    }
+
     protected remove_grouping_expression(id: string, fieldName: string) {
 
     }
 
-    private resizeHandler = () => {
-        this.state.forEach(g => {
-            g.reflow();
-            g.zone.run(() => g.markForCheck());
-        });
-    }
-
-    /**
-     * @hidden
-     */
-    protected autogenerateColumns(id: string) {
+    private autogenerate_columns(id: string) {
         const grid = this.get(id);
         const factory = grid.resolver.resolveComponentFactory(IgxColumnComponent);
         const fields = Object.keys(grid.data[0]);
@@ -733,7 +788,7 @@ export class IGridAPIService <T extends IGridComponent> {
         fields.forEach((field) => {
             const ref = grid.viewRef.createComponent(factory);
             ref.instance.field = field;
-            ref.instance.dataType = this.resolveDataTypes(grid.data[0][field]);
+            ref.instance.dataType = this.resolve_data_types(grid.data[0][field]);
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
         });
@@ -741,10 +796,7 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.columnList.reset(columns);
     }
 
-    /**
-     * @hidden
-     */
-    protected calcMaxSummaryHeight(id: string) {
+    private calc_max_summary_height(id: string) {
         const grid = this.get(id);
         let maxSummaryLength = 0;
         grid.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
@@ -759,42 +811,33 @@ export class IGridAPIService <T extends IGridComponent> {
         return maxSummaryLength * grid.defaultRowHeight;
     }
 
-    /**
-     * @hidden
-     */
-    protected _derivePossibleHeight(id: string) {
+    private derive_possible_height(id: string) {
         const grid = this.get(id);
         if ((grid.height && grid.height.indexOf('%') === -1) || !grid.height) {
             return;
         }
         if (!grid.nativeElement.parentNode.clientHeight) {
             const viewPortHeight = document.documentElement.clientHeight;
-            grid.height = this.rowBasedHeight(id) <= viewPortHeight ? null : viewPortHeight.toString();
+            grid.height = this.row_based_height(id) <= viewPortHeight ? null : viewPortHeight.toString();
         } else {
             const parentHeight = grid.nativeElement.parentNode.getBoundingClientRect().height;
-            grid.height = this.rowBasedHeight <= parentHeight ? null : grid.height;
+            grid.height = this.row_based_height(id) <= parentHeight ? null : grid.height;
         }
-        this.calculateGridHeight(id);
+        this.calculate_grid_height(id);
         grid.cdr.detectChanges();
     }
 
-    /**
-     * @hidden
-     */
-    protected derivePossibleWidth(id: string) {
+    private derive_possible_width(id: string) {
         const grid = this.get(id);
         if (!grid.columnWidthSetByUser) {
-            grid.columnWidth = this.getPossibleColumnWidth(id);
+            grid.columnWidth = this.get_possible_column_width(id);
             grid.columnWidthSetByUser = false;
-            this.initColumns(id, grid.columnList, null);
+            this.init_columns(id, grid.columnList, null);
         }
-        this.calculateGridWidth(id);
+        this.calculate_grid_width(id);
     }
 
-    /**
-     * @hidden
-     */
-    public calculateGridHeight(id: string) {
+    public calculate_grid_height(id: string) {
         const grid = this.get(id);
         const computed = grid.document.defaultView.getComputedStyle(grid.nativeElement);
 
@@ -807,7 +850,7 @@ export class IGridAPIService <T extends IGridComponent> {
             grid.calcHeight = null;
             if (grid.hasSummarizedColumns && !grid.summariesHeight) {
                 grid.summariesHeight = grid.summaries ?
-                    this.calcMaxSummaryHeight(id) : 0;
+                    this.calc_max_summary_height(id) : 0;
             }
             return;
         }
@@ -826,35 +869,32 @@ export class IGridAPIService <T extends IGridComponent> {
 
         if (!grid.summariesHeight) {
             grid.summariesHeight = grid.summaries ?
-                this.calcMaxSummaryHeight(id) : 0;
+                this.calc_max_summary_height(id) : 0;
         }
 
-        const groupAreaHeight = this.getGroupAreaHeight(id);
+        const groupAreaHeight = this.get_group_area_height(id);
 
         if (grid.height && grid.height.indexOf('%') !== -1) {
             /*height in %*/
-            grid.calcHeight = this._calculateGridBodyHeight(grid.id,
+            grid.calcHeight = this.calculate_grid_body_height(grid.id,
                 parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight, groupAreaHeight);
         } else {
-            grid.calcHeight = this._calculateGridBodyHeight(grid.id,
+            grid.calcHeight = this.calculate_grid_body_height(grid.id,
                 parseInt(grid.height, 10), toolbarHeight, pagingHeight, groupAreaHeight);
         }
     }
 
-    protected getGroupAreaHeight(id): number {
+    protected get_group_area_height(id): number {
         return 0;
     }
 
-        /**
-     * @hidden
-     */
-    protected _calculateGridBodyHeight(id: string, gridHeight: number,
+    private calculate_grid_body_height(id: string, gridHeight: number,
         toolbarHeight: number, pagingHeight: number, groupAreaHeight: number) {
         const grid = this.get(id);
         const footerBordersAndScrollbars = grid.tfoot.nativeElement.offsetHeight -
             grid.tfoot.nativeElement.clientHeight;
         if (isNaN(gridHeight)) {
-            return this.defaultTargetBodyHeight(id);
+            return this.default_target_body_height(id);
         }
 
         return Math.abs(gridHeight - toolbarHeight -
@@ -864,20 +904,14 @@ export class IGridAPIService <T extends IGridComponent> {
             grid.scr.nativeElement.clientHeight);
     }
 
-    /**
-     * @hidden
-    */
-    private defaultTargetBodyHeight(id: string): number {
+    private default_target_body_height(id: string): number {
         const grid = this.get(id);
         const allItems = grid.totalItemCount || grid.data.length;
         return grid.rowHeight * Math.min(DEFAULT_TARGET_RECORD_NUMBER,
             grid.paging ? Math.min(allItems, grid.perPage) : allItems);
     }
 
-    /**
-     * @hidden
-     */
-    protected calculateGridWidth(id) {
+    private calculate_grid_width(id) {
         const grid = this.get(id);
         const computed = grid.document.defaultView.getComputedStyle(grid.nativeElement);
 
@@ -887,7 +921,7 @@ export class IGridAPIService <T extends IGridComponent> {
             if (Number.isFinite(width) && width !== grid.calcWidth) {
                 grid.calcWidth = width;
 
-                this.derivePossibleWidth(id);
+                this.derive_possible_width(id);
                 grid.cdr.markForCheck();
             }
             return;
@@ -895,11 +929,7 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.calcWidth = parseInt(grid.width, 10);
     }
 
-
-    /**
-     * @hidden
-     */
-    protected initColumns(id: string, collection: QueryList<IgxColumnComponent>, cb: any = null) {
+    private init_columns(id: string, collection: QueryList<IgxColumnComponent>, cb: any = null) {
         const grid = this.get(id);
         // XXX: Deprecate index
         grid.columns = grid.columnList.toArray();
@@ -912,13 +942,10 @@ export class IGridAPIService <T extends IGridComponent> {
             }
         });
 
-        this.reinitPinStates(id);
+        this.reinit_pin_states(id);
     }
 
-    /**
-     * @hidden
-     */
-    protected reinitPinStates(id: string) {
+    private reinit_pin_states(id: string) {
         const grid = this.get(id);
 
         if (grid.hasColumnGroups) {
@@ -927,10 +954,7 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.unpinnedColumns = grid.columns.filter(c => !c.pinned);
     }
 
-      /**
-     * @hidden
-     */
-    protected resolveDataTypes(rec) {
+    private resolve_data_types(rec) {
         if (typeof rec === 'number') {
             return DataType.Number;
         } else if (typeof rec === 'boolean') {
@@ -941,10 +965,7 @@ export class IGridAPIService <T extends IGridComponent> {
         return DataType.String;
     }
 
-     /**
-     * @hidden
-     */
-    protected getPossibleColumnWidth(id: string) {
+    private get_possible_column_width(id: string) {
         const grid = this.get(id);
         let computedWidth = parseInt(
             grid.document.defaultView.getComputedStyle(grid.nativeElement).getPropertyValue('width'), 10);
@@ -968,13 +989,13 @@ export class IGridAPIService <T extends IGridComponent> {
         return columnWidth.toString();
     }
 
-    private checkIfGridIsAdded(id, node): boolean {
+    private check_if_grid_is_added(id, node): boolean {
         const grid = this.get(id);
         if (node === grid.nativeElement) {
             return true;
         } else {
             for (const childNode of node.childNodes) {
-                const added = this.checkIfGridIsAdded(id, childNode);
+                const added = this.check_if_grid_is_added(id, childNode);
                 if (added) {
                     return true;
                 }
@@ -984,10 +1005,7 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    /**
-     * @hidden
-     */
-    protected initPinning(id: string) {
+    private init_pinning(id: string) {
         const grid = this.get(id);
         let currentPinnedWidth = 0;
         const pinnedColumns = [];
@@ -1046,11 +1064,7 @@ export class IGridAPIService <T extends IGridComponent> {
         grid.unpinnedColumns = unpinnedColumns;
     }
 
-
-    /**
-     * @hidden
-     */
-    protected rowBasedHeight(id: string) {
+    private row_based_height(id: string) {
         const grid = this.get(id);
         if (grid.data && grid.data.length) {
             return grid.data.length * grid.rowHeight;
@@ -1058,11 +1072,11 @@ export class IGridAPIService <T extends IGridComponent> {
         return 0;
     }
 
-    public focusNextCell(id: string, rowIndex: number, columnIndex: number, dir?: string, event?) {
+    public focus_next_cell(id: string, rowIndex: number, columnIndex: number, dir?: string, event?) {
         const grid = this.get(id);
         let row = this.get_row_by_index(id, rowIndex);
         const virtualDir = dir !== undefined ? row.virtDirRow : grid.verticalScrollContainer;
-        this.subscribeNext(virtualDir, () => {
+        this.subscribe_next(virtualDir, () => {
             let target;
             grid.cdr.detectChanges();
             row = this.get_row_by_index(id, rowIndex);
@@ -1081,7 +1095,7 @@ export class IGridAPIService <T extends IGridComponent> {
         });
     }
 
-    private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
+    private subscribe_next(virtualContainer: any, callback: (elem?) => void) {
         virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
             next: (e: any) => {
                 callback(e);
@@ -1089,10 +1103,7 @@ export class IGridAPIService <T extends IGridComponent> {
         });
     }
 
-    /**
-     * @hidden
-     */
-    public navigateUp(id: string, rowIndex: number, columnIndex: number, event?) {
+    public navigate_up(id: string, rowIndex: number, columnIndex: number, event?) {
         const grid = this.get(id);
         const row = this.get_row_by_index(id, rowIndex);
         const target = row.getNavigationTarget(columnIndex, rowIndex);
@@ -1110,21 +1121,18 @@ export class IGridAPIService <T extends IGridComponent> {
                 const scrollAmount = containerTopOffset < 0 ?
                     containerTopOffset :
                     -grid.rowHeight + Math.abs(containerTopOffset);
-                this.performVerticalScroll(id, scrollAmount, rowIndex - 1, columnIndex, event);
+                this.perform_vertical_scroll(id, scrollAmount, rowIndex - 1, columnIndex, event);
             }
             row.performNavigationAction(target);
         } else {
             const scrollOffset =
                 -parseInt(grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scrollAmount = grid.rowHeight + scrollOffset;
-            this.performVerticalScroll(id, -scrollAmount, rowIndex, columnIndex, event);
+            this.perform_vertical_scroll(id, -scrollAmount, rowIndex, columnIndex, event);
         }
     }
 
-    /**
-     * @hidden
-     */
-    public navigateDown(id: string, rowIndex: number, columnIndex: number, event?) {
+    public navigate_down(id: string, rowIndex: number, columnIndex: number, event?) {
         const grid = this.get(id);
         const row = this.get_row_by_index(id, rowIndex);
         const target = row.getNavigationTarget(columnIndex, rowIndex);
@@ -1142,7 +1150,7 @@ export class IGridAPIService <T extends IGridComponent> {
             const targetEndTopOffset = row.element.nativeElement.offsetTop + grid.rowHeight + containerTopOffset;
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 const scrollAmount = targetEndTopOffset - containerHeight;
-                this.performVerticalScroll(id, scrollAmount, rowIndex, columnIndex, event);
+                this.perform_vertical_scroll(id, scrollAmount, rowIndex, columnIndex, event);
             } else {
                 row.performNavigationAction(target);
             }
@@ -1151,24 +1159,39 @@ export class IGridAPIService <T extends IGridComponent> {
             const scrollOffset = parseInt(grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const lastRowOffset = contentHeight + scrollOffset - grid.calcHeight;
             const scrollAmount = grid.rowHeight + lastRowOffset;
-            this.performVerticalScroll(id, scrollAmount, rowIndex, columnIndex, event);
+            this.perform_vertical_scroll(id, scrollAmount, rowIndex, columnIndex, event);
         }
     }
 
-    private performVerticalScroll(id: string, amount: number, rowIndex: number, columnIndex: number, event?) {
+    private perform_vertical_scroll(id: string, amount: number, rowIndex: number, columnIndex: number, event?) {
         const grid = this.get(id);
         const scrolled = grid.verticalScrollContainer.addScrollTop(amount);
         if (scrolled) {
-            this.focusNextCell(id, rowIndex, columnIndex, undefined, event);
+            this.focus_next_cell(id, rowIndex, columnIndex, undefined, event);
         }
     }
 
-    public checkHeaderCheckboxStatus(id: string, headerStatus?: boolean) {
+    public on_header_checkbox_click(id: string, event: any) {
+        const grid = this.get(id);
+        grid.allRowsSelected = event.checked;
+        const newSelection =
+            event.checked ?
+                grid.filteredData ?
+                    grid.selection.add_items(id, grid.selection.get_all_ids(grid.filteredData, grid.primaryKey)) :
+                    grid.selection.get_all_ids(grid.data, grid.primaryKey) :
+                grid.filteredData ?
+                    grid.selection.delete_items(id, grid.selection.get_all_ids(grid.filteredData, grid.primaryKey)) :
+                    grid.selection.get_empty();
+        this.trigger_row_selection_change(id, newSelection, null, event, event.checked);
+        this.check_header_checkbox_status(id, event.checked);
+    }
+
+    public check_header_checkbox_status(id: string, headerStatus?: boolean) {
         const grid = this.get(id);
         if (headerStatus === undefined) {
             grid.allRowsSelected = grid.selection.are_all_selected(id, grid.data);
             if (grid.headerCheckbox) {
-                grid.headerCheckbox.indeterminate = !grid.allRowsSelected && !grid.selection.are_none_selected(this.id);
+                grid.headerCheckbox.indeterminate = !grid.allRowsSelected && !grid.selection.are_none_selected(id);
                 if (!grid.headerCheckbox.indeterminate) {
                     grid.headerCheckbox.checked = grid.selection.are_all_selected(id, grid.data);
                 }
@@ -1179,19 +1202,25 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    public selectRows(id: string, rowIDs: any[], clearCurrentSelection?: boolean) {
+    public selected_rows(id: string): any[] {
+        const grid = this.get(id);
+        const selection = grid.selection.get(id);
+        return selection ? Array.from(selection) : [];
+    }
+
+    public select_rows(id: string, rowIDs: any[], clearCurrentSelection?: boolean) {
         const grid = this.get(id);
         const newSelection = grid.selection.add_items(id, rowIDs, clearCurrentSelection);
-        this.triggerRowSelectionChange(id, newSelection);
+        this.trigger_row_selection_change(id, newSelection);
     }
 
-    public deselectRows(id: string, rowIDs: any[]) {
+    public deselect_rows(id: string, rowIDs: any[]) {
         const grid = this.get(id);
         const newSelection = grid.selection.delete_items(id, rowIDs);
-        this.triggerRowSelectionChange(id, newSelection);
+        this.trigger_row_selection_change(id, newSelection);
     }
 
-    public triggerRowSelectionChange(id: string, newSelectionAsSet: Set<any>, row?: IgxRowComponent<IGridComponent>,
+    public trigger_row_selection_change(id: string, newSelectionAsSet: Set<any>, row?: IgxRowComponent<IGridComponent>,
                                     event?: Event, headerStatus?: boolean) {
         const grid = this.get(id);
         const oldSelectionAsSet = grid.selection.get(id);
@@ -1204,6 +1233,437 @@ export class IGridAPIService <T extends IGridComponent> {
             newSelectionAsSet.add(args.newSelection[i]);
         }
         grid.selection.set(id, newSelectionAsSet);
-        this.checkHeaderCheckboxStatus(id, headerStatus);
+        this.check_header_checkbox_status(id, headerStatus);
+    }
+
+    public update_header_checkbox_status_on_filter(id: string, data: any[]) {
+        const grid = this.get(id);
+        if (!data) {
+            data = grid.data;
+        }
+        switch (this.filtered_items_status(id, data)) {
+            case 'allSelected': {
+                grid.allRowsSelected = true;
+                grid.headerCheckbox.indeterminate = false;
+                break;
+            }
+            case 'noneSelected': {
+                grid.allRowsSelected = false;
+                grid.headerCheckbox.indeterminate = false;
+                break;
+            }
+            default: {
+                grid.headerCheckbox.indeterminate = true;
+                grid.allRowsSelected = false;
+                break;
+            }
+        }
+    }
+
+    private filtered_items_status(id: string, filteredData: any[], primaryKey?) {
+        const grid = this.get(id);
+        const currSelection = grid.selection.get(id);
+        let atLeastOneSelected = false;
+        let notAllSelected = false;
+        if (currSelection) {
+            for (const key of Object.keys(filteredData)) {
+                const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
+                if (currSelection.has(dataItem)) {
+                    atLeastOneSelected = true;
+                    if (notAllSelected) {
+                        return 'indeterminate';
+                    }
+                } else {
+                    notAllSelected = true;
+                    if (atLeastOneSelected) {
+                        return 'indeterminate';
+                    }
+                }
+            }
+        }
+        return atLeastOneSelected ? 'allSelected' : 'noneSelected';
+    }
+
+    public selected_cells(id: string): IgxGridCellComponent[] | any[] {
+        const grid = this.get(id);
+        if (grid.rowList) {
+            return grid.rowList.filter((row) => row instanceof IgxRowComponent).
+                                map((row) => row.cells.filter((cell) => cell.selected)).
+                                reduce((a, b) => a.concat(b), []);
+        } else {
+            return [];
+        }
+    }
+
+    public pin_column(id: string, columnName: string | IgxColumnComponent, index?): boolean {
+        const col = columnName instanceof IgxColumnComponent ? columnName : this.get_column_by_name(id, columnName);
+        return col.pin(index);
+    }
+
+    public unpin_column(id: string, columnName: string | IgxColumnComponent, index?): boolean {
+        const col = columnName instanceof IgxColumnComponent ? columnName : this.get_column_by_name(id, columnName);
+        return col.unpin(index);
+    }
+
+    public get_pinned_width(id: string, takeHidden: boolean) {
+        const grid = this.get(id);
+        const fc = takeHidden ? grid.pinnedColumns : grid.pinnedColumns.filter(c => !c.hidden);
+        let sum = 0;
+        for (const col of fc) {
+            if (col.level === 0) {
+                sum += parseInt(col.width, 10);
+            }
+        }
+        if (grid.rowSelectable) {
+            sum += grid.calcRowCheckboxWidth;
+        }
+
+        return sum;
+    }
+
+    public get_unpinned_width(id: string, takeHidden: boolean) {
+        const grid = this.get(id);
+        const width = grid.width && grid.width.indexOf('%') !== -1 ?
+            grid.calcWidth :
+            parseInt(grid.width, 10);
+        return width - this.get_pinned_width(id, takeHidden);
+    }
+
+    public toggle_column_visibility(id: string, args: IColumnVisibilityChangedEventArgs) {
+        const grid = this.get(id);
+        const col = this.get_column_by_name(id, args.column.field);
+        col.hidden = args.newValue;
+        grid.onColumnVisibilityChanged.emit(args);
+
+        this.mark_for_check(id);
+    }
+
+    public total_width(id: string) {
+        const grid = this.get(id);
+        // Take only top level, unpinned columns
+        const cols = grid.visibleColumns.filter(col => col.level === 0 && !col.pinned);
+        let totalWidth = 0;
+        let i = 0;
+        for (i; i < cols.length; i++) {
+            totalWidth += parseInt(cols[i].width, 10) || 0;
+        }
+        return totalWidth;
+    }
+
+    public move_column(id: string, column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
+        const grid = this.get(id);
+        let position = pos;
+        const fromIndex = column.visibleIndex;
+        const toIndex = dropTarget.visibleIndex;
+
+        if (pos === DropPosition.BeforeDropTarget && fromIndex < toIndex) {
+            position = DropPosition.BeforeDropTarget;
+        } else if (pos === DropPosition.AfterDropTarget && fromIndex > toIndex) {
+            position = DropPosition.AfterDropTarget;
+        } else {
+            position = DropPosition.None;
+        }
+
+
+        if ((column.level !== dropTarget.level) ||
+            (column.topLevelParent !== dropTarget.topLevelParent)) {
+            return;
+        }
+
+        this.submit_value(id);
+        if (column.level) {
+            this.move_child_columns(column.parent, column, dropTarget, position);
+        }
+
+        if (dropTarget.pinned && column.pinned) {
+            this.reorder_pinned_columns(id, column, dropTarget, position);
+        }
+
+        if (dropTarget.pinned && !column.pinned) {
+            column.pin();
+            this.reorder_pinned_columns(id, column, dropTarget, position);
+        }
+
+        if (!dropTarget.pinned && column.pinned) {
+            column.unpin();
+
+            const list = grid.columnList.toArray();
+            const fi = list.indexOf(column);
+            const ti = list.indexOf(dropTarget);
+
+            if (pos === DropPosition.BeforeDropTarget && fi < ti) {
+                position = DropPosition.BeforeDropTarget;
+            } else if (pos === DropPosition.AfterDropTarget && fi > ti) {
+                position = DropPosition.AfterDropTarget;
+            } else {
+                position = DropPosition.None;
+            }
+        }
+
+        this.move_columns(id, column, dropTarget, position);
+        grid.cdr.detectChanges();
+    }
+
+    private move_columns(id: string, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
+        const grid = this.get(id);
+        const list = grid.columnList.toArray();
+        const fromIndex = list.indexOf(from);
+        let toIndex = list.indexOf(to);
+
+        if (pos === DropPosition.BeforeDropTarget) {
+            toIndex--;
+            if (toIndex < 0) {
+                toIndex = 0;
+            }
+        }
+
+        if (pos === DropPosition.AfterDropTarget) {
+            toIndex++;
+        }
+
+        list.splice(toIndex, 0, ...list.splice(fromIndex, 1));
+        const newList = this.reset_column_list(id, list);
+        grid.columnList.reset(newList);
+        grid.columnList.notifyOnChanges();
+        grid.columns = grid.columnList.toArray();
+    }
+
+    private move_child_columns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
+        const buffer = parent.children.toArray();
+        const fromIndex = buffer.indexOf(from);
+        let toIndex = buffer.indexOf(to);
+
+        if (pos === DropPosition.BeforeDropTarget) {
+            toIndex--;
+        }
+
+        if (pos === DropPosition.AfterDropTarget) {
+            toIndex++;
+        }
+
+        buffer.splice(toIndex, 0, ...buffer.splice(fromIndex, 1));
+        parent.children.reset(buffer);
+    }
+
+    private reorder_pinned_columns(id: string, from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition) {
+        const grid = this.get(id);
+        const pinned = grid.pinnedColumns;
+        let dropIndex = pinned.indexOf(to);
+
+        if (position === DropPosition.BeforeDropTarget) {
+            dropIndex--;
+        }
+
+        if (position === DropPosition.AfterDropTarget) {
+            dropIndex++;
+        }
+
+        pinned.splice(dropIndex, 0, ...pinned.splice(pinned.indexOf(from), 1));
+    }
+
+    private reset_column_list(id: string, list?: IgxColumnComponent[]): IgxColumnComponent[] {
+        const grid = this.get(id);
+        if (!list) {
+            list = grid.columnList.toArray();
+        }
+        let newList = [];
+        list.filter(c => c.level === 0).forEach(p => {
+            newList.push(p);
+            if (p.columnGroup) {
+                newList = newList.concat(p.allChildren);
+            }
+        });
+        return newList;
+    }
+
+    public add_row(id: string, data: any) {
+        const grid = this.get(id);
+        grid.data.push(data);
+        grid.onRowAdded.emit({ data });
+        grid.pipeTrigger++;
+        grid.cdr.markForCheck();
+
+        this.refresh_search(id);
+    }
+
+    public delete_row(id: string, rowSelector: any) {
+        const grid = this.get(id);
+        if (grid.primaryKey !== undefined && grid.primaryKey !== null) {
+            const index = grid.data.map((record) => record[grid.primaryKey]).indexOf(rowSelector);
+            if (index !== -1) {
+                const editableCell = this.get_cell_inEditMode(id);
+                if (editableCell && editableCell.cellID.rowID === rowSelector) {
+                    this.escape_editMode(id, editableCell.cellID);
+                }
+                grid.onRowDeleted.emit({ data: grid.data[index] });
+                grid.data.splice(index, 1);
+                if (grid.rowSelectable === true && grid.selection.is_item_selected(id, rowSelector)) {
+                    this.deselect_rows(id, [rowSelector]);
+                } else {
+                    this.check_header_checkbox_status(id);
+                }
+                grid.pipeTrigger++;
+                grid.cdr.markForCheck();
+
+                this.refresh_search(id);
+                if (grid.data.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0) {
+                    grid.page--;
+                }
+            }
+        }
+    }
+
+    public update_cell(id: string, value: any, rowSelector: any, column: string): void {
+        const grid = this.get(id);
+        if (grid.primaryKey !== undefined && grid.primaryKey !== null) {
+            const columnEdit = grid.columns.filter((col) => col.field === column);
+            if (columnEdit.length > 0) {
+                const columnId = grid.columns.indexOf(columnEdit[0]);
+                const editableCell = this.get_cell_inEditMode(id);
+                if (editableCell && editableCell.cellID.rowID === rowSelector &&
+                    editableCell.cellID.columnID === columnId) {
+                    this.escape_editMode(id, editableCell.cellID);
+                }
+                this.update_cell_implementation(id, rowSelector, columnId, value);
+                grid.cdr.markForCheck();
+                this.refresh_search(id);
+            }
+        }
+    }
+
+    public update_cell_implementation(id: string, rowID, columnID, editValue): void {
+        const grid = this.get(id);
+        const isRowSelected = grid.selection.is_item_selected(id, rowID);
+        const editableCell = this.get_cell_inEditMode(id);
+        const column = grid.columns[columnID];
+        const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
+        editableCell.cell : grid.columns[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
+        const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
+        grid.data.indexOf(rowID);
+        if (rowIndex !== -1) {
+            const args: IGridEditEventArgs = {
+                row: cellObj ? cellObj.row : null, cell: cellObj,
+                currentValue: grid.data[rowIndex][column.field], newValue: editValue
+            };
+            grid.onEditDone.emit(args);
+            grid.data[rowIndex][column.field] = args.newValue;
+            if (grid.primaryKey === column.field && isRowSelected) {
+                grid.selection.deselect_item(id, rowID);
+                grid.selection.select_item(id, args.newValue);
+            }
+            (grid as any)._pipeTrigger++;
+        }
+    }
+
+    public update_row(id: string, value: any, rowSelector: any): void {
+        const grid = this.get(id);
+        if (grid.primaryKey !== undefined && grid.primaryKey !== null) {
+            const editableCell = this.get_cell_inEditMode(id);
+            if (editableCell && editableCell.cellID.rowID === rowSelector) {
+                this.escape_editMode(id, editableCell.cellID);
+            }
+            this.update_row_implementation(id, value, rowSelector);
+            grid.cdr.markForCheck();
+            this.refresh_search(id);
+        }
+    }
+
+    public update_row_implementation(id: string, value: any, rowID: any): void {
+        const grid = this.get(id);
+        const isRowSelected = grid.selection.is_item_selected(id, rowID);
+        const index = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
+        grid.data.indexOf(rowID);
+        if (index !== -1) {
+            const args: IGridEditEventArgs = { row: this.get_row_by_key(id, rowID), cell: null,
+                currentValue: this.get(id).data[index], newValue: value };
+            grid.onEditDone.emit(args);
+            grid.data[index] = args.newValue;
+            if (isRowSelected) {
+                grid.selection.deselect_item(id, rowID);
+                const newRowID = (grid.primaryKey) ? args.newValue[grid.primaryKey] : args.newValue;
+                grid.selection.select_item(id, newRowID);
+            }
+            (grid as any)._pipeTrigger++;
+        }
+    }
+
+    public enable_summaries(id: string, ...rest) {
+        if (rest.length === 1 && Array.isArray(rest[0])) {
+            this.multiple_summaries(id, rest[0], true);
+        } else {
+            this.summaries(id, rest[0], true, rest[1]);
+        }
+        const grid = this.get(id);
+        grid.summariesHeight = 0;
+        this.mark_for_check(id);
+        this.calculate_grid_height(id);
+        grid.cdr.detectChanges();
+    }
+
+    public disable_summaries(id: string, ...rest) {
+        if (rest.length === 1 && Array.isArray(rest[0])) {
+            this.disable_multiple_summaries(id, rest[0]);
+        } else {
+            this.summaries(id, rest[0], false);
+        }
+        const grid = this.get(id);
+        grid.summariesHeight = 0;
+        this.mark_for_check(id);
+        this.calculate_grid_height(id);
+        grid.cdr.detectChanges();
+    }
+
+    public recalculate_summaries(id: string) {
+        this.get(id).summariesHeight = 0;
+        requestAnimationFrame(() => this.reflow(id));
+    }
+
+    public clear_summary_cache(id: string, editCell) {
+        if (editCell && editCell.cell) {
+            this.remove_summary(id, editCell.cell.column.filed);
+        } else {
+            this.remove_summary(id);
+        }
+    }
+
+    private summaries(id: string, fieldName: string, hasSummary: boolean, summaryOperand?: any) {
+        const column = this.get_column_by_name(id, fieldName);
+        column.hasSummary = hasSummary;
+        if (summaryOperand) {
+            column.summaries = summaryOperand;
+        }
+    }
+
+    private multiple_summaries(id: string, expressions: ISummaryExpression[], hasSummary: boolean) {
+        expressions.forEach((element) => {
+            this.summaries(id, element.fieldName, hasSummary, element.customSummary);
+        });
+    }
+
+    private disable_multiple_summaries(id: string, expressions: string[]) {
+        expressions.forEach((column) => { this.summaries(id, column, false); });
+    }
+
+    public paginate(id: string, val: number) {
+        const grid = this.get(id);
+        if (val < 0 || val > grid.totalPages - 1) {
+            return;
+        }
+
+        grid.page = val;
+    }
+
+    public next_page(id: string) {
+        const grid = this.get(id);
+        if (!grid.isLastPage) {
+            grid.page += 1;
+        }
+    }
+
+    public previous_page(id: string) {
+        const grid = this.get(id);
+        if (!grid.isFirstPage) {
+            grid.page -= 1;
+        }
     }
 }
