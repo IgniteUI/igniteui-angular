@@ -19,7 +19,7 @@ steps:
 - script: npm run build:style
   displayName: 'Build styles'
 
-- script: npm run test:lib
+- script: npm run test:lib:azure
   displayName: 'Run tests'
 
 - script: npm run test:migration

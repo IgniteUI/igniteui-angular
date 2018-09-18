@@ -9,6 +9,7 @@
         "lint": "ng lint",
         "e2e": "ng e2e",
         "test:lib": "ng test igniteui-angular --watch=false --no-progress --code-coverage",
+        "test:lib:azure": "ng test igniteui-angular --watch=false --no-progress --code-coverage --karma-config=./projects/igniteui-angular/karma.azure.conf.js",
         "test:lib:watch": "ng test igniteui-angular",
         "test:migration": "node -r ts-node/register ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/migrations/**/*.spec.ts",
         "build:lib": "ng build igniteui-angular --prod && gulp build-style && gulp watch",
