@@ -6,9 +6,6 @@ describe('IgxSelectionAPIService', () => {
         service = new IgxSelectionAPIService();
     });
 
-    afterEach(() => {
-    });
-
     it('call set method with undefined componentID', () => {
         service.set(undefined, new Set());
         expect(service.get(undefined)).toBeUndefined();
