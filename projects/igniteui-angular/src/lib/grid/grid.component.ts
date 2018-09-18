@@ -2021,6 +2021,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();
         this._derivePossibleHeight();
+        this._horizontalChunkSize = 0;
         this.markForCheck();
 
         this.columnList.changes

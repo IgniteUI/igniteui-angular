@@ -345,9 +345,8 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
                 }
             }
         }
-        // TODO: CHANGE TO IGXFORVISIBLEITEMS
-        const containerSize = 'igxForContainerSize';
-        if (containerSize in changes && !changes[containerSize].firstChange) {
+        const chunkSize = 'igxForVisibleElements';
+        if (chunkSize in changes && !changes[chunkSize].firstChange) {
             this._recalcOnContainerChange(changes);
         }
     }
@@ -752,44 +751,6 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
 
     /**
      * @hidden
-     * Recalculates the chunkSize based on current startIndex and returns the new size.
-     * This should be called after this.state.startIndex is updated, not before.
-     */
-    /*protected _calculateChunkSize(): number {
-        let chunkSize = 0;
-        if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
-            if (this.igxForScrollOrientation === 'horizontal') {
-                if (!this.hCache) {
-                    this.initHCache(this.igxForOf);
-                }
-                chunkSize = this._calcMaxChunkSize();
-                if (this.igxForOf && chunkSize > this.igxForOf.length) {
-                   chunkSize = this.igxForOf.length;
-                }
-            } else {
-                chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
-                    parseInt(this.igxForItemSize, 10));
-                chunkSize = isNaN(chunkSize) ? 0 : chunkSize;
-                if (chunkSize !== 0 && !this._isScrolledToBottom && !this._isAtBottomIndex) {
-                    chunkSize++;
-                    this.extraRowApplied = true;
-                } else {
-                    this.extraRowApplied = false;
-                }
-                if (this.igxForOf && chunkSize > this.igxForOf.length) {
-                    chunkSize = this.igxForOf.length;
-                }
-            }
-        } else {
-            if (this.igxForOf) {
-                chunkSize = this.igxForOf.length;
-            }
-        }
-        return chunkSize;
-    }*/
-
-    /**
-     * @hidden
      */
     protected getElement(viewref, nodeName) {
         const elem = viewref.element.nativeElement.parentNode.getElementsByTagName(nodeName);
@@ -840,10 +801,11 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
 
     private _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
-        this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
+        this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize < count;
         if (this.igxForScrollOrientation === 'horizontal') {
-            const totalWidth = this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;
-            this.hScroll.style.width = this.igxForContainerSize + 'px';
+            const totalWidth = /*this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;*/
+                this.initHCache(this.igxForOf);
+            this.hScroll.style.width = this.containerSize + 'px';
             this.hScroll.children[0].style.width = totalWidth + 'px';
         }
         if (this.igxForScrollOrientation === 'vertical') {
