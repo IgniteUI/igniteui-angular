@@ -162,7 +162,6 @@
     }
 
     %igx-expansion-panel__body {
-        padding: $panel-padding;
         color: --var($theme, 'body-color');
         background: --var($theme, 'body-background');
         overflow: hidden;
