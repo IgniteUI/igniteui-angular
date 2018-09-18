@@ -67,9 +67,17 @@ export class IgxOverlayService {
     }
 
     /**
-     * Shows the provided component.
+     * Shows the overlay for provided id.
+     * @param id Id to show overlay for
+     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      */
     show(id: string, settings?: OverlaySettings): string;
+    /**
+     * Shows the provided component.
+     * @param component ElementRef or Component Type to show in overlay
+     * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
+     * @returns Id of the created overlay. Valid until `onClosed` is emitted.
+     */
     // tslint:disable-next-line:unified-signatures
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
     show(compOrId: string | ElementRef | Type<{}> , settings?: OverlaySettings): string {
