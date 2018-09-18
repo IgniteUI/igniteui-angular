@@ -1129,7 +1129,7 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 
     // UI tests custom column
-    it('UI tests on custom column', fakeAsync(() => {
+    xit('UI tests on custom column', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
