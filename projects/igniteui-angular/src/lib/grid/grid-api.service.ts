@@ -161,13 +161,4 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
             return null;
         }
     }
-
-    protected updateTarget(target: any, row: IgxRowComponent<IGridComponent>, dir?: string) {
-        if (target && row instanceof IgxGridGroupByRowComponent) {
-            target = row.groupContent;
-            target.nativeElement.focus();
-        } else {
-            super.updateTarget(target, row, dir);
-        }
-    }
 }

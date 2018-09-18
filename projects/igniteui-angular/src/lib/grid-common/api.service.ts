@@ -8,7 +8,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxRowComponent } from './row.component';
 import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
-import { IGridEditEventArgs, IGridComponent } from './common/grid-interfaces';
+import { IGridEditEventArgs, IRowSelectionEventArgs, IGridComponent } from './common/grid-interfaces';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { DataType } from '../data-operations/data-util';
@@ -1068,22 +1068,18 @@ export class IGridAPIService <T extends IGridComponent> {
             row = this.get_row_by_index(id, rowIndex);
             target = this.get_cell_by_visible_index(id, rowIndex, columnIndex);
 
+            if (!target) {
+                if (dir || row) {
+                    target = dir === 'left' ? row.cells.first : row.cells.last;
+                } else if (row) {
+                    target = row.getNavigationTarget(0, rowIndex);
+                } else {
+                    return;
+                }
+                row.performNavigationAction(target);
+            }
         });
     }
-
-    protected updateTarget(target: any, row: IgxRowComponent<IGridComponent>, dir?: string) {
-        if (!target) {
-            if (dir) {
-                target = dir === 'left' ? row.cells.first : row.cells.last;
-            } else if (row) {
-                target = row.cells.first;
-            } else {
-                return;
-            }
-        }
-        target._updateCellSelectionStatus(true, event);
-    }
-
 
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
         virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
@@ -1099,9 +1095,7 @@ export class IGridAPIService <T extends IGridComponent> {
     public navigateUp(id: string, rowIndex: number, columnIndex: number, event?) {
         const grid = this.get(id);
         const row = this.get_row_by_index(id, rowIndex);
-        const target = row instanceof IgxGridGroupByRowComponent ?
-            row.groupContent :
-            this.get_cell_by_visible_index(id, rowIndex, columnIndex);
+        const target = row.getNavigationTarget(columnIndex, rowIndex);
         const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
 
         if (!verticalScroll && !target) {
@@ -1118,11 +1112,7 @@ export class IGridAPIService <T extends IGridComponent> {
                     -grid.rowHeight + Math.abs(containerTopOffset);
                 this.performVerticalScroll(id, scrollAmount, rowIndex - 1, columnIndex, event);
             }
-            if (row instanceof IgxGridGroupByRowComponent) {
-                target.nativeElement.focus();
-            } else {
-                target._updateCellSelectionStatus(true, event);
-            }
+            row.performNavigationAction(target);
         } else {
             const scrollOffset =
                 -parseInt(grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
@@ -1137,9 +1127,7 @@ export class IGridAPIService <T extends IGridComponent> {
     public navigateDown(id: string, rowIndex: number, columnIndex: number, event?) {
         const grid = this.get(id);
         const row = this.get_row_by_index(id, rowIndex);
-        const target = row instanceof IgxGridGroupByRowComponent ?
-            row.groupContent :
-            this.get_cell_by_visible_index(id, rowIndex, columnIndex);
+        const target = row.getNavigationTarget(columnIndex, rowIndex);
         const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
         if (!verticalScroll && !target) {
             return;
@@ -1156,11 +1144,7 @@ export class IGridAPIService <T extends IGridComponent> {
                 const scrollAmount = targetEndTopOffset - containerHeight;
                 this.performVerticalScroll(id, scrollAmount, rowIndex, columnIndex, event);
             } else {
-                if (row instanceof IgxGridGroupByRowComponent) {
-                    target.nativeElement.focus();
-                } else {
-                    (target as any)._updateCellSelectionStatus(true, event);
-                }
+                row.performNavigationAction(target);
             }
         } else {
             const contentHeight = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
@@ -1177,5 +1161,49 @@ export class IGridAPIService <T extends IGridComponent> {
         if (scrolled) {
             this.focusNextCell(id, rowIndex, columnIndex, undefined, event);
         }
+    }
+
+    public checkHeaderCheckboxStatus(id: string, headerStatus?: boolean) {
+        const grid = this.get(id);
+        if (headerStatus === undefined) {
+            grid.allRowsSelected = grid.selection.are_all_selected(id, grid.data);
+            if (grid.headerCheckbox) {
+                grid.headerCheckbox.indeterminate = !grid.allRowsSelected && !grid.selection.are_none_selected(this.id);
+                if (!grid.headerCheckbox.indeterminate) {
+                    grid.headerCheckbox.checked = grid.selection.are_all_selected(id, grid.data);
+                }
+            }
+            grid.cdr.markForCheck();
+        } else if (grid.headerCheckbox) {
+            grid.headerCheckbox.checked = headerStatus;
+        }
+    }
+
+    public selectRows(id: string, rowIDs: any[], clearCurrentSelection?: boolean) {
+        const grid = this.get(id);
+        const newSelection = grid.selection.add_items(id, rowIDs, clearCurrentSelection);
+        this.triggerRowSelectionChange(id, newSelection);
+    }
+
+    public deselectRows(id: string, rowIDs: any[]) {
+        const grid = this.get(id);
+        const newSelection = grid.selection.delete_items(id, rowIDs);
+        this.triggerRowSelectionChange(id, newSelection);
+    }
+
+    public triggerRowSelectionChange(id: string, newSelectionAsSet: Set<any>, row?: IgxRowComponent<IGridComponent>,
+                                    event?: Event, headerStatus?: boolean) {
+        const grid = this.get(id);
+        const oldSelectionAsSet = grid.selection.get(id);
+        const oldSelection = oldSelectionAsSet ? Array.from(oldSelectionAsSet) : [];
+        const newSelection = newSelectionAsSet ? Array.from(newSelectionAsSet) : [];
+        const args: IRowSelectionEventArgs = { oldSelection, newSelection, row, event };
+        grid.onRowSelectionChange.emit(args);
+        newSelectionAsSet = grid.selection.get_empty();
+        for (let i = 0; i < args.newSelection.length; i++) {
+            newSelectionAsSet.add(args.newSelection[i]);
+        }
+        grid.selection.set(id, newSelectionAsSet);
+        this.checkHeaderCheckboxStatus(id, headerStatus);
     }
 }

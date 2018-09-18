@@ -331,4 +331,18 @@ export class IgxRowComponent<T extends IGridComponent> implements DoCheck {
     notGroups(arr) {
         return arr.filter(c => !c.columnGroup);
     }
+
+    /**
+     * @hidden
+     */
+    public getNavigationTarget(columnIndex: number, rowIndex: number) {
+        return this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+    }
+
+    /**
+     * @hidden
+     */
+    public performNavigationAction(target: any) {
+        target._updateCellSelectionStatus(true, event);
+    }
 }

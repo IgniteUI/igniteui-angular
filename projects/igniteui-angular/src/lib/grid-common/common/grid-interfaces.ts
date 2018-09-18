@@ -16,6 +16,8 @@ import { ISortingExpression } from '../../data-operations/sorting-expression.int
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridHeaderComponent } from '../grid-header.component';
@@ -181,6 +183,7 @@ export interface IGridComponent {
     viewRef: ViewContainerRef;
     paginator: ElementRef;
     headerCheckboxContainer: ElementRef;
+    headerCheckbox: IgxCheckboxComponent;
     scr: ElementRef;
     hasColumnGroups: boolean;
     totalItemCount: number;
@@ -229,6 +232,8 @@ export interface IGridComponent {
     selectedRows(): any[];
     selectRows(rowIDs: any[], clearCurrentSelection?: boolean);
     deselectRows(rowIDs: any[]);
+    selectAllRows();
+    deselectAllRows();
     triggerRowSelectionChange(newSelectionAsSet: Set<any>,
         row?: IgxRowComponent<IGridComponent>, event?: Event, headerStatus?: boolean);
     scrollTo(row: any, column: any);

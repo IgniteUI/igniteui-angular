@@ -3230,18 +3230,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
-        if (headerStatus === undefined) {
-            this.allRowsSelected = this.selection.are_all_selected(this.id, this.data);
-            if (this.headerCheckbox) {
-                this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
-                if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.checked = this.selection.are_all_selected(this.id, this.data);
-                }
-            }
-            this.cdr.markForCheck();
-        } else if (this.headerCheckbox) {
-            this.headerCheckbox.checked = headerStatus !== undefined ? headerStatus : false;
-        }
+        this.gridAPI.checkHeaderCheckboxStatus(this.id, headerStatus);
     }
 
     /**
@@ -3332,9 +3321,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
-        let newSelection: Set<any>;
-        newSelection = this.selection.add_items(this.id, rowIDs, clearCurrentSelection);
-        this.triggerRowSelectionChange(newSelection);
+        this.gridAPI.selectRows(this.id, rowIDs,clearCurrentSelection);
     }
 
     /**
@@ -3346,9 +3333,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public deselectRows(rowIDs: any[]) {
-        let newSelection: Set<any>;
-        newSelection = this.selection.delete_items(this.id, rowIDs);
-        this.triggerRowSelectionChange(newSelection);
+        this.gridAPI.deselectRows(id, rowIDs);
     }
 
     /**
@@ -3360,7 +3345,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public selectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_all_ids(this.data, this.primaryKey));
+        this.gridAPI.triggerRowSelectionChange(this.id, this.selection.get_all_ids(this.data, this.primaryKey));
     }
 
     /**
@@ -3371,24 +3356,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      */
     public deselectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_empty());
+        this.gridAPI.triggerRowSelectionChange(this.id, this.selection.get_empty());
     }
 
     /**
      * @hidden
      */
     public triggerRowSelectionChange(newSelectionAsSet: Set<any>, row?: IgxGridRowComponent, event?: Event, headerStatus?: boolean) {
-        const oldSelectionAsSet = this.selection.get(this.id);
-        const oldSelection = oldSelectionAsSet ? Array.from(oldSelectionAsSet) : [];
-        const newSelection = newSelectionAsSet ? Array.from(newSelectionAsSet) : [];
-        const args: IRowSelectionEventArgs = { oldSelection, newSelection, row, event };
-        this.onRowSelectionChange.emit(args);
-        newSelectionAsSet = this.selection.get_empty();
-        for (let i = 0; i < args.newSelection.length; i++) {
-            newSelectionAsSet.add(args.newSelection[i]);
-        }
-        this.selection.set(this.id, newSelectionAsSet);
-        this.checkHeaderCheckboxStatus(headerStatus);
+        this.gridAPI.triggerRowSelectionChange(this.id, newSelectionAsSet, row, event, headerStatus);
     }
 
     /**

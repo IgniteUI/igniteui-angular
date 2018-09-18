@@ -222,6 +222,20 @@ export class IgxGridGroupByRowComponent {
         this.isFocused = false;
     }
 
+    /**
+     * @hidden
+     */
+    public getNavigationTarget(rowIndex: number, columnIndex: number) {
+        return this.groupContent;
+    }
+
+    /**
+     * @hidden
+     */
+    public performNavigationAction(target: any) {
+        target.nativeElement.focus();
+    }
+
     private _getSelectedColIndex() {
         const cell = this.selection.first_item(this.gridID + '-cell');
         if (cell) {
