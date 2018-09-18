@@ -3,11 +3,11 @@
     <circle class="progress-circular__innercircle" cx="50" cy="50" r="46" />
     <circle #circle class="progress-circular__circle" cx="50" cy="50" r="46" />
     <text #text [class.progress-circular__text--hidden]="!textVisibility" id="myTimer" text-anchor="middle" x="50" y="60">
-            <ng-container *ngTemplateOutlet="template; context: context">
+            <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate; context: context">
             </ng-container>
     </text>
 
-    <ng-template #defaultText>
+    <ng-template #defaultTextTemplate>
         <tspan class="progress-circular__text"> {{textContent ? textContent: valueInPercent + '%'}}</tspan>
     </ng-template>
 </svg>

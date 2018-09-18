@@ -458,33 +458,15 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     @Input()
     public text: string;
 
-    @ViewChild('defaultText', { read: TemplateRef })
-    protected defaultTextTemplate: TemplateRef<any>;
-
     @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective })
     public textTemplate: IgxProcessBarTextTemplateDirective;
 
-     /**
-     * Returns the `template` of the text
-     * ```typescript
-     * let textTemplate = this.circularBar.template;
-     * ```
-     * @memberof IgxCircularProgressBarComponent
-     */
-    public get template(): TemplateRef<any> {
-        return this.textTemplate ? this.textTemplate.template : this.defaultTextTemplate;
-    }
-
     /**
-     * Returns the `context` object which represents the `template context` binding into the `circularBar container`
-     * by providing the `$implicit` declaration which is the `IgxCircularProgressBarComponent` itself.
-     * ```typescript
-     * let processComponent =  this.circularBar.context;
-     * ```
-     */
+     * @hidden
+    */
     public get context(): any {
         return {
-            $implicit: this
+            $implicit: { value: this.value, valueInPercent: this.valueInPercent, max: this.max}
         };
     }
 
