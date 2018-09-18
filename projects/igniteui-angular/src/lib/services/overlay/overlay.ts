@@ -70,6 +70,7 @@ export class IgxOverlayService {
      * Shows the provided component.
      */
     show(id: string, settings?: OverlaySettings): string;
+    // tslint:disable-next-line:unified-signatures
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
     show(compOrId: string | ElementRef | Type<{}> , settings?: OverlaySettings): string {
         let info: OverlayInfo;
