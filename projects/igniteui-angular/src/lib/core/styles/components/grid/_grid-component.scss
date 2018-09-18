@@ -78,6 +78,10 @@
         }
     }
 
+    @include e(summaries-patch) {
+        @extend %grid-summaries-patch !optional;
+    }
+
     @include e(tr, $m: odd) {
         @extend %grid-row--odd !optional;
     }
