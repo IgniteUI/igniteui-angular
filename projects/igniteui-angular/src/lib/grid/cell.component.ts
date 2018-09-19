@@ -761,17 +761,28 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
                 this.onTabKey(event);
                 break;
+            case 'home':
             case 'arrowleft':
             case 'left':
-                if (ctrl) {
+                if (ctrl && key === 'home') {
+                    this.onKeydownCtrlHome(event);
+                    // break;
+                    return;
+                }
+                if (ctrl || key === 'home') {
                     this.onKeydownCtrlArrowLeft(event);
                     break;
                 }
                 this.onKeydownArrowLeft(event);
                 break;
+            case 'end':
             case 'arrowright':
             case 'right':
-                if (ctrl) {
+                if (ctrl && key === 'end') {
+                    this.onKeydownCtrlEnd(event);
+                    break;
+                }
+                if (ctrl || key === 'end') {
                     this.onKeydownCtrlArrowRight(event);
                     break;
                 }
@@ -779,10 +790,18 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
             case 'arrowup':
             case 'up':
+                if (ctrl) {
+                    this.onKeydownCtrlArrowUp(event);
+                    break;
+                }
                 this.onKeydownArrowUp(event);
                 break;
             case 'arrowdown':
             case 'down':
+                if (ctrl) {
+                    this.onKeydownCtrlArrowDown(event);
+                    break;
+                }
                 this.onKeydownArrowDown(event);
                 break;
             case 'enter':
@@ -799,7 +818,35 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onShiftTabKey(event) {
-        this.onKeydownArrowLeft(event);
+        const selectedCell =  this._getLastSelectedCell();
+        if (selectedCell && selectedCell.rowIndex === 0 && selectedCell.visibleColumnIndex === 0) { return; }
+        if (selectedCell && 0 === selectedCell.visibleColumnIndex) {
+            if (this.grid.rowList.first.index === selectedCell.rowIndex) {
+                this.grid.verticalScrollContainer.scrollPrev();
+                this.grid.verticalScrollContainer.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    this.grid.scrollTo(this.rowIndex, this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex,
+                        this.grid.paging ? this.grid.page : 0);
+                    this.row.virtDirRow.onChunkLoad
+                    .pipe(first())
+                    .subscribe(() => {
+                        this.row.cells.last._updateCellSelectionStatus(true, event);
+                    });
+                });
+            } else {
+                const columnIndex  = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
+                this.grid.scrollTo(this.rowIndex, columnIndex, this.grid.paging ? this.grid.page : 0);
+                this.grid.rowList.find(row => row.index === this.rowIndex - 1).virtDirRow.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    this.grid.navigateUp(this.row.index - 1,
+                        columnIndex, event);
+                });
+            }
+        } else {
+            this.onKeydownArrowLeft(event);
+        }
     }
 
     public onKeydownArrowLeft(event) {
@@ -863,7 +910,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        this.grid.scrollTo(this.rowIndex, columnIndex, this.grid.paging ? this.grid.page : 0);
+        this.grid.scrollTo(this.rowIndex, 0, this.grid.paging ? this.grid.page : 0);
         this.row.virtDirRow.onChunkLoad
             .pipe(first())
             .subscribe(() => {
@@ -873,7 +920,21 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onTabKey(event) {
-        this.onKeydownArrowRight(event);
+        const selectedCell =  this._getLastSelectedCell();
+        if (selectedCell &&
+            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === selectedCell.visibleColumnIndex) {
+            if (this.grid.rowList.find(row => row.index === this.rowIndex + 1)) {
+                this.row.virtDirRow.scrollTo(0);
+                this.grid.rowList.find(row => row.index === this.rowIndex + 1).virtDirRow.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    const i = 1;
+                    this.grid.navigateDown(this.row.index + 1, 0, event);
+                });
+            }
+        } else {
+            this.onKeydownArrowRight(event);
+        }
     }
 
     public onKeydownArrowRight(event) {
@@ -958,6 +1019,13 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    public onKeydownCtrlArrowUp(event) {
+        if (this.rowIndex === 0) {
+            return;
+        }
+        this.grid.navigateTop( this.visibleColumnIndex, event);
+    }
+
     public onKeydownArrowUp(event) {
         if (this.rowIndex === 0) {
             return;
@@ -967,6 +1035,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
         this.grid.navigateUp(rowIndex, this.visibleColumnIndex, event);
     }
+
+    public onKeydownCtrlArrowDown(event) {
+        this.grid.navigateBottom(this.visibleColumnIndex, event);
+     }
 
     public onKeydownArrowDown(event) {
         const virtDir = this.grid.verticalScrollContainer;
@@ -979,6 +1051,70 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
         this.grid.navigateDown(rowIndex, this.visibleColumnIndex, event);
     }
+
+    public onKeydownCtrlHome(event) {
+        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getHorizontalScroll();
+        if (verticalScroll.scrollTop === 0) {
+            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
+                if (this.grid.dataRowList.first.cells.first) {
+                    this.grid.dataRowList.first.cells.first._updateCellSelectionStatus(true, event);
+                }
+            } else {
+                this.grid.scrollTo(0, 0, this.grid.paging ? this.grid.page : 0);
+                this.row.virtDirRow.onChunkLoad
+                    .pipe(first())
+                    .subscribe(() => {
+                        if (this.grid.dataRowList.first.cells.first) {
+                            this.grid.dataRowList.first.cells.first._updateCellSelectionStatus(true, event);
+                        }
+                });
+            }
+        } else {
+            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
+                this.grid.navigateTop(0, event);
+            } else {
+                this.row.virtDirRow.scrollTo(0);
+                this.row.virtDirRow.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                   this.grid.navigateTop(0, event);
+                });
+            }
+        }
+    }
+     public onKeydownCtrlEnd(event) {
+        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        const columnIndex = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
+        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+            if (this.row.cells.last.visibleColumnIndex === columnIndex) {
+                if (this.grid.dataRowList.last.cells.last) {
+                    this.grid.dataRowList.last.cells.last._updateCellSelectionStatus(true, event);
+                }
+            } else {
+                this.grid.scrollTo(this.rowIndex, columnIndex + 1,
+                    this.grid.paging ? this.grid.page : 0);
+                this.grid.dataRowList.last.virtDirRow.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    if (this.grid.dataRowList.last.cells.last) {
+                        this.grid.dataRowList.last.cells.last._updateCellSelectionStatus(true, event);
+                    }
+                });
+            }
+        } else {
+            if (this.row.cells.last.visibleColumnIndex === columnIndex) {
+                this.grid.navigateBottom(columnIndex, event);
+            } else {
+                this.grid.scrollTo(this.rowIndex, columnIndex, this.grid.paging ? this.grid.page : 0);
+                this.row.virtDirRow.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    this.grid.navigateBottom(columnIndex, event);
+                });
+            }
+        }
+     }
 
     public onKeydownEnterEditMode(event) {
         if (this.column.editable) {
@@ -1023,6 +1159,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private isNavigationKey(key) {
-        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
+        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright', 'home', 'end'].indexOf(key) !== -1;
     }
+
 }

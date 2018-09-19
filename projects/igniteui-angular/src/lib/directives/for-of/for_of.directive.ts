@@ -406,7 +406,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         // this.state.startIndex = index;
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.hScroll.scrollLeft = this.hCache[index] + 1;
+            if (index === 0 || index === 1) {
+                this.hScroll.scrollLeft = this.hCache[0];
+                return;
+            }
+            this.hScroll.scrollLeft = this.hCache[index + 1];
         } else {
             const containerSize = parseInt(this.igxForContainerSize, 10);
             const maxVirtScrollTop = this._virtHeight - containerSize;
