@@ -1,7 +1,7 @@
 import { DataUtil } from '../../data-operations/data-util';
 import { Pipe, PipeTransform } from '@angular/core';
 import { IGridAPIService } from '../api.service';
-import { IGridComponent } from './grid-interfaces';
+import { IGridBaseComponent } from './grid-interfaces';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { cloneArray } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -16,7 +16,7 @@ import { IFilteringExpressionsTree } from '../../data-operations/filtering-expre
 })
 export class IgxGridSortingPipe implements PipeTransform {
 
-    constructor(private gridAPI: IGridAPIService<IGridComponent>) { }
+    constructor(private gridAPI: IGridAPIService<IGridBaseComponent>) { }
 
     public transform(collection: any[], expressions: ISortingExpression | ISortingExpression[],
         id: string, pipeTrigger: number): any[] {
@@ -41,7 +41,7 @@ export class IgxGridSortingPipe implements PipeTransform {
 })
 export class IgxGridFilteringPipe implements PipeTransform {
 
-    constructor(private gridAPI: IGridAPIService<IGridComponent>) { }
+    constructor(private gridAPI: IGridAPIService<IGridBaseComponent>) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         id: string, pipeTrigger: number) {

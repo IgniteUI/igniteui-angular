@@ -15,7 +15,7 @@ import {
 import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
 import { IGridAPIService } from '../api.service';
-import { IGridComponent } from '../common/grid-interfaces';
+import { IGridBaseComponent } from '../common/grid-interfaces';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
@@ -86,7 +86,7 @@ export class IgxGridFilterExpressionComponent implements OnDestroy, AfterViewIni
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
 
-    constructor(public gridAPI: IGridAPIService<IGridComponent>, public cdr: ChangeDetectorRef) {
+    constructor(public gridAPI: IGridAPIService<IGridBaseComponent>, public cdr: ChangeDetectorRef) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
         this.conditionChanged.subscribe(() => this.conditionChangedCallback());
 

@@ -16,7 +16,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IGridAPIService } from './api.service';
-import { IGridComponent } from './common/grid-interfaces';
+import { IGridBaseComponent } from './common/grid-interfaces';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 
@@ -26,7 +26,7 @@ import { IgxColumnComponent } from './column.component';
     selector: 'igx-row',
     templateUrl: './row.component.html'
 })
-export class IgxRowComponent<T extends IGridComponent> implements DoCheck {
+export class IgxRowComponent<T extends IGridBaseComponent> implements DoCheck {
 
     /**
      *  The data passed to the row component.

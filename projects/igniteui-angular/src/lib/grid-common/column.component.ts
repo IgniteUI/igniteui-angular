@@ -34,7 +34,7 @@ import {
 
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
-import { IGridComponent } from './common/grid-interfaces';
+import { IGridBaseComponent } from './common/grid-interfaces';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -478,7 +478,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    get grid(): IGridComponent {
+    get grid(): IGridBaseComponent {
         return this.gridAPI.get(this.gridID);
     }
     /**
@@ -744,7 +744,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     constructor(
-        public gridAPI: IGridAPIService<IGridComponent>,
+        public gridAPI: IGridAPIService<IGridBaseComponent>,
         public cdr: ChangeDetectorRef,
         @Inject(DOCUMENT) public document) { }
     /**

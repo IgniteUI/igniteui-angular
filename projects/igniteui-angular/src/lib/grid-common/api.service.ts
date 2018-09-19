@@ -1,4 +1,5 @@
-import { Injectable, IterableChangeRecord, QueryList } from '@angular/core';
+import { Injectable, Inject, IterableChangeRecord, QueryList, NgZone } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
 import { cloneArray } from '../core/utils';
@@ -16,7 +17,7 @@ import {
     IGridEditEventArgs,
     IRowSelectionEventArgs,
     IColumnVisibilityChangedEventArgs,
-    IGridComponent } from './common/grid-interfaces';
+    IGridBaseComponent } from './common/grid-interfaces';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { DataType } from '../data-operations/data-util';
@@ -31,7 +32,7 @@ const MINIMUM_COLUMN_WIDTH = 136;
  *@hidden
  */
 @Injectable()
-export class IGridAPIService <T extends IGridComponent> {
+export class IGridAPIService <T extends IGridBaseComponent> {
 
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, T> = new Map<string, T>();
@@ -39,10 +40,13 @@ export class IGridAPIService <T extends IGridComponent> {
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
 
+    constructor(private zone: NgZone,
+                @Inject(DOCUMENT) private document) {}
+
     private resizeHandler = () => {
         this.state.forEach(g => {
             g.reflow();
-            g.zone.run(() => g.markForCheck());
+            this.zone.run(() => g.markForCheck());
         });
     }
 
@@ -110,8 +114,8 @@ export class IGridAPIService <T extends IGridComponent> {
 
     public on_after_view_init(id: string) {
         const grid = this.get(id);
-        grid.zone.runOutsideAngular(() => {
-            grid.document.defaultView.addEventListener('resize', this.resizeHandler);
+        this.zone.runOutsideAngular(() => {
+            this.document.defaultView.addEventListener('resize', this.resizeHandler);
         });
         this.calculate_grid_width(id);
         this.init_pinning(id);
@@ -146,14 +150,13 @@ export class IGridAPIService <T extends IGridComponent> {
             };
 
             observer = new MutationObserver(callback);
-            observer.observe(grid.document.body, config);
+            observer.observe(this.document.body, config);
         }
     }
 
     public on_destroy(id: string) {
-        const grid = this.get(id);
-        grid.zone.runOutsideAngular(() => {
-            grid.document.defaultView.removeEventListener('resize', this.resizeHandler);
+        this.zone.runOutsideAngular(() => {
+            this.document.defaultView.removeEventListener('resize', this.resizeHandler);
         });
         this.get_destroy(id).next(true);
         this.get_destroy(id).complete();
@@ -280,7 +283,7 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IGridComponent>  {
+    public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IGridBaseComponent>  {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -289,7 +292,7 @@ export class IGridAPIService <T extends IGridComponent> {
         }
     }
 
-    public get_row_by_index(id: string, rowIndex: number): IgxRowComponent<IGridComponent> {
+    public get_row_by_index(id: string, rowIndex: number): IgxRowComponent<IGridBaseComponent> {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
@@ -839,7 +842,7 @@ export class IGridAPIService <T extends IGridComponent> {
 
     public calculate_grid_height(id: string) {
         const grid = this.get(id);
-        const computed = grid.document.defaultView.getComputedStyle(grid.nativeElement);
+        const computed = this.document.defaultView.getComputedStyle(grid.nativeElement);
 
         // TODO: Calculate based on grid density
         if (grid.maxLevelHeaderDepth) {
@@ -913,7 +916,7 @@ export class IGridAPIService <T extends IGridComponent> {
 
     private calculate_grid_width(id) {
         const grid = this.get(id);
-        const computed = grid.document.defaultView.getComputedStyle(grid.nativeElement);
+        const computed = this.document.defaultView.getComputedStyle(grid.nativeElement);
 
         if (grid.width && grid.width.indexOf('%') !== -1) {
             /* width in %*/
@@ -968,7 +971,7 @@ export class IGridAPIService <T extends IGridComponent> {
     private get_possible_column_width(id: string) {
         const grid = this.get(id);
         let computedWidth = parseInt(
-            grid.document.defaultView.getComputedStyle(grid.nativeElement).getPropertyValue('width'), 10);
+            this.document.defaultView.getComputedStyle(grid.nativeElement).getPropertyValue('width'), 10);
 
         if (grid.rowSelectable) {
             computedWidth -= grid.headerCheckboxContainer.nativeElement.clientWidth;
@@ -1220,7 +1223,7 @@ export class IGridAPIService <T extends IGridComponent> {
         this.trigger_row_selection_change(id, newSelection);
     }
 
-    public trigger_row_selection_change(id: string, newSelectionAsSet: Set<any>, row?: IgxRowComponent<IGridComponent>,
+    public trigger_row_selection_change(id: string, newSelectionAsSet: Set<any>, row?: IgxRowComponent<IGridBaseComponent>,
                                     event?: Event, headerStatus?: boolean) {
         const grid = this.get(id);
         const oldSelectionAsSet = grid.selection.get(id);
@@ -1665,5 +1668,27 @@ export class IGridAPIService <T extends IGridComponent> {
         if (!grid.isFirstPage) {
             grid.page -= 1;
         }
+    }
+
+    public on_key_down_page_down(id: string, event) {
+        const grid = this.get(id);
+        event.preventDefault();
+        grid.verticalScrollContainer.scrollNextPage();
+        grid.nativeElement.focus();
+    }
+
+    public on_key_down_page_up(id: string, event) {
+        const grid = this.get(id);
+        event.preventDefault();
+        grid.verticalScrollContainer.scrollPrevPage();
+        grid.nativeElement.focus();
+    }
+
+    public scroll_handler(id: string, event) {
+        const grid = this.get(id);
+        grid.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
+        grid.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
+        event.target.scrollLeft = 0;
+        event.target.scrollTop = 0;
     }
 }

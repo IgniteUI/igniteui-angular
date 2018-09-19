@@ -18,7 +18,7 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { IGridComponent } from './common/grid-interfaces';
+import { IGridBaseComponent } from './common/grid-interfaces';
 import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
 
 /**
@@ -186,7 +186,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
-    get grid(): IGridComponent {
+    get grid(): IGridBaseComponent {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -550,7 +550,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     private previousCellEditMode = false;
 
     constructor(
-        public gridAPI: IGridAPIService<IGridComponent>,
+        public gridAPI: IGridAPIService<IGridBaseComponent>,
         public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }

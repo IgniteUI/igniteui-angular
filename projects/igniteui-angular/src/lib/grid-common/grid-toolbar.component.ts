@@ -18,7 +18,7 @@ import {
     AbsoluteScrollStrategy
 } from '../services';
 import { IGridAPIService } from './api.service';
-import { IGridComponent } from './common/grid-interfaces';
+import { IGridBaseComponent } from './common/grid-interfaces';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding/column-hiding.component';
 import { IgxColumnPinningComponent } from './column-pinning/column-pinning.component';
@@ -151,7 +151,7 @@ export class IgxGridToolbarComponent {
      * const grid = this.igxGrid1.toolbar.grid;
      * ```
      */
-    public get grid(): IGridComponent {
+    public get grid(): IGridBaseComponent {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -250,7 +250,7 @@ export class IgxGridToolbarComponent {
         }
     }
 
-    constructor(public gridAPI: IGridAPIService<IGridComponent>,
+    constructor(public gridAPI: IGridAPIService<IGridBaseComponent>,
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService) {

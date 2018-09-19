@@ -11,14 +11,12 @@
     Renderer2,
     TemplateRef
 } from '@angular/core';
-import { interval, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../grid-common/column.component';
 import { IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxColumnMovingDragDirective } from '../grid-common/common/grid-common.misc';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './grid-api.service';
-import { IGridComponent } from '../grid-common/common/grid-interfaces';
+import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
 import { IGridAPIService } from '../grid-common/api.service';
 
 /**
@@ -83,7 +81,7 @@ export class IgxCellEditorTemplateDirective {
 export class IgxGroupAreaDropDirective extends IgxDropDirective {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: IGridAPIService<IGridComponent>, elementRef: ElementRef, renderer: Renderer2, _zone: NgZone) {
+    constructor(gridAPI: IGridAPIService<IGridBaseComponent>, elementRef: ElementRef, renderer: Renderer2, _zone: NgZone) {
         super(elementRef, renderer, _zone);
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
