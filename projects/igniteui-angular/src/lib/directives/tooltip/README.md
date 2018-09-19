@@ -99,8 +99,8 @@ Since the **IgxTooltip** directive extends the **IgxToggle** directive and there
 ### Methods
 | Name | Type | Arguments | Description |
 | :--- |:--- | :--- | :--- |
-| openTooltip | void | N/A | Opens the tooltip after the specified amount of ms by the `showDelay` property. |
-| closeTooltip | void | N/A | Closes the tooltip after the specified amount of ms by the `hideDelay` property. |
+| openTooltip | void | N/A | Opens the tooltip after the amount of ms specified by the `showDelay` property. |
+| closeTooltip | void | N/A | Closes the tooltip after the amount of ms specified by the `hideDelay` property. |
 
 ### Events
 |Name|Description|Cancelable|Event arguments|
