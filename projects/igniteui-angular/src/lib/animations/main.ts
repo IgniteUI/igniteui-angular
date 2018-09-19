@@ -19,6 +19,8 @@ export interface IAnimationParams {
     rotateX?: number;
     rotateY?: number;
     rotateZ?: number;
+    startHeight?: string;
+    endHeight?: string;
 }
 
 export * from './fade/index';
@@ -28,3 +30,4 @@ export * from './misc/index';
 export * from './scale/index';
 export * from './slide/index';
 export * from './swing/index';
+export * from './grow/index';
