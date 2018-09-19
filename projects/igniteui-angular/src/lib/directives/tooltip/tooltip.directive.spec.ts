@@ -65,13 +65,11 @@ describe('IgxTooltip', () => {
     it('IgxTooltip is shown/hidden when hovering/unhovering its target', fakeAsync(() => {
         hoverElement(button);
         flush();
-        fix.detectChanges();
 
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         unhoverElement(button);
         flush();
-        fix.detectChanges();
 
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
     }));
@@ -79,7 +77,6 @@ describe('IgxTooltip', () => {
     it('verify tooltip default position', fakeAsync(() => {
         hoverElement(button);
         flush();
-        fix.detectChanges();
 
         const buttonRect = (<HTMLElement>button.nativeElement).getBoundingClientRect();
         const tooltipRect = (<HTMLElement>tooltipNativeElement).getBoundingClientRect();
@@ -99,7 +96,6 @@ describe('IgxTooltip', () => {
 
         hoverElement(button);
         flush();
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
 
         tooltipTarget.tooltipDisabled = false;
@@ -107,7 +103,6 @@ describe('IgxTooltip', () => {
 
         hoverElement(button);
         flush();
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
     }));
 
@@ -118,15 +113,12 @@ describe('IgxTooltip', () => {
         hoverElement(button);
 
         tick(500);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
 
         tick(300);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
 
         tick(100);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
     }));
 
@@ -136,31 +128,25 @@ describe('IgxTooltip', () => {
 
         hoverElement(button);
         flush();
-        fix.detectChanges();
 
         unhoverElement(button);
         tick(400);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         tick(100);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         tick(200);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
     }));
 
     it('IgxTooltip is shown/hidden when invoking openTooltip/closeTooltip methods', fakeAsync(() => {
         tooltipTarget.openTooltip();
         flush();
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         tooltipTarget.closeTooltip();
         flush();
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
     }));
 
@@ -171,11 +157,9 @@ describe('IgxTooltip', () => {
         tooltipTarget.openTooltip();
 
         tick(300);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
 
         tick(100);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
     }));
 
@@ -185,63 +169,52 @@ describe('IgxTooltip', () => {
 
         tooltipTarget.openTooltip();
         flush();
-        fix.detectChanges();
 
         tooltipTarget.closeTooltip();
 
         tick(400);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         tick(50);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
     }));
 
     it('IgxTooltip closes and reopens if it was opened through API and then its target is hovered', fakeAsync(() => {
         tooltipTarget.openTooltip();
         flush();
-        fix.detectChanges();
 
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         hoverElement(button);
 
         tick(250);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
 
         tick(250);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
     }));
 
     it('IgxTooltip closes and reopens if opening it through API multiple times', fakeAsync(() => {
         tooltipTarget.openTooltip();
         tick(500);
-        fix.detectChanges();
 
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         tooltipTarget.openTooltip();
         tick(250);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
 
         tick(250);
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
     }));
 
     it('IgxTooltip respects the passed overlaySettings', fakeAsync(() => {
         tooltipTarget.openTooltip();
         flush();
-        fix.detectChanges();
 
         // click button (the button is outside the tooltip, so we can use it for the test)
         UIInteractions.clickElement(button);
         flush();
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         tooltipTarget.overlaySettings = /*<OverlaySettings>*/ {
@@ -251,24 +224,20 @@ describe('IgxTooltip', () => {
 
         tooltipTarget.openTooltip();
         flush();
-        fix.detectChanges();
 
         UIInteractions.clickElement(button);
         flush();
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
     }));
 
     it('IgxTooltip closes on pressing \'escape\' key', fakeAsync(() => {
         tooltipTarget.openTooltip();
         flush();
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, true);
 
         UIInteractions.simulateKeyDownEvent(document.documentElement, 'Escape');
 
         flush();
-        fix.detectChanges();
         verifyTooltipVisibility(fix, tooltipNativeElement, false);
     }));
 
@@ -282,13 +251,11 @@ describe('IgxTooltip', () => {
             hoverElement(button);
             expect(tooltipTarget.onTooltipOpening.emit).toHaveBeenCalled();
             flush();
-            fix.detectChanges();
             expect(tooltipTarget.onTooltipOpened.emit).toHaveBeenCalled();
 
             unhoverElement(button);
             expect(tooltipTarget.onTooltipClosing.emit).toHaveBeenCalled();
             flush();
-            fix.detectChanges();
             expect(tooltipTarget.onTooltipClosed.emit).toHaveBeenCalled();
         }));
 
@@ -301,13 +268,11 @@ describe('IgxTooltip', () => {
             tooltipTarget.openTooltip();
             expect(tooltipTarget.onTooltipOpening.emit).toHaveBeenCalled();
             flush();
-            fix.detectChanges();
             expect(tooltipTarget.onTooltipOpened.emit).toHaveBeenCalled();
 
             tooltipTarget.closeTooltip();
             expect(tooltipTarget.onTooltipClosing.emit).toHaveBeenCalled();
             flush();
-            fix.detectChanges();
             expect(tooltipTarget.onTooltipClosed.emit).toHaveBeenCalled();
         }));
 
@@ -325,13 +290,11 @@ describe('IgxTooltip', () => {
             hoverElement(button);
             expect(tooltipTarget.onTooltipOpening.emit).toHaveBeenCalledWith(tooltipOpeningArgs);
             flush();
-            fix.detectChanges();
             expect(tooltipTarget.onTooltipOpened.emit).toHaveBeenCalledWith(tooltipOpenedArgs);
 
             unhoverElement(button);
             expect(tooltipTarget.onTooltipClosing.emit).toHaveBeenCalledWith(tooltipClosingArgs);
             flush();
-            fix.detectChanges();
             expect(tooltipTarget.onTooltipClosed.emit).toHaveBeenCalledWith(tooltipClosedArgs);
         }));
 
@@ -349,13 +312,11 @@ describe('IgxTooltip', () => {
             tooltipTarget.openTooltip();
             expect(tooltipTarget.onTooltipOpening.emit).toHaveBeenCalledWith(tooltipOpeningArgs);
             flush();
-            fix.detectChanges();
             expect(tooltipTarget.onTooltipOpened.emit).toHaveBeenCalledWith(tooltipOpenedArgs);
 
             tooltipTarget.closeTooltip();
             expect(tooltipTarget.onTooltipClosing.emit).toHaveBeenCalledWith(tooltipClosingArgs);
             flush();
-            fix.detectChanges();
             expect(tooltipTarget.onTooltipClosed.emit).toHaveBeenCalledWith(tooltipClosedArgs);
         }));
 
@@ -365,7 +326,6 @@ describe('IgxTooltip', () => {
 
             hoverElement(button);
             flush();
-            fix.detectChanges();
 
             verifyTooltipVisibility(fix, tooltipNativeElement, false);
             expect(tooltipTarget.onTooltipOpened.emit).not.toHaveBeenCalled();
@@ -377,11 +337,9 @@ describe('IgxTooltip', () => {
 
             hoverElement(button);
             flush();
-            fix.detectChanges();
 
             unhoverElement(button);
             flush();
-            fix.detectChanges();
 
             verifyTooltipVisibility(fix, tooltipNativeElement, true);
             expect(tooltipTarget.onTooltipClosed.emit).not.toHaveBeenCalled();
@@ -393,7 +351,6 @@ describe('IgxTooltip', () => {
 
             tooltipTarget.openTooltip();
             flush();
-            fix.detectChanges();
 
             verifyTooltipVisibility(fix, tooltipNativeElement, false);
             expect(tooltipTarget.onTooltipOpened.emit).not.toHaveBeenCalled();
@@ -405,11 +362,9 @@ describe('IgxTooltip', () => {
 
             tooltipTarget.openTooltip();
             flush();
-            fix.detectChanges();
 
             tooltipTarget.closeTooltip();
             flush();
-            fix.detectChanges();
 
             verifyTooltipVisibility(fix, tooltipNativeElement, true);
             expect(tooltipTarget.onTooltipClosed.emit).not.toHaveBeenCalled();
