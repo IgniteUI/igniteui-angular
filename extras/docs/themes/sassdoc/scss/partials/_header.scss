@@ -1,0 +1,41 @@
+@include b(header) {
+  display: flex;
+  flex-flow: column nowrap;
+
+  @include e(secondary) {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: rem($secondary-header-height);
+    background: #222;
+    padding: 0 rem(15);
+  }
+
+  @include e(logo) {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-size: rem(18);
+  }
+
+  @include e(logo-name) { }
+
+  @include e(logo-version) {
+    font-size: rem(12);
+    background: #666;
+    color: #efefef;
+    padding: rem(4) rem(8);
+    margin-left: rem(12);
+    font-weight: 500;
+  }
+
+  @include e(menu) { }
+
+  @include m(sticky) {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 4;
+  }
+}

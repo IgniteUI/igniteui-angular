@@ -1,0 +1,17 @@
+@import './normalize';
+@import './typography';
+
+html {
+  box-sizing: border-box;
+  color: $base-color;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+  margin:0;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
