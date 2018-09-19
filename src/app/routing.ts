@@ -47,6 +47,7 @@ import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 
 const appRoutes = [
     {
@@ -198,6 +199,10 @@ const appRoutes = [
     {
         path: 'gridCellEditing',
         component: GridCellEditingComponent
+    },
+    {
+        path: 'gridConditionalCellStyling',
+        component: GridCellStylingSampleComponent
     },
     {
         path: 'grid',
