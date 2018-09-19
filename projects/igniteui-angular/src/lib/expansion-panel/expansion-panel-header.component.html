@@ -1,0 +1,14 @@
+<div class="igx-expansion-panel__header-inner" tabindex="0" role="button" [attr.id]="id"
+[attr.aria-disabled]="disabled" [attr.aria-expanded]="isExpanded" [attr.aria-controls]="controls">
+    <div class="igx-expansion-panel__title-wrapper">
+        <ng-content select="igx-expansion-panel-title"></ng-content>
+        <ng-content select="igx-expansion-panel-description"></ng-content>
+    </div>
+    <ng-content></ng-content>
+    <div [class]="iconPositionClass">
+        <ng-content *ngIf="iconTemplate" select="igx-expansion-panel-icon"></ng-content>
+        <igx-icon *ngIf="!iconTemplate" fontSet="material">
+            {{panel.collapsed? 'expand_more':'expand_less'}}
+        </igx-icon>
+    </div>
+</div>
