@@ -29,24 +29,68 @@ export interface ITooltipClosedEventArgs {
     selector: '[igxTooltipTarget]'
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
-
-    /* Private Members */
     private _toBeShown = false;
     private _toBeHidden = false;
     private _timeoutId;
     private _tooltipOpenedSub: Subscription;
     private _tooltipClosedSub: Subscription;
 
-    /* Public Members */
+    /**
+     * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
+     *
+     * ```typescript
+     * // get
+     * let tooltipShowDelay = this.tooltipTarget.showDelay;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <button [igxTooltipTarget]="tooltipRef" showDelay="1500">Hover me</button>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
     @Input('showDelay')
     public showDelay = 500;
 
+    /**
+     * Gets/sets the amount of milliseconds that should pass before hiding the tooltip.
+     *
+     * ```typescript
+     * // get
+     * let tooltipHideDelay = this.tooltipTarget.hideDelay;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <button [igxTooltipTarget]="tooltipRef" hideDelay="1500">Hover me</button>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
     @Input('hideDelay')
     public hideDelay = 500;
 
+    /**
+     * Specifies if the tooltip should not show when hovering its target with the mouse. (defaults to false)
+     * While setting this property to 'true' will disable the user interactions that show/hide the tooltip,
+     * the developer will still be able to show/hide the tooltip through the API.
+     *
+     * ```typescript
+     * // get
+     * let tooltipDisabledValue = this.tooltipTarget.tooltipDisabled;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <button [igxTooltipTarget]="tooltipRef" [tooltipDisabled]="true">Hover me</button>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
     @Input('tooltipDisabled')
     public tooltipDisabled = false;
 
+    /**
+     * @hidden
+     */
     @Input('igxTooltipTarget')
     set target(target: any) {
         if (target !== null && target !== '') {
@@ -54,6 +98,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
     }
 
+    /**
+     * @hidden
+     */
     get target(): any {
         if (typeof this._target === 'string') {
             return this._navigationService.get(this._target);
@@ -61,23 +108,99 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         return this._target;
     }
 
+    /**
+     * Get the respective native element of the directive.
+     *
+     * ```typescript
+     * let tooltipTargetElement = this.tooltipTarget.nativeElement;
+     * ```
+     */
     public get nativeElement() {
         return this._element.nativeElement;
     }
 
+    /**
+     * Indicates if the tooltip that is is associated with this target is currently hidden.
+     *
+     * ```typescript
+     * let tooltipHiddenValue = this.tooltipTarget.tooltipHidden;
+     * ```
+     */
     public get tooltipHidden(): boolean {
         return !this.target || this.target.collapsed;
     }
 
+    /**
+     * Emits an event when the tooltip that is associated with this target starts opening.
+     * This event is fired before the start of the countdown to opening the tooltip.
+     *
+     * ```typescript
+     * tooltipOpening(args: ITooltipOpeningEventArgs) {
+     *    alert("Tooltip started opening!");
+     * }
+     * ```
+     *
+     * ```html
+     * <button [igxTooltipTarget]="tooltipRef"
+     *         (onTooltipOpening)='tooltipOpening($event)'>Hover me</button>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
     @Output()
     public onTooltipOpening = new EventEmitter<ITooltipOpeningEventArgs>();
 
+    /**
+     * Emits an event when the tooltip that is associated with this target is opened.
+     *
+     * ```typescript
+     * tooltipOpened(args: ITooltipOpenedEventArgs) {
+     *    alert("Tooltip opened!");
+     * }
+     * ```
+     *
+     * ```html
+     * <button [igxTooltipTarget]="tooltipRef"
+     *         (onTooltipOpened)='tooltipOpened($event)'>Hover me</button>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
     @Output()
     public onTooltipOpened = new EventEmitter<ITooltipOpenedEventArgs>();
 
+    /**
+     * Emits an event when the tooltip that is associated with this target starts closing.
+     * This event is fired before the start of the countdown to closing the tooltip.
+     *
+     * ```typescript
+     * tooltipClosing(args: ITooltipClosingEventArgs) {
+     *    alert("Tooltip started closing!");
+     * }
+     * ```
+     *
+     * ```html
+     * <button [igxTooltipTarget]="tooltipRef"
+     *         (onTooltipClosing)='tooltipClosing($event)'>Hover me</button>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
     @Output()
     public onTooltipClosing = new EventEmitter<ITooltipClosingEventArgs>();
 
+    /**
+     * Emits an event when the tooltip that is associated with this target is closed.
+     *
+     * ```typescript
+     * tooltipClosed(args: ITooltipClosedEventArgs) {
+     *    alert("Tooltip closed!");
+     * }
+     * ```
+     *
+     * ```html
+     * <button [igxTooltipTarget]="tooltipRef"
+     *         (onTooltipClosed)='tooltipClosed($event)'>Hover me</button>
+     * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+     * ```
+     */
     @Output()
     public onTooltipClosed = new EventEmitter<ITooltipClosedEventArgs>();
 
@@ -86,6 +209,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         super(_element, _navigationService);
     }
 
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         super.ngOnInit();
 
@@ -107,6 +233,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         );
     }
 
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         if (this._tooltipOpenedSub && !this._tooltipOpenedSub.closed) {
             this._tooltipOpenedSub.unsubscribe();
@@ -116,7 +245,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
     }
 
-    /* Private Methods */
     private checkOutletAndOutsideClick() {
         if (this.closeOnOutsideClick !== undefined) {
             this._overlayDefaults.closeOnOutsideClick = this.closeOnOutsideClick;
@@ -160,7 +288,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         return false;
     }
 
-    /* Public Methods */
+    /**
+     * @hidden
+     */
     @HostListener('document:keydown.escape', ['$event'])
     public onKeydownEscape(event: KeyboardEvent) {
         const args = { tooltip: this.target, cancel: false };
@@ -175,11 +305,17 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._toBeHidden = false;
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('click')
     public onClick() {
         return;
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('mouseenter')
     public onMouseEnter() {
         if (this.tooltipDisabled) {
@@ -203,6 +339,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }, this.showDelay);
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('mouseleave')
     public onMouseLeave() {
         if (this.tooltipDisabled) {
@@ -229,6 +368,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }, this.hideDelay);
     }
 
+    /**
+     * Opens the tooltip by respecting the 'showDelay' property.
+     *
+     * ```typescript
+     * this.tooltipTarget.openTooltip();
+     * ```
+     */
     public openTooltip() {
         clearTimeout(this._timeoutId);
 
@@ -251,6 +397,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }, this.showDelay);
     }
 
+    /**
+     * Closes the tooltip by respecting the 'hideDelay' property.
+     *
+     * ```typescript
+     * this.tooltipTarget.closeTooltip();
+     * ```
+     */
     public closeTooltip() {
         if (this.target.collapsed && this._toBeShown) {
             clearTimeout(this._timeoutId);
@@ -281,23 +434,41 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]'
 })
 export class IgxTooltipDirective extends IgxToggleDirective {
-
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-tooltip--hidden')
     public get hiddenClass() {
         return this.collapsed;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-tooltip')
     public get defaultClass() {
         return !this.collapsed;
     }
 
+    /**
+     * Identifier for the tooltip.
+     * If this is property is not explicitly set, it will be automatically generated.
+     *
+     * ```typescript
+     * let tooltipId = this.tooltip.id;
+     * ```
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-tooltip-${NEXT_ID++}`;
 
-    @Input() public labelId = `${this.id}-label`;
-
+    /**
+     * Get the role attribute of the tooltip.
+     *
+     * ```typescript
+     * let tooltipRole = this.tooltip.role;
+     * ```
+     */
     @HostBinding('attr.role')
     public get role() {
         return 'tooltip';
