@@ -11,7 +11,7 @@ import {
 import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component';
 
 /**
- * The `<igx-drop-down-item> is a container intended for row items in
+ * The `<igx-drop-down-item>` is a container intended for row items in
  * a `<igx-drop-down>` container.
  */
 
