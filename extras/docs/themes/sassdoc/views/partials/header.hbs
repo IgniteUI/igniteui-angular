@@ -3,10 +3,26 @@
     <div class="header__secondary">
         <div class="header__logo">
             <span class="header__logo-name">{{package.name}}</span>
-            <span class="header__logo-version">{{package.version}}</span>
+            <span class="header__logo-version">API ver. {{package.version}}</span>
         </div>
 
-        <div class="header__menu">
+        <div class="tsd-nav-toggle align-end">
+            <input id="tsd-toggle-cbx" type="checkbox">
+            <label for="tsd-toggle-cbx">
+                <span class="material-icons">menu</span>
+            </label>
+            <ul class="tsd-nav">
+                <li class="tsd-nav-item">
+                    <button class="infra-button--flat">
+                        <a href="https://www.infragistics.com/products/ignite-ui-angular">Components</a>
+                    </button>
+                </li>
+                <li class="tsd-nav-item">
+                    <button class="infra-button">
+                        <a href="https://infragistics.com/products/ignite-ui-angular/getting-started/">Get Started</a>
+                    </button>
+                </li>
+            </ul>
         </div>
     </div>
 </header>
