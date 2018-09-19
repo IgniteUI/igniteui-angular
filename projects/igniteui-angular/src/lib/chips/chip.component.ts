@@ -449,6 +449,10 @@ export class IgxChipComponent implements AfterViewInit {
         }
     }
 
+    public onChipRemoveMouseDown(event: PointerEvent|MouseEvent) {
+        event.stopPropagation();
+    }
+
     /**
      * @hidden
      */
