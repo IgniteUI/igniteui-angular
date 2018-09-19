@@ -159,7 +159,7 @@ export interface IColumnMovingEndEventArgs {
     providers: [IgxPendingTransactionService]
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
-
+    private _data;
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
      * ```html
@@ -168,7 +168,30 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public data = [];
+    public get data(): any[] {
+        if (this.transactions.aggregatedState()) {
+            const copy = [...this._data];
+            const transactionsState = this.transactions.aggregatedState();
+            transactionsState.forEach((state, key) => {
+                // TODO change to switch case
+                if (state.type === TransactionType.ADD) {
+                    copy.push(state.value);
+                }
+                if (state.type === TransactionType.UPDATE) {
+                    const index = this._data.findIndex(v => v === state.recordRef);
+                    copy.splice(index, 1, Object.assign({}, copy[index], state.value));
+                }
+                if (state.type === TransactionType.DELETE) {
+                    //  TODO: mark row as deleted somehow
+                }
+            });
+            return copy;
+        }
+        return this._data;
+    }
+    public set data(value: any[]) {
+        this._data = value;
+    }
 
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
@@ -745,7 +768,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public  get rowHeight()  {
+    public get rowHeight() {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
@@ -1519,7 +1542,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth =  this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -1834,7 +1857,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public buttonDoneTemplate;
 
-     @Input()
+    @Input()
     public buttonCancelTemplate;
 
     /**
@@ -2718,20 +2741,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public addRow(data: any): void {
-        //  TODO: set transaction id in this way so it could be then updated and deleted
-        //  with next transaction on this row
-        const transaction: ITransaction = {id: `addRow${this._newRowTransactionId++}`, type: TransactionType.ADD, newValue: data};
-        if (!this.transactions.add(transaction)) {
+        if (this.transactions.aggregatedState() !== null) {
+            const transactionId = this.primaryKey ? data[this.primaryKey] : data;
+            const transaction: ITransaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
+            this.transactions.add(transaction);
+        } else {
             this.data.push(data);
         }
+
         this.onRowAdded.emit({ data });
         this._pipeTrigger++;
         this.cdr.markForCheck();
 
         this.refreshSearch();
     }
-    // tslint:disable-next-line:member-ordering
-    private _newRowTransactionId = 0;
 
     /**
      * Removes the `IgxGridRowComponent` and the corresponding data record by primary key.
@@ -2745,10 +2768,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const index = this.gridAPI.get(this.id).data.map((record) => record[this.gridAPI.get(this.id).primaryKey]).indexOf(rowSelector);
-            if (index !== -1) {
-                const transaction: ITransaction = {id: rowSelector, type: TransactionType.DELETE, newValue: null};
-                if (!this.transactions.add(transaction, this.data[index])) {
+            const hasTransactions = this.transactions.aggregatedState() !== null;
+            const index = this.data.map((record) => record[this.primaryKey]).indexOf(rowSelector);
+            if (hasTransactions) {
+                if (index !== -1) {
+                    const transaction: ITransaction = { id: rowSelector, type: TransactionType.DELETE, newValue: null };
+                    this.transactions.add(transaction, this.data[index]);
+                } else {
+                    const state = this.transactions.aggregatedState().get(rowSelector);
+                    if (state && state.type !== TransactionType.DELETE) {
+                        this.transactions.add({ id: rowSelector, type: TransactionType.DELETE, newValue: null }, state.recordRef);
+                    }
+                }
+            } else {
+                if (index !== -1) {
                     const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
                     if (editableCell && editableCell.cellID.rowID === rowSelector) {
                         this.gridAPI.escape_editMode(this.id, editableCell.cellID);
@@ -2756,18 +2789,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     this.onRowDeleted.emit({ data: this.data[index] });
                     this.data.splice(index, 1);
                 }
-                if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowSelector)) {
-                    this.deselectRows([rowSelector]);
-                } else {
-                    this.checkHeaderCheckboxStatus();
-                }
-                this._pipeTrigger++;
-                this.cdr.markForCheck();
+            }
+            if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowSelector)) {
+                this.deselectRows([rowSelector]);
+            } else {
+                this.checkHeaderCheckboxStatus();
+            }
+            this._pipeTrigger++;
+            this.cdr.markForCheck();
 
-                this.refreshSearch();
-                if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
-                    this.page--;
-                }
+            this.refreshSearch();
+            if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+                this.page--;
             }
         }
     }

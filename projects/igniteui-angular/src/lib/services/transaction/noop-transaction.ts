@@ -1,15 +1,12 @@
 import { ITransactionService, ITransaction, IState } from './utilities';
 
 export class NoOpTransactionService implements ITransactionService {
-    public add(transaction: ITransaction) {
+    add(transaction: ITransaction, recordRef?: any): boolean {
         return false;
     }
 
-    getLastTransactionById(id: any): ITransaction {
+    getTransactionLog(id?: any): ITransaction[] | ITransaction {
         return null;
-    }
-    getTransactionLog(): ITransaction[] {
-        return [];
     }
 
     undo() { }

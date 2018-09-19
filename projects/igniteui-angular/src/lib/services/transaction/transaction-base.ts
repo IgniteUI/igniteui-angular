@@ -55,14 +55,13 @@ export class IgxTransactionBaseService implements ITransactionService {
 
     public undo() {
         if (this._transactions.length <= 0) {
-            //  TODO: should we throw here
             return;
         }
-            this._transactions.pop();
-            const action: { transaction: ITransaction, recordRef: any } = this._undoStack.pop();
-            this._redoStack.push(action);
-            this._states.clear();
-            this._undoStack.map(a => this.updateCurrentState(a.transaction, a.recordRef));
+        this._transactions.pop();
+        const action: { transaction: ITransaction, recordRef: any } = this._undoStack.pop();
+        this._redoStack.push(action);
+        this._states.clear();
+        this._undoStack.map(a => this.updateCurrentState(a.transaction, a.recordRef));
     }
 
     public redo() {
@@ -70,6 +69,7 @@ export class IgxTransactionBaseService implements ITransactionService {
             const undoItem = this._redoStack.pop();
             this.updateCurrentState(undoItem.transaction, undoItem.recordRef);
             this._transactions.push(undoItem.transaction);
+            this._undoStack.push(undoItem);
         }
     }
 
@@ -114,7 +114,7 @@ export class IgxTransactionBaseService implements ITransactionService {
         //    - if there is state with this id of type UPDATE change its type to DELETE;
         //    - if there is no state with this id add transaction to _states;
         //  if TransactionType is UPDATE:
-        //    - if there is state with this id set state value to the transaction's value;
+        //    - if there is state with this id update the state value with the transaction's value;
         //    - if there is state with this id and state type is DELETE change its type to UPDATE
         //    - if there is no state with this id add transaction to _states;
         switch (transaction.type) {
@@ -130,7 +130,11 @@ export class IgxTransactionBaseService implements ITransactionService {
                 break;
             case TransactionType.UPDATE:
                 if (state) {
-                    state.value = transaction.newValue;
+                    if (state.type !== TransactionType.DELETE && typeof state.value === 'object') {
+                        Object.assign(state.value, transaction.newValue);
+                    } else {
+                        state.value = transaction.newValue;
+                    }
                     if (state.type === TransactionType.DELETE) {
                         state.type = TransactionType.UPDATE;
                     }
@@ -138,11 +142,6 @@ export class IgxTransactionBaseService implements ITransactionService {
                 }
         }
 
-        const oldState: IState = this._states.get(transaction.id);
-        if (oldState && oldState.type === TransactionType.UPDATE && typeof oldState.value === 'object') {
-            Object.assign(oldState.value, transaction.newValue);
-            return;
-        }
         this._states.set(transaction.id, { value: transaction.newValue, recordRef: recordRef, type: transaction.type });
     }
 

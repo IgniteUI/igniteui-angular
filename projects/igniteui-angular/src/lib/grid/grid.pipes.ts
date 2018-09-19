@@ -184,22 +184,24 @@ export class IgxGridTransactionPipe implements PipeTransform {
     constructor(private gridAPI: IgxGridAPIService) { }
 
     transform(collection: any[], id: string, pipeTrigger: number) {
-        const grid = this.gridAPI.get(id);
-        //  TODO: find faster way to copy the data source collection
-        const copy = JSON.parse(JSON.stringify(collection));
-        const transactionsState = grid.transactions.aggregatedState();
-        transactionsState.forEach((state, ket) => {
-            if (state.type === TransactionType.ADD) {
-                copy.push(state.value);
-            }
-            const index = collection.findIndex(v => v === state.recordRef);
-            if (state.type === TransactionType.UPDATE) {
-                Object.assign(copy[index], state.value);
-            }
-            if (state.type === TransactionType.DELETE) {
-                //  TODO: mark row as deleted somehow
-            }
-        });
-        return copy;
+        return collection;
+        // const grid = this.gridAPI.get(id);
+        // //  TODO: find faster way to copy the data source collection
+        // const copy = [...collection];
+        // const transactionsState = grid.transactions.aggregatedState();
+        // transactionsState.forEach((state, ket) => {
+        //     // TODO change to switch case
+        //     if (state.type === TransactionType.ADD) {
+        //         copy.push(state.value);
+        //     }
+        //     if (state.type === TransactionType.UPDATE) {
+        //         const index = collection.findIndex(v => v === state.recordRef);
+        //         copy.splice(index, 1, Object.assign({}, copy[index], state.value));
+        //     }
+        //     if (state.type === TransactionType.DELETE) {
+        //         //  TODO: mark row as deleted somehow
+        //     }
+        // });
+        // return copy;
     }
 }

@@ -10,13 +10,14 @@ import {
 })
 export class GridCellEditingComponent {
 
+    private addProductId: number;
     orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent })
     public gridWithPK: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent })
     public gridWithoutPK: IgxGridComponent;
     @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
-    data: any;
+    data: any[];
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
@@ -31,11 +32,13 @@ export class GridCellEditingComponent {
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
+
+        this.addProductId = this.data.length + 1;
     }
 
     public addRow() {
         this.gridWithPK.addRow({
-            ProductID: 21,
+            ProductID: this.addProductId++,
             ProductName: 'Sir Rodneys Marmalade',
             SupplierID: 8,
             CategoryID: 3,
@@ -155,9 +158,13 @@ export class GridCellEditingComponent {
 
     public undo() {
         this.gridWithPK.transactions.undo();
+        (<any>this.gridWithPK)._pipeTrigger++;
+        (<any>this.gridWithPK).cdr.markForCheck();
     }
 
     public redo() {
         this.gridWithPK.transactions.redo();
+        (<any>this.gridWithPK)._pipeTrigger++;
+        (<any>this.gridWithPK).cdr.markForCheck();
     }
 }
