@@ -16,6 +16,7 @@
 10. **[Removed]** Vertical Tabs - material doesn't define vertical tabs 
 11. Row Editing with transactions [issue](https://github.com/IgniteUI/igniteui-angular/issues/566)
 12. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
+13. **[Done]** Drag and Drop Directive
 
 # Previous Milestones
 
