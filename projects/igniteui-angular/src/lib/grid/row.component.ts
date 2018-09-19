@@ -180,7 +180,7 @@ export class IgxGridRowComponent implements DoCheck {
         if (value) {
             this.grid.openRowEditingOverlay(this);
         } else {
-            this.grid.closeRowEditingOverlay();
+            this.grid.closeRowEditingOverlay(this);
         }
     }
 

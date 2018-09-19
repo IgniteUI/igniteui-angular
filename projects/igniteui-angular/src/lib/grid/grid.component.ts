@@ -4599,21 +4599,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 horizontalDirection: HorizontalAlignment.Left,
                 verticalDirection: VerticalAlignment.Bottom,
                 horizontalStartPoint: HorizontalAlignment.Right,
-                verticalStartPoint: VerticalAlignment.Bottom
+                verticalStartPoint: VerticalAlignment.Bottom,
+                openAnimation: null,
+                closeAnimation: null
             })
         };
         this.rowEditingOverlay.open(overlaySettings);
-        this._rowInEditMode = row;
     }
 
-    public closeRowEditingOverlay() {
+    public closeRowEditingOverlay(row: IgxGridRowComponent) {
         this.rowEditingOverlay.close();
-        this._rowInEditMode = null;
+        row.inEditMode = false;
     }
 
     public updateRowTransaction(event) {
-        const row = this._rowInEditMode;
-        this.closeRowEditingOverlay();
+        const row = this.rowInEditMode;
+        this.closeRowEditingOverlay(row);
         this.transactions.add(
             {
                 id: row.rowID,
@@ -4624,6 +4625,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public resetRowTransaction(event) {
-        this.closeRowEditingOverlay();
+        this.closeRowEditingOverlay(this.rowInEditMode);
+    }
+
+    public get rowInEditMode(): IgxGridRowComponent {
+        return this.gridAPI.get_row_inEditMode(this.id);
     }
 }
