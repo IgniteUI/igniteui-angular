@@ -110,7 +110,7 @@ export class IgxGridRowComponent implements DoCheck {
     get styleClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
-        const dirtyClass = this.isDirty ? 'igx-grid__tr--dirty' : '';
+        const dirtyClass = this.isDirty ? 'igx-grid__tr--edited' : '';
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}`;
     }
@@ -180,7 +180,7 @@ export class IgxGridRowComponent implements DoCheck {
         if (value) {
             this.grid.openRowEditingOverlay(this);
         } else {
-            this.grid.closeRowEditingOverlay();
+            this.grid.closeRowEditingOverlay(this);
         }
     }
 

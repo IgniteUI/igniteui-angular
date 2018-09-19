@@ -136,10 +136,17 @@
 <div class="igx-grid__filtering-outlet" igxOverlayOutlet></div>
 
 <div igxToggle>
-    <div class="igx-grid-row__updating-buttons" style="display: flex; flex-direction: row; background: white; border: 1px solid grey;">
-        <span class="igx-grid-row__updating-label">There are edits pending on this row</span>
-        <ng-container *ngTemplateOutlet="buttonCancelTemplate ? buttonCancelTemplate : buttonCancel; context: {$implicit: this}"></ng-container>
-        <ng-container *ngTemplateOutlet="buttonDoneTemplate ? buttonDoneTemplate : buttonDone; context: {$implicit: this}"></ng-container>
+    <div class="banner">
+        <div class="banner__message">
+            <!--<div class="banner__massage-illustration">-->
+                <!--<igx-icon fontSet="material" name="edit"></igx-icon>-->
+            <!--</div>-->
+            <span class="banner__massage-text">There are edits pending on this row</span>
+        </div>
+        <div class="banner__actions">
+            <ng-container *ngTemplateOutlet="buttonCancelTemplate ? buttonCancelTemplate : buttonCancel; context: {$implicit: this}"></ng-container>
+            <ng-container *ngTemplateOutlet="buttonDoneTemplate ? buttonDoneTemplate : buttonDone; context: {$implicit: this}"></ng-container>
+        </div>
     </div>
 </div>
 <ng-template #buttonCancel>

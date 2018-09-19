@@ -86,6 +86,7 @@ export class IgxGridAPIService {
 
     public escape_editMode(gridId, cellId?) {
         const editableCell = this.get_cell_inEditMode(gridId);
+        const grid = this.get(gridId);
         if (editableCell) {
             if (cellId) {
                 if (cellId.rowID === editableCell.cellID.rowID &&
@@ -96,8 +97,11 @@ export class IgxGridAPIService {
                 this.editCellState.delete(gridId);
             }
         }
+        if (grid.rowEditable) {
+            grid.closeRowEditingOverlay(this.get_row_inEditMode(gridId));
+        }
 
-        this.get(gridId).refreshSearch();
+        grid.refreshSearch();
     }
 
 
@@ -121,6 +125,11 @@ export class IgxGridAPIService {
 
     public get_row_by_index(id: string, rowIndex: number): IgxGridRowComponent {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
+    }
+
+    public get_row_inEditMode(gridId) {
+        const rowID = this.get_cell_inEditMode(gridId).cellID.rowID;
+        return this.get_row_by_key(gridId, rowID);
     }
 
     public get_cell_by_key(id: string, rowSelector: any, field: string): IgxGridCellComponent {

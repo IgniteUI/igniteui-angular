@@ -90,16 +90,12 @@
         @extend %grid-row--selected !optional;
     }
 
-    @include e(tr, $m: dirty) {
-        @extend %grid-row--dirty !optional;
+    @include e(tr, $m: edited) {
+        @extend %igx-grid__tr--edited !optional;
     }
 
     @include e(tr, $m: edit) {
-        @extend %grid-row--edit !optional;
-    }
-
-    @include e(tr, $m: updatingButtons) {
-        @extend %grid-row__updating-buttons !optional;
+        @extend %igx-grid__tr--edit !optional;
     }
 
     @include e(tr, $m: group) {
@@ -151,12 +147,12 @@
         @extend %grid-cell--selected !optional;
     }
 
-    @include e(td, $m: dirty) {
-        @extend %grid-cell--dirty !optional;
+    @include e(td, $m: edited) {
+        @extend %igx-grid__td--edited !optional;
     }
 
     @include e(td, $m: editing) {
-        @extend %grid-cell--editing !optional;
+        @extend %igx-grid__td--editing !optional;
     }
 
     @include e(td, $m: number) {

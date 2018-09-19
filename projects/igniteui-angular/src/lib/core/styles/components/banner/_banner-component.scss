@@ -1,0 +1,41 @@
+////
+/// @group components
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+@include b(banner) {
+    @extend %banner !optional;
+
+    @include e(message){
+        @extend %banner__message !optional;
+    }
+
+    @include e(massage-illustration){
+        @extend %banner__massage-illustration !optional;
+    }
+
+    @include e(massage-text){
+        @extend %banner__massage-text !optional;
+    }
+
+    @include e(actions){
+        @extend %banner__actions !optional;
+    }
+
+    @include m(vertical) {
+        @extend %banner--vertical !optional;
+    }
+
+    @include m(cosy) {
+        @extend %banner !optional;
+        @extend %banner--cosy !optional
+    }
+
+    @include m(compact) {
+        @extend %banner !optional;
+        @extend %banner--compact !optional;
+    }
+}
