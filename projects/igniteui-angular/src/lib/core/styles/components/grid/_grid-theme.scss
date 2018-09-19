@@ -91,6 +91,9 @@
     $cell-selected-text-color: null,
     $cell-editing-background: null,
 
+    $edit-mode-row-border: null,
+    $edited-row-indicator: null,
+
     $resize-line-color: null,
     $drop-indicator-color: null,
 
@@ -153,6 +156,9 @@
         cell-selected-background: igx-color($palette, 'primary'),
         cell-selected-text-color: igx-contrast-color($palette, 'primary'),
         cell-editing-background: #fff,
+
+        edit-mode-row-border: igx-color($palette, 'secondary'),
+        edited-row-indicator: igx-color($palette, 'grays', 400),
 
         resize-line-color: igx-color($palette, 'secondary'),
 
@@ -335,6 +341,9 @@
         cell-selected-background: $cell-selected-background,
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
+
+        edit-mode-row-border: $edit-mode-row-border,
+        edited-row-indicator: $edited-row-indicator,
 
         resize-line-color: $resize-line-color,
 
@@ -634,24 +643,14 @@
         }
     }
 
-    %grid-row--edit {
-        border-style: solid;
-        border-color: deeppink;
-        border-width: 1px;
+    %grid-row--edit-mode {
+        border: 1px solid --var($theme, 'edit-mode-row-border');
     }
 
-    %grid-row--dirty {
-        border-style: solid;
-        border-color: grey;
-        border-left-width: 3px;
+    %grid-row--edited {
+        border: 2px solid --var($theme, 'edited-row-indicator');
     }
 
-    %grid-row__updating-buttons {
-        display: flex;
-        flex-direction: row-reverse;
-        background: white;
-        border: 1px solid grey;
-    }
 
     %grid-row--group {
         position: relative;

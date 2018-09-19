@@ -1,0 +1,148 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// If only background color is specified, text/icon color
+/// will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $banner-background [#FFFFFF)]- The background color used banner background.
+/// @param {Color} $banner-label-color [rgba(0, 0, 0, .26)]- The color used for banner label.
+/// @param {Color} $banner-border-color [rgba(0, 0, 0, .74)] - The border color used banner border.
+/// @requires text-contrast
+/// @requires igx-color
+/// @requires extend
+///
+/// @example scss Change the background in banner
+///   $my-banner-theme: igx-banner-theme($banner-background: #000);
+///   // Pass the theme to the igx-banner component mixin
+///   @include igx-banner($my-banner-theme);
+@function igx-banner-theme(
+    $palette: $default-palette,
+    $banner-background: null,
+    $banner-message-color: null,
+    $banner-border-color: null,
+    $banner-illustration-background: null,
+    $banner-illustration-color: null
+) {
+    $default-theme: (
+        name: 'igx-banner',
+        banner-background: #fff,
+        banner-message-color: igx-color($palette, 'grays', 900),
+        banner-border-color: igx-color($palette, 'grays', 400),
+        banner-illustration-background: igx-color($palette, 'grays', 100),
+        banner-illustration-color: igx-color($palette, 'grays', 900)
+    );
+
+    @if not($banner-message-color) and $banner-background {
+        $banner-label-color: text-contrast($banner-background);
+    }
+
+    @return extend($default-theme, (
+        palette: $palette,
+        banner-background: $banner-background,
+        banner-message-color: $banner-message-color,
+        banner-border-color: $banner-border-color,
+        banner-illustration-background: $banner-illustration-background,
+        banner-illustration-color: $banner-illustration-color
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-banner($theme) {
+    @include igx-root-css-vars($theme);
+
+    $banner-padding: (
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
+    );
+
+    $banner-height: (
+        comfortable: rem(50px),
+        cosy: rem(40px),
+        compact: rem(32px)
+    );
+
+    $illustration-margin: (
+        comfortable: rem(16px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
+
+    %banner,
+    %banner__massage-illustration,
+    %banner__message {
+        display: flex;
+        align-items: center;
+    }
+
+    %banner {
+        justify-content: space-between;
+        padding: map-get($banner-padding, 'comfortable');
+        height: map-get($banner-height, 'comfortable');
+        background: --var($theme, 'banner-background');
+        border-bottom: 1px solid --var($theme, 'banner-border-color');
+    }
+
+    %banner__massage-illustration {
+        justify-content: center;
+        margin-right: map-get($illustration-margin, 'comfortable');
+        width: rem(40);
+        height: rem(40);
+        border-radius: 50%;
+        background: --var($theme, 'banner-illustration-background');
+        color: --var($theme, 'banner-illustration-color');
+    }
+
+    %banner__massage-text {
+        color: --var($theme, 'banner-message-color');
+        flex: 1 0 0%;
+    }
+
+    %banner--vertical {
+        flex-direction: column;
+    }
+
+    %banner--cosy {
+        padding: map-get($banner-padding, 'cosy');
+        height: map-get($banner-height, 'cosy');
+    }
+
+    %banner--compact {
+        padding: map-get($banner-padding, 'compact');
+        height: map-get($banner-height, 'compact');
+    }
+
+    %banner__message {
+        flex: 1 0 0%;
+    }
+
+    %banner__actions {
+        display: flex;
+    }
+}
+
+
+/// Adds typography styles for the igx-banner component.
+/// Uses the 'body-2' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(label: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-banner-typography($type-scale, $categories: (
+    message: 'body-2')
+) {
+    $message: map-get($categories, 'message');
+
+    @include igx-scope('.igx-typography') {
+        %banner__text {
+            @include igx-type-style($type-scale, $message);
+        }
+    }
+}
