@@ -61,6 +61,11 @@ export class AppComponent implements OnInit {
             name: 'Combo'
         },
         {
+            link: '/expansionPanel',
+            icon: 'expand_more',
+            name: 'ExpansionPanel'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'

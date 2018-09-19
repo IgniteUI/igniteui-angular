@@ -1,0 +1,44 @@
+.game-board {
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    margin: 30px auto;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .26), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .08);
+}
+
+.sample-flex-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.sample-flex-row {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+
+    button {
+        margin-right: 10px;
+
+        &:last-of-type {
+            margin: 0;
+        }
+    }
+}
+
+.game-board__collapsible {
+    width: 100%;
+}
+
+.game-board__grid {
+    height: 100%;
+    width: 100%;
+}
+
+.game-board__grid__match {
+    font-weight: 600;
+    font-size: 12px; 
+}
+
+.igx-expansion-panel__header-body {
+    display: block;
+}
