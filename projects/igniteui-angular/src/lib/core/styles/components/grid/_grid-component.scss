@@ -94,8 +94,8 @@
         @extend %grid-row--edited !optional;
     }
 
-    @include e(tr, $m: edit-mode) {
-        @extend %grid-row--edit-mode !optional;
+    @include e(tr, $m: edit) {
+        @extend %grid-row--edit !optional;
     }
 
     @include e(tr, $m: group) {
@@ -147,8 +147,8 @@
         @extend %grid-cell--selected !optional;
     }
 
-    @include e(td, $m: dirty) {
-        @extend %grid-cell--dirty !optional;
+    @include e(td, $m: edited) {
+        @extend %grid-cell--edited !optional;
     }
 
     @include e(td, $m: editing) {

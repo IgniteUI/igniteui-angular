@@ -57,13 +57,13 @@
     @include igx-root-css-vars($theme);
 
     $banner-padding: (
-        comfortable: 0 rem(24px),
-        cosy: 0 rem(16px),
-        compact: 0 rem(12px)
+        comfortable: 0 rem(16px),
+        cosy: 0 rem(8px),
+        compact: 0 rem(4px)
     );
 
     $banner-height: (
-        comfortable: rem(50px),
+        comfortable: rem(56px),
         cosy: rem(40px),
         compact: rem(32px)
     );
@@ -121,10 +121,13 @@
 
     %banner__message {
         flex: 1 0 0%;
+        min-width: rem(360);
+        margin-right: rem(36);
     }
 
     %banner__actions {
         display: flex;
+        justify-content: flex-end;
     }
 }
 
