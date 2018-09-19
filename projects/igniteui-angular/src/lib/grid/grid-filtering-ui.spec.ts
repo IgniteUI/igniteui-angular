@@ -1148,8 +1148,6 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
         tick(100);
 
-        verifyFilterUIPosition(filterUIContainer, grid);
-
         sendInput(input, 'a', fix);
         fix.detectChanges();
         tick();
