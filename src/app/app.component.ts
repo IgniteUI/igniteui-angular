@@ -96,6 +96,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Moving'
         },
         {
+            link: '/gridConditionalCellStyling',
+            icon: 'view_column',
+            name: 'Grid Cell Styling'
+        },
+        {
             link: '/gridColumnPinning',
             icon: 'view_column',
             name: 'Grid Column Pinning'
