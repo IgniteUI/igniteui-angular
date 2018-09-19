@@ -80,6 +80,12 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
 
+    @ViewChildren('row')
+    private _rowList: QueryList<any>;
+
+    @ViewChildren(IgxRowComponent, { read: IgxRowComponent })
+    private _dataRowList: QueryList<any>;
+
     /**
      * @hidden
      */
@@ -292,6 +298,16 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.api.refresh_search(this.id, true);
     }
 
+    /**
+     * Returns an array containing the filtered and sorted data.
+     * ```typescript
+     * const filteredData = this.grid1.filteredSortedData;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get filteredSortedData(): any[] {
+        return this.api.filtered_sorted_data(this.id);
+    }
 
     /**
      * Returns whether the paging feature is enabled/disabled.
@@ -1086,14 +1102,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     @ViewChildren(IgxGridHeaderComponent, { read: IgxGridHeaderComponent })
     public headerList: QueryList<IgxGridHeaderComponent>;
 
-
-    @ViewChildren('row')
-    private _rowList: QueryList<any>;
-
-
-    @ViewChildren(IgxRowComponent, { read: IgxRowComponent })
-    private _dataRowList: QueryList<any>;
-
     /**
      * A template reference for the template when the filtered `IgxGridComponent` is empty.
      * ```
@@ -1795,124 +1803,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    public lastSearchInfo: ISearchInfo = {
-        searchText: '',
-        caseSensitive: false,
-        exactMatch: false,
-        activeMatchIndex: 0,
-        matchInfoCache: []
-    };
-
-    /**
-     * @hidden
-     */
-    public pagingState;
-    /**
-     * @hidden
-     */
-    public calcWidth: number;
-    /**
-     * @hidden
-     */
-    public calcRowCheckboxWidth: number;
-    /**
-     * @hidden
-     */
-    public calcHeight: number;
-    /**
-     * @hidden
-     */
-    public tfootHeight: number;
-    /**
-     * @hidden
-     */
-    public summariesHeight: number;
-
-    /**
-     * @hidden
-     */
-    public draggedColumn: IgxColumnComponent;
-    /**
-     * @hidden
-     */
-    public isColumnResizing: boolean;
-    /**
-     * @hidden
-     */
-    public isColumnMoving: boolean;
-
-    /**
-     * @hidden
-     */
-    public allRowsSelected = false;
-
-    /**
-     * @hidden
-     */
-    public columnListDiffer: any;
-
-    /**
-     * @hidden
-     */
-    public columnWidthSetByUser = false;
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInitPassed = false;
-
-    /**
-     * @hidden
-     */
-    public ngOnInit() {
-        this.api.on_init(this);
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterContentInit() {
-        this.api.on_after_content_init(this.id);
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit() {
-        this.api.on_after_view_init(this.id);
-    }
-
-    /**
-     * @hidden
-     */
-    public ngOnDestroy() {
-        this.api.on_destroy(this.id);
-    }
-
-    /**
-     * @hidden
-     */
-    public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
-    }
-
-    /**
-     * Toggles the specified column's visibility.
-     * ```typescript
-     * this.grid1.toggleColumnVisibility({
-     *       column: this.grid1.columns[0],
-     *       newValue: true
-     * });
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
-        this.api.toggle_column_visibility(this.id, args);
-    }
-
-    /**
-     * @hidden
-     */
     get calcResizerHeight(): number {
         if (this.hasSummarizedColumns) {
             return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight +
@@ -2031,6 +1921,124 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
     set unpinnedColumns(value: IgxColumnComponent[]) {
         this._unpinnedColumns = value;
+    }
+
+    /**
+     * @hidden
+     */
+    public lastSearchInfo: ISearchInfo = {
+        searchText: '',
+        caseSensitive: false,
+        exactMatch: false,
+        activeMatchIndex: 0,
+        matchInfoCache: []
+    };
+
+    /**
+     * @hidden
+     */
+    public pagingState;
+    /**
+     * @hidden
+     */
+    public calcWidth: number;
+    /**
+     * @hidden
+     */
+    public calcRowCheckboxWidth: number;
+    /**
+     * @hidden
+     */
+    public calcHeight: number;
+    /**
+     * @hidden
+     */
+    public tfootHeight: number;
+    /**
+     * @hidden
+     */
+    public summariesHeight: number;
+
+    /**
+     * @hidden
+     */
+    public draggedColumn: IgxColumnComponent;
+    /**
+     * @hidden
+     */
+    public isColumnResizing: boolean;
+    /**
+     * @hidden
+     */
+    public isColumnMoving: boolean;
+
+    /**
+     * @hidden
+     */
+    public allRowsSelected = false;
+
+    /**
+     * @hidden
+     */
+    public columnListDiffer: any;
+
+    /**
+     * @hidden
+     */
+    public columnWidthSetByUser = false;
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInitPassed = false;
+
+    /**
+     * @hidden
+     */
+    public ngOnInit() {
+        this.api.on_init(this);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterContentInit() {
+        this.api.on_after_content_init(this.id);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit() {
+        this.api.on_after_view_init(this.id);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.api.on_destroy(this.id);
+    }
+
+    /**
+     * @hidden
+     */
+    public dataLoading(event) {
+        this.onDataPreLoad.emit(event);
+    }
+
+    /**
+     * Toggles the specified column's visibility.
+     * ```typescript
+     * this.grid1.toggleColumnVisibility({
+     *       column: this.grid1.columns[0],
+     *       newValue: true
+     * });
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
+        this.api.toggle_column_visibility(this.id, args);
     }
 
     /**
@@ -2354,7 +2362,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         return this.api.unpin_column(this.id, columnName, index);
     }
 
-        /**
+    /**
      * Recalculates grid width/height dimensions. Should be run when changing DOM elements dimentions manually that affect the grid's size.
      * ```typescript
      * this.grid.reflow();
@@ -2594,17 +2602,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     public trackColumnChanges(index, col) {
         return col.field + col.width;
-    }
-
-    /**
-     * Returns an array containing the filtered data.
-     * ```typescript
-     * const filteredData = this.grid1.filteredSortedData;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get filteredSortedData(): any[] {
-        return this.api.filtered_sorted_data(this.id);
     }
 
     /**
