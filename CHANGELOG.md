@@ -198,7 +198,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxDropdown` component added
 
     ```html
-    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+    <igx-drop-down igxDropDownItemNavigation [allowItemsFocus]="true" (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
         <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
                 {{ item.field }}
         </igx-drop-down-item>
