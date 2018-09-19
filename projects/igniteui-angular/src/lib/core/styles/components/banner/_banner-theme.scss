@@ -57,9 +57,9 @@
     @include igx-root-css-vars($theme);
 
     $banner-padding: (
-        comfortable: rem(16px),
-        cosy: rem(8px),
-        compact: rem(4px)
+        comfortable: rem(8) rem(16px),
+        cosy: rem(8) rem(8px),
+        compact: rem(4) rem(4px)
     );
 
     $illustration-margin: (

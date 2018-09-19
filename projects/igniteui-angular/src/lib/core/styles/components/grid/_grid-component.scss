@@ -91,11 +91,11 @@
     }
 
     @include e(tr, $m: edited) {
-        @extend %grid-row--edited !optional;
+        @extend %igx-grid__tr--edited !optional;
     }
 
     @include e(tr, $m: edit) {
-        @extend %grid-row--edit !optional;
+        @extend %igx-grid__tr--edit !optional;
     }
 
     @include e(tr, $m: group) {

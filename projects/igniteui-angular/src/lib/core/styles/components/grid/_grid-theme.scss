@@ -53,6 +53,7 @@
 /// @param {Color} $row-content-focus-background [rgba(0, 0, 0, .04)] - grouping row background color on focus.
 /// @param {Color} $edited-row-indicator [rgba(0, 0, 0, .04)] - edited row indicator color.
 /// @param {Color} $edit-mode-color [rgba(0, 0, 0, .04)] - edit row border color for the row and the input.
+/// @param {Color} $cell-edited-value-color [rgba(0, 0, 0, .04)] - edit cell input bottom border color.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -95,6 +96,7 @@
 
     $edit-mode-color: null,
     $edited-row-indicator: null,
+    $cell-edited-value-color: null,
 
     $resize-line-color: null,
     $drop-indicator-color: null,
@@ -161,6 +163,7 @@
 
         edit-mode-color: igx-color($palette, 'secondary'),
         edited-row-indicator: igx-color($palette, 'grays', 400),
+        cell-edited-value-color: igx-color($palette, 'grays', 600),
 
         resize-line-color: igx-color($palette, 'secondary'),
 
@@ -346,6 +349,7 @@
 
         edit-mode-row-border-color: $edit-mode-color,
         edited-row-indicator: $edited-row-indicator,
+        cell-edited-value-color: $cell-edited-value-color,
 
         resize-line-color: $resize-line-color,
 
@@ -614,6 +618,7 @@
         background-color: --var($theme, 'content-background');
         border-bottom: 1px solid --var($theme, 'row-border-color');
         outline-style: none;
+        position: relative;
 
         &:last-of-type {
             border-bottom: 0;
@@ -645,7 +650,7 @@
         }
     }
 
-    %grid-row--edit {
+    %igx-grid__tr--edit {
         border-bottom: 1px solid --var($theme, 'edit-mode-color');
         position: relative;
 
@@ -660,10 +665,16 @@
         }
     }
 
-    %grid-row--edited {
-        border: 2px solid --var($theme, 'edited-row-indicator');
+    %igx-grid__tr--edited {
+        &::before {
+            content: '';
+            position: absolute;
+            width: rem(2);
+            height: 100%;
+            z-index: 2;
+            background: --var($theme, 'edited-row-indicator');
+        }
     }
-
 
     %grid-row--group {
         position: relative;
@@ -709,7 +720,7 @@
 
     %igx-grid__td--edited {
         font-style: italic;
-        color: #ddd;
+        color: --var($theme, 'cell-edited-value-color');
     }
 
     %igx-grid__td--editing {
