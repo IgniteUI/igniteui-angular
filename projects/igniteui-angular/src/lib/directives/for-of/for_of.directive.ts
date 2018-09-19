@@ -53,6 +53,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Input()
     public igxForScrollOrientation: string;
 
+    @Input()
+    public igxForAutoSize: boolean;
+
     /**
      * Optionally pass the parent `igxFor` instance to create a virtual template scrolling both horizontally and vertically.
      * ```html
@@ -239,7 +242,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         if (this.igxForOf && this.igxForOf.length) {
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
-            if (!this.igxForItemSize) {
+            if (this.igxForAutoSize) {
                 totalSize = this.initSizesCache(this.igxForOf);
                 this.hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
                 if (this.hScroll) {
@@ -335,7 +338,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
-                if (!this.igxForItemSize) {
+                if (this.igxForAutoSize) {
                     // if no static item size - re-init cache.
                     this.initSizesCache(this.igxForOf);
                 }
@@ -411,7 +414,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         } else {
             const containerSize = parseInt(this.igxForContainerSize, 10);
             const maxVirtScrollTop = this._virtHeight - containerSize;
-            let nextScrollTop = this.igxForItemSize ? index *  parseInt(this.igxForItemSize, 10)
+            let nextScrollTop = this.igxForAutoSize ? index *  parseInt(this.igxForItemSize, 10)
             : this.sizesCache[index] + 1;
             if (nextScrollTop > maxVirtScrollTop) {
                 nextScrollTop = maxVirtScrollTop;
@@ -503,7 +506,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     public getItemCountInView() {
-        if (!this.igxForItemSize) {
+        if (this.igxForAutoSize) {
             const position = this.igxForScrollOrientation === 'horizontal' ?
                 this.hScroll.scrollLeft :
                 this.vh.instance.elementRef.nativeElement.scrollTop;
@@ -553,19 +556,63 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
         const realPercentScrolled = event.target.scrollTop / maxRealScrollTop;
         if (!this._bScrollInternal) {
-            const maxVirtScrollTop = this._virtHeight - containerSize;
+            const maxVirtScrollTop = this.vh.instance.height - containerSize;
             this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
         } else {
             this._bScrollInternal = false;
         }
 
-        const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop, this._virtHeight);
+        const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop, this.vh.instance.height);
         if (scrollOffset === undefined) {
             return;
         }
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         this.dc.changeDetectorRef.detectChanges();
         this.onChunkLoad.emit(this.state);
+
+        if (this.igxForAutoSize) {
+            // check if height has changes in views.
+            this._recalcUpdateSizes();
+        }
+    }
+
+    protected _recalcUpdateSizes() {
+        const dimension = this.igxForScrollOrientation === 'horizontal' ?
+        'width' : 'height';
+        const updatedHeights = [];
+        let totalDiff = 0;
+        for (let i = 0; i < this._embeddedViews.length; i++) {
+            const view = this._embeddedViews[i];
+            const rNode = view.rootNodes.find((node) => node.nodeType === Node.ELEMENT_NODE);
+            if (rNode) {
+                updatedHeights.push(rNode.clientHeight);
+                const index = this.state.startIndex + i;
+                if (!this.igxForOf[index]) {
+                    continue;
+                }
+                const oldVal = this.igxForOf[index][dimension];
+                const newVal = dimension === 'height' ?  rNode.clientHeight : rNode.clientWidth;
+                this.igxForOf[index][dimension] = newVal;
+                const currDiff = newVal - oldVal;
+                totalDiff += currDiff;
+                this.sizesCache[index + 1] += totalDiff;
+            }
+        }
+        // update cache
+        if (totalDiff > 0) {
+            for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
+                this.sizesCache[j] += totalDiff;
+            }
+
+            // update scrBar heights/widths
+            if (this.igxForScrollOrientation === 'horizontal') {
+                const totalWidth = parseInt(this.hScroll.children[0].style.width, 10) + totalDiff;
+                this.hScroll.children[0].style.width = totalWidth + 'px';
+            }
+            if (this.igxForScrollOrientation === 'vertical') {
+                this.vh.instance.height += totalDiff;
+            }
+        }
     }
 
     /**
@@ -576,7 +623,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
 
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const ind = this.igxForItemSize ?
+        const ind = !this.igxForAutoSize ?
          ratio * count :
          this.getIndexAt(
             inScrollTop,
@@ -594,7 +641,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (endingIndex > this.igxForOf.length) {
             endingIndex = this.igxForOf.length;
         }
-        if (bUpdatedStart && this.igxForItemSize &&
+        if (bUpdatedStart && !this.igxForAutoSize &&
             ((!this._isScrolledToBottom || !this._isAtBottomIndex) && !this.extraRowApplied) ||
             ((this._isScrolledToBottom || this._isAtBottomIndex) && this.extraRowApplied)) {
             // Reapply chunk size when are aren't at the buttom index but we don't have extra row applied as well.
@@ -617,7 +664,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
         }
-        const scrOffset = this.igxForItemSize ?
+        const scrOffset = !this.igxForAutoSize ?
          inScrollTop - this.state.startIndex * (scrollHeight / count) :
          inScrollTop - this.sizesCache[this.state.startIndex];
 
@@ -670,7 +717,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
         const scrollWidth = parseInt(this.hScroll.children[0].style.width, 10);
-        const scrOffset = this.igxForItemSize ?
+        const scrOffset = this.igxForAutoSize ?
         inScrollLeft - this.state.startIndex * (scrollWidth / count) :
         inScrollLeft - this.sizesCache[this.state.startIndex];
         return scrOffset;
@@ -750,7 +797,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _calculateChunkSize(): number {
         let chunkSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
-            if (!this.igxForItemSize) {
+            if (this.igxForAutoSize) {
                 if (!this.sizesCache) {
                     this.initSizesCache(this.igxForOf);
                 }
@@ -799,6 +846,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.sizesCache = [];
         this.sizesCache.push(0);
         for (i; i < cols.length; i++) {
+            if (!cols[i][dimension] && this.igxForAutoSize && dimension === 'height') {
+                cols[i][dimension] = this.igxForItemSize || 0;
+            }
             totalSize += parseInt(cols[i][dimension], 10) || 0;
             this.sizesCache.push(totalSize);
         }
@@ -888,7 +938,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     private _calcHeight(): number {
         const count = this.totalItemCount || (this.igxForOf ? this.igxForOf.length : 0);
-        let height = this.igxForItemSize ? count * parseInt(this.igxForItemSize, 10)
+        let height = !this.igxForAutoSize ? count * parseInt(this.igxForItemSize, 10)
         : this.initSizesCache(this.igxForOf);
         this._virtHeight = height;
         if (height > this._maxHeight) {
@@ -903,7 +953,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
-        if (this.sizesCache && this.hScroll.scrollLeft !== 0) {
+        if (this.sizesCache && this.hScroll && this.hScroll.scrollLeft !== 0) {
             // Updating horizontal chunks and offsets based on the new scrollLeft
             const scrollOffset = this.fixedUpdateAllCols(this.hScroll.scrollLeft);
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
@@ -980,7 +1030,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _updateVScrollOffset() {
         let scrollOffset = 0;
         const vScroll = this.vh.instance.elementRef.nativeElement;
-        if (!this.igxForItemSize) {
+        if (this.igxForAutoSize) {
             scrollOffset = vScroll && parseInt(vScroll.style.height, 10) ?
             vScroll.scrollTop - this.sizesCache[this.state.startIndex] : 0;
         } else {
@@ -995,7 +1045,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
     private _updateHScrollOffset() {
         let scrollOffset = 0;
-        if (!this.igxForItemSize) {
+        if (this.igxForAutoSize) {
             scrollOffset = this.hScroll && parseInt(this.hScroll.children[0].style.width, 10) ?
             this.hScroll.scrollLeft - this.sizesCache[this.state.startIndex] : 0;
         } else {

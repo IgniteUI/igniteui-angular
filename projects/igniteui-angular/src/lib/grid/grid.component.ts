@@ -160,6 +160,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public data = [];
 
+    @Input()
+    public autoSizeRows = false;
+
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
      * The default value is false.

@@ -86,7 +86,7 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('style.height.px')
     get rowHeight() {
-        return this.grid.rowHeight;
+        return this.grid.autoSizeRows ? null : this.grid.rowHeight;
     }
 
     /**
