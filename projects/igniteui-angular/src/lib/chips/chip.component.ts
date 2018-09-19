@@ -14,12 +14,14 @@ import { DisplayDensity } from '../core/utils';
 import {
     IgxDragDirective,
     IDragBaseEventArgs,
-    IDragStartEventArgs
+    IDragStartEventArgs,
+    IgxDropEnterEventArgs,
+    IgxDropEventArgs
 } from '../directives/dragdrop/dragdrop.directive';
 
 
 export interface IBaseChipEventArgs {
-    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent;
+    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IgxDropEnterEventArgs;
     owner: IgxChipComponent;
 }
 
@@ -29,6 +31,7 @@ export interface IChipClickEventArgs extends IBaseChipEventArgs {
 
 export interface IChipKeyDownEventArgs extends IBaseChipEventArgs {
     originalEvent: KeyboardEvent;
+    cancel: boolean;
 }
 
 export interface IChipEnterDragAreaEventArgs extends IBaseChipEventArgs {
@@ -258,7 +261,7 @@ export class IgxChipComponent implements AfterViewInit {
      * Returns the focused/selected `IgxChipComponent`, whether the event should be canceled,
      * if the `alt`, `shift` or `control` key is pressed and the pressed key name.
      * ```typescript
-     * chipKeyDown(event: IChipClickEventArgs){
+     * chipKeyDown(event: IChipKeyDownEventArgs){
      *     let keyDown = event.key;
      * }
      * ```
@@ -267,7 +270,7 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     @Output()
-    public onKeyDown = new EventEmitter<IChipClickEventArgs>();
+    public onKeyDown = new EventEmitter<IChipKeyDownEventArgs>();
 
     /**
      * Emits an event when the `IgxChipComponent` has entered the `IgxChipsAreaComponent`.
@@ -388,8 +391,8 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipKeyDown(event) {
-        const keyDownArgs: IChipClickEventArgs = {
+    public onChipKeyDown(event: KeyboardEvent) {
+        const keyDownArgs: IChipKeyDownEventArgs = {
             originalEvent: event,
             owner: this,
             cancel: false
@@ -433,7 +436,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipRemove(event) {
+    public onChipRemove(event: MouseEvent | TouchEvent) {
         this.onRemove.emit({
             originalEvent: event,
             owner: this
@@ -451,7 +454,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipRemoveEnd(event) {
+    public onChipRemoveEnd(event: TouchEvent) {
         if (!this._movedWhileRemoving) {
             this.onChipRemove(event);
         }
@@ -543,7 +546,7 @@ export class IgxChipComponent implements AfterViewInit {
      */
     // -----------------------------
     // Start chip igxDrop behaviour
-    public onChipDragEnterHandler(event) {
+    public onChipDragEnterHandler(event: IgxDropEnterEventArgs) {
         if (this.dragDir === event.drag || !event.dragData || !event.dragData.chip) {
             return;
         }
@@ -559,7 +562,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipDrop(event) {
+    public onChipDrop(event: IgxDropEventArgs) {
         // Cancel the default drop logic
         event.cancel = true;
     }
