@@ -39,3 +39,20 @@
   margin: rem($top-gutter) 0 rem($bottom-gutter) 0;
 }
 
+%button {
+    display: inline-flex;
+    font-size: 12px;
+    text-align: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    padding: 9px 16px;
+    outline: none;
+    white-space: nowrap;
+    transition: all .25s ease-in-out;
+
+    > a {
+        color: inherit;
+        text-transform: inherit;
+        text-decoration: none;
+    }
+}
