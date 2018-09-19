@@ -57,15 +57,9 @@
     @include igx-root-css-vars($theme);
 
     $banner-padding: (
-        comfortable: 0 rem(16px),
-        cosy: 0 rem(8px),
-        compact: 0 rem(4px)
-    );
-
-    $banner-height: (
-        comfortable: rem(56px),
-        cosy: rem(40px),
-        compact: rem(32px)
+        comfortable: rem(16px),
+        cosy: rem(8px),
+        compact: rem(4px)
     );
 
     $illustration-margin: (
@@ -85,7 +79,7 @@
     %banner {
         justify-content: space-between;
         padding: map-get($banner-padding, 'comfortable');
-        height: map-get($banner-height, 'comfortable');
+        min-height: rem(56);
         background: --var($theme, 'banner-background');
         border-bottom: 1px solid --var($theme, 'banner-border-color');
     }
@@ -111,23 +105,22 @@
 
     %banner--cosy {
         padding: map-get($banner-padding, 'cosy');
-        height: map-get($banner-height, 'cosy');
     }
 
     %banner--compact {
         padding: map-get($banner-padding, 'compact');
-        height: map-get($banner-height, 'compact');
     }
 
     %banner__message {
         flex: 1 0 0%;
         min-width: rem(360);
-        margin-right: rem(36);
     }
 
     %banner__actions {
         display: flex;
         justify-content: flex-end;
+        flex: 1 0 0%;
+        margin-left: rem(36);
     }
 }
 

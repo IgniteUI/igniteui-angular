@@ -148,11 +148,11 @@
     }
 
     @include e(td, $m: edited) {
-        @extend %grid-cell--edited !optional;
+        @extend %igx-grid__td--edited !optional;
     }
 
     @include e(td, $m: editing) {
-        @extend %grid-cell--editing !optional;
+        @extend %igx-grid__td--editing !optional;
     }
 
     @include e(td, $m: number) {
