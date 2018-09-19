@@ -3,7 +3,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import { IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService } from 'igniteui-angular';
+import {
+    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService,
+    IgxOverlayService
+} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
@@ -17,7 +20,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
-import { ChipsSampleComponent} from './chips/chips.sample';
+import { ChipsSampleComponent } from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
@@ -56,12 +59,14 @@ import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
-
+import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
+
 
 const components = [
     AppComponent,
@@ -71,6 +76,7 @@ const components = [
     CalendarSampleComponent,
     CardSampleComponent,
     CarouselSampleComponent,
+    ExpansionPanelSampleComponent,
     ChipsSampleComponent,
     DialogSampleComponent,
     DatePickerSampleComponent,
@@ -110,6 +116,7 @@ const components = [
     GridToolbarSampleComponent,
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
+    GridCellStylingSampleComponent,
 
     CustomContentComponent,
     ColorsSampleComponent,
