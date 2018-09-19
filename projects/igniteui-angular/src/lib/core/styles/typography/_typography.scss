@@ -15,6 +15,7 @@
 @import '../components/column-hiding/column-hiding-theme';
 @import '../components/dialog/dialog-theme';
 @import '../components/drop-down/drop-down-theme';
+@import '../components/expansion-panel/expansion-panel-theme';
 @import '../components/input/input-group-theme';
 @import '../components/navbar/navbar-theme';
 @import '../components/navdrawer/navdrawer-theme';
@@ -100,6 +101,7 @@
     @include igx-column-hiding-typography($type-scale);
     @include igx-dialog-typography($type-scale);
     @include igx-drop-down-typography($type-scale);
+    @include igx-expansion-panel-typography($type-scale);
     @include igx-input-group-typography($type-scale);
     @include igx-navbar-typography($type-scale);
     @include igx-navdrawer-typography($type-scale);
