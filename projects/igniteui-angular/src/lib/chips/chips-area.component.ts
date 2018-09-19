@@ -18,9 +18,12 @@ import {
     IChipEnterDragAreaEventArgs,
     IBaseChipEventArgs
 } from './chip.component';
+import {
+    IgxDropEnterEventArgs
+} from '../directives/dragdrop/dragdrop.directive';
 
 export interface IBaseChipsAreaEventArgs {
-    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent;
+    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IgxDropEnterEventArgs;
     owner: IgxChipsAreaComponent;
 }
 
