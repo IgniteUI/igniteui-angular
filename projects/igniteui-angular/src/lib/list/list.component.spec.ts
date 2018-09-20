@@ -133,17 +133,12 @@ describe('List', () => {
 
         /* Pan item right */
         panItem(itemNativeElements[0], 0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[0].panState).toBe(IgxListPanState.RIGHT);
 
         /* Pan item left */
         panItem(itemNativeElements[1], -0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[1].panState).toBe(IgxListPanState.LEFT);
+
         expect(timesCalledLeftPan).toBe(1);
         expect(timesCalledStateChanged).toBe(2);
         expect(timesCalledRightPan).toBe(1);
@@ -186,17 +181,12 @@ describe('List', () => {
 
         /* Pan item right */
         panItem(itemNativeElements[0], 0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[0].panState).toBe(IgxListPanState.RIGHT);
 
         /* Pan item left */
         panItem(itemNativeElements[1], -0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[1].panState).toBe(IgxListPanState.NONE);
+
         expect(timesCalledLeftPan).toBe(0);
         expect(timesCalledStateChanged).toBe(1);
         expect(timesCalledRightPan).toBe(1);
@@ -234,17 +224,12 @@ describe('List', () => {
 
         /* Pan item left */
         panItem(itemNativeElements[0], -0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[0].panState).toBe(IgxListPanState.LEFT);
 
         /* Pan item right */
         panItem(itemNativeElements[1], 0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[1].panState).toBe(IgxListPanState.NONE);
+
         expect(timesCalledLeftPan).toBe(1);
         expect(timesCalledStateChanged).toBe(1);
         expect(timesCalledRightPan).toBe(0);
@@ -458,8 +443,6 @@ describe('List', () => {
 
         /* Click and drag item left */
         clickAndDrag(itemNativeElements[1], -0.3);
-        fixture.detectChanges();
-
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('visible');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     });
@@ -476,8 +459,6 @@ describe('List', () => {
 
         /* Click and drag item right */
         clickAndDrag(itemNativeElements[1], 0.3);
-        fixture.detectChanges();
-
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('visible');
     });
@@ -495,8 +476,6 @@ describe('List', () => {
         /* Pan item left */
         panItem(itemNativeElements[1], -0.3);
         tick(600);
-        fixture.detectChanges();
-
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     }));
@@ -514,8 +493,6 @@ describe('List', () => {
         /* Pan item right */
         panItem(itemNativeElements[1], 0.3);
         tick(600);
-        fixture.detectChanges();
-
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     }));
@@ -547,8 +524,6 @@ describe('List', () => {
         const firstItem = list.items[0] as IgxListItemComponent;
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
         panItem(itemNativeElements[1], -0.6);
-        fixture.detectChanges();
-
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
     });
 
@@ -564,8 +539,6 @@ describe('List', () => {
         const firstItem = list.items[0] as IgxListItemComponent;
         const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
         panItem(itemNativeElements[1], 0.6);
-        fixture.detectChanges();
-
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
     });
 
