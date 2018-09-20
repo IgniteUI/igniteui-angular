@@ -38,4 +38,15 @@ describe('Update 6.2.0', () => {
             .toEqual(`<igx-date-picker></igx-date-picker>`);
         done();
     });
+
+    it('should remove igx-combo height property', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html',
+            `<igx-combo [height]="200px"></igx-combo>`
+        );
+        const tree = schematicRunner.runSchematic('migration-05', {}, appTree);
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`<igx-combo></igx-combo>`);
+        done();
+    });
 });
