@@ -114,7 +114,8 @@ export class IgxTransactionBaseService implements ITransactionService {
         //    - if there is state with this id of type UPDATE change its type to DELETE;
         //    - if there is no state with this id add transaction to _states;
         //  if TransactionType is UPDATE:
-        //    - if there is state with this id update the state value with the transaction's value;
+        //    - if there is state with this id of type ADD merge new value and state recordRef into state new value
+        //    - if there is state with this id of type UPDATE merge new value into state new value
         //    - if there is state with this id and state type is DELETE change its type to UPDATE
         //    - if there is no state with this id add transaction to _states;
         switch (transaction.type) {
@@ -130,8 +131,14 @@ export class IgxTransactionBaseService implements ITransactionService {
                 break;
             case TransactionType.UPDATE:
                 if (state) {
-                    if (state.type !== TransactionType.DELETE && typeof state.value === 'object') {
-                        Object.assign(state.value, transaction.newValue);
+                    //  TODO: move object.assign part in a method, probably change updateValue one!
+                    if (typeof state.value === 'object') {
+                        if (state.type === TransactionType.ADD) {
+                            transaction.newValue = Object.assign({}, state.recordRef, transaction.newValue);
+                        }
+                        if (state.type === TransactionType.UPDATE) {
+                            Object.assign(state.value, transaction.newValue);
+                        }
                     } else {
                         state.value = transaction.newValue;
                     }
@@ -158,7 +165,6 @@ export class IgxTransactionBaseService implements ITransactionService {
             if (0 <= index && index < data.length) {
                 data[index] = state.value;
             }
-            //  TODO: should we throw here if there is no such item in the data
         }
     }
 }
