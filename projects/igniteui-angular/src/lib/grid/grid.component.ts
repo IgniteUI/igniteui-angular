@@ -4668,7 +4668,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public resetRowTransaction(event) {
-        this.transactions.resetPending();
+        this.transactions.resetPending(this.rowInEditMode.rowID);
         this.cellInEditMode.inEditMode = false;
     }
 

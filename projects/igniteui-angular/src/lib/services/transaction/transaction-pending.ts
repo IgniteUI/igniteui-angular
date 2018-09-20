@@ -14,7 +14,12 @@ export class IgxPendingTransactionService extends IgxTransactionBaseService {
         return this.aggregatedState().get(rowId);
     }
 
-    public resetPending() {
-        return null;
+    public resetPending(rowID) {
+        this.removeTransactionFromCurrentState(rowID);
+        this._pendingTransactions = [];
+    }
+
+    public removeTransactionFromCurrentState(rowID) {
+        this._states.delete(rowID);
     }
 }

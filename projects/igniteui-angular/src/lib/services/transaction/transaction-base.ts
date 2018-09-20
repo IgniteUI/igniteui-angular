@@ -4,7 +4,7 @@ export class IgxTransactionBaseService implements ITransactionService {
     private _transactions: ITransaction[] = [];
     private _redoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _undoStack: { transaction: ITransaction, recordRef: any }[] = [];
-    private _states: Map<any, IState> = new Map();
+    protected _states: Map<any, IState> = new Map();
 
     public add(transaction: ITransaction, recordRef?: any) {
         this.verifyAddedTransaction(transaction, recordRef);
