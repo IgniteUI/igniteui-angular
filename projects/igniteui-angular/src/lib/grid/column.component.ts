@@ -297,17 +297,23 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public headerClasses = '';
     /**
-     * Sets/gets the class selector of the column cells.
+     * Sets a conditional class selector of the column cells.
+     * Accepts an object literal, containing key-value pairs,
+     * where the key is the name of the CSS class, while the
+     * value is either a callback function that returns a boolean,
+     * or boolean, like so:
      * ```typescript
-     * let columnCellsClass = this.column.cellClasses;
+     * callback = (rowData, columnKey) => { return rowData[columnKey] > 6; }
+     * cellClasses = { 'className' : this.callback };
      * ```
      * ```html
-     * <igx-column [cellClasses] = "'column-cell'"></igx-column>
+     * <igx-column [cellClasses] = "cellClasses"></igx-column>
+     * <igx-column [cellClasses] = "{'class1' : true }"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public cellClasses = '';
+    public cellClasses: any;
     /**
      * Gets the column index.
      * ```typescript
