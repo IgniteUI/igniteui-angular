@@ -282,10 +282,10 @@ describe('IgxTooltip', () => {
             spyOn(tooltipTarget.onTooltipClosing, 'emit');
             spyOn(tooltipTarget.onTooltipClosed, 'emit');
 
-            const tooltipOpeningArgs = /* ITooltipOpeningEventArgs */ { tooltip: fix.componentInstance.tooltip, cancel: false };
-            const tooltipOpenedArgs = /* ITooltipOpenedEventArgs */ { tooltip: fix.componentInstance.tooltip };
-            const tooltipClosingArgs = /* ITooltipClosingEventArgs */ { tooltip: fix.componentInstance.tooltip, cancel: false };
-            const tooltipClosedArgs = /* ITooltipClosedEventArgs */ { tooltip: fix.componentInstance.tooltip };
+            const tooltipOpeningArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
+            const tooltipOpenedArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip };
+            const tooltipClosingArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
+            const tooltipClosedArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip };
 
             hoverElement(button);
             expect(tooltipTarget.onTooltipOpening.emit).toHaveBeenCalledWith(tooltipOpeningArgs);
@@ -304,10 +304,10 @@ describe('IgxTooltip', () => {
             spyOn(tooltipTarget.onTooltipClosing, 'emit');
             spyOn(tooltipTarget.onTooltipClosed, 'emit');
 
-            const tooltipOpeningArgs = /* ITooltipOpeningEventArgs */ { tooltip: fix.componentInstance.tooltip, cancel: false };
-            const tooltipOpenedArgs = /* ITooltipOpenedEventArgs */ { tooltip: fix.componentInstance.tooltip };
-            const tooltipClosingArgs = /* ITooltipClosingEventArgs */ { tooltip: fix.componentInstance.tooltip, cancel: false };
-            const tooltipClosedArgs = /* ITooltipClosedEventArgs */ { tooltip: fix.componentInstance.tooltip };
+            const tooltipOpeningArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
+            const tooltipOpenedArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip };
+            const tooltipClosingArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
+            const tooltipClosedArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip };
 
             tooltipTarget.openTooltip();
             expect(tooltipTarget.onTooltipOpening.emit).toHaveBeenCalledWith(tooltipOpeningArgs);

@@ -10,17 +10,21 @@ import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.d
 import { Subscription } from 'rxjs';
 
 export interface ITooltipOpeningEventArgs {
+    target: IgxTooltipTargetDirective;
     tooltip: IgxTooltipDirective;
     cancel: boolean;
 }
 export interface ITooltipOpenedEventArgs {
+    target: IgxTooltipTargetDirective;
     tooltip: IgxTooltipDirective;
 }
 export interface ITooltipClosingEventArgs {
+    target: IgxTooltipTargetDirective;
     tooltip: IgxTooltipDirective;
     cancel: boolean;
 }
 export interface ITooltipClosedEventArgs {
+    target: IgxTooltipTargetDirective;
     tooltip: IgxTooltipDirective;
 }
 
@@ -226,10 +230,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         const tooltipDir = (this.target as IgxTooltipDirective);
         this._tooltipOpenedSub = tooltipDir.onOpened.subscribe(() =>
-            this.onTooltipOpened.emit({ tooltip: this.target })
+            this.onTooltipOpened.emit({ target: this, tooltip: this.target })
         );
         this._tooltipClosedSub = tooltipDir.onClosed.subscribe(() =>
-            this.onTooltipClosed.emit({ tooltip: this.target })
+            this.onTooltipClosed.emit({ target: this, tooltip: this.target })
         );
     }
 
@@ -293,7 +297,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @HostListener('document:keydown.escape', ['$event'])
     public onKeydownEscape(event: KeyboardEvent) {
-        const args = { tooltip: this.target, cancel: false };
+        const args = { target: this, tooltip: this.target, cancel: false };
         this.onTooltipClosing.emit(args);
 
         if (args.cancel) {
@@ -325,7 +329,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this.checkOutletAndOutsideClick();
         this.preMouseEnterCheck();
 
-        const args = { tooltip: this.target, cancel: false };
+        const args = { target: this, tooltip: this.target, cancel: false };
         this.onTooltipOpening.emit(args);
 
         if (args.cancel) {
@@ -354,7 +358,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        const args = { tooltip: this.target, cancel: false };
+        const args = { target: this, tooltip: this.target, cancel: false };
         this.onTooltipClosing.emit(args);
 
         if (args.cancel) {
@@ -383,7 +387,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._toBeHidden = false;
         }
 
-        const args = { tooltip: this.target, cancel: false };
+        const args = { target: this, tooltip: this.target, cancel: false };
         this.onTooltipOpening.emit(args);
 
         if (args.cancel) {
@@ -413,7 +417,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        const args = { tooltip: this.target, cancel: false };
+        const args = { target: this, tooltip: this.target, cancel: false };
         this.onTooltipClosing.emit(args);
 
         if (args.cancel) {
