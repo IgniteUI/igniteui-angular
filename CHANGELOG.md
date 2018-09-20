@@ -3,6 +3,8 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
+-`igxGrid`:
+    - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
@@ -22,6 +24,13 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`: The `findNext` and `findPrev` methods now have a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the grid's cells.
     - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
+- `IgxChip`
+    - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
+- `IgxChipArea`
+    - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
 - `IgxCombo`
     - Added the following directives for `TemplateRef` assignment for combo templates (item, footer, etc.):
         - Added `IgxComboItemDirective`. Use `[igxComboItem]` in markup to assing a TemplateRef to `combo.itemTemplate`.
@@ -32,6 +41,8 @@ All notable changes for each version of this project will be documented in this 
         - Added `IgxComboHeaderItemDirective`. Use `[igxComboHeaderItem]` in markup to assing a TemplateRef to `combo.headerItemTemplate`.
     - **Breaking change** Assigning templates with the following template ref variables is now deprecated in favor of the new directives:
             `#itemTemplate`, `#headerTemplate`, `#footerTemplate`, `#emptyTemplate`, `#addItemTemplate`, `#headerItemTemplate`.
+    - **Breaking change** `height` property is removed. In the future `IgxInputGroup` will expose an option that allows custom sizing and then `IgxCombo` will use the same functionality for proper styling and better consistency.
+
 - `IgxDropDown`
     - **Breaking change** `allowItemsFocus` default value is changed to `false`.
     - Added `value` input to `IgxDropDownItemComponent` definition. The property allows data to be bound to a drop-down item so it can more easily be retrieved (e.g. on selection)
@@ -202,7 +213,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxDropdown` component added
 
     ```html
-    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+    <igx-drop-down igxDropDownItemNavigation [allowItemsFocus]="true" (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
         <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
                 {{ item.field }}
         </igx-drop-down-item>

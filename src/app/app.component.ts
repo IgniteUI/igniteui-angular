@@ -61,6 +61,11 @@ export class AppComponent implements OnInit {
             name: 'Combo'
         },
         {
+            link: '/expansionPanel',
+            icon: 'expand_more',
+            name: 'ExpansionPanel'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'
@@ -89,6 +94,11 @@ export class AppComponent implements OnInit {
             link: '/gridColumnMoving',
             icon: 'view_column',
             name: 'Grid Column Moving'
+        },
+        {
+            link: '/gridConditionalCellStyling',
+            icon: 'view_column',
+            name: 'Grid Cell Styling'
         },
         {
             link: '/gridColumnPinning',
@@ -184,6 +194,11 @@ export class AppComponent implements OnInit {
             link: '/overlay',
             icon: 'overlay',
             name: 'Overlay'
+        },
+        {
+            link: '/overlay-animation',
+            icon: 'overlay_animation',
+            name: 'Overlay Animation'
         },
         {
             link: '/progressbar',
