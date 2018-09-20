@@ -6,10 +6,9 @@ import { Calendar } from '../calendar';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand } from '../../public_api';
+import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
-const selectedCellClass = '.igx-grid__td--selected';
 let data = [
     { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z' },
     { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z' },
@@ -23,7 +22,7 @@ let data = [
     { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
 ];
 
-fdescribe('IgxGrid - Row Selection', () => {
+describe('IgxGrid - Row Selection', () => {
 
     beforeEach(async(() => {
         TestBed.resetTestingModule();
@@ -131,7 +130,6 @@ fdescribe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         const targetCell = grid.getCellByKey(2, 'Name');
@@ -144,7 +142,6 @@ fdescribe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
         expect(targetCell.focused).toEqual(true);
 
-        const targetCellDebugElement = fix.debugElement.query(By.css('.igx-grid__td--selected'));
         UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
         await wait(30);
         fix.detectChanges();
@@ -160,7 +157,6 @@ fdescribe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection3;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const targetCellPrimaryKey = grid.rowList.last.rowID;
         const targetCell = grid.getCellByColumn(targetCellPrimaryKey, 'Column1');
         const initialValue = targetCell.value;

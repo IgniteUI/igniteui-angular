@@ -84,7 +84,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private _rowList: QueryList<any>;
 
     @ViewChildren(IgxRowComponent, { read: IgxRowComponent })
-    private _dataRowList: QueryList<any>;
+    protected _dataRowList: QueryList<any>;
 
     /**
      * @hidden
@@ -1538,6 +1538,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     get pipeTrigger(): number {
         return this._pipeTrigger;
+    }
+    set pipeTrigger(value: number) {
+        this._pipeTrigger = value;
     }
 
     /**

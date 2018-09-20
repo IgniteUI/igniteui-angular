@@ -14,7 +14,6 @@ import {
     forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './summaries/grid-summary';
@@ -30,7 +29,7 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand
-} from '../../public_api';
+} from '../data-operations/filtering-condition';
 
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';

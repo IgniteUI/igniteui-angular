@@ -5,14 +5,14 @@ import { takeUntil, take } from 'rxjs/operators';
 import { cloneArray } from '../core/utils';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridCellComponent } from './cell.component';
+import { ISortingState } from '../data-operations/sorting-state.interface';
 import { IgxColumnComponent } from './column.component';
-import { IgxRowComponent } from './row.component';
+import { DataUtil } from '../data-operations/data-util';
 import {
-    IFilteringOperation,
     FilteringExpressionsTree,
     IFilteringExpressionsTree
-} from '../../public_api';
+} from '../data-operations/filtering-expressions-tree';
+import {IFilteringOperation} from '../data-operations/filtering-condition';
 import {
     IGridEditEventArgs,
     IRowSelectionEventArgs,
@@ -21,7 +21,6 @@ import {
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { DataType } from '../data-operations/data-util';
-import { IgxGridSortingPipe } from './common/grid-common.pipes';
 import { DropPosition } from './common/grid-common.misc';
 import { ISummaryExpression } from './summaries/grid-summary';
 
@@ -73,7 +72,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
             this.autogenerate_columns(id);
         }
 
-        this.init_columns(id, grid.columnList, (col: IgxColumnComponent) => grid.onColumnInit.emit(col));
+        this.init_columns(id, grid.columnList, (col) => grid.onColumnInit.emit(col));
         grid.columnListDiffer.diff(grid.columnList);
         grid.clearSummaryCache();
         grid.summariesHeight = this.calc_max_summary_height(id);
@@ -82,19 +81,19 @@ export class IGridAPIService <T extends IGridBaseComponent> {
 
         grid.columnList.changes
             .pipe(takeUntil(this.get_destroy(id)))
-            .subscribe((change: QueryList<IgxColumnComponent>) => {
+            .subscribe((change: QueryList<any>) => {
                 const diff = grid.columnListDiffer.diff(change);
                 if (diff) {
 
                     this.init_columns(id, grid.columnList);
 
-                    diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                    diff.forEachAddedItem((record: IterableChangeRecord<any>) => {
                         grid.clearSummaryCache();
                         grid.reflow();
                         grid.onColumnInit.emit(record.item);
                     });
 
-                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                    diff.forEachRemovedItem((record: IterableChangeRecord<any>) => {
                         // Recalculate Summaries
                         grid.clearSummaryCache();
                         grid.reflow();
@@ -208,7 +207,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         return res;
     }
 
-    public get_column_by_name(id: string, name: string): IgxColumnComponent {
+    public get_column_by_name(id: string, name: string) {
         return this.get(id).columns.find((col) => col.field === name);
     }
 
@@ -283,7 +282,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         }
     }
 
-    public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IGridBaseComponent>  {
+    public get_row_by_key(id: string, rowSelector: any) {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -292,32 +291,32 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         }
     }
 
-    public get_row_by_index(id: string, rowIndex: number): IgxRowComponent<IGridBaseComponent> {
+    public get_row_by_index(id: string, rowIndex: number) {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
-    public get_cell_by_key(id: string, rowSelector: any, field: string): IgxGridCellComponent {
+    public get_cell_by_key(id: string, rowSelector: any, field: string) {
         const row = this.get_row_by_key(id, rowSelector);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
     }
 
-    public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
+    public get_cell_by_index(id: string, rowIndex: number, columnIndex: number) {
         const row = this.get_row_by_index(id, rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.columnIndex === columnIndex);
         }
     }
 
-    public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number): IgxGridCellComponent {
+    public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number) {
         const row = this.get_row_by_index(id, rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
         }
     }
 
-    public get_cell_by_column(id: string, rowIndex: number, columnField: string): IgxGridCellComponent {
+    public get_cell_by_column(id: string, rowIndex: number, columnField: string) {
         const grid = this.get(id);
         const columnId = grid.columnList.map((column) => column.field).indexOf(columnField);
         if (columnId !== -1) {
@@ -542,9 +541,11 @@ export class IGridAPIService <T extends IGridBaseComponent> {
 
         if (grid.sortingExpressions &&
             grid.sortingExpressions.length > 0) {
+            const state: ISortingState = {
+                'expressions': grid.sortingExpressions
+            };
 
-            const sortingPipe = new IgxGridSortingPipe(this);
-            data = sortingPipe.transform(data, grid.sortingExpressions, id, -1);
+            data = DataUtil.sort(cloneArray(data), state);
         }
 
         return data;
@@ -1223,7 +1224,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         this.trigger_row_selection_change(id, newSelection);
     }
 
-    public trigger_row_selection_change(id: string, newSelectionAsSet: Set<any>, row?: IgxRowComponent<IGridBaseComponent>,
+    public trigger_row_selection_change(id: string, newSelectionAsSet: Set<any>, row?: any,
                                     event?: Event, headerStatus?: boolean) {
         const grid = this.get(id);
         const oldSelectionAsSet = grid.selection.get(id);
@@ -1287,12 +1288,12 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         return atLeastOneSelected ? 'allSelected' : 'noneSelected';
     }
 
-    public selected_cells(id: string): IgxGridCellComponent[] | any[] {
+    public selected_cells(id: string): any[] {
         const grid = this.get(id);
         if (grid.rowList) {
-            return grid.rowList.filter((row) => row instanceof IgxRowComponent).
-                                map((row) => row.cells.filter((cell) => cell.selected)).
-                                reduce((a, b) => a.concat(b), []);
+            return grid.dataRowList.
+                        map((row) => row.cells.filter((cell) => cell.selected)).
+                        reduce((a, b) => a.concat(b), []);
         } else {
             return [];
         }

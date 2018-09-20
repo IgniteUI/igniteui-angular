@@ -1,4 +1,4 @@
-import { FilteringLogic, IFilteringExpression } from '../../public_api';
+import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 
 export declare interface IFilteringExpressionsTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
