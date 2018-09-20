@@ -1,12 +1,12 @@
 ﻿<div #chipArea class="igx-chip__item" [tabindex]="chipTabindex" igxDrop (onEnter)="onChipDragEnterHandler($event)" (onDrop)="onChipDrop($event)"
     [igxDrag]="{ chip: this }" [hideBaseOnDrag]="true" [animateOnRelease]="true" [ghostImageClass]="ghostClass"
-    (dragStart)="onChipDragStart($event)" (dragEnd)="onChipDragEnd($event)" (returnMoveEnd)="onChipMoveEnd($event)" (dragClicked)="onChipDragClicked()">
+    (dragStart)="onChipDragStart($event)" (dragEnd)="onChipDragEnd()" (returnMoveEnd)="onChipMoveEnd($event)" (dragClicked)="onChipDragClicked($event)">
     <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
 
     <ng-content class="igx-chip__label"></ng-content>
 
     <igx-icon #removeBtn [tabindex]="removeBtnTabindex" #cancelContainer *ngIf="removable" igxButton="icon" igxRipple igxRippleCentered="true"
-        (click)="onChipRemove()" (touchmove)="onChipRemoveMove()" (touchend)="onChipRemoveEnd()"
+        (click)="onChipRemove($event)" (touchmove)="onChipRemoveMove()" (touchend)="onChipRemoveEnd($event)"
         class="igx-chip__remove-icon" fontSet="material" [name]="'cancel'"></igx-icon>
 
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
