@@ -64,7 +64,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     /**
      * Specifies if the tooltip should not show when hovering its target with the mouse. (defaults to false)
-     * While setting this property to 'true' will disable the user interactions that show/hide the tooltip,
+     * While setting this property to 'true' will disable the user interactions that shows/hides the tooltip,
      * the developer will still be able to show/hide the tooltip through the API.
      *
      * ```typescript
@@ -124,18 +124,18 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Emits an event when the tooltip that is associated with this target starts opening.
-     * This event is fired before the start of the countdown to opening the tooltip.
+     * Emits an event when the tooltip that is associated with this target starts showing.
+     * This event is fired before the start of the countdown to showing the tooltip.
      *
      * ```typescript
-     * tooltipOpening(args: ITooltipOpeningEventArgs) {
-     *    alert("Tooltip started opening!");
+     * tooltipShowing(args: ITooltipShowEventArgs) {
+     *    alert("Tooltip started showing!");
      * }
      * ```
      *
      * ```html
      * <button [igxTooltipTarget]="tooltipRef"
-     *         (onTooltipShow)='tooltipOpening($event)'>Hover me</button>
+     *         (onTooltipShow)='tooltipShowing($event)'>Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
@@ -143,18 +143,18 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public onTooltipShow = new EventEmitter<ITooltipShowEventArgs>();
 
     /**
-     * Emits an event when the tooltip that is associated with this target starts closing.
-     * This event is fired before the start of the countdown to closing the tooltip.
+     * Emits an event when the tooltip that is associated with this target starts hiding.
+     * This event is fired before the start of the countdown to hiding the tooltip.
      *
      * ```typescript
-     * tooltipClosing(args: ITooltipClosingEventArgs) {
-     *    alert("Tooltip started closing!");
+     * tooltipHiding(args: ITooltipHidingEventArgs) {
+     *    alert("Tooltip started hiding!");
      * }
      * ```
      *
      * ```html
      * <button [igxTooltipTarget]="tooltipRef"
-     *         (onTooltipHide)='tooltipClosing($event)'>Hover me</button>
+     *         (onTooltipHide)='tooltipHiding($event)'>Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
@@ -320,7 +320,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Opens the tooltip by respecting the 'showDelay' property.
+     * Shows the tooltip by respecting the 'showDelay' property.
      *
      * ```typescript
      * this.tooltipTarget.showTooltip();
@@ -356,7 +356,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Closes the tooltip by respecting the 'hideDelay' property.
+     * Hides the tooltip by respecting the 'hideDelay' property.
      *
      * ```typescript
      * this.tooltipTarget.hideTooltip();

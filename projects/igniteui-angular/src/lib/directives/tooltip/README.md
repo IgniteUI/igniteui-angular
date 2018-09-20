@@ -63,12 +63,12 @@ The **IgxTooltipTarget** directive exposes `showDelay` and `hideDelay` inputs, w
 </div>
 ```
 
-### Manually opening and closing the tooltip
-While the tooltip's default behavior is to open when its target is hovered and close when its target is unhovered, we can also do this manually by using the `openTooltip` and the `closeTooltip` methods of the IgxTooltipTarget directive.
+### Manually showing and hiding the tooltip
+While the tooltip's default behavior is to show when its target is hovered and hide when its target is unhovered, we can also do this manually by using the `showTooltip` and the `hideTooltip` methods of the IgxTooltipTarget directive.
 
 ```html
-<button (click)="targetBtn.openTooltip()">Open tooltip</button>
-<button (click)="targetBtn.closeTooltip()">Close tooltip</button>
+<button (click)="targetBtn.showTooltip()">Show tooltip</button>
+<button (click)="targetBtn.hideTooltip()">Hide tooltip</button>
 
 <button #targetBtn="tooltipTarget" [igxTooltipTarget]="tooltipRef">
     Hover me
@@ -99,13 +99,11 @@ Since the **IgxTooltip** directive extends the **IgxToggle** directive and there
 ### Methods
 | Name | Type | Arguments | Description |
 | :--- |:--- | :--- | :--- |
-| openTooltip | void | N/A | Opens the tooltip after the amount of ms specified by the `showDelay` property. |
-| closeTooltip | void | N/A | Closes the tooltip after the amount of ms specified by the `hideDelay` property. |
+| showTooltip | void | N/A | Shows the tooltip after the amount of ms specified by the `showDelay` property. |
+| hideTooltip | void | N/A | Hides the tooltip after the amount of ms specified by the `hideDelay` property. |
 
 ### Events
 |Name|Description|Cancelable|Event arguments|
 |--|--|--|--|
-| onTooltipOpening | Emitted when the tooltip starts opening. (This event is fired before the start of the countdown to showing the tooltip.) | True | ITooltipOpeningEventArgs |
-| onTooltipOpened | Emitted when the tooltip is opened. | False | ITooltipOpenedEventArgs |
-| onTooltipClosing | Emitted when the tooltip starts closing. (This event is fired before the start of the countdown to hiding the tooltip.) | True | ITooltipClosingEventArgs |
-| onTooltipClosed | Emitted when the tooltip is closed. | False | ITooltipClosedEventArgs |
+| onTooltipShow | Emitted when the tooltip starts showing. (This event is fired before the start of the countdown to showing the tooltip.) | True | ITooltipShowEventArgs |
+| onTooltipHide | Emitted when the tooltip starts hiding. (This event is fired before the start of the countdown to hiding the tooltip.) | True | ITooltipHideEventArgs |
