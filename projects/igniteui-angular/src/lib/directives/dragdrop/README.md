@@ -3,8 +3,8 @@
 
 ## Usage
 ```html
-<div igxDrag [hideBaseOnDrag]="true" [animateOnRelease]="true" *ngFor="let elem of draggableElems" class="draggableElem" (dragStart)="onDragStart()" (dragEnd)="onDragEnd()">
-    <span [style.margin]="'auto'">{{elem}}</span>
+<div igxDrag [hideBaseOnDrag]="true" [animateOnRelease]="true" *ngFor="let elem of draggableElems" >
+    <span [style.margin]="'auto'">{{elem.label}}</span>
 </div>
 ```
 
@@ -47,12 +47,12 @@ After the user releases the mouse/touch the drag ghost element is removed from t
 
 ### Outputs
 
-| Name | Description | Cancelable |
-| :--- | :--- | :--- |
-| dragStart      | Event triggered when the draggable element drag starts. | true |
-| dragEnd        | Event triggered when the draggable element is released. | false |
-| returnMoveEnd  | Event triggered after the draggable element is released and after its animation has finished. | false |
-| dragClicked    | Event triggered when the draggable element is clicked. | false |
+| Name | Argument Type | Description | Cancelable |
+| :--- | :--- | :--- | :--- |
+| dragStart      | `IDragStartEventArgs` | Event triggered when the draggable element drag starts. | true |
+| dragEnd        | `IDragBaseEventArgs` | Event triggered when the draggable element is released. | false |
+| returnMoveEnd  | `IDragBaseEventArgs` | Event triggered after the draggable element is released and after its animation has finished. | false |
+| dragClicked    | `IDragBaseEventArgs` | Event triggered when the draggable element is clicked. | false |
 
 ### Properties
 
@@ -73,8 +73,23 @@ After the user releases the mouse/touch the drag ghost element is removed from t
 
 ## Usage
 ````html
-<div class="cageArea" igxDrop (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
+<div class="dropArea" igxDrop (onEnter)="onAreaEnter()" (onLeave)="onAreaLeave()">
+    <span *ngIf="!elementInsideArea">Drag here.</span>
+    <span *ngIf="elementInsideArea">Release to put element here.</span>
 </div>
+````
+
+````ts
+//App component...
+public onAreaEnter() {
+    this.elementInsideArea = true;
+    this.changeDetectionRef.detectChanges();
+}
+public onAreaLeave() {
+    this.elementInsideArea = false;
+    this.changeDetectionRef.detectChanges();
+}
+//...
 ````
 
 ## Getting Started
@@ -95,9 +110,8 @@ One element can have both `igxDrag` and `igxDrop` directives applied but then it
 
 ### Outputs
 
-| Name | Description | Cancelable| 
-| :--- | :--- | :--- |
-| *Event emitters* | *Notify for a change*                                           | |
-| onEnter  | Event triggered when dragged element enters the area of the element. | false |
-| onLeave  | Event triggered when dragged element leaves the area of the element. | false |
-| onDrop   | Event triggered when dragged element is dropped in the area of the element. | true |
+| Name | Argument Type | Description | Cancelable| 
+| :--- | :--- | :--- | :--- |
+| onEnter  | `IgxDropEnterEventArgs` | Event triggered when dragged element enters the area of the element. | false |
+| onLeave  | `IgxDropLeaveEventArgs` | Event triggered when dragged element leaves the area of the element. | false |
+| onDrop   | `IgxDropEventArgs` | Event triggered when dragged element is dropped in the area of the element. | true |
