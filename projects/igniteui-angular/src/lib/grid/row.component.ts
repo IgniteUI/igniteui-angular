@@ -169,7 +169,7 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('attr.aria-dirty')
     public get isDirty(): boolean {
-        return this.grid.rowEditable && this.grid.transactions.getTransactionLog(this.rowID) !== undefined;
+        return this.grid.rowEditable && this.grid.transactions.aggregatedState().get(this.rowID) !== undefined;
     }
 
     public get inEditMode(): boolean {
@@ -179,8 +179,6 @@ export class IgxGridRowComponent implements DoCheck {
         this._inEditMode = value;
         if (value) {
             this.grid.openRowEditingOverlay(this);
-        } else {
-            this.grid.closeRowEditingOverlay(this);
         }
     }
 

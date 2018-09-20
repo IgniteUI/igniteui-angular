@@ -1628,6 +1628,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
     private _rowInEditMode: IgxGridRowComponent = null;
+    public get bannerClass() {
+        let bannerClass = 'banner';
+        if (this.displayDensity !== 'compact') {
+            bannerClass = bannerClass + '--' + this.displayDensity;
+        }
+        return bannerClass;
+    }
 
     /**
      * Provides access to the `IgxToolbarComponent`.
@@ -4640,14 +4647,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.rowEditingOverlay.open(overlaySettings);
     }
 
-    public closeRowEditingOverlay(row: IgxGridRowComponent) {
+    public closeRowEditingOverlay() {
         this.rowEditingOverlay.close();
-        row.inEditMode = false;
     }
 
     public updateRowTransaction(event) {
+        this.cellInEditMode.inEditMode = false;
         const row = this.rowInEditMode;
-        this.closeRowEditingOverlay(row);
         this.transactions.add(
             {
                 id: row.rowID,
@@ -4658,7 +4664,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public resetRowTransaction(event) {
-        this.closeRowEditingOverlay(this.rowInEditMode);
+        this.cellInEditMode.inEditMode = false;
+    }
+
+    public get cellInEditMode(): IgxGridCellComponent {
+        const cell = this.gridAPI.get_cell_inEditMode(this.id);
+        return this.gridAPI.get_cell_by_key(this.id, cell.cellID.rowID, cell.cell.column.field);
     }
 
     public get rowInEditMode(): IgxGridRowComponent {
