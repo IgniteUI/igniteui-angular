@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,7 @@ import { IgxStringFilteringOperand } from '../../public_api';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../test-utils/helper-utils.spec';
+import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
 
@@ -75,7 +76,8 @@ describe('IgxGrid - Cell component', () => {
                 GridWithEditableColumnComponent,
                 NoColumnWidthGridComponent,
                 CellEditingTestComponent,
-                CellEditingScrollTestComponent
+                CellEditingScrollTestComponent,
+                ConditionalCellStyleTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -567,7 +569,7 @@ describe('IgxGrid - Cell component', () => {
                 await wait(100);
                 fixture.detectChanges();
 
-                const testCells = fixture.debugElement.queryAll(By.css('.testCell'));
+                const testCells = grid.getColumnByName('firstName').cells;
                 cellElem = testCells[testCells.length - 1].nativeElement;
 
                 cellElem.dispatchEvent(new Event('focus'));
@@ -653,7 +655,6 @@ describe('IgxGrid - Cell component', () => {
             }));
         });
     });
-
 
     it('keyboard navigation', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -1059,6 +1060,28 @@ describe('IgxGrid - Cell component', () => {
             done();
         });
     });
+
+    it('should be able to conditionally style cells', () => {
+        const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+
+        grid.getColumnByName('UnitsInStock').cells.forEach((cell) => {
+            expect(cell.nativeElement.classList).toContain('test1');
+        });
+
+        const indexColCells = grid.getColumnByName('ProductID').cells;
+
+        expect(indexColCells[3].nativeElement.classList).not.toContain('test');
+        expect(indexColCells[4].nativeElement.classList).toContain('test2');
+        expect(indexColCells[5].nativeElement.classList).toContain('test');
+        expect(indexColCells[6].nativeElement.classList).toContain('test');
+
+        expect(grid.getColumnByName('ProductName').cells[4].nativeElement.classList).toContain('test2');
+        expect(grid.getColumnByName('InStock').cells[4].nativeElement.classList).toContain('test2');
+        expect(grid.getColumnByName('OrderDate').cells[4].nativeElement.classList).toContain('test2');
+    });
 });
 
 @Component({
@@ -1258,7 +1281,7 @@ export class CellEditingTestComponent {
 @Component({
     template: `
         <igx-grid [data]="data" width="300px" height="250px">
-            <igx-column [editable]="true" field="firstName" cellClasses='testCell'></igx-column>
+            <igx-column [editable]="true" field="firstName"></igx-column>
             <igx-column [editable]="true" field="lastName"></igx-column>
             <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
             <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
@@ -1290,5 +1313,60 @@ export class CellEditingScrollTestComponent {
 
     public scrollLeft(newLeft: number) {
         this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" [width]="'900px'" [height]="'500px'" [rowSelectable]="true">
+        <igx-column *ngFor="let c of columns" [field]="c.field"
+                                              [header]="c.field"
+                                              [width]="c.width"
+                                              [movable]="true"
+                                              [groupable]="true"
+                                              [resizable]="true"
+                                              [sortable]="true"
+                                              [filterable]="true"
+                                              [editable]="true"
+                                              [cellClasses]="c.cellClasses">
+        </igx-column>
+    </igx-grid>`,
+    styleUrls: ['../test-utils/grid-cell-style-testing.scss'],
+})
+export class ConditionalCellStyleTestComponent implements OnInit {
+    public data: Array<any>;
+    public columns: Array<any>;
+
+    @ViewChild('grid') public grid: IgxGridComponent;
+
+    cellClasses;
+    cellClasses1;
+
+    callback = (rowData: any, columnKey: any) => {
+        return rowData[columnKey] >= 5;
+    }
+
+    callback1 = (rowData: any) => {
+        return rowData[this.grid.primaryKey] === 5;
+    }
+
+    public ngOnInit(): void {
+        this.cellClasses = {
+            'test': this.callback,
+            'test2': this.callback1
+        };
+
+        this.cellClasses1 = {
+            'test2': this.callback1
+        };
+
+        this.columns = [
+            { field: 'ProductID', width: 100, cellClasses: this.cellClasses },
+            { field: 'ProductName', width: 200, cellClasses: this.cellClasses1 },
+            { field: 'InStock', width: 150, cellClasses: this.cellClasses1 },
+            { field: 'UnitsInStock', width: 150, cellClasses: {'test1' : true } },
+            { field: 'OrderDate', width: 150, cellClasses: this.cellClasses1 }
+        ];
+        this.data = SampleTestData.foodProductDataExtended();
     }
 }

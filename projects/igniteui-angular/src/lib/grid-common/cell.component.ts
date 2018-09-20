@@ -370,10 +370,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     @HostBinding('class')
     get styleClasses(): string {
-        const defaultClasses = [
-            'igx-grid__td igx-grid__td--fw',
-            this.column.cellClasses
-        ];
+        const defaultClasses = ['igx-grid__td igx-grid__td--fw'];
+
+        if (this.column.cellClasses) {
+            Object.entries(this.column.cellClasses).forEach(([name, cb]) => {
+                const value = typeof cb === 'function' ? (cb as any)(this.row.rowData, this.column.field) : cb;
+                if (value) {
+                    defaultClasses.push(name);
+                }
+            }, this);
+        }
 
         const classList = {
             'igx_grid__cell--edit': this.inEditMode,

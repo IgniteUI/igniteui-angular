@@ -8,6 +8,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 
 let data = [
     { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z' },
@@ -1023,6 +1024,27 @@ describe('IgxGrid - Row Selection', () => {
         expect(thirdRow.isSelected).toBeFalsy();
         expect(grid.selectedRows()).toEqual([]);
     });
+
+    it('Should properly check the header checkbox state when filtering, #2469', fakeAsync(() => {
+        const fixture = TestBed.createComponent(GridWithSelectionFilteringComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const headerCheckbox: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
+        grid.primaryKey = 'ID';
+        fixture.detectChanges();
+        tick();
+        headerCheckbox.click();
+        tick();
+        fixture.detectChanges();
+        tick();
+        expect(headerCheckbox.parentElement.classList).toContain('igx-checkbox--checked');
+        grid.filter('Downloads', 0, IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), true);
+        tick();
+        fixture.detectChanges();
+        tick();
+        expect(headerCheckbox.parentElement.classList).toContain('igx-checkbox--checked');
+    }));
 
     it('Should properly handle TAB / SHIFT + TAB on edge cell, triggering virt scroll', (async () => {
         const fix = TestBed.createComponent(GridWithScrollsComponent);

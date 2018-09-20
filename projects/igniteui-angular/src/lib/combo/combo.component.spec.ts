@@ -9,7 +9,7 @@ import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -59,13 +59,15 @@ describe('igxCombo', () => {
                 IgxComboEmptyTestComponent,
                 IgxComboInContainerTestComponent,
                 IgxComboInContainerFixedWidthComponent,
-                IgxComboFormComponent
+                IgxComboFormComponent,
+                SimpleBindComboComponent
             ],
             imports: [
                 IgxComboModule,
                 NoopAnimationsModule,
                 IgxToggleModule,
                 ReactiveFormsModule,
+                FormsModule
             ]
         }).compileComponents();
     }));
@@ -104,7 +106,6 @@ describe('igxCombo', () => {
             expect(combo.placeholder).toEqual('Location');
             expect(combo.searchPlaceholder).toEqual('Enter a Search Term'); // Default;
             expect(combo.filterable).toEqual(true);
-            expect(combo.height).toEqual('400px');
             expect(combo.itemsMaxHeight).toEqual(400);
             expect(combo.itemsWidth).toEqual('399px');
             expect(combo.itemHeight).toEqual(40);
@@ -119,8 +120,6 @@ describe('igxCombo', () => {
             expect(combo.searchPlaceholder).toEqual('Filter');
             combo.filterable = false;
             expect(combo.filterable).toEqual(false);
-            combo.height = '500px';
-            expect(combo.height).toEqual('500px');
             combo.itemsMaxHeight = 500;
             expect(combo.itemsMaxHeight).toEqual(500);
             combo.itemHeight = 50;
@@ -2984,6 +2983,22 @@ describe('igxCombo', () => {
             expect(form.status).toEqual('VALID');
             fix.debugElement.query(By.css('button')).nativeElement.click();
         });
+
+        it('Should properly bind to values when used as a form control wihtout valueKey', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleBindComboComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            const data = fixture.componentInstance.items;
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            // tslint:disable-next-line:no-debugger
+            debugger;
+            expect(combo.selectedItems()).toEqual(fixture.componentInstance.comboSelectedItems);
+            combo.selectItems([...data].splice(1, 3), true);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.comboSelectedItems).toEqual([...data].splice(1, 3));
+        }));
     });
 });
 
@@ -3145,7 +3160,7 @@ class IgxComboSampleComponent {
     template: `
 <p>Change data to:</p>
 <label id="mockID">Combo Label</label>
-<igx-combo #combo [placeholder]="'Location'" [data]='items' [height]="'400px'"
+<igx-combo #combo [placeholder]="'Location'" [data]='items'
 [itemsMaxHeight]='400' [itemsWidth]="'399px'" [itemHeight]='40'
 [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
 [ariaLabelledBy]="'mockID'">
@@ -3296,7 +3311,7 @@ export class LocalService {
 @Component({
     template: `
 <label id="mockID">Combo Label</label>
-<igx-combo #combo [placeholder]="'Products'" [data]='items' [height]="'400px'" [itemsMaxHeight]='400'
+<igx-combo #combo [placeholder]="'Products'" [data]='items' [itemsMaxHeight]='400'
 [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'"
 [ariaLabelledBy]="'mockID'">
 </igx-combo>
@@ -3372,7 +3387,7 @@ export class IgxComboRemoteBindingTestComponent implements OnInit, AfterViewInit
 @Component({
     template: `
 <label id="mockID">Combo Label</label>
-<igx-combo #combo [height]="'400px'" [itemsMaxHeight]='400'
+<igx-combo #combo [itemsMaxHeight]='400'
 [itemHeight]='40' [width]="'400px'">
 </igx-combo>
 `
@@ -3494,8 +3509,7 @@ export class RemoteDataService {
 @Component({
     template: `
 <label id="mockID">Combo Label</label>
-<igx-combo #combo [placeholder]="'Products'" [data]="data | async" (onDataPreLoad)="dataLoading($event)"
-[height]="'400px'" [itemsMaxHeight]='400'
+<igx-combo #combo [placeholder]="'Products'" [data]="data | async" (onDataPreLoad)="dataLoading($event)" [itemsMaxHeight]='400'
 [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'"
 [ariaLabelledBy]="'mockID'">
 </igx-combo>
@@ -3526,5 +3540,20 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 
     ngOnDestroy() {
         this.cdr.detach();
+    }
+}
+
+@Component({
+    template: `<igx-combo [(ngModel)]="comboSelectedItems" [data]="items"></igx-combo>`
+})
+export class SimpleBindComboComponent implements OnInit {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+    public items: Array<any>;
+    public comboSelectedItems: Array<any>;
+
+    ngOnInit() {
+        this.items = ['One', 'Two', 'Three', 'Four', 'Five'];
+        this.comboSelectedItems = ['One', 'Two'];
     }
 }

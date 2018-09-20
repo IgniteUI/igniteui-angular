@@ -522,23 +522,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return this._valid === IgxComboState.INVALID;
     }
 
-
-    /**
-     * Sets the style height of the element
-     *
-     * ```typescript
-     * // get
-     * let myComboHeight = this.combo.height;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [height]='400px'></igx-combo>
-     * ```
-     */
-    @Input()
-    public height = '400px';
-
     /**
      * Controls whether custom values can be added to the collection
      *
@@ -1331,9 +1314,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public writeValue(value: any): void {
-        if (this.valueKey !== '') {
-            this.selectItems(value, true);
-        }
+        // selectItems can handle Array<any>, no valueKey is needed;
+        this.selectItems(value, true);
+        this.cdr.markForCheck();
     }
 
     /**

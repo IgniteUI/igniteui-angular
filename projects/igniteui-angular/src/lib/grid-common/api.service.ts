@@ -1245,7 +1245,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         if (!data) {
             data = grid.data;
         }
-        switch (this.filtered_items_status(id, data)) {
+        switch (this.filtered_items_status(id, data, grid.primaryKey)) {
             case 'allSelected': {
                 grid.allRowsSelected = true;
                 grid.headerCheckbox.indeterminate = false;
