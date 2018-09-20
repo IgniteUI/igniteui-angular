@@ -57,8 +57,11 @@ export class IgxDropEventArgs {
     cancel: boolean;
 }
 
-export interface IDragStartEventArgs {
+export interface IDragBaseEventArgs {
+    originalEvent: PointerEvent | MouseEvent | TouchEvent;
     owner: IgxDragDirective;
+}
+export interface IDragStartEventArgs extends IDragBaseEventArgs {
     cancel: boolean;
 }
 
@@ -154,7 +157,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public dragEnd = new EventEmitter<any>();
+    public dragEnd = new EventEmitter<IDragBaseEventArgs>();
 
     /**
      * Event triggered after the draggable element is released and after its animation has finished.
@@ -170,7 +173,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public returnMoveEnd = new EventEmitter<any>();
+    public returnMoveEnd = new EventEmitter<IDragBaseEventArgs>();
 
     /**
      * Event triggered when the draggable element is clicked.
@@ -186,7 +189,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public dragClicked = new EventEmitter<any>();
+    public dragClicked = new EventEmitter<IDragBaseEventArgs>();
 
     /**
      * @hidden
@@ -479,6 +482,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public onPointerMove(event) {
         if (this._clicked) {
             const dragStartArgs: IDragStartEventArgs = {
+                originalEvent: event,
                 owner: this,
                 cancel: false
             };
@@ -530,6 +534,10 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             return;
         }
 
+        const eventArgs = {
+            originalEvent: event,
+            owner: this
+        };
         this._clicked = false;
         if (this._dragStarted) {
             if (this._lastDropArea && !this._lastDropArea.isEqualNode(this.element.nativeElement)) {
@@ -551,9 +559,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 this.onTransitionEnd(null);
             }
 
-            this.dragEnd.emit();
+            this.dragEnd.emit(eventArgs);
         } else {
-            this.dragClicked.emit();
+            this.dragClicked.emit(eventArgs);
         }
     }
 
@@ -713,7 +721,10 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
             this.element.nativeElement.style.transitionDuration = '0.0s';
             this._dragStarted = false;
-            this.returnMoveEnd.emit();
+            this.returnMoveEnd.emit({
+                originalEvent: event,
+                owner: this
+            });
         }
     }
 
