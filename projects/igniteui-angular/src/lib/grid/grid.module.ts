@@ -34,7 +34,9 @@ import {
     IgxColumnMovingDropDirective,
     IgxGroupAreaDropDirective,
     IgxColumnMovingService,
-    IgxGroupByRowTemplateDirective
+    IgxGroupByRowTemplateDirective,
+    IgxDecimalPipeComponent,
+    IgxDatePipeComponent
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 import {
@@ -80,7 +82,9 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
     IgxGridFilterConditionPipe,
-    IgxGridFilterExpressionComponent
+    IgxGridFilterExpressionComponent,
+    IgxDatePipeComponent,
+    IgxDecimalPipeComponent
   ],
   entryComponents: [
     IgxColumnComponent,

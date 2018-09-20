@@ -11,7 +11,7 @@ import {
 import { IgxDropDownComponent, ISelectionEventArgs } from './drop-down.component';
 
 /**
- * The `<igx-drop-down-item> is a container intended for row items in
+ * The `<igx-drop-down-item>` is a container intended for row items in
  * a `<igx-drop-down>` container.
  */
 
@@ -105,7 +105,7 @@ export class IgxDropDownItemBase {
             return;
         }
 
-        if (value && !this.dropDown.collapsed) {
+        if (this.dropDown.allowItemsFocus && value && !this.dropDown.collapsed) {
             this.elementRef.nativeElement.focus({ preventScroll: true });
         }
         this._isFocused = value;
@@ -202,10 +202,10 @@ export class IgxDropDownItemBase {
     clicked(event) {
         if (this.disabled || this.isHeader) {
             const focusedItem = this.dropDown.items.find((item) => item.isFocused);
-            if (focusedItem) {
+            if (this.dropDown.allowItemsFocus && focusedItem) {
                 focusedItem.elementRef.nativeElement.focus({ preventScroll: true });
-                return;
-                }
+            }
+            return;
         }
         this.dropDown.navigateItem(this.index);
         this.dropDown.selectItem(this, event);

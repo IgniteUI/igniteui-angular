@@ -1,0 +1,17 @@
+:host::ng-deep {
+    .test2 {
+        color: black !important;
+        font-weight: bold;
+        background-color: greenyellow !important;
+    }
+    .test {
+        color: red;
+        font-weight: bold;
+        background-color: yellow;
+    }
+    .test1 {
+        color: blue ;
+        font-weight: bold;
+        background-color: salmon;
+    }
+}
