@@ -36,7 +36,7 @@
         header-text-color: igx-color($palette, 'secondary'),
         item-background: #fff,
         item-text-color: igx-color($palette, 'grays', 800),
-        item-background-active: #fff,
+        item-background-active: hexrgba(igx-color($palette, 'grays', 100)),
         item-text-color-active: igx-color($palette, 'grays', 800)
     );
 
