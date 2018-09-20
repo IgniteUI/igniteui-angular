@@ -110,7 +110,7 @@ export class IgxGridRowComponent implements DoCheck {
     get styleClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
-        const dirtyClass = this.isDirty ? 'igx-grid__tr--edited' : '';
+        const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}`;
     }
@@ -168,7 +168,7 @@ export class IgxGridRowComponent implements DoCheck {
      * @hidden
      */
     @HostBinding('attr.aria-dirty')
-    public get isDirty(): boolean {
+    public get dirty(): boolean {
         return this.grid.rowEditable && this.grid.transactions.aggregatedState().get(this.rowID) !== undefined;
     }
 

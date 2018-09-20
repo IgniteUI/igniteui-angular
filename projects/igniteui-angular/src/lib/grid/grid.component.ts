@@ -4656,7 +4656,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateRowTransaction(event) {
-        this.cellInEditMode.inEditMode = false;
         const row = this.rowInEditMode;
         this.transactions.add(
             {
@@ -4665,9 +4664,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 newValue: this.transactions.getPending(row.rowID).value
             },
             this.data[row.index]);
+            this.cellInEditMode.inEditMode = false;
     }
 
     public resetRowTransaction(event) {
+        this.transactions.resetPending();
         this.cellInEditMode.inEditMode = false;
     }
 
