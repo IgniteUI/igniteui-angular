@@ -83,6 +83,13 @@ export interface IRowDataEventArgs {
     data: any;
 }
 
+export interface IGroupingChangedEventArgs {
+    oldExpressions: Array<ISortingExpression> | null;
+    newExpressions: Array<ISortingExpression> | null;
+    newlyGrouped:   Array<IgxColumnComponent> | null;
+    newlyUngrouped: Array<IgxColumnComponent> | null;
+}
+
 export interface IColumnResizeEventArgs {
     column: IgxColumnComponent;
     prevWidth: string;
@@ -1046,17 +1053,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Emitted when a new `IgxColumnComponent` is grouped or ungrouped.
      * Returns the `ISortingExpression` related to the grouping operation.
      * ```typescript
-     * groupingDone(event: any){
+     * groupingChanged(event: any){
      *     const grouping = event;
      * }
      * ```
      * ```html
-     * <igx-grid #grid [data]="localData" (onGroupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (onGroupingChanged)="groupingChanged($event)" [autoGenerate]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onGroupingDone = new EventEmitter<ISortingExpression[]>();
+    public onGroupingChanged = new EventEmitter<IGroupingChangedEventArgs>();
 
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
@@ -2797,13 +2804,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Groups by a new `IgxColumnComponent` based on the provided expression or modifies an existing one.
+     * Also allows for multiple columns to be grouped at once if an array of sorting expressions is passed.
      * ```typescript
      * this.grid.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+     *  this.grid.groupBy([
+            { fieldName: name1, dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: name2, dir: SortingDirection.Desc, ignoreCase: true },
+            { fieldName: name3, dir: SortingDirection.Desc, ignoreCase: false }
+        ])
      * ```
 	 * @memberof IgxGridComponent
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
+        const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        const newlyGroupedCols: Array<IgxColumnComponent> = [];
         this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -2812,24 +2827,57 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        this.onGroupingDone.emit(this.sortingExpressions);
+        const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        const changedColsArr = newSortingExpressions.filter(function(obj) {
+            return !oldSortingExpressions.some(function(obj2) {
+                return obj.fieldName === obj2.fieldName;
+            });
+        });
+        changedColsArr.forEach(function(elem) {
+            newlyGroupedCols.push(this.getColumnByName(elem.fieldName));
+        }, this);
+        const groupingChangedArgs: IGroupingChangedEventArgs = {
+            oldExpressions : oldSortingExpressions || null,
+            newExpressions: newSortingExpressions || null,
+            newlyGrouped: newlyGroupedCols,
+            newlyUngrouped: null
+        };
+        this.onGroupingChanged.emit(groupingChangedArgs);
 
         this.restoreHighlight();
     }
 
     /**
      * Clears all grouping in the grid, if no parameter is passed.
-     * If a parameter is provided clears grouping for a particular column
+     * If a parameter is provided clears grouping for a particular column or an array or columns
      * ```typescript
      * this.grid.clearGrouping();
      * this.grid.clearGrouping("ID");
+     * * this.grid.clearGrouping(["ID", "Column1", "Column2"]);
      * ```
      *
      */
-    public clearGrouping(name?: string): void {
+    public clearGrouping(name?: string | Array<string>): void {
+        const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        const newlyUngroupedCols: Array<IgxColumnComponent> = [];
         this.gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
-
+        const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        const changedColsArr = oldSortingExpressions.filter(function(obj) {
+            return !newSortingExpressions.some(function(obj2) {
+                return obj.fieldName === obj2.fieldName;
+            });
+        });
+        changedColsArr.forEach(function(elem) {
+            newlyUngroupedCols.push(this.getColumnByName(elem.fieldName));
+        }, this);
+        const groupingChangedArgs: IGroupingChangedEventArgs = {
+            oldExpressions : oldSortingExpressions || null,
+            newExpressions: newSortingExpressions || null,
+            newlyGrouped: null,
+            newlyUngrouped: newlyUngroupedCols
+        };
+        this.onGroupingChanged.emit(groupingChangedArgs);
         this.restoreHighlight();
     }
 
