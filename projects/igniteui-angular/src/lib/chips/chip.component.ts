@@ -446,6 +446,7 @@ export class IgxChipComponent implements AfterViewInit {
             });
 
             event.preventDefault();
+            event.stopPropagation();
         }
     }
 
