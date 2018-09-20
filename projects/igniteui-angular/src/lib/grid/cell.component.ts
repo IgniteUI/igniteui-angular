@@ -513,8 +513,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     get dirty() {
-        const rowTransaction = this.grid.transactions.getTransactionLog(this.row.rowID);
-        return rowTransaction && rowTransaction.newValue && rowTransaction.newValue[this.column.field];
+        const rowTransaction = this.grid.transactions.aggregatedState().get(this.row.rowID);
+        return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
     }
 
     /**

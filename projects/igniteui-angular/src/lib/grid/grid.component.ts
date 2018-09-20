@@ -1451,6 +1451,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    get bannerClass(): string {
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                return 'banner--cosy';
+            case DisplayDensity.compact:
+                return 'banner--compact';
+            default:
+                return 'banner';
+        }
+    }
+
     /**
      * @hidden
      */
@@ -1628,13 +1639,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
     private _rowInEditMode: IgxGridRowComponent = null;
-    public get bannerClass() {
-        let bannerClass = 'banner';
-        if (this.displayDensity !== 'compact') {
-            bannerClass = bannerClass + '--' + this.displayDensity;
-        }
-        return bannerClass;
-    }
 
     /**
      * Provides access to the `IgxToolbarComponent`.
