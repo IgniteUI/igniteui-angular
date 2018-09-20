@@ -273,7 +273,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         this.refresh_search(gridId);
     }
 
-    public get_cell_inEditMode(gridId) {
+    public get_cell_inEditMode(gridId): any {
         const editCellId = this.editCellState.get(gridId);
         if (editCellId) {
             return editCellId;
@@ -282,7 +282,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         }
     }
 
-    public get_row_by_key(id: string, rowSelector: any) {
+    public get_row_by_key(id: string, rowSelector: any): any {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -291,32 +291,32 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         }
     }
 
-    public get_row_by_index(id: string, rowIndex: number) {
+    public get_row_by_index(id: string, rowIndex: number): any {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
-    public get_cell_by_key(id: string, rowSelector: any, field: string) {
+    public get_cell_by_key(id: string, rowSelector: any, field: string): any {
         const row = this.get_row_by_key(id, rowSelector);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.column.field === field);
         }
     }
 
-    public get_cell_by_index(id: string, rowIndex: number, columnIndex: number) {
+    public get_cell_by_index(id: string, rowIndex: number, columnIndex: number): any {
         const row = this.get_row_by_index(id, rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.columnIndex === columnIndex);
         }
     }
 
-    public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number) {
+    public get_cell_by_visible_index(id: string, rowIndex: number, columnIndex: number): any {
         const row = this.get_row_by_index(id, rowIndex);
         if (row && row.cells) {
             return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
         }
     }
 
-    public get_cell_by_column(id: string, rowIndex: number, columnField: string) {
+    public get_cell_by_column(id: string, rowIndex: number, columnField: string): any {
         const grid = this.get(id);
         const columnId = grid.columnList.map((column) => column.field).indexOf(columnField);
         if (columnId !== -1) {
