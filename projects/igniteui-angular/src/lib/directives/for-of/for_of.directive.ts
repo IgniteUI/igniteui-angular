@@ -235,7 +235,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
-
+        if (!this.igxForAutoSize && this.igxForScrollOrientation === 'horizontal') {
+            this.igxForAutoSize = true;
+        }
         if (typeof MSGesture === 'function') {
             // On Edge and IE when scrolling on touch the page scroll instead of the grid.
             this.dc.instance._viewContainer.element.nativeElement.style.touchAction = 'none';
@@ -414,7 +416,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         } else {
             const containerSize = parseInt(this.igxForContainerSize, 10);
             const maxVirtScrollTop = this._virtHeight - containerSize;
-            let nextScrollTop = this.igxForAutoSize ? index *  parseInt(this.igxForItemSize, 10)
+            let nextScrollTop = !this.igxForAutoSize ? index *  parseInt(this.igxForItemSize, 10)
             : this.sizesCache[index] + 1;
             if (nextScrollTop > maxVirtScrollTop) {
                 nextScrollTop = maxVirtScrollTop;
@@ -717,7 +719,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
         const scrollWidth = parseInt(this.hScroll.children[0].style.width, 10);
-        const scrOffset = this.igxForAutoSize ?
+        const scrOffset = !this.igxForAutoSize ?
         inScrollLeft - this.state.startIndex * (scrollWidth / count) :
         inScrollLeft - this.sizesCache[this.state.startIndex];
         return scrOffset;
