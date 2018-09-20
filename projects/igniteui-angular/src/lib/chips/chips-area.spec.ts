@@ -510,6 +510,7 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: keyEvent,
             owner: chipAreaComp,
             newSelection: [secondChipComp]
         });
@@ -522,6 +523,7 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: keyEvent,
             owner: chipAreaComp,
             newSelection: []
         });
@@ -557,6 +559,7 @@ describe('IgxChipsArea', () => {
         const thirdChipComp = fix.componentInstance.chips.toArray()[2];
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: null,
             owner: chipAreaComp,
             newSelection: [secondChipComp, thirdChipComp]
         });
@@ -943,25 +946,29 @@ describe('IgxChipsArea', () => {
 
         const chipAreaComp = fix.componentInstance.chipsArea;
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
+        const pointerDownEvt = new PointerEvent('pointerdown', { pointerId: 1 });
+        const pointerUpEvt = new PointerEvent('pointerup', { pointerId: 1 });
 
         spyOn(chipAreaComp.onSelection, 'emit');
 
-        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
         fix.detectChanges();
-        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: pointerUpEvt,
             owner: chipAreaComp,
             newSelection: [secondChipComp]
         });
 
-        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
         fix.detectChanges();
-        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: pointerUpEvt,
             owner: chipAreaComp,
             newSelection: []
         });
