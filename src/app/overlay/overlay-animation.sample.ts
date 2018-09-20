@@ -35,6 +35,7 @@ export class OverlayAnimationSampleComponent {
         ];
         const openAnimation: AnimationReferenceMetadata = animation(openAnimationMetaData);
         this._overlaySettings.positionStrategy.settings.openAnimation = openAnimation;
+        this._overlaySettings.closeOnOutsideClick = false;
 
         const closeAnimationMetaData: AnimationMetadata[] = [
             style({ opacity: `1`, transform: `scale(1)`, transformOrigin: `50% 50%` }),
