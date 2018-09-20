@@ -301,7 +301,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.checkOutletAndOutsideClick();
         const shouldReturn = this.preMouseLeaveCheck();
-        if (shouldReturn) {
+        if (shouldReturn || this.target.collapsed) {
             return;
         }
 
