@@ -3786,7 +3786,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!data) {
             data = this.data;
         }
-        switch (this.filteredItemsStatus(this.id, data)) {
+        switch (this.filteredItemsStatus(this.id, data, this.primaryKey)) {
             case 'allSelected': {
                 if (!this.allRowsSelected) {
                     this.allRowsSelected = true;
