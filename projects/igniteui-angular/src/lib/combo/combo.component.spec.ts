@@ -9,7 +9,7 @@ import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -59,13 +59,15 @@ describe('igxCombo', () => {
                 IgxComboEmptyTestComponent,
                 IgxComboInContainerTestComponent,
                 IgxComboInContainerFixedWidthComponent,
-                IgxComboFormComponent
+                IgxComboFormComponent,
+                SimpleBindComboComponent
             ],
             imports: [
                 IgxComboModule,
                 NoopAnimationsModule,
                 IgxToggleModule,
                 ReactiveFormsModule,
+                FormsModule
             ]
         }).compileComponents();
     }));
@@ -2984,6 +2986,21 @@ describe('igxCombo', () => {
             expect(form.status).toEqual('VALID');
             fix.debugElement.query(By.css('button')).nativeElement.click();
         });
+        it('Should properly bind to values when used as a form control wihtout valueKey', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleBindComboComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            const data = fixture.componentInstance.items;
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            // tslint:disable-next-line:no-debugger
+            debugger;
+            expect(combo.selectedItems()).toEqual(fixture.componentInstance.comboSelectedItems);
+            combo.selectItems([...data].splice(1, 3), true);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.comboSelectedItems).toEqual([...data].splice(1, 3));
+        }));
     });
 });
 
@@ -3531,4 +3548,17 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
     }
 }
 
+@Component({
+    template: `<igx-combo [(ngModel)]="comboSelectedItems" [data]="items"></igx-combo>`
+})
+export class SimpleBindComboComponent implements OnInit {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+    public items: Array<any>;
+    public comboSelectedItems: Array<any>;
+     ngOnInit() {
+        this.items = ['One', 'Two', 'Three', 'Four', 'Five'];
+        this.comboSelectedItems = ['One', 'Two'];
+    }
+}
 
