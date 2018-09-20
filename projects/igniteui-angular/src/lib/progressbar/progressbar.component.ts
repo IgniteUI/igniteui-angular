@@ -10,8 +10,11 @@ import {
     OnChanges,
     Output,
     Renderer2,
-    ViewChild
+    ViewChild,
+    TemplateRef,
+    ContentChild
 } from '@angular/core';
+import { IgxProcessBarTextTemplateDirective } from './progressbar.common';
 
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
@@ -455,8 +458,20 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     @Input()
     public text: string;
 
+    @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective })
+    public textTemplate: IgxProcessBarTextTemplateDirective;
+
     /**
-     *Animation on progress `IgxCircularProgressBarComponent`. By default it is set to true.
+     * @hidden
+    */
+    public get context(): any {
+        return {
+            $implicit: { value: this.value, valueInPercent: this.valueInPercent, max: this.max}
+        };
+    }
+
+    /**
+    *Animation on progress `IgxCircularProgressBarComponent`. By default it is set to true.
      *```html
      *<igx-circular-bar [animate]="false" [value]="50"></igx-circular-bar>
      *```
@@ -662,8 +677,8 @@ export function convertInPercentage(value: number, max: number) {
  * {@link IgxCircularProgressBarComponent} inside your application.
  */
 @NgModule({
-    declarations: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent],
-    exports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent],
+    declarations: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProcessBarTextTemplateDirective],
+    exports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProcessBarTextTemplateDirective],
     imports: [CommonModule]
 })
 export class IgxProgressBarModule {
