@@ -10,11 +10,18 @@
     AfterViewInit,
     Renderer2
 } from '@angular/core';
-import { IgxDragDirective, IgxDropEnterEventArgs } from '../directives/dragdrop/dragdrop.directive';
 import { DisplayDensity } from '../core/utils';
+import {
+    IgxDragDirective,
+    IDragBaseEventArgs,
+    IDragStartEventArgs,
+    IgxDropEnterEventArgs,
+    IgxDropEventArgs
+} from '../directives/dragdrop/dragdrop.directive';
 
 
 export interface IBaseChipEventArgs {
+    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IgxDropEnterEventArgs;
     owner: IgxChipComponent;
 }
 
@@ -22,21 +29,16 @@ export interface IChipClickEventArgs extends IBaseChipEventArgs {
     cancel: boolean;
 }
 
-export interface IChipKeyDownEventArgs extends IChipClickEventArgs {
-    altKey: boolean;
-    shiftKey: boolean;
-    ctrlKey: boolean;
-    key: string;
+export interface IChipKeyDownEventArgs extends IBaseChipEventArgs {
+    originalEvent: KeyboardEvent;
+    cancel: boolean;
 }
 
-export interface IChipEnterDragAreaEventArgs {
-    targetChip: IgxChipComponent;
+export interface IChipEnterDragAreaEventArgs extends IBaseChipEventArgs {
     dragChip: IgxChipComponent;
-    originalEvent: IgxDropEnterEventArgs;
 }
 
-export interface IChipSelectEventArgs {
-    owner: IgxChipComponent;
+export interface IChipSelectEventArgs extends IBaseChipEventArgs {
     cancel: boolean;
     selected: boolean;
 }
@@ -239,9 +241,9 @@ export class IgxChipComponent implements AfterViewInit {
     public onClick = new EventEmitter<IChipClickEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` is selected.
-     * Returns the selected chip reference, whether the event should be canceled,
-     * and what is the next selection state.
+     * Emits event when the `IgxChipComponent` is selected.
+     * Returns the selected chip reference, whether the event should be canceled, what is the next selection state and
+     * when the event is triggered by interaction `originalEvent` is provided, otherwise `originalEvent` is `null`.
      * ```typescript
      * chipSelect(event: IChipSelectEventArgs){
      *     let selectedChip = event.owner;
@@ -340,27 +342,7 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     public set selected(newValue: boolean) {
-        const onSelectArgs: IChipSelectEventArgs = {
-            owner: this,
-            selected: false,
-            cancel: false
-        };
-        if (newValue && !this._selected) {
-            onSelectArgs.selected = true;
-            this.onSelection.emit(onSelectArgs);
-
-            if (!onSelectArgs.cancel) {
-                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
-                this._selected = newValue;
-            }
-        } else if (!newValue && this._selected) {
-            this.onSelection.emit(onSelectArgs);
-
-            if (!onSelectArgs.cancel) {
-                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
-                this._selected = newValue;
-            }
-        }
+        this.changeSelection(newValue);
     }
 
     /**
@@ -409,13 +391,10 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipKeyDown(event) {
+    public onChipKeyDown(event: KeyboardEvent) {
         const keyDownArgs: IChipKeyDownEventArgs = {
+            originalEvent: event,
             owner: this,
-            altKey: event.altKey,
-            ctrlKey: event.ctrlKey,
-            shiftKey: event.shiftKey,
-            key: event.key,
             cancel: false
         };
 
@@ -424,18 +403,18 @@ export class IgxChipComponent implements AfterViewInit {
             return;
         }
 
-        // Check keyIdentifier for Safary
-        if ((event.key === 'Delete' || event.key === 'Del' || event.keyIdentifier === 'U+007F') && this.removable) {
+        if ((event.key === 'Delete' || event.key === 'Del') && this.removable) {
             this.onRemove.emit({
+                originalEvent: event,
                 owner: this
             });
         }
 
-        if ((event.key === ' ' || event.key === 'Spacebar' || event.keyIdentifier === 'U+0020') && this.selectable) {
-            this.selected = !this.selected;
+        if ((event.key === ' ' || event.key === 'Spacebar') && this.selectable) {
+            this.changeSelection(!this.selected, event);
         }
 
-        if (event.key !== 'Tab' && event.keyIdentifier !== 'U+0009') {
+        if (event.key !== 'Tab') {
             event.preventDefault();
         }
     }
@@ -443,10 +422,10 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onRemoveBtnKeyDown(event) {
-        if (event.key === ' ' || event.key === 'Spacebar' || event.keyIdentifier === 'U+0020' ||
-        event.key === 'Enter' || event.keyIdentifier === 'Enter') {
+    public onRemoveBtnKeyDown(event: KeyboardEvent) {
+        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') {
             this.onRemove.emit({
+                originalEvent: event,
                 owner: this
             });
 
@@ -457,8 +436,9 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipRemove() {
+    public onChipRemove(event: MouseEvent | TouchEvent) {
         this.onRemove.emit({
+            originalEvent: event,
             owner: this
         });
     }
@@ -474,11 +454,37 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipRemoveEnd() {
+    public onChipRemoveEnd(event: TouchEvent) {
         if (!this._movedWhileRemoving) {
-            this.onChipRemove();
+            this.onChipRemove(event);
         }
         this._movedWhileRemoving = false;
+    }
+
+    protected changeSelection(newValue: boolean, srcEvent = null) {
+        const onSelectArgs: IChipSelectEventArgs = {
+            originalEvent: srcEvent,
+            owner: this,
+            selected: false,
+            cancel: false
+        };
+
+        if (newValue && !this._selected) {
+            onSelectArgs.selected = true;
+            this.onSelection.emit(onSelectArgs);
+
+            if (!onSelectArgs.cancel) {
+                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
+                this._selected = newValue;
+            }
+        } else if (!newValue && this._selected) {
+            this.onSelection.emit(onSelectArgs);
+
+            if (!onSelectArgs.cancel) {
+                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
+                this._selected = newValue;
+            }
+        }
     }
 
     /**
@@ -486,8 +492,9 @@ export class IgxChipComponent implements AfterViewInit {
      */
     // -----------------------------
     // Start chip igxDrag behaviour
-    public onChipDragStart(event) {
+    public onChipDragStart(event: IDragStartEventArgs) {
         this.onMoveStart.emit({
+            originalEvent: event.originalEvent,
             owner: this
         });
         event.cancel = !this.draggable;
@@ -497,7 +504,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipDragEnd(event) {
+    public onChipDragEnd() {
         this.dragDir.dropFinished();
         this._dragging = false;
     }
@@ -505,9 +512,10 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipMoveEnd(event) {
+    public onChipMoveEnd(event: IDragBaseEventArgs) {
         // moveEnd is triggered after return animation has finished. This happen when we drag and release the chip.
         this.onMoveEnd.emit({
+            originalEvent: event.originalEvent,
             owner: this
         });
 
@@ -519,15 +527,16 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipDragClicked() {
+    public onChipDragClicked(event: IDragBaseEventArgs) {
         const clickEventArgs: IChipClickEventArgs = {
+            originalEvent: event.originalEvent,
             owner: this,
             cancel: false
         };
         this.onClick.emit(clickEventArgs);
 
         if (!clickEventArgs.cancel && this.selectable) {
-            this.selected = !this.selected;
+            this.changeSelection(!this.selected, event.originalEvent);
         }
     }
     // End chip igxDrag behaviour
@@ -537,13 +546,13 @@ export class IgxChipComponent implements AfterViewInit {
      */
     // -----------------------------
     // Start chip igxDrop behaviour
-    public onChipDragEnterHandler(event) {
+    public onChipDragEnterHandler(event: IgxDropEnterEventArgs) {
         if (this.dragDir === event.drag || !event.dragData || !event.dragData.chip) {
             return;
         }
 
         const eventArgs: IChipEnterDragAreaEventArgs = {
-            targetChip: this,
+            owner: this,
             dragChip: event.dragData.chip,
             originalEvent: event
         };
@@ -553,7 +562,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipDrop(event) {
+    public onChipDrop(event: IgxDropEventArgs) {
         // Cancel the default drop logic
         event.cancel = true;
     }
