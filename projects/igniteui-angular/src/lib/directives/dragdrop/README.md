@@ -24,11 +24,11 @@ The `igxDrag` directive can be applied on any DOM element by just adding it to i
 
 ### DOM Behavior
 
-By default when an element with `igxDrag` directive applied needs to be dragged the user needs to swipe at least 5px in any direction in order for the actual dragging to occur. Otherwise the interaction is considered as a click and the `dragClicked` event is emitted.
+By default a drag operation starts when the end user swipes at least 5 px in any direction. Otherwise the interaction is considered as a click and the `dragClicked` event is emitted.
 
-When dragging occurs a drag ghost element is spawned that is positioned so it is always under the mouse cursor or when on touch where it is being touched. The original element is still present, but it can be hidden automatically when dragging starts with the `hideBaseOnDrag` input. 
+When dragging occurs a drag ghost element is spawned and moves along with the mouse cursor or touch interaction.. The original element is still present, but it can be hidden automatically when dragging starts with the `hideBaseOnDrag` input.
 
-The dragging can be canceled by the user before it starts by setting the `cancel` property of the `dragStart` event to `true`. This will cancel the current dragging logic that could be used.
+The dragging can be canceled by setting the `cancel` property of the `dragStart` event to `true`. This will cancel the current dragging logic that could be used.
 
 After the user releases the mouse/touch the drag ghost element is removed from the DOM and if the `hideBaseOnDrag` is enabled it will make the original element visible again and the `dragEnd` event will be emitted. If the `animateOnRelease` input is set to `true` all this will execute after the default animation of the drag ghost is finished which consist of returning it from the last dragged position to the position of the original element. Then the drag ghost will be removed with the rest and the `returnMoveEnd` event will be emitted.
 
