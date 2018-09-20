@@ -4,11 +4,11 @@ export class IgxTransactionBaseService implements ITransactionService {
     private _transactions: ITransaction[] = [];
     private _redoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _undoStack: { transaction: ITransaction, recordRef: any }[] = [];
-    protected _states: Map<any, IState> = new Map();
+    private _states: Map<any, IState> = new Map();
 
     public add(transaction: ITransaction, recordRef?: any) {
         this.verifyAddedTransaction(transaction, recordRef);
-        this.updateCurrentState(transaction, recordRef);
+        this.updateState(this._states, transaction, recordRef);
         this._transactions.push(transaction);
         this._undoStack.push({ transaction, recordRef });
         this._redoStack = [];
@@ -61,13 +61,13 @@ export class IgxTransactionBaseService implements ITransactionService {
         const action: { transaction: ITransaction, recordRef: any } = this._undoStack.pop();
         this._redoStack.push(action);
         this._states.clear();
-        this._undoStack.map(a => this.updateCurrentState(a.transaction, a.recordRef));
+        this._undoStack.map(a => this.updateState(this._states, a.transaction, a.recordRef));
     }
 
     public redo() {
         if (this._redoStack.length > 0) {
             const undoItem = this._redoStack.pop();
-            this.updateCurrentState(undoItem.transaction, undoItem.recordRef);
+            this.updateState(this._states, undoItem.transaction, undoItem.recordRef);
             this._transactions.push(undoItem.transaction);
             this._undoStack.push(undoItem);
         }
@@ -106,22 +106,22 @@ export class IgxTransactionBaseService implements ITransactionService {
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateCurrentState(transaction: ITransaction, recordRef?: any): void {
-        const state = this._states.get(transaction.id);
-        //  if TransactionType is ADD simply add transaction to _states;
+    protected updateState(states: Map<any, IState>,  transaction: ITransaction, recordRef?: any): void {
+        const state = states.get(transaction.id);
+        //  if TransactionType is ADD simply add transaction to states;
         //  if TransactionType is DELETE:
-        //    - if there is state with this id of type ADD remove it from the _states;
+        //    - if there is state with this id of type ADD remove it from the states;
         //    - if there is state with this id of type UPDATE change its type to DELETE;
-        //    - if there is no state with this id add transaction to _states;
+        //    - if there is no state with this id add transaction to states;
         //  if TransactionType is UPDATE:
         //    - if there is state with this id of type ADD merge new value and state recordRef into state new value
         //    - if there is state with this id of type UPDATE merge new value into state new value
         //    - if there is state with this id and state type is DELETE change its type to UPDATE
-        //    - if there is no state with this id add transaction to _states;
+        //    - if there is no state with this id add transaction to states;
         switch (transaction.type) {
             case TransactionType.DELETE:
                 if (state && state.type === TransactionType.ADD) {
-                    this._states.delete(transaction.id);
+                    states.delete(transaction.id);
                     return;
                 } else if (state && state.type === TransactionType.UPDATE) {
                     state.value = transaction.newValue;
@@ -134,7 +134,7 @@ export class IgxTransactionBaseService implements ITransactionService {
                     //  TODO: move object.assign part in a method, probably change updateValue one!
                     if (typeof state.value === 'object') {
                         if (state.type === TransactionType.ADD) {
-                            transaction.newValue = Object.assign({}, state.recordRef, transaction.newValue);
+                            state.value = Object.assign({}, state.value, transaction.newValue);
                         }
                         if (state.type === TransactionType.UPDATE) {
                             Object.assign(state.value, transaction.newValue);
@@ -149,7 +149,7 @@ export class IgxTransactionBaseService implements ITransactionService {
                 }
         }
 
-        this._states.set(transaction.id, { value: transaction.newValue, recordRef: recordRef, type: transaction.type });
+        states.set(transaction.id, { value: transaction.newValue, recordRef: recordRef, type: transaction.type });
     }
 
     /**
