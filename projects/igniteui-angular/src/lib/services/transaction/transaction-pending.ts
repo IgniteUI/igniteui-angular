@@ -10,7 +10,7 @@ export class IgxPendingTransactionService extends IgxTransactionBaseService {
         return true;
     }
 
-    public getPending(rowId) {
+    public getPending(rowId): IState {
         return this.aggregatedState().get(rowId);
     }
 

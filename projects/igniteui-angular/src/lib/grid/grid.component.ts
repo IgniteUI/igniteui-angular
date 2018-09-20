@@ -169,7 +169,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Input()
     public get data(): any[] {
-        if (this.transactions.aggregatedState()) {
+        if (this._data && this.transactions.aggregatedState()) {
             const copy = [...this._data];
             const transactionsState = this.transactions.aggregatedState();
             transactionsState.forEach((state, key) => {
