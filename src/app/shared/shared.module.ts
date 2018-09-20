@@ -70,7 +70,7 @@ const igniteModules = [
     IgxTabsModule,
     IgxTimePickerModule,
     IgxToastModule,
-    IgxTooltipModule
+    IgxTooltipModule,
     IgxExpansionPanelModule
 ];
 
