@@ -8,6 +8,7 @@ import {
     ComponentFactoryResolver,
     ContentChildren,
     ContentChild,
+    DoCheck,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -148,7 +149,7 @@ export interface IColumnMovingEndEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck {
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -847,6 +848,36 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
         }
+    }
+
+    /**
+     * An @Input property that sets whether the grouped columns should be hidden as well.
+     * The default value is "false"
+     * ```html
+     * <igx-grid #grid [data]="localData" [hideGroupedColumns]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public get hideGroupedColumns() {
+        return this._hideGroupedColumns;
+    }
+
+    public set hideGroupedColumns(value: boolean) {
+        if (value) {
+            this.groupingDiffer = this.differs.find(this.groupingExpressions).create();
+            this.groupingExpressions.forEach((expr) => {
+                const col = this.getColumnByName(expr.fieldName);
+                col.hidden = true;
+            });
+        } else {
+            this.groupingDiffer = null;
+            this.groupingExpressions.forEach((expr) => {
+                const col = this.getColumnByName(expr.fieldName);
+                col.hidden = false;
+            });
+        }
+        this._hideGroupedColumns = value;
     }
 
     /**
@@ -1954,6 +1985,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected _columnPinning = false;
+    /**
+     * @hidden
+     */
+    protected groupingDiffer;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -1969,6 +2004,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _columnWidthSetByUser = false;
 
     private _defaultTargetRecordNumber = 10;
+    private _hideGroupedColumns = false;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -2099,6 +2135,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             observer.observe(this.document.body, config);
         }
     }
+
+    public ngDoCheck(): void {
+        if (this.groupingDiffer) {
+            const changes = this.groupingDiffer.diff(this.groupingExpressions);
+            if (changes) {
+            changes.forEachAddedItem((rec) => {
+                const col = this.getColumnByName(rec.item.fieldName);
+                col.hidden = true;
+            });
+            changes.forEachRemovedItem((rec) => {
+                const col = this.getColumnByName(rec.item.fieldName);
+                col.hidden = false;
+            });
+            }
+        }
+      }
 
     /**
      * @hidden

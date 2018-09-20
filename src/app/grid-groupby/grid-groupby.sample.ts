@@ -2,6 +2,7 @@ import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 
 import {DataType, IgxButtonDirective, IgxColumnComponent, IgxGridComponent,  SortingDirection, ISortingExpression } from 'igniteui-angular';
 import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/utils';
+import { detectChanges } from '@angular/core/src/render3';
 
 @Component({
     providers: [],
@@ -13,6 +14,7 @@ import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/utils';
 export class GridGroupBySampleComponent implements OnInit {
     @ViewChild('grid1') public grid1: IgxGridComponent;
     public data: Array<any>;
+    public hideGroupedColumns = false;
     public columns: Array<any>;
     public ngOnInit(): void {
         this.columns = [
@@ -77,6 +79,9 @@ export class GridGroupBySampleComponent implements OnInit {
             }
         }
         this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+    }
+    toggleGroupedVisibility(event){
+        this.grid1.hideGroupedColumns = !event.checked;
     }
     toggleDensity() {
         switch (this._density) {
