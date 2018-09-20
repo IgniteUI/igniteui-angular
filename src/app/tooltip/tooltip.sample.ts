@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import {
     IgxTooltipTargetDirective, OverlaySettings, AutoPositionStrategy, AbsoluteScrollStrategy,
-    ITooltipOpeningEventArgs, ITooltipOpenedEventArgs, ITooltipClosingEventArgs, ITooltipClosedEventArgs
+    ITooltipShowEventArgs,ITooltipHideEventArgs,
 } from 'igniteui-angular';
 
 @Component({
@@ -93,15 +93,13 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
     }
 
     showTooltip() {
-        this.tooltipTarget.openTooltip();
+        this.tooltipTarget.showTooltip();
     }
 
     hideTooltip() {
-        this.tooltipTarget.closeTooltip();
+        this.tooltipTarget.hideTooltip();
     }
 
-    opening(args: ITooltipOpeningEventArgs) { console.log("opening"); }
-    opened(args: ITooltipOpenedEventArgs) { console.log("opened"); }
-    closing(args: ITooltipClosingEventArgs) { console.log("closing"); }
-    closed(args: ITooltipClosedEventArgs) { console.log("closed"); }
+    showing(args: ITooltipShowEventArgs) { console.log("showing"); }
+    hiding(args: ITooltipHideEventArgs) { console.log("hiding"); }
 }

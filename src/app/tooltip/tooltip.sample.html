@@ -7,10 +7,8 @@
             <h4 class="sample-title">Simple tooltip</h4>
             <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="simple" [overlaySettings]="settings"
                         src="assets/images/avatar/10.jpg" size="medium" [roundShape]="true"
-                        (onTooltipOpening)="opening()"
-                        (onTooltipOpened)="opened()"
-                        (onTooltipClosing)="closing()"
-                        (onTooltipClosed)="closed()"
+                        (onTooltipShow)="showing($event)"
+                        (onTooltipHide)="hiding($event)"
                         aria-describedby="myid">
             </igx-avatar>
 
