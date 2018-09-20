@@ -38,6 +38,8 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
+import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
+import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 
 
 const appRoutes = [
@@ -77,6 +79,10 @@ const appRoutes = [
     {
         path: 'dialog',
         component: DialogSampleComponent
+    },
+    {
+        path: 'expansion-panel',
+        component: ExpansionPanelSampleComponent
     },
     {
         path: 'icon',
@@ -174,6 +180,10 @@ const appRoutes = [
     {
         path: 'gridColumnResizing',
         component: GridColumnResizingSampleComponent
+    },
+    {
+        path: 'gridConditionalCellStyling',
+        component: GridCellStylingSampleComponent
     },
     {
         path: 'gridSummary',
