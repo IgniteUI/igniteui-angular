@@ -36,7 +36,9 @@ import {
     IgxColumnMovingDropDirective,
     IgxGroupAreaDropDirective,
     IgxColumnMovingService,
-    IgxGroupByRowTemplateDirective
+    IgxGroupByRowTemplateDirective,
+    IgxDecimalPipeComponent,
+    IgxDatePipeComponent
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 import {
@@ -86,6 +88,8 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
     IgxGridFilterExpressionComponent,
     IgxGridFilteringCellComponent,
     IgxGridFilteringRowComponent
+    IgxDatePipeComponent,
+    IgxDecimalPipeComponent
   ],
   entryComponents: [
     IgxColumnComponent,

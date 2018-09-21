@@ -522,23 +522,6 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         return this._valid === IgxComboState.INVALID;
     }
 
-
-    /**
-     * Sets the style height of the element
-     *
-     * ```typescript
-     * // get
-     * let myComboHeight = this.combo.height;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [height]='400px'></igx-combo>
-     * ```
-     */
-    @Input()
-    public height = '400px';
-
     /**
      * Controls whether custom values can be added to the collection
      *
@@ -569,7 +552,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
     */
     @Input()
-    public itemsMaxHeight = 320;
+    public itemsMaxHeight = 480;
 
     /**
      * Configures the drop down list width
@@ -601,7 +584,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public itemHeight = 32;
+    public itemHeight = 48;
 
     /**
      * @hidden
@@ -1063,7 +1046,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    public getItemDataByValueKey(val: any): any {
+    public getValueByValueKey(val: any): any {
         if (!val && val !== 0) {
             return undefined;
         }
@@ -1146,7 +1129,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
                 this.changeSelectedItem(itemID, false);
             }
         } else {
-            const target = typeof itemID === 'object' ? itemID : this.getItemDataByValueKey(itemID);
+            const target = typeof itemID === 'object' ? itemID : this.getValueByValueKey(itemID);
             if (target) {
                 this.changeSelectedItem(target, select);
             }
@@ -1331,9 +1314,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * @hidden
      */
     public writeValue(value: any): void {
-        if (this.valueKey !== '') {
-            this.selectItems(value, true);
-        }
+        // selectItems can handle Array<any>, no valueKey is needed;
+        this.selectItems(value, true);
+        this.cdr.markForCheck();
     }
 
     /**

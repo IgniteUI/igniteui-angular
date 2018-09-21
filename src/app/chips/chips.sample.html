@@ -3,7 +3,7 @@
     <section class="sample-content">
         <div class="sample-holder">
             <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
-                <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
+                <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)" >
                     <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                     <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
                 </igx-chip>
@@ -22,7 +22,7 @@
                     <igx-chip *ngFor="let chip of chipListTo" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartTo()" (onMoveEnd)="moveEndedTo()">
                         <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                     </igx-chip>
-                    <div class="dropAreaTo" igxDrop #dropTo (onDrop)="onDropTo($event)" (igxDragEnter)="onDragEnterCc($event)" (igxDragLeave)="onDragLeaveCc($event)"></div>
+                    <div class="dropAreaTo" igxDrop #dropTo (onDrop)="onDropTo($event)" (igxDragEnter)="onDragEnterCc()" (igxDragLeave)="onDragLeaveCc()"></div>
                 </igx-chips-area>
             </div>
 
@@ -32,7 +32,7 @@
                     <igx-chip *ngFor="let chip of chipListCc" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartCc()" (onMoveEnd)="moveEndedCc()">
                         <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                     </igx-chip>
-                    <div igxDrop #dropCc (onDrop)="onDropCc($event)" (igxDragEnter)="onDragEnterCc($event)" (igxDragLeave)="onDragLeaveCc($event)"
+                    <div igxDrop #dropCc (onDrop)="onDropCc($event)" (igxDragEnter)="onDragEnterCc()" (igxDragLeave)="onDragLeaveCc()"
                         class="dropAreaCc"></div>
                 </igx-chips-area>
             </div>

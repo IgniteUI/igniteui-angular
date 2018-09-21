@@ -850,6 +850,11 @@
         background: inherit;
     }
 
+    %grid-summaries-patch {
+        background: inherit;
+        position: relative;
+        z-index: 1;
+    }
 
     // Column moving
     %igx-grid__th-drop-indicator-left,

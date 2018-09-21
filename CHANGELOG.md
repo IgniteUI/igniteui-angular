@@ -3,6 +3,8 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
+-`igxGrid`:
+    - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
@@ -25,8 +27,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChip`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
 - `IgxChipArea`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
 - `IgxCombo`
     - Added the following directives for `TemplateRef` assignment for combo templates (item, footer, etc.):
         - Added `IgxComboItemDirective`. Use `[igxComboItem]` in markup to assing a TemplateRef to `combo.itemTemplate`.
@@ -37,13 +41,30 @@ All notable changes for each version of this project will be documented in this 
         - Added `IgxComboHeaderItemDirective`. Use `[igxComboHeaderItem]` in markup to assing a TemplateRef to `combo.headerItemTemplate`.
     - **Breaking change** Assigning templates with the following template ref variables is now deprecated in favor of the new directives:
             `#itemTemplate`, `#headerTemplate`, `#footerTemplate`, `#emptyTemplate`, `#addItemTemplate`, `#headerItemTemplate`.
+    - **Breaking change** `height` property is removed. In the future `IgxInputGroup` will expose an option that allows custom sizing and then `IgxCombo` will use the same functionality for proper styling and better consistency.
+
 - `IgxDropDown`
     - **Breaking change** `allowItemsFocus` default value is changed to `false`.
+    - Added `value` input to `IgxDropDownItemComponent` definition. The property allows data to be bound to a drop-down item so it can more easily be retrieved (e.g. on selection)
 - `igx-calendar`:
     - Introduced `disabledDates` property which allows a user to disable dates based on various rules: before or after a date, weekends, workdays, specific dates and ranges. The disabled dates cannot be selected and have a distinguishable style.
     - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
     - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
 
+## 6.1.5
+- **General**
+    - `IgxChip`
+        - Introduced event argument types to all `EventEmitter` `@Output`s.
+        - A chip can now be selected with the API with the new `selected` input. The `selected` input overrides the `selectable` input value.
+        - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - `IgxChipArea`
+        - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - `igxFor`
+        - Adding inertia scrolling for touch devices. This also affects the following components that virtualize their content via the igxFor - `igxGrid`, `igxCombo`.
+    - `igxGrid`
+        - Adding inertia scrolling for touch devices.
+    - `igxCombo`
+        - Adding inertia scrolling for touch devices. 
 ## 6.1.3
 - **General**
     - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.
@@ -186,7 +207,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxDropdown` component added
 
     ```html
-    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+    <igx-drop-down (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
         <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
                 {{ item.field }}
         </igx-drop-down-item>

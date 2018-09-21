@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, ElementRef, DebugElement } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './drop-down.component';
@@ -28,11 +28,11 @@ describe('IgxDropDown ', () => {
                 InputWithDropDownDirectiveComponent,
                 IgxDropDownInputTestComponent,
                 IgxDropDownImageTestComponent,
-                IgxDropDownTabsTestComponent
+                IgxDropDownTabsTestComponent,
+                DropDownWithValuesComponent
             ],
             imports: [
                 IgxDropDownModule,
-                BrowserAnimationsModule,
                 NoopAnimationsModule,
                 IgxToggleModule,
                 IgxTabsModule
@@ -47,73 +47,63 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             const button = fixture.debugElement.query(By.css('button')).nativeElement;
             const list = fixture.componentInstance.dropdown;
-            const listItems = list.items;
             let targetElement;
             const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
             expect(list).toBeDefined();
             expect(list.items.length).toEqual(4);
+
             button.click(mockObj);
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED))[0];
-                expect(currentItem.componentInstance.index).toEqual(0);
-                expect(list.collapsed).toEqual(false);
-                targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
-                expect(targetElement).toBeDefined();
-                targetElement.triggerEventHandler('keydown.ArrowDown', mockObj);
-                // targetElement.nativeElement.dispatchEvent(new KeyboardEvent('keydown', mockObj1));
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
-                expect(currentItem).toBeDefined();
-                expect(currentItem.componentInstance.index).toEqual(1);
-                expect(list.selectedItem).toBeFalsy();
-                targetElement.triggerEventHandler('keydown.Space', mockObj);
-                // targetElement.nativeElement.dispatchEvent(new KeyboardEvent('keydown', mockObj1));
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                fixture.detectChanges();
-                expect(list.selectedItem).toEqual(list.items[1]);
-                expect(list.collapsed).toEqual(true);
-                button.click(mockObj);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
-                const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED))[0];
-                targetElement.triggerEventHandler('keydown.ArrowDown', mockObj);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
-                const currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
-                targetElement.triggerEventHandler('keydown.Enter', mockObj);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.collapsed).toEqual(true);
-                expect(list.selectedItem).toEqual(list.items[2]);
-                button.click(mockObj);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.collapsed).toEqual(false);
-                fixture.detectChanges();
-                list.items[1].element.nativeElement.click(mockObj);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.selectedItem).toEqual(list.items[1]);
-                expect(list.collapsed).toEqual(true);
-            });
+            tick();
+            fixture.detectChanges();
+            let currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED))[0];
+            expect(currentItem.componentInstance.index).toEqual(0);
+            expect(list.collapsed).toEqual(false);
+
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            expect(targetElement).toBeDefined();
+
+            targetElement.triggerEventHandler('keydown.ArrowDown', mockObj);
+            tick();
+            fixture.detectChanges();
+            currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
+            expect(currentItem).toBeDefined();
+            expect(currentItem.componentInstance.index).toEqual(1);
+            expect(list.selectedItem).toBeFalsy();
+
+            targetElement.triggerEventHandler('keydown.Space', mockObj);
+            tick();
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items[1]);
+            expect(list.collapsed).toEqual(true);
+
+            button.click(mockObj);
+            tick();
+            fixture.detectChanges();
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED))[0];
+
+            targetElement.triggerEventHandler('keydown.ArrowDown', mockObj);
+            tick();
+            fixture.detectChanges();
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
+
+            targetElement.triggerEventHandler('keydown.Enter', mockObj);
+            tick();
+            fixture.detectChanges();
+            expect(list.collapsed).toEqual(true);
+            expect(list.selectedItem).toEqual(list.items[2]);
+
+            button.click(mockObj);
+            tick();
+            fixture.detectChanges();
+            expect(list.collapsed).toEqual(false);
+
+            list.items[1].element.nativeElement.click(mockObj);
+            tick();
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items[1]);
+            expect(list.collapsed).toEqual(true);
         }));
 
         it('should change the selected values indefinitely', fakeAsync(() => {
@@ -126,57 +116,43 @@ describe('IgxDropDown ', () => {
             const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
             expect(list).toBeDefined();
             expect(list.items.length).toEqual(15);
+
             button.click(mockObj);
-            // spyOn(list.items[0], 'onArrowDownKeyDown').and.callThrough();
-            // spyOn(list.items[1], 'onSpaceKeyDown').and.callThrough();
-            // spyOn(list.items[4], 'onEscapeKeyDown').and.callThrough();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
-                expect(currentItem.componentInstance.index).toEqual(0);
-                targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
-                targetElement.triggerEventHandler('keydown.ArrowDown', mockObj);
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
-                expect(currentItem).toBeDefined();
-                expect(currentItem.componentInstance.index).toEqual(1);
-                targetElement.triggerEventHandler('keydown.Space', mockObj);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.selectedItem).toEqual(listItems[1]);
-                document.getElementsByTagName('button')[1].click();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.selectedItem).toEqual(listItems[4]);
-                button.click();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
-                expect(currentItem).toBeDefined();
-                expect(currentItem.componentInstance.index).toEqual(4);
-                targetElement.triggerEventHandler('keydown.Escape', mockObj);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.collapsed).toEqual(true);
-                expect(list.selectedItem).toEqual(listItems[4]);
-                // expect(list.items[0].onArrowDownKeyDown).toHaveBeenCalledTimes(1);
-                // expect(list.items[1].onSpaceKeyDown).toHaveBeenCalledTimes(1);
-                // expect(list.items[4].onEscapeKeyDown).toHaveBeenCalledTimes(1);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                tick();
-                fixture.detectChanges();
-                expect(list.collapsed).toEqual(true);
-            });
+            tick();
+            fixture.detectChanges();
+            let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
+            expect(currentItem.componentInstance.index).toEqual(0);
+
+            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
+            targetElement.triggerEventHandler('keydown.ArrowDown', mockObj);
+            tick();
+            fixture.detectChanges();
+            currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
+            expect(currentItem).toBeDefined();
+            expect(currentItem.componentInstance.index).toEqual(1);
+
+            targetElement.triggerEventHandler('keydown.Space', mockObj);
+            tick();
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(listItems[1]);
+
+            document.getElementsByTagName('button')[1].click();
+            tick();
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(listItems[4]);
+
+            button.click();
+            tick();
+            fixture.detectChanges();
+            currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
+            expect(currentItem).toBeDefined();
+            expect(currentItem.componentInstance.index).toEqual(4);
+
+            targetElement.triggerEventHandler('keydown.Escape', mockObj);
+            tick();
+            fixture.detectChanges();
+            expect(list.collapsed).toEqual(true);
+            expect(list.selectedItem).toEqual(listItems[4]);
         }));
 
         it('Should navigate through the items using Up/Down/Home/End keys', fakeAsync(() => {
@@ -184,40 +160,38 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             const button = fixture.debugElement.query(By.css('button')).nativeElement;
             const list = fixture.componentInstance.dropdown;
-            const listItems = list.items;
             let targetElement;
             expect(list).toBeDefined();
             expect(list.items.length).toEqual(4);
+
             const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
             button.click();
             tick();
-
             fixture.detectChanges();
             let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
             targetElement.triggerEventHandler('keydown.ArrowDown', mockObj);
-
             tick();
             fixture.detectChanges();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem).toBeDefined();
             expect(currentItem.componentInstance.index).toEqual(1);
-            targetElement.triggerEventHandler('keydown.End', mockObj);
 
+            targetElement.triggerEventHandler('keydown.End', mockObj);
             tick();
             fixture.detectChanges();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem).toBeDefined();
             expect(currentItem.componentInstance.index).toEqual(3);
-            targetElement.triggerEventHandler('keydown.ArrowUp', mockObj);
 
+            targetElement.triggerEventHandler('keydown.ArrowUp', mockObj);
             tick();
             fixture.detectChanges();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem).toBeDefined();
             expect(currentItem.componentInstance.index).toEqual(2);
-            targetElement.triggerEventHandler('keydown.Home', mockObj);
 
+            targetElement.triggerEventHandler('keydown.Home', mockObj);
             tick();
             fixture.detectChanges();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
@@ -228,30 +202,22 @@ describe('IgxDropDown ', () => {
         it('Should support disabled items', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestDisabledAnyComponent);
             fixture.detectChanges();
+
             const button = fixture.debugElement.query(By.css('button')).nativeElement;
             const list = fixture.componentInstance.dropdownDisabledAny;
-            const listItems = list.items;
             expect(list).toBeDefined();
             expect(list.items.length).toEqual(13);
+
             const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
             button.click();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DISABLED))[0];
-                expect(currentItem.componentInstance.index).toEqual(2);
-                currentItem.triggerEventHandler('click', mockObj);
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.queryAll(By.css('.igx-drop-down__item'))[4];
-                expect(currentItem.componentInstance.index).toEqual(4);
-                currentItem.triggerEventHandler('click', mockObj);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.selectedItem).toEqual(list.items[4]);
-            });
+            tick();
+            fixture.detectChanges();
+            const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DISABLED))[0];
+            expect(currentItem.componentInstance.index).toEqual(2);
+
+            currentItem.triggerEventHandler('click', mockObj);
+            fixture.detectChanges();
+            expect(list.selectedItem).toBeNull();
         }));
 
         it('Should support header items', fakeAsync(() => {
@@ -259,38 +225,30 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             const button = fixture.debugElement.query(By.css('button')).nativeElement;
             const list = fixture.componentInstance.dropdownDisabledAny;
-            const listItems = list.items;
             const headerItems = list.headers;
             expect(list).toBeDefined();
             expect(list.items.length).toEqual(13);
+
             const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
             button.click();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADER))[0];
-                expect(currentItem).toBeDefined();
-                expect(currentItem.componentInstance).toEqual(headerItems[0]);
-                currentItem.triggerEventHandler('click', mockObj);
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                const currentItem = fixture.debugElement.queryAll(By.css('.igx-drop-down__item'))[1];
-                currentItem.triggerEventHandler('click', mockObj);
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.selectedItem).toEqual(list.items[1]);
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.collapsed).toEqual(true);
-            });
+            tick();
+            fixture.detectChanges();
+            const firstHeaderItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADER))[0];
+            expect(firstHeaderItem).toBeDefined();
+            expect(firstHeaderItem.componentInstance).toEqual(headerItems[0]);
+
+            firstHeaderItem.triggerEventHandler('click', mockObj);
+            tick();
+            fixture.detectChanges();
+
+            //  clicking on header item should not close the drop down
+            expect(list.collapsed).toEqual(false);
         }));
 
         it('Should notify when selection has changed', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             fixture.detectChanges();
+
             const button = fixture.debugElement.query(By.css('button')).nativeElement;
             const list = fixture.componentInstance.dropdown;
             const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
@@ -299,20 +257,19 @@ describe('IgxDropDown ', () => {
             spyOn(fixture.componentInstance, 'onSelection');
             expect(list).toBeDefined();
             expect(list.items.length).toEqual(4);
+
             button.click(mockObj);
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const lastListItem = list.items[3].element.nativeElement;
-                lastListItem.click({});
-                tick();
-                return fixture.whenStable();
-            }).then(() => {
-                fixture.detectChanges();
-                expect(list.selectedItem).toEqual(list.items[3]);
-                expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
-                expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
-                expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
-            });
+            tick();
+            fixture.detectChanges();
+            const lastListItem = list.items[3].element.nativeElement;
+
+            lastListItem.click({});
+            tick();
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items[3]);
+            expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
         }));
 
         it('Should persist selection through scrolling', fakeAsync(() => {
@@ -951,6 +908,7 @@ describe('IgxDropDown ', () => {
             button.click();
             igxDropDown.open();
             tick();
+            fixture.detectChanges();
 
             expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(116);
         }));
@@ -1027,6 +985,18 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
 
             expect(componentInstance.dropdownDisabledAny.selectedItem.index).toEqual(2);
+        }));
+
+        it('Should properly handle IgxDropDownItem value', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DropDownWithValuesComponent);
+            const dropdown = fixture.componentInstance.dropdown;
+            dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            dropdown.selectItem(dropdown.items[2]);
+            tick();
+            fixture.detectChanges();
+            expect(dropdown.selectedItem.value).toEqual({ name: 'Product 3', id: 3 });
         }));
     });
 });
@@ -1440,5 +1410,25 @@ class InputWithDropDownDirectiveComponent {
         { field: 'Nav2' },
         { field: 'Nav3' },
         { field: 'Nav4' }
+    ];
+}
+
+@Component({
+    template: `
+    <igx-drop-down #dropdownElement [width]="'400px'" [height]="'400px'">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class DropDownWithValuesComponent {
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropdown: IgxDropDownComponent;
+
+    public items: any[] = [
+        { name: 'Product 1', id: 1 },
+        { name: 'Product 2', id: 2 },
+        { name: 'Product 3', id: 3 },
+        { name: 'Product 4', id: 3 },
     ];
 }

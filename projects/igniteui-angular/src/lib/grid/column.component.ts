@@ -194,13 +194,6 @@ export class IgxColumnComponent implements AfterContentInit {
                     this.grid.summariesHeight = 0;
                 }
 
-                if (!value) {
-                    this.grid.columnsWithNoSetWidths.push(this);
-                } else if (this.grid.columnsWithNoSetWidths.indexOf(this) !== -1) {
-                    const colIndex = this.grid.columnsWithNoSetWidths.indexOf(this);
-                    this.grid.columnsWithNoSetWidths.splice(colIndex, 1);
-                }
-
                 this.grid.reflow();
             }
         }
@@ -252,7 +245,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public get width(): string {
-        return this._width;
+        return this.widthSetByUser ? this._width : this.defaultWidth;
     }
     /**
      * Sets the `width` of the column.
@@ -262,13 +255,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     public set width(value: string) {
-        this._width = value;
-
-        if (this.grid && this.grid.columnsWithNoSetWidths !== null) {
-            const index = this.grid.columnsWithNoSetWidths.indexOf(this);
-            if (index !== -1) {
-                this.grid.columnsWithNoSetWidths.splice(index, 1);
-            }
+        if (value) {
+            this.widthSetByUser = true;
+            this._width = value;
         }
     }
     /**
@@ -309,17 +298,23 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public headerClasses = '';
     /**
-     * Sets/gets the class selector of the column cells.
+     * Sets a conditional class selector of the column cells.
+     * Accepts an object literal, containing key-value pairs,
+     * where the key is the name of the CSS class, while the
+     * value is either a callback function that returns a boolean,
+     * or boolean, like so:
      * ```typescript
-     * let columnCellsClass = this.column.cellClasses;
+     * callback = (rowData, columnKey) => { return rowData[columnKey] > 6; }
+     * cellClasses = { 'className' : this.callback };
      * ```
      * ```html
-     * <igx-column [cellClasses] = "'column-cell'"></igx-column>
+     * <igx-column [cellClasses] = "cellClasses"></igx-column>
+     * <igx-column [cellClasses] = "{'class1' : true }"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public cellClasses = '';
+    public cellClasses: any;
     /**
      * Gets the column index.
      * ```typescript
@@ -665,6 +660,17 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         return lvl;
     }
+
+    /**
+     * hidden
+     */
+    public defaultWidth: string;
+
+    /**
+     * hidden
+     */
+    public widthSetByUser: boolean;
+
     /**
      * Returns the filteringExpressionsTree of the column.
      * ```typescript

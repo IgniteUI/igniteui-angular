@@ -16,10 +16,7 @@
     top: 0
     left: 0
     width: 100%
-    height: $TOOLBAR_HEIGHT
     color: $TOOLBAR_TEXT_COLOR
-    background: $TOOLBAR_COLOR
-    border-bottom: 1px solid $COLOR_PANEL_DIVIDER
 
     a
         color: $TOOLBAR_TEXT_COLOR
@@ -46,12 +43,12 @@
             width: 100%
 
 %TSD_WIDGET_ICON
-    &:before
+    &::before
         content: ''
         display: inline-block
         width: 40px
         height: 40px
-        margin: 0 -8px 0 0
+        margin: 0 -5px 0 0
         background-image: url(../images/widgets.png)
         background-repeat: no-repeat
         text-indent: -1024px
@@ -61,18 +58,27 @@
             background-image: url(../images/widgets@2x.png)
             background-size: 320px 40px
 
+%TSD_WIDGET_ICON-MATERIAL
+    &::before
+        display: inline-flex
+        content: ''
+        justify-content: center
+        align-items: center
+        font-family: 'Material Icons'
+        font-size: 18px
+        width: 24px
+        height: 14px
+        margin-right: 4px
+        color: #09f
+
 .tsd-widget
-    @extend %TSD_WIDGET_ICON
+    @extend %TSD_WIDGET_ICON-MATERIAL
     display: inline-block
     overflow: hidden
-    opacity: 0.6
-    height: $TOOLBAR_HEIGHT
-    transition: opacity 0.1s, background-color 0.2s
-    vertical-align: bottom
+    font-size: 14px
     cursor: pointer
-
-    &:hover
-        opacity: 0.8
+    user-select: none
+    padding: 5px 0
 
     &.active
         opacity: 1
@@ -101,30 +107,30 @@
             display: inline-block
 
     input[type=checkbox] + &:before
-        background-position: -120px 0
+        color: #484848
+        content: '\e835'
 
     input[type=checkbox]:checked + &:before
-        background-position: -160px 0
+        color: #09f
+        content: '\e834'
 
 .tsd-select
     position: relative
     display: inline-block
-    height: $TOOLBAR_HEIGHT
     transition: opacity 0.1s, background-color 0.2s
     vertical-align: bottom
     cursor: pointer
+    z-index: 2
 
     .tsd-select-label
-        @extend %TSD_WIDGET_ICON
-        opacity: 0.6
-        transition: opacity 0.2s
-
-        &:before
-            background-position: -240px 0
+        @extend %TSD_WIDGET_ICON-MATERIAL
+        padding: 5px 0
+        &::before
+            content: '\e8f4'
 
     &.active
         .tsd-select-label
-            opacity: 0.8
+            position: relative
 
         .tsd-select-list
             visibility: visible
@@ -134,22 +140,20 @@
     .tsd-select-list
         position: absolute
         visibility: hidden
-        top: $TOOLBAR_HEIGHT
+        top: 0
         left: 0
+        right: 0
         margin: 0
         padding: 0
         opacity: 0
         list-style: none
-        box-shadow: 0 0 4px rgba(#000, 0.25)
         transition: visibility 0s 0.2s, opacity 0.2s
+        border: 1px solid #dedede
 
         li
-            @extend %TSD_WIDGET_ICON
-            padding: 0 20px 0 0
+            @extend %TSD_WIDGET_ICON-MATERIAL
+            padding: 5px 0
             background-color: $COLOR_BACKGROUND
-
-            &:before
-                background-position: 40px 0
 
             &:nth-child(even)
                 background-color: $COLOR_PANEL
@@ -158,7 +162,8 @@
                 background-color: $COLOR_PANEL_DIVIDER
 
             &.selected:before
-                background-position: -200px 0
+                font-size: 14px
+                content: '\e5ca'
 
     +size-xs-sm
         .tsd-select-list
