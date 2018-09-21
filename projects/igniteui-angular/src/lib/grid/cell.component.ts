@@ -277,21 +277,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     get inEditMode(): boolean {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell) {
-            if (this.cellID.rowID === editableCell.cellID.rowID &&
-                this.cellID.columnID === editableCell.cellID.columnID) {
-                    if (this.grid.rowEditable) {
-                        this.row.inEditMode = true;
-                    }
-                    return true;
-                } else {
-                    /*if (this.grid.rowEditable && this.row.inEditMode) {
-                        this.row.inEditMode = false;
-                    }*/
-                }
+            return this.cellID.rowID === editableCell.cellID.rowID &&
+                this.cellID.columnID === editableCell.cellID.columnID;
         } else {
-            /*if (this.grid.rowEditable) {
-                this.row.inEditMode = false;
-            }*/
             return false;
         }
     }
@@ -310,14 +298,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (this.highlight && this.grid.lastSearchInfo.searchText) {
                 this.highlight.observe();
             }
-            if (this.grid.rowEditable) {
-                this.row.inEditMode = true;
-            }
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
-            if (this.grid.rowEditable) {
-                this.row.inEditMode = false;
-            }
         }
 
         this.cdr.detectChanges();
