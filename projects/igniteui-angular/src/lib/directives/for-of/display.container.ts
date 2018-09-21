@@ -20,6 +20,12 @@ export class DisplayContainerComponent {
     @HostBinding('class.igx-display-container--inactive')
     public notVirtual = true;
 
+    @HostBinding('style.width.px')
+    public width = null;
+
+    @HostBinding('style.height.px')
+    public height = null;
+
     public scrollContainer;
 
     constructor(public cdr: ChangeDetectorRef, public _viewContainer: ViewContainerRef) { }

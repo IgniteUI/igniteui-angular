@@ -103,6 +103,18 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
     @Input()
     public igxForItemSize: any;
 
+    @Input()
+    public get igxForDisplayContainerWidth() {
+        return this.dc ? this.dc.instance.width : null;
+    }
+
+    public set igxForDisplayContainerWidth(value: number) {
+        if (this.dc) {
+            this.dc.instance.width = value;
+            this._recalcScrollBarSize();
+        }
+    }
+
     /**
      * @hidden
      */
@@ -252,7 +264,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         }
         if (this.igxForOf && this.igxForOf.length) {
             // TODO Remove igxForContainerSize
-            this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize < this.igxForOf.length;
+            this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize > this.igxForOf.length;
             if (this.igxForScrollOrientation === 'horizontal') {
                 totalWidth = this.initHCache(this.igxForOf);
                 this.hScroll = this.getElement(vc, 'igx-horizontal-virtual-helper');
@@ -260,7 +272,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
                     this.state.startIndex = this.getHorizontalIndexAt(this.hScroll.scrollLeft, this.hCache, 0);
                 }
             }
-            this.state.chunkSize = this.igxForVisibleElements + 1;
+            this.state.chunkSize = this.igxForVisibleElements;
             for (let i = 0; i < this.state.chunkSize && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
@@ -714,7 +726,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      */
     protected _applyChanges(changes: IterableChanges<T>) {
         this.applyChunkSizeChange();
-        this._recalcScrollBarSize();
+        //this._recalcScrollBarSize();
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this.state.startIndex;
@@ -801,7 +813,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
 
     private _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
-        this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize < count;
+        this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize > count;
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = /*this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;*/
                 this.initHCache(this.igxForOf);
@@ -829,7 +841,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
         this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
         this.applyChunkSizeChange();
-        this._recalcScrollBarSize();
+        //this._recalcScrollBarSize();
         if (this.hCache && this.hScroll.scrollLeft !== 0) {
             // Updating horizontal chunks and offsets based on the new scrollLeft
             const scrollOffset = this.fixedUpdateAllCols(this.hScroll.scrollLeft);
@@ -883,7 +895,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
     private applyChunkSizeChange() {
-        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this.igxForVisibleElements + 1;
+        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this.igxForVisibleElements;
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
@@ -895,6 +907,8 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
                 this.removeLastElem();
             }
         }
+        this.state.chunkSize = chunkSize;
+        this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize > this.igxForOf.length;
     }
 
     private _updateScrollOffset() {
