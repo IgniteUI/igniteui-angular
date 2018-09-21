@@ -6,7 +6,10 @@ All notable changes for each version of this project will be documented in this 
 -`igxGrid`:
 - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
-- `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
+- `igxOverlay`:
+    - `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
+    - when `show` and `hide` methods are called `onAnimation` event fires. In the arguments of this event there is a reference to the `animationPlayer`, `animationType` (either `open` or `close`) and to the overlay id.
+    - if you call `show`/`hide` methods of overlay, while opening/closing animation is still ongoing, the animation will stop and respective open/close animation will start.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
 - `IgxOverlayOutlet` directive introduced to mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
 - `igxButtonGroup`
