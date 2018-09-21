@@ -552,7 +552,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
     */
     @Input()
-    public itemsMaxHeight = 320;
+    public itemsMaxHeight = 480;
 
     /**
      * Configures the drop down list width
@@ -584,7 +584,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public itemHeight = 32;
+    public itemHeight = 48;
 
     /**
      * @hidden

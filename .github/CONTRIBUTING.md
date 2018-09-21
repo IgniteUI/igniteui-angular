@@ -56,7 +56,7 @@ When logging issue you should assign `severity:` label. If you cannot determine 
 
 ### Triaging
 
-Before release a triaging is done. Issues that need to be fixed for the release are makred with `triage: blocking` status.
+Before release a triaging is done. Issues that need to be fixed for the release are marked with `triage: blocking` status.
 
 ## Testing - applicable to pull requests
 1. `status: awaiting-test` this is the initial status of pull requests. If you're performing the pull request, please place this status on it. Pull requests are accepted if and only if all status checks pass, review is performed, and the pull request has been tested and contains `status: verified`.
@@ -122,6 +122,14 @@ In order to contribute code to a new feature, you need to follow these guideline
 4. Make sure all static code analysis and tests pass before opening a pull request
 5. Reference the issue you've been working on in your commit message and pull request title/description.
 6. Don't forget to make the necessary status updates, as described in the workflow section.
+
+# Breaking changes and migrations
+If the bug fix or new feature development requires changes to released public API or behavior in a way that'll njo longer be compatible with an existing user code base:
+
+1. Describe in the appropriate section in the [CHANGELOG.md](https://github.com/IgniteUI/igniteui-angular/blob/master/CHANGELOG.md)
+2. Add a `BREAKING CHANGE:` section to the commit message body or footer. See https://www.conventionalcommits.org
+3. Check if the change can be migrated by `ng update` schematics and add to the project migrations. See [Update Migrations wiki](https://github.com/IgniteUI/igniteui-angular/wiki/Update-Migrations) for available functionality and instructions.
+
 
 # Testing a PR
 In order to test a pull request that is awaiting test, perform the following actions.
