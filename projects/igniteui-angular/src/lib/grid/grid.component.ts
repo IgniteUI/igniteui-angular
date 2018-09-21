@@ -4660,19 +4660,30 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public updateRowTransaction(event) {
-        const row = this.rowInEditMode;
+        //  cache rowID and rowIndex. As soon as we call gridAPI.submitValue
+        //  this.cellInEditMode is gone.
+        const rowID = this.cellInEditMode.cellID.rowID;
+        const rowIndex = this.cellInEditMode.cellID.rowIndex;
+        //  we should submit the value before add the transaction and close the row edit template
+        this.gridAPI.submit_value(this.id);
+        // const row = this.rowInEditMode;
         this.transactions.add(
             {
-                id: row.rowID,
+                id: rowID,
                 type: TransactionType.UPDATE,
-                newValue: this.transactions.getPending(row.rowID).value
+                newValue: this.transactions.getPendingState(rowID).value
             },
-            this.data[row.index]);
-            this.cellInEditMode.inEditMode = false;
+            this.data[rowIndex]);
+            //  the call to submit_value sets inEditMode to false and we do not need next call
+            //  this.cellInEditMode.inEditMode = false;
+
+            //  reset transactions for this row. Otherwise next time you edit it you
+            //  will push old changes to transaction log
+            this.transactions.resetPending();
     }
 
     public resetRowTransaction(event) {
-        this.transactions.resetPending(this.rowInEditMode.rowID);
+        this.transactions.resetPending();
         this.cellInEditMode.inEditMode = false;
     }
 

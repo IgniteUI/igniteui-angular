@@ -1,25 +1,22 @@
-import { ITransactionService, ITransaction, IState, TransactionType } from './utilities';
+import { ITransaction, IState } from './utilities';
 import { IgxTransactionBaseService } from './transaction-base';
 
 export class IgxPendingTransactionService extends IgxTransactionBaseService {
     private _pendingTransactions: ITransaction[] = [];
+    private _pendingStates: Map<any, IState> = new Map();
 
     public addPending(transaction: ITransaction, recordRef?: any) {
-        this.updateCurrentState(transaction, recordRef);
+        this.updateState(this._pendingStates, transaction, recordRef);
         this._pendingTransactions.push(transaction);
         return true;
     }
 
-    public getPending(rowId): IState {
-        return this.aggregatedState().get(rowId);
+    public getPendingState(rowId): IState {
+        return this._pendingStates.get(rowId);
     }
 
-    public resetPending(rowID) {
-        this.removeTransactionFromCurrentState(rowID);
+    public resetPending() {
         this._pendingTransactions = [];
-    }
-
-    public removeTransactionFromCurrentState(rowID) {
-        this._states.delete(rowID);
+        this._pendingStates = new Map();
     }
 }
