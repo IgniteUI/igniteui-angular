@@ -25,11 +25,11 @@ export class IgxIconComponent implements OnInit {
     @ViewChild('noLigature', { read: TemplateRef })
     private noLigature: TemplateRef<HTMLElement>;
 
-    @ViewChild('implicitLigature', { read: TemplateRef })
-    private implicitLigature: TemplateRef<HTMLElement>;
-
     @ViewChild('explicitLigature', { read: TemplateRef })
     private explicitLigature: TemplateRef<HTMLElement>;
+
+    @ViewChild('svgImage', { read: TemplateRef })
+    private svgImage: TemplateRef<HTMLElement>;
 
     /**
      *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
@@ -60,7 +60,7 @@ export class IgxIconComponent implements OnInit {
     public ariaHidden = true;
 
     /**
-    *    An @Input property that sets the value of the `id` attribute.
+    *  An @Input property that sets the value of the `id` attribute.
     *```html
     *<igx-icon id="igx-icon-1" fontSet="material" name="settings" color="blue" [isActive]="false"></igx-icon>
     *```
@@ -70,7 +70,7 @@ export class IgxIconComponent implements OnInit {
     public id = `igx-icon-${NEXT_ID++}`;
 
     /**
-    *    An @Input property that sets the value of the `fontSet`. By default it's "material".
+    *  An @Input property that sets the value of the `fontSet`. By default it's "material".
     *```html
     *<igx-icon fontSet="material" name="settings" color="blue" [isActive]="false"></igx-icon>
     *```
@@ -79,7 +79,7 @@ export class IgxIconComponent implements OnInit {
     public font: string;
 
     /**
-    *    An @Input property that allows you to disable the `active` property. By default it's applied.
+    *  An @Input property that allows you to disable the `active` property. By default it's applied.
     *```html
     *<igx-icon [isActive]="false" fontSet="material" name="settings" color="blue"></igx-icon>
     *```
@@ -88,7 +88,7 @@ export class IgxIconComponent implements OnInit {
     public active = true;
 
     /**
-    *    An @Input property that allows you to change the `iconColor` of the icon.
+    *  An @Input property that allows you to change the `iconColor` of the icon.
     *```html
     *<igx-icon color="blue" [isActive]="true" fontSet="material" name="settings" ></igx-icon>
     *```
@@ -97,26 +97,14 @@ export class IgxIconComponent implements OnInit {
     public iconColor: string;
 
     /**
-    *    An @Input property that allows you to change the `iconName` of the icon.
-    *    The `iconName` can be set using the `name`.
-    *    You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
+    *  An @Input property that allows you to set the `iconName` of the icon.
+    *  The `iconName` can be set using the `name` property.
     *```html
     *<igx-icon name="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
     *```
     */
     @Input('name')
     public iconName: string;
-
-    /**
-    *    An @Input property that allows you to change the `glyphName` of the icon.
-    *    The `glyphName` can be set using `iconName`.
-    *    You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
-    *```html
-    *<igx-icon iconName="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
-    *```
-    */
-    @Input('iconName')
-    public glyphName: string;
 
     /**
      * An ElementRef property of the `igx-icon` component.
@@ -133,12 +121,11 @@ export class IgxIconComponent implements OnInit {
      * @hidden
      */
     ngOnInit() {
-        this.checkInputProps();
         this.updateIconClass();
     }
 
-        /**
-     *   An accessor that returns the value of the font property.
+    /**
+     *  An accessor that returns the value of the font property.
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -152,7 +139,7 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *   An accessor that returns the value of the active property.
+     *  An accessor that returns the value of the active property.
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -166,7 +153,7 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *   An accessor that returns inactive property.
+     *  An accessor that returns inactive property.
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -181,7 +168,7 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *   An accessor that returns the opposite value of the `iconColor` property.
+     *  An accessor that returns the opposite value of the `iconColor` property.
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -196,7 +183,7 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *   An accessor that returns the value of the iconName property.
+     *  An accessor that returns the value of the iconName property.
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -210,7 +197,26 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *   An accessor that returns a TemplateRef to explicit, implicit or no ligature.
+     *  An accessor that returns the key of the SVG image.
+     *  The key consists of the fontSet and the iconName separated by underscore.
+     *```typescript
+     *@ViewChild("MyIcon")
+     *public icon: IgxIconComponent;
+     *ngAfterViewInit() {
+     *    let svgKey = this.icon.getSvgKey;
+     * }
+     * ```
+     */
+    get getSvgKey(): string {
+        if (this.iconService.isSvgIconCached(this.iconName, this.font)) {
+            return '#' + this.iconService.getSvgIconKey(this.iconName, this.font);
+        }
+
+        return null;
+    }
+
+    /**
+     *   An accessor that returns a TemplateRef to explicit, svg or no ligature.
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -220,31 +226,26 @@ export class IgxIconComponent implements OnInit {
      * ```
      */
     get template(): TemplateRef<HTMLElement> {
-        if (this.glyphName) {
-            return this.noLigature;
-        }
-
         if (this.iconName) {
-            return this.implicitLigature;
+            if (this.iconService.isSvgIconCached(this.iconName, this.font)) {
+                return this.svgImage;
+            }
+
+            this.noLigature;
         }
 
         return this.explicitLigature;
     }
 
-    private checkInputProps() {
-        if (this.iconName && this.glyphName) {
-            throw new Error(
-                'You can provide either ligature `name` or glyph `iconName`, but not both at the same time.'
-            );
-        }
-    }
-
+    /**
+     * @hidden
+     */
     private updateIconClass() {
         const className = this.iconService.fontSetClassName(this.font);
         this.el.nativeElement.classList.add(className);
 
-        if (this.glyphName) {
-            this.el.nativeElement.classList.add(this.glyphName);
+        if (this.iconName && !this.iconService.isSvgIconCached(this.iconName, this.font)) {
+            this.el.nativeElement.classList.add(this.iconName);
         }
     }
 }
