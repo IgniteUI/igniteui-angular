@@ -1,0 +1,52 @@
+<div #container class="sample-wrapper">
+    <app-page-header title="Overlay animation sample" description="This sample demonstrates how animation of igxOverlay works."></app-page-header>
+    <section class="sample-content">
+        <igx-avatar id="audi" initials="BS" size="large" bgColor="#bb0a30" color="#b6b1a9" (mouseenter)="mouseenter($event)"
+            (mouseleave)="mouseleave($event)">
+        </igx-avatar>
+        <igx-avatar id="bmw" initials="HK" size="large" bgColor="#009ada" color="fff" (mouseenter)="mouseenter($event)"
+            (mouseleave)="mouseleave($event)">
+        </igx-avatar>
+        <igx-avatar id="mercedes" initials="DZ" size="large" bgColor="#black" color="fff" (mouseenter)="mouseenter($event)"
+            (mouseleave)="mouseleave($event)">
+        </igx-avatar>
+    </section>
+    <div igxToggle #audiToggle="toggle" style="max-width: 400px; min-width:250px;">
+        <igx-card>
+            <igx-card-header>
+                <h3 class="igx-card-header__title">Brad Stanley</h3>
+                <h5 class="igx-card-header__subtitle">Audi AG</h5>
+            </igx-card-header>
+            <igx-card-content>
+                <p class="igx-card-content__text">Brad Stanley (born 17 March 1963 in Titting, Germany) is a German
+                    business executive and chairman of the Vorstand (CEO) of Audi AG.</p>
+            </igx-card-content>
+        </igx-card>
+    </div>
+    <div igxToggle #bmwToggle="toggle" style="max-width: 400px; min-width:250px;">
+        <igx-card>
+            <igx-card-header>
+                <h3 class="igx-card-header__title">Harald Krüger</h3>
+                <h5 class="igx-card-header__subtitle">BMW AG</h5>
+            </igx-card-header>
+            <igx-card-content>
+                <p class="igx-card-content__text">Harald Krüger (born 13 October 1965 in Freiburg im Breisgau, West
+                    Germany)
+                    is the current chairman of the board of management (CEO) for BMW.</p>
+            </igx-card-content>
+        </igx-card>
+    </div>
+    <div igxToggle #mercedesToggle="toggle" style="max-width: 400px; min-width:250px;">
+        <igx-card>
+            <igx-card-header>
+                <h3 class="igx-card-header__title">Dieter Zetsche</h3>
+                <h5 class="igx-card-header__subtitle">Daimler AG</h5>
+            </igx-card-header>
+            <igx-card-content>
+                <p class="igx-card-content__text">Harald Krüger (born 13 October 1965 in Freiburg im Breisgau, West
+                    Germany)
+                    is the current chairman of the board of management (CEO) for BMW.</p>
+            </igx-card-content>
+        </igx-card>
+    </div>
+</div>

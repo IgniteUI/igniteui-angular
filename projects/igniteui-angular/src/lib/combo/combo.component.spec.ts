@@ -9,7 +9,7 @@ import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -59,13 +59,15 @@ describe('igxCombo', () => {
                 IgxComboEmptyTestComponent,
                 IgxComboInContainerTestComponent,
                 IgxComboInContainerFixedWidthComponent,
-                IgxComboFormComponent
+                IgxComboFormComponent,
+                SimpleBindComboComponent
             ],
             imports: [
                 IgxComboModule,
                 NoopAnimationsModule,
                 IgxToggleModule,
                 ReactiveFormsModule,
+                FormsModule
             ]
         }).compileComponents();
     }));
@@ -1626,19 +1628,19 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.collapsed).toBeFalsy();
             // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
-            expect(combo.itemHeight).toEqual(32); // Default value for itemHeight
-            expect(combo.itemsMaxHeight).toEqual(320); // Default value for itemsMaxHeight
+            expect(combo.itemHeight).toEqual(48); // Default value for itemHeight
+            expect(combo.itemsMaxHeight).toEqual(480); // Default value for itemsMaxHeight
             const dropdownItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const dropdownList = fix.debugElement.query(By.css('.' + CSS_CLASS_CONTENT));
-            expect(dropdownList.nativeElement.clientHeight).toEqual(320);
+            expect(dropdownList.nativeElement.clientHeight).toEqual(480);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemHeight = 48;
             tick();
             fix.detectChanges();
             expect(combo.itemHeight).toEqual(48);
-            expect(combo.itemsMaxHeight).toEqual(320);
-            expect(dropdownList.nativeElement.clientHeight).toEqual(320);
+            expect(combo.itemsMaxHeight).toEqual(480);
+            expect(dropdownList.nativeElement.clientHeight).toEqual(480);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemsMaxHeight = 438;
@@ -2981,6 +2983,22 @@ describe('igxCombo', () => {
             expect(form.status).toEqual('VALID');
             fix.debugElement.query(By.css('button')).nativeElement.click();
         });
+
+        it('Should properly bind to values when used as a form control wihtout valueKey', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleBindComboComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            const data = fixture.componentInstance.items;
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            // tslint:disable-next-line:no-debugger
+            debugger;
+            expect(combo.selectedItems()).toEqual(fixture.componentInstance.comboSelectedItems);
+            combo.selectItems([...data].splice(1, 3), true);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.comboSelectedItems).toEqual([...data].splice(1, 3));
+        }));
     });
 });
 
@@ -3522,5 +3540,20 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 
     ngOnDestroy() {
         this.cdr.detach();
+    }
+}
+
+@Component({
+    template: `<igx-combo [(ngModel)]="comboSelectedItems" [data]="items"></igx-combo>`
+})
+export class SimpleBindComboComponent implements OnInit {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent })
+    public combo: IgxComboComponent;
+    public items: Array<any>;
+    public comboSelectedItems: Array<any>;
+
+    ngOnInit() {
+        this.items = ['One', 'Two', 'Three', 'Four', 'Five'];
+        this.comboSelectedItems = ['One', 'Two'];
     }
 }
