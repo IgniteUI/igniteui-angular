@@ -196,6 +196,11 @@ export class AppComponent implements OnInit {
             name: 'Overlay'
         },
         {
+            link: '/overlay-animation',
+            icon: 'overlay_animation',
+            name: 'Overlay Animation'
+        },
+        {
             link: '/progressbar',
             icon: 'poll',
             name: 'Progress Indicators'

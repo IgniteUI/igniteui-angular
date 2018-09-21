@@ -38,8 +38,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChip`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
 - `IgxChipArea`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
 - `IgxCombo`
     - Added the following directives for `TemplateRef` assignment for combo templates (item, footer, etc.):
         - Added `IgxComboItemDirective`. Use `[igxComboItem]` in markup to assing a TemplateRef to `combo.itemTemplate`.
