@@ -28,6 +28,7 @@
     "gulp-postcss": "^8.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.1",
+    "gulp-typescript": "^5.0.0-alpha.3",
     "gulp-uglify": "^3.0.1",
     "gulp-util": "^3.0.8",
     "imagemin-pngcrush": "^5.1.0",

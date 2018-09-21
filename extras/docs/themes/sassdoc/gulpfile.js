@@ -7,6 +7,7 @@ var uglify = require('gulp-uglify');
 var cache = require('gulp-cached');
 var rename = require('gulp-rename');
 var gutil = require('gulp-util');
+var ts = require('gulp-typescript');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
@@ -28,6 +29,8 @@ var project = function () {
     args.unshift(projectPath);
     return path.resolve.apply(path, args);
 };
+
+var tsProject = ts.createProject('tsconfig.json');
 
 // Theme and project specific paths.
 var dirs = {
@@ -56,6 +59,13 @@ gulp.task('styles', function () {
         .pipe(gulp.dest('assets/css'));
 });
 
+gulp.task('scripts', function () {
+    var tsResult = gulp.src('typescript/**/*.ts')
+        .pipe(tsProject());
+
+
+    return tsResult.js.pipe(gulp.dest('./'));
+});
 
 gulp.task('browser-sync', function () {
     browserSync({
@@ -124,10 +134,11 @@ gulp.task('dumpCSS', ['styles'], function () {
 
 // Development task.
 // While working on a theme.
-gulp.task('develop', ['compile', 'styles', 'browser-sync'], function () {
+gulp.task('develop', ['compile', 'styles', 'scripts', 'browser-sync'], function () {
     gulp.watch('scss/**/*.scss', ['styles', 'dumpCSS']);
     gulp.watch('assets/js/**/*.js', ['dumpJS']);
     gulp.watch('views/**/*.{handlebars,hbs}', ['compile']);
+    gulp.watch('typescript/**/*.ts', ['scripts']);
 });
 
 
