@@ -52,6 +52,7 @@ import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxGridFilteringRowComponent } from './grid.filtering-row.component';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -124,6 +125,12 @@ export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
     cancel: boolean;
+}
+
+export interface IFilterInfo {
+    isFilterRowVisible: boolean;
+    filteredColumn: IgxColumnComponent;
+    selectedExpression: IFilteringExpression;
 }
 
 /**
@@ -858,6 +865,35 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Input()
     public columnPinningTitle = '';
+
+    /**
+     * Returns if the filtering is enabled.
+     * ```typescript
+     *  let filtering = this.grid.allowFiltering;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    get allowFiltering() {
+        return this._allowFiltering;
+    }
+
+    /**
+     * Sets if the filtering is enabled.
+     * By default it's disabled.
+     * ```html
+     * <igx-grid #grid [data]="localData" [allowFiltering]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    set allowFiltering(value) {
+        if (this._allowFiltering !== value) {
+            this._allowFiltering = value;
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+            }
+        }
+    }
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
@@ -1889,6 +1925,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
+    public filterInfo: IFilterInfo = {
+        isFilterRowVisible: false,
+        filteredColumn: null,
+        selectedExpression: null
+    }
+
+    /**
+     * @hidden
+     */
     protected destroy$ = new Subject<boolean>();
 
     /**
@@ -1959,6 +2004,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected _columnPinning = false;
+    protected _allowFiltering = false;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;

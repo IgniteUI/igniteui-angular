@@ -30,6 +30,7 @@ import {
 } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
+import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -111,17 +112,17 @@ export class IgxColumnComponent implements AfterContentInit {
     public editable = false;
     /**
      * Sets/gets whether the column is filterable.
-     * Default value is `false`.
+     * Default value is `true`.
      * ```typescript
      * let isFilterable = this.column.filterable;
      * ```
      * ```html
-     * <igx-column [filterable] = "true"></igx-column>
+     * <igx-column [filterable] = "false"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public filterable = false;
+    public filterable = true;
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
@@ -665,6 +666,16 @@ export class IgxColumnComponent implements AfterContentInit {
         return lvl;
     }
     /**
+     * Returns the filteringExpressionsTree of the column.
+     * ```typescript
+     * let tree =  this.column.filteringExpressionsTree;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get filteringExpressionsTree(): FilteringExpressionsTree {
+        return this.grid.filteringExpressionsTree.find(this.field) as FilteringExpressionsTree;
+    }
+    /**
      * Sets/gets the parent column.
      * ```typescript
      * let parentColumn = this.column.parent;
@@ -1041,7 +1052,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
             }
 
-            if (this.sortable || this.filterable) {
+            if (this.sortable || (this.grid.allowFiltering && this.filterable)) {
                 headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
             }
 

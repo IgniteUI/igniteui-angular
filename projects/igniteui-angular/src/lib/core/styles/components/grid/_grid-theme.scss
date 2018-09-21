@@ -544,6 +544,11 @@
         flex-flow: row nowrap;
     }
 
+    %grid-thead-item {
+        display: flex;
+        flex-flow: column nowrap;
+    }
+
     %grid-tfoot {
         grid-row: 5;
         border-top: $grid-header-border;

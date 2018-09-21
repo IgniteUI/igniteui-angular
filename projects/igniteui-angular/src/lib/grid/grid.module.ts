@@ -24,6 +24,8 @@ import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridSummaryComponent } from './grid-summary.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
+import { IgxGridFilteringCellComponent } from './grid.filtering-cell.component';
+import { IgxGridFilteringRowComponent } from './grid.filtering-row.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -52,6 +54,7 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
+import { IgxAvatarModule } from '../avatar/avatar.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +83,9 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxGridPagingPipe,
     IgxGridFilteringPipe,
     IgxGridFilterConditionPipe,
-    IgxGridFilterExpressionComponent
+    IgxGridFilterExpressionComponent,
+    IgxGridFilteringCellComponent,
+    IgxGridFilteringRowComponent
   ],
   entryComponents: [
     IgxColumnComponent,
@@ -128,7 +133,8 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxColumnHidingModule,
     IgxDropDownModule,
     IgxButtonGroupModule,
-    IgxColumnPinningModule
+    IgxColumnPinningModule,
+    IgxAvatarModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })

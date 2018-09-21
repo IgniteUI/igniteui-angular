@@ -24,7 +24,7 @@
     </span>
     <div class="igx-grid__th-icons" *ngIf="!column.columnGroup">
         <igx-icon class="sort-icon" *ngIf="column.sortable">{{sortingIcon}}</igx-icon>
-        <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter>
+        <!-- <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter> -->
     </div>
 
     <span *ngIf="!column.columnGroup" [attr.draggable]="false" [style.cursor]="resizeCursor" #resizeArea

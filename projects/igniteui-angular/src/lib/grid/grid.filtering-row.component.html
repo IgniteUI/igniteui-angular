@@ -1,0 +1,80 @@
+<igx-drop-down #operands (onSelection)="onOperandChanged($event)" (onOpening)="onDropDownOpening($event)">
+    <igx-drop-down-item [igxDropDownItemNavigation]="operands" *ngFor="let condition of conditions">
+        <option [value]="condition">
+            {{ condition | filterCondition | titlecase }}
+        </option>
+    </igx-drop-down-item>
+</igx-drop-down>
+
+<ng-template #defaultFilterUI>
+    <!-- <igx-input-group type="box" >
+        <igx-prefix (click)="toggleDropDown($event)">
+            <igx-icon>filter_list</igx-icon>
+        </igx-prefix>
+        <label igxLabel *ngIf="item.expression.searchVal">{{ item.expression.condition.name | filterCondition | titlecase }}</label>
+        <input #input igxInput
+        type="text"
+        (input)="onInputChanged(item.expression.searchVal)"
+        [placeholder]="item.expression.condition.name | filterCondition | titlecase"
+        autocomplete="off"
+        [ngModel]="item.expression.searchVal"
+        (ngModelChange)="item.expression.searchVal = onChange($event)"
+        [igxFocus]="true"/>
+        <igx-suffix *ngIf="input.value.length > 0" >
+            <igx-icon>clear</igx-icon>
+        </igx-suffix>
+    </igx-input-group> -->
+    <igx-input-group type="box" >
+        <igx-prefix (click)="toggleDropDown($event)">
+            <igx-icon>filter_list</igx-icon>
+        </igx-prefix>
+        <label igxLabel *ngIf="expression.searchVal">{{ expression.condition.name | filterCondition | titlecase }}</label>
+        <input #input igxInput
+        type="text"
+        [placeholder]="expression.condition.name | filterCondition | titlecase"
+        autocomplete="off"
+        [(ngModel)]="value"
+        [igxFocus]="true"/>
+        <igx-suffix *ngIf="input.value.length > 0" >
+            <igx-icon>clear</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+</ng-template>
+
+<ng-template let-item #defaultDateUI>
+    <igx-datePicker
+        [outlet]="grid.outletDirective"
+        [(ngModel)]="item.expression.searchVal">
+    </igx-datePicker>
+</ng-template>
+
+
+<div >
+    <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
+</div>
+<igx-chips-area (onSelection)="onChipsSelectionChanged($event)">
+    <igx-chip *ngFor="let item of expressionsList; index as i" 
+    (onSelection)="onChipSelected($event, item.expression)" 
+    (onRemove)="onChipRemoved($event, item)"
+    [selectable]="true"
+    [selected]="item.isSelected"
+    [removable]="true" >
+        <span #label [class]="'igx-chip__text'">{{item.expression.searchVal}}</span>
+        <span igxConnector>
+            <button igxButton (click)="toggleOperandsDropDown($event, i)">
+                <span>
+                    <igx-icon>expand_more</igx-icon>
+                    <span>{{getOperator(item.afterOperator)}}</span>
+                </span>
+            </button>
+            <igx-drop-down >
+                    <igx-drop-down-item>And</igx-drop-down-item>
+                    <igx-drop-down-item>Or</igx-drop-down-item>
+            </igx-drop-down>
+        </span>
+    </igx-chip>
+</igx-chips-area>
+<div>
+    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
+    <button igxButton igxRipple (click)="close()">Close</button>
+</div>
