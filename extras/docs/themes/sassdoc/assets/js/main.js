@@ -80,7 +80,7 @@ var SassDoc;
             }
         };
         Application.prototype.onScrollHandler = function () {
-            this.scrollPosition = window.scrollY;
+            this.scrollPosition = window.pageYOffset;
             this.requestSidebarUpdate();
         };
         Application.prototype.requestSidebarUpdate = function () {

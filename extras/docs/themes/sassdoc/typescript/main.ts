@@ -104,7 +104,7 @@ namespace SassDoc {
         }
 
         onScrollHandler() {
-            this.scrollPosition = window.scrollY;
+            this.scrollPosition = window.pageYOffset;
             this.requestSidebarUpdate();
         }
 
