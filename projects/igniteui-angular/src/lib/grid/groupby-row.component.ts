@@ -232,7 +232,7 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
-    public performNavigationAction(target: any) {
+    public performNavigationAction(target: any, event) {
         target.nativeElement.focus();
     }
 

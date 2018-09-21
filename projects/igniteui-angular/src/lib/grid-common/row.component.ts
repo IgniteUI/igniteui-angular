@@ -342,7 +342,7 @@ export class IgxRowComponent<T extends IGridBaseComponent> implements DoCheck {
     /**
      * @hidden
      */
-    public performNavigationAction(target: any) {
+    public performNavigationAction(target: any, event) {
         target._updateCellSelectionStatus(true, event);
     }
 }

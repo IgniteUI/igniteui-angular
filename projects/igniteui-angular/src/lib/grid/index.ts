@@ -4,3 +4,4 @@ export * from './grid.component';
 export * from './grid.misc';
 export * from './grid.module';
 export * from './grid-api.service';
+export * from './grid-row.component';

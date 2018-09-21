@@ -1094,8 +1094,8 @@ export class IGridAPIService <T extends IGridBaseComponent> {
                 } else {
                     return;
                 }
-                row.performNavigationAction(target);
             }
+            row.performNavigationAction(target, event);
         });
     }
 
@@ -1110,7 +1110,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
     public navigate_up(id: string, rowIndex: number, columnIndex: number, event?) {
         const grid = this.get(id);
         const row = this.get_row_by_index(id, rowIndex);
-        const target = row.getNavigationTarget(columnIndex, rowIndex);
+        const target = row ? row.getNavigationTarget(columnIndex, rowIndex) : undefined;
         const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
 
         if (!verticalScroll && !target) {
@@ -1127,7 +1127,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
                     -grid.rowHeight + Math.abs(containerTopOffset);
                 this.perform_vertical_scroll(id, scrollAmount, rowIndex - 1, columnIndex, event);
             }
-            row.performNavigationAction(target);
+            row.performNavigationAction(target, event);
         } else {
             const scrollOffset =
                 -parseInt(grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
@@ -1139,7 +1139,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
     public navigate_down(id: string, rowIndex: number, columnIndex: number, event?) {
         const grid = this.get(id);
         const row = this.get_row_by_index(id, rowIndex);
-        const target = row.getNavigationTarget(columnIndex, rowIndex);
+        const target = row ? row.getNavigationTarget(columnIndex, rowIndex) : undefined;
         const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
         if (!verticalScroll && !target) {
             return;
@@ -1156,7 +1156,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
                 const scrollAmount = targetEndTopOffset - containerHeight;
                 this.perform_vertical_scroll(id, scrollAmount, rowIndex, columnIndex, event);
             } else {
-                row.performNavigationAction(target);
+                row.performNavigationAction(target, event);
             }
         } else {
             const contentHeight = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;

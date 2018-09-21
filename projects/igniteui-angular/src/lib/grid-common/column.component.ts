@@ -850,7 +850,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         if (this.columnGroup) {
             this.allChildren.forEach(child => child.pin());
-            grid.gridAPI.reinitPinStates(grid.id);
+            grid.gridAPI.reinit_pin_states(grid.id);
         }
 
         grid.cdr.detectChanges();
@@ -898,7 +898,7 @@ export class IgxColumnComponent implements AfterContentInit {
             this.allChildren.forEach(child => child.unpin());
         }
 
-        grid.gridAPI.reinitPinStates(grid.id);
+        grid.gridAPI.reinit_pin_states(grid.id);
 
         grid.cdr.detectChanges();
         return true;
