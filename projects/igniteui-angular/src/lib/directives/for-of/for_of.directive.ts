@@ -358,7 +358,9 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
             }
         }
         const chunkSize = 'igxForVisibleElements';
-        if (chunkSize in changes && !changes[chunkSize].firstChange) {
+        const contSize = 'igxForDisplayContainerWidth';
+        if ((chunkSize in changes && !changes[chunkSize].firstChange) ||
+            (contSize in changes && !changes[contSize].firstChange)) {
             this._recalcOnContainerChange(changes);
         }
     }
@@ -817,7 +819,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = /*this.igxForContainerSize ? this.initHCache(this.igxForOf) : 0;*/
                 this.initHCache(this.igxForOf);
-            this.hScroll.style.width = this.containerSize + 'px';
+            this.hScroll.style.width = this.igxForDisplayContainerWidth + 'px';
             this.hScroll.children[0].style.width = totalWidth + 'px';
         }
         if (this.igxForScrollOrientation === 'vertical') {
