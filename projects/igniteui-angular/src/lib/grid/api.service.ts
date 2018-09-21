@@ -75,10 +75,6 @@ export class IgxGridAPIService {
 
     public set_cell_inEditMode(gridId: string, cell, editMode: boolean) {
         const grid = this.get(gridId);
-        if (grid.rowEditable) {
-            cell.row.inEditMode = true;
-            grid.openRowEditingOverlay(cell.row);
-        }
         if (!this.editCellState.has(gridId)) {
             this.editCellState.set(gridId, null);
         }
@@ -103,10 +99,10 @@ export class IgxGridAPIService {
                 this.editCellState.delete(gridId);
             }
         }
-        if (grid.rowEditable) {
+        /*if (grid.rowEditable) {
             cell.row.inEditMode = false;
             grid.closeRowEditingOverlay();
-        }
+        }*/
 
         grid.refreshSearch();
     }

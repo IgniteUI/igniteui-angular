@@ -4634,25 +4634,29 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public openRowEditingOverlay(row: IgxGridRowComponent) {
-        const overlaySettings: OverlaySettings = {
-            scrollStrategy: new AbsoluteScrollStrategy(),
-            modal: false,
-            closeOnOutsideClick: false,
-            positionStrategy: new ConnectedPositioningStrategy({
-                target: row.element.nativeElement,
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Bottom,
-                horizontalStartPoint: HorizontalAlignment.Right,
-                verticalStartPoint: VerticalAlignment.Bottom,
-                openAnimation: null,
-                closeAnimation: null
-            })
-        };
-        this.rowEditingOverlay.open(overlaySettings);
+        if (this.rowEditingOverlay.collapsed) {
+            const overlaySettings: OverlaySettings = {
+                scrollStrategy: new AbsoluteScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false,
+                positionStrategy: new ConnectedPositioningStrategy({
+                    target: row.element.nativeElement,
+                    horizontalDirection: HorizontalAlignment.Left,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    horizontalStartPoint: HorizontalAlignment.Right,
+                    verticalStartPoint: VerticalAlignment.Bottom,
+                    openAnimation: null,
+                    closeAnimation: null
+                })
+            };
+            this.rowEditingOverlay.open(overlaySettings);
+        }
     }
 
     public closeRowEditingOverlay() {
-        this.rowEditingOverlay.close();
+        if (!this.rowEditingOverlay.collapsed) {
+            this.rowEditingOverlay.close();
+        }
     }
 
     public updateRowTransaction(event) {
