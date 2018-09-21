@@ -328,7 +328,7 @@ describe('IgxGrid - GroupBy', () => {
         }
     });
 
-    it('should trigger a onGroupingDone event when a column is grouped with the correct params.', () => {
+    it('should trigger an onGroupingDone event when a column is grouped with the correct params.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -340,6 +340,90 @@ describe('IgxGrid - GroupBy', () => {
         const currExpr = fix.componentInstance.currentSortExpressions;
         expect(currExpr.length).toEqual(1);
         expect(currExpr[0].fieldName).toEqual('Released');
+    });
+
+    it('should trigger an onGroupingDone event when a column is ungrouped with the correct params.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
+        fix.detectChanges();
+        grid.clearGrouping('Released');
+        fix.detectChanges();
+        const currExpr = fix.componentInstance.currentSortExpressions;
+        expect(currExpr.length).toEqual(1);
+        expect(currExpr[0].fieldName).toEqual('ReleaseDate');
+    });
+
+    it('should trigger an onGroupingChanged event when a column is grouped with the correct params.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+        const currExpr = fix.componentInstance.currentSortExpressions;
+        expect(currExpr.length).toEqual(1);
+        expect(currExpr[0].fieldName).toEqual('Released');
+     });
+
+     it('should trigger an onGroupingChanged event when multiple columns are grouped with the correct params.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
+        fix.detectChanges();
+        const currExpr = fix.componentInstance.currentSortExpressions;
+        expect(currExpr.length).toEqual(3);
+        expect(currExpr[0].fieldName).toEqual('Released');
+        expect(currExpr[0].fieldName).toEqual('ProductName');
+        expect(currExpr[0].fieldName).toEqual('ReleaseDate');
+     });
+
+     it('should trigger an onGroupingChanged event when a column is ungrouped with the correct params.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
+        fix.detectChanges();
+        grid.clearGrouping('Released');
+        fix.detectChanges();
+        const currExpr = fix.componentInstance.currentSortExpressions;
+        expect(currExpr.length).toEqual(1);
+        expect(currExpr[0].fieldName).toEqual('ReleaseDate');
+    });
+
+    it('should trigger an onGroupingChanged event when multiple columns are ungrouped with the correct params.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+         grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        fix.detectChanges();
+        grid.clearGrouping(['Released', 'ProductName', 'Downloads']);
+        fix.detectChanges();
+        const currExpr = fix.componentInstance.currentSortExpressions;
+        expect(currExpr.length).toEqual(1);
+        expect(currExpr[0].fieldName).toEqual('ReleaseDate');
     });
 
     it('should allow setting custom template for group row content.', () => {

@@ -1,5 +1,6 @@
 <div class="wrapper">
-    <igx-grid #grid1 [data]="data" [width]="'1200px'" [height]="'800px'" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="'compact'">
+    <igx-grid #grid1 [data]="data" [width]="'1200px'" [height]="'800px'" (onGroupingDone)="onGroupingDoneHandler($event)" 
+    (onGroupingChanged)="onGroupingChangedHandler($event)" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="'compact'">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
             [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned'>
         </igx-column>
@@ -14,4 +15,7 @@
     <button igxButton="raised" (click)="groupBy('City')">Group/Ungroup 'City'</button>
     <button igxButton="raised" (click)="groupBy('PostalCode')">Group/Ungroup 'PostalCode'</button>
     <button igxButton="raised" (click)="getRowsList()">Get rowslist'</button>
+    <br />
+    <button igxButton="raised" (click)="groupMultiple()">Group "Contact Title", "Address", "Country"</button>
+    <button igxButton="raised" (click)="ungroupMultiple()">Ungroup "Address", "Country"</button>
 </div>

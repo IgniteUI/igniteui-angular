@@ -1059,6 +1059,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onGroupingDone = new EventEmitter<ISortingExpression[]>();
 
     /**
+     * Emitted when a new `IgxColumnComponent` is grouped or ungrouped.
+     * Returns the `ISortingExpression` related to the grouping or ungrouping operation.
+     * ```typescript
+     * groupingChanged(event: any){
+     *     const grouping = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" (onGroupingChanged)="groupingChanged($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Output()
+    public onGroupingChanged = new EventEmitter<ISortingExpression[]>();
+
+    /**
      * Emitted when a new chunk of data is loaded from virtualization.
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
@@ -2797,13 +2813,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     /**
      * Groups by a new `IgxColumnComponent` based on the provided expression or modifies an existing one.
+     * Also allows for multiple columns to be grouped at once if an array of sorting expressions is passed.
      * ```typescript
      * this.grid.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+     * this.grid.groupBy([
+            { fieldName: name1, dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: name2, dir: SortingDirection.Desc, ignoreCase: true },
+            { fieldName: name3, dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
      * ```
 	 * @memberof IgxGridComponent
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
+        const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
         this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -2812,24 +2835,34 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        this.onGroupingDone.emit(this.sortingExpressions);
+        const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
+            this.onGroupingDone.emit(this.sortingExpressions);
+            this.onGroupingChanged.emit(newSortingExpressions);
+        }
 
         this.restoreHighlight();
     }
 
     /**
      * Clears all grouping in the grid, if no parameter is passed.
-     * If a parameter is provided clears grouping for a particular column
+     * If a parameter is provided, clears grouping for a particular column or an array of columns.
      * ```typescript
-     * this.grid.clearGrouping();
-     * this.grid.clearGrouping("ID");
+     * this.grid.clearGrouping(); //clears all grouping
+     * this.grid.clearGrouping("ID"); //ungroups a single column
+     * this.grid.clearGrouping(["ID", "Column1", "Column2"]); //ungroups multiple columns
      * ```
      *
      */
-    public clearGrouping(name?: string): void {
+    public clearGrouping(name?: string | Array<string>): void {
+        const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
         this.gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
-
+        const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
+            this.onGroupingDone.emit(this.sortingExpressions);
+            this.onGroupingChanged.emit(newSortingExpressions);
+        }
         this.restoreHighlight();
     }
 

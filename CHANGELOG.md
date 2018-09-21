@@ -4,6 +4,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 6.2.0
 -`igxGrid`:
+- `onGroupingChanged` - A new event, emitted when a column or multiple columns get grouped or ungrouped. Returns the `ISortingExpression` related to the grouping or ungrouping operation.
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
