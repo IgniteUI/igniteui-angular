@@ -533,23 +533,6 @@ describe('IgxChipsArea', () => {
         expect(secondChipComp.selected).not.toBeTruthy();
     });
 
-    it('should not fire onSelection event when selectable is false', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const firstChipComp = fix.componentInstance.chips.toArray()[0];
-
-        spyOn( firstChipComp.onSelection, 'emit');
-        firstChipComp.chipArea.nativeElement.focus();
-
-        const keyEvent = new KeyboardEvent('keydown', {
-            'key': ' '
-        });
-        firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
-        fix.detectChanges();
-        expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
-    });
-
     it('should be able to have multiple chips selected', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
