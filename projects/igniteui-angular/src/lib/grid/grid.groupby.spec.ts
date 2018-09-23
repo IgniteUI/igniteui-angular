@@ -386,8 +386,8 @@ describe('IgxGrid - GroupBy', () => {
         const currExpr = fix.componentInstance.currentSortExpressions;
         expect(currExpr.length).toEqual(3);
         expect(currExpr[0].fieldName).toEqual('Released');
-        expect(currExpr[0].fieldName).toEqual('ProductName');
-        expect(currExpr[0].fieldName).toEqual('ReleaseDate');
+        expect(currExpr[1].fieldName).toEqual('ProductName');
+        expect(currExpr[2].fieldName).toEqual('ReleaseDate');
      });
 
      it('should trigger an onGroupingChanged event when a column is ungrouped with the correct params.', () => {
