@@ -6,7 +6,8 @@
     <ng-content class="igx-chip__label"></ng-content>
 
     <igx-icon #removeBtn [tabindex]="removeBtnTabindex" #cancelContainer *ngIf="removable" igxButton="icon" igxRipple igxRippleCentered="true"
-        (click)="onChipRemove($event)" (touchmove)="onChipRemoveMove()" (touchend)="onChipRemoveEnd($event)"
+        (pointerdown)="onChipRemoveMouseDown($event)" (mousedown)="onChipRemoveMouseDown($event)" (click)="onChipRemove($event)"
+        (touchmove)="onChipRemoveMove()" (touchend)="onChipRemoveEnd($event)"
         class="igx-chip__remove-icon" fontSet="material" [name]="'cancel'"></igx-icon>
 
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
