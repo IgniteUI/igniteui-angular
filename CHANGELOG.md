@@ -4,9 +4,12 @@ All notable changes for each version of this project will be documented in this 
 
 ## 6.2.0
 -`igxGrid`:
-    - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
+- **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
-- `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
+- `igxOverlay`:
+    - `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
+    - when `show` and `hide` methods are called `onAnimation` event fires. In the arguments of this event there is a reference to the `animationPlayer`, `animationType` (either `open` or `close`) and to the overlay id.
+    - if you call `show`/`hide` methods of overlay, while opening/closing animation is still ongoing, the animation will stop and respective open/close animation will start.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
 - `IgxOverlayOutlet` directive introduced to mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
 - `igxButtonGroup`
@@ -50,6 +53,8 @@ All notable changes for each version of this project will be documented in this 
     - Introduced `disabledDates` property which allows a user to disable dates based on various rules: before or after a date, weekends, workdays, specific dates and ranges. The disabled dates cannot be selected and have a distinguishable style.
     - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
     - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
+- `igxExpansionPanel`:
+    - component added. `igxExpansionPanel` provides a way to display more information after expanding an item, respectively show less after collapsing it. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion_panel.html).
 
 ## 6.1.5
 - **General**
