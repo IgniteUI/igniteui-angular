@@ -44,8 +44,8 @@
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
-        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
-        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+        <span *ngIf="hasMovableColumns && draggedColumn && onlyTopLevel(pinnedColumns).length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
+        <span *ngIf="hasMovableColumns && draggedColumn && onlyTopLevel(pinnedColumns).length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-container *ngIf="groupingExpressions.length > 0">
             <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}" #headerGroupContainer>
                 <button class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true">
@@ -58,7 +58,7 @@
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
             </div>
         </ng-container>
-        <ng-container *ngIf="pinnedColumns.length > 0">
+        <ng-container *ngIf="onlyTopLevel(pinnedColumns).length > 0">
             <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" *ngFor="let col of onlyTopLevel(pinnedColumns)" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
         </ng-container>
         <ng-template igxFor let-col [igxForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
@@ -101,7 +101,7 @@
         <ng-container *ngIf="summariesMargin">
             <div
             class="igx-grid__summaries-patch"
-            [style.min-width.px]="summariesMargin" 
+            [style.min-width.px]="summariesMargin"
             [style.flex-basis.px]="summariesMargin"
             ></div>
         </ng-container>

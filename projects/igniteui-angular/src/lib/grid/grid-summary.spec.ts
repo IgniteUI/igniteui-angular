@@ -4,9 +4,9 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxDateSummaryOperand, IgxGridComponent, IgxGridModule, IgxNumberSummaryOperand, IgxSummaryResult } from './index';
-import { IgxGridAPIService } from './grid-api.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
+import { IGridAPIService, IGridBaseComponent } from '../grid-common';
 
 describe('IgxGrid - Summaries', () => {
     const SUMMARY_CLASS = '.igx-grid-summary';
@@ -675,7 +675,7 @@ export class  SummaryColumnsWithIdenticalWidthsComponent {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: '2018-03-01' }
     ];
 
-    constructor(public gridApi: IgxGridAPIService) { }
+    constructor(public gridApi: IGridAPIService<IGridBaseComponent>) { }
 }
 
 

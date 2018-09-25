@@ -346,7 +346,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
     }
 
     public sort(id: string, expression: ISortingExpression | Array<ISortingExpression>): void;
-    public sort(id: string, ...rest): void {
+    public sort(id: string, rest): void {
         this.escape_editMode(id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this.sort_multiple_implementation(id, rest[0]);
@@ -673,10 +673,10 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         });
     }
 
-    public scroll_to(id: string, row: any, column: any): void {
+    public scroll_to(id: string, row: any | number, column: any | number): void {
         const grid = this.get(id);
-        const rowIndex = grid.filteredSortedData.indexOf(row);
-        let columnIndex = this.get_column_by_name(id, column).visibleIndex;
+        const rowIndex = typeof row === 'number' ? row : grid.filteredSortedData.indexOf(row);
+        let columnIndex = typeof column === 'number' ? column : this.get_column_by_name(id, column).visibleIndex;
 
         if (grid.paging) {
             grid.page = Math.floor(rowIndex / grid.perPage);
@@ -1087,7 +1087,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
             target = this.get_cell_by_visible_index(id, rowIndex, columnIndex);
 
             if (!target) {
-                if (dir || row) {
+                if (dir) {
                     target = dir === 'left' ? row.cells.first : row.cells.last;
                 } else if (row) {
                     target = row.getNavigationTarget(0, rowIndex);
@@ -1591,7 +1591,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         }
     }
 
-    public enable_summaries(id: string, ...rest) {
+    public enable_summaries(id: string, rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
             this.multiple_summaries(id, rest[0], true);
         } else {
@@ -1604,7 +1604,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         grid.cdr.detectChanges();
     }
 
-    public disable_summaries(id: string, ...rest) {
+    public disable_summaries(id: string, rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
             this.disable_multiple_summaries(id, rest[0]);
         } else {

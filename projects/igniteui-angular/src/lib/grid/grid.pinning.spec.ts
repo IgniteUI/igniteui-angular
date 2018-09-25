@@ -481,14 +481,14 @@ describe('IgxGrid - Column Pinning ', () => {
         const col = grid.getColumnByName('CompanyName');
         col.pinned = true;
         fix.detectChanges();
-        expect(grid.pinnedColumns.length).toEqual(1);
-        expect(grid.unpinnedColumns.length).toEqual(9);
+        expect(grid.pinnedColumns.filter(c => !c.hidden).length).toEqual(1);
+        expect(grid.unpinnedColumns.filter(c => !c.hidden).length).toEqual(9);
 
         col.hidden = true;
         fix.detectChanges();
 
-        expect(grid.pinnedColumns.length).toEqual(0);
-        expect(grid.unpinnedColumns.length).toEqual(9);
+        expect(grid.pinnedColumns.filter(c => !c.hidden).length).toEqual(0);
+        expect(grid.unpinnedColumns.filter(c => !c.hidden).length).toEqual(9);
 
         let headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
@@ -498,8 +498,8 @@ describe('IgxGrid - Column Pinning ', () => {
         col.hidden = false;
         fix.detectChanges();
 
-        expect(grid.pinnedColumns.length).toEqual(1);
-        expect(grid.unpinnedColumns.length).toEqual(9);
+        expect(grid.pinnedColumns.filter(c => !c.hidden).length).toEqual(1);
+        expect(grid.unpinnedColumns.filter(c => !c.hidden).length).toEqual(9);
 
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
@@ -517,14 +517,14 @@ describe('IgxGrid - Column Pinning ', () => {
         col.pinned = true;
         fix.detectChanges();
 
-        expect(grid.pinnedColumns.length).toEqual(0);
-        expect(grid.unpinnedColumns.length).toEqual(9);
+        expect(grid.pinnedColumns.filter(c => !c.hidden).length).toEqual(0);
+        expect(grid.unpinnedColumns.filter(c => !c.hidden).length).toEqual(9);
 
         col.hidden = false;
         fix.detectChanges();
 
-        expect(grid.pinnedColumns.length).toEqual(1);
-        expect(grid.unpinnedColumns.length).toEqual(9);
+        expect(grid.pinnedColumns.filter(c => !c.hidden).length).toEqual(1);
+        expect(grid.unpinnedColumns.filter(c => !c.hidden).length).toEqual(9);
     });
 
     it('should allow hiding columns in the unpinned area.', () => {

@@ -130,7 +130,7 @@ export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
         this.get(id).groupingExpansionState = expansionState;
     }
 
-    public scroll_to(id: string, row: any, column: any): void {
+    public scroll_to(id: string, row: any | number, column: any | number): void {
         const grid = this.get(id);
         if (grid.groupingExpressions && grid.groupingExpressions.length) {
             const groupByRecords = this.get_group_by_records(id);

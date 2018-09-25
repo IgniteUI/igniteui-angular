@@ -135,14 +135,14 @@ export class IgxRowComponent<T extends IGridBaseComponent> implements DoCheck {
      * @hidden
      */
     get pinnedColumns(): IgxColumnComponent[] {
-        return this.grid.pinnedColumns;
+        return this.grid.pinnedColumns.filter(c => !c.hidden);
     }
 
     /**
      * @hidden
      */
     get unpinnedColumns(): IgxColumnComponent[] {
-        return this.grid.unpinnedColumns;
+        return this.grid.unpinnedColumns.filter(c => !c.hidden);
     }
 
     /**
@@ -336,7 +336,7 @@ export class IgxRowComponent<T extends IGridBaseComponent> implements DoCheck {
      * @hidden
      */
     public getNavigationTarget(columnIndex: number, rowIndex: number) {
-        return this.gridAPI.get_cell_by_index(this.gridID, rowIndex, columnIndex);
+        return this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
     }
 
     /**

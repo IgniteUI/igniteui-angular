@@ -2479,7 +2479,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     onlyTopLevel(arr) {
-        return arr.filter(c => c.level === 0);
+        return arr.filter(c => c.level === 0 && !c.hidden);
     }
 
     /**

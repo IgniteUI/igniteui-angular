@@ -231,7 +231,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     get unpinnedColumnIndex(): number {
-        return this.grid.unpinnedColumns.filter(c => !c.columnGroup).indexOf(this.column);
+        return this.grid.unpinnedColumns.filter(c => !c.columnGroup && !c.hidden).indexOf(this.column);
     }
 
     /**
@@ -478,7 +478,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     get isLastPinned() {
-        const pinnedCols = this.grid.pinnedColumns;
+        const pinnedCols = this.grid.pinnedColumns.filter(c => !c.hidden);
         return pinnedCols[pinnedCols.length - 1] === this.column;
     }
 
@@ -490,7 +490,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     get isLastUnpinned() {
-        const unpinnedColumns = this.grid.unpinnedColumns;
+        const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.hidden);
         return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
     }
 
@@ -839,7 +839,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (!this.column.pinned) {
                     this.row.virtDirRow.scrollPrev();
                 } else {
-                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.filter(c => !c.columnGroup).length - 1);
+                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.filter(c => !c.hidden && !c.columnGroup).length - 1);
                 }
             }
 
@@ -856,13 +856,13 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public onKeydownCtrlArrowLeft(event) {
 
-        if (this.grid.pinnedColumns.length) {
+        if (this.grid.pinnedColumns.filter(c => !c.hidden).length) {
             const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
             target._updateCellSelectionStatus(true, event);
             return;
         }
 
-        const columnIndex = this.grid.unpinnedColumns[0].visibleIndex;
+        const columnIndex = this.grid.unpinnedColumns.filter(c => !c.hidden)[0].visibleIndex;
 
         const firstCell = this.row.cells.first;
         if (firstCell.visibleColumnIndex === columnIndex) {
@@ -948,7 +948,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onKeydownCtrlArrowRight(event) {
-        const columnIndex = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
+        const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.hidden);
+        const columnIndex = unpinnedColumns[unpinnedColumns.length - 1].visibleIndex;
 
         const lastCell = this.row.cells.last;
         if (lastCell.visibleColumnIndex === columnIndex) {
