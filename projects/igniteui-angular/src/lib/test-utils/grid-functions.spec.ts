@@ -79,7 +79,7 @@ export class GridFunctions {
     public static  verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
         expect(column.pinned).toBe(isPinned, 'Pinned is not ' + isPinned);
 
-        const pinnedColumns = column.grid.pinnedColumns;
+        const pinnedColumns = column.grid.pinnedColumns.filter(c => !c.hidden);
         expect(pinnedColumns.length).toBe(pinnedColumnsCount, 'Unexpected pinned columns count!');
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
     }

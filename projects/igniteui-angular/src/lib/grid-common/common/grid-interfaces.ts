@@ -241,8 +241,6 @@ export interface IGridBaseComponent {
     deselectRows(rowIDs: any[]);
     selectAllRows();
     deselectAllRows();
-    triggerRowSelectionChange(newSelectionAsSet: Set<any>,
-        row?: IgxRowComponent<IGridBaseComponent>, event?: Event, headerStatus?: boolean);
     scrollTo(row: any, column: any);
     focusNextCell(rowIndex: number, columnIndex: number, dir?: string, event?);
     navigateDown(rowIndex: number, columnIndex: number, event?);

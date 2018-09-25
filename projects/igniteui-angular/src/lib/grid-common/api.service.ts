@@ -1408,7 +1408,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         grid.cdr.detectChanges();
     }
 
-    private move_columns(id: string, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
+    private move_columns(id: string, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
         const grid = this.get(id);
         const list = grid.columnList.toArray();
         const fromIndex = list.indexOf(from);
@@ -1640,7 +1640,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
 
     private multiple_summaries(id: string, expressions: ISummaryExpression[], hasSummary: boolean) {
         expressions.forEach((element) => {
-            this.summaries(id, element.fieldName, hasSummary, element.customSummary);
+            this.summaries(id, element.fieldName ? element.fieldName : element.toString(), hasSummary, element.customSummary);
         });
     }
 

@@ -2569,14 +2569,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    public triggerRowSelectionChange(newSelectionAsSet: Set<any>, row?: IgxRowComponent<IGridBaseComponent>,
-                    event?: Event, headerStatus?: boolean) {
-        this.api.trigger_row_selection_change(this.id, newSelectionAsSet, row, event, headerStatus);
-    }
-
-    /**
-     * @hidden
-     */
     public navigateDown(rowIndex: number, columnIndex: number, event?) {
         this.api.navigate_down(this.id, rowIndex, columnIndex, event);
     }

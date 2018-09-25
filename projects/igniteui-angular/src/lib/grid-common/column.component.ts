@@ -845,7 +845,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         if (hasIndex) {
-            grid._moveColumns(this, targetColumn);
+            grid.gridAPI.move_columns(grid.id, this, targetColumn);
         }
 
         if (this.columnGroup) {
@@ -891,7 +891,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         if (hasIndex) {
-            grid._moveColumns(this, targetColumn);
+            grid.gridAPI.move_columns(grid.id, this, targetColumn);
         }
 
         if (this.columnGroup) {

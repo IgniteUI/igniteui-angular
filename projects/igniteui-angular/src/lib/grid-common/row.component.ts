@@ -249,7 +249,7 @@ export class IgxRowComponent<T extends IGridBaseComponent> implements DoCheck {
         const newSelection = (event.checked) ?
                             this.selection.add_item(this.gridID, this.rowID) :
                             this.selection.delete_item(this.gridID, this.rowID);
-        this.grid.triggerRowSelectionChange(newSelection, this, event);
+        this.gridAPI.trigger_row_selection_change(this.gridID, newSelection, this, event);
     }
 
     /**

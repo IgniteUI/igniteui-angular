@@ -192,7 +192,7 @@ describe('Column Pinning UI', () => {
             grid.columns[1].hidden = true;
             fix.detectChanges();
 
-            expect(grid.pinnedColumns.length).toBe(1);
+            expect(grid.pinnedColumns.filter(c => !c.hidden).length).toBe(1);
 
             checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
             checkboxes[2].click();
