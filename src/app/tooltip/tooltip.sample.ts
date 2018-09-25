@@ -100,6 +100,9 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
         this.tooltipTarget.hideTooltip();
     }
 
-    showing(args: ITooltipShowEventArgs) { console.log("showing"); }
-    hiding(args: ITooltipHideEventArgs) { console.log("hiding"); }
+    showing(args: ITooltipShowEventArgs) {        
+    }
+
+    hiding(args: ITooltipHideEventArgs) {        
+    }
 }

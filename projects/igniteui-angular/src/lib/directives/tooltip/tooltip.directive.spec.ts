@@ -2,14 +2,16 @@ import { Component, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective,
-         ITooltipShowEventArgs, ITooltipHideEventArgs } from './tooltip.directive';
+import {
+    IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective,
+    ITooltipShowEventArgs, ITooltipHideEventArgs
+} from './tooltip.directive';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip';
 
-describe('IgxTooltip', () => {
+fdescribe('IgxTooltip', () => {
     let fix;
     let tooltipNativeElement;
     let tooltipTarget: IgxTooltipTargetDirective;
@@ -342,6 +344,72 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(fix, tooltipNativeElement, true);
         }));
     });
+
+    describe('Tooltip touch', () => {
+        it('IgxTooltip is shown/hidden when touching/untouching its target', fakeAsync(() => {
+            touchElement(button);
+            flush();
+
+            verifyTooltipVisibility(fix, tooltipNativeElement, true);
+
+            const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
+            touchElement(dummyDiv);
+            flush();
+
+            verifyTooltipVisibility(fix, tooltipNativeElement, false);
+        }));
+
+        it('IgxTooltip is not shown when is disabled and touching its target', fakeAsync(() => {
+            tooltipTarget.tooltipDisabled = true;
+            fix.detectChanges();
+
+            touchElement(button);
+            flush();
+            verifyTooltipVisibility(fix, tooltipNativeElement, false);
+
+            tooltipTarget.tooltipDisabled = false;
+            fix.detectChanges();
+
+            touchElement(button);
+            flush();
+            verifyTooltipVisibility(fix, tooltipNativeElement, true);
+        }));
+
+        it('IgxTooltip touch interaction respects showDelay', fakeAsync(() => {
+            tooltipTarget.showDelay = 900;
+            fix.detectChanges();
+
+            touchElement(button);
+
+            tick(500);
+            verifyTooltipVisibility(fix, tooltipNativeElement, false);
+
+            tick(300);
+            verifyTooltipVisibility(fix, tooltipNativeElement, false);
+
+            tick(100);
+            verifyTooltipVisibility(fix, tooltipNativeElement, true);
+        }));
+
+        it('IgxTooltip touch interaction respects hideDelay', fakeAsync(() => {
+            tooltipTarget.hideDelay = 700;
+            fix.detectChanges();
+
+            touchElement(button);
+            flush();
+
+            const dummyDiv = fix.debugElement.query(By.css('.dummyDiv'));
+            touchElement(dummyDiv);
+            tick(400);
+            verifyTooltipVisibility(fix, tooltipNativeElement, true);
+
+            tick(100);
+            verifyTooltipVisibility(fix, tooltipNativeElement, true);
+
+            tick(200);
+            verifyTooltipVisibility(fix, tooltipNativeElement, false);
+        }));
+    });
 });
 
 function hoverElement(element) {
@@ -350,6 +418,10 @@ function hoverElement(element) {
 
 function unhoverElement(element) {
     element.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+}
+
+function touchElement(element) {
+    element.nativeElement.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
 }
 
 function verifyTooltipVisibility(fix, tooltipNativeElement, shouldBeVisible: boolean) {
@@ -366,6 +438,7 @@ function verifyTooltipVisibility(fix, tooltipNativeElement, shouldBeVisible: boo
 
 @Component({
     template: `
+        <div class="dummyDiv">dummy div for touch tests</div>
         <button [igxTooltipTarget]="tooltipRef"
                 (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)">
             Hover me

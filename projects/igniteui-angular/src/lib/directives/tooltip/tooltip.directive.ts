@@ -320,6 +320,35 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
+     * @hidden
+     */
+    @HostListener('touchstart', ['$event'])
+    public onTouchStart(event) {
+        if (this.tooltipDisabled) {
+            return;
+        }
+
+        event.preventDefault();
+        this.showTooltip();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('document:touchstart', ['$event'])
+    public onDocumentTouchStart(event) {
+        if (this.tooltipDisabled) {
+            return;
+        }
+
+        if (this.nativeElement !== event.target &&
+            !this.nativeElement.contains(event.target)
+        ) {
+            this.hideTooltip();
+        }
+    }
+
+    /**
      * Shows the tooltip by respecting the 'showDelay' property.
      *
      * ```typescript
