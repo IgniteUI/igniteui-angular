@@ -11,19 +11,19 @@
     width: 120px;
 }
 
-.igx-tooltip {
+/* .igx-tooltip {
     border-radius: 2px 2px 2px 2px;
     background-color: gray;
     color: white;
     padding: 10px;
     margin-top: 10px;
-}
+} */
 
 .custom-width {
-    width: 180px;
+    /* width: 180px; */
 }
 
-.custom-size{
+.custom-size {
     font-size: 56px;
     width: 56px;
     height: 56px;
@@ -55,7 +55,7 @@
 
 .locationTooltip {
     width: 300px;
-    background-color: rgba(128, 128, 128, 0.7);    
+    background-color: rgba(128, 128, 128, 0.7);
     padding: 3px;
     font-size: 13px;
 }

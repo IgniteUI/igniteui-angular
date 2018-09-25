@@ -1,0 +1,126 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Returns a map containing all style properties related to the theming the tooltip directive.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $background [] - The background color of the tooltip.
+/// @param {Color} $text-color [] - The text color of the tooltip.
+/// @param {Number} $roundness [] - The border roundness of the tooltip. Smaller values mean less roundness.
+/// @param {String} $variant ['dark'] - Determines the default color scheme - could be either 'dark' or 'light'.
+/// Set to light when the surrounding area is dark.
+///
+/// @requires extend
+/// @requires igx-color
+/// @requires text-contrast
+///
+/// @example scss Change the checked fill color
+///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
+///   // Pass the theme to the igx-checkbox component mixin
+///   @include igx-checkbox($my-checkbox-theme);
+@function igx-tooltip-theme(
+    $palette: $default-palette,
+    $background: null,
+    $text-color: null,
+    $roundness: null,
+    $variant: 'dark'
+) {
+    $name: 'igx-tooltip';
+    $dark-background: hexrgba(igx-color($palette, 'grays', 700));
+    $light-background: rgba(#fff, .94);
+    $border-radius: rem(4px);
+
+    $dark-theme: (
+        background: rgba($dark-background, .9),
+        text-color: text-contrast($dark-background),
+        roundness: $border-radius
+    );
+
+    $light-theme: (
+        background: $light-background,
+        text-color: text-contrast($light-background),
+        roundness: $border-radius
+    );
+
+    $default-theme: map-get((
+        dark: $dark-theme,
+        light: $light-theme
+    ), $variant);
+
+    @if not($text-color) and $background {
+        $text-color: text-contrast($background);
+    }
+
+    @return extend($default-theme, (
+        palette: $default-palette,
+        name: $name,
+        background: $background,
+        text-color: $text-color,
+        roundness: $roundness
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires --var
+@mixin igx-tooltip($theme) {
+    @include igx-root-css-vars($theme);
+
+    %tooltip-display {
+        display: inline-flex;
+        text-align: center;
+        align-items: center;
+        flex-flow: column wrap;
+        background-color: --var($theme, 'background');
+        color: --var($theme, 'text-color');
+        border-radius: --var($theme, 'roundness');
+        margin: 0 auto;
+    }
+
+    %tooltip--desktop {
+        padding: 0 rem(8px);
+        min-height: rem(24px);
+    }
+
+    %tooltip--mobile {
+        padding: 0 rem(16px);
+        min-height: rem(32px);
+    }
+
+    %tooltip--hidden {
+        display: none;
+    }
+}
+
+/// Adds typography styles for the igx-tooltip component.
+/// Uses the 'body-2' category from the typographic scale for mobile tooltips and custom typography for desktop tooltips.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(text-desktop: null, text-mobile: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @requires rem
+/// @requires {mixin} igx-type-style
+@mixin igx-tooltip-typography(
+    $type-scale,
+    $categories: (text-desktop: null, text-mobile: 'body-2')
+) {
+    $text-desktop: map-get($categories, 'text-desktop');
+    $text-mobile: map-get($categories, 'text-mobile');
+
+    %tooltip--mobile {
+        @include igx-type-style($type-scale, $text-mobile);
+    }
+
+    @if $text-desktop != null {
+        %tooltip--desktop {
+            @include igx-type-style($type-scale, $text-desktop);
+        }
+    } @else {
+        %tooltip--desktop {
+            font-size: rem(10px);
+            font-weight: 600;
+        }
+    }
+}
