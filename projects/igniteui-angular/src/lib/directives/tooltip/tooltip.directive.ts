@@ -2,6 +2,9 @@ import {
     Directive, ElementRef, HostListener, Input, NgModule, Renderer2, ChangeDetectorRef, OnInit,
     Output, EventEmitter, Optional, HostBinding, OnDestroy
 } from '@angular/core';
+import { useAnimation } from '@angular/animations';
+import { scaleInCenter } from '../../animations/scale/index';
+import { fadeOut } from '../../animations/fade/index';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { HorizontalAlignment, AutoPositionStrategy, PositionSettings } from '../../services';
 import { CommonModule } from '@angular/common';
@@ -175,7 +178,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         const positionSettings: PositionSettings = {
             target: this.nativeElement,
             horizontalDirection: HorizontalAlignment.Center,
-            horizontalStartPoint: HorizontalAlignment.Center
+            horizontalStartPoint: HorizontalAlignment.Center,
+            openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
+            closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
         };
 
         this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
@@ -432,7 +437,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-tooltip')
+    @HostBinding('class.igx-tooltip--desktop')
     public get defaultClass() {
         return !this.collapsed;
     }
