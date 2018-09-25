@@ -4649,6 +4649,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             scrollStrategy: new AbsoluteScrollStrategy(),
             modal: false,
             closeOnOutsideClick: false,
+            outlet: this.outletDirective,
             positionStrategy: new ConnectedPositioningStrategy({
                 target: row.element.nativeElement,
                 horizontalDirection: HorizontalAlignment.Left,
