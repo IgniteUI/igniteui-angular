@@ -4,12 +4,7 @@
         <div class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>
     </ng-container>
     <ng-template #default>
-        <ng-container *ngIf="column.dataType === 'number'">
-            <div class="igx-grid__td-text">{{ value | number }}</div>
-        </ng-container>
-        <ng-container *ngIf="column.dataType === 'date'">
-            <div class="igx-grid__td-text">{{ value | date }}</div>
-        </ng-container>
+        <div class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal) : (value | igxdate) }}</div>
     </ng-template>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">
@@ -27,7 +22,7 @@
         <igx-checkbox [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [checked]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [disableRipple]="true"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-datePicker [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [labelVisibility]="false"></igx-datePicker>
+        <igx-datePicker [outlet]="grid.outletDirective" [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [labelVisibility]="false"></igx-datePicker>
     </ng-container>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context">

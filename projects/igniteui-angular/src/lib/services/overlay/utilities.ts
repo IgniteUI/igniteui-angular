@@ -47,6 +47,15 @@ export interface OverlayEventArgs {
     componentRef?: ComponentRef<{}>;
 }
 
+export interface OverlayAnimationEventArgs {
+    /** Id of the overlay as returned by the `show()` method */
+    id: string;
+    /** Animation player that will play the animation */
+    animationPlayer: AnimationPlayer;
+    /** Type of animation to be played. It should be either 'open' or 'close' */
+    animationType: 'open' | 'close';
+}
+
 /** @hidden */
 export function getPointFromPositionsSettings(settings: PositionSettings, overlayWrapper: HTMLElement): Point {
     let result: Point = new Point(0, 0);
@@ -81,4 +90,6 @@ export interface OverlayInfo {
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
     closeAnimationPlayer?: AnimationPlayer;
+    openAnimationInnerPlayer?: any;
+    closeAnimationInnerPlayer?: any;
 }

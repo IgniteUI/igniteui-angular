@@ -155,8 +155,12 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
-     * Gets/sets whether items will be able to take focus. If set to true, default value,
-     * user will be able to use keyboard navigation.
+     * Gets/sets whether items take focus. Disabled by default.
+     * When enabled, drop down items gain tab index and are focused when active -
+     * this includes activating the selected item when opening the drop down and moving with keyboard navigation.
+     *
+     * Note: Keep that focus shift in mind when using the igxDropDownItemNavigation directive
+     * and ensure it's placed either on each focusable item or a common ancestor to allow it to handle keyboard events.
      *
      * ```typescript
      * // get
@@ -169,7 +173,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     @Input()
-    public allowItemsFocus = true;
+    public allowItemsFocus = false;
 
     /**
      * Gets the drop down's id
@@ -612,7 +616,7 @@ export class IgxDropDownItemNavigationDirective {
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
         if (!(this.target instanceof IgxDropDownComponent)) {
-            if (this.target.focusedItem.itemData === 'ADD ITEM') {
+            if (this.target.focusedItem.value === 'ADD ITEM') {
                 const targetC = this.target as IgxComboDropDownComponent;
                 targetC.combo.addItemToCollection();
             } else {

@@ -8,6 +8,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 
 const selectedCellClass = '.igx-grid__td--selected';
 let data = [
@@ -1028,6 +1029,27 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.selectedRows()).toEqual([]);
     });
 
+    it('Should properly check the header checkbox state when filtering, #2469', fakeAsync(() => {
+        const fixture = TestBed.createComponent(GridWithSelectionFilteringComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const headerCheckbox: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
+        grid.primaryKey = 'ID';
+        fixture.detectChanges();
+        tick();
+        headerCheckbox.click();
+        tick();
+        fixture.detectChanges();
+        tick();
+        expect(headerCheckbox.parentElement.classList).toContain('igx-checkbox--checked');
+        grid.filter('Downloads', 0, IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), true);
+        tick();
+        fixture.detectChanges();
+        tick();
+        expect(headerCheckbox.parentElement.classList).toContain('igx-checkbox--checked');
+    }));
+
     it('Should properly handle TAB / SHIFT + TAB on edge cell, triggering virt scroll', (async () => {
         const fix = TestBed.createComponent(GridWithScrollsComponent);
         fix.detectChanges();
@@ -1057,7 +1079,7 @@ describe('IgxGrid - Row Selection', () => {
 
         const targetCell = gridFirstRow.cells.toArray()[cellsLength - 4];
 
-        targetCell.nativeElement.focus();
+        targetCell.onFocus(mockEvent);
         await wait();
         fix.detectChanges();
 
@@ -1072,19 +1094,16 @@ describe('IgxGrid - Row Selection', () => {
         // Focus has changed to last cell
         expect(lastVisibleCell.isSelected).toBeTruthy();
         // Focus leftmost cell, SHIFT + TAB will NOT trigger virtualization
-        gridFirstRow.cells.first.nativeElement.focus();
+        gridFirstRow.cells.first.onFocus(mockEvent);
         await wait();
         fix.detectChanges();
 
         expect(gridFirstRow.cells.first.isSelected).toBeTruthy();
-        // gridFirstRow.cells.first.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
         gridFirstRow.cells.first.onShiftTabKey(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
         await wait(100);
         fix.detectChanges();
         // There are not cells prior to the first cell - no scrolling will be done, spy will not be called;
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
-        // Cell is no longer focused
-        expect(gridFirstRow.cells.first.isSelected).toBeFalsy();
     }));
 
 });

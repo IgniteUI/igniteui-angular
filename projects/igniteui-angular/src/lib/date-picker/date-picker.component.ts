@@ -14,6 +14,7 @@ import {
     ViewChild,
     ViewContainerRef,
     HostListener,
+    ElementRef,
     TemplateRef,
     Directive
 } from '@angular/core';
@@ -30,6 +31,8 @@ import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { OverlaySettings } from '../services';
 import { DeprecateClass } from '../core/deprecateDecorators';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 
@@ -39,6 +42,7 @@ import { DateRangeDescriptor } from '../core/dates/dateRange';
 export class IgxDatePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
+
 
 export interface IFormatViews {
     day?: boolean;
@@ -411,6 +415,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     /**
      *@hidden
      */
+    @Input()
+    public outlet: IgxOverlayOutletDirective | ElementRef;
+
+    /**
+     *@hidden
+     */
     public get calendar() {
         return this.calendarRef.instance;
     }
@@ -517,13 +527,36 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
     }
 
     /**
+     * Deselects the calendar date.
+     *```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *ngAfterViewInit(){
+     *this.datePicker.deselectDate();
+     *}
+     * ```
+     * @memberOf {@link IgxDatePickerComponent}
+     */
+    public deselectDate() {
+        this.value = null;
+        this._onChangeCallback(null);
+    }
+
+    /**
      * Open the dialog and update the calendar.
      *
      * @hidden
      */
     public openDialog(): void {
         this.createCalendarRef();
-        this.alert.open();
+        if (this.outlet) {
+            const overlaySettings: OverlaySettings = {
+                outlet: this.outlet
+            };
+            this.alert.open(overlaySettings);
+        } else {
+            this.alert.open();
+        }
         this._onTouchedCallback();
         this.onOpen.emit(this);
     }
