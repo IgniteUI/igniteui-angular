@@ -21,7 +21,7 @@ export class IgxGridAPIService {
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
     protected editCellState: Map<string, any> = new Map<string, any>();
-    protected editRowState: Map<string, any> = new Map<string, any>();
+    protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     public register(grid: IgxGridComponent) {
@@ -76,7 +76,12 @@ export class IgxGridAPIService {
     }
 
     public set_cell_inEditMode(gridId: string, cell, editMode: boolean) {
+        const editRowState = this.editRowState.get(gridId);
         const grid = this.get(gridId);
+        if (editRowState && editRowState.rowID !== cell.cellID.rowID) {
+            grid.updateRowTransaction(editRowState.rowID, editRowState.rowIndex);
+        }
+
         if (!this.editCellState.has(gridId)) {
             this.editCellState.set(gridId, null);
             this.editRowState.set(gridId, null);
@@ -85,7 +90,7 @@ export class IgxGridAPIService {
             const cellCopy = Object.assign({}, cell);
             cellCopy.row = Object.assign({}, cell.row);
             this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
-            this.editRowState.set(gridId, { rowID: cell.cellID.rowID });
+            this.editRowState.set(gridId, { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex });
         }
     }
 
@@ -185,7 +190,7 @@ export class IgxGridAPIService {
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
         const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
-        editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
+            editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
         const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
         if (rowIndex !== -1) {
             const args: IGridEditEventArgs = {
@@ -193,19 +198,17 @@ export class IgxGridAPIService {
                 currentValue: grid.data[rowIndex][column.field], newValue: editValue
             };
             const oldValue = grid.data[rowIndex][column.field];
-            if (oldValue && oldValue === editValue) {
-                return;
-            }
-
             grid.onEditDone.emit(args);
+
+            //  if edit (new) value is same as old value do nothing here
+            if (oldValue && oldValue === editValue) { return; }
+
             if (grid.transactions.aggregatedState() !== null) {
-                const newTransaction = { [column.field]: editValue };
+                const transaction: ITransaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
                 if (grid.rowEditable) {
-                    grid.transactions.addPending({ id: rowID, type: TransactionType.UPDATE, newValue: newTransaction},
-                        grid.data[rowIndex]);
+                    grid.transactions.addPending(transaction, grid.data[rowIndex]);
                 } else {
-                    grid.transactions.add({ id: rowID, type: TransactionType.UPDATE, newValue: newTransaction},
-                        grid.data[rowIndex]);
+                    grid.transactions.add(transaction, grid.data[rowIndex]);
                 }
             } else {
                 grid.data[rowIndex][column.field] = args.newValue;
@@ -222,10 +225,14 @@ export class IgxGridAPIService {
         const grid = this.get(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const index = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-        grid.data.indexOf(rowID);
+            grid.data.indexOf(rowID);
         if (index !== -1) {
-            const args: IGridEditEventArgs = { row: this.get_row_by_key(id, rowID), cell: null,
-                currentValue: this.get(id).data[index], newValue: value };
+            const args: IGridEditEventArgs = {
+                row: this.get_row_by_key(id, rowID),
+                cell: null,
+                currentValue: this.get(id).data[index],
+                newValue: value
+            };
             grid.onEditDone.emit(args);
             grid.data[index] = args.newValue;
             if (isRowSelected) {

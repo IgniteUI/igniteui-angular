@@ -173,18 +173,29 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const copy = [...this._data];
             const transactionsState = this.transactions.aggregatedState();
             transactionsState.forEach((state, key) => {
-                // TODO change to switch case
-                if (state.type === TransactionType.ADD) {
-                    copy.push(state.value);
-                }
-                if (state.type === TransactionType.UPDATE) {
-                    const index = this._data.findIndex(v => v === state.recordRef);
-                    copy.splice(index, 1, Object.assign({}, copy[index], state.value));
-                }
-                if (state.type === TransactionType.DELETE) {
-                    //  TODO: mark row as deleted somehow
+                const index = this._data.findIndex(v => v === state.recordRef);
+                switch (state.type) {
+                    case TransactionType.ADD: {
+                        copy.push(state.value);
+                        break;
+                    }
+                    case TransactionType.DELETE: {
+                        //  TODO: mark row as deleted somehow
+                        break;
+                    }
+                    case TransactionType.UPDATE: {
+                        copy.splice(index, 1, Object.assign({}, copy[index], state.value));
+
+                        const pendingState = this.transactions.getPendingState(key);
+                        if (pendingState) {
+                            copy.splice(index, 1, Object.assign({}, copy[index], pendingState.value));
+                        }
+
+                        break;
+                    }
                 }
             });
+
             return copy;
         }
         return this._data;
@@ -1638,7 +1649,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportText: string = null;
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
-    private _rowInEditMode: IgxGridRowComponent = null;
 
     /**
      * Provides access to the `IgxToolbarComponent`.
@@ -4656,14 +4666,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.rowEditingOverlay.close();
     }
 
-    public updateRowTransaction(event) {
-        //  cache rowID and rowIndex. As soon as we call gridAPI.submitValue
-        //  this.cellInEditMode is gone.
+    public onUpdateRowTransaction(event) {
         const rowID = this.cellInEditMode.cellID.rowID;
         const rowIndex = this.cellInEditMode.cellID.rowIndex;
+        this.updateRowTransaction(rowID, rowIndex);
+    }
+
+    public updateRowTransaction(rowID: any, rowIndex: number) {
         //  we should submit the value before add the transaction and close the row edit template
         this.gridAPI.submit_value(this.id);
-        // const row = this.rowInEditMode;
         this.transactions.add(
             {
                 id: rowID,
@@ -4677,9 +4688,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             //  reset transactions for this row. Otherwise next time you edit it you
             //  will push old changes to transaction log
             this.transactions.resetPending();
+            this.closeRowEditingOverlay();
+            this.cdr.detectChanges();
     }
 
-    public resetRowTransaction(event) {
+    public onResetRowTransaction(event) {
+        this.resetRowTransaction();
+    }
+
+    private resetRowTransaction() {
         this.transactions.resetPending();
         this.cellInEditMode.inEditMode = false;
     }
@@ -4687,9 +4704,5 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public get cellInEditMode(): IgxGridCellComponent {
         const cell = this.gridAPI.get_cell_inEditMode(this.id);
         return this.gridAPI.get_cell_by_key(this.id, cell.cellID.rowID, cell.cell.column.field);
-    }
-
-    public get rowInEditMode(): IgxGridRowComponent {
-        return this.gridAPI.get_row_inEditMode(this.id);
     }
 }
