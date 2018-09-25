@@ -3404,6 +3404,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridSizes() {
+        this._horizontalChunkSize = 0;
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
@@ -4325,13 +4326,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let length = 0;
         let maxLength = 0;
         const arr = [];
-        const columns = this.columnList.toArray();
+        const columns = this.unpinnedColumns;
         let sum = 0;
         const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem.width, 10);
         const availableSize = this.unpinnedWidth;
         for (i; i < columns.length; i++) {
             const column = columns[i];
             sum = arr.reduce(reducer, parseInt(column.width, 10));
+            if (isNaN(sum)) {
+                return maxLength;
+            }
             if (sum <= availableSize) {
                 arr.push(column);
                 length = arr.length;
@@ -4341,6 +4345,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     let prevIndex = columns.indexOf(arr[i]) - 1;
                     while (prevIndex >= 0 && sum <= availableSize) {
                         prevIndex = columns.indexOf(arr[0]) - 1;
+                        if (prevIndex < 0) {
+                            maxLength++;
+                            return maxLength;
+                        }
                         const prevItem = columns[prevIndex];
                         sum = arr.reduce(reducer, parseInt(prevItem.width, 10));
                         arr.unshift(prevItem);

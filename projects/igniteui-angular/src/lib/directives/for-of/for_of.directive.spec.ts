@@ -104,7 +104,8 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should always fill available space for last chunk size calculation', () => {
+        /* Chunk size is now calculated in igxGrid => TODO MOVE TEST*/
+        xit('should always fill available space for last chunk size calculation', () => {
             fix.componentInstance.width = '1900px';
             fix.componentInstance.cols = [
                 { field: '1', width: 100 },
@@ -1150,6 +1151,7 @@ export class VerticalVirtualComponent {
                     <ng-template #childContainer igxForTest let-col [igxForOf]="cols"
                         [igxForScrollOrientation]="'horizontal'"
                         [igxForScrollContainer]="scrollContainer"
+                        [igxForDisplayContainerWidth]='width'
                         [igxForContainerSize]='width'>
                             <div [style.min-width]='col.width + "px"'>{{rowData[col.field]}}</div>
                     </ng-template>

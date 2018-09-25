@@ -858,6 +858,8 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         const grid = (this.grid as any);
+        // TODO REFACTOR
+        grid._horizontalChunkSize = 0;
         const hasIndex = index !== undefined;
         if (hasIndex && (index < 0 || index >= grid.pinnedColumns.length)) {
             return false;
@@ -917,6 +919,8 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         const grid = (this.grid as any);
+        // TODO REFACTOR
+        grid._horizontalChunkSize = 0;
         const hasIndex = index !== undefined;
         if (hasIndex && (index < 0 || index >= grid._unpinnedColumns.length)) {
             return false;

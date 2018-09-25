@@ -12,7 +12,7 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Cell component', () => {
+fdescribe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateHorizontallyToIndex = (
@@ -616,7 +616,7 @@ describe('IgxGrid - Cell component', () => {
                 expect(displayContainer).toBe(0);
             }));
 
-            it('When cell in editMode and try to navigate with `ArrowLeft` - focus should remain over the input.', (async () => {
+            fit('When cell in editMode and try to navigate with `ArrowLeft` - focus should remain over the input.', (async () => {
                 let cellElem;
                 const virtRow = grid.getRowByIndex(0).virtDirRow;
                 let virtRowStyle;
@@ -1146,7 +1146,7 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
+        <igx-grid [height]="gridHeight" [columnWidth]="defaultWidth" [visibleRows]="5" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
             <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.field" [width]="c.width">
             </igx-column>
         </igx-grid>
@@ -1276,7 +1276,7 @@ export class CellEditingTestComponent {
 }
 @Component({
     template: `
-        <igx-grid [data]="data" width="300px" height="250px">
+        <igx-grid [data]="data" width="300px" height="250px" [visibleRows]="4">
             <igx-column [editable]="true" field="firstName"></igx-column>
             <igx-column [editable]="true" field="lastName"></igx-column>
             <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
