@@ -26,11 +26,11 @@ The `igxDrag` directive can be applied on any DOM element by just adding it to i
 
 By default a drag operation starts when the end user swipes at least 5 px in any direction. Otherwise the interaction is considered as a click and the `dragClicked` event is emitted.
 
-When dragging occurs a drag ghost element is spawned and moves along with the mouse cursor or touch interaction.. The original element is still present, but it can be hidden automatically when dragging starts with the `hideBaseOnDrag` input.
+When dragging occurs a drag ghost element is spawned and moves along with the mouse cursor or touch interaction. The original element is still present, but it can be hidden automatically when dragging starts with the `hideBaseOnDrag` input.
 
-The dragging can be canceled by setting the `cancel` property of the `dragStart` event to `true`. This will cancel the current dragging logic that could be used.
+The dragging can be canceled by setting the `cancel` property of the `dragStart` event to `true`. This will cancel the default dragging logic.
 
-After the user releases the mouse/touch the drag ghost element is removed from the DOM and if the `hideBaseOnDrag` is enabled it will make the original element visible again and the `dragEnd` event will be emitted. If the `animateOnRelease` input is set to `true` all this will execute after the default animation of the drag ghost is finished which consist of returning it from the last dragged position to the position of the original element. Then the drag ghost will be removed with the rest and the `returnMoveEnd` event will be emitted.
+After the user releases the mouse/touch the drag ghost element is removed from the DOM and if the `hideBaseOnDrag` is enabled it will make the original element visible again and the `dragEnd` event will be emitted. If the `animateOnRelease` input is set to `true` all this will execute after the default animation of the drag ghost is finished which consist of returning it from the last dragged position to the position of the original element. Then the drag ghost will be removed and the `returnMoveEnd` event will be emitted.
 
 ## API
 
@@ -39,10 +39,9 @@ After the user releases the mouse/touch the drag ghost element is removed from t
 | Name | Type | Default Value | Description |
 | :--- | :--- | :--- | :--- |
 | igxDrag          | any | - | Input used to save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element. |
-| dragTolerance    | number | 5 | Indicates when the drag should start
-     * By default the drag starts after the draggable element is moved by 5px |
+| dragTolerance    | number | 5 | Indicates when the drag should start (in pixels). By default the drag starts after the draggable element is moved by 5px |
 | ghostImageClass  | string | '' | Sets a custom class that will be added to the `dragGhost` element. |
-| hideBaseOnDrag   | boolean | false | Sets if the draggable element should hide when when dragging starts. |
+| hideBaseOnDrag   | boolean | false | Sets if the draggable element should hide when dragging starts. |
 | animateOnRelease | boolean | false | Enables/disables the draggable element animation when the element is released. |
 
 ### Outputs
@@ -66,7 +65,7 @@ After the user releases the mouse/touch the drag ghost element is removed from t
 
 | Signature    | Description   |
 | :----------- | :------------ |
-| dropFinished() | Triggers the drop finishing action on the igxDrag when moving it in the DOM from one place to another. This is needed so the igxDrag recalculates it's position once moved in DOM so the current and return animation are based on the new position in DOM. |
+| dropFinished() | Triggers the drop finishing action on the igxDrag when moving it in the DOM from one place to another. This is needed so the `igxDrag` recalculates it's position once moved in DOM so the current and return animation are based on the new position in DOM. |
 
 #igxDrop
 `igxDrop` directive is used in combination with the `igxDrag` directive to add behavior when element needs to be dropped in an area.
@@ -104,7 +103,7 @@ The `igxDrop` directive can be applied to any DOM element just like the `igxDrag
 ````html
 <div igxDrop>Drop here</div>
 ````
-One element can have both `igxDrag` and `igxDrop` directives applied but then it is recommended to use custom logic when another element is being dropped on to it by canceling the `onDrop` event of the `igxDrop` directive. 
+One element can have both `igxDrag` and `igxDrop` directives applied, but then it is recommended to use custom logic when another element is being dropped on to it by canceling the `onDrop` event of the `igxDrop` directive. 
 
 ## API
 
@@ -112,6 +111,6 @@ One element can have both `igxDrag` and `igxDrop` directives applied but then it
 
 | Name | Argument Type | Description | Cancelable| 
 | :--- | :--- | :--- | :--- |
-| onEnter  | `IgxDropEnterEventArgs` | Event triggered when dragged element enters the area of the element. | false |
-| onLeave  | `IgxDropLeaveEventArgs` | Event triggered when dragged element leaves the area of the element. | false |
-| onDrop   | `IgxDropEventArgs` | Event triggered when dragged element is dropped in the area of the element. | true |
+| onEnter  | `IgxDropEnterEventArgs` | Event triggered when dragged element enters the area of the drop element. | false |
+| onLeave  | `IgxDropLeaveEventArgs` | Event triggered when dragged element leaves the area of the drop element. | false |
+| onDrop   | `IgxDropEventArgs` | Event triggered when dragged element is dropped in the area of the drop element. | true |
