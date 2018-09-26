@@ -2,8 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent
+    IgxGridComponent, IgxButtonGroupComponent, IgxNoOpTransactionService, IgxTransactionService
 } from 'igniteui-angular';
+
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
@@ -21,7 +22,6 @@ export class GridCellEditingComponent {
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
-    private subscribtion;
 
     constructor() {
         const date = new Date();

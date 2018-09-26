@@ -5,7 +5,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService,
-    IgxOverlayService
+    IgxOverlayService,
+    IgxTransactionBaseService,
+    IgxTransactionService,
+    IgxGridTransaction
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -67,7 +70,6 @@ import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
-
 
 const components = [
     AppComponent,
@@ -147,8 +149,8 @@ const components = [
         RemoteService,
         IgxExcelExporterService,
         IgxCsvExporterService,
-        IgxOverlayService
-    ],
+        IgxOverlayService,
+        { provide: IgxGridTransaction, useClass: IgxTransactionBaseService }],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

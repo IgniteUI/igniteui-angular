@@ -1,6 +1,6 @@
-import { ITransactionService, ITransaction, IState, TransactionType } from './utilities';
+import { IgxTransactionService, ITransaction, IState, TransactionType } from './utilities';
 
-export class IgxTransactionBaseService implements ITransactionService {
+export class IgxTransactionBaseService implements IgxTransactionService {
     private _transactions: ITransaction[] = [];
     private _redoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _undoStack: { transaction: ITransaction, recordRef: any }[] = [];

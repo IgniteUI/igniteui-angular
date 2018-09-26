@@ -16,7 +16,7 @@ export interface IState {
     type: TransactionType;
 }
 
-export interface ITransactionService {
+export interface IgxTransactionService {
     /**
      * Adds provided  transaction with recordRef if any
      * @param transaction Transaction to be added
@@ -34,12 +34,12 @@ export interface ITransactionService {
     /**
      * Remove the last transaction if any
      */
-    undo();
+    undo(): void;
 
     /**
      * Applies the last undone transaction if any
      */
-    redo();
+    redo(): void;
 
     /**
      * Returns a map of aggregated state for all transactions
@@ -51,10 +51,10 @@ export interface ITransactionService {
      * Applies all transactions over the provided data
      * @param data Data source to update
      */
-    commit(data: any[]);
+    commit(data: any[]): void;
 
     /**
      * Clears all transactions
      */
-    clear();
+    clear(): void;
 }

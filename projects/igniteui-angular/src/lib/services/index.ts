@@ -12,3 +12,6 @@ export {
     OverlayEventArgs, OverlaySettings, PositionSettings
 } from './overlay/utilities';
 export * from './overlay/scroll';
+export * from './transaction/transaction-base';
+export * from './transaction/noop-transaction';
+export * from './transaction/utilities';

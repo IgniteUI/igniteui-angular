@@ -1,21 +1,15 @@
-import { ITransactionService, ITransaction, IState } from './utilities';
+import { IgxTransactionService, ITransaction, IState } from './utilities';
 
-export class NoOpTransactionService implements ITransactionService {
-    add(transaction: ITransaction, recordRef?: any): boolean {
-        return false;
-    }
+export class IgxNoOpTransactionService implements IgxTransactionService {
+    add(transaction: ITransaction, recordRef?: any): boolean { return false; }
 
-    getTransactionLog(id?: any): ITransaction[] | ITransaction {
-        return null;
-    }
+    getTransactionLog(id?: any): ITransaction[] | ITransaction { return null; }
 
     undo() { }
 
     redo() { }
 
-    aggregatedState(): Map<any, IState> {
-        return null;
-    }
+    aggregatedState(): Map<any, IState> { return null; }
 
     commit(data: any) { }
 

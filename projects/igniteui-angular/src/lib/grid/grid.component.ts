@@ -24,17 +24,18 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef
+    ViewContainerRef,
+    InjectionToken
 } from '@angular/core';
 import { Subject, of } from 'rxjs';
 import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
-import { DataType } from '../data-operations/data-util';
+import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxBaseExporter, IgxExporterOptionsBase, OverlaySettings, AbsoluteScrollStrategy,
@@ -47,19 +48,20 @@ import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGroupByRowTemplateDirective, DropPosition } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
+import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
-import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { IgxTransactionBaseService } from '../services/transaction/transaction-base';
-import { ITransaction, TransactionType } from '../services/transaction/utilities';
-import { IgxPendingTransactionService } from '../services/transaction/transaction-pending';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IFilteringOperation } from '../data-operations/filtering-condition';
+import { ITransaction, TransactionType, IgxTransactionService } from '../services/transaction/utilities';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
 const MINIMUM_COLUMN_WIDTH = 136;
+
+export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -155,8 +157,8 @@ export interface IColumnMovingEndEventArgs {
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid',
-    templateUrl: './grid.component.html',
-    providers: [IgxPendingTransactionService]
+    templateUrl: './grid.component.html'
+    // providers: [IgxPendingTransactionService]
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
     private _data;
@@ -186,10 +188,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     case TransactionType.UPDATE: {
                         copy.splice(index, 1, Object.assign({}, copy[index], state.value));
 
-                        const pendingState = this.transactions.getPendingState(key);
-                        if (pendingState) {
-                            copy.splice(index, 1, Object.assign({}, copy[index], pendingState.value));
-                        }
+                        // const pendingState = this.transactions.getPendingState(key);
+                        // if (pendingState) {
+                        //     copy.splice(index, 1, Object.assign({}, copy[index], pendingState.value));
+                        // }
 
                         break;
                     }
@@ -655,28 +657,28 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    /**
-     * Sets whether the `IgxGridRowComponent` is editable.
-     * By default it is set to false.
-     * ```typescript
-     * let rowEditable = this.grid.rowEditable;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    get rowEditable(): boolean {
-        return this._rowEditable;
-    }
-     /**
-     * Sets whether rows can be edited.
-     * ```html
-     * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [columnHiding]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    set rowEditable(val: boolean) {
-        this._rowEditable = val;
-    }
+    // /**
+    //  * Sets whether the `IgxGridRowComponent` is editable.
+    //  * By default it is set to false.
+    //  * ```typescript
+    //  * let rowEditable = this.grid.rowEditable;
+    //  * ```
+    //  * @memberof IgxGridComponent
+    //  */
+    // @Input()
+    // get rowEditable(): boolean {
+    //     return this._rowEditable;
+    // }
+    //  /**
+    //  * Sets whether rows can be edited.
+    //  * ```html
+    //  * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [columnHiding]="true"></igx-grid>
+    //  * ```
+    //  * @memberof IgxGridComponent
+    //  */
+    // set rowEditable(val: boolean) {
+    //     this._rowEditable = val;
+    // }
 
     /**
      * Returns the height of the `IgxGridComponent`.
@@ -971,21 +973,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onRowSelectionChange = new EventEmitter<IRowSelectionEventArgs>();
 
-    /**
-     * Emitted when a `IgxGridRowComponent` is being updated to the `IgxGridComponent` through the UI and API.
-     * Returns the data for the updated `IgxGridRowComponent` object.
-     * ```typescript
-     * rowUpdated(event: IRowUpdateDataEventArgs){
-     *    const rowInfo = event;
-     * }
-     * ```
-     * ```html
-     * <igx-grid #grid [data]="localData" (onRowUpdated)="rowUpdated($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Output()
-    public onRowUpdated = new EventEmitter<IRowUpdateDataEventArgs>();
+    // /**
+    //  * Emitted when a `IgxGridRowComponent` is being updated to the `IgxGridComponent` through the UI and API.
+    //  * Returns the data for the updated `IgxGridRowComponent` object.
+    //  * ```typescript
+    //  * rowUpdated(event: IRowUpdateDataEventArgs){
+    //  *    const rowInfo = event;
+    //  * }
+    //  * ```
+    //  * ```html
+    //  * <igx-grid #grid [data]="localData" (onRowUpdated)="rowUpdated($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+    //  * ```
+	//  * @memberof IgxGridComponent
+    //  */
+    // @Output()
+    // public onRowUpdated = new EventEmitter<IRowUpdateDataEventArgs>();
 
     /**
      * Emitted when `IgxColumnComponent` is pinned.
@@ -1462,8 +1464,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild(IgxOverlayOutletDirective, { read: IgxOverlayOutletDirective })
     public outletDirective: IgxOverlayOutletDirective;
 
-    @ViewChild(IgxToggleDirective)
-    public rowEditingOverlay: IgxToggleDirective;
+    // @ViewChild(IgxToggleDirective)
+    // public rowEditingOverlay: IgxToggleDirective;
 
     /**
      * @hidden
@@ -2017,10 +2019,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected _rowSelection = false;
-    /**
-     * @hidden
-     */
-    protected _rowEditable = false;
+    // /**
+    //  * @hidden
+    //  */
+    // protected _rowEditable = false;
     /**
      * @hidden
      */
@@ -2092,7 +2094,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     constructor(
         private gridAPI: IgxGridAPIService,
         public selection: IgxSelectionAPIService,
-        private _transactions: IgxPendingTransactionService,
+        @Inject(IgxGridTransaction) private _transactions: IgxTransactionService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -2121,7 +2123,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
-        this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe((source) => {
+        this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.gridAPI.submit_value(this.id);
         });
     }
@@ -3102,7 +3104,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public disableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
-            this._disableMultipleSummaries(rest[0], false);
+            this._disableMultipleSummaries(rest[0]);
         } else {
             this._summaries(rest[0], false);
         }
@@ -3714,7 +3716,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected _disableMultipleSummaries(expressions: string[], hasSummary: boolean) {
+    protected _disableMultipleSummaries(expressions: string[]) {
         expressions.forEach((column) => { this._summaries(column, false); });
     }
 
@@ -4171,7 +4173,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public trackColumnChanges(index, col) {
+    public trackColumnChanges(col) {
         return col.field + col.width;
     }
 
@@ -4675,66 +4677,66 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public openRowEditingOverlay(row: IgxGridRowComponent) {
-        this.closeRowEditingOverlay();
-        const overlaySettings: OverlaySettings = {
-            scrollStrategy: new AbsoluteScrollStrategy(),
-            modal: false,
-            closeOnOutsideClick: false,
-            outlet: this.outletDirective,
-            positionStrategy: new ConnectedPositioningStrategy({
-                target: row.element.nativeElement,
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Bottom,
-                horizontalStartPoint: HorizontalAlignment.Right,
-                verticalStartPoint: VerticalAlignment.Bottom,
-                openAnimation: null,
-                closeAnimation: null
-            })
-        };
-        this.rowEditingOverlay.open(overlaySettings);
+        // this.closeRowEditingOverlay();
+        // const overlaySettings: OverlaySettings = {
+        //     scrollStrategy: new AbsoluteScrollStrategy(),
+        //     modal: false,
+        //     closeOnOutsideClick: false,
+        //     outlet: this.outletDirective,
+        //     positionStrategy: new ConnectedPositioningStrategy({
+        //         target: row.element.nativeElement,
+        //         horizontalDirection: HorizontalAlignment.Left,
+        //         verticalDirection: VerticalAlignment.Bottom,
+        //         horizontalStartPoint: HorizontalAlignment.Right,
+        //         verticalStartPoint: VerticalAlignment.Bottom,
+        //         openAnimation: null,
+        //         closeAnimation: null
+        //     })
+        // };
+        // this.rowEditingOverlay.open(overlaySettings);
     }
 
     public closeRowEditingOverlay() {
-        this.rowEditingOverlay.close();
+        // this.rowEditingOverlay.close();
     }
 
-    public onUpdateRowTransaction(event) {
-        const rowID = this.cellInEditMode.cellID.rowID;
-        const rowIndex = this.cellInEditMode.cellID.rowIndex;
-        this.updateRowTransaction(rowID, rowIndex);
+    public onUpdateRowTransaction(ev) {
+        // const rowID = this.cellInEditMode.cellID.rowID;
+        // const rowIndex = this.cellInEditMode.cellID.rowIndex;
+        // this.updateRowTransaction(rowID, rowIndex);
     }
 
     public updateRowTransaction(rowID: any, rowIndex: number) {
-        //  we should submit the value before add the transaction and close the row edit template
-        this.gridAPI.submit_value(this.id);
-        this.transactions.add(
-            {
-                id: rowID,
-                type: TransactionType.UPDATE,
-                newValue: this.transactions.getPendingState(rowID).value
-            },
-            this.data[rowIndex]);
-            //  the call to submit_value sets inEditMode to false and we do not need next call
-            //  this.cellInEditMode.inEditMode = false;
+        // //  we should submit the value before add the transaction and close the row edit template
+        // this.gridAPI.submit_value(this.id);
+        // this.transactions.add(
+        //     {
+        //         id: rowID,
+        //         type: TransactionType.UPDATE,
+        //         newValue: this.transactions.getPendingState(rowID).value
+        //     },
+        //     this.data[rowIndex]);
+        // //  the call to submit_value sets inEditMode to false and we do not need next call
+        // //  this.cellInEditMode.inEditMode = false;
 
-            //  reset transactions for this row. Otherwise next time you edit it you
-            //  will push old changes to transaction log
-            this.transactions.resetPending();
-            this.closeRowEditingOverlay();
-            this.cdr.detectChanges();
+        // //  reset transactions for this row. Otherwise next time you edit it you
+        // //  will push old changes to transaction log
+        // // this.transactions.resetPending();
+        // this.closeRowEditingOverlay();
+        // this.cdr.detectChanges();
     }
 
-    public onResetRowTransaction(event) {
-        this.resetRowTransaction();
+    public onResetRowTransaction(ev) {
+        // this.resetRowTransaction();
     }
 
     private resetRowTransaction() {
-        this.transactions.resetPending();
-        this.cellInEditMode.inEditMode = false;
+        // this.transactions.resetPending();
+        // this.cellInEditMode.inEditMode = false;
     }
 
-    public get cellInEditMode(): IgxGridCellComponent {
-        const cell = this.gridAPI.get_cell_inEditMode(this.id);
-        return this.gridAPI.get_cell_by_key(this.id, cell.cellID.rowID, cell.cell.column.field);
-    }
+    // public get cellInEditMode(): IgxGridCellComponent {
+        // const cell = this.gridAPI.get_cell_inEditMode(this.id);
+        // return this.gridAPI.get_cell_by_key(this.id, cell.cellID.rowID, cell.cell.column.field);
+    // }
 }

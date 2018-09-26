@@ -10,7 +10,8 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
-import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
+import { IFilteringOperation } from '../data-operations/filtering-condition';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { ITransaction, TransactionType } from '../services/transaction/utilities';
 /**
  *@hidden
@@ -205,11 +206,11 @@ export class IgxGridAPIService {
 
             if (grid.transactions.aggregatedState() !== null) {
                 const transaction: ITransaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
-                if (grid.rowEditable) {
-                    grid.transactions.addPending(transaction, grid.data[rowIndex]);
-                } else {
+                // if (grid.rowEditable) {
+                    // grid.transactions.addPending(transaction, grid.data[rowIndex]);
+                // } else {
                     grid.transactions.add(transaction, grid.data[rowIndex]);
-                }
+                // }
             } else {
                 grid.data[rowIndex][column.field] = args.newValue;
             }

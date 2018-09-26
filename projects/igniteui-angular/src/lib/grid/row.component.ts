@@ -30,7 +30,7 @@ import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
 })
 export class IgxGridRowComponent implements DoCheck {
 
-    private _inEditMode = false;
+    // private _inEditMode = false;
 
     /**
      *  The data passed to the row component.
@@ -169,23 +169,25 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('attr.aria-dirty')
     public get dirty(): boolean {
-        return this.grid.rowEditable && this.grid.transactions.aggregatedState().get(this.rowID) !== undefined;
+        // return  this.grid.rowEditable &&
+        return this.grid.transactions.aggregatedState() && this.grid.transactions.aggregatedState().get(this.rowID) !== undefined;
     }
 
     public get inEditMode(): boolean {
-        const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
-        if (this.grid.rowEditable && editableRow) {
-            if (editableRow.rowID === this.rowID) {
-                this.grid.openRowEditingOverlay(this);
-                return true;
-            } else if (!this.grid.rowList.find(row => row.rowID === editableRow.rowID) &&
-                !this.grid.rowEditingOverlay.collapsed) {
-                this.grid.closeRowEditingOverlay();
-                return false;
-            }
-        } else {
-            return false;
-        }
+        // const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
+        // if (this.grid.rowEditable && editableRow) {
+        //     if (editableRow.rowID === this.rowID) {
+        //         this.grid.openRowEditingOverlay(this);
+        //         return true;
+        //     } else if (!this.grid.rowList.find(row => row.rowID === editableRow.rowID) &&
+        //         !this.grid.rowEditingOverlay.collapsed) {
+        //         this.grid.closeRowEditingOverlay();
+        //         return false;
+        //     }
+        // } else {
+        //     return false;
+        // }
+        return false;
     }
 
     /**
@@ -289,7 +291,6 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     public update(value: any) {
-
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.rowID) {
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
@@ -309,7 +310,6 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     public delete() {
-
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.rowID) {
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
