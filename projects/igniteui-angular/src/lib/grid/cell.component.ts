@@ -508,12 +508,13 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     get dirty() {
-        let rowTransaction: IState;
-        if ( this.grid.transactions.aggregatedState()) {
-            rowTransaction = this.grid.transactions.aggregatedState().get(this.row.rowID);
+        const states = this.grid.transactions.aggregatedState();
+        if (states) {
+            const rowTransaction: IState = states.get(this.row.rowID);
+            return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
         }
 
-        return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
+        return false;
     }
 
     /**

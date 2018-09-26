@@ -22,7 +22,6 @@ export class IgxGridAPIService {
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
     protected editCellState: Map<string, any> = new Map<string, any>();
-    protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     public register(grid: IgxGridComponent) {
@@ -41,7 +40,6 @@ export class IgxGridAPIService {
         this.state.delete(id);
         this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
-        this.editRowState.delete(id);
     }
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
@@ -77,27 +75,18 @@ export class IgxGridAPIService {
     }
 
     public set_cell_inEditMode(gridId: string, cell, editMode: boolean) {
-        const editRowState = this.editRowState.get(gridId);
-        const grid = this.get(gridId);
-        if (editRowState && editRowState.rowID !== cell.cellID.rowID) {
-            grid.updateRowTransaction(editRowState.rowID, editRowState.rowIndex);
-        }
-
         if (!this.editCellState.has(gridId)) {
             this.editCellState.set(gridId, null);
-            this.editRowState.set(gridId, null);
         }
         if (!this.get_cell_inEditMode(gridId) && editMode) {
             const cellCopy = Object.assign({}, cell);
             cellCopy.row = Object.assign({}, cell.row);
             this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
-            this.editRowState.set(gridId, { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex });
         }
     }
 
     public escape_editMode(gridId, cellId?) {
         const editableCell = this.get_cell_inEditMode(gridId);
-        const grid = this.get(gridId);
         if (editableCell) {
             if (cellId) {
                 if (cellId.rowID === editableCell.cellID.rowID &&
@@ -109,7 +98,7 @@ export class IgxGridAPIService {
             }
         }
 
-        grid.refreshSearch();
+        this.get(gridId).refreshSearch();
     }
 
 
@@ -133,15 +122,6 @@ export class IgxGridAPIService {
 
     public get_row_by_index(id: string, rowIndex: number): IgxGridRowComponent {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
-    }
-
-    public get_row_inEditMode(gridId) {
-        const editRowId = this.editRowState.get(gridId);
-        if (editRowId) {
-            return editRowId;
-        } else {
-            return null;
-        }
     }
 
     public get_cell_by_key(id: string, rowSelector: any, field: string): IgxGridCellComponent {
@@ -206,11 +186,7 @@ export class IgxGridAPIService {
 
             if (grid.transactions.aggregatedState() !== null) {
                 const transaction: ITransaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
-                // if (grid.rowEditable) {
-                    // grid.transactions.addPending(transaction, grid.data[rowIndex]);
-                // } else {
-                    grid.transactions.add(transaction, grid.data[rowIndex]);
-                // }
+                grid.transactions.add(transaction, grid.data[rowIndex]);
             } else {
                 grid.data[rowIndex][column.field] = args.newValue;
             }

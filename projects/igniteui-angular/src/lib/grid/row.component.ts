@@ -31,8 +31,6 @@ import { TransactionType } from '../services';
 })
 export class IgxGridRowComponent implements DoCheck {
 
-    // private _inEditMode = false;
-
     /**
      *  The data passed to the row component.
      *
@@ -113,8 +111,7 @@ export class IgxGridRowComponent implements DoCheck {
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
-        const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`;
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${dirtyClass} ${deletedClass}`;
     }
 
 
@@ -171,9 +168,6 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('attr.aria-dirty')
     public get dirty(): boolean {
-        // return this.grid.rowEditable &&
-        //     this.grid.transactions.aggregatedState() &&
-        //     this.grid.transactions.aggregatedState().get(this.rowID) !== undefined;
         const state = this.grid.transactions.aggregatedState();
         if (state) {
             const row = state.get(this.rowID);
@@ -198,24 +192,6 @@ export class IgxGridRowComponent implements DoCheck {
             }
         }
 
-        return false;
-
-    }
-
-    public get inEditMode(): boolean {
-        // const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
-        // if (this.grid.rowEditable && editableRow) {
-        //     if (editableRow.rowID === this.rowID) {
-        //         this.grid.openRowEditingOverlay(this);
-        //         return true;
-        //     } else if (!this.grid.rowList.find(row => row.rowID === editableRow.rowID) &&
-        //         !this.grid.rowEditingOverlay.collapsed) {
-        //         this.grid.closeRowEditingOverlay();
-        //         return false;
-        //     }
-        // } else {
-        //     return false;
-        // }
         return false;
     }
 
