@@ -616,7 +616,7 @@ fdescribe('IgxGrid - Cell component', () => {
                 expect(displayContainer).toBe(0);
             }));
 
-            fit('When cell in editMode and try to navigate with `ArrowLeft` - focus should remain over the input.', (async () => {
+            it('When cell in editMode and try to navigate with `ArrowLeft` - focus should remain over the input.', (async () => {
                 let cellElem;
                 const virtRow = grid.getRowByIndex(0).virtDirRow;
                 let virtRowStyle;
@@ -1146,7 +1146,7 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [height]="gridHeight" [columnWidth]="defaultWidth" [visibleRows]="5" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
+        <igx-grid [columnWidth]="defaultWidth" [visibleRows]="5" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
             <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.field" [width]="c.width">
             </igx-column>
         </igx-grid>

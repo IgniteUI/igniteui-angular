@@ -325,9 +325,11 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * @hidden
      */
     public ngAfterViewInit() {
-        const height = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height - this.igxForItemSize;
-        this.onChunkGenerated.emit(height);
-        this._recalcScrollBarSize(height);
+        if (this.igxForScrollOrientation === "vertical") {
+            const height = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height - this.igxForItemSize;
+            this.onChunkGenerated.emit(height);
+            this._recalcScrollBarSize(height);
+        }
     }
 
     /**
@@ -842,7 +844,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
         this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
         this.applyChunkSizeChange();
-        //this._recalcScrollBarSize();
+        this._recalcScrollBarSize(null);
         if (this.hCache && this.hScroll.scrollLeft !== 0) {
             // Updating horizontal chunks and offsets based on the new scrollLeft
             const scrollOffset = this.fixedUpdateAllCols(this.hScroll.scrollLeft);

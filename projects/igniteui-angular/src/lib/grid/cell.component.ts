@@ -899,7 +899,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 0;
 
             // We take into consideration the vertical scroll width sinse it is not calculated in the container inside the row
-            const virtContainerSize = parseInt(this.row.virtDirRow.igxForContainerSize, 10) - verticalVirtScrollWidth;
+            const virtContainerSize = parseInt(this.row.virtDirRow.igxForDisplayContainerWidth, 10) - verticalVirtScrollWidth;
             let bVirtSubscribe = true;
 
             if (!horVirtScroll && !target) {
