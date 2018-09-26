@@ -61,6 +61,16 @@ All notable changes for each version of this project will be documented in this 
         - **item** of type `IgxListItemComponent`
         - **direction** of type `IgxListPanState`
         - **keepItem** of type `boolean`
+- `igxTooltip` and `igxTooltipTarget` directives:
+    - Added `IgxTooltipDirective`.
+        - An element that uses the `igxTooltip` directive is used as a tooltip for a specific target (anchor).
+        - Extends `IgxToggleDirective`.
+        - Exported with the name **tooltip**.
+    - Added `IgxTooltipTargetDirective`.
+        - An element that uses the `igxTooltipTarget` directive is used as a target (anchor) for a specific tooltip.
+        - Extends `IgxToggleActionDirective`.
+        - Exported with the name **tooltipTarget**.
+    - Both new directives are used in combination to set a tooltip to an element. For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
 
 ## 6.1.5
 - **General**
