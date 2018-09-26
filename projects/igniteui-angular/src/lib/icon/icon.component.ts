@@ -231,7 +231,7 @@ export class IgxIconComponent implements OnInit {
                 return this.svgImage;
             }
 
-            this.noLigature;
+            return this.noLigature;
         }
 
         return this.explicitLigature;

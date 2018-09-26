@@ -1,6 +1,7 @@
 import { Injectable, SecurityContext, Inject } from '@angular/core';
-import { DomSanitizer, DOCUMENT } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
 
 /**
  * **Ignite UI for Angular Icon Service** -
@@ -160,10 +161,10 @@ export class IgxIconService {
      */
     private _ensureSvgContainerCreated() {
         if (!this._svgContainer) {
-            this._svgContainer = this._document.documentElement.querySelector(".igx-svg-container");
+            this._svgContainer = this._document.documentElement.querySelector('.igx-svg-container');
             if (!this._svgContainer) {
                 this._svgContainer = this._document.createElement('DIV');
-                this._svgContainer.classList.add("igx-svg-container");
+                this._svgContainer.classList.add('igx-svg-container');
                 this._document.documentElement.appendChild(this._svgContainer);
             }
         }
