@@ -11,20 +11,37 @@
 
     @extend %igx-list !optional;
 
+    // css class 'igx-list__header'
     @include e(header) {
         @extend %igx-list-header !optional;
     }
 
-    @include e(item) {
-        @extend %igx-list-item !optional;
+    // css class 'igx-list__item-base'
+    @include e(item-base) {
+        @extend %igx-list-item-base !optional;
+    }
+
+    // css class 'igx-list__item-right' applied to the panning container shown when the list item is panned left
+    @include e(item-right) {
+        @extend %igx-list-item-pan !optional;
+    }
+
+    // css class 'igx-list__item-left' applied to the panning container shown when the list item in panned right
+    @include e(item-left) {
+        @extend %igx-list-item-pan !optional;
+    }
+
+    // css class 'igx-list__item-content'
+    @include e(item-content) {
+        @extend %igx-list-item-content !optional;
 
         &:active {
-            @extend %igx-list-item !optional;
-            @extend %igx-list-item--active !optional;
+            @extend %igx-list-item-content !optional;
+            @extend %igx-list-item-content--active !optional;
         }
 
         &:not(:active) {
-            @extend %igx-list-item--inactive !optional;
+            @extend %igx-list-item-content--inactive !optional;
         }
     }
 

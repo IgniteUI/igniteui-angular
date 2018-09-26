@@ -1,0 +1,128 @@
+@include b(header) {
+    display: flex;
+    flex-flow: column nowrap;
+
+    @include e(secondary) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: rem($secondary-header-height);
+        background: #222;
+        padding: 0 rem(15);
+    }
+
+    @include e(logo) {
+        display: flex;
+        align-items: center;
+        color: #fff;
+        font-size: rem(18);
+    }
+
+    @include e(logo-version) {
+        font-size: rem(12);
+        background: #666;
+        color: #efefef;
+        padding: rem(4) rem(8);
+        margin-left: rem(12);
+        font-weight: 500;
+    }
+
+    @include m(sticky) {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+}
+
+@include b(tsd-nav-toggle) {
+    label {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #333;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 4px;
+        outline-style: none;
+        transition: background .25s ease-in-out;
+
+        &:hover {
+            background: transparent
+        }
+
+        @media only screen and (min-width: 960px) {
+            display: none
+        }
+    }
+
+    input[type='checkbox'] {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0);
+        z-index: -1;
+    }
+
+    input[type='checkbox']:checked ~ .tsd-nav {
+        transform: translateY(0);
+    }
+}
+
+@include b(tsd-nav) {
+    position: absolute;
+    flex-flow: column nowrap;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 16px;
+    background: #222;
+    border-top: 1px solid rgba(white, .1);
+    box-shadow: 0 -1px 0 black;
+    box-sizing: border-box;
+    top: 110px;
+    left: 0;
+    right: 0;
+    transform: translateY(-110px);
+    z-index: -1;
+    transition: transform .25s ease-in-out;
+
+    &-item {
+        width: 100%;
+        text-align: center;
+    }
+
+    &-item + &-item {
+        margin-top: 10px;
+    }
+
+    @media only screen and (min-width: 960px) {
+        position: relative;
+        display: flex;
+        flex-flow: row nowrap;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        width: auto;
+        flex: 0;
+        top: initial;
+        left: initial;
+        right: initial;
+        transform: translateY(0);
+        z-index: initial;
+        transition: none;
+
+        &-item {
+            width: initial;
+        }
+
+        &-item + &-item {
+            margin-top: 0;
+            margin-left: 10px;
+        }
+    }
+}
