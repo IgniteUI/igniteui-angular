@@ -52,6 +52,7 @@ let NEXT_ID = 0;
     templateUrl: './grid.component.html'
 })
 export class IgxGridComponent extends IgxGridBaseComponent {
+    private _id = `igx-grid-${NEXT_ID++}`;
 
     /**
      * @hidden
@@ -81,7 +82,16 @@ export class IgxGridComponent extends IgxGridBaseComponent {
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-grid-${NEXT_ID++}`;
+    public get id(): string {
+        return this._id;
+    }
+    public set id(value: string) {
+        if (this._id !== value) {
+            const oldId = this._id;
+            this._id = value;
+            this.gridAPI.reset(oldId, this._id);
+        }
+    }
 
     /**
      * Returns the group by state of the `IgxGridComponent`.

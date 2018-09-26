@@ -186,6 +186,31 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         this.destroyMap.delete(id);
     }
 
+    public reset(oldId: string, newId: string) {
+        const destroy = this.destroyMap.get(oldId);
+        const summary = this.summaryCacheMap.get(oldId);
+        const editCellState = this.editCellState.get(oldId);
+        const grid = this.get(oldId);
+
+        this.unset(oldId);
+
+        if (grid) {
+            this.state.set(newId, grid);
+        }
+
+        if (destroy) {
+            this.destroyMap.set(newId, destroy);
+        }
+
+        if (summary) {
+            this.summaryCacheMap.set(newId, summary);
+        }
+
+        if (editCellState) {
+            this.editCellState.set(newId, editCellState);
+        }
+    }
+
     public mark_for_check(id: string) {
         const grid = this.get(id);
 
