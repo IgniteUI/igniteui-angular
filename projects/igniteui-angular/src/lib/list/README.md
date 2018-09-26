@@ -50,6 +50,35 @@ In order to use your own custom template, you can use the `igxEmptyList` directi
 </igx-list>
 ```
 
+### List Items Panning
+The IgxList's items support left and right panning. You can enable this feature separately for each direction using the `allowLeftPanning` and `allowRightPanning` properties. There are separate templates for left and right panning shown under the panned list item. The templates are defined using **ng-template** and specifying the directives `igxListItemLeftPanning` and `igxListItemRightPanning`. When panning the list items beyond a certain threshold an event will be emitted. This threshold is specified using the `panEndTriggeringThreshold` property. By default this property has a value of 0.5 which means 50% of list item's width. The events emitted are `onLeftPan` and `onRightPan` and their event argument is of type `IListItemPanningEventArgs` and has the following fields:
+- item - a reference to the `IgxListItemComponent` being dragged
+- direction - field of type `IgxListPanState` showing the panning direction
+- keepItem - this property specifies whether the list item will be kept in the list after a successful panning. BY default it is `false`. May be set to `true` in the event handler.
+
+```html
+<igx-list [allowLeftPanning]="true" [allowRightPanning]="true"
+  (onLeftPan)="leftPanPerformed($event)" (onRightPan)="rightPanPerformed($event)">
+    <ng-template igxListItemLeftPanning>
+        <div>Message</div>
+    </ng-template>
+    <ng-template igxListItemRightPanning>
+        <div>Dial</div>
+    </ng-template>
+    ...
+</igx-list>
+```
+
+```typescript
+public leftPanPerformed(args) {
+  args.keepItem = true;
+}
+
+public rightPanPerformed(args) {
+  args.keepItem = true;
+}
+```
+
 ## API
 
 ### Inputs
@@ -61,6 +90,7 @@ In order to use your own custom template, you can use the `igxEmptyList` directi
 | allowRightPanning  | Determines whether the right panning of an item is allowed  |
 | emptyListTemplate | Sets a reference to a custom empty list template, otherwise default template is used |
 | dataLoadingTemplate | Sets a reference to a custom data loading template, otherwise default template is used |
+| panEndTriggeringThreshold | Number | Specifies the threshold after which a panning event is emitted. By default this property has a value of 0.5 which means 50% of list item's width. |
 
 
 ### Properties

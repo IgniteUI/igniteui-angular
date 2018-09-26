@@ -16,6 +16,7 @@ import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
+import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
@@ -47,6 +48,7 @@ import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-colum
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 
@@ -129,6 +131,10 @@ const appRoutes = [
         component: ListSampleComponent
     },
     {
+        path: 'listPanning',
+        component: ListPanningSampleComponent
+    },
+    {
         path: 'listPerformance',
         component: ListPerformanceSampleComponent
     },
@@ -147,6 +153,10 @@ const appRoutes = [
     {
         path: 'overlay',
         component: OverlaySampleComponent
+    },
+    {
+        path: 'overlay-animation',
+        component: OverlayAnimationSampleComponent
     },
     {
         path: 'progressbar',

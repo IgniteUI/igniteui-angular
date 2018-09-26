@@ -510,6 +510,7 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: keyEvent,
             owner: chipAreaComp,
             newSelection: [secondChipComp]
         });
@@ -522,6 +523,7 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: keyEvent,
             owner: chipAreaComp,
             newSelection: []
         });
@@ -529,23 +531,6 @@ describe('IgxChipsArea', () => {
         chipsSelectionStates = fix.componentInstance.chips.toArray().filter(c => c.selected);
         expect(chipsSelectionStates.length).toEqual(0);
         expect(secondChipComp.selected).not.toBeTruthy();
-    });
-
-    it('should not fire onSelection event when selectable is false', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const firstChipComp = fix.componentInstance.chips.toArray()[0];
-
-        spyOn( firstChipComp.onSelection, 'emit');
-        firstChipComp.chipArea.nativeElement.focus();
-
-        const keyEvent = new KeyboardEvent('keydown', {
-            'key': ' '
-        });
-        firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
-        fix.detectChanges();
-        expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
     });
 
     it('should be able to have multiple chips selected', () => {
@@ -574,6 +559,7 @@ describe('IgxChipsArea', () => {
         const thirdChipComp = fix.componentInstance.chips.toArray()[2];
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: null,
             owner: chipAreaComp,
             newSelection: [secondChipComp, thirdChipComp]
         });
@@ -960,25 +946,29 @@ describe('IgxChipsArea', () => {
 
         const chipAreaComp = fix.componentInstance.chipsArea;
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
+        const pointerDownEvt = new PointerEvent('pointerdown', { pointerId: 1 });
+        const pointerUpEvt = new PointerEvent('pointerup', { pointerId: 1 });
 
         spyOn(chipAreaComp.onSelection, 'emit');
 
-        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
         fix.detectChanges();
-        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: pointerUpEvt,
             owner: chipAreaComp,
             newSelection: [secondChipComp]
         });
 
-        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
         fix.detectChanges();
-        secondChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: pointerUpEvt,
             owner: chipAreaComp,
             newSelection: []
         });
