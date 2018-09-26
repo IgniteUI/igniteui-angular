@@ -21,6 +21,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
+import { TransactionType } from '../services';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,7 +70,7 @@ export class IgxGridRowComponent implements DoCheck {
     /**
      * @hidden
      */
-    @ViewChild(forwardRef(() => IgxCheckboxComponent), {read: IgxCheckboxComponent})
+    @ViewChild(forwardRef(() => IgxCheckboxComponent), { read: IgxCheckboxComponent })
     public checkboxElement: IgxCheckboxComponent;
 
     /**
@@ -111,8 +112,9 @@ export class IgxGridRowComponent implements DoCheck {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
+        const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}`;
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`;
     }
 
 
@@ -169,8 +171,35 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('attr.aria-dirty')
     public get dirty(): boolean {
-        // return  this.grid.rowEditable &&
-        return this.grid.transactions.aggregatedState() && this.grid.transactions.aggregatedState().get(this.rowID) !== undefined;
+        // return this.grid.rowEditable &&
+        //     this.grid.transactions.aggregatedState() &&
+        //     this.grid.transactions.aggregatedState().get(this.rowID) !== undefined;
+        const state = this.grid.transactions.aggregatedState();
+        if (state) {
+            const row = state.get(this.rowID);
+            if (row) {
+                return row.type === TransactionType.ADD || row.type === TransactionType.UPDATE;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-deleted')
+    public get deleted(): boolean {
+        const state = this.grid.transactions.aggregatedState();
+        if (state) {
+            const row = state.get(this.rowID);
+            if (row) {
+                return row.type === TransactionType.DELETE;
+            }
+        }
+
+        return false;
+
     }
 
     public get inEditMode(): boolean {
@@ -250,9 +279,9 @@ export class IgxGridRowComponent implements DoCheck {
     protected isFocused = false;
 
     constructor(public gridAPI: IgxGridAPIService,
-                private selection: IgxSelectionAPIService,
-                public element: ElementRef,
-                public cdr: ChangeDetectorRef) { }
+        private selection: IgxSelectionAPIService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -275,8 +304,8 @@ export class IgxGridRowComponent implements DoCheck {
      */
     public onCheckboxClick(event) {
         const newSelection = (event.checked) ?
-                            this.selection.add_item(this.gridID, this.rowID) :
-                            this.selection.delete_item(this.gridID, this.rowID);
+            this.selection.add_item(this.gridID, this.rowID) :
+            this.selection.delete_item(this.gridID, this.rowID);
         this.grid.triggerRowSelectionChange(newSelection, this, event);
     }
 

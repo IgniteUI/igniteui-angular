@@ -735,6 +735,10 @@
         color: --var($theme, 'cell-edited-value-color');
     }
 
+    %igx-grid__tr--deleted {
+        text-decoration-line: line-through;
+    }
+
     %igx-grid__td--editing {
         background-color: --var($theme, 'cell-editing-background') !important;
         border: rem(2px) solid --var($theme, 'cell-selected-background');

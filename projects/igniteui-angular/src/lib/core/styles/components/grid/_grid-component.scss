@@ -98,6 +98,10 @@
         @extend %igx-grid__tr--edited !optional;
     }
 
+    @include e(tr, $m: deleted) {
+        @extend %igx-grid__tr--deleted !optional;
+    }
+
     @include e(tr, $m: edit) {
         @extend %igx-grid__tr--edit !optional;
     }
