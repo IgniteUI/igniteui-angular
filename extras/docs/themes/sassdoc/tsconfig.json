@@ -1,0 +1,18 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "sourceMap": false,
+        "declaration": true,
+        "removeComments": true,
+        "outFile": "assets/js/main.js",
+        "lib": [
+            "es6",
+            "dom"
+        ]
+    },
+    "include": [
+        "typescript/main.ts"
+    ]
+}
