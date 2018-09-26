@@ -150,7 +150,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * This event is fired before the start of the countdown to hiding the tooltip.
      *
      * ```typescript
-     * tooltipHiding(args: ITooltipHidingEventArgs) {
+     * tooltipHiding(args: ITooltipHideEventArgs) {
      *    alert("Tooltip started hiding!");
      * }
      * ```
