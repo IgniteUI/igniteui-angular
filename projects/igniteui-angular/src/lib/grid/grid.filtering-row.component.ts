@@ -13,7 +13,8 @@ import {
     ViewChild,
     OnDestroy,
     ViewChildren,
-    QueryList
+    QueryList,
+    HostListener
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
@@ -27,12 +28,12 @@ import { ConnectedPositioningStrategy } from '../services/overlay/position/conne
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IChipsAreaSelectEventArgs, IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent } from '../chips';
 import { ExpressionUI } from './grid.filtering-cell.component';
+import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 
 /**
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid.filtering-row.component.html'
@@ -54,6 +55,9 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
             this.expression.searchVal = null;
         } else {
             this.expression.searchVal = this.transformValue(val);
+            if (this.chipsArea.chipsList.filter(chip => chip.selected).length === 0) {
+                this._addExpression(true);
+            }
             this.filter();
         }
     }
@@ -70,7 +74,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     @ViewChild("chipsArea", { read: IgxChipsAreaComponent })
     public chipsArea: IgxChipsAreaComponent;
 
-    @ViewChildren(IgxDropDownComponent) 
+    @ViewChildren('operators', { read: IgxDropDownComponent}) 
     protected dropDownList: QueryList<IgxDropDownComponent>;
 
     private _positionSettings = {
@@ -85,12 +89,19 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     };
 
     public expression: IFilteringExpression;
+    @Input()
     public expressionsList: Array<ExpressionUI>;
     private _expressionsMap: Map<number, ExpressionUI[]>;
+    private _rootExpressionsTree: FilteringExpressionsTree;
+
+    protected conditionChanged = new Subject();
+    protected unaryConditionChanged = new Subject();
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this._expressionsMap = new Map<number, ExpressionUI[]>();
         this.expressionsList = new Array<ExpressionUI>();
+        this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
+        this.conditionChanged.subscribe(() => this.conditionChangedCallback());
     }
 
     ngOnInit(): void {
@@ -100,12 +111,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         } else {
         }
 
-        this.expression = {
-            fieldName: this.column.field,
-            condition: this.getCondition(this.conditions[0]),
-            searchVal: null,
-            ignoreCase: this.column.filteringIgnoreCase
-        };
+        this._resetExpression();
     }
 
     ngAfterViewInit(): void {
@@ -133,16 +139,32 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         }
     }
 
-    // get unaryCondition(): boolean {
-    //     return this.isUnaryCondition();
-    // }
+    get unaryCondition(): boolean {
+        return this.isUnaryCondition();
+    }
 
-    // public isUnaryCondition(): boolean {
-    //     return this.expression && this.expression.condition && this.expression.condition.isUnary;
-    // }
+    public isUnaryCondition(): boolean {
+        return this.expression && this.expression.condition && this.expression.condition.isUnary;
+    }
 
     get conditions() {
         return this.column.filters.instance().conditionList();
+    }
+
+    public conditionChangedCallback(): void {
+        if (!!this.expression.searchVal || this.expression.searchVal === 0) {
+            this.filter();
+        } else {
+            this.value = null;
+        }
+    }
+
+    public unaryConditionChangedCallback(): void {
+        this.value = null;
+        if (this.chipsArea.chipsList.filter(chip => chip.selected).length === 0) {
+            this._addExpression(true);
+        }
+        this.filter();
     }
 
     public getCondition(value: string): IFilteringOperation {
@@ -157,11 +179,19 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         return FilteringLogic[operator];
     }
 
+    public getChipLable(expression: IFilteringExpression) {
+        if(expression.condition.isUnary) {
+            return expression.condition.name;
+        } else {
+            return expression.searchVal;
+        }
+    }
+
     private _generateExpressionsMap(expressionsTree: FilteringExpressionsTree, depth:number) {
         if (expressionsTree.filteringOperands) {
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
                 if (expressionsTree.filteringOperands[i] instanceof FilteringExpressionsTree) {
-                    this._generateExpressionsMap(expressionsTree.filteringOperands[i] as FilteringExpressionsTree, ++depth)
+                    this._generateExpressionsMap(expressionsTree.filteringOperands[i] as FilteringExpressionsTree, depth + 1)
                 } else {
                     const exprUI = new ExpressionUI();
                     exprUI.expression = expressionsTree.filteringOperands[i] as IFilteringExpression;
@@ -196,12 +226,11 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     public clearFiltering() {
         this.grid.clearFilter(this.column.field);
         this.expressionsList = [];
-        this.expression = {
-            fieldName: this.column.field,
-            condition: this.getCondition(this.conditions[0]),
-            searchVal: null,
-            ignoreCase: this.column.filteringIgnoreCase
-        };
+        this._resetExpression();
+    }
+
+    public clearInput(): void {
+        this.value = null;
     }
 
     public close() {
@@ -209,34 +238,14 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         this.cdr.detectChanges();
     }
 
-    public onSelectLogicOperator($event) {
-        // this.expressionsList.push({
-        //     expression: {
-        //         fieldName: this.column.field,
-        //         condition: null,
-        //         searchVal: null,
-        //         ignoreCase: this.column.filteringIgnoreCase
-        //     },
-        //     operator: FilteringLogic[FilteringLogic.And]
-        // });
-    }
-
-    public onOperandChanged(event): void {
-    //     const value = event.newSelection.elementRef.nativeElement.firstChild.value;
-    //     this.expression.condition = this.getCondition(value);
-    //     if (this.unaryCondition) {
-    //         this.unaryConditionChanged.next(value);
-    //     } else {
-    //         this.conditionChanged.next(value);
-    //     }
-    }
-
-    public onDropDownOpening(event): void {
-    //     for (let index = 0; index < this.igxDropDown.items.length; index++) {
-    //         if(!this.igxDropDown.items[index].isSelected && this.igxDropDown.items[index].element.nativeElement.firstChild.value === this.expression.condition.name) {
-    //             this.igxDropDown.setSelectedItem(index);
-    //         }
-    //     }
+    public onOperandChanged(eventArgs): void {
+        const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+        this.expression.condition = this.getCondition(value);
+        if (this.unaryCondition) {
+            this.unaryConditionChanged.next(value);
+        } else {
+            this.conditionChanged.next(value);
+        }
     }
 
     public toggleDropDown(eventArgs): void {
@@ -246,7 +255,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
 
     public toggleOperandsDropDown(eventArgs, index): void {
         this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
-        this.dropDownList.toArray()[index + 1].toggle(this._overlaySettings);
+        this.dropDownList.toArray()[index].toggle(this._overlaySettings);
     }
 
     protected transformValue(value) {
@@ -259,25 +268,38 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         return value;
     }
 
-    // public onChange(value) {
-    //     return this.transformValue(value);
-    // }
-
     public filter() {
-            let rootExpr = this.grid.filteringExpressionsTree.find(this.column.field) as FilteringExpressionsTree;
+        if (this.expressionsList.length === 0) {
+            const tree = new FilteringExpressionsTree(FilteringLogic.And, this.column.field);
+            tree.filteringOperands.push(this.expression);
+            this._rootExpressionsTree = tree;
+        } else if (this.expressionsList.length === 1) {
+            const tree = new FilteringExpressionsTree(this.expressionsList[0].beforeOperator, this.column.field);
+            tree.filteringOperands.push(this.expressionsList[0].expression);
+            this._rootExpressionsTree = tree;
+        } else {
+            this._createTree(this.expressionsList[0].expression, this.expressionsList[1]);
+        }
 
-            if(this.expressionsList.length === 1) {
-                const tree = new FilteringExpressionsTree(this.expressionsList[0].beforeOperator, this.column.field);
-                tree.filteringOperands.push(this.expressionsList[0].expression);
-                rootExpr = tree;
-            } else {
-                rootExpr = this._createTree(this.expressionsList[0].expression, this.expressionsList[1]);
-            }
-
-            this.grid.filter(this.column.field, null, rootExpr);
+        this.grid.filter(this.column.field, null, this._rootExpressionsTree);
     }
 
-    private _createTree(left: FilteringExpressionsTree | IFilteringExpression, right: ExpressionUI ): FilteringExpressionsTree {
+    private _addExpression(isSelected: boolean) {
+        const exprUI = new ExpressionUI();
+        exprUI.expression = this.expression;
+        exprUI.beforeOperator = FilteringLogic.And;
+        exprUI.isSelected = isSelected;
+
+        this.expressionsList.push(exprUI);
+
+        const length = this.expressionsList.length;
+        if(this.expressionsList[length - 2]) {
+            this.expressionsList[length - 2].afterOperator = this.expressionsList[length - 1].beforeOperator;
+        }
+
+    }
+
+    private _createTree(left: FilteringExpressionsTree | IFilteringExpression, right: ExpressionUI ) {
         const tree = new FilteringExpressionsTree(right.beforeOperator, this.column.field);
         tree.filteringOperands.push(left);
         tree.filteringOperands.push(right.expression);
@@ -285,7 +307,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         if(right !== this.expressionsList[this.expressionsList.length - 1]) {
             this._createTree(tree, this.expressionsList[this.expressionsList.indexOf(right) + 1]);
         } else {
-            return tree;
+            this._rootExpressionsTree = tree;
         }
     }
 
@@ -293,18 +315,11 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         if (eventArgs.selected) {
             this.expression = expression;
         } else if (this.expression === expression) {
-            this.expression = {
-                fieldName: this.column.field,
-                condition: this.getCondition(this.conditions[0]),
-                searchVal: null,
-                ignoreCase: this.column.filteringIgnoreCase
-            }
+            this._resetExpression();
         }
     }
 
-    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
-        const indexToRemove = this.expressionsList.indexOf(item);
-
+    private _removeExpression(indexToRemove: number, expression: IFilteringExpression) {
         if (indexToRemove === 0 && this.expressionsList[1]) {
             this.expressionsList[1].beforeOperator = null;
         } else if (indexToRemove === 0 && this.expressionsList.length === 1) {
@@ -319,15 +334,59 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         }
         
         this.expressionsList.splice(indexToRemove, 1);
-        
         this.filter();
+
+        if (this.expression === expression) {
+            this._resetExpression();
+        }
+        
         this.cdr.detectChanges();
+    }
+
+    private _resetExpression() {
+        this.expression = {
+            fieldName: this.column.field,
+            condition: this.getCondition(this.conditions[0]),
+            searchVal: null,
+            ignoreCase: this.column.filteringIgnoreCase
+        }
+    }
+
+    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
+        const indexToRemove = this.expressionsList.indexOf(item);
+
+        this._removeExpression(indexToRemove, item.expression);
     }
 
     public onChipsSelectionChanged (eventArgs: IChipsAreaSelectEventArgs) {
         if (eventArgs.newSelection.length > 1) {
             eventArgs.newSelection[0].selected = false;
         }
+        this.cdr.detectChanges();
+    }
+
+    @HostListener('keydown.Enter')
+    public onInputKeyDown() {
+        this.chipsArea.chipsList.filter(chip => chip.selected = false);
+
+        let indexToDeselect = -1;
+        for (let index = 0; index < this.expressionsList.length; index++) {
+            if (this.expressionsList[index].expression.searchVal === null) {
+                indexToDeselect = index;
+            }
+        }
+
+        if(indexToDeselect !== -1) {
+            this._removeExpression(indexToDeselect, this.expression);
+        }
+
+        this._resetExpression();
+    }
+
+    public onLogicOperatorChanged(eventArgs, expression: ExpressionUI) {
+        expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+        this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
+        this.filter();
     }
 
 }

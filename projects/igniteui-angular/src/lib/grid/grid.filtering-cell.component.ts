@@ -29,7 +29,6 @@ export class ExpressionUI {
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid.filtering-cell.component.html'
@@ -50,6 +49,7 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, OnD
 
     public expressionsList: Array<ExpressionUI>;
     private _expressionsMap: Map<number, ExpressionUI[]>;
+    private _rootExpressionsTree: FilteringExpressionsTree
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this._expressionsMap = new Map<number, ExpressionUI[]>();
@@ -98,15 +98,64 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, OnD
         }
     }
 
-    public onChipRemoved(eventArgs: IBaseChipEventArgs) {
+    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
+        const indexToRemove = this.expressionsList.indexOf(item);
 
+        this._removeExpression(indexToRemove, item.expression);
+    }
+
+    private _removeExpression(indexToRemove: number, expression: IFilteringExpression) {
+        if (indexToRemove === 0 && this.expressionsList[1]) {
+            this.expressionsList[1].beforeOperator = null;
+        } else if (indexToRemove === 0 && this.expressionsList.length === 1) {
+            this.clearFiltering();
+            return;
+        } else if (indexToRemove === this.expressionsList.length - 1) {
+            this.expressionsList[indexToRemove - 1].afterOperator = null;
+        } else {
+            this.expressionsList[indexToRemove - 1].afterOperator = this.expressionsList[indexToRemove + 1].beforeOperator;
+            this.expressionsList[0].beforeOperator = null;
+            this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
+        }
+        
+        this.expressionsList.splice(indexToRemove, 1);
+        this.filter();
+    }
+
+    public clearFiltering() {
+        this.grid.clearFilter(this.column.field);
+        this.expressionsList = [];
+    }
+
+    public filter() {
+        if (this.expressionsList.length === 1) {
+            const tree = new FilteringExpressionsTree(this.expressionsList[0].beforeOperator, this.column.field);
+            tree.filteringOperands.push(this.expressionsList[0].expression);
+            this._rootExpressionsTree = tree;
+        } else {
+            this._createTree(this.expressionsList[0].expression, this.expressionsList[1]);
+        }
+
+        this.grid.filter(this.column.field, null, this._rootExpressionsTree);
+    }
+
+    private _createTree(left: FilteringExpressionsTree | IFilteringExpression, right: ExpressionUI ) {
+        const tree = new FilteringExpressionsTree(right.beforeOperator, this.column.field);
+        tree.filteringOperands.push(left);
+        tree.filteringOperands.push(right.expression);
+
+        if(right !== this.expressionsList[this.expressionsList.length - 1]) {
+            this._createTree(tree, this.expressionsList[this.expressionsList.indexOf(right) + 1]);
+        } else {
+            this._rootExpressionsTree = tree;
+        }
     }
 
     private _generateExpressionsMap(expressionsTree: FilteringExpressionsTree, depth:number) {
         if (expressionsTree.filteringOperands) {
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
                 if (expressionsTree.filteringOperands[i] instanceof FilteringExpressionsTree) {
-                    this._generateExpressionsMap(expressionsTree.filteringOperands[i] as FilteringExpressionsTree, ++depth)
+                    this._generateExpressionsMap(expressionsTree.filteringOperands[i] as FilteringExpressionsTree, depth + 1)
                 } else {
                     const exprUI = new ExpressionUI();
                     exprUI.expression = expressionsTree.filteringOperands[i] as IFilteringExpression;

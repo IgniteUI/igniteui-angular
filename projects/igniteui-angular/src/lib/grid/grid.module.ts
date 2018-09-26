@@ -87,7 +87,7 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
     IgxGridFilterConditionPipe,
     IgxGridFilterExpressionComponent,
     IgxGridFilteringCellComponent,
-    IgxGridFilteringRowComponent
+    IgxGridFilteringRowComponent,
     IgxDatePipeComponent,
     IgxDecimalPipeComponent
   ],

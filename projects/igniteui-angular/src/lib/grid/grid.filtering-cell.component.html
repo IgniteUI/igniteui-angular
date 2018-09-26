@@ -7,7 +7,7 @@
 
 <ng-template #filters>
     <igx-chips-area>
-        <igx-chip *ngFor="let item of expressionsList" (click)="onChipClicked(item.expression)" [removable]="true" (onRemove)="onChipRemoved($event)">
+        <igx-chip *ngFor="let item of expressionsList" (click)="onChipClicked(item.expression)" [removable]="true" (onRemove)="onChipRemoved($event, item)">
             <!-- <igx-avatar igxPrefix fontSet="material" [src]="expression.photo" roundShape="true"></igx-avatar> -->
             <span #label [class]="'igx-chip__text'">{{item.expression.searchVal}}</span>
             <span igxConnector>{{getOperator(item.afterOperator)}}</span>
