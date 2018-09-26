@@ -217,7 +217,7 @@ export class UpdateChanges {
     }
 }
 
-enum BindingType {
+export enum BindingType {
     output,
     input
 }
