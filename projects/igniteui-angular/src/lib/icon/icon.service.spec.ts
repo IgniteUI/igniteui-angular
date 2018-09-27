@@ -1,12 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { IgxIconService } from './icon.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { DOCUMENT } from '@angular/common';
 
 describe('Icon Service', () => {
     const MY_FONT = 'my-awesome-icons';
     const ALIAS = 'awesome';
 
+    const svgText = `<svg id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <path d="M74 74h54v54H74" />
+    <path d="M10 10h181v181H10V10zm38.2 38.2v104.6h104.6V48.2H48.2z"/>
+</svg>`;
+
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
             providers: [IgxIconService]
         }).compileComponents();
     });
@@ -39,5 +47,30 @@ describe('Icon Service', () => {
         iconService.registerFontSetAlias(ALIAS, MY_FONT);
 
         expect(iconService.fontSetClassName(ALIAS)).toBe(MY_FONT);
+    });
+
+    fit('should add custom svg icon', () => {
+        const iconService = TestBed.get(IgxIconService) as IgxIconService;
+        const httpMock = TestBed.get(HttpTestingController);
+        const document = TestBed.get(DOCUMENT);
+
+        const iconName = 'test';
+        const fontSet = 'svg-icons';
+        const iconKey = fontSet + '_' + iconName;
+
+        iconService.addSvgIcon(iconName, 'test.svg', fontSet);
+
+        const req = httpMock.expectOne('test.svg');
+        expect(req.request.method).toBe('GET');
+        req.flush(svgText);
+
+        expect(iconService.isSvgIconCached(iconName, fontSet)).toBeTruthy();
+        expect(iconService.getSvgIconKey(iconName, fontSet)).toEqual(iconKey);
+
+        const svgElement = document.querySelector(`svg[id='${iconKey}']`);
+        expect(svgElement).toBeDefined();
+
+        // make sure thare are no outstanding requests
+        httpMock.verify();
     });
 });
