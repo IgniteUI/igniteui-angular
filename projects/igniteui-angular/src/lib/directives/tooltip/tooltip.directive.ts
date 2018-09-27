@@ -101,7 +101,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Get the respective native element of the directive.
+     * Gets the respective native element of the directive.
      *
      * ```typescript
      * let tooltipTargetElement = this.tooltipTarget.nativeElement;
@@ -452,6 +452,24 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     public get defaultClass() {
         return !this.collapsed;
     }
+
+    /**
+     * Gets/sets any tooltip related data.
+     * The 'context' can be used for storing any information that is necessary
+     * to access when working with the tooltip.
+     *
+     * ```typescript
+     * // get
+     * let tooltipContext = this.tooltip.context;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.tooltip.context = "Tooltip's context";
+     * ```
+     */
+    @Input('context')
+    public context;
 
     /**
      * Identifier for the tooltip.
