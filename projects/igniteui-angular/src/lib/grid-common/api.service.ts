@@ -394,7 +394,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         this.get(id).sortingExpressions = sortingState;
     }
 
-    private sort_multiple_implementation(id: string, expressions: ISortingExpression[]): void {
+    public sort_multiple_implementation(id: string, expressions: ISortingExpression[]): void {
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         for (const each of expressions) {
