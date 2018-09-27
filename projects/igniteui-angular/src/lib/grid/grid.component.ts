@@ -1622,6 +1622,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     */
     public columnsWithNoSetWidths = null;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e1c9c68647d0f8258fe570af86715ee57d273fad
     /* Toolbar related definitions */
     private _showToolbar = false;
     private _exportExcel = false;

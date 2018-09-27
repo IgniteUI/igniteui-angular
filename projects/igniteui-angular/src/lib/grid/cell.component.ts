@@ -19,8 +19,13 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
+<<<<<<< HEAD
 import { IState } from '../services/transaction/utilities';
 import { IgxGridComponent } from './grid.component';
+=======
+import { TransactionType } from '../services/transaction/utilities';
+
+>>>>>>> e1c9c68647d0f8258fe570af86715ee57d273fad
 
 /**
  * Providing reference to `IgxGridCellComponent`:

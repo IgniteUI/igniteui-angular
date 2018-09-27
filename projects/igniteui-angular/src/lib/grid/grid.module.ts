@@ -59,6 +59,7 @@ import { IgxTransactionService } from '../services';
 import { IgxNoOpTransactionService } from '../services/transaction/noop-transaction';
 
 @NgModule({
+<<<<<<< HEAD
     declarations: [
         IgxGridCellComponent,
         IgxColumnComponent,
@@ -143,6 +144,89 @@ import { IgxNoOpTransactionService } from '../services/transaction/noop-transact
         IgxSelectionAPIService,
         { provide: IgxGridTransaction, useClass: IgxNoOpTransactionService }
     ]
+=======
+  declarations: [
+    IgxGridCellComponent,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxGridComponent,
+    IgxGridRowComponent,
+    IgxGridGroupByRowComponent,
+    IgxGridHeaderComponent,
+    IgxGridSummaryComponent,
+    IgxGridToolbarComponent,
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxGroupByRowTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxColumnResizerDirective,
+    IgxColumnMovingDragDirective,
+    IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective,
+    IgxGridFilterComponent,
+    IgxGridPreGroupingPipe,
+    IgxGridPostGroupingPipe,
+    IgxGridSortingPipe,
+    IgxGridPagingPipe,
+    IgxGridFilteringPipe,
+    IgxGridFilterConditionPipe,
+    IgxGridFilterExpressionComponent,
+    IgxGridTransactionPipe,
+    IgxDatePipeComponent,
+    IgxDecimalPipeComponent
+
+  ],
+  entryComponents: [
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+  ],
+  exports: [
+    IgxGridComponent,
+    IgxGridCellComponent,
+    IgxGridGroupByRowComponent,
+    IgxGridRowComponent,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxGridHeaderComponent,
+    IgxGridFilterComponent,
+    IgxGridSummaryComponent,
+    IgxGridToolbarComponent,
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxGroupByRowTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxColumnResizerDirective,
+    IgxColumnMovingDragDirective,
+    IgxColumnMovingDropDirective,
+    IgxGroupAreaDropDirective
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IgxButtonModule,
+    IgxDatePickerModule,
+    IgxIconModule,
+    IgxRippleModule,
+    IgxInputGroupModule,
+    IgxToggleModule,
+    IgxForOfModule,
+    IgxTemplateOutletModule,
+    IgxFocusModule,
+    IgxTextHighlightModule,
+    IgxTextSelectionModule,
+    IgxCheckboxModule,
+    IgxBadgeModule,
+    IgxChipsModule,
+    IgxDragDropModule,
+    IgxColumnHidingModule,
+    IgxDropDownModule,
+    IgxButtonGroupModule,
+    IgxColumnPinningModule
+  ],
+  providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
+>>>>>>> e1c9c68647d0f8258fe570af86715ee57d273fad
 })
 export class IgxGridModule {
     public static forRoot() {
