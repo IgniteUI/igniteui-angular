@@ -3,10 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
--`igxGrid`:
+- `igxGrid`:
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
-- `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
+- `igxOverlay`:
+    - `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
+    - when `show` and `hide` methods are called `onAnimation` event fires. In the arguments of this event there is a reference to the `animationPlayer`, `animationType` (either `open` or `close`) and to the overlay id.
+    - if you call `show`/`hide` methods of overlay, while opening/closing animation is still ongoing, the animation will stop and respective open/close animation will start.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
 - `IgxOverlayOutlet` directive introduced to mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
 - `igxButtonGroup`
@@ -50,6 +53,14 @@ All notable changes for each version of this project will be documented in this 
     - Introduced `disabledDates` property which allows a user to disable dates based on various rules: before or after a date, weekends, workdays, specific dates and ranges. The disabled dates cannot be selected and have a distinguishable style.
     - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
     - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
+- `igxExpansionPanel`:
+    - component added. `igxExpansionPanel` provides a way to display more information after expanding an item, respectively show less after collapsing it. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion_panel.html).
+- `IgxList`:
+    - the control now supports **ng-templates** which are shown "under" a list item when it is left or right panned. The templates are distinguished using the `igxListItemLeftPanning` and `igxListItemRightPanning` directives set on the templates.
+    - the IgxList's `onLeftPan` and `onRightPan` events now have an argument of type `IListItemPanningEventArgs` (instead of `IgxListItemComponent`). The event argument has the following fields:
+        - **item** of type `IgxListItemComponent`
+        - **direction** of type `IgxListPanState`
+        - **keepItem** of type `boolean`
 
 ## 6.1.5
 - **General**
@@ -207,7 +218,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxDropdown` component added
 
     ```html
-    <igx-drop-down igxDropDownItemNavigation [allowItemsFocus]="true" (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+    <igx-drop-down (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
         <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
                 {{ item.field }}
         </igx-drop-down-item>
