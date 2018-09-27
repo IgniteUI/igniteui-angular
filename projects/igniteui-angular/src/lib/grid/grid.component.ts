@@ -1924,7 +1924,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         isFilterRowVisible: false,
         filteredColumn: null,
         selectedExpression: null
-    }
+    };
 
     /**
      * @hidden
