@@ -3,6 +3,9 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
+- `igxIcon`:
+    - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. This means that the icon name should be explicitly defined between the opening and closing tags.
+    - Added support for custom SVG icons.
 - `igxGrid`:
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
