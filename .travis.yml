@@ -18,9 +18,9 @@ script:
 - npm run lint:lib
 - ng build igniteui-angular --prod
 - npm run build:style
-- npm run test:lib
-- npm run test:migration
-- if [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:migration; fi
+- if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 
 before_deploy:
 - npm run build:migration
