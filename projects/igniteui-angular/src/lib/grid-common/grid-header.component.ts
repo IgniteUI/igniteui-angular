@@ -17,7 +17,7 @@ import {
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
-import { IGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IGridBaseComponent } from './common/grid-interfaces';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnMovingService } from './common/grid-common.misc';
@@ -142,7 +142,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     private _pinnedMaxWidth;
 
     constructor(
-        public gridAPI: IGridAPIService<IGridBaseComponent>,
+        public gridAPI: GridBaseAPIService<IGridBaseComponent>,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         public zone: NgZone,

@@ -16,7 +16,7 @@ import { sampleTime, takeUntil, first, tap } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IGridBaseComponent } from './common/grid-interfaces';
 import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
@@ -556,7 +556,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     private previousCellEditMode = false;
 
     constructor(
-        public gridAPI: IGridAPIService<IGridBaseComponent>,
+        public gridAPI: GridBaseAPIService<IGridBaseComponent>,
         public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }

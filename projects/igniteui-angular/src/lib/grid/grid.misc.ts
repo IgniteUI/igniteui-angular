@@ -17,7 +17,7 @@ import { IgxColumnMovingDragDirective } from '../grid-common/common/grid-common.
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './grid-api.service';
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
-import { IGridAPIService } from '../grid-common/api.service';
+import { GridBaseAPIService } from '../grid-common/api.service';
 
 /**
  * @hidden
@@ -81,7 +81,7 @@ export class IgxCellEditorTemplateDirective {
 export class IgxGroupAreaDropDirective extends IgxDropDirective {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: IGridAPIService<IGridBaseComponent>, elementRef: ElementRef, renderer: Renderer2, _zone: NgZone) {
+    constructor(gridAPI: GridBaseAPIService<IGridBaseComponent>, elementRef: ElementRef, renderer: Renderer2, _zone: NgZone) {
         super(elementRef, renderer, _zone);
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }

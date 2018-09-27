@@ -31,7 +31,7 @@ const MINIMUM_COLUMN_WIDTH = 136;
  *@hidden
  */
 @Injectable()
-export class IGridAPIService <T extends IGridBaseComponent> {
+export class GridBaseAPIService <T extends IGridBaseComponent> {
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, T> = new Map<string, T>();
     protected editCellState: Map<string, any> = new Map<string, any>();

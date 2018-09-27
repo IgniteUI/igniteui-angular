@@ -45,7 +45,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { DropPosition } from './common/grid-common.misc';
 import { IgxRowComponent } from './row.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import {
     IGridCellEventArgs,
     IPinColumnEventArgs,
@@ -149,7 +149,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     protected _columnPinning = false;
 
     constructor(
-        private api: IGridAPIService<IGridBaseComponent>,
+        private api: GridBaseAPIService<IGridBaseComponent>,
         public selection: IgxSelectionAPIService,
         private elementRef: ElementRef,
         public cdr: ChangeDetectorRef,

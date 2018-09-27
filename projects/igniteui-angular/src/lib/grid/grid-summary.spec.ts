@@ -6,7 +6,7 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxDateSummaryOperand, IgxGridComponent, IgxGridModule, IgxNumberSummaryOperand, IgxSummaryResult } from './index';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
-import { IGridAPIService, IGridBaseComponent } from '../grid-common';
+import { GridBaseAPIService, IGridBaseComponent } from '../grid-common';
 
 describe('IgxGrid - Summaries', () => {
     const SUMMARY_CLASS = '.igx-grid-summary';
@@ -675,7 +675,7 @@ export class  SummaryColumnsWithIdenticalWidthsComponent {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: '2018-03-01' }
     ];
 
-    constructor(public gridApi: IGridAPIService<IGridBaseComponent>) { }
+    constructor(public gridApi: GridBaseAPIService<IGridBaseComponent>) { }
 }
 
 

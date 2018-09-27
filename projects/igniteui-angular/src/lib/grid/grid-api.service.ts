@@ -1,4 +1,4 @@
-import { IGridAPIService } from '../grid-common/api.service';
+import { GridBaseAPIService } from '../grid-common/api.service';
 import { IgxGridComponent } from './grid.component';
 
 import { cloneArray } from '../core/utils';
@@ -7,7 +7,7 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 
-export class IgxGridAPIService extends IGridAPIService<IgxGridComponent> {
+export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
     public arrange_sorting_expressions(id) {
         const groupingState = this.get(id).groupingExpressions;
