@@ -141,7 +141,8 @@ import { IgxNoOpTransactionService } from '../services/transaction/noop-transact
     providers: [
         IgxGridAPIService,
         IgxSelectionAPIService,
-        { provide: IgxGridTransaction, useClass: IgxNoOpTransactionService }]
+        { provide: IgxGridTransaction, useClass: IgxNoOpTransactionService }
+    ]
 })
 export class IgxGridModule {
     public static forRoot() {
@@ -150,7 +151,8 @@ export class IgxGridModule {
             providers: [
                 IgxGridAPIService,
                 IgxSelectionAPIService,
-                IgxColumnMovingService]
+                IgxColumnMovingService
+            ]
         };
     }
 }

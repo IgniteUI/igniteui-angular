@@ -4,11 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
-    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService,
-    IgxOverlayService,
-    IgxTransactionBaseService,
-    IgxTransactionService,
-    IgxGridTransaction
+    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -52,6 +48,7 @@ import { RemoteService } from './shared/remote.service';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
 import { LocalService } from './shared/local.service';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
+import { GridWithTransactionsComponent } from './grid-cellEditing/grid-with-transactions.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
@@ -111,6 +108,7 @@ const components = [
     VirtualForSampleComponent,
     ButtonGroupSampleComponent,
     GridCellEditingComponent,
+    GridWithTransactionsComponent,
     GridSampleComponent,
     GridColumnMovingSampleComponent,
     GridColumnPinningSampleComponent,
@@ -151,8 +149,8 @@ const components = [
         RemoteService,
         IgxExcelExporterService,
         IgxCsvExporterService,
-        IgxOverlayService,
-        { provide: IgxGridTransaction, useClass: IgxTransactionBaseService }],
+        IgxOverlayService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

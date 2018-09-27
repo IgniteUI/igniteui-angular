@@ -38,7 +38,7 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
+import { IgxBaseExporter, IgxExporterOptionsBase, IgxNoOpTransactionService } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -1233,7 +1233,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
 
     @ViewChildren('row')
-    private _rowList:  QueryList<any>;
+    private _rowList: QueryList<any>;
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -3786,9 +3786,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     public getContext(rowData): any {
         return {
             $implicit: rowData,
