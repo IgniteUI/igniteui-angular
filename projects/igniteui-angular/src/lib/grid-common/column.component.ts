@@ -14,7 +14,7 @@ import {
     forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
-import { IGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './summaries/grid-summary';
 import { IgxRowComponent } from './row.component';
@@ -749,7 +749,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     constructor(
-        public gridAPI: IGridAPIService<IGridBaseComponent>,
+        public gridAPI: GridBaseAPIService<IGridBaseComponent>,
         public cdr: ChangeDetectorRef,
         @Inject(DOCUMENT) public document) { }
     /**

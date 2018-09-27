@@ -17,7 +17,7 @@ import {
     IgxExcelExporterService,
     AbsoluteScrollStrategy
 } from '../services';
-import { IGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IGridBaseComponent } from './common/grid-interfaces';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding/column-hiding.component';
@@ -250,7 +250,7 @@ export class IgxGridToolbarComponent {
         }
     }
 
-    constructor(public gridAPI: IGridAPIService<IGridBaseComponent>,
+    constructor(public gridAPI: GridBaseAPIService<IGridBaseComponent>,
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService) {

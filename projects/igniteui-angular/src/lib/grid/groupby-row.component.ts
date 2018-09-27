@@ -12,7 +12,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
-import { IGridAPIService } from '../grid-common/api.service';
+import { GridBaseAPIService } from '../grid-common/api.service';
 import { IGridBaseComponent} from '../grid-common/common/grid-interfaces';
 
 @Component({
@@ -24,7 +24,7 @@ import { IGridBaseComponent} from '../grid-common/common/grid-interfaces';
 export class IgxGridGroupByRowComponent {
     public gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: IGridAPIService<IGridBaseComponent>,
+    constructor(gridAPI: GridBaseAPIService<IGridBaseComponent>,
                 private selection: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) {

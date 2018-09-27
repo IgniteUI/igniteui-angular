@@ -25,7 +25,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridBaseComponent } from '../grid-common/grid-base.component';
 
 import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
-import { IGridAPIService } from '../grid-common/api.service';
+import { GridBaseAPIService } from '../grid-common/api.service';
 
 let NEXT_ID = 0;
 
@@ -251,7 +251,7 @@ export class IgxGridComponent extends IgxGridBaseComponent {
     private gridAPI: IgxGridAPIService;
 
     constructor(
-        gridAPI: IGridAPIService<IGridBaseComponent>,
+        gridAPI: GridBaseAPIService<IGridBaseComponent>,
         selection: IgxSelectionAPIService,
         elementRef: ElementRef,
         cdr: ChangeDetectorRef,

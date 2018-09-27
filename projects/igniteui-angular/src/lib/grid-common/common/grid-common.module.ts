@@ -41,7 +41,7 @@ import {
 import { IgxGridFilterExpressionComponent } from '../filtering/grid-filtering-expression.component';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxRowComponent } from '../row.component';
-import { IGridAPIService } from '../api.service';
+import { GridBaseAPIService } from '../api.service';
 import { IgxTemplateOutletModule } from '../../directives/template-outlet/template_outlet.directive';
 
 @NgModule({
@@ -133,7 +133,7 @@ import { IgxTemplateOutletModule } from '../../directives/template-outlet/templa
         return {
             ngModule: IgxGridCommonModule,
             providers: [
-                { provide: IGridAPIService, useClass: gridType }
+                { provide: GridBaseAPIService, useClass: gridType }
             ]
         };
     }
