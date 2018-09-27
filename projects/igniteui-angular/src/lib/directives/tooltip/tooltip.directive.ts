@@ -27,10 +27,6 @@ export interface ITooltipHideEventArgs {
     selector: '[igxTooltipTarget]'
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit {
-    private _toBeShown = false;
-    private _toBeHidden = false;
-    private _timeoutId;
-
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -203,14 +199,14 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     // Return true if the execution in onMouseEnter should be terminated after this method
     private preMouseEnterCheck() {
         // If tooltip is about to be opened
-        if (this._toBeShown) {
-            clearTimeout(this._timeoutId);
-            this._toBeShown = false;
+        if (this.target.toBeShown) {
+            clearTimeout(this.target.timeoutId);
+            this.target.toBeShown = false;
         }
 
         // If Tooltip is opened or about to be hidden
-        if (!this.target.collapsed || this._toBeHidden) {
-            clearTimeout(this._timeoutId);
+        if (!this.target.collapsed || this.target.toBeHidden) {
+            clearTimeout(this.target.timeoutId);
 
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.onTooltipHide.emit(hidingArgs);
@@ -219,7 +215,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
                 return true;
             } else {
                 this.target.close();
-                this._toBeHidden = false;
+                this.target.toBeHidden = false;
             }
         }
 
@@ -228,13 +224,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
     // Return true if the execution in onMouseLeave should be terminated after this method
     private preMouseLeaveCheck(): boolean {
-        clearTimeout(this._timeoutId);
+        clearTimeout(this.target.timeoutId);
 
         // If tooltip is about to be opened
-        if (this._toBeShown) {
-            clearTimeout(this._timeoutId);
-            this._toBeShown = false;
-            this._toBeHidden = false;
+        if (this.target.toBeShown) {
+            clearTimeout(this.target.timeoutId);
+            this.target.toBeShown = false;
+            this.target.toBeHidden = false;
             return true;
         }
 
@@ -253,9 +249,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this._toBeHidden = true;
+        this.target.toBeHidden = true;
         this.target.close();
-        this._toBeHidden = false;
+        this.target.toBeHidden = false;
     }
 
     /**
@@ -288,10 +284,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this._toBeShown = true;
-        this._timeoutId = setTimeout(() => {
+        this.target.toBeShown = true;
+        this.target.timeoutId = setTimeout(() => {
             this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
-            this._toBeShown = false;
+            this.target.toBeShown = false;
         }, this.showDelay);
     }
 
@@ -317,10 +313,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this._toBeHidden = true;
-        this._timeoutId = setTimeout(() => {
+        this.target.toBeHidden = true;
+        this.target.timeoutId = setTimeout(() => {
             this.target.close(); // Call close() of IgxTooltipDirective
-            this._toBeHidden = false;
+            this.target.toBeHidden = false;
         }, this.hideDelay);
     }
 
@@ -361,7 +357,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      */
     public showTooltip() {
-        clearTimeout(this._timeoutId);
+        clearTimeout(this.target.timeoutId);
 
         if (!this.target.collapsed) {
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
@@ -371,7 +367,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
                 return;
             } else {
                 this.target.close();
-                this._toBeHidden = false;
+                this.target.toBeHidden = false;
             }
         }
 
@@ -382,10 +378,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this._toBeShown = true;
-        this._timeoutId = setTimeout(() => {
+        this.target.toBeShown = true;
+        this.target.timeoutId = setTimeout(() => {
             this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
-            this._toBeShown = false;
+            this.target.toBeShown = false;
         }, this.showDelay);
     }
 
@@ -397,11 +393,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * ```
      */
     public hideTooltip() {
-        if (this.target.collapsed && this._toBeShown) {
-            clearTimeout(this._timeoutId);
+        if (this.target.collapsed && this.target.toBeShown) {
+            clearTimeout(this.target.timeoutId);
         }
 
-        if (this.target.collapsed || this._toBeHidden) {
+        if (this.target.collapsed || this.target.toBeHidden) {
             return;
         }
 
@@ -412,10 +408,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        this._toBeHidden = true;
-        this._timeoutId = setTimeout(() => {
+        this.target.toBeHidden = true;
+        this.target.timeoutId = setTimeout(() => {
             this.target.close(); // Call close() of IgxTooltipDirective
-            this._toBeHidden = false;
+            this.target.toBeHidden = false;
         }, this.hideDelay);
     }
 }
@@ -426,6 +422,21 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]'
 })
 export class IgxTooltipDirective extends IgxToggleDirective {
+    /**
+     * @hidden
+     */
+    public timeoutId;
+
+    /**
+     * @hidden
+     */
+    public toBeHidden = false;
+
+    /**
+     * @hidden
+     */
+    public toBeShown = false;
+
     /**
      * @hidden
      */
