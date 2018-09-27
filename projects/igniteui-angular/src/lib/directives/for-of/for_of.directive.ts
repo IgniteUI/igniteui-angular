@@ -104,7 +104,9 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
     public igxForItemSize: any;
 
     @Input()
-    public get igxForDisplayContainerWidth() {
+    public igxForDisplayContainerWidth: number;
+
+   /* public get igxForDisplayContainerWidth() {
         return this.dc ? this.dc.instance.width : null;
     }
 
@@ -113,7 +115,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
             this.dc.instance.width = value;
             this._recalcScrollBarSize(value);
         }
-    }
+    }*/
 
     /**
      * @hidden
@@ -318,6 +320,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
             const scrollOffset = this.hScroll.scrollLeft - (this.hCache && this.hCache.length ? this.hCache[this.state.startIndex] : 0);
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
             this.dc.instance._viewContainer.element.nativeElement.style.height = '100%';
+            this.dc.instance.width = this.igxForDisplayContainerWidth;
         }
     }
 

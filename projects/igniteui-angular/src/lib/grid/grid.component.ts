@@ -52,6 +52,7 @@ import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -619,9 +620,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @HostBinding('style.height')
+    @DeprecateProperty(`The input 'height' is deprecated. You can set the grid's element height inline with\n
+        the style attribute (e.g. [style.height.px]="500"), with the ngStyle directive or through CSS.\n
+        By default the grid will grow with its content.\n
+        The amount of rows to be rendered can be set with the visibleRows input`)
     @Input()
     public height: string;
 
+    /**
+     * Gets/sets the number of rows to be visible at once in the table body of the `IgxGridComponent`.
+     * If the data source contains more records than this number, a vertical scrollbar will be shown.
+     * ```typescript
+     * let visibleRows = this.grid.visibleRows;
+     * ```
+	 * @memberof IgxGridComponent
+     */
     @Input()
     public visibleRows: number = 10;
 
@@ -643,6 +656,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @HostBinding('style.width')
+    @DeprecateProperty(`The input 'width' is deprecated. You can set the grid's element width inline with\n
+        the style attribute (e.g. [style.width.px]="500"), with the ngStyle directive or through CSS`)
     @Input()
     public get width() {
         return this._width;
