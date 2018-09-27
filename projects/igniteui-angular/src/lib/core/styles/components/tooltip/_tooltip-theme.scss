@@ -71,8 +71,7 @@
 
     %tooltip-display {
         display: inline-flex;
-        text-align: center;
-        align-items: center;
+        justify-content: center;
         flex-flow: column wrap;
         background-color: --var($theme, 'background');
         color: --var($theme, 'text-color');
