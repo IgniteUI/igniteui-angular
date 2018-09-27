@@ -32,7 +32,6 @@ const MINIMUM_COLUMN_WIDTH = 136;
  */
 @Injectable()
 export class IGridAPIService <T extends IGridBaseComponent> {
-
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, T> = new Map<string, T>();
     protected editCellState: Map<string, any> = new Map<string, any>();
@@ -113,9 +112,12 @@ export class IGridAPIService <T extends IGridBaseComponent> {
 
     public on_after_view_init(id: string) {
         const grid = this.get(id);
-        this.zone.runOutsideAngular(() => {
-            this.document.defaultView.addEventListener('resize', this.resizeHandler);
-        });
+        // Subscribe only if we haven't got any active subscribtions
+        if (this.state.size === 0) {
+            this.zone.runOutsideAngular(() => {
+                this.document.defaultView.addEventListener('resize', this.resizeHandler);
+            });
+        }
         this.calculate_grid_width(id);
         this.init_pinning(id);
         grid.reflow();
@@ -154,9 +156,11 @@ export class IGridAPIService <T extends IGridBaseComponent> {
     }
 
     public on_destroy(id: string) {
-        this.zone.runOutsideAngular(() => {
-            this.document.defaultView.removeEventListener('resize', this.resizeHandler);
-        });
+        if (this.state.size === 1) {
+            this.zone.runOutsideAngular(() => {
+                this.document.defaultView.removeEventListener('resize', this.resizeHandler);
+            });
+        }
         this.get_destroy(id).next(true);
         this.get_destroy(id).complete();
         this.unset(id);
@@ -380,7 +384,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         }
     }
 
-    public sort_implementation(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+    private sort_implementation(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
         if (dir === SortingDirection.None) {
             this.remove_grouping_expression(id, fieldName);
         }
@@ -390,7 +394,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         this.get(id).sortingExpressions = sortingState;
     }
 
-    public sort_multiple_implementation(id: string, expressions: ISortingExpression[]): void {
+    private sort_multiple_implementation(id: string, expressions: ISortingExpression[]): void {
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         for (const each of expressions) {
@@ -472,7 +476,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         this.clear_filter_implementation(id, fieldName);
     }
 
-    public clear_filter_implementation(id: string, fieldName: string) {
+    private clear_filter_implementation(id: string, fieldName: string) {
         if (fieldName) {
             const column = this.get_column_by_name(id, fieldName);
             if (!column) {
@@ -509,7 +513,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
         this.clear_sort_implementation(id, fieldName);
     }
 
-    public clear_sort_implementation(id, fieldName) {
+    private clear_sort_implementation(id, fieldName) {
         const sortingState = this.get(id).sortingExpressions;
         const index = sortingState.findIndex((expr) => expr.fieldName === fieldName);
         if (index > -1) {
@@ -1125,7 +1129,7 @@ export class IGridAPIService <T extends IGridBaseComponent> {
     }
 
     private subscribe_next(virtualContainer: any, callback: (elem?) => void) {
-        virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
+        const subscription = virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
             next: (e: any) => {
                 callback(e);
             }
