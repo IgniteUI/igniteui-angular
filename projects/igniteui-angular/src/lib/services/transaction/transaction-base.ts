@@ -8,8 +8,6 @@ export class IgxTransactionBaseService implements IgxTransactionService {
 
     private _isPending = false;
     private _pendingTransactions: ITransaction[] = [];
-    private _pendingRedoStack: { transaction: ITransaction, recordRef: any }[] = [];
-    private _pendingUndoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _pendingStates: Map<any, IState> = new Map();
 
     public add(transaction: ITransaction, recordRef?: any) {
@@ -20,28 +18,27 @@ export class IgxTransactionBaseService implements IgxTransactionService {
         const transactions = this._isPending ? this._pendingTransactions : this._transactions;
         transactions.push(transaction);
 
-        const undoStack = this._isPending ? this._pendingUndoStack : this._undoStack;
-        undoStack.push({ transaction, recordRef });
+        if (this._isPending) {
+            this._undoStack.push({ transaction, recordRef });
+            this._redoStack = [];
+        }
 
-        let redoStack = this._isPending ? this._pendingRedoStack : this._redoStack;
-        redoStack = [];
         return true;
     }
 
     public getTransactionLog(id?: any): ITransaction[] | ITransaction {
         if (id) {
-            return [...(this._isPending ? this._pendingTransactions : this._transactions)].reverse().find(t => t.id === id);
+            return [...this._transactions].reverse().find(t => t.id === id);
         }
-        return [...(this._isPending ? this._pendingTransactions : this._transactions)];
+        return [...this._transactions];
     }
 
     public aggregatedState(): Map<any, IState> {
-        return new Map(this._isPending ? this._pendingStates : this._states);
+        return new Map(this._states);
     }
 
     public commit(data: any[]) {
-        const states = this._isPending ? this._pendingStates : this._states;
-        states.forEach(s => {
+        this._states.forEach((s: IState) => {
             switch (s.type) {
                 case TransactionType.ADD:
                     data.push(s.value);
@@ -100,8 +97,6 @@ export class IgxTransactionBaseService implements IgxTransactionService {
         }
         this._pendingStates.clear();
         this._pendingTransactions = [];
-        this._pendingUndoStack = [];
-        this._pendingRedoStack = [];
     }
 
     /**
