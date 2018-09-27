@@ -52,6 +52,7 @@ import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -145,6 +146,7 @@ export interface IColumnMovingEndEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
+    providers: [IgxGridNavigationService],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
@@ -1979,8 +1981,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
-        private viewRef: ViewContainerRef) {
-
+        private viewRef: ViewContainerRef,
+        private navigation: IgxGridNavigationService) {
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
@@ -1992,6 +1994,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.navigation.grid = this;
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
