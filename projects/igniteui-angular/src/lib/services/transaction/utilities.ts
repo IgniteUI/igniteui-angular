@@ -57,4 +57,18 @@ export interface IgxTransactionService {
      * Clears all transactions
      */
     clear(): void;
+
+    /**
+     * Starts pending transaction. All transaction passed after call to startPending
+     * will not be added to transaction log and will not be reflected in aggregated
+     * state
+     */
+    startPending(): void;
+
+    /**
+     * Clears all pending transactions and aggregated pending state. If commit is set to true
+     * commits pending states as single transaction
+     * @param commit Should commit the pending states
+     */
+    endPending(commit: boolean): void;
 }

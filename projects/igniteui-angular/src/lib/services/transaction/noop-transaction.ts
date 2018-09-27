@@ -14,4 +14,8 @@ export class IgxNoOpTransactionService implements IgxTransactionService {
     commit(data: any) { }
 
     clear() { }
+
+    startPending(): void { }
+
+    endPending(commit: boolean): void { }
 }

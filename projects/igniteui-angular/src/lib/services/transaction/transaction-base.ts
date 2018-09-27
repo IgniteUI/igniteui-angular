@@ -6,28 +6,42 @@ export class IgxTransactionBaseService implements IgxTransactionService {
     private _undoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _states: Map<any, IState> = new Map();
 
+    private _isPending = false;
+    private _pendingTransactions: ITransaction[] = [];
+    private _pendingRedoStack: { transaction: ITransaction, recordRef: any }[] = [];
+    private _pendingUndoStack: { transaction: ITransaction, recordRef: any }[] = [];
+    private _pendingStates: Map<any, IState> = new Map();
+
     public add(transaction: ITransaction, recordRef?: any) {
-        this.verifyAddedTransaction(transaction, recordRef);
-        this.updateState(this._states, transaction, recordRef);
-        this._transactions.push(transaction);
-        this._undoStack.push({ transaction, recordRef });
-        this._redoStack = [];
+        const states = this._isPending ? this._pendingStates : this._states;
+        this.verifyAddedTransaction(states, transaction, recordRef);
+        this.updateState(states, transaction, recordRef);
+
+        const transactions = this._isPending ? this._pendingTransactions : this._transactions;
+        transactions.push(transaction);
+
+        const undoStack = this._isPending ? this._pendingUndoStack : this._undoStack;
+        undoStack.push({ transaction, recordRef });
+
+        let redoStack = this._isPending ? this._pendingRedoStack : this._redoStack;
+        redoStack = [];
         return true;
     }
 
     public getTransactionLog(id?: any): ITransaction[] | ITransaction {
         if (id) {
-            return [...this._transactions].reverse().find(t => t.id === id);
+            return [...(this._isPending ? this._pendingTransactions : this._transactions)].reverse().find(t => t.id === id);
         }
-        return [...this._transactions];
+        return [...(this._isPending ? this._pendingTransactions : this._transactions)];
     }
 
     public aggregatedState(): Map<any, IState> {
-        return new Map(this._states);
+        return new Map(this._isPending ? this._pendingStates : this._states);
     }
 
     public commit(data: any[]) {
-        this._states.forEach(s => {
+        const states = this._isPending ? this._pendingStates : this._states;
+        states.forEach(s => {
             switch (s.type) {
                 case TransactionType.ADD:
                     data.push(s.value);
@@ -73,12 +87,29 @@ export class IgxTransactionBaseService implements IgxTransactionService {
         }
     }
 
+    public startPending(): void {
+        this._isPending = true;
+    }
+
+    public endPending(commit: boolean): void {
+        this._isPending = false;
+        if (commit) {
+            this._pendingStates.forEach((s: IState, k: any) => {
+                this.add({ id: k, newValue: s.value, type: s.type }, s.recordRef);
+            });
+        }
+        this._pendingStates.clear();
+        this._pendingTransactions = [];
+        this._pendingUndoStack = [];
+        this._pendingRedoStack = [];
+    }
+
     /**
      * Verifies if the passed transaction is correct. If not throws an exception.
      * @param transaction Transaction to be verified
      */
-    protected verifyAddedTransaction(transaction: ITransaction, recordRef?: any): void {
-        const state = this._states.get(transaction.id);
+    protected verifyAddedTransaction(states: Map<any, IState>, transaction: ITransaction, recordRef?: any): void {
+        const state = states.get(transaction.id);
         switch (transaction.type) {
             case TransactionType.ADD:
                 if (state) {
@@ -106,7 +137,7 @@ export class IgxTransactionBaseService implements IgxTransactionService {
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateState(states: Map<any, IState>,  transaction: ITransaction, recordRef?: any): void {
+    protected updateState(states: Map<any, IState>, transaction: ITransaction, recordRef?: any): void {
         const state = states.get(transaction.id);
         //  if TransactionType is ADD simply add transaction to states;
         //  if TransactionType is DELETE:
