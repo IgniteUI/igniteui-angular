@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewChildren, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { IgxChipsAreaComponent, IgxChipComponent } from 'igniteui-angular';
-import { IChipSelectEventArgs } from 'projects/igniteui-angular/src/lib/chips';
+import { IChipSelectEventArgs, IChipsAreaReorderEventArgs, IBaseChipEventArgs } from 'projects/igniteui-angular/src/lib/chips';
 
 @Component({
     selector: 'app-chips-sample',
@@ -44,7 +44,7 @@ export class ChipsSampleComponent {
 
     constructor(public cdr: ChangeDetectorRef) { }
 
-    chipsOrderChanged(event) {
+    chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newChipList = [];
         for (let i = 0; i < event.chipsArray.length; i++) {
             const chipItem = this.chipList.filter((item) => {
@@ -54,12 +54,13 @@ export class ChipsSampleComponent {
         }
         this.chipList = newChipList;
         event.isValid = true;
+        this.cdr.detectChanges();
     }
 
     chipMovingEnded() {
     }
 
-    chipRemoved(event) {
+    chipRemoved(event: IBaseChipEventArgs) {
         this.chipList = this.chipList.filter((item) => {
             return item.id !== event.owner.id;
         });
@@ -74,7 +75,7 @@ export class ChipsSampleComponent {
     }
 
     onChipsSelected(event: IChipSelectEventArgs) {
-        console.log(event.selected);
+        console.log(event);
     }
 
     /**
@@ -91,6 +92,7 @@ export class ChipsSampleComponent {
         }
         this.chipListTo = newChipListTo;
         event.isValid = true;
+        this.cdr.detectChanges();
     }
 
     chipsOrderChangedCc(event) {
@@ -103,6 +105,7 @@ export class ChipsSampleComponent {
         }
         this.chipListCc = newChipListCc;
         event.isValid = true;
+        this.cdr.detectChanges();
     }
 
     public onDragEnterCc() {

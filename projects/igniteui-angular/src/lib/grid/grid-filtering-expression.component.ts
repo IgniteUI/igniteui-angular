@@ -150,6 +150,10 @@ export class IgxGridFilterExpressionComponent implements OnDestroy, AfterViewIni
         return this.column.gridID;
     }
 
+    get grid(): any {
+        return this.gridAPI.get(this.gridID);
+    }
+
     get unaryCondition(): boolean {
         return this.isUnaryCondition();
     }

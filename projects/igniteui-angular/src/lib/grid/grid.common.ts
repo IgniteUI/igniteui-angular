@@ -1,4 +1,4 @@
-﻿import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT, DatePipe, DecimalPipe } from '@angular/common';
 import {
     ChangeDetectorRef,
     Directive,
@@ -12,6 +12,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    Pipe,
+    PipeTransform,
     Renderer2,
     TemplateRef
 } from '@angular/core';
@@ -545,7 +547,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
 
                 if (cell) {
-                    cell._updateCellSelectionStatus();
+                    cell._updateCellSelectionStatus(true, event);
                 }
 
                 this.cms.selection = null;
@@ -598,6 +600,37 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             if (column.groupable && !isGrouped) {
                 column.grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
             }
+        }
+    }
+}
+
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'igxdate'
+})
+export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
+    transform(value: any): string {
+        if (value && value instanceof Date) {
+            return super.transform(value);
+        } else {
+            return value;
+        }
+    }
+}
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'igxdecimal'
+})
+export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
+    transform(value: any): string {
+        if (value && typeof value === 'number') {
+            return super.transform(value);
+        } else {
+            return value;
         }
     }
 }

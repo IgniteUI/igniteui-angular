@@ -6,6 +6,7 @@ import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
 import { ChipsSampleComponent} from './chips/chips.sample';
+import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
@@ -15,6 +16,7 @@ import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
+import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
@@ -46,7 +48,9 @@ import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-colum
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 
 const appRoutes = [
     {
@@ -81,6 +85,10 @@ const appRoutes = [
     {
         path: 'combo',
         component: ComboSampleComponent
+    },
+    {
+        path: 'expansionPanel',
+        component: ExpansionPanelSampleComponent
     },
     {
         path: 'chip',
@@ -123,6 +131,10 @@ const appRoutes = [
         component: ListSampleComponent
     },
     {
+        path: 'listPanning',
+        component: ListPanningSampleComponent
+    },
+    {
         path: 'listPerformance',
         component: ListPerformanceSampleComponent
     },
@@ -141,6 +153,10 @@ const appRoutes = [
     {
         path: 'overlay',
         component: OverlaySampleComponent
+    },
+    {
+        path: 'overlay-animation',
+        component: OverlayAnimationSampleComponent
     },
     {
         path: 'progressbar',
@@ -198,6 +214,10 @@ const appRoutes = [
     {
         path: 'gridCellEditing',
         component: GridCellEditingComponent
+    },
+    {
+        path: 'gridConditionalCellStyling',
+        component: GridCellStylingSampleComponent
     },
     {
         path: 'grid',

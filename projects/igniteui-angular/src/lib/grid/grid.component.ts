@@ -1139,17 +1139,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onGroupingDone = new EventEmitter<any>();
+    public onGroupingDone = new EventEmitter<ISortingExpression[]>();
 
     /**
-     * Emitted when a new chunk fo data is loaded from virtualization.
+     * Emitted when a new chunk of data is loaded from virtualization.
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<any>();
+    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Emitted when `IgxColumnComponent` is resized.
@@ -1285,6 +1285,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
+
+    @ViewChildren('row')
+    private _rowList:  QueryList<any>;
+
     /**
      * A list of `IgxGridRowComponent`.
      * ```typescript
@@ -1292,8 +1296,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    @ViewChildren('row')
-    public rowList: QueryList<any>;
+    public get rowList() {
+        const res = new QueryList<any>();
+        if (!this._rowList) {
+            return res;
+        }
+        const rList = this._rowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(rList);
+        return res;
+    }
+
+    @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
+    private _dataRowList: QueryList<any>;
 
     /**
      * A list of `IgxGridRowComponent`, currently rendered.
@@ -1302,8 +1318,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
-    public dataRowList: QueryList<any>;
+    public get dataRowList() {
+        const res = new QueryList<any>();
+        if (!this._dataRowList) {
+            return res;
+        }
+        const rList = this._dataRowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(rList);
+        return res;
+    }
+
+    @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
+    private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
     /**
      * A list of all group rows.
@@ -1312,8 +1340,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
-    public groupsRowList: QueryList<IgxGridGroupByRowComponent>;
+    public get groupsRowList() {
+        const res = new QueryList<any>();
+        if (!this._groupsRowList) {
+            return res;
+        }
+        const rList = this._groupsRowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(rList);
+        return res;
+    }
+
 
     /**
      * A template reference for the template when the filtered `IgxGridComponent` is empty.
@@ -1640,6 +1678,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
     */
     public columnsWithNoSetWidths = null;
+
 
     /* Toolbar related definitions */
     private _showToolbar = false;
@@ -2145,7 +2184,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
         });
-        this._derivePossibleWidth();
+        this.calculateGridWidth();
         this.initPinning();
         this.calculateGridSizes();
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -3408,7 +3447,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._columnWidth = this.getPossibleColumnWidth();
             this.initColumns(this.columnList, null);
         }
-        this.calculateGridWidth();
     }
 
     /**
@@ -3497,28 +3535,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
 
-        let maxColumnWidth = Math.max(
-            ...this.visibleColumns.map((col) => parseInt(col.width, 10))
-                .filter((width) => !isNaN(width))
-        );
-
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
 
-        if (this.columnsWithNoSetWidths === null) {
-            this.columnsWithNoSetWidths = this.visibleColumns.filter((col) => !col.columnGroup && col.width === null);
-        }
+        const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
-        const sumExistingWidths = this.visibleColumns
-            .filter((col) => !col.columnGroup && this.columnsWithNoSetWidths.indexOf(col) === -1)
+        const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
+        const columnsToSize = visibleChildColumns.length - columnsWithSetWidths.length;
+
+        const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
-        maxColumnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / this.columnsWithNoSetWidths.length, MINIMUM_COLUMN_WIDTH) :
-            Math.max((computedWidth - sumExistingWidths) / this.columnsWithNoSetWidths.length, MINIMUM_COLUMN_WIDTH);
+        const columnWidth = !Number.isFinite(sumExistingWidths) ?
+            Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH);
 
-        return maxColumnWidth.toString();
+        return columnWidth.toString();
     }
 
     /**
@@ -3533,12 +3566,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (Number.isFinite(width) && width !== this.calcWidth) {
                 this.calcWidth = width;
 
-                this._derivePossibleWidth();
                 this.cdr.markForCheck();
             }
-            return;
+        } else {
+            this.calcWidth = parseInt(this._width, 10);
         }
-        this.calcWidth = parseInt(this._width, 10);
+
+        this._derivePossibleWidth();
     }
 
     /**
@@ -3562,7 +3596,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridSizes() {
-        this._derivePossibleWidth();
+        this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
         if (this.rowSelectable) {
@@ -3729,29 +3763,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
-
-        if (this._columns.length !== collection.length) {
-            // XXX: Deprecate index
-            this._columns = this.columnList.toArray();
-        }
-        const _columnsWithNoSetWidths = [];
-
+        // XXX: Deprecate index
+        this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
+            column.defaultWidth = this.columnWidth;
+
             if (cb) {
                 cb(column);
             }
-            if ((this.columnsWithNoSetWidths === null && !column.width) ||
-                (this.columnsWithNoSetWidths !== null && this.columnsWithNoSetWidths.indexOf(column) !== -1)) {
-                column.width = this.columnWidth;
-
-                if (!column.hidden) {
-                    _columnsWithNoSetWidths.push(column);
-                }
-            }
         });
 
-        this.columnsWithNoSetWidths = _columnsWithNoSetWidths;
         this.reinitPinStates();
     }
 
@@ -3832,6 +3854,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+     /**
+     * @hidden
+     */
+    public getContext(rowData): any {
+        return {
+            $implicit: rowData,
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+        };
+    }
+
+
     /**
      * @hidden
      */
@@ -3894,7 +3927,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!data) {
             data = this.data;
         }
-        switch (this.filteredItemsStatus(this.id, data)) {
+        switch (this.filteredItemsStatus(this.id, data, this.primaryKey)) {
             case 'allSelected': {
                 if (!this.allRowsSelected) {
                     this.allRowsSelected = true;
@@ -4011,7 +4044,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public navigateDown(rowIndex: number, columnIndex: number) {
+    public navigateDown(rowIndex: number, columnIndex: number, event?) {
         const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const target = row instanceof IgxGridGroupByRowComponent ?
             row.groupContent :
@@ -4030,12 +4063,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const targetEndTopOffset = row.element.nativeElement.offsetTop + this.rowHeight + containerTopOffset;
             if (containerHeight && targetEndTopOffset > containerHeight) {
                 const scrollAmount = targetEndTopOffset - containerHeight;
-                this.performVerticalScroll(scrollAmount, rowIndex, columnIndex);
+                this.performVerticalScroll(scrollAmount, rowIndex, columnIndex, event);
             } else {
                 if (row instanceof IgxGridGroupByRowComponent) {
                     target.nativeElement.focus();
                 } else {
-                    (target as any)._updateCellSelectionStatus();
+                    (target as any)._updateCellSelectionStatus(true, event);
                 }
             }
         } else {
@@ -4043,14 +4076,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const scrollOffset = parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const lastRowOffset = contentHeight + scrollOffset - this.calcHeight;
             const scrollAmount = this.rowHeight + lastRowOffset;
-            this.performVerticalScroll(scrollAmount, rowIndex, columnIndex);
+            this.performVerticalScroll(scrollAmount, rowIndex, columnIndex, event);
         }
     }
 
     /**
      * @hidden
      */
-    public navigateUp(rowIndex: number, columnIndex: number) {
+    public navigateUp(rowIndex: number, columnIndex: number, event?) {
         const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const target = row instanceof IgxGridGroupByRowComponent ?
             row.groupContent :
@@ -4069,18 +4102,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 const scrollAmount = containerTopOffset < 0 ?
                     containerTopOffset :
                     -this.rowHeight + Math.abs(containerTopOffset);
-                this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex);
+                this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex, event);
             }
             if (row instanceof IgxGridGroupByRowComponent) {
                 target.nativeElement.focus();
             } else {
-                (target as any)._updateCellSelectionStatus();
+                (target as any)._updateCellSelectionStatus(true, event);
             }
         } else {
             const scrollOffset =
                 -parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             const scrollAmount = this.rowHeight + scrollOffset;
-            this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex);
+            this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex, event);
         }
     }
 
@@ -4095,7 +4128,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         event.target.scrollTop = 0;
     }
 
-    private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string) {
+    private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string, event?) {
         let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
         const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
         this.subscribeNext(virtualDir, () => {
@@ -4117,8 +4150,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     return;
                 }
             }
-            target._updateCellSelectionStatus();
-            this.cdr.detectChanges();
+            target._updateCellSelectionStatus(true, event);
         });
     }
 
@@ -4130,10 +4162,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
     }
 
-    private performVerticalScroll(amount: number, rowIndex: number, columnIndex: number) {
+    private performVerticalScroll(amount: number, rowIndex: number, columnIndex: number, event?) {
         const scrolled = this.verticalScrollContainer.addScrollTop(amount);
         if (scrolled) {
-            this._focusNextCell(rowIndex, columnIndex);
+            this._focusNextCell(rowIndex, columnIndex, undefined, event);
         }
     }
 

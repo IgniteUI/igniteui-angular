@@ -6,6 +6,7 @@ import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '../test-utils/grid-samples.spec';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Column properties', () => {
 
@@ -219,6 +220,29 @@ describe('IgxGrid - Column properties', () => {
             }, 100);
         }, 100);
     }));
+
+    it('column width should be adjusted after a column has been hidden', async() => {
+        const fix = TestBed.createComponent(ColumnsFromIterableComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        grid.width = '600px';
+        fix.detectChanges();
+        await wait();
+
+        expect(grid.calcWidth).toBe(600);
+        expect(grid.columns[0].width).toBe('300');
+        expect(!grid.columns[0].widthSetByUser);
+        expect(grid.columns[1].width).toBe('300');
+        expect(!grid.columns[1].widthSetByUser);
+        grid.columns[0].hidden = true;
+
+        expect(grid.columns[1].width).toBe('600');
+        grid.columns[0].hidden = false;
+
+        expect(grid.columns[0].width).toBe('300');
+        expect(grid.columns[1].width).toBe('300');
+    });
 });
 
 @Component({
@@ -262,7 +286,7 @@ export class TemplatedColumnsComponent {
             <igx-column field="ProductId"  dataType="number" width="100px"></igx-column>
             <igx-column field="Number1" dataType="number" width="100px"></igx-column>
             <igx-column field="Number2" dataType="number" width="100px" [headerClasses]="'headerAlignSyle'"></igx-column>
-            <igx-column field="Number3" dataType="number" width="100px" [cellClasses]="'headerAlignSyle'"></igx-column>
+            <igx-column field="Number3" dataType="number" width="100px" [cellClasses]="{'headerAlignSyle':true}"></igx-column>
             <igx-column field="Number4" dataType="number" width="100px"></igx-column>
             <igx-column field="Number5" dataType="number" width="100px"></igx-column>
             <igx-column field="Number6" dataType="number" width="100px"></igx-column>
