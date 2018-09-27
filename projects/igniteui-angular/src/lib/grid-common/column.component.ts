@@ -23,7 +23,7 @@ import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
-} from '../grid/grid.misc';
+} from './common/grid-common.misc';
 import {
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,

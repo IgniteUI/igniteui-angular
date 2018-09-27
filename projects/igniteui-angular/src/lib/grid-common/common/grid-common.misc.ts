@@ -13,7 +13,8 @@ import {
     Renderer2,
     HostListener,
     ChangeDetectorRef,
-    Injectable
+    Injectable,
+    TemplateRef
 } from '@angular/core';
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
@@ -534,4 +535,46 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
             return value;
         }
     }
+}
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxFooter]'
+})
+export class IgxCellFooterTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+}
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxCellEditor]'
+})
+export class IgxCellEditorTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+}
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxCell]'
+})
+export class IgxCellTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+}
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxHeader]'
+})
+export class IgxCellHeaderTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+
 }

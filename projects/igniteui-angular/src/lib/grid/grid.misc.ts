@@ -1,13 +1,8 @@
 ﻿import {
-    ChangeDetectorRef,
     Directive,
     ElementRef,
     HostBinding,
-    HostListener,
-    Injectable,
-    Input,
     NgZone,
-    OnDestroy,
     Renderer2,
     TemplateRef
 } from '@angular/core';
@@ -23,53 +18,12 @@ import { GridBaseAPIService } from '../grid-common/api.service';
  * @hidden
  */
 @Directive({
-    selector: '[igxCell]'
-})
-export class IgxCellTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-}
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxHeader]'
-})
-export class IgxCellHeaderTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-
-}
-/**
- * @hidden
- */
-@Directive({
     selector: '[igxGroupByRow]'
 })
 export class IgxGroupByRowTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 
-}
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxFooter]'
-})
-export class IgxCellFooterTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-}
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxCellEditor]'
-})
-export class IgxCellEditorTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
