@@ -105,6 +105,25 @@ The `igxDrop` directive can be applied to any DOM element just like the `igxDrag
 ````
 One element can have both `igxDrag` and `igxDrop` directives applied, but then it is recommended to use custom logic when another element is being dropped on to it by canceling the `onDrop` event of the `igxDrop` directive. 
 
+Example of cancelling `onDrop` default drop logic:
+
+````html
+<div igxDrop (onDrop)="onElemDrop($event)">Drop here</div>
+````
+
+````ts
+public onElemDrop(event: IgxDropEventArgs) {
+    event.cancel = true; // This cancels the default drop logic
+    // ...
+    // Custom implementation logic
+    // ...
+
+    // This is required to tell the dragged element the dropping has finished, so it can return to the new location/old location.
+    // It can be called anywhere in the code as well.
+    event.drag.dropFinished(); 
+}
+````
+
 ## API
 
 ### Outputs

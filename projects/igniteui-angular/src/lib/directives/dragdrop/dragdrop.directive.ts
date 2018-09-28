@@ -624,7 +624,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
         for (let i = 0; i < elementsFromPoint.length; i++) {
             if (elementsFromPoint[i].getAttribute('droppable') === 'true' &&
-                !elementsFromPoint[i].isEqualNode(this._dragGhost)) {
+            !elementsFromPoint[i].isEqualNode(this._dragGhost)) {
                 topDropArea = elementsFromPoint[i];
                 break;
             }
@@ -636,7 +636,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
         if (topDropArea &&
             (!this._lastDropArea || (this._lastDropArea && !this._lastDropArea.isEqualNode(topDropArea)))) {
-            if (this._lastDropArea) {
+                if (this._lastDropArea) {
                 this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
             }
 
@@ -688,7 +688,18 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     }
 
     /**
-     * @hidden
+     * Informs the `igxDrag` directive that it has been dropped/released.
+     * This should usully be called when `animateOnRelease` is set to `true`.
+     * When canceling or defining custom drop logic this tells the igxDrag to update it's positions and
+     * animate correctly to the new position.
+     * ```typescript
+     * public onDropElem(event) {
+     *     // Function bound to the igxDrop directive event `onDrop`
+     *     // This cancels the default drop logic of the `igxDrop`
+     *     event.cancel = true;
+     *     event.drag.dropFinished();
+     * }
+     * ```
      */
     public dropFinished() {
         if (this.animateOnRelease && this._dragGhost) {
