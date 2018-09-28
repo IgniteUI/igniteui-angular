@@ -13,7 +13,7 @@ import { IgxStringFilteringOperand } from '../../public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 
-describe('IgxGrid - Column Pinning ', () => {
+fdescribe('IgxGrid - Column Pinning ', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const FIXED_CELL_CSS = 'igx-grid__th--pinned';
