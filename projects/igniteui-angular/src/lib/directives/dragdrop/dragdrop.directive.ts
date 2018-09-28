@@ -804,6 +804,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     public onLeave = new EventEmitter<IgxDropLeaveEventArgs>();
 
     /** Event triggered when dragged element is dropped in the area of the element.
+     * Since the `igxDrop` has default logic that appends the dropped element as a child, it can be canceled here.
+     * To cancel the default logic the `cancel` property of the event needs to be set to true.
      * ```html
      * <div class="cageArea" igxDrop (onDrop)="dragDrop()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
      * </div>
