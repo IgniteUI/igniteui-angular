@@ -13,7 +13,7 @@ import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../te
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
-xdescribe('Excel Exporter', () => {
+describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
