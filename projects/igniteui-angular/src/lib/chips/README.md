@@ -178,7 +178,7 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | `onMoveEnd` | `IBaseChipEventArgs` | Fired when the chip moving(dragging) ends. |
 | `onRemove ` | `IBaseChipEventArgs` | Fired when the chip remove button is clicked. |
 | `onClick ` | `IChipClickEventArgs` | Fired when the chip is clicked instead of dragged. |
-| `onSelection` | `IChipSelectEventArgs` | Fired when the chip is being selected. |
+| `onSelection` | `IChipSelectEventArgs` | Fired when the chip is being selected/deselected. |
 | `onKeyDown ` | `IChipKeyDownEventArgs` | Fired when the chip keyboard navigation is being used. |
 | `onDragEnter ` | `IChipEnterDragAreaEventArgs` | Fired when another chip has entered the current chip area. |
 
@@ -188,15 +188,15 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `width` | `number` | Sets the width of the chips area. |
-| `height ` | `number` | Sets the height of the chip area. |
+| `height ` | `number` | Sets the height of the chips area. |
 
 ### Outputs
 | Name | Argument Type | Description |
 |:--:|:---|:---|
-| `onReorder ` | `IChipsAreaReorderEventArgs` | Fired when the chip moving(dragging) starts. |
-| `onSelection ` | `IChipsAreaSelectEventArgs` | Fired when the chip moving(dragging) ends. |
-| `onMoveStart  ` | `IBaseChipsAreaEventArgs` | Fired when the chip remove button is clicked. |
-| `onMoveEnd ` | `IBaseChipsAreaEventArgs` | Fired when the chip is clicked instead of dragged. |
+| `onReorder ` | `IChipsAreaReorderEventArgs` | Fired when the chips order should be changed(from dragging). Requires custom logic for actual reorder. |
+| `onSelection ` | `IChipsAreaSelectEventArgs` | Fired for all initially selected chips and when chip is being selected/deselected. |
+| `onMoveStart  ` | `IBaseChipsAreaEventArgs` | Fired when any chip moving(dragging) starts. |
+| `onMoveEnd ` | `IBaseChipsAreaEventArgs` | Fired when any chip moving(dragging) ends. |
 
 ### Properties
 | Name   | Return Type | Description |
