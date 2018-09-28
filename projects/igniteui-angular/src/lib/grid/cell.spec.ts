@@ -12,7 +12,7 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
 
-fdescribe('IgxGrid - Cell component', () => {
+describe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateHorizontallyToIndex = (
@@ -836,7 +836,7 @@ fdescribe('IgxGrid - Cell component', () => {
         });
     });
 
-    fit('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
+    it('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.gridHeight = null;
         fix.detectChanges();
