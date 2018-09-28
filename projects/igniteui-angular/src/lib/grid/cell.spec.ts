@@ -836,8 +836,9 @@ fdescribe('IgxGrid - Cell component', () => {
         });
     });
 
-    it('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
+    fit('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
+        fix.componentInstance.gridHeight = null;
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         const cell = grid.getCellByColumn(4, 'index');
@@ -922,10 +923,11 @@ fdescribe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
     });
 
-    it('keyboard navigation - should scroll into view the not fully visible cells when navigating down', (done) => {
+    xit('keyboard navigation - should scroll into view the not fully visible cells when navigating down', (done) => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols = fix.componentInstance.generateCols(100);
         fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.componentInstance.gridHeight = "270px";
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -952,7 +954,7 @@ fdescribe('IgxGrid - Cell component', () => {
         });
     });
 
-    it('keyboard navigation - should scroll into view the not fully visible cells when navigating up', (done) => {
+    xit('keyboard navigation - should scroll into view the not fully visible cells when navigating up', (done) => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols = fix.componentInstance.generateCols(100);
         fix.componentInstance.data = fix.componentInstance.generateData(1000);
@@ -1146,7 +1148,7 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [columnWidth]="defaultWidth" [visibleRows]="5" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
+        <igx-grid [columnWidth]="defaultWidth" [visibleRows]="5" [height]="gridHeight" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
             <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.field" [width]="c.width">
             </igx-column>
         </igx-grid>
