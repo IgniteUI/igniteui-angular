@@ -83,7 +83,12 @@ While the tooltip's default behavior is to show when its target is hovered and h
 
 ## IgxTooltipDirective
 
-Since the **IgxTooltip** directive extends the **IgxToggle** directive and there is no specific functionality it adds apart from some styling classes and attributes, you can refer to the [IgxToggle API](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md) for additional details.
+### Properties
+| Name | Type | Description |
+| :--- |:--- | :--- |
+| context | any | Specifies the context of the tooltip. (Used to store and access any tooltip related data.) |
+
+Since the **IgxTooltip** directive extends the **IgxToggle** directive and there is no specific functionality it adds apart from some styling classes and attributes in combination with the properties from above, you can refer to the [IgxToggle API](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md) for additional details.
 
 ## IgxTooltipTargetDirective
 
