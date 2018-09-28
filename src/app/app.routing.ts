@@ -40,6 +40,7 @@ import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
+import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 
 
 const appRoutes = [
@@ -204,6 +205,10 @@ const appRoutes = [
     {
         path: 'gridRemoteVirtualization',
         component: GridVirtualizationSampleComponent
+    },
+    {
+        path: 'gridRowEdit',
+        component: GridRowEditSampleComponent
     },
     {
         path: 'buttonGroup',

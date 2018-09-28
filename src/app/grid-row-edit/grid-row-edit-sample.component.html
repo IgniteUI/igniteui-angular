@@ -1,0 +1,53 @@
+<div class="sample-wrapper">
+    <app-page-header title="Avatar">
+        This sample demonstrates row editing capability of the grid.
+    </app-page-header>
+
+    <div class="sample-content">
+        <h4>Grid with rowEditing and no transactions</h4>
+        <igx-grid #gridRoEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
+            <igx-column>
+                <ng-template igxCell let-cell="cell" let-val>
+                    <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
+                </ng-template>
+            </igx-column>
+            <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'"></igx-column>
+            <igx-column field="ReorderLevel" width="200px" editable="true" [dataType]="'number'"></igx-column>
+            <igx-column field="ProductName" width="200px" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
+            <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true">
+                <ng-template igxCellEditor let-cell="cell">
+                    <input name="units" [(ngModel)]="cell.value" style="color: black" />
+                </ng-template>
+            </igx-column>
+            <igx-column field="OrderDate" width="200px" [dataType]="'date'" editable="true"></igx-column>
+            <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" editable="true"></igx-column>
+        </igx-grid>
+        <button (click)="addRow()">Add Row</button>
+        <button (click)="undo()">Undo</button>
+        <button (click)="redo()">Redo</button>
+
+        <h4>Grid with rowEditing and with transactions</h4>
+        <app-grid-with-transactions>
+            <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
+                <igx-column>
+                    <ng-template igxCell let-cell="cell" let-val>
+                        <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
+                    </ng-template>
+                </igx-column>
+                <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'"></igx-column>
+                <igx-column field="ReorderLevel" width="200px" editable="true" [dataType]="'number'"></igx-column>
+                <igx-column field="ProductName" width="200px" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
+                <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true">
+                    <ng-template igxCellEditor let-cell="cell">
+                        <input name="units" [(ngModel)]="cell.value" style="color: black" />
+                    </ng-template>
+                </igx-column>
+                <igx-column field="OrderDate" width="200px" [dataType]="'date'" editable="true"></igx-column>
+                <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" editable="true"></igx-column>
+            </igx-grid>
+        </app-grid-with-transactions>
+        <button (click)="addRow()">Add Row</button>
+        <button (click)="undo()">Undo</button>
+        <button (click)="redo()">Redo</button>
+    </div>
+</div>
