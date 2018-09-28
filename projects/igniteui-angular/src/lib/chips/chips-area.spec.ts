@@ -967,7 +967,7 @@ describe('IgxChipsArea', () => {
         });
     });
 
-    fit('should emit onSelection for the chipArea event when there are initially selected chips through their inputs', () => {
+    it('should emit onSelection for the chipArea event when there are initially selected chips through their inputs', () => {
         const fix = TestBed.createComponent(TestChipSelectComponent);
 
         const chipAreaComp = fix.componentInstance.chipsArea;
