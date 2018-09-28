@@ -1,12 +1,16 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from './data';
 
-import {
-    IgxGridComponent, IgxButtonGroupComponent, IgxNoOpTransactionService, IgxTransactionService
-} from 'igniteui-angular';
+import { IgxGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-edit',
+    styles: [
+        `.grid-row-edit-wrapper {
+            flex-flow: row wrap;
+            padding: 50px;
+    }`
+    ],
     templateUrl: 'grid-row-edit-sample.component.html'
 })
 export class GridRowEditSampleComponent {
@@ -21,7 +25,7 @@ export class GridRowEditSampleComponent {
     }
 
     public addRow() {
-        this.gridRowEdit.addRow({
+        this.gridRowEditTransaction.addRow({
             ProductID: this.addProductId++,
             ProductName: 'Product with index ' + this.getRandomInt(0, 20),
             SupplierID: this.getRandomInt(1, 20),
@@ -39,19 +43,19 @@ export class GridRowEditSampleComponent {
 
     public deleteRow(event, rowID) {
         event.stopPropagation();
-        this.gridRowEdit.deleteRow(rowID);
+        this.gridRowEditTransaction.deleteRow(rowID);
     }
 
     public undo() {
-        this.gridRowEdit.transactions.undo();
-        (<any>this.gridRowEdit)._pipeTrigger++;
-        (<any>this.gridRowEdit).cdr.markForCheck();
+        this.gridRowEditTransaction.transactions.undo();
+        (<any>this.gridRowEditTransaction)._pipeTrigger++;
+        (<any>this.gridRowEditTransaction).cdr.markForCheck();
     }
 
     public redo() {
-        this.gridRowEdit.transactions.redo();
-        (<any>this.gridRowEdit)._pipeTrigger++;
-        (<any>this.gridRowEdit).cdr.markForCheck();
+        this.gridRowEditTransaction.transactions.redo();
+        (<any>this.gridRowEditTransaction)._pipeTrigger++;
+        (<any>this.gridRowEditTransaction).cdr.markForCheck();
     }
 
     private getRandomInt(min, max) {

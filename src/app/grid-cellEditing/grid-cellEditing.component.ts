@@ -2,26 +2,25 @@ import { Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent, IgxNoOpTransactionService, IgxTransactionService
+    IgxGridComponent, IgxButtonGroupComponent
 } from 'igniteui-angular';
-
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
 })
 export class GridCellEditingComponent {
 
-    private addProductId: number;
     orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent })
     public gridWithPK: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent })
     public gridWithoutPK: IgxGridComponent;
     @ViewChild(IgxButtonGroupComponent) public buttonGroup: IgxButtonGroupComponent;
-    data: any[];
+    data: any;
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
+    private subscribtion;
 
     constructor() {
         const date = new Date();
@@ -32,13 +31,11 @@ export class GridCellEditingComponent {
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
-
-        this.addProductId = this.data.length + 1;
     }
 
     public addRow() {
         this.gridWithPK.addRow({
-            ProductID: this.addProductId++,
+            ProductID: 21,
             ProductName: 'Sir Rodneys Marmalade',
             SupplierID: 8,
             CategoryID: 3,
@@ -154,17 +151,5 @@ export class GridCellEditingComponent {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
-    }
-
-    public undo() {
-        this.gridWithPK.transactions.undo();
-        (<any>this.gridWithPK)._pipeTrigger++;
-        (<any>this.gridWithPK).cdr.markForCheck();
-    }
-
-    public redo() {
-        this.gridWithPK.transactions.redo();
-        (<any>this.gridWithPK)._pipeTrigger++;
-        (<any>this.gridWithPK).cdr.markForCheck();
     }
 }
