@@ -6,5 +6,6 @@ export * from './column.component';
 export * from './api.service';
 export * from './cell.component';
 export * from './row.component';
+export * from './common/grid-common.misc';
 export * from './common/grid-interfaces';
 export * from './grid-base.component';
