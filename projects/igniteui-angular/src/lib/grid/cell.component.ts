@@ -266,7 +266,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     get inEditMode(): boolean {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        this.cdr.markForCheck();
         if (editableCell) {
             return this.cellID.rowID === editableCell.cellID.rowID &&
                 this.cellID.columnID === editableCell.cellID.columnID;
@@ -334,6 +333,16 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     @HostBinding('attr.aria-readonly')
     get readonly(): boolean {
         return !this.column.editable;
+    }
+
+    @HostBinding('attr.data-rowIndex')
+    get dataRowIndex() {
+        return this.rowIndex;
+    }
+
+    @HostBinding('attr.data-visibleIndex')
+    get dataColumnVisibleIndex() {
+        return this.visibleColumnIndex;
     }
 
     /**
@@ -548,7 +557,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }),
             takeUntil(this.destroy$),
-            sampleTime(0, rAF)
+            // delay(60)
+            // sampleTime(60, rAF)
         );
     private cellSelectionID: string;
     private prevCellSelectionID: string;
@@ -575,7 +585,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (fireFocus) {
                 this.nativeElement.focus();
             }
-            this.cdr.detectChanges();
+            this.cdr.markForCheck();
             this.grid.onSelection.emit({ cell: this, event });
         }
     }
@@ -646,8 +656,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.cellSelectionID = `${this.gridID}-cell`;
         this.prevCellSelectionID = `${this.gridID}-prev-cell`;
         this.keydown$.subscribe((event: KeyboardEvent) => this.dispatchEvent(event));
-        combineLatest([this.row.virtDirRow.onChunkLoad, this.grid.verticalScrollContainer.onChunkLoad])
-            .pipe(takeUntil(this.destroy$)).subscribe(() => this.cdr.markForCheck());
     }
 
     /**
@@ -771,44 +779,43 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             case 'arrowleft':
             case 'left':
                 if (ctrl && key === 'home') {
-                    this.onKeydownCtrlHome(event);
-                    // break;
+                    this.grid.navigation.goToFirstCell();
                     return;
                 }
                 if (ctrl || key === 'home') {
-                    this.onKeydownCtrlArrowLeft(event);
+                    this.grid.navigation.onKeydownHome(this.rowIndex);
                     break;
                 }
-                this.onKeydownArrowLeft(event);
+                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, this.rowIndex, this.visibleColumnIndex);
                 break;
             case 'end':
             case 'arrowright':
             case 'right':
                 if (ctrl && key === 'end') {
-                    this.onKeydownCtrlEnd(event);
-                    break;
+                    this.grid.navigation.goToLastCell();
+                    return;
                 }
                 if (ctrl || key === 'end') {
-                    this.onKeydownCtrlArrowRight(event);
+                    this.grid.navigation.onKeydownEnd(this.rowIndex);
                     break;
                 }
-                this.onKeydownArrowRight(event);
+                this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.rowIndex, this.visibleColumnIndex);
                 break;
             case 'arrowup':
             case 'up':
                 if (ctrl) {
-                    this.onKeydownCtrlArrowUp(event);
+                    this.grid.navigation.navigateTop(this.visibleColumnIndex);
                     break;
                 }
-                this.onKeydownArrowUp(event);
+                this.grid.navigation.navigateUp(this.row.nativeElement, this.rowIndex, this.visibleColumnIndex);
                 break;
             case 'arrowdown':
             case 'down':
                 if (ctrl) {
-                    this.onKeydownCtrlArrowDown(event);
+                    this.grid.navigation.navigateBottom(this.visibleColumnIndex);
                     break;
                 }
-                this.onKeydownArrowDown(event);
+                this.grid.navigation.navigateDown(this.row.nativeElement, this.rowIndex, this.visibleColumnIndex);
                 break;
             case 'enter':
             case 'f2':
@@ -851,78 +858,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
             }
         } else {
-            this.onKeydownArrowLeft(event);
+            this.grid.navigation.onKeydownArrowLeft(this.nativeElement, this.rowIndex, this.visibleColumnIndex);
         }
-    }
-
-    public onKeydownArrowLeft(event) {
-
-        const rowIndex = this.rowIndex;
-        const columnIndex = this.visibleColumnIndex - 1;
-
-        if (columnIndex >= 0) {
-            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
-            const targetUnpinnedIndex = this.unpinnedColumnIndex - 1;
-            const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
-            let bVirtSubscribe = true;
-
-            if (!horVirtScroll && !target) {
-                return;
-            }
-
-            if (target) {
-                const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-                const targetEndLeftOffset = target.nativeElement.offsetLeft + containerLeftOffset;
-                if (!target.isPinned && targetEndLeftOffset < 0) {
-                    // Target cell is not pinned and is partialy visible (left part is cut). Scroll so it is fully visible and then focus.
-                    horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex);
-                } else {
-                    // Target cell is fully visible. Just focus it.
-                    target._updateCellSelectionStatus(true, event);
-                    bVirtSubscribe = false;
-                }
-            } else {
-                if (!this.column.pinned) {
-                    this.row.virtDirRow.scrollPrev();
-                } else {
-                    this.row.virtDirRow.scrollTo(this.grid.unpinnedColumns.filter(c => !c.columnGroup).length - 1);
-                }
-            }
-
-            /**
-             * Determine if we need to subscribe, otherwise if we use navigation and don't scroll, it will bind n-times times.
-             * If we scroll the virtual container above, we need to subscribe to onChunkLoad.
-             * We do this because it takes time to detect change in scrollLeft of an element
-             */
-            if (bVirtSubscribe) {
-                this.grid._focusNextCell(this.rowIndex, columnIndex, 'left', event);
-            }
-        }
-    }
-
-    public onKeydownCtrlArrowLeft(event) {
-
-        if (this.grid.pinnedColumns.length) {
-            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, this.row.cells.first.visibleColumnIndex);
-            target._updateCellSelectionStatus(true, event);
-            return;
-        }
-
-        const columnIndex = this.grid.unpinnedColumns[0].visibleIndex;
-
-        const firstCell = this.row.cells.first;
-        if (firstCell.visibleColumnIndex === columnIndex) {
-            firstCell._updateCellSelectionStatus(true, event);
-            return;
-        }
-
-        this.grid.scrollTo(this.rowIndex, 0, this.grid.paging ? this.grid.page : 0);
-        this.row.virtDirRow.onChunkLoad
-            .pipe(first())
-            .subscribe(() => {
-                const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, columnIndex);
-                target._updateCellSelectionStatus(true, event);
-        });
     }
 
     public onTabKey(event) {
@@ -939,188 +876,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
             }
         } else {
-            this.onKeydownArrowRight(event);
+            this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.rowIndex, this.visibleColumnIndex);
         }
     }
-
-    public onKeydownArrowRight(event) {
-
-        const visibleColumns = this.grid.visibleColumns.filter(c => !c.columnGroup);
-        const rowIndex = this.rowIndex;
-        const columnIndex = this.visibleColumnIndex + 1;
-
-        if (columnIndex > -1 && columnIndex <= visibleColumns.length - 1) {
-            const target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
-            const targetUnpinnedIndex = this.unpinnedColumnIndex + 1;
-            const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
-            const verticalVirtScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-            const verticalVirtScrollWidth = verticalVirtScroll &&
-                verticalVirtScroll.offsetHeight < verticalVirtScroll.children[0].offsetHeight ?
-                this.grid.verticalScrollContainer.getVerticalScroll().offsetWidth :
-                0;
-
-            // We take into consideration the vertical scroll width sinse it is not calculated in the container inside the row
-            const virtContainerSize = parseInt(this.row.virtDirRow.igxForContainerSize, 10) - verticalVirtScrollWidth;
-            let bVirtSubscribe = true;
-
-            if (!horVirtScroll && !target) {
-                return;
-            }
-
-            if (target) {
-                const containerLeftOffset = parseInt(this.row.virtDirRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-                const targetStartLeftOffset = target.nativeElement.offsetLeft + containerLeftOffset;
-                const targetEndLeftOffset = target.nativeElement.offsetLeft +
-                    parseInt(visibleColumns[columnIndex].width, 10) +
-                    containerLeftOffset;
-                if (!target.isPinned && targetEndLeftOffset > virtContainerSize) {
-                    // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
-                    const oldScrollLeft = horVirtScroll.scrollLeft;
-                    const targetScrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1) - virtContainerSize;
-                    horVirtScroll.scrollLeft = targetScrollLeft;
-
-                    if (oldScrollLeft === horVirtScroll.scrollLeft && oldScrollLeft !== targetScrollLeft) {
-                        // There is nowhere to scroll more. Don't subscribe since there won't be triggered event.
-                        target._updateCellSelectionStatus(true, event);
-                        bVirtSubscribe = false;
-                    }
-                } else if (!target.isPinned && targetStartLeftOffset < 0) {
-                    // Target cell is partially visible (left part of it is cut). Happens when going from pinned to unpinned area.
-                    horVirtScroll.scrollLeft = 0;
-                } else {
-                    // Target cell is fully visible. Just focus it.
-                    target._updateCellSelectionStatus(true, event);
-                    bVirtSubscribe = false;
-                }
-            } else {
-                horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1) - virtContainerSize;
-            }
-
-            /**
-             * Determine if we need to subscribe, otherwise if we use navigation and don't scroll, it will bind n-times.
-             * If we scroll the virtual container above, we need to subscribe to onChunkLoad.
-             * We do this because it takes time to detect change in scrollLeft of an element
-             */
-            if (bVirtSubscribe) {
-                this.grid._focusNextCell(this.rowIndex, columnIndex, 'right', event);
-            }
-        }
-    }
-
-    public onKeydownCtrlArrowRight(event) {
-        const columnIndex = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
-
-        const lastCell = this.row.cells.last;
-        if (lastCell.visibleColumnIndex === columnIndex) {
-            lastCell._updateCellSelectionStatus(true, event);
-            return;
-        }
-
-        this.grid.scrollTo(this.rowIndex, columnIndex, this.grid.paging ? this.grid.page : 0);
-        this.row.virtDirRow.onChunkLoad
-            .pipe(first())
-            .subscribe(() => {
-                const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, columnIndex);
-                target._updateCellSelectionStatus(true, event);
-        });
-    }
-
-    public onKeydownCtrlArrowUp(event) {
-        if (this.rowIndex === 0) {
-            return;
-        }
-        this.grid.navigateTop( this.visibleColumnIndex, event);
-    }
-
-    public onKeydownArrowUp(event) {
-        if (this.rowIndex === 0) {
-            return;
-        }
-
-        const lastCell = this._getLastSelectedCell();
-        const rowIndex = lastCell ? lastCell.rowIndex - 1 : this.grid.rowList.last.index;
-        this.grid.navigateUp(rowIndex, this.visibleColumnIndex, event);
-    }
-
-    public onKeydownCtrlArrowDown(event) {
-        this.grid.navigateBottom(this.visibleColumnIndex, event);
-     }
-
-    public onKeydownArrowDown(event) {
-        const virtDir = this.grid.verticalScrollContainer;
-        const count = virtDir.totalItemCount || virtDir.igxForOf.length;
-        if (this.rowIndex + 1 === count) {
-            return;
-        }
-
-        const lastCell = this._getLastSelectedCell();
-        const rowIndex = lastCell ? lastCell.rowIndex + 1 : this.grid.rowList.first.index;
-        this.grid.navigateDown(rowIndex, this.visibleColumnIndex, event);
-    }
-
-    public onKeydownCtrlHome(event) {
-        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-        const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getHorizontalScroll();
-        if (verticalScroll.scrollTop === 0) {
-            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
-                if (this.grid.dataRowList.first.cells.first) {
-                    this.grid.dataRowList.first.cells.first._updateCellSelectionStatus(true, event);
-                }
-            } else {
-                this.grid.scrollTo(0, 0, this.grid.paging ? this.grid.page : 0);
-                this.row.virtDirRow.onChunkLoad
-                    .pipe(first())
-                    .subscribe(() => {
-                        if (this.grid.dataRowList.first.cells.first) {
-                            this.grid.dataRowList.first.cells.first._updateCellSelectionStatus(true, event);
-                        }
-                });
-            }
-        } else {
-            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
-                this.grid.navigateTop(0, event);
-            } else {
-                this.row.virtDirRow.scrollTo(0);
-                this.row.virtDirRow.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                   this.grid.navigateTop(0, event);
-                });
-            }
-        }
-    }
-     public onKeydownCtrlEnd(event) {
-        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-        const columnIndex = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
-        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
-            if (this.row.cells.last.visibleColumnIndex === columnIndex) {
-                if (this.grid.dataRowList.last.cells.last) {
-                    this.grid.dataRowList.last.cells.last._updateCellSelectionStatus(true, event);
-                }
-            } else {
-                this.grid.scrollTo(this.rowIndex, columnIndex + 1,
-                    this.grid.paging ? this.grid.page : 0);
-                this.grid.dataRowList.last.virtDirRow.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    if (this.grid.dataRowList.last.cells.last) {
-                        this.grid.dataRowList.last.cells.last._updateCellSelectionStatus(true, event);
-                    }
-                });
-            }
-        } else {
-            if (this.row.cells.last.visibleColumnIndex === columnIndex) {
-                this.grid.navigateBottom(columnIndex, event);
-            } else {
-                this.grid.scrollTo(this.rowIndex, columnIndex, this.grid.paging ? this.grid.page : 0);
-                this.row.virtDirRow.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    this.grid.navigateBottom(columnIndex, event);
-                });
-            }
-        }
-     }
 
     public onKeydownEnterEditMode(event) {
         if (this.column.editable) {
