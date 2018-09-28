@@ -18,7 +18,7 @@ export class IgxTransactionBaseService implements IgxTransactionService {
         const transactions = this._isPending ? this._pendingTransactions : this._transactions;
         transactions.push(transaction);
 
-        if (this._isPending) {
+        if (!this._isPending) {
             this._undoStack.push({ transaction, recordRef });
             this._redoStack = [];
         }

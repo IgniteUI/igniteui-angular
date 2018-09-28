@@ -88,7 +88,7 @@ describe('IgxTransaction', () => {
             const updateTransaction = { id: '2', type: TransactionType.DELETE, newValue: 7 };
             expect(trans.getTransactionLog('2')).toEqual(updateTransaction);
             const msg = `Cannot add this transaction. This is first transaction of type ${updateTransaction.type} ` +
-            `for id ${updateTransaction.id}. For first transaction of this type recordRef is mandatory.`;
+                `for id ${updateTransaction.id}. For first transaction of this type recordRef is mandatory.`;
             expect(function () {
                 updateTransaction.newValue = 107;
                 trans.add(updateTransaction);
@@ -490,6 +490,69 @@ describe('IgxTransaction', () => {
             expect(originalData.find(i => i === 'Row 10')).toBeUndefined();
             expect(originalData.length).toBe(50);
             expect(originalData[49]).toEqual('Added Row');
+        });
+
+        it('Should add pending transaction and push it to transaction log', () => {
+            const trans = new IgxTransactionBaseService();
+            expect(trans).toBeDefined();
+            const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
+            let newValue: any = { key: 'Key1', value1: 10 };
+            let updateTransaction: ITransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue };
+
+            trans.startPending();
+            trans.add(updateTransaction, recordRef);
+
+            expect(trans.getTransactionLog()).toEqual([]);
+            expect(trans.aggregatedState()).toEqual(new Map());
+
+            newValue = { key: 'Key1', value3: 30 };
+            updateTransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue };
+            trans.add(updateTransaction, recordRef);
+
+            expect(trans.getTransactionLog()).toEqual([]);
+            expect(trans.aggregatedState()).toEqual(new Map());
+
+            trans.endPending(true);
+
+            expect((<any>trans.getTransactionLog())).toEqual(
+                [
+                    {
+                        id: 'Key1',
+                        newValue: { key: 'Key1', value1: 10, value3: 30 },
+                        type: 'update'
+                    }
+                ]);
+            expect(trans.aggregatedState().get(updateTransaction.id)).toEqual({
+                value: { key: 'Key1', value1: 10, value3: 30 },
+                recordRef: recordRef,
+                type: updateTransaction.type
+            });
+        });
+
+        it('Should not add pending transaction and push it to transaction log', () => {
+            const trans = new IgxTransactionBaseService();
+            expect(trans).toBeDefined();
+            const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
+            let newValue: any = { key: 'Key1', value1: 10 };
+            let updateTransaction: ITransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue };
+
+            trans.startPending();
+            trans.add(updateTransaction, recordRef);
+
+            expect(trans.getTransactionLog()).toEqual([]);
+            expect(trans.aggregatedState()).toEqual(new Map());
+
+            newValue = { key: 'Key1', value3: 30 };
+            updateTransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue };
+            trans.add(updateTransaction, recordRef);
+
+            expect(trans.getTransactionLog()).toEqual([]);
+            expect(trans.aggregatedState()).toEqual(new Map());
+
+            trans.endPending(false);
+
+            expect(trans.getTransactionLog()).toEqual([]);
+            expect(trans.aggregatedState()).toEqual(new Map());
         });
     });
 });
