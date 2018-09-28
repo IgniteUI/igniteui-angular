@@ -297,47 +297,39 @@ describe('List', () => {
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
     });
 
-    it('should fire ItemClicked on click.', (done) => {
+    it('should fire ItemClicked on click.', () => {
         let fixture;
         let list: IgxListComponent;
         let listItem: IgxListItemComponent;
         let timesCalled = 0;
 
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(ListWithHeaderComponent);
-            list = fixture.componentInstance.list;
+        fixture = TestBed.createComponent(ListWithHeaderComponent);
+        fixture.detectChanges();
+        list = fixture.componentInstance.list;
 
-            fixture.detectChanges();
-            return fixture.whenStable();
-        }).then(() => {
-
-            list.onItemClicked.subscribe((value) => {
-                timesCalled++;
-                listItem = value.item;
-            });
-
-            return clickItem(list.items[0]);
-        }).then(() => {
-            expect(timesCalled).toBe(1);
-            expect(listItem.index).toBe(1);
-            expect(listItem.element.textContent.trim()).toBe('Item 1');
-
-            // Click the same item again and verify click is fired again
-            return clickItem(list.items[0]);
-        }).then(() => {
-            expect(timesCalled).toBe(2);
-            expect(listItem.index).toBe(1);
-
-            // Click the header and verify click is fired
-            return clickItem(list.headers[0]);
-        }).then(() => {
-            expect(timesCalled).toBe(3);
-            expect(listItem.index).toBe(0);
-            expect(listItem.element.textContent.trim()).toBe('Header');
-            unsubscribeEvents(list);
-            done();
+        list.onItemClicked.subscribe((value) => {
+            timesCalled++;
+            listItem = value.item;
         });
-    }, 5000);
+
+        clickItem(list.items[0]);
+
+        expect(timesCalled).toBe(1);
+        expect(listItem.index).toBe(1);
+        expect(listItem.element.textContent.trim()).toBe('Item 1');
+
+        // Click the same item again and verify click is fired again
+        clickItem(list.items[0]);
+        expect(timesCalled).toBe(2);
+        expect(listItem.index).toBe(1);
+
+        // Click the header and verify click is fired
+        clickItem(list.headers[0]);
+        expect(timesCalled).toBe(3);
+        expect(listItem.index).toBe(0);
+        expect(listItem.element.textContent.trim()).toBe('Header');
+        unsubscribeEvents(list);
+    });
 
     it('should display multiple headers properly.', () => {
         const fixture = TestBed.createComponent(TwoHeadersListComponent);
@@ -393,43 +385,35 @@ describe('List', () => {
         expect(hiddenTags.length).toBe(1);
     });
 
-    it('should not pan when panning is not allowed.', (done) => {
+    it('should not pan when panning is not allowed.', () => {
         let fixture;
         let list: IgxListComponent;
         let item: IgxListItemComponent;
         let itemNativeElement;
         let elementRefCollection;
 
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TwoHeadersListNoPanningComponent);
-            list = fixture.componentInstance.list;
+        fixture = TestBed.createComponent(TwoHeadersListNoPanningComponent);
+        fixture.detectChanges();
+        list = fixture.componentInstance.list;
 
-            fixture.detectChanges();
-            return fixture.whenStable();
-        }).then(() => {
+        item = list.items[0] as IgxListItemComponent;
+        itemNativeElement = item.element;
 
-            item = list.items[0] as IgxListItemComponent;
-            itemNativeElement = item.element;
+        spyOn(list.onLeftPan, 'emit');
+        spyOn(list.onRightPan, 'emit');
+        spyOn(list.onPanStateChange, 'emit');
 
-            spyOn(list.onLeftPan, 'emit');
-            spyOn(list.onRightPan, 'emit');
-            spyOn(list.onPanStateChange, 'emit');
+        elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItem(elementRefCollection[1], 0.8);
+        expect(item.panState).toBe(IgxListPanState.NONE);
 
-            elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
-            return panItem(elementRefCollection[1], 0.8);
-        }).then(() => {
-            expect(item.panState).toBe(IgxListPanState.NONE);
-
-            elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
-            return panItem(elementRefCollection[1], -0.8);
-        }).then(() => {
-            expect(item.panState).toBe(IgxListPanState.NONE);
-            expect(list.onLeftPan.emit).toHaveBeenCalledTimes(0);
-            expect(list.onRightPan.emit).toHaveBeenCalledTimes(0);
-            expect(list.onPanStateChange.emit).toHaveBeenCalledTimes(0);
-            done();
-        });
-    }, 5000);
+        elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItem(elementRefCollection[1], -0.8);
+        expect(item.panState).toBe(IgxListPanState.NONE);
+        expect(list.onLeftPan.emit).toHaveBeenCalledTimes(0);
+        expect(list.onRightPan.emit).toHaveBeenCalledTimes(0);
+        expect(list.onPanStateChange.emit).toHaveBeenCalledTimes(0);
+    });
 
     it('checking the panLeftTemplate is visible when left-panning a list item.', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
@@ -616,9 +600,11 @@ describe('List', () => {
     }
 
     function unsubscribeEvents(list) {
-        list.onLeftPan.unsubscribe();
-        list.onPanStateChange.unsubscribe();
-        list.onRightPan.unsubscribe();
-        list.onItemClicked.unsubscribe();
+        if (list) {
+            list.onLeftPan.unsubscribe();
+            list.onPanStateChange.unsubscribe();
+            list.onRightPan.unsubscribe();
+            list.onItemClicked.unsubscribe();
+        }
     }
 });
