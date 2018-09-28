@@ -7,7 +7,7 @@ import { IgxGridModule } from './index';
 import { wait } from '../test-utils/ui-interactions.spec';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
-describe('IgxGrid - CRUD operations', () => {
+fdescribe('IgxGrid - CRUD operations', () => {
 
     let fix;
     let grid;

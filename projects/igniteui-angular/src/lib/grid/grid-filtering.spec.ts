@@ -12,7 +12,7 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand,
 const FILTERING_TOGGLE_CLASS = 'igx-filtering__toggle';
 const FILTERING_TOGGLE_FILTERED_CLASS = 'igx-filtering__toggle--filtered';
 
-describe('IgxGrid - Filtering actions', () => {
+fdescribe('IgxGrid - Filtering actions', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

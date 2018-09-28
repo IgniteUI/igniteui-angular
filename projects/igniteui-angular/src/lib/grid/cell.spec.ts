@@ -16,7 +16,7 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Cell component', () => {
+fdescribe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateHorizontallyToIndex = (

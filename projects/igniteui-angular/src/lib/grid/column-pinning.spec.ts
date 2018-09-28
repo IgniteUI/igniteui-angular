@@ -12,7 +12,7 @@ import { HelperUtils } from '../test-utils/helper-utils.spec';
 import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent } from '../test-utils/grid-base-components.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
-describe('Column Pinning UI', () => {
+fdescribe('Column Pinning UI', () => {
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnPinningComponent;
