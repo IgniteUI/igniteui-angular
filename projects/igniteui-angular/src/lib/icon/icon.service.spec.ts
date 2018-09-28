@@ -49,7 +49,7 @@ describe('Icon Service', () => {
         expect(iconService.fontSetClassName(ALIAS)).toBe(MY_FONT);
     });
 
-    fit('should add custom svg icon', () => {
+    it('should add custom svg icon', () => {
         const iconService = TestBed.get(IgxIconService) as IgxIconService;
         const httpMock = TestBed.get(HttpTestingController);
         const document = TestBed.get(DOCUMENT);
