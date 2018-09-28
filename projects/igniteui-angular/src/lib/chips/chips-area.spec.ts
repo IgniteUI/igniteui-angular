@@ -832,4 +832,22 @@ describe('IgxChipsArea', () => {
             expect(chipComponents.length).toEqual(3);
         });
     });
+
+    it('should emit onSelection for the chipArea event when there are initially selected chips through their inputs', () => {
+        const fix = TestBed.createComponent(TestChipSelectComponent);
+
+        const chipAreaComp = fix.componentInstance.chipsArea;
+        spyOn(chipAreaComp.onSelection, 'emit');
+
+        fix.detectChanges();
+
+        const secondChipComp = fix.componentInstance.chips.toArray();
+
+        expect(chipAreaComp['selectedChips']).toEqual([secondChipComp[0], secondChipComp[1]]);
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: null,
+            owner: chipAreaComp,
+            newSelection: [secondChipComp[0], secondChipComp[1]]
+        });
+    });
 });
