@@ -101,6 +101,11 @@ export class IgxGridRowComponent implements DoCheck {
     @HostBinding('attr.role')
     public role = 'row';
 
+    @HostBinding('attr.data-rowIndex')
+    get dataRowIndex() {
+        return this.index;
+    }
+
     /**
      * @hidden
      */

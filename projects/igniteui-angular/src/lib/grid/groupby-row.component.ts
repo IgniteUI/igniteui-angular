@@ -112,6 +112,11 @@ export class IgxGridGroupByRowComponent {
         return this.gridID + '_' + grRowExpr;
     }
 
+    @HostBinding('attr.data-rowIndex')
+    get dataRowIndex() {
+        return this.index;
+    }
+
     /**
      * Returns a reference to the underlying HTML element.
      * ```typescript
@@ -160,7 +165,7 @@ export class IgxGridGroupByRowComponent {
      * this.grid1.rowList.first.grid;
      * ```
      */
-    get grid(): IgxGridComponent {
+    get grid(): any {
         return this.gridAPI.get(this.gridID);
     }
 
