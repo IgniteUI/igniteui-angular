@@ -26,6 +26,7 @@
 @import '../components/tabs/tabs-theme';
 @import '../components/time-picker/time-picker-theme';
 @import '../components/toast/toast-theme';
+@import '../components/tooltip/tooltip-theme';
 
 /// Adds typography styles for h1-h6, paragraph and creates
 /// custom typography class selectors. The produces styles
@@ -112,4 +113,5 @@
     @include igx-tabs-typography($type-scale);
     @include igx-time-picker-typography($type-scale);
     @include igx-toast-typography($type-scale);
+    @include igx-tooltip-typography($type-scale);
 }
