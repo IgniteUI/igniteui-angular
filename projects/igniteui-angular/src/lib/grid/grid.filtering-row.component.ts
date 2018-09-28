@@ -11,7 +11,8 @@ import {
     ViewChildren,
     QueryList,
     HostListener,
-    ElementRef
+    ElementRef,
+    HostBinding
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
@@ -72,16 +73,16 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     @ViewChild('input', { read: ElementRef })
     protected input: ElementRef;
 
-    @ViewChild('operands', { read: IgxDropDownComponent})
+    @ViewChild('operands', { read: IgxDropDownComponent })
     protected igxDropDown: IgxDropDownComponent;
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
     public chipsArea: IgxChipsAreaComponent;
 
-    @ViewChildren('operators', { read: IgxDropDownComponent})
+    @ViewChildren('operators', { read: IgxDropDownComponent })
     protected dropDownList: QueryList<IgxDropDownComponent>;
 
-    @ViewChild('operandsIcon', { read: IgxIconComponent})
+    @ViewChild('operandsIcon', { read: IgxIconComponent })
     protected operandsIcon: IgxIconComponent;
 
     private _positionSettings = {
@@ -90,9 +91,9 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     };
 
     private _overlaySettings = {
-      closeOnOutsideClick: true,
-      modal: false,
-      positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
+        closeOnOutsideClick: true,
+        modal: false,
+        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };
 
     private _expressionsMap: Map<number, ExpressionUI[]>;
@@ -105,6 +106,9 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
 
     public expression: IFilteringExpression;
     public expressionsList: Array<ExpressionUI>;
+
+    @HostBinding('class.igx-grid__filtering-row')
+    public cssClass = 'igx-grid__filtering-row';
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this._expressionsMap = new Map<number, ExpressionUI[]>();
@@ -263,7 +267,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
 
     }
 
-    private _createTree(left: FilteringExpressionsTree | IFilteringExpression, right: ExpressionUI ): void {
+    private _createTree(left: FilteringExpressionsTree | IFilteringExpression, right: ExpressionUI): void {
         const tree = new FilteringExpressionsTree(right.beforeOperator, this.column.field);
         tree.filteringOperands.push(left);
         tree.filteringOperands.push(right.expression);
@@ -403,7 +407,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         }
     }
 
-    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression ): void {
+    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression): void {
         if (eventArgs.selected) {
             this.expression = expression;
             setTimeout(() => {
@@ -421,7 +425,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         this._removeExpression(indexToRemove, item.expression);
     }
 
-    public onChipsSelectionChanged (eventArgs: IChipsAreaSelectEventArgs): void {
+    public onChipsSelectionChanged(eventArgs: IChipsAreaSelectEventArgs): void {
         if (eventArgs.newSelection.length > 1) {
             eventArgs.newSelection[0].selected = false;
         }

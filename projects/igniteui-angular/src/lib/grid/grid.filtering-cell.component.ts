@@ -6,6 +6,7 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
+    HostBinding,
 } from '@angular/core';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
@@ -49,6 +50,9 @@ export class IgxGridFilteringCellComponent implements OnInit {
     private _titlecasePipe = new TitleCasePipe();
 
     public expressionsList: Array<ExpressionUI>;
+
+    @HostBinding('class.igx-grid__filtering-cell')
+    public cssClass = 'igx-grid__filtering-cell';
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this._expressionsMap = new Map<number, ExpressionUI[]>();

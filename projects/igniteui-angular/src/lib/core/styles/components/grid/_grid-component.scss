@@ -119,6 +119,10 @@
         @extend %grid-cell--fixed-width !optional;
     }
 
+    @include e(th, $m: filtering) {
+        @extend %grid-cell-header--filtering !optional;
+    }
+
     @include e(th-title) {
         @extend %grid-cell-header-title !optional;
     }
@@ -246,6 +250,23 @@
 
     @include e(filtering-outlet) {
         @extend %igx-grid__filtering-outlet !optional;
+    }
+
+    @include e(filtering-cell) {
+        @extend %igx-grid__filtering-cell !optional;
+    }
+
+    @include e(filtering-row) {
+        @extend %igx-grid__filtering-row !optional;
+    }
+
+    @include e(filtering-row-buttons) {
+        @extend %igx-grid__filtering-row-buttons !optional;
+    }
+
+    @include e(filtering-row-main) {
+
+        @extend %igx-grid__filtering-row-main !optional;
     }
 
     @for $i from 1 through 10 {
@@ -432,4 +453,5 @@
     @include e(count-badge) {
         @extend %igx-group-label__count-badge !optional;
     }
+
 }
