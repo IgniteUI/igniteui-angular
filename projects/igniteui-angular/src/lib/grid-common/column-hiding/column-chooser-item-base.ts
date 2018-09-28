@@ -1,4 +1,4 @@
-import { EventEmitter, Input, Output } from '@angular/core';
+import { EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 
 export interface IValueChangedEventArgs {
     oldValue: any;
@@ -47,7 +47,7 @@ export abstract class ItemPropertyValueChanged {
     }
 }
 
-export class ColumnChooserItemBase extends ItemPropertyValueChanged {
+export class ColumnChooserItemBase extends ItemPropertyValueChanged implements OnDestroy {
     @Input()
     get column() {
         return this.object;
@@ -67,6 +67,10 @@ export class ColumnChooserItemBase extends ItemPropertyValueChanged {
 
     constructor(public prop: string) {
         super(prop);
+    }
+
+    ngOnDestroy(): void {
+        this.valueChanged.unsubscribe();
     }
 
     get name() {
