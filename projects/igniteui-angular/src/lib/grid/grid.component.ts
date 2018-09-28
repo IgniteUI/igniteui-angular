@@ -636,7 +636,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public visibleRows: number = 10;
+    public visibleRows = 10;
 
     /**
      * @hidden

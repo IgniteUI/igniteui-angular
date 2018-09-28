@@ -927,7 +927,7 @@ fdescribe('IgxGrid - Cell component', () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols = fix.componentInstance.generateCols(100);
         fix.componentInstance.data = fix.componentInstance.generateData(1000);
-        fix.componentInstance.gridHeight = "270px";
+        fix.componentInstance.gridHeight = '270px';
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -1148,7 +1148,8 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [columnWidth]="defaultWidth" [visibleRows]="5" [height]="gridHeight" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
+        <igx-grid [columnWidth]="defaultWidth" [visibleRows]="5" [height]="gridHeight"
+        [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
             <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.field" [width]="c.width">
             </igx-column>
         </igx-grid>

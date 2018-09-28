@@ -328,7 +328,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * @hidden
      */
     public ngAfterViewInit() {
-        if (this.igxForScrollOrientation === "vertical") {
+        if (this.igxForScrollOrientation === 'vertical') {
             const height = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height - this.igxForItemSize;
             this.onChunkGenerated.emit(height);
             this._recalcScrollBarSize(height);
@@ -732,7 +732,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      */
     protected _applyChanges(changes: IterableChanges<T>) {
         this.applyChunkSizeChange();
-        //this._recalcScrollBarSize();
+        // this._recalcScrollBarSize();
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this.state.startIndex;
