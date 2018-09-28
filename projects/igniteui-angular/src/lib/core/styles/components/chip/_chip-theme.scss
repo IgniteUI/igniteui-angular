@@ -277,7 +277,6 @@
         cursor: pointer;
         border-radius: map-get($chip-height, 'comfortable') / 2;
         padding: map-get($chip-padding, 'comfortable');
-        margin: rem(4px);
         height: map-get($chip-height, 'comfortable');
         transition: $transition;
         background: --var($theme, 'chip-background');
