@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
@@ -7,9 +7,9 @@ import { IgxListComponent, IgxListModule } from './list.component';
 import {
     ListWithHeaderComponent, ListWithPanningComponent,
     EmptyListComponent, CustomEmptyListComponent,
-    ListLoadingComponent,
+    ListLoadingComponent, ListWithPanningTemplatesComponent,
     ListCustomLoadingComponent,
-    TwoHeadersListComponent } from '../test-utils/list-components.spec';
+    TwoHeadersListComponent, TwoHeadersListNoPanningComponent } from '../test-utils/list-components.spec';
 
 declare var Simulator: any;
 
@@ -23,7 +23,9 @@ describe('List', () => {
                 ListLoadingComponent,
                 ListWithHeaderComponent,
                 ListWithPanningComponent,
-                TwoHeadersListComponent
+                TwoHeadersListComponent,
+                TwoHeadersListNoPanningComponent,
+                ListWithPanningTemplatesComponent
             ],
             imports: [IgxListModule]
         }).compileComponents();
@@ -80,7 +82,7 @@ describe('List', () => {
         expect(item.width).toBe(testWidth);
         expect(item.maxLeft).toBe(-testWidth);
         expect(item.maxRight).toBe(testWidth);
-        expect(item.left).toBe(testLeft);
+        expect(item.element.offsetLeft).toBe(testLeft);
      });
 
     it('should calculate properly item index', () => {
@@ -131,17 +133,12 @@ describe('List', () => {
 
         /* Pan item right */
         panItem(itemNativeElements[0], 0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[0].panState).toBe(IgxListPanState.RIGHT);
 
         /* Pan item left */
         panItem(itemNativeElements[1], -0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[1].panState).toBe(IgxListPanState.LEFT);
+
         expect(timesCalledLeftPan).toBe(1);
         expect(timesCalledStateChanged).toBe(2);
         expect(timesCalledRightPan).toBe(1);
@@ -184,17 +181,12 @@ describe('List', () => {
 
         /* Pan item right */
         panItem(itemNativeElements[0], 0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[0].panState).toBe(IgxListPanState.RIGHT);
 
         /* Pan item left */
         panItem(itemNativeElements[1], -0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[1].panState).toBe(IgxListPanState.NONE);
+
         expect(timesCalledLeftPan).toBe(0);
         expect(timesCalledStateChanged).toBe(1);
         expect(timesCalledRightPan).toBe(1);
@@ -232,17 +224,12 @@ describe('List', () => {
 
         /* Pan item left */
         panItem(itemNativeElements[0], -0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[0].panState).toBe(IgxListPanState.LEFT);
 
         /* Pan item right */
         panItem(itemNativeElements[1], 0.6);
-
-        fixture.detectChanges();
-
         expect(listItems[1].panState).toBe(IgxListPanState.NONE);
+
         expect(timesCalledLeftPan).toBe(1);
         expect(timesCalledStateChanged).toBe(1);
         expect(timesCalledRightPan).toBe(0);
@@ -411,11 +398,10 @@ describe('List', () => {
         let list: IgxListComponent;
         let item: IgxListItemComponent;
         let itemNativeElement;
-        let itemHeight;
-        let itemWidth;
+        let elementRefCollection;
 
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TwoHeadersListComponent);
+            fixture = TestBed.createComponent(TwoHeadersListNoPanningComponent);
             list = fixture.componentInstance.list;
 
             fixture.detectChanges();
@@ -424,18 +410,18 @@ describe('List', () => {
 
             item = list.items[0] as IgxListItemComponent;
             itemNativeElement = item.element;
-            itemHeight = itemNativeElement.offsetHeight;
-            itemWidth = itemNativeElement.offsetWidth;
 
             spyOn(list.onLeftPan, 'emit');
             spyOn(list.onRightPan, 'emit');
             spyOn(list.onPanStateChange, 'emit');
 
-            return panRight(itemNativeElement, itemHeight, itemWidth, 200);
+            elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
+            return panItem(elementRefCollection[1], 0.8);
         }).then(() => {
             expect(item.panState).toBe(IgxListPanState.NONE);
 
-            return panLeft(itemNativeElement, itemHeight, itemWidth, 200);
+            elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
+            return panItem(elementRefCollection[1], -0.8);
         }).then(() => {
             expect(item.panState).toBe(IgxListPanState.NONE);
             expect(list.onLeftPan.emit).toHaveBeenCalledTimes(0);
@@ -444,6 +430,117 @@ describe('List', () => {
             done();
         });
     }, 5000);
+
+    it('checking the panLeftTemplate is visible when left-panning a list item.', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Click and drag item left */
+        clickAndDrag(itemNativeElements[1], -0.3);
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('visible');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+    });
+
+    it('checking the panRightTemplate is visible when right-panning a list item.', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Click and drag item right */
+        clickAndDrag(itemNativeElements[1], 0.3);
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('visible');
+    });
+
+    it('checking the panLeftTemplate is not visible when releasing a list item.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Pan item left */
+        panItem(itemNativeElements[1], -0.3);
+        tick(600);
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+    }));
+
+    it('checking the panRightTemplate is not visible when releasing a list item.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Pan item right */
+        panItem(itemNativeElements[1], 0.3);
+        tick(600);
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+    }));
+
+    it('checking the header list item does not have panning and content containers.', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const headers = list.headers;
+        let header;
+        for (let i = 0; i < headers.length; i++) {
+            header = headers[i] as IgxListItemComponent;
+            expect(header.leftPanningTemplateElement).toBeUndefined();
+            expect(header.rightPanningTemplateElement).toBeUndefined();
+            expect(header.contentElement).toBe(null);
+        }
+    });
+
+    it('checking the list item is returning back in the list when canceling the pan left event', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        list.onLeftPan.subscribe((args) => {
+            args.keepItem = true;
+        });
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItem(itemNativeElements[1], -0.6);
+        expect(firstItem.panState).toBe(IgxListPanState.NONE);
+    });
+
+    it('checking the list item is returning back in the list when canceling the pan right event', () => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        list.onRightPan.subscribe((args) => {
+            args.keepItem = true;
+        });
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItem(itemNativeElements[1], 0.6);
+        expect(firstItem.panState).toBe(IgxListPanState.NONE);
+    });
 
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
@@ -478,14 +575,30 @@ describe('List', () => {
     /* factorX - the coefficient used to calculate deltaX.
     Pan left by providing negative factorX;
     Pan right - positive factorX.  */
-    function panItem(itemNativeElement, factorX) {
+    function panItem(elementRefObject, factorX) {
+        const itemWidth = elementRefObject.nativeElement.offsetWidth;
+
+        elementRefObject.triggerEventHandler('panstart', {
+            deltaX : factorX < 0 ? -10 : 10
+        });
+        elementRefObject.triggerEventHandler('panmove', {
+            deltaX : factorX * itemWidth, duration : 200
+        });
+        elementRefObject.triggerEventHandler('panend', null);
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+
+    function clickAndDrag(itemNativeElement, factorX) {
         const itemWidth = itemNativeElement.nativeElement.offsetWidth;
 
-        itemNativeElement.triggerEventHandler('panstart', null);
+        itemNativeElement.triggerEventHandler('panstart', {
+            deltaX : factorX < 0 ? -10 : 10
+        });
         itemNativeElement.triggerEventHandler('panmove', {
             deltaX : factorX * itemWidth, duration : 200
         });
-        itemNativeElement.triggerEventHandler('panend', null);
     }
 
     function clickItem(currentItem: IgxListItemComponent) {
