@@ -65,6 +65,7 @@ import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
@@ -127,7 +128,8 @@ const components = [
     ColorsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
-    RadioSampleComponent
+    RadioSampleComponent,
+    TooltipSampleComponent
 ];
 
 @NgModule({

@@ -50,6 +50,7 @@ import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 
@@ -271,6 +272,10 @@ const appRoutes = [
     {
         path: 'gridRowEdit',
         component: GridRowEditSampleComponent
+    },
+    {
+        path: 'tooltip',
+        component: TooltipSampleComponent
     }
 ];
 
