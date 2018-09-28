@@ -14,7 +14,7 @@ import { GridTemplateStrings } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
 
-fdescribe('IgxGrid Component Tests', () => {
+describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 

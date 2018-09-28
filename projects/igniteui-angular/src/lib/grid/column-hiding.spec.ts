@@ -14,7 +14,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { HelperUtils } from '../test-utils/helper-utils.spec';
 
-fdescribe('Column Hiding UI', () => {
+describe('Column Hiding UI', () => {
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;

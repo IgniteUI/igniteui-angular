@@ -10,7 +10,7 @@ import { IgxColumnComponent } from '../grid-common/column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 
-fdescribe('IgxGrid - Grid initialization', () => {
+describe('IgxGrid - Grid initialization', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

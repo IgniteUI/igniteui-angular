@@ -834,7 +834,7 @@ describe('IgxChipsArea', () => {
     });
 
     it('should emit onSelection for the chipArea event when there are initially selected chips through their inputs', () => {
-        const fix = TestBed.createComponent(TestChipSelectComponent);
+        fix = TestBed.createComponent(TestChipSelectComponent);
 
         const chipAreaComp = fix.componentInstance.chipsArea;
         spyOn(chipAreaComp.onSelection, 'emit');

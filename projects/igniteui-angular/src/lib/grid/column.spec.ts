@@ -8,7 +8,7 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '../test-utils/grid-samples.spec';
 import { wait } from '../test-utils/ui-interactions.spec';
 
-fdescribe('IgxGrid - Column properties', () => {
+describe('IgxGrid - Column properties', () => {
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 

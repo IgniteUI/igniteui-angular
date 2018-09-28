@@ -8,7 +8,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { GridBaseAPIService, IGridBaseComponent } from '../grid-common';
 
-fdescribe('IgxGrid - Summaries', () => {
+describe('IgxGrid - Summaries', () => {
     const SUMMARY_CLASS = '.igx-grid-summary';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';

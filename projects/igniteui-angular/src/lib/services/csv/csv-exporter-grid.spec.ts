@@ -14,7 +14,7 @@ import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../te
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
-fdescribe('CSV Grid Exporter', () => {
+xdescribe('CSV Grid Exporter', () => {
     let exporter: IgxCsvExporterService;
     let actualData: FileContentData;
     let options: IgxCsvExporterOptions;
