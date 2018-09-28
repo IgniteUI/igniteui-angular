@@ -3,10 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxGridAPIService } from './grid-api.service';
 import {
-    IgxCellEditorTemplateDirective,
-    IgxCellFooterTemplateDirective,
-    IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective,
     IgxGroupAreaDropDirective,
     IgxGroupByRowTemplateDirective
 } from './grid.misc';
@@ -26,11 +22,7 @@ import { IgxGridCommonModule } from '../grid-common/common/grid-common.module';
     IgxGridComponent,
     IgxGridRowComponent,
     IgxGridGroupByRowComponent,
-    IgxCellFooterTemplateDirective,
-    IgxCellHeaderTemplateDirective,
     IgxGroupByRowTemplateDirective,
-    IgxCellEditorTemplateDirective,
-    IgxCellTemplateDirective,
     IgxGroupAreaDropDirective,
     IgxGridPreGroupingPipe,
     IgxGridPostGroupingPipe,
@@ -40,11 +32,7 @@ import { IgxGridCommonModule } from '../grid-common/common/grid-common.module';
     IgxGridComponent,
     IgxGridGroupByRowComponent,
     IgxGridRowComponent,
-    IgxCellFooterTemplateDirective,
-    IgxCellHeaderTemplateDirective,
     IgxGroupByRowTemplateDirective,
-    IgxCellEditorTemplateDirective,
-    IgxCellTemplateDirective,
     IgxGroupAreaDropDirective,
     IgxGridCommonModule
   ],
