@@ -241,7 +241,7 @@ export class IgxChipComponent implements AfterViewInit {
     public onClick = new EventEmitter<IChipClickEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` is selected.
+     * Emits event when the `IgxChipComponent` is selected/deselected.
      * Returns the selected chip reference, whether the event should be canceled, what is the next selection state and
      * when the event is triggered by interaction `originalEvent` is provided, otherwise `originalEvent` is `null`.
      * ```typescript
