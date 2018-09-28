@@ -11,6 +11,10 @@ export class IgxNoOpTransactionService implements IgxTransactionService {
 
     aggregatedState(): Map<any, IState> { return null; }
 
+    hasState(id: any): boolean { return false; }
+
+    getAggregatedValue(id: any) { return null; }
+
     commit(data: any) { }
 
     clear() { }

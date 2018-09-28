@@ -41,9 +41,16 @@ export class GridRowEditSampleComponent {
         });
     }
 
-    public deleteRow(event, rowID) {
+    public deleteRow(event, gridID, rowID) {
         event.stopPropagation();
-        this.gridRowEditTransaction.deleteRow(rowID);
+        switch (gridID) {
+            case 'igx-grid-0':
+                this.data.splice(rowID - 1, 1);
+                break;
+            case 'igx-grid-1':
+                this.gridRowEditTransaction.deleteRow(rowID);
+                break;
+        }
     }
 
     public undo() {

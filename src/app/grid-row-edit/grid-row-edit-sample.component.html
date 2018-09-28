@@ -9,7 +9,7 @@
             <igx-grid #gridRoEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                 <igx-column>
                     <ng-template igxCell let-cell="cell" let-val>
-                        <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
+                        <button (click)="deleteRow($event, cell.gridID, cell.cellID.rowID)">Delete</button>
                     </ng-template>
                 </igx-column>
                 <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -30,7 +30,7 @@
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                     <igx-column>
                         <ng-template igxCell let-cell="cell" let-val>
-                            <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
+                                <button (click)="deleteRow($event, cell.gridID, cell.cellID.rowID)">Delete</button>
                         </ng-template>
                     </igx-column>
                     <igx-column field="ProductID" header="Product ID"></igx-column>

@@ -167,6 +167,8 @@ describe('IgxTransaction', () => {
             // ADD
             const addTransaction: ITransaction = { id: '1', type: TransactionType.ADD, newValue: 1 };
             trans.add(addTransaction);
+            expect(trans.hasState('1')).toBeTruthy();
+            expect(trans.getAggregatedValue('1')).toEqual(1);
             expect(trans.getTransactionLog('1')).toEqual(addTransaction);
             expect(trans.getTransactionLog()).toEqual([addTransaction]);
             expect(trans.aggregatedState().get(addTransaction.id)).toEqual({
@@ -175,6 +177,8 @@ describe('IgxTransaction', () => {
                 type: addTransaction.type
             });
             trans.clear();
+            expect(trans.hasState('1')).toBeFalsy();
+            expect(trans.getAggregatedValue('1')).toBeNull();
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.aggregatedState()).toEqual(new Map());
 
@@ -322,6 +326,8 @@ describe('IgxTransaction', () => {
             const newValue = { key: 'Key1', value: 2 };
             const updateTransaction: ITransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue };
             trans.add(updateTransaction, recordRef);
+            expect(trans.hasState('Key1')).toBeTruthy();
+            expect(trans.getAggregatedValue('Key1')).toEqual(newValue);
             expect(trans.getTransactionLog('Key1')).toEqual(updateTransaction);
             expect(trans.getTransactionLog()).toEqual([updateTransaction]);
             expect(trans.aggregatedState().get(updateTransaction.id)).toEqual({
@@ -330,6 +336,8 @@ describe('IgxTransaction', () => {
                 type: updateTransaction.type
             });
             trans.clear();
+            expect(trans.hasState('Key1')).toBeFalsy();
+            expect(trans.getAggregatedValue('Key1')).toBeNull();
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.aggregatedState()).toEqual(new Map());
 
@@ -502,6 +510,8 @@ describe('IgxTransaction', () => {
             trans.startPending();
             trans.add(updateTransaction, recordRef);
 
+            expect(trans.hasState('Key1')).toBeTruthy();
+            expect(trans.getAggregatedValue('Key1')).toEqual({ key: 'Key1', value1: 10, value2: 2, value3: 3 });
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.aggregatedState()).toEqual(new Map());
 
@@ -509,11 +519,15 @@ describe('IgxTransaction', () => {
             updateTransaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue };
             trans.add(updateTransaction, recordRef);
 
+            expect(trans.hasState('Key1')).toBeTruthy();
+            expect(trans.getAggregatedValue('Key1')).toEqual({ key: 'Key1', value1: 10, value2: 2, value3: 30 });
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.aggregatedState()).toEqual(new Map());
 
             trans.endPending(true);
 
+            expect(trans.hasState('Key1')).toBeTruthy();
+            expect(trans.getAggregatedValue('Key1')).toEqual({ key: 'Key1', value1: 10, value2: 2, value3: 30 });
             expect((<any>trans.getTransactionLog())).toEqual(
                 [
                     {

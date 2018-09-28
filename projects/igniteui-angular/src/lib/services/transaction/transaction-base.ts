@@ -37,21 +37,43 @@ export class IgxTransactionBaseService implements IgxTransactionService {
         return new Map(this._states);
     }
 
+    public hasState(id: any): boolean {
+        return this._states.has(id) || this._pendingStates.has(id);
+    }
+
+    public getAggregatedValue(id: any) {
+        //  if we pending changes for this id get the state from pendingStates
+        let state = this._pendingStates.get(id);
+        if (!state) {
+            //  if there is no pending changes try to get state from aggregated states
+            state = this._states.get(id);
+        }
+
+        //  if we have state update its recordRef and return the result
+        if (state) {
+            return this.updateValue(state);
+        }
+
+        return null;
+    }
+
     public commit(data: any[]) {
         this._states.forEach((s: IState) => {
+            const index = data.findIndex(i => i === s.recordRef);
             switch (s.type) {
                 case TransactionType.ADD:
                     data.push(s.value);
                     break;
                 case TransactionType.DELETE:
-                    const index = data.findIndex(i => i === s.recordRef);
                     if (0 <= index && index < data.length) {
                         data.splice(index, 1);
                     }
                     //  TODO: should we throw here if there is no such item in the data
                     break;
                 case TransactionType.UPDATE:
-                    this.updateValue(s, data);
+                    if (0 <= index && index < data.length) {
+                        data[index] = this.updateValue(s);
+                    }
                     break;
             }
         });
@@ -179,18 +201,15 @@ export class IgxTransactionBaseService implements IgxTransactionService {
     }
 
     /**
-     * Updates the value in @param data. Accepts primitive and object value types
+     * Updates the recordRef of the provided state with all the changes in the state. Accepts primitive and object value types
      * @param state State to update value for
-     * @param data Data source where update should be applied
+     * @returns updated value including all the changes in provided state
      */
-    protected updateValue(state: IState, data: any[]) {
+    protected updateValue(state: IState) {
         if (typeof state.recordRef === 'object') {
-            Object.assign(state.recordRef, state.value);
+            return Object.assign({}, state.recordRef, state.value);
         } else {
-            const index = data.findIndex(i => i === state.recordRef);
-            if (0 <= index && index < data.length) {
-                data[index] = state.value;
-            }
+            return state.value;
         }
     }
 }
