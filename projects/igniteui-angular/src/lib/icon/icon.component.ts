@@ -10,8 +10,7 @@ import { IgxIconService } from './icon.service';
  *
  * Example:
  * ```html
- * <igx-icon name="home" color="#00ff00" isActive="true">
- * </igx-icon>
+ * <igx-icon color="#00ff00" isActive="true">home</igx-icon>
  * ```
  */
 let NEXT_ID = 0;
@@ -62,7 +61,7 @@ export class IgxIconComponent implements OnInit {
     /**
     *  An @Input property that sets the value of the `id` attribute.
     *```html
-    *<igx-icon id="igx-icon-1" fontSet="material" name="settings" color="blue" [isActive]="false"></igx-icon>
+    *<igx-icon id="igx-icon-1" fontSet="material" color="blue" [isActive]="false">settings</igx-icon>
     *```
     */
     @HostBinding('attr.id')
@@ -72,7 +71,7 @@ export class IgxIconComponent implements OnInit {
     /**
     *  An @Input property that sets the value of the `fontSet`. By default it's "material".
     *```html
-    *<igx-icon fontSet="material" name="settings" color="blue" [isActive]="false"></igx-icon>
+    *<igx-icon fontSet="material" color="blue" [isActive]="false">settings</igx-icon>
     *```
     */
     @Input('fontSet')
@@ -81,7 +80,7 @@ export class IgxIconComponent implements OnInit {
     /**
     *  An @Input property that allows you to disable the `active` property. By default it's applied.
     *```html
-    *<igx-icon [isActive]="false" fontSet="material" name="settings" color="blue"></igx-icon>
+    *<igx-icon [isActive]="false" fontSet="material" color="blue">settings</igx-icon>
     *```
     */
     @Input('isActive')
@@ -90,7 +89,7 @@ export class IgxIconComponent implements OnInit {
     /**
     *  An @Input property that allows you to change the `iconColor` of the icon.
     *```html
-    *<igx-icon color="blue" [isActive]="true" fontSet="material" name="settings" ></igx-icon>
+    *<igx-icon color="blue" [isActive]="true" fontSet="material">settings</igx-icon>
     *```
     */
     @Input('color')
@@ -100,7 +99,7 @@ export class IgxIconComponent implements OnInit {
     *  An @Input property that allows you to set the `iconName` of the icon.
     *  The `iconName` can be set using the `name` property.
     *```html
-    *<igx-icon name="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
+    *<igx-icon color="blue" [isActive]="true" fontSet="material">question_answer</igx-icon>
     *```
     */
     @Input('name')

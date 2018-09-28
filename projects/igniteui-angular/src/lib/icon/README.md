@@ -8,7 +8,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 # Usage
 
 ```html
-    <igx-icon fontSet="material" name="home" color="magenta" isActive="false"></igx-icon>
+    <igx-icon fontSet="material" color="magenta" isActive="false">home</igx-icon>
 ```
 
 You can set the fontSet to `fontSet="material"` to select the material icons set (default). More to be added later.
