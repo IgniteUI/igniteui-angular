@@ -69,8 +69,8 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     @ViewChild('defaultDateUI', { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild('input', { read: ElementRef })
-    protected input: ElementRef;
+    @ViewChild('datePickerInput', { read: ElementRef })
+    protected datePickerInput: ElementRef;
 
     @ViewChild('operands', { read: IgxDropDownComponent})
     protected igxDropDown: IgxDropDownComponent;
@@ -309,6 +309,10 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
 
         if (this.column.dataType !== DataType.Boolean) {
             this.expression.condition = this.getCondition(this.conditions[0]);
+        }
+
+        if (this.column.dataType === DataType.Date && this.datePickerInput) {
+            this.datePickerInput.nativeElement.value = null;
         }
     }
 

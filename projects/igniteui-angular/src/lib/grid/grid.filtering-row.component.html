@@ -33,13 +33,13 @@
                 <igx-prefix (click)="toggleDropDown($event.target)">
                     <igx-icon #operandsIcon>filter_list</igx-icon>
                 </igx-prefix>
-                <input #input igxInput
+                <input #datePickerInput igxInput
                 (click)="openDialog()"
                 [placeholder]="placeholder"
                 autocomplete="off"
                 [value]="displayData"
-                [readonly]="true"/>
-                <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
+                readonly/>
+                <igx-suffix *ngIf="datePickerInput.value.length > 0" (click)="clearInput()">
                     <igx-icon>clear</igx-icon>
                 </igx-suffix>
             </igx-input-group>
