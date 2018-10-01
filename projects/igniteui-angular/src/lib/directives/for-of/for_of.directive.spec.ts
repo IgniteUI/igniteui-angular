@@ -78,7 +78,7 @@ describe('IgxForOf directive -', () => {
             dg.generateData(300, 5, fix.componentInstance);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
-            displayContainer  = fix.nativeElement.querySelector('igx-display-container');
+            displayContainer = fix.nativeElement.querySelector('igx-display-container');
             verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
         });
@@ -347,7 +347,7 @@ describe('IgxForOf directive -', () => {
             expect(rows.length).toBe(8);
         });
 
-        it('should scroll to wheel event correctly', async() => {
+        it('should scroll to wheel event correctly', async () => {
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
             await UIInteractions.simulateWheelEvent(displayContainer, 0, 2 * 120);
             await wait();
@@ -648,7 +648,7 @@ describe('IgxForOf directive -', () => {
             expect(colsRendered.length).toBe(7);
         });
 
-        it('should scroll down when using touch events', async() => {
+        it('should scroll down when using touch events', async () => {
             let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
@@ -656,8 +656,8 @@ describe('IgxForOf directive -', () => {
                     .toBe(fix.componentInstance.data[i][1].toString());
             }
 
-            await expect(async() => {
-                const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
+            await expect(async () => {
+                const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
                 UIInteractions.simulateTouchStartEvent(
                     dcElem,
                     200,
@@ -677,8 +677,8 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should apply inertia when swiping via touch interaction.', async() => {
-            const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
+        it('should apply inertia when swiping via touch interaction.', async () => {
+            const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
             // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
             await UIInteractions.simulateTouchStartEvent(
                 dcElem,
@@ -947,7 +947,7 @@ class DataGenerator {
     public data300x50000: any[] = [];
     public cols300: any[] = [];
 
-    constructor() {}
+    constructor() { }
 
     public generateVerticalData(cols) {
         if (this.verticalData.length !== 0) {
@@ -987,9 +987,9 @@ class DataGenerator {
 
         if (instance) {
             instance.cols = cols;
-        instance.data = dummyData;
+            instance.data = dummyData;
         } else {
-            return {data: dummyData, cols: cols};
+            return { data: dummyData, cols: cols };
         }
     }
 
@@ -1311,7 +1311,7 @@ export class VirtualVariableSizeComponent {
     `
 })
 export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent implements OnInit {
-    ngOnInit() {}
+    ngOnInit() { }
 }
 
 @Injectable()
