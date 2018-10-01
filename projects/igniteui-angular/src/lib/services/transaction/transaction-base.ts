@@ -197,7 +197,7 @@ export class IgxTransactionBaseService implements IgxTransactionService {
                 }
         }
 
-        states.set(transaction.id, { value: transaction.newValue, recordRef: recordRef, type: transaction.type });
+        states.set(transaction.id, { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type });
     }
 
     /**
@@ -210,6 +210,14 @@ export class IgxTransactionBaseService implements IgxTransactionService {
             return Object.assign({}, state.recordRef, state.value);
         } else {
             return state.value;
+        }
+    }
+
+    protected copyValue(value: any) {
+        if (typeof value === 'object') {
+            return Object.assign({}, value);
+        } else {
+            return value;
         }
     }
 }

@@ -288,7 +288,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1')).toEqual(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([deleteTransaction]);
             expect(trans.aggregatedState().get(deleteTransaction.id)).toEqual({
-                value: deleteTransaction.newValue,
+                value: {},
                 recordRef: recordRef,
                 type: deleteTransaction.type
             });
@@ -310,7 +310,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1')).toEqual(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([deleteTransaction]);
             expect(trans.aggregatedState().get(deleteTransaction.id)).toEqual({
-                value: deleteTransaction.newValue,
+                value: {},
                 recordRef: recordRef,
                 type: deleteTransaction.type
             });
