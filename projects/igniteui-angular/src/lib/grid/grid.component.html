@@ -108,7 +108,7 @@
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-summary [gridID]="id" *ngFor="let col of notGroups(pinnedColumns)"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-container>
-        <ng-template igxFor let-col [igxForOf]="notGroups(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #summaryContainer>
+        <ng-template igxFor let-col [igxForOf]="notGroups(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForDisplayContainerWidth]="unpinnedWidth" [igxForVisibleElements]='horizontalChunkSize' [igxForTrackBy]='trackColumnChanges' #summaryContainer>
             <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-template>
     </div>

@@ -15,7 +15,7 @@ const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
-describe('IgxGrid - multi-column headers', () => {
+fdescribe('IgxGrid - multi-column headers', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -1357,7 +1357,7 @@ export class ColumnGroupTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="600px" width="800px">
+    <igx-grid #grid [data]="data" height="600px" width="800px" [visibleRows]="visibleRows">
         <igx-column #idCol field="ID"></igx-column>
         <igx-column-group #genInfoColGroup header="General Information">
             <igx-column #companyNameCol field="CompanyName"></igx-column>
@@ -1433,6 +1433,8 @@ export class ColumnGroupFourLevelTestComponent implements AfterViewInit {
 
     public addressColsAndGroups = [];
     public colsAndGroupsNaturalOrder = [];
+
+    public visibleRows = 7;
 
     data = SampleTestData.contactInfoDataFull();
 
