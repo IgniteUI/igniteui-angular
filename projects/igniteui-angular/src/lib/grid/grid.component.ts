@@ -54,7 +54,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
-import { ITransaction, TransactionType, IgxTransactionService } from '../services/transaction/utilities';
+import { ITransaction, TransactionType, IgxTransactionService, IState } from '../services/transaction/utilities';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -164,22 +164,43 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Input()
     public get data(): any[] {
-        if (this._data && this.transactions.aggregatedState()) {
+        const aggregatedState = this.transactions.aggregatedState();
+        if (this._data && aggregatedState) {
             const copy = [...this._data];
-            const transactionsState = this.transactions.aggregatedState();
-            transactionsState.forEach((state, key) => {
-                const index = this._data.findIndex(v => v === state.recordRef);
-                switch (state.type) {
-                    case TransactionType.ADD: {
-                        copy.push(state.value);
-                        break;
-                    }
-                    case TransactionType.UPDATE: {
-                        copy.splice(index, 1, Object.assign({}, copy[index], state.value));
-                        break;
+            copy.forEach((value, index) => {
+                const row = this.getRowByIndex(index);
+                if (row) {
+                    const rowId = this.getRowByIndex(index).rowID;
+                    if (this.transactions.hasState(rowId)) {
+                        const state = aggregatedState.get(rowId);
+                        switch (state.type) {
+                            case TransactionType.UPDATE: {
+                                copy[index] = this.transactions.getAggregatedValue(rowId);
+                                break;
+                            }
+                        }
                     }
                 }
             });
+            aggregatedState.forEach((state: IState) => {
+                if (state.type === TransactionType.ADD) {
+                    copy.push(state.value);
+                }
+            });
+            // const transactionsState = this.transactions.aggregatedState();
+            // transactionsState.forEach((state, key) => {
+            //     const index = this._data.findIndex(v => v === state.recordRef);
+            //     switch (state.type) {
+            //         case TransactionType.ADD: {
+            //             copy.push(state.value);
+            //             break;
+            //         }
+            //         case TransactionType.UPDATE: {
+            //             copy.splice(index, 1, Object.assign({}, copy[index], state.value));
+            //             break;
+            //         }
+            //     }
+            // });
 
             return copy;
         }

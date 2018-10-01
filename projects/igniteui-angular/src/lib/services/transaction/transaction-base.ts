@@ -213,7 +213,12 @@ export class IgxTransactionBaseService implements IgxTransactionService {
         }
     }
 
-    protected copyValue(value: any) {
+    /**
+     * If provided value is object creates a new object and returns it, otherwise returns the value
+     * @param value Value to create copy for
+     * @returns Copy of provided value
+     */
+    protected copyValue(value: any): any {
         if (typeof value === 'object') {
             return Object.assign({}, value);
         } else {

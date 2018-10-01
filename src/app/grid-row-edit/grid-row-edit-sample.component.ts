@@ -48,10 +48,14 @@ export class GridRowEditSampleComponent {
         event.stopPropagation();
         switch (gridID) {
             case 'igx-grid-0':
+            case 'igx-grid-2':
                 this.data.splice(rowID - 1, 1);
                 break;
             case 'igx-grid-1':
                 this.gridRowEditTransaction.deleteRow(rowID);
+                break;
+            case 'igx-grid-3':
+                this.gridTransaction.deleteRow(rowID);
                 break;
         }
     }
