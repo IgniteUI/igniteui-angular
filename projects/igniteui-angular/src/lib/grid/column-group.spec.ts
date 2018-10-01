@@ -5,7 +5,7 @@ import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxStringFilteringOperand} from '../../public_api';
+import { IgxStringFilteringOperand } from '../../public_api';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { wait } from '../test-utils/ui-interactions.spec';
@@ -15,7 +15,7 @@ const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
-fdescribe('IgxGrid - multi-column headers', () => {
+describe('IgxGrid - multi-column headers', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -985,7 +985,7 @@ fdescribe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
 
         // Sort column
-        grid.sort({fieldName: 'ContactTitle', dir: SortingDirection.Asc});
+        grid.sort({ fieldName: 'ContactTitle', dir: SortingDirection.Asc });
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1012,7 +1012,7 @@ fdescribe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
 
         // sort column which is not in the view
-        grid.sort({fieldName: 'Fax', dir: SortingDirection.Asc});
+        grid.sort({ fieldName: 'Fax', dir: SortingDirection.Asc });
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1155,17 +1155,17 @@ fdescribe('IgxGrid - multi-column headers', () => {
         expect(grExprs.length).toEqual(1);
         expect(grExprs[0].fieldName).toEqual('ContactTitle');
 
-         // verify rows
-         const groupRows = grid.groupsRowList.toArray();
-         const dataRows = grid.dataRowList.toArray();
+        // verify rows
+        const groupRows = grid.groupsRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
 
-         expect(groupRows.length).toEqual(5);
-         expect(dataRows.length).toEqual(11);
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(11);
 
-         // Verify first grouped row
-         const firstGroupedRow = groupRows[0].groupRow;
-         expect(firstGroupedRow.value).toEqual('Sales Representative');
-         expect(firstGroupedRow.records.length).toEqual(4);
+        // Verify first grouped row
+        const firstGroupedRow = groupRows[0].groupRow;
+        expect(firstGroupedRow.value).toEqual('Sales Representative');
+        expect(firstGroupedRow.records.length).toEqual(4);
     });
 
     it('Should not render empty column group.', () => {
@@ -1357,7 +1357,7 @@ export class ColumnGroupTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="600px" width="800px" [visibleRows]="visibleRows">
+    <igx-grid #grid [data]="data" width="800px" [visibleRows]="visibleRows">
         <igx-column #idCol field="ID"></igx-column>
         <igx-column-group #genInfoColGroup header="General Information">
             <igx-column #companyNameCol field="CompanyName"></igx-column>
@@ -1440,11 +1440,11 @@ export class ColumnGroupFourLevelTestComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.genInfoColsAndGroups = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
-            this.contactNameCol, this.contactTitleCol];
+        this.contactNameCol, this.contactTitleCol];
 
         this.addressColsAndGroups = [this.addrInfoColGroup, this.locationColGroup, this.countryCol,
         this.regionCol, this.locCityColGroup, this.cityCol, this.addressCol, this.contactInfoColGroup,
-            this.phoneCol, this.faxCol, this.postalCodeColGroup, this.postalCodeCol];
+        this.phoneCol, this.faxCol, this.postalCodeColGroup, this.postalCodeCol];
 
         this.colsAndGroupsNaturalOrder = [this.idCol].concat(this.genInfoColsAndGroups)
             .concat(this.addressColsAndGroups);
@@ -1481,7 +1481,7 @@ export class ColumnGroupChildLevelTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="1000px">
+    <igx-grid #grid [data]="data" [visibleRows]="16">
         <igx-column field="ID"></igx-column>
         <igx-column-group header="General Information">
              <igx-column field="ContactName"></igx-column>
@@ -1731,7 +1731,7 @@ export class StegosaurusGridComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.genInfoColList = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
-            this.contactNameCol, this.contactTitleCol];
+        this.contactNameCol, this.contactTitleCol];
         this.postalCodeColList = [this.postalCodeColGroup, this.postalCodeCol];
         this.cityColList = [this.cityColGroup, this.cityCol];
         this.countryColList = [this.countryColGroup, this.countryCol];
@@ -1854,7 +1854,7 @@ export class OneColPerGroupGridComponent {
 
 @Component({
     template: `
-        <igx-grid #grid [data]="data" height="600px" [columnWidth]="columnWidth">
+        <igx-grid #grid [data]="data" [columnWidth]="columnWidth">
             <igx-column-group headerClasses="masterColGroup" [header]="masterColGroupTitle">
                 <igx-column-group headerClasses="firstSlaveColGroup slaveColGroup" [header]="firstSlaveColGroupTitle">
                     <igx-column headerClasses="addressCol firstSlaveChild" field="Address" [header]="addressColTitle"></igx-column>

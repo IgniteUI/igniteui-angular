@@ -4341,7 +4341,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let length = 0;
         let maxLength = 0;
         const arr = [];
-        const columns = this.unpinnedColumns;
+        const columns = this.notGroups(this.unpinnedColumns);
         let sum = 0;
         const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem.width, 10);
         const availableSize = this.unpinnedWidth;
