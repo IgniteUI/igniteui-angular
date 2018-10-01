@@ -67,3 +67,10 @@ $exclude: (
 //         color: red;
 //     }
 // }
+
+$tooltip-theme: igx-tooltip-theme(
+    $background: orange,
+    $text-color: red
+);
+
+// @include igx-tooltip($tooltip-theme);
