@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { IgxIconService } from './icon.service';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 /**
  * **Ignite UI for Angular Icon** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
@@ -104,6 +105,19 @@ export class IgxIconComponent implements OnInit {
     */
     @Input('name')
     public iconName: string;
+
+    /**
+    *    An @Input property that allows you to change the `glyphName` of the icon.
+    *    The `glyphName` can be set using `iconName`.
+    *    You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
+    *```html
+    *<igx-icon iconName="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
+    *```
+    */
+    @DeprecateProperty(`'iconName' property is deprecated. To set the icon name for 'material' icons place the name of the icone between the opening and closing tags.` + 
+        `For 'Font Awesome' and SVG icons use 'name' property.`)
+    @Input('iconName')
+    public glyphName: string;
 
     /**
      * An ElementRef property of the `igx-icon` component.
