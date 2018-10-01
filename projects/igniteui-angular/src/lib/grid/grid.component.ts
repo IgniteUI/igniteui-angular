@@ -866,17 +866,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public set hideGroupedColumns(value: boolean) {
         if (value) {
             this.groupingDiffer = this.differs.find(this.groupingExpressions).create();
-            this.groupingExpressions.forEach((expr) => {
-                const col = this.getColumnByName(expr.fieldName);
-                col.hidden = true;
-            });
         } else {
             this.groupingDiffer = null;
+        }
+        if (this.columnList && this.groupingExpressions) {
             this.groupingExpressions.forEach((expr) => {
                 const col = this.getColumnByName(expr.fieldName);
-                col.hidden = false;
+                col.hidden = value;
             });
         }
+
         this._hideGroupedColumns = value;
     }
 
@@ -2054,6 +2053,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
+
+        if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
+               this.groupingExpressions.forEach((expr) => {
+                   const col = this.getColumnByName(expr.fieldName);
+                   col.hidden = this.hideGroupedColumns;
+               });
+        }
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();

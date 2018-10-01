@@ -16,7 +16,9 @@ export class GridGroupBySampleComponent implements OnInit {
     public data: Array<any>;
     public hideGroupedColumns = false;
     public columns: Array<any>;
+    public groupingExpressions: Array<ISortingExpression>;
     public ngOnInit(): void {
+
         this.columns = [
             { field: 'ID', width: 100, hidden: true },
             { field: 'CompanyName', width: 300, groupable: true  },
@@ -30,6 +32,13 @@ export class GridGroupBySampleComponent implements OnInit {
             { field: 'Phone', width: 150, groupable: true  },
             { field: 'Fax', width: 150, groupable: true  }
         ];
+        this.groupingExpressions =  [
+            {
+                fieldName: 'CompanyName',
+                dir: SortingDirection.Asc
+            }
+        ];
+
         /* tslint:disable */
         this.data = [
             { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
