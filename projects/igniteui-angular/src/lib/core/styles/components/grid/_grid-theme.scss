@@ -724,6 +724,22 @@
         outline-style: none;
     }
 
+    %grid-cell-header--filtering {
+        background: #fff;
+        box-shadow: inset 0 0 0 1px igx-color($palette, 'primary');
+        z-index: 3;
+
+        &::after {
+            position: absolute;
+            content: '';
+            background: inherit;
+            left: 1px;
+            width: calc(100% - 2px);
+            bottom: -2px;
+            height: 4px;
+        }
+    }
+
     %grid-cell-header--cosy {
         padding: map-get($grid-header-padding, 'cosy');
         min-height: map-get($grid-header-height, 'cosy');
@@ -1314,5 +1330,27 @@
 
     %igx-grid__filtering-outlet {
         z-index: 99999;
+    }
+
+    %igx-grid__filtering-cell {
+        display: flex;
+        border-right: $grid-header-border;
+        border-top: $grid-header-border;
+    }
+
+    %igx-grid__filtering-row {
+        position: absolute;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+        border: 1px solid igx-color($palette, 'primary');
+        z-index: 2;
+    }
+
+    %igx-grid__filtering-row-main {
+        display: flex;
+        flex: 1;
     }
 }
