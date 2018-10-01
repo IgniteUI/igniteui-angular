@@ -62,7 +62,7 @@
             <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" *ngFor="let col of onlyTopLevel(pinnedColumns)" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
         </ng-container>
         <ng-template igxFor let-col [igxForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-            [igxForVisibleElements]="horizontalChunkSize" [igxForDisplayContainerWidth]="unpinnedWidth" [igxForTrackBy]='trackColumnChanges' #headerContainer>
+            [igxForVisibleElements]="headerChunkSize" [igxForDisplayContainerWidth]="unpinnedWidth" [igxForTrackBy]='trackColumnChanges' #headerContainer>
             <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
         </ng-template>
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>

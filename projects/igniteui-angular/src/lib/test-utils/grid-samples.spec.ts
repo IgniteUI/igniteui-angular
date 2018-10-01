@@ -661,7 +661,7 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate" [paging]="paging"`,
+    template: `${GridTemplateStrings.declareGrid(`width="500px" [autoGenerate]="autoGenerate" [paging]="paging"`,
         EventSubscriptions.onColumnInit, '')}`
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
@@ -669,7 +669,6 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
     data = SampleTestData.contactInfoDataFull();
 
     width = '500px';
-    height = '400px';
     paging = false;
 
     public columnInit(column: IgxColumnComponent) {
@@ -685,7 +684,7 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 }
 
 @Component({
-    template: `${GridTemplateStrings.declareGrid(`height="800px"`, '', ColumnDefinitions.multiColHeadersColumns)}`
+    template: `${GridTemplateStrings.declareGrid(``, '', ColumnDefinitions.multiColHeadersColumns)}`
 })
 export class MultiColumnHeadersComponent extends BasicGridComponent {
     data = SampleTestData.contactInfoDataFull();
