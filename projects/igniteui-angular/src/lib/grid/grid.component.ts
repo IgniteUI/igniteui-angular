@@ -165,21 +165,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public get data(): any[] {
         const aggregatedState = this.transactions.aggregatedState();
-        if (this._data && aggregatedState) {
+        if (this._data && aggregatedState && aggregatedState.size > 0) {
             const copy = [...this._data];
             copy.forEach((value, index) => {
-                const row = this.getRowByIndex(index);
-                if (row) {
-                    const rowId = this.getRowByIndex(index).rowID;
-                    if (this.transactions.hasState(rowId)) {
-                        const state = aggregatedState.get(rowId);
-                        switch (state.type) {
-                            case TransactionType.UPDATE: {
-                                copy[index] = this.transactions.getAggregatedValue(rowId);
-                                break;
-                            }
-                        }
-                    }
+                const rowId = this.primaryKey ? copy[index][this.primaryKey] : copy[index];
+                if (this.transactions.hasState(rowId)) {
+                    copy[index] = this.transactions.getAggregatedValue(rowId);
                 }
             });
             aggregatedState.forEach((state: IState) => {

@@ -20,7 +20,7 @@ export class GridPerformanceSampleComponent implements OnInit {
         cols.push({
             field: 'ID',
             width: 90
-        })
+        });
         for (let j = 0; j < 300; j++) {
             cols.push({
                 field: (j + 1).toString(),
@@ -37,7 +37,7 @@ export class GridPerformanceSampleComponent implements OnInit {
         }
 
         for (let i = 0; i < 100000; i++) {
-            var newObj = Object.create(obj);
+            const newObj = Object.assign({}, obj);
             newObj['ID'] = i + 1;
             this.localData.push(newObj);
         }
@@ -48,7 +48,7 @@ export class GridPerformanceSampleComponent implements OnInit {
             this.columns.splice(0, 1);
         } else {
             this.columns.unshift({ field: 'new column', width: '200px' });
-            for(let i = 0; i < 100000; i++) {
+            for (let i = 0; i < 100000; i++) {
                 this.localData[i]['new column'] = i * 3;
             }
         }
