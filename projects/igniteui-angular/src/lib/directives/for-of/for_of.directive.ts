@@ -109,7 +109,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
     /* public get igxForDisplayContainerWidth() {
          return this.dc ? this.dc.instance.width : null;
      }
- 
+
      public set igxForDisplayContainerWidth(value: number) {
          if (this.dc) {
              this.dc.instance.width = value;
