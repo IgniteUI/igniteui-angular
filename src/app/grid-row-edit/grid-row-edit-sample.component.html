@@ -6,10 +6,10 @@
     <div class="sample-content">
         <article class="grid-row-edit-wrapper">
             <h4>Grid with rowEditing and without transactions</h4>
-            <igx-grid #gridRoEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
+            <igx-grid #gridRowEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                 <igx-column>
                     <ng-template igxCell let-cell="cell" let-val>
-                        <button (click)="deleteRow($event, cell.gridID, cell.cellID.rowID)">Delete</button>
+                        <button (click)="deleteRow($event, 'gridRowEdit', cell.cellID.rowID)">Delete</button>
                     </ng-template>
                 </igx-column>
                 <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -30,7 +30,7 @@
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                     <igx-column>
                         <ng-template igxCell let-cell="cell" let-val>
-                                <button (click)="deleteRow($event, cell.gridID, cell.cellID.rowID)">Delete</button>
+                                <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
                         </ng-template>
                     </igx-column>
                     <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -45,16 +45,16 @@
                     <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" editable="true"></igx-column>
                 </igx-grid>
             </app-grid-with-transactions>
-            <button (click)="addRow('igx-grid-1')">Add Row</button>
-            <button (click)="undo('igx-grid-1')">Undo</button>
-            <button (click)="redo('igx-grid-1')">Redo</button>
+            <button (click)="addRow('gridRowEditTransaction')">Add Row</button>
+            <button (click)="undo('gridRowEditTransaction')">Undo</button>
+            <button (click)="redo('gridRowEditTransaction')">Redo</button>
         </article>
         <article class="grid-row-edit-wrapper">
             <h4>Grid without row editing neither transactions</h4>
             <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                 <igx-column>
                     <ng-template igxCell let-cell="cell" let-val>
-                        <button (click)="deleteRow($event, cell.gridID, cell.cellID.rowID)">Delete</button>
+                        <button (click)="deleteRow($event, 'grid', cell.cellID.rowID)">Delete</button>
                     </ng-template>
                 </igx-column>
                 <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -75,7 +75,7 @@
                 <igx-grid #gridTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                     <igx-column>
                         <ng-template igxCell let-cell="cell" let-val>
-                                <button (click)="deleteRow($event, cell.gridID, cell.cellID.rowID)">Delete</button>
+                                <button (click)="deleteRow($event, 'gridTransaction', cell.cellID.rowID)">Delete</button>
                         </ng-template>
                     </igx-column>
                     <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -90,9 +90,9 @@
                     <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" editable="true"></igx-column>
                 </igx-grid>
             </app-grid-with-transactions>
-            <button (click)="addRow('igx-grid-3')">Add Row</button>
-            <button (click)="undo('igx-grid-3')">Undo</button>
-            <button (click)="redo('igx-grid-3')">Redo</button>
+            <button (click)="addRow('gridTransaction')">Add Row</button>
+            <button (click)="undo('gridTransaction')">Undo</button>
+            <button (click)="redo('gridTransaction')">Redo</button>
         </article>
     </div>
 </div>

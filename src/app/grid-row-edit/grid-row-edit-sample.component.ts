@@ -16,7 +16,7 @@ import { IgxGridComponent } from 'igniteui-angular';
 export class GridRowEditSampleComponent {
     private addProductId: number;
     data: any[];
-    @ViewChild('gridRoEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
+    @ViewChild('gridRowEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
     @ViewChild('gridRowEditTransaction', { read: IgxGridComponent }) public gridRowEditTransaction: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
     @ViewChild('gridTransaction', { read: IgxGridComponent }) public gridTransaction: IgxGridComponent;
@@ -42,36 +42,37 @@ export class GridRowEditSampleComponent {
             OrderDate: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
                 .toISOString().slice(0, 10)
         });
+        this.refresh(currentGrid);
     }
 
     public deleteRow(event, gridID, rowID) {
         event.stopPropagation();
         switch (gridID) {
-            case 'igx-grid-0':
-            case 'igx-grid-2':
+            case 'gridRowEdit':
+            case 'grid':
                 this.data.splice(rowID - 1, 1);
                 break;
-            case 'igx-grid-1':
+            case 'gridRowEditTransaction':
                 this.gridRowEditTransaction.deleteRow(rowID);
                 break;
-            case 'igx-grid-3':
+            case 'gridTransaction':
                 this.gridTransaction.deleteRow(rowID);
                 break;
         }
+
+        this.refreshAll();
     }
 
     public undo(gridID) {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         currentGrid.transactions.undo();
-        (<any>currentGrid)._pipeTrigger++;
-        (<any>currentGrid).cdr.markForCheck();
+        this.refresh(currentGrid);
     }
 
     public redo(gridID) {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         currentGrid.transactions.redo();
-        (<any>currentGrid)._pipeTrigger++;
-        (<any>currentGrid).cdr.markForCheck();
+        this.refresh(currentGrid);
     }
 
     private getRandomInt(min, max) {
@@ -80,12 +81,28 @@ export class GridRowEditSampleComponent {
 
     private getGridById(gridID): IgxGridComponent {
         switch (gridID) {
-            case 'igx-grid-1':
-                return this.gridRowEditTransaction;
-            case 'igx-grid-3':
+            case 'grid':
+                return this.grid;
+            case 'gridRowEdit':
+                return this.gridRowEdit;
+            case 'gridTransaction':
                 return this.gridTransaction;
+            case 'gridRowEditTransaction':
+                return this.gridRowEditTransaction;
         }
 
         return null;
+    }
+
+    refreshAll(): void {
+        this.refresh(this.getGridById('grid'));
+        this.refresh(this.getGridById('gridRowEdit'));
+        this.refresh(this.getGridById('gridTransaction'));
+        this.refresh(this.getGridById('gridRowEditTransaction'));
+    }
+
+    private refresh(grid: IgxGridComponent): void {
+        (<any>grid)._pipeTrigger++;
+        (<any>grid).cdr.markForCheck();
     }
 }
