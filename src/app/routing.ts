@@ -50,6 +50,7 @@ import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 
 const appRoutes = [
@@ -266,6 +267,10 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    },
+    {
+        path: 'tooltip',
+        component: TooltipSampleComponent
     }
 ];
 
