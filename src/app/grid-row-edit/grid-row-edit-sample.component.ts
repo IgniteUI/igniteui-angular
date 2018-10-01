@@ -18,14 +18,17 @@ export class GridRowEditSampleComponent {
     data: any[];
     @ViewChild('gridRoEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
     @ViewChild('gridRowEditTransaction', { read: IgxGridComponent }) public gridRowEditTransaction: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
+    @ViewChild('gridTransaction', { read: IgxGridComponent }) public gridTransaction: IgxGridComponent;
 
     constructor() {
         this.data = data;
         this.addProductId = this.data.length + 1;
     }
 
-    public addRow() {
-        this.gridRowEditTransaction.addRow({
+    public addRow(gridID) {
+        const currentGrid: IgxGridComponent = this.getGridById(gridID);
+        currentGrid.addRow({
             ProductID: this.addProductId++,
             ProductName: 'Product with index ' + this.getRandomInt(0, 20),
             SupplierID: this.getRandomInt(1, 20),
@@ -53,19 +56,32 @@ export class GridRowEditSampleComponent {
         }
     }
 
-    public undo() {
-        this.gridRowEditTransaction.transactions.undo();
-        (<any>this.gridRowEditTransaction)._pipeTrigger++;
-        (<any>this.gridRowEditTransaction).cdr.markForCheck();
+    public undo(gridID) {
+        const currentGrid: IgxGridComponent = this.getGridById(gridID);
+        currentGrid.transactions.undo();
+        (<any>currentGrid)._pipeTrigger++;
+        (<any>currentGrid).cdr.markForCheck();
     }
 
-    public redo() {
-        this.gridRowEditTransaction.transactions.redo();
-        (<any>this.gridRowEditTransaction)._pipeTrigger++;
-        (<any>this.gridRowEditTransaction).cdr.markForCheck();
+    public redo(gridID) {
+        const currentGrid: IgxGridComponent = this.getGridById(gridID);
+        currentGrid.transactions.redo();
+        (<any>currentGrid)._pipeTrigger++;
+        (<any>currentGrid).cdr.markForCheck();
     }
 
     private getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    private getGridById(gridID): IgxGridComponent {
+        switch (gridID) {
+            case 'igx-grid-1':
+                return this.gridRowEditTransaction;
+            case 'igx-grid-3':
+                return this.gridTransaction;
+        }
+
+        return null;
     }
 }
