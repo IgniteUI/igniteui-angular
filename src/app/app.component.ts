@@ -171,6 +171,11 @@ export class AppComponent implements OnInit {
             name: 'List'
         },
         {
+            link: '/listPanning',
+            icon: 'list',
+            name: 'List Panning'
+        },
+        {
             link: '/listPerformance',
             icon: 'list',
             name: 'List Performance'
@@ -189,6 +194,11 @@ export class AppComponent implements OnInit {
             link: '/overlay',
             icon: 'overlay',
             name: 'Overlay'
+        },
+        {
+            link: '/overlay-animation',
+            icon: 'overlay_animation',
+            name: 'Overlay Animation'
         },
         {
             link: '/progressbar',
@@ -262,6 +272,11 @@ export class AppComponent implements OnInit {
             link: '/mask',
             icon: 'view_column',
             name: 'Mask Directive'
+        },
+        {
+            link: '/tooltip',
+            icon: 'info',
+            name: 'Tooltip'
         }
     ];
 

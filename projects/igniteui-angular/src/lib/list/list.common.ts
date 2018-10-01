@@ -19,3 +19,17 @@ export class IgxEmptyListTemplateDirective {
 export class IgxDataLoadingTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
+
+@Directive({
+    selector: '[igxListItemLeftPanning]'
+})
+export class IgxListItemLeftPanningTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+
+@Directive({
+    selector: '[igxListItemRightPanning]'
+})
+export class IgxListItemRightPanningTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}

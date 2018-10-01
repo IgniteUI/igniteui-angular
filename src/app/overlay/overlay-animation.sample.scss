@@ -1,0 +1,10 @@
+// Import the IgniteUI themes library first
+@import '../../../dist/igniteui-angular/lib/core/styles/themes/index';
+
+$new-card-theme: igx-card-theme(
+    $background: royalblue
+);
+
+::ng-deep{
+    @include igx-card($new-card-theme);
+}
