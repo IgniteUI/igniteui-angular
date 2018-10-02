@@ -167,12 +167,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Input()
     public get data(): any[] {
         const aggregatedState = this.transactions.aggregatedState();
-        if (this._data && aggregatedState && aggregatedState.size > 0) {
+        if (this._data && this.transactions.hasState()) {
             const copy = [...this._data];
             copy.forEach((value, index) => {
                 const rowId = this.primaryKey ? copy[index][this.primaryKey] : copy[index];
                 if (this.transactions.hasState(rowId)) {
-                    copy[index] = this.transactions.getAggregatedValue(rowId);
+                    copy[index] = this.transactions.getAggregatedValue(rowId, true);
                 }
             });
             aggregatedState.forEach((state: IState) => {
@@ -4701,7 +4701,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public endRowTransaction(event, commit?: boolean) {
         this.gridAPI.submit_value(this.id);
-        this.cdr.detectChanges();
         this.closeRowEditingOverlay(commit);
     }
 

@@ -510,10 +510,17 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     get dirty() {
-        const states = this.grid.transactions.aggregatedState();
-        if (states) {
-            const rowTransaction: IState = states.get(this.row.rowID);
-            return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
+        if (this.grid.rowEditable) {
+            const rowCurrentState = this.grid.transactions.getAggregatedValue(this.row.rowID, false);
+            if (rowCurrentState) {
+                return rowCurrentState.value && rowCurrentState.value[this.column.field];
+            }
+        } else {
+            const states = this.grid.transactions.aggregatedState();
+            if (states) {
+                const rowTransaction: IState = states.get(this.row.rowID);
+                return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
+            }
         }
 
         return false;
