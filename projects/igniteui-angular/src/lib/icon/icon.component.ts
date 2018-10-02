@@ -114,8 +114,8 @@ export class IgxIconComponent implements OnInit {
     *<igx-icon iconName="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
     *```
     */
-    @DeprecateProperty(`'iconName' property is deprecated. To set the icon name for 'material' icons place the name of the icone between the opening and closing tags.` + 
-        `For 'Font Awesome' and SVG icons use 'name' property.`)
+    @DeprecateProperty(`'iconName' property is deprecated. To set the icon name for 'material' icons place the name of the icon between ` +
+        `the opening and closing tags. For 'Font Awesome' and SVG icons use 'name' property.`)
     @Input('iconName')
     public glyphName: string;
 
