@@ -23,8 +23,8 @@ import { UIInteractions} from '../test-utils/ui-interactions.spec';
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
-                <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
+                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
+                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
