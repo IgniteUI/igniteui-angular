@@ -2140,7 +2140,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public chunkGenerated(event) {
-        this.calcHeight = event;
+        if (event > 0) {
+            this.calcHeight = event;
+        }
     }
 
     /**
@@ -4356,11 +4358,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let maxLength = 0;
         const arr = [];
         let sum = 0;
-        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem.width, 10);
+        const reducer = (accumulator, currentItem) => accumulator + 
+            (currentItem.width === "Infinity" ? Infinity : parseInt(currentItem.width, 10));
         const availableSize = this.unpinnedWidth;
         for (i; i < columns.length; i++) {
             const column = columns[i];
-            sum = arr.reduce(reducer, parseInt(column.width, 10));
+            sum = arr.reduce(reducer, column.width === "Infinity" ? Infinity : parseInt(column.width, 10));
             if (isNaN(sum)) {
                 return maxLength;
             }
