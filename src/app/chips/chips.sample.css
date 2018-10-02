@@ -15,7 +15,6 @@
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
-
 }
 
 .wrapperAreaCc {
@@ -30,14 +29,14 @@
 
 .dropAreaTo {
     padding: 0 1rem;
-    margin: 0.25rem;
+    margin: .25rem;
     border-radius: 1rem;
     visibility: hidden;
 }
 
 .dropAreaCc {
     padding: 0 1rem;
-    margin: 0.25rem;
+    margin: .25rem;
     border-radius: 1rem;
     visibility: hidden;
 }
@@ -50,4 +49,8 @@
 .dropAreaTo.dragOver {
     color: white;
     background-color: #f66604;
+}
+
+:host ::ng-deep .igx-chip__item {
+    margin: 4px;
 }

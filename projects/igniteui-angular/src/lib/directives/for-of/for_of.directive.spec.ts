@@ -24,7 +24,7 @@ import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directi
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxForOf directive -', () => {
+xdescribe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
     let displayContainer: HTMLElement;
     let verticalScroller: HTMLElement;

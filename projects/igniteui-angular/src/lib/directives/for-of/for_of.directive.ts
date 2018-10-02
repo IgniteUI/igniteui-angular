@@ -731,7 +731,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      */
     protected _applyChanges(changes: IterableChanges<T>) {
         this.applyChunkSizeChange();
-        // this._recalcScrollBarSize();
+        this._recalcScrollBarSize(null);
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this.state.startIndex;
@@ -900,8 +900,8 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
     private applyChunkSizeChange() {
-        const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) :
-            Math.min(this.igxForOf.length, this.igxForVisibleElements);
+        const dataLength = this.igxForOf ? this.igxForOf.length : 0;
+        const chunkSize = this.isRemote ? dataLength : Math.min(dataLength, this.igxForVisibleElements);
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
@@ -914,7 +914,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
             }
         }
         this.state.chunkSize = chunkSize;
-        this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize >= this.igxForOf.length;
+        this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize >= dataLength;
         if (this.igxForScrollOrientation === 'vertical') {
             const height = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height - this.igxForItemSize;
             this.onChunkGenerated.emit(height);

@@ -678,7 +678,8 @@ describe('Column Hiding UI', () => {
             expect(columnChooserElement.nativeElement.offsetHeight).toBe(252);
         });
 
-        it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', () => {
+        // This test is not relevant when the height is not calculated by the control
+        /*xit('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', () => {
             grid.height = '200px';
             fix.detectChanges();
             grid.reflow();
@@ -702,7 +703,7 @@ describe('Column Hiding UI', () => {
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 
             expect(grid.calcHeight).toEqual(expectedHeight);
-        });
+        });*/
     });
 
     describe('', () => {

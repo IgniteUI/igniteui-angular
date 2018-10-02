@@ -643,9 +643,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public get horizontalChunkSize(): number {
         if (!this._horizontalChunkSize) {
-            this._horizontalChunkSize = this.getCalcHorizontalSize();
+            this._horizontalChunkSize = this.getCalcHorizontalSize(this.notGroups(this.unpinnedColumns));
         }
         return this._horizontalChunkSize;
+    }
+
+    /**
+     * @hidden
+     */
+    public get headerChunkSize(): number {
+        if (!this._headerChunkSize) {
+            this._headerChunkSize = this.getCalcHorizontalSize(this.onlyTopLevel(this.unpinnedColumns));
+        }
+        return this._headerChunkSize;
     }
 
     /**
@@ -1971,6 +1981,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _width = '100%';
     private _rowHeight;
     private _horizontalChunkSize = 0;
+    private _headerChunkSize = 0;
     private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
 
@@ -2032,6 +2043,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.summariesHeight = this.calcMaxSummaryHeight();
         this._derivePossibleHeight();
         this._horizontalChunkSize = 0;
+        this._headerChunkSize = 0;
         this.markForCheck();
 
         this.columnList.changes
@@ -2128,7 +2140,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public chunkGenerated(event) {
-        this.calcHeight = event;
+        if (event > 0) {
+            this.calcHeight = event;
+        }
     }
 
     /**
@@ -3383,6 +3397,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
 
         this._horizontalChunkSize = 0;
+        this._headerChunkSize = 0;
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             const width = parseInt(computed.getPropertyValue('width'), 10);
@@ -3420,6 +3435,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected calculateGridSizes() {
         this._horizontalChunkSize = 0;
+        this._headerChunkSize = 0;
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
@@ -4336,18 +4352,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected getCalcHorizontalSize(): number {
+    protected getCalcHorizontalSize(columns): number {
         let i = 0;
         let length = 0;
         let maxLength = 0;
         const arr = [];
-        const columns = this.notGroups(this.unpinnedColumns);
         let sum = 0;
-        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem.width, 10);
+        const reducer = (accumulator, currentItem) => accumulator + 
+            (currentItem.width === "Infinity" ? Infinity : parseInt(currentItem.width, 10));
         const availableSize = this.unpinnedWidth;
         for (i; i < columns.length; i++) {
             const column = columns[i];
-            sum = arr.reduce(reducer, parseInt(column.width, 10));
+            sum = arr.reduce(reducer, column.width === "Infinity" ? Infinity : parseInt(column.width, 10));
             if (isNaN(sum)) {
                 return maxLength;
             }
@@ -4357,7 +4373,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 if (i === columns.length - 1) {
                     // reached end without exceeding
                     // include prev items until size is filled or first item is reached.
-                    let prevIndex = columns.indexOf(arr[i]) - 1;
+                    let prevIndex = columns.indexOf(arr[0]) - 1;
                     while (prevIndex >= 0 && sum <= availableSize) {
                         prevIndex = columns.indexOf(arr[0]) - 1;
                         if (prevIndex < 0) {
