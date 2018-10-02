@@ -223,6 +223,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return this.totalItemCount !== null;
     }
 
+    public verticalScrollHandler(event) {
+        this.onScroll(event);
+    }
+
     /**
      * @hidden
      */
@@ -264,7 +268,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this._maxHeight = this._calcMaxBrowserHeight();
             this.vh.instance.height = this.igxForOf ? this._calcHeight() : 0;
             this._zone.runOutsideAngular(() => {
-                this.vh.instance.elementRef.nativeElement.addEventListener('scroll', (evt) => { this.onScroll(evt); });
+                this.vh.instance.elementRef.nativeElement.addEventListener('scroll', this.verticalScrollHandler);
                 this.dc.instance.scrollContainer = this.vh.instance.elementRef.nativeElement;
             });
         }
@@ -338,11 +342,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     // after changes in columns have occured re-init cache.
                     this.initHCache(this.igxForOf);
                 }
-                this._zone.run(() => {
+                // this._zone.run(() => {
                     this._applyChanges(changes);
                     this.cdr.markForCheck();
                     this._updateScrollOffset();
-                });
+                // });
             }
         }
     }
@@ -562,10 +566,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        this._zone.run(() => {
-            this.cdr.markForCheck();
-        });
-        this.onChunkLoad.emit(this.state);
+        // this._zone.run(() => {
+        //     this.cdr.markForCheck();
+        // });
+        // this.onChunkLoad.emit(this.state);
     }
 
     /**
@@ -630,8 +634,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const scrollOffset = this.fixedUpdateAllCols(curScrollLeft);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
 
-        this.dc.changeDetectorRef.detectChanges();
-        this.onChunkLoad.emit();
+        // this.dc.changeDetectorRef.detectChanges();
+        // this.onChunkLoad.emit();
     }
 
     /**
@@ -710,8 +714,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 cntx.$implicit = input;
                 cntx.index = this.igxForOf.indexOf(input);
             }
-            this.dc.changeDetectorRef.detectChanges();
-            this.onChunkLoad.emit();
+            // this.dc.changeDetectorRef.detectChanges();
+            // this.onChunkLoad.emit();
         }
     }
 
@@ -922,9 +926,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this._embeddedViews.push(embeddedView);
         this.state.chunkSize++;
 
-        this._zone.run(() => {
-            this.cdr.markForCheck();
-        });
+        // this._zone.run(() => {
+            // this.cdr.markForCheck();
+        // });
     }
 
     /**

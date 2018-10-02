@@ -2101,6 +2101,40 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             observer = new MutationObserver(callback);
             observer.observe(this.document.body, config);
         }
+        setTimeout(() => {
+            const ofs = this.dataRowList.filter(row => row).map(row => row.virtDirRow);
+            this.zone.runOutsideAngular(() => {
+                ofs.forEach(vfor => {
+                    // Remove all scroll handlers
+                    vfor.hScroll.removeEventListener('scroll', vfor.func);
+                });
+            });
+            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', (event) => {
+                this.zone.runOutsideAngular(() => {
+                    ofs.forEach(vfor => {
+                        vfor.onHScroll(event);
+                    });
+                    this.cdr.detectChanges();
+                    this.zone.run(() => {
+                        this.parentVirtDir.onChunkLoad.emit(this.parentVirtDir.state);
+                    });
+                });
+            });
+            this.zone.runOutsideAngular(() => {
+                const vc = this.verticalScrollContainer as any;
+                vc.vh.instance.elementRef.nativeElement.removeEventListener('scroll', vc.verticalScrollHandler);
+            });
+
+            (this.verticalScrollContainer as any).vh.instance.elementRef.nativeElement.addEventListener('scroll', (event) => {
+                this.zone.runOutsideAngular(() => {
+                    (this.verticalScrollContainer as any).onScroll(event);
+                    this.cdr.detectChanges();
+                    this.zone.run(() => {
+                        this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+                    });
+                });
+            });
+        }, 100);
     }
 
     /**
@@ -3647,37 +3681,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._pinnedColumns = this.columnList.filter((c) => c.pinned);
         }
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
-    }
-
-    /**
-     * @hidden
-     */
-    protected setEventBusSubscription() {
-        this.eventBus.pipe(
-            debounceTime(DEBOUNCE_TIME),
-            takeUntil(this.destroy$)
-        ).subscribe(() => this.cdr.detectChanges());
-    }
-
-    /**
-     * @hidden
-     */
-    protected setVerticalScrollSubscription() {
-        /*
-            Until the grid component is destroyed,
-            Take the first event and unsubscribe
-            then merge with an empty observable after DEBOUNCE_TIME,
-            re-subscribe and repeat the process
-        */
-        this.verticalScrollContainer.onChunkLoad.pipe(
-            takeUntil(this.destroy$),
-            take(1),
-            merge(of({})),
-            delay(DEBOUNCE_TIME),
-            repeat()
-        ).subscribe(() => {
-            this.eventBus.next();
-        });
     }
 
     /**
