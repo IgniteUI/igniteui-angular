@@ -71,6 +71,8 @@ All notable changes for each version of this project will be documented in this 
         - Extends `IgxToggleActionDirective`.
         - Exported with the name **tooltipTarget**.
     - Both new directives are used in combination to set a tooltip to an element. For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+- `igxToggle`:
+    - Introduced reposition method which allows a user to force toggle to reposition according its position strategy.
 
 ## 6.1.5
 - **General**
