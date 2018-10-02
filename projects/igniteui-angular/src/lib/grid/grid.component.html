@@ -156,10 +156,10 @@
     </div>
 </div>
 <ng-template #buttonCancel>
-    <button igxButton (click)="onResetRowTransaction($event)">Cancel</button>
+    <button igxButton (click)="endRowTransaction($event)">Cancel</button>
 </ng-template>
  <ng-template #buttonDone>
-    <button igxButton (click)="onUpdateRowTransaction($event)">Done</button>
+    <button igxButton (click)="endRowTransaction($event, true)">Done</button>
 </ng-template>
 
 <div class="igx-grid__filtering-outlet" igxOverlayOutlet></div>

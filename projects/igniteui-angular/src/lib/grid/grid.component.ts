@@ -4655,6 +4655,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public openRowEditingOverlay(row: IgxGridRowComponent) {
+        this.transactions.startPending();
         this.overlaySettings = {
             scrollStrategy: new AbsoluteScrollStrategy(),
             modal: false,
@@ -4688,8 +4689,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.rowEditingOverlay.element.style.display = 'none';
     }
 
-    public closeRowEditingOverlay() {
+    public closeRowEditingOverlay(commit?: boolean) {
+        this.transactions.endPending(commit);
         this.rowEditingOverlay.close();
+    }
+
+
+    public endRowTransaction(event, commit?: boolean) {
+        this.gridAPI.submit_value(this.id);
+        this.closeRowEditingOverlay(commit);
     }
 
     public get cellInEditMode(): IgxGridCellComponent {
