@@ -1445,6 +1445,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild(IgxOverlayOutletDirective, { read: IgxOverlayOutletDirective })
     public outletDirective: IgxOverlayOutletDirective;
 
+    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
+    public rowEditingOutletDirective: IgxOverlayOutletDirective;
+
     @ViewChild(IgxToggleDirective)
     public rowEditingOverlay: IgxToggleDirective;
 
@@ -4660,6 +4663,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             scrollStrategy: new AbsoluteScrollStrategy(),
             modal: false,
             closeOnOutsideClick: false,
+            outlet: this.rowEditingOutletDirective,
             positionStrategy: new AutoPositionStrategy({
                 target: row.element.nativeElement,
                 horizontalDirection: HorizontalAlignment.Left,
