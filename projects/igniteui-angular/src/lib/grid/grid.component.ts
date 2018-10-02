@@ -4370,7 +4370,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 if (i === columns.length - 1) {
                     // reached end without exceeding
                     // include prev items until size is filled or first item is reached.
-                    let prevIndex = columns.indexOf(arr[i]) - 1;
+                    let prevIndex = columns.indexOf(arr[0]) - 1;
                     while (prevIndex >= 0 && sum <= availableSize) {
                         prevIndex = columns.indexOf(arr[0]) - 1;
                         if (prevIndex < 0) {

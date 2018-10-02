@@ -609,8 +609,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const hScroll = fixture.componentInstance.grid.parentVirtDir.getHorizontalScroll();
         const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
 
-        // Should 243 - 18, because the horizontal scrollbar has 18px height
-        expect(grid.calcHeight).toEqual(expectedHeight - 18);
+        // Should be rowHeight * number of rows - 250
+        // the horizontal scroll bar adds to the grid height seperately
+        expect(grid.calcHeight).toEqual(expectedHeight);
         expect(hScrollVisible).toBe(true);
     }));
 
@@ -722,7 +723,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 });
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, ColumnDefinitions.resizableThreeOfFour)
+    template: GridTemplateStrings.declareGrid(`width="500px" [visibleRows]="5"`, ``, ColumnDefinitions.resizableThreeOfFour)
 })
 export class ResizableColumnsComponent {
 
