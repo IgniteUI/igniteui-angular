@@ -585,7 +585,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (fireFocus) {
                 this.nativeElement.focus();
             }
-            this.cdr.markForCheck();
+            this.grid.cdr.detectChanges();
             this.grid.onSelection.emit({ cell: this, event });
         }
     }

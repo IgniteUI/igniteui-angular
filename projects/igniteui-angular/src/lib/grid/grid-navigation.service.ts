@@ -68,7 +68,7 @@ export class IgxGridNavigationService {
     }
 
     public onKeydownArrowRight(element, rowIndex, visibleColumnIndex) {
-        if (!element.nextElementSibling) {
+        if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             return;
         }
         if (this.isColumnFullyVisible(visibleColumnIndex + 1)) { // if next column is fully visible or is pinned
@@ -187,9 +187,9 @@ export class IgxGridNavigationService {
     public navigateBottom(visibleColumnIndex) {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
         if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
-                const cells = this.grid.nativeElement.querySelectorAll(
-                    `igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
-                cells[cells.length - 1].focus();
+            const cells = this.grid.nativeElement.querySelectorAll(
+                `igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
+            cells[cells.length - 1].focus();
         } else {
             this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
@@ -201,22 +201,33 @@ export class IgxGridNavigationService {
         }
     }
 
-    navigateUp(rowElement, currentRowIndex, visibleColumnIndex) {
+    public navigateUp(rowElement, currentRowIndex, visibleColumnIndex) {
         if (currentRowIndex === 0) {
             return;
         }
         const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
-        if ((!!Math.abs(containerTopOffset) && this.grid.rowList.first.index === currentRowIndex - 1) ||
-            (!Math.abs(containerTopOffset) && this.grid.rowList.first.index > currentRowIndex - 1)) {
+        if ((!!Math.abs(containerTopOffset) && (this.grid.rowList.first.index === currentRowIndex - 1 ||
+            this.grid.rowList.first.index === currentRowIndex)) ||
+            (!Math.abs(containerTopOffset) && this.grid.rowList.first.index >= currentRowIndex)) {
             (document.activeElement as any).blur();
-            const scrollAmount = containerTopOffset < 0 ? containerTopOffset :
+            let scrollAmount = 0;
+            if (this.grid.rowList.first.index === currentRowIndex && containerTopOffset < 0) {
+                scrollAmount =  -this.grid.rowHeight - Math.abs(containerTopOffset);
+            } else {
+            scrollAmount = containerTopOffset < 0 ? containerTopOffset :
                     -this.grid.rowHeight + Math.abs(containerTopOffset);
+            }
             this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
             this.grid.verticalScrollContainer.onChunkLoad
             .pipe(first())
             .subscribe(() => {
-                rowElement = this.grid.nativeElement.querySelector(
-                    `igx-grid-row[data-rowindex="${currentRowIndex}"]`);
+                if (rowElement.tagName.toLowerCase() === 'igx-grid-row') {
+                    rowElement = this.grid.nativeElement.querySelector(
+                        `igx-grid-row[data-rowindex="${currentRowIndex}"]`);
+                } else {
+                    rowElement = this.grid.nativeElement.querySelector(
+                        `igx-grid-groupby-row[data-rowindex="${currentRowIndex}"]`);
+                }
                 this.focusPreviousElement(rowElement, visibleColumnIndex);
             });
         } else {
@@ -232,10 +243,37 @@ export class IgxGridNavigationService {
             } else {
                 currentRowEl.previousElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
             }
+        } else if (currentRowEl.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+            if (currentRowEl.previousElementSibling.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+                currentRowEl.previousElementSibling.querySelector('.igx-grid__group-content').focus();
+            } else {
+                if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
+                    currentRowEl.previousElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+                } else {
+                    const cells = currentRowEl.previousElementSibling.querySelectorAll(`igx-grid-cell`);
+                    const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
+                    const lastVisibleIndex =  parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
+                    const middle = (firstVisibleIndex + lastVisibleIndex ) / 2;
+                    if (middle > visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
+                        this.horizontalScroll(this.grid.dataRowList.first.index).getHorizontalScroll().scrollLeft =
+                        this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex);
+                    } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
+                        this.horizontalScroll(this.grid.dataRowList.first.index).getHorizontalScroll().scrollLeft =
+                        (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex + 1) -
+                        this.displayContainerWidth);
+                    }
+                    this.grid.parentVirtDir.onChunkLoad
+                    .pipe(first())
+                    .subscribe(() => {
+                        currentRowEl.previousElementSibling
+                        .querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+                    });
+                }
+            }
         }
     }
 
-    navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
+    public navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
         if (!rowElement.nextElementSibling) {
             return;
         }
@@ -274,7 +312,27 @@ export class IgxGridNavigationService {
             if (rowElement.nextElementSibling.tagName.toLowerCase() === 'igx-grid-groupby-row') {
                 rowElement.nextElementSibling.querySelector('.igx-grid__group-content').focus();
             } else {
-                rowElement.nextElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+                if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
+                    rowElement.nextElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+                } else {
+                    const cells = rowElement.nextElementSibling.querySelectorAll(`igx-grid-cell`);
+                    const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
+                    const lastVisibleIndex =  parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
+                    const middle = (firstVisibleIndex + lastVisibleIndex ) / 2;
+                    if (middle > visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
+                        this.horizontalScroll(this.grid.dataRowList.first.index).getHorizontalScroll().scrollLeft =
+                        this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex);
+                    } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
+                        this.horizontalScroll(this.grid.dataRowList.first.index).getHorizontalScroll().scrollLeft =
+                        (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex + 1) -
+                        this.displayContainerWidth);
+                    }
+                    this.grid.parentVirtDir.onChunkLoad
+                    .pipe(first())
+                    .subscribe(() => {
+                        rowElement.nextElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+                    });
+                }
             }
         }
     }
@@ -283,7 +341,7 @@ export class IgxGridNavigationService {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
         const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getHorizontalScroll();
         if (verticalScroll.scrollTop === 0) {
-            this.onKeydownHome(0);
+            this.onKeydownHome(this.grid.dataRowList.first.index);
         } else {
             if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
                 this.navigateTop(0);
@@ -301,7 +359,9 @@ export class IgxGridNavigationService {
     public goToLastCell() {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
         if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
-            this.onKeydownEnd(this.grid.verticalScrollContainer.igxForOf.length - 1);
+            const rows = this.grid.nativeElement.querySelectorAll('igx-grid-row');
+            const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
+            this.onKeydownEnd(rowIndex);
         } else {
             this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
@@ -318,6 +378,5 @@ export class IgxGridNavigationService {
         return this.horizontalScroll(rowIndex).getColumnScrollLeft(index) +
         parseInt(this.grid.columnList.filter(c => !c.columnGroup).find((column) => column.visibleIndex === visibleColumnIndex).width, 10) -
         this.displayContainerWidth - this.horizontalScroll(rowIndex).getHorizontalScroll().scrollLeft;
-
     }
 }

@@ -153,9 +153,19 @@ export class IgxGridGroupByRowComponent {
      */
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
+        event.preventDefault();
+        event.stopPropagation();
         if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Space' || event.key === 'Enter') {
-            event.preventDefault();
             this.grid.toggleGroup(this.groupRow);
+            return;
+        }
+        const colIndex = this._getPrevSelectedColIndex() || 0;
+        const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex || 0;
+        if (event.key.toLowerCase() === 'arrowdown') {
+            this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
+        }
+        if (event.key.toLowerCase() === 'arrowup') {
+            this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
         }
     }
 
@@ -174,35 +184,6 @@ export class IgxGridGroupByRowComponent {
      */
     get dataType(): any {
         return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event) {
-        const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
-        const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
-        event.preventDefault();
-        event.stopPropagation();
-        const rowIndex = this.index + 1;
-        this.grid.navigateDown(rowIndex, visibleColumnIndex, event);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event) {
-        const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
-        const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
-        event.preventDefault();
-        event.stopPropagation();
-        if (this.index === 0) {
-            return;
-        }
-        const rowIndex = this.index - 1;
-        this.grid.navigateUp(rowIndex, visibleColumnIndex, event);
     }
 
     /**
