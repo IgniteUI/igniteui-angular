@@ -39,7 +39,7 @@
         "jszip": "^3.1.5",
         "rxjs": "^6.2.2",
         "web-animations-js": "^2.3.1",
-        "zone.js": "^0.8.26"
+        "zone.js": "git+https://github.com/tiliev/zone.js.git#profiling"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "~0.7.1",
