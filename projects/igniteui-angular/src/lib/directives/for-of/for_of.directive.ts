@@ -592,11 +592,11 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
             this._bScrollInternal = false;
         }
 
-        let scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop, this._virtHeight);
+        const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop, this._virtHeight);
         if (scrollOffset === undefined) {
             return;
         }
-        scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
+        // scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
         this._zone.run(() => {
@@ -615,24 +615,25 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
         const ind = ratio * count;
         // floating point number calculations are flawed so we need to handle rounding errors.
-        const currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
-        let endingIndex = this.state.chunkSize + currIndex;
+        let currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
+        const endingIndex = this.state.chunkSize + currIndex;
+        if (endingIndex > this.igxForOf.length) {
+            currIndex = this.igxForOf.length - this.state.chunkSize;
+        }
 
         // We update the startIndex before recalculating the chunkSize.
         const bUpdatedStart = this.state.startIndex !== currIndex;
         this.state.startIndex = currIndex;
 
-        if (endingIndex > this.igxForOf.length) {
-            endingIndex = this.igxForOf.length;
-        }
-        if (bUpdatedStart &&
-            ((!this._isScrolledToBottom || !this._isAtBottomIndex) && !this.extraRowApplied) ||
-            ((this._isScrolledToBottom || this._isAtBottomIndex) && this.extraRowApplied)) {
-            // Reapply chunk size when are aren't at the buttom index but we don't have extra row applied as well.
-            // or reapply chunk size when we are at the bottom index but we have extra row applied.
-            // We check both scroll position and index to be sure since we actually check bottom index before recalculating chunk size.
-            this.applyChunkSizeChange();
-        }
+
+        /* if (bUpdatedStart &&
+             ((!this._isScrolledToBottom || !this._isAtBottomIndex) && !this.extraRowApplied) ||
+             ((this._isScrolledToBottom || this._isAtBottomIndex) && this.extraRowApplied)) {
+             // Reapply chunk size when are aren't at the buttom index but we don't have extra row applied as well.
+             // or reapply chunk size when we are at the bottom index but we have extra row applied.
+             // We check both scroll position and index to be sure since we actually check bottom index before recalculating chunk size.
+             this.applyChunkSizeChange();
+         }*/
 
         if (bUpdatedStart) {
             this.onChunkPreload.emit(this.state);
