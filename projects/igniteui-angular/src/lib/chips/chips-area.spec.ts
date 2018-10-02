@@ -17,9 +17,9 @@ import { UIInteractions} from '../test-utils/ui-interactions.spec';
         <igx-chips-area #chipsArea>
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
-                <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
+                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
+                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -63,9 +63,9 @@ class TestChipSelectComponent extends TestChipComponent {
             (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
             <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
                 [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
-                <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
+                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
+                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -971,6 +971,24 @@ describe('IgxChipsArea', () => {
             originalEvent: pointerUpEvt,
             owner: chipAreaComp,
             newSelection: []
+        });
+    });
+
+    it('should emit onSelection for the chipArea event when there are initially selected chips through their inputs', () => {
+        const fix = TestBed.createComponent(TestChipSelectComponent);
+
+        const chipAreaComp = fix.componentInstance.chipsArea;
+        spyOn(chipAreaComp.onSelection, 'emit');
+
+        fix.detectChanges();
+
+        const secondChipComp = fix.componentInstance.chips.toArray();
+
+        expect(chipAreaComp['selectedChips']).toEqual([secondChipComp[0], secondChipComp[1]]);
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            originalEvent: null,
+            owner: chipAreaComp,
+            newSelection: [secondChipComp[0], secondChipComp[1]]
         });
     });
 });
