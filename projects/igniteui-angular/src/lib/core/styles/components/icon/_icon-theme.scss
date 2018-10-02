@@ -55,9 +55,23 @@
         height: $igx-icon-font-size;
         font-size: $igx-icon-font-size;
         color: --var($theme, 'color');
+
+        svg {
+            width: inherit;
+            height: inherit;
+            fill: currentColor;
+        }
     }
 
     %igx-icon--inactive {
         color: --var($theme, 'disabled-color') !important;
     }
+}
+
+%igx-svg-container {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    font-size: 0;
+    overflow: hidden;
 }
