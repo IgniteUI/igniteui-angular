@@ -22,6 +22,7 @@ export class IgxGridAPIService {
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
     protected editCellState: Map<string, any> = new Map<string, any>();
+    protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     public register(grid: IgxGridComponent) {
@@ -40,6 +41,7 @@ export class IgxGridAPIService {
         this.state.delete(id);
         this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
+        this.editRowState.delete(id);
     }
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
@@ -75,13 +77,28 @@ export class IgxGridAPIService {
     }
 
     public set_cell_inEditMode(gridId: string, cell, editMode: boolean) {
+        const editRowState = this.editRowState.get(gridId);
+        const grid = this.get(gridId);
+        if (grid.rowEditable) {
+            if (editRowState && editRowState.rowID !== cell.cellID.rowID) {
+                grid.updateRowTransaction(editRowState.rowID, editRowState.rowIndex);
+                grid.closeRowEditingOverlay();
+                grid.openRowEditingOverlay(cell.row);
+            } else if (grid.rowEditingOverlay.collapsed) {
+                grid.openRowEditingOverlay(cell.row);
+            }
+
+        }
+
         if (!this.editCellState.has(gridId)) {
             this.editCellState.set(gridId, null);
+            this.editRowState.set(gridId, null);
         }
         if (!this.get_cell_inEditMode(gridId) && editMode) {
             const cellCopy = Object.assign({}, cell);
             cellCopy.row = Object.assign({}, cell.row);
             this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
+            this.editRowState.set(gridId, { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex });
         }
     }
 
@@ -123,6 +140,16 @@ export class IgxGridAPIService {
     public get_row_by_index(id: string, rowIndex: number): IgxGridRowComponent {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
+
+    public get_row_inEditMode(gridId) {
+        const editRowId = this.editRowState.get(gridId);
+        if (editRowId) {
+            return editRowId;
+        } else {
+            return null;
+        }
+    }
+
 
     public get_cell_by_key(id: string, rowSelector: any, field: string): IgxGridCellComponent {
         const row = this.get_row_by_key(id, rowSelector);

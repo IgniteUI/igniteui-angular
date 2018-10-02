@@ -141,4 +141,25 @@
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
+<div igxToggle>
+    <div [className]="bannerClass">
+        <div class="banner__message">
+            <!--<div class="banner__massage-illustration">-->
+                <!--<igx-icon fontSet="material" name="edit"></igx-icon>-->
+            <!--</div>-->
+            <span class="banner__massage-text">There are edits pending on this row</span>
+        </div>
+        <div class="banner__actions">
+            <ng-container *ngTemplateOutlet="buttonCancelTemplate ? buttonCancelTemplate : buttonCancel; context: {$implicit: this}"></ng-container>
+            <ng-container *ngTemplateOutlet="buttonDoneTemplate ? buttonDoneTemplate : buttonDone; context: {$implicit: this}"></ng-container>
+        </div>
+    </div>
+</div>
+<ng-template #buttonCancel>
+    <button igxButton (click)="onResetRowTransaction($event)">Cancel</button>
+</ng-template>
+ <ng-template #buttonDone>
+    <button igxButton (click)="onUpdateRowTransaction($event)">Done</button>
+</ng-template>
+
 <div class="igx-grid__filtering-outlet" igxOverlayOutlet></div>

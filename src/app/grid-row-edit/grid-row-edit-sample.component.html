@@ -6,7 +6,7 @@
     <div class="sample-content">
         <article class="grid-row-edit-wrapper">
             <h4>Grid with rowEditing and without transactions</h4>
-            <igx-grid #gridRowEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
+            <igx-grid #gridRowEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
                 <igx-column>
                     <ng-template igxCell let-cell="cell" let-val>
                         <button (click)="deleteRow($event, 'gridRowEdit', cell.cellID.rowID)">Delete</button>
@@ -27,7 +27,7 @@
         <article class="grid-row-edit-wrapper">
             <h4>Grid with rowEditing and with transactions</h4>
             <app-grid-with-transactions>
-                <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
+                <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
                     <igx-column>
                         <ng-template igxCell let-cell="cell" let-val>
                                 <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
