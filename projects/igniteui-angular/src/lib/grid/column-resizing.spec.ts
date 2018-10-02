@@ -686,6 +686,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
     it('should autosize MCHs programmatically.', fakeAsync(() => {
         const fixture = TestBed.createComponent(MultiColumnHeadersComponent);
+        fixture.componentInstance.grid.visibleRows = 14;
         fixture.detectChanges();
 
         let column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'CompanyName')[0];
