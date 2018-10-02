@@ -770,10 +770,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         switch (key) {
             case 'tab':
                 if (shift) {
-                    this.onShiftTabKey(event);
+                    this.grid.navigation.performShiftTabKey(this.row.nativeElement, this.rowIndex, this.visibleColumnIndex);
                     break;
                 }
-                this.onTabKey(event);
+                this.grid.navigation.performTab(this.row.nativeElement, this.rowIndex, this.visibleColumnIndex);
                 break;
             case 'home':
             case 'arrowleft':
@@ -827,56 +827,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
             default:
                 return;
-        }
-    }
-
-    public onShiftTabKey(event) {
-        const selectedCell =  this._getLastSelectedCell();
-        if (selectedCell && selectedCell.rowIndex === 0 && selectedCell.visibleColumnIndex === 0) { return; }
-        if (selectedCell && 0 === selectedCell.visibleColumnIndex) {
-            if (this.grid.rowList.first.index === selectedCell.rowIndex) {
-                this.grid.verticalScrollContainer.scrollPrev();
-                this.grid.verticalScrollContainer.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    this.grid.scrollTo(this.rowIndex, this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex,
-                        this.grid.paging ? this.grid.page : 0);
-                    this.row.virtDirRow.onChunkLoad
-                    .pipe(first())
-                    .subscribe(() => {
-                        this.row.cells.last._updateCellSelectionStatus(true, event);
-                    });
-                });
-            } else {
-                const columnIndex  = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
-                this.grid.scrollTo(this.rowIndex, columnIndex, this.grid.paging ? this.grid.page : 0);
-                this.grid.rowList.find(row => row.index === this.rowIndex - 1).virtDirRow.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    this.grid.navigateUp(this.row.index - 1,
-                        columnIndex, event);
-                });
-            }
-        } else {
-            this.grid.navigation.onKeydownArrowLeft(this.nativeElement, this.rowIndex, this.visibleColumnIndex);
-        }
-    }
-
-    public onTabKey(event) {
-        const selectedCell =  this._getLastSelectedCell();
-        if (selectedCell &&
-            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === selectedCell.visibleColumnIndex) {
-            if (this.grid.rowList.find(row => row.index === this.rowIndex + 1)) {
-                this.row.virtDirRow.scrollTo(0);
-                this.grid.rowList.find(row => row.index === this.rowIndex + 1).virtDirRow.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    const i = 1;
-                    this.grid.navigateDown(this.row.index + 1, 0, event);
-                });
-            }
-        } else {
-            this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.rowIndex, this.visibleColumnIndex);
         }
     }
 
