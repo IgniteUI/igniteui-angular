@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Icons/filter/is empty</title>
+    <desc>Created with Sketch.</desc>
+    <path d="M18,18 L18,17 L19,17 L19,18 L19,19 L17,19 L17,18 L18,18 Z M19,6 L19,7 L18,7 L18,6 L17,6 L17,5 L19,5 L19,6 Z M6,18 L7,18 L7,19 L5,19 L5,18 L5,17 L6,17 L6,18 Z M6,6 L6,7 L5,7 L5,6 L5,5 L7,5 L7,6 L6,6 Z M9,5 L11,5 L11,6 L9,6 L9,5 Z M13,5 L15,5 L15,6 L13,6 L13,5 Z M9,18 L11,18 L11,19 L9,19 L9,18 Z M13,18 L15,18 L15,19 L13,19 L13,18 Z M5,9 L6,9 L6,11 L5,11 L5,9 Z M5,13 L6,13 L6,15 L5,15 L5,13 Z M18,9 L19,9 L19,11 L18,11 L18,9 Z M18,13 L19,13 L19,15 L18,15 L18,13 Z" id="path-1"></path>
+    <g id="Icons/filter/is-empty" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="is-empty">
+            <g id="Icon-24px">
+                <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Combined-Shape"></g>
+                <g id="Colors/grays.600" mask="url(#mask-2)" fill="#000000" fill-opacity="0.54">
+                    <rect id="grays.600" x="0" y="0" width="24" height="24"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

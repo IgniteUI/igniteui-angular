@@ -540,7 +540,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         };
         this._clicked = false;
         if (this._dragStarted) {
-            if (this._lastDropArea && !this._lastDropArea.isEqualNode(this.element.nativeElement)) {
+            if (this._lastDropArea && this._lastDropArea !== this.element.nativeElement) {
                 if (!this.animateOnRelease) {
                     this.onTransitionEnd(null);
                 }
@@ -623,8 +623,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
         const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
         for (let i = 0; i < elementsFromPoint.length; i++) {
-            if (elementsFromPoint[i].getAttribute('droppable') === 'true' &&
-                !elementsFromPoint[i].isEqualNode(this._dragGhost)) {
+            if (elementsFromPoint[i].getAttribute('droppable') === 'true' && elementsFromPoint[i] !== this._dragGhost) {
                 topDropArea = elementsFromPoint[i];
                 break;
             }
@@ -635,7 +634,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         }
 
         if (topDropArea &&
-            (!this._lastDropArea || (this._lastDropArea && !this._lastDropArea.isEqualNode(topDropArea)))) {
+            (!this._lastDropArea || (this._lastDropArea && this._lastDropArea !== topDropArea))) {
             if (this._lastDropArea) {
                 this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
             }
@@ -763,6 +762,15 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     selector: '[igxDrop]'
 })
 export class IgxDropDirective implements OnInit, OnDestroy {
+
+    /**
+     * - Save data inside the `igxDrop` directive. This can be set when instancing `igxDrop` on an element.
+     * ```html
+     * <div [igxDrop]="{ source: myElement }"></div>
+     * ```
+     */
+    @Input('igxDrop')
+    public data: any;
 
     /** Event triggered when dragged element enters the area of the element.
      * ```html
