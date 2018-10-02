@@ -1231,7 +1231,7 @@ describe('IgxGrid - multi-column headers', () => {
         NestedColGroupsTests.testHeadersRendering(fixture);
     });
 
-    it('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
+    fit('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1249,6 +1249,7 @@ describe('IgxGrid - multi-column headers', () => {
             ci.faxColTitle = ci.cityColTitle = title;
 
         tick(50);
+        fixture.componentInstance.grid.cdr.markForCheck();
         fixture.detectChanges();
 
         NestedColGroupsTests.testHeadersRendering(fixture);
