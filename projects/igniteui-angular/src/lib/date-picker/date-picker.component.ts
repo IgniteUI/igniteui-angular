@@ -492,12 +492,19 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
      *
      * @hidden
      */
-    public handleSelection(event) {
-        this.value = event;
-        this.calendar.viewDate = event;
-        this._onChangeCallback(event);
+    public handleSelection(date: Date) {
+        if (this.value !== null && this.value !== undefined) {
+            date.setHours(this.value.getHours());
+            date.setMinutes(this.value.getMinutes());
+            date.setSeconds(this.value.getSeconds());
+            date.setMilliseconds(this.value.getMilliseconds());
+        }
+
+        this.value = date;
+        this.calendar.viewDate = date;
+        this._onChangeCallback(date);
         this.alert.close();
-        this.onSelection.emit(event);
+        this.onSelection.emit(date);
     }
 
     @HostListener('keydown.spacebar', ['$event'])
