@@ -81,8 +81,7 @@ export class IgxGridAPIService {
         const grid = this.get(gridId);
         if (grid.rowEditable) {
             if (editRowState && editRowState.rowID !== cell.cellID.rowID) {
-                grid.updateRowTransaction(editRowState.rowID, editRowState.rowIndex);
-                grid.closeRowEditingOverlay();
+                grid.closeRowEditingOverlay(true);
                 grid.openRowEditingOverlay(cell.row);
             } else if (grid.rowEditingOverlay.collapsed) {
                 grid.openRowEditingOverlay(cell.row);
