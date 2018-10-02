@@ -223,9 +223,9 @@
     );
 
     $chip-padding: (
-        comfortable: 0 rem(16px),
+        comfortable: 0 rem(12px),
         cosy: 0 rem(8px),
-        compact: 0 rem(6px)
+        compact: 0 rem(4px)
     );
 
     $transition: all 120ms $ease-in-out-cubic;
@@ -277,7 +277,6 @@
         cursor: pointer;
         border-radius: map-get($chip-height, 'comfortable') / 2;
         padding: map-get($chip-padding, 'comfortable');
-        margin: rem(4px);
         height: map-get($chip-height, 'comfortable');
         transition: $transition;
         background: --var($theme, 'chip-background');
@@ -288,13 +287,11 @@
         &:focus{
             outline: transparent;
             background: --var($theme, 'chip-hover-background');
-
+            transition: $transition;
 
             %igx-chip__text {
                 color: --var($theme, 'text-hover-color');
             }
-
-            transition: $transition;
 
             %igx-chip__order-icon {
                 transition: $transition;
@@ -334,11 +331,9 @@
     }
 
     %igx-chip__text {
-        color: --var($theme, 'text-color');
-        font-size: rem(12px);
-        flex: 1 0 0%;
-
         @include ellipsis();
+        color: --var($theme, 'text-color');
+        flex: 1 0 0%;
 
         + %igx-chip__remove-icon {
             margin-left: rem(16px);
@@ -483,7 +478,9 @@
 
     @include igx-scope('.igx-typography') {
         %igx-chip__text {
-            @include igx-type-style($type-scale, $text);
+            @include igx-type-style($type-scale, $text) {
+                font-weight: 600;
+            }
         }
     }
 }

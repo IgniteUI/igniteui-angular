@@ -1336,6 +1336,18 @@
         display: flex;
         border-right: $grid-header-border;
         border-top: $grid-header-border;
+        height: map-get($grid-header-height, 'comfortable');
+        padding: map-get($grid-header-padding, 'comfortable');
+    }
+
+    %igx-grid__filtering-cell--cosy {
+        height: map-get($grid-header-height, 'cosy');
+        padding: map-get($grid-header-padding, 'comfortable');
+    }
+
+    %igx-grid__filtering-cell--compact {
+        height: map-get($grid-header-height, 'compact');
+        padding: map-get($grid-header-padding, 'comfortable');
     }
 
     %igx-grid__filtering-row {
