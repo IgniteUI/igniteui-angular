@@ -1670,7 +1670,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportText: string = null;
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
-    private _rowEditable = true;
+    private _rowEditable = false;
 
     /**
      * Provides access to the `IgxToolbarComponent`.
@@ -4655,7 +4655,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public openRowEditingOverlay(row: IgxGridRowComponent) {
-        // this.closeRowEditingOverlay();
         this.overlaySettings = {
             scrollStrategy: new AbsoluteScrollStrategy(),
             modal: false,
@@ -4671,44 +4670,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             })
         };
         this.rowEditingOverlay.open(this.overlaySettings);
+
+        if (this.rowEditingOverlay.element.style.display === 'none') {
+            this.rowEditingOverlay.element.style.display = 'block';
+        }
+    }
+
+    public repositionEditingOverlay(row: IgxGridRowComponent) {
+        this.overlaySettings.positionStrategy.settings.target = row.element.nativeElement;
+        if (this.rowEditingOverlay.element.style.display === 'none') {
+            this.rowEditingOverlay.element.style.display = 'block';
+        }
+        this.rowEditingOverlay.reposition();
+    }
+
+    public hideRowEditingOverlay() {
+        this.rowEditingOverlay.element.style.display = 'none';
     }
 
     public closeRowEditingOverlay() {
         this.rowEditingOverlay.close();
-    }
-
-    public onUpdateRowTransaction(event) {
-        /*const rowID = this.cellInEditMode.cellID.rowID;
-        const rowIndex = this.cellInEditMode.cellID.rowIndex;
-        this.updateRowTransaction(rowID, rowIndex);*/
-    }
-
-    public updateRowTransaction(rowID: any, rowIndex: number) {
-        /*//  we should submit the value before add the transaction and close the row edit template
-        this.gridAPI.submit_value(this.id);
-        this.transactions.add(
-            {
-                id: rowID,
-                type: TransactionType.UPDATE,
-                newValue: this.transactions.getPendingState(rowID).value
-            },
-            this.data[rowIndex]);
-            //  the call to submit_value sets inEditMode to false and we do not need next call
-            //  this.cellInEditMode.inEditMode = false;
-             //  reset transactions for this row. Otherwise next time you edit it you
-            //  will push old changes to transaction log
-            this.transactions.resetPending();
-            this.closeRowEditingOverlay();
-            this.cdr.detectChanges();*/
-    }
-
-    public onResetRowTransaction(event) {
-        /*this.resetRowTransaction();*/
-    }
-
-    private resetRowTransaction() {
-        /*this.transactions.resetPending();
-        this.cellInEditMode.inEditMode = false;*/
     }
 
     public get cellInEditMode(): IgxGridCellComponent {

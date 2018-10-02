@@ -81,7 +81,6 @@ export class IgxGridAPIService {
         const grid = this.get(gridId);
         if (grid.rowEditable) {
             if (editRowState && editRowState.rowID !== cell.cellID.rowID) {
-                grid.updateRowTransaction(editRowState.rowID, editRowState.rowIndex);
                 grid.closeRowEditingOverlay();
                 grid.openRowEditingOverlay(cell.row);
             } else if (grid.rowEditingOverlay.collapsed) {
@@ -109,9 +108,11 @@ export class IgxGridAPIService {
                 if (cellId.rowID === editableCell.cellID.rowID &&
                     cellId.columnID === editableCell.cellID.columnID) {
                     this.editCellState.delete(gridId);
+                    this.editRowState.delete(gridId);
                 }
             } else {
                 this.editCellState.delete(gridId);
+                this.editRowState.delete(gridId);
             }
         }
 
