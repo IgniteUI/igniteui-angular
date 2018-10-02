@@ -20,7 +20,6 @@ export class GridColumnMovingSampleComponent implements OnInit {
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true },
             { field: 'CompanyName', width: 150, resizable: true, movable: true },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true },
             { field: 'ContactName', width: 150, resizable: true, movable: true },
             { field: 'ContactTitle', width: 150, resizable: true, movable: true },
             { field: 'Address', width: 150, resizable: true, movable: true },
@@ -382,10 +381,6 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'Fax': '011-4988261'
             }
         ];
-    }
-
-    public log(event) {
-        console.log('selection', event);
     }
 
     toggleColumn(name: string) {

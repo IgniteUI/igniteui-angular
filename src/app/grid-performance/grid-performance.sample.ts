@@ -24,7 +24,7 @@ export class GridPerformanceSampleComponent implements OnInit {
         for (let j = 0; j < 300; j++) {
             cols.push({
                 field: (j + 1).toString(),
-                width: Math.trunc(Math.random() * 80) + 90
+                width: (Math.random() * 80) + 90
             });
         }
 
